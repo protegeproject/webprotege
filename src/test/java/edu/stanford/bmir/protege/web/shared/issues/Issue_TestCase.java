@@ -13,8 +13,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,6 +49,8 @@ public class Issue_TestCase {
 
     private Optional<Long> updatedAt = Optional.of(ISSUE_NUMBER);
 
+    private ImmutableList<OWLEntity> targetEntities = ImmutableList.of(mock(OWLEntity.class));
+
     private String title = "The title";
 
     private String body = "The body";
@@ -54,7 +59,7 @@ public class Issue_TestCase {
 
     private LockSetting lockSetting = LockSetting.UNLOCKED;
 
-    private Optional<UserId> assignee = Optional.of(mock(UserId.class));
+    private ImmutableList<UserId> assignees = ImmutableList.of(mock(UserId.class));
 
     private Optional<Milestone> milestone = Optional.of(mock(Milestone.class));
 
@@ -80,16 +85,15 @@ public class Issue_TestCase {
                           number,
                           creator,
                           createdAt,
-                          updatedAt,
+                          updatedAt, targetEntities,
                           title,
                           body,
                           status,
-                          assignee,
-                          milestone, lockSetting,
+                          assignees, milestone,
+                          lockSetting,
                           labels,
                           comments,
-                          mentions,
-                          participants, events);
+                          mentions, participants, events);
     }
 
     @SuppressWarnings("ConstantConditions" )
@@ -99,16 +103,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -128,16 +131,15 @@ public class Issue_TestCase {
                   number,
                   null,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -157,22 +159,46 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  null,
+                  null, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
     public void shouldReturnSupplied_updatedAt() {
         assertThat(issue.getUpdatedAt(), is(this.updatedAt));
     }
+
+    @Test
+    public void shouldReturnSupplied_targetEntities() {
+        assertThat(issue.getTargetEntities(), is(this.targetEntities));
+    }
+
+    @SuppressWarnings("ConstantConditions" )
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_targetEntities_IsNull() {
+        new Issue(projectId,
+                  number,
+                  creator,
+                  createdAt,
+                  updatedAt,
+                  null,
+                  title,
+                  body,
+                  status,
+                  assignees, milestone,
+                  lockSetting,
+                  labels,
+                  comments,
+                  mentions, participants, events);
+    }
+
 
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
@@ -181,16 +207,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   null,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -205,16 +230,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   null,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -229,16 +253,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   null,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -253,21 +276,20 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  null,
-                  milestone, lockSetting,
+                  null, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
     public void shouldReturnSupplied_assignee() {
-        assertThat(issue.getAssignee(), is(this.assignee));
+        assertThat(issue.getAssignees(), is(this.assignees));
     }
 
     @SuppressWarnings("ConstantConditions" )
@@ -277,16 +299,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  null, lockSetting,
+                  assignees, null,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -301,17 +322,16 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
+                  assignees,
                   milestone,
                   null,
                   labels,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -326,16 +346,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   null,
                   comments,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -350,16 +369,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   null,
-                  mentions,
-                  participants, events);
+                  mentions, participants, events);
     }
 
     @Test
@@ -374,16 +392,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  null,
-                  participants, events);
+                  null, participants, events);
     }
 
     @Test
@@ -398,16 +415,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  null, events);
+                  mentions, null, events);
     }
 
     @Test
@@ -422,16 +438,15 @@ public class Issue_TestCase {
                   number,
                   creator,
                   createdAt,
-                  updatedAt,
+                  updatedAt, targetEntities,
                   title,
                   body,
                   status,
-                  assignee,
-                  milestone, lockSetting,
+                  assignees, milestone,
+                  lockSetting,
                   labels,
                   comments,
-                  mentions,
-                  participants, null);
+                  mentions, participants, null);
     }
 
     @Test
@@ -457,321 +472,323 @@ public class Issue_TestCase {
                                 number,
                                 creator,
                                 createdAt,
-                                updatedAt,
+                                updatedAt, targetEntities,
                                 title,
                                 body,
                                 status,
-                                assignee,
-                                milestone, lockSetting,
+                                assignees, milestone,
+                                lockSetting,
                                 labels,
                                 comments,
-                                mentions,
-                                participants, events)));
+                                mentions, participants, events)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(mock(ProjectId.class),
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(mock(ProjectId.class),
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_number() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             2,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    2,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_creator() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             mock(UserId.class),
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    mock(UserId.class),
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_createdAt() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             2L,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    2L,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_updatedAt() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             Optional.of(OTHER_ISSUE_NUMBER),
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    Optional.of(OTHER_ISSUE_NUMBER), targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_title() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             "String-524c2461-a479-48d9-9ab7-6d171b0f7ab3" ,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    "String-524c2461-a479-48d9-9ab7-6d171b0f7ab3" ,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_body() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             "String-308adff8-401c-4eb1-b31d-3b4b794a2406" ,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    "String-308adff8-401c-4eb1-b31d-3b4b794a2406" ,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_status() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             Status.CLOSED,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    Status.CLOSED,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_locked() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone,
-                                             LockSetting.LOCKED,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees,
+                                    milestone,
+                                    LockSetting.LOCKED,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_assignee() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             Optional.of(mock(UserId.class)),
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    ImmutableList.of(mock(UserId.class)), milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_milestone() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             Optional.of(mock(Milestone.class)), lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, Optional.of(mock(Milestone.class)),
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_labels() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             ImmutableList.of("Other Label" ),
-                                             comments,
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    ImmutableList.of("Other Label" ),
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_comments() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             ImmutableList.of(mock(Comment.class)),
-                                             mentions,
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    ImmutableList.of(mock(Comment.class)),
+                                    mentions, participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_mentions() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             ImmutableList.of(mock(Mention.class)),
-                                             participants, events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    ImmutableList.of(mock(Mention.class)), participants, events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_participants() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             ImmutableList.of(mock(UserId.class)), events))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, ImmutableList.of(mock(UserId.class)), events))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_events() {
         assertThat(issue,
-                   is(Matchers.not(new Issue(projectId,
-                                             number,
-                                             creator,
-                                             createdAt,
-                                             updatedAt,
-                                             title,
-                                             body,
-                                             status,
-                                             assignee,
-                                             milestone, lockSetting,
-                                             labels,
-                                             comments,
-                                             mentions,
-                                             participants, ImmutableList.of(mock(IssueEvent.class))))));
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt, targetEntities,
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, ImmutableList.of(mock(IssueEvent.class))))));
+    }
+
+    @Test
+    public void shouldNotBeEqualToOtherThatHasDifferent_targetEntities() {
+        assertThat(issue,
+                   is(not(new Issue(projectId,
+                                    number,
+                                    creator,
+                                    createdAt,
+                                    updatedAt,
+                                    ImmutableList.of(mock(OWLEntity.class)),
+                                    title,
+                                    body,
+                                    status,
+                                    assignees, milestone,
+                                    lockSetting,
+                                    labels,
+                                    comments,
+                                    mentions, participants, events))));
     }
 
     @Test
@@ -781,16 +798,15 @@ public class Issue_TestCase {
                                 number,
                                 creator,
                                 createdAt,
-                                updatedAt,
+                                updatedAt, targetEntities,
                                 title,
                                 body,
                                 status,
-                                assignee,
-                                milestone, lockSetting,
+                                assignees, milestone,
+                                lockSetting,
                                 labels,
                                 comments,
-                                mentions,
-                                participants, events).hashCode()));
+                                mentions, participants, events).hashCode()));
     }
 
     @Test

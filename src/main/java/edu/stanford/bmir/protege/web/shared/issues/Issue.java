@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.issues.events.IssueEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -48,6 +49,9 @@ public class Issue implements IsSerializable {
     private Long updatedAt;
 
     @Nonnull
+    private List<OWLEntity> targetEntities;
+
+    @Nonnull
     private String title;
 
     @Nonnull
@@ -56,8 +60,8 @@ public class Issue implements IsSerializable {
     @Nonnull
     private Status status;
 
-    @Nullable
-    private UserId assignee;
+    @Nonnull
+    private List<UserId> assignees;
 
     @Nullable
     private Milestone milestone;
@@ -83,19 +87,20 @@ public class Issue implements IsSerializable {
 
     /**
      * Creates an issues record
-     *  @param projectId    The project that the issue pertains to.
+     * @param projectId    The project that the issue pertains to.
      * @param number       The issue number.
      * @param creator      The issue creator.  That is, the user id of the person that created the issue.
      * @param createdAt    A timestamp specifying when the issue was created.
      * @param updatedAt    A timestamp specifying when the issue was last updated.  An empty value indicates that the
 *                     issue has not been updated.
+     * @param targetEntities
      * @param title        The issue title.  May be empty.
      * @param body         The issue body. May be empty.
      * @param status       The status of the issue.
-     * @param assignee     The UserId of the person that the issue was assigned to. An absent value indicates that the
+     * @param assignees    The UserId of the person that the issue was assigned to. An absent value indicates that the
 *                     issue has not been assigned to any user.
      * @param milestone    A milestone for the issue.  An empty string indicates that there is no milestone set.
-     * @param lockSetting
+     * @param lockSetting  The setting that specifies whether or not the issue is locked.
      * @param labels       A list of labels for the issue.  The values in the list must not be {@code null}.
      * @param mentions     A list of Mentions that occur in the body of the issue or in issue comments.
      * @param participants A list of users that participate in the tracking of this issue.
@@ -105,10 +110,11 @@ public class Issue implements IsSerializable {
                  @Nonnull UserId creator,
                  long createdAt,
                  @Nonnull Optional<Long> updatedAt,
+                 @Nonnull ImmutableList<OWLEntity> targetEntities,
                  @Nonnull String title,
                  @Nonnull String body,
                  @Nonnull Status status,
-                 @Nonnull Optional<UserId> assignee,
+                 @Nonnull ImmutableList<UserId> assignees,
                  @Nonnull Optional<Milestone> milestone,
                  @Nonnull LockSetting lockSetting, @Nonnull ImmutableList<String> labels,
                  @Nonnull ImmutableList<Comment> comments,
@@ -120,10 +126,11 @@ public class Issue implements IsSerializable {
         this.creator = checkNotNull(creator);
         this.createdAt = createdAt;
         this.updatedAt = checkNotNull(updatedAt).orElse(null);
+        this.targetEntities = checkNotNull(targetEntities);
         this.title = checkNotNull(title);
         this.body = checkNotNull(body);
         this.status = checkNotNull(status);
-        this.assignee = checkNotNull(assignee).orElse(null);
+        this.assignees = checkNotNull(assignees);
         this.milestone = checkNotNull(milestone).orElse(null);
         this.lockSetting = checkNotNull(lockSetting);
         this.labels = checkNotNull(labels);
@@ -142,10 +149,11 @@ public class Issue implements IsSerializable {
                     @Nonnull UserId creator,
                     long createdAt,
                     @Nullable Long updatedAt,
+                    @Nonnull List<OWLEntity> targetEntities,
                     @Nonnull String title,
                     @Nonnull String body,
                     @Nonnull Status status,
-                    @Nullable UserId assignee,
+                    @Nonnull List<UserId> assignees,
                     @Nullable Milestone milestone,
                     @Nonnull LockSetting lockSetting,
                     @Nonnull List<String> labels,
@@ -158,10 +166,11 @@ public class Issue implements IsSerializable {
         this.creator = checkNotNull(creator);
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.targetEntities = ImmutableList.copyOf(targetEntities);
         this.title = checkNotNull(title);
         this.body = checkNotNull(body);
         this.status = checkNotNull(status);
-        this.assignee = assignee;
+        this.assignees = ImmutableList.copyOf(checkNotNull(assignees));
         this.milestone = milestone;
         this.lockSetting = checkNotNull(lockSetting);
         this.labels = ImmutableList.copyOf(checkNotNull(labels));
@@ -208,13 +217,18 @@ public class Issue implements IsSerializable {
     }
 
     @Nonnull
+    public List<OWLEntity> getTargetEntities() {
+        return ImmutableList.copyOf(targetEntities);
+    }
+
+    @Nonnull
     public Status getStatus() {
         return status;
     }
 
     @Nonnull
-    public Optional<UserId> getAssignee() {
-        return Optional.ofNullable(assignee);
+    public List<UserId> getAssignees() {
+        return ImmutableList.copyOf(assignees);
     }
 
     @Nonnull
@@ -264,7 +278,7 @@ public class Issue implements IsSerializable {
                 createdAt,
                 updatedAt,
                 status,
-                assignee,
+                assignees,
                 milestone,
                 lockSetting,
                 labels,
@@ -290,8 +304,9 @@ public class Issue implements IsSerializable {
                 && this.creator.equals(other.creator)
                 && this.createdAt == other.createdAt
                 && Objects.equal(this.updatedAt, other.updatedAt)
+                && this.targetEntities.equals(other.targetEntities)
                 && this.status == other.status
-                && Objects.equal(this.assignee, other.assignee)
+                && Objects.equal(this.assignees, other.assignees)
                 && Objects.equal(this.milestone, other.milestone)
                 && this.lockSetting.equals(other.lockSetting)
                 && this.labels.equals(other.labels)
@@ -309,10 +324,11 @@ public class Issue implements IsSerializable {
                 .add("owner" , creator)
                 .add("createdAt" , createdAt)
                 .add("updatedAt" , updatedAt)
+                .add("targetEntities", targetEntities)
                 .addValue(status)
-                .add("assignee" , assignee)
+                .add("assignees" , assignees)
                 .add("milestone" , milestone)
-                .add("locked", lockSetting)
+                .add("locked" , lockSetting)
                 .add("labels" , labels)
                 .add("body" , body)
                 .add("comments" , comments)
@@ -341,6 +357,7 @@ public class Issue implements IsSerializable {
 
     /**
      * Creates an {@link IssueBuilder} that is initialised with the values contained in this issue.
+     *
      * @return The builder.
      */
     @Nonnull
@@ -351,10 +368,11 @@ public class Issue implements IsSerializable {
                 creator,
                 createdAt,
                 Optional.ofNullable(updatedAt),
+                targetEntities,
                 title,
                 body,
                 status,
-                Optional.ofNullable(assignee),
+                assignees,
                 Optional.ofNullable(milestone),
                 lockSetting,
                 labels,
