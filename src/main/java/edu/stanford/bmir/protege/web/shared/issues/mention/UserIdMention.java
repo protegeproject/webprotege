@@ -8,6 +8,8 @@ import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
+import java.util.Optional;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
@@ -35,6 +37,16 @@ public class UserIdMention implements Mention {
         return userId;
     }
 
+    /**
+     * If this mention mentions a UserId then this method returns the UserId.
+     *
+     * @return The UserId.
+     */
+    @Nonnull
+    @Override
+    public Optional<UserId> getMentionedUserId() {
+        return Optional.of(userId);
+    }
 
     @Override
     public String toString() {

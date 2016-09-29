@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.issues.events.*;
 import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
+import edu.stanford.bmir.protege.web.shared.issues.mention.UserIdMention;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -100,15 +101,21 @@ public class IssueBuilder {
     }
 
     public Issue build(MentionParser parser) {
-        ImmutableSet.Builder<Mention> parsedMentions = ImmutableSet.builder();
+        ImmutableSet.Builder<Mention> mentionsBuilder = ImmutableSet.builder();
         parser.parseMentions(body).stream()
                 .map(pm -> pm.getParsedMention())
-                .forEach(parsedMentions::add);
+                .forEach(mentionsBuilder::add);
         comments.stream()
                 .flatMap(c -> parser.parseMentions(c.getBody()).stream())
                 .map(pm -> pm.getParsedMention())
-                .forEach(parsedMentions::add);
-        parsedMentions.addAll(mentions);
+                .forEach(mentionsBuilder::add);
+        ImmutableSet<Mention> mentions = mentionsBuilder.build();
+        ImmutableSet.Builder<UserId> participantsBuilder = ImmutableSet.builder();
+        participantsBuilder.addAll(participants);
+        mentions.stream()
+                .map(m -> m.getMentionedUserId())
+                .forEach(u -> u.ifPresent(participantsBuilder::add));
+
         return new Issue(
                 projectId,
                 number,
@@ -124,8 +131,9 @@ public class IssueBuilder {
                 lockSetting,
                 ImmutableList.copyOf(labels),
                 ImmutableList.copyOf(comments),
-                ImmutableList.copyOf(parsedMentions.build()),
-                ImmutableList.copyOf(participants), ImmutableList.copyOf(events));
+                ImmutableList.copyOf(mentions),
+                ImmutableList.copyOf(participantsBuilder.build()),
+                ImmutableList.copyOf(events));
     }
 
     @Nonnull
@@ -248,6 +256,16 @@ public class IssueBuilder {
     @Nonnull
     public IssueBuilder addComment(@Nonnull Comment comment, long timestamp) {
         if (this.comments.add(checkNotNull(comment))) {
+            this.updatedAt = Optional.of(timestamp);
+        }
+        return this;
+    }
+
+    @Nonnull
+    public IssueBuilder replaceComment(@Nonnull Comment comment, @Nonnull Comment replacementComment, long timestamp) {
+        int index = this.comments.indexOf(comment);
+        if(index != -1) {
+            comments.set(index, replacementComment);
             this.updatedAt = Optional.of(timestamp);
         }
         return this;
