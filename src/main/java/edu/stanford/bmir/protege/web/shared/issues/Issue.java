@@ -295,7 +295,7 @@ public class Issue implements IsSerializable {
                 .add("number" , number)
                 .add("owner" , creator)
                 .add("createdAt" , createdAt)
-                .add("updatedAt", updatedAt)
+                .add("updatedAt" , updatedAt)
                 .addValue(status)
                 .add("assignee" , assignee)
                 .add("milestone" , milestone)
@@ -303,8 +303,51 @@ public class Issue implements IsSerializable {
                 .add("body" , body)
                 .add("comments" , comments)
                 .add("mentions" , mentions)
-                .add("participants", participants)
+                .add("participants" , participants)
                 .add("events" , events)
                 .toString();
     }
+
+    /**
+     * Creates an {@link IssueBuilder} initialised with the specified values.  All other values will have default values.
+     *
+     * @param projectId The project id for the issue.
+     * @param number    The issue number.
+     * @param creator   The issue creator.
+     * @param createdAt The time that the issue was created at.
+     * @return The builder.
+     */
+    @Nonnull
+    public static IssueBuilder builder(@Nonnull ProjectId projectId,
+                                       int number,
+                                       @Nonnull UserId creator,
+                                       long createdAt) {
+        return new IssueBuilder(projectId, number, creator, createdAt);
+    }
+
+    /**
+     * Creates an {@link IssueBuilder} that is initialised with the values contained in this issue.
+     * @return The builder.
+     */
+    @Nonnull
+    public IssueBuilder builder() {
+        return new IssueBuilder(
+                projectId,
+                number,
+                creator,
+                createdAt,
+                Optional.ofNullable(updatedAt),
+                title,
+                body,
+                status,
+                Optional.ofNullable(assignee),
+                Optional.ofNullable(milestone),
+                labels,
+                comments,
+                mentions,
+                participants,
+                events
+        );
+    }
+
 }
