@@ -18,11 +18,10 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 @TypeAlias("RevisionMention")
 public class RevisionMention implements Mention {
 
-    @Nonnull
-    private RevisionNumber revisionNumber;
+    private long revisionNumber;
 
     @PersistenceConstructor
-    public RevisionMention(@Nonnull RevisionNumber revisionNumber) {
+    public RevisionMention(long revisionNumber) {
         this.revisionNumber = revisionNumber;
     }
 
@@ -30,8 +29,7 @@ public class RevisionMention implements Mention {
     private RevisionMention() {
     }
 
-    @Nonnull
-    public RevisionNumber getRevisionNumber() {
+    public long getRevisionNumber() {
         return revisionNumber;
     }
 

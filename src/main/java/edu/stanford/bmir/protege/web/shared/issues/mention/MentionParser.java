@@ -114,7 +114,7 @@ public class MentionParser {
         String revisionNumberGroup = matchResult.getGroup(REVISION_MATCH_GROUP + 1);
         return new ParsedMention(
                 new RevisionMention(
-                        RevisionNumber.getRevisionNumber(Long.parseLong(revisionNumberGroup))),
+                        Long.parseLong(revisionNumberGroup)),
                 startIndex,
                 endIndex);
     }
