@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -41,10 +42,9 @@ public class GetUserIdCompletionsActionHandler_TestCase {
     public void setUp() {
         actionHandler = new GetUserIdCompletionsActionHandler(userDetailsManager);
         userIds = Arrays.asList(johnSmith, janeDoe);
-        when(userDetailsManager.getUserIds()).thenReturn(userIds);
         when(johnSmith.getUserName()).thenReturn("John Smith");
         when(janeDoe.getUserName()).thenReturn("Jane Doe");
-        when(userDetailsManager.getUserIdsContainingIgnoreCase(anyString(), anyLong())).thenReturn(userIds);
+        when(userDetailsManager.getUserIdsContainingIgnoreCase(anyString(), anyInt())).thenReturn(userIds);
     }
 
     @Test(expected = java.lang.NullPointerException.class)

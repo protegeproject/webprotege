@@ -36,7 +36,7 @@ public class CheckMongoDBConnectionTask implements ConfigurationTask {
             MongoClient mongoClient = new MongoClient(dbHost, dbPort);
             mongoClient.getDatabaseNames();
             mongoClient.close();
-        } catch (UnknownHostException | MongoTimeoutException e) {
+        } catch (MongoTimeoutException e) {
             throw new WebProtegeConfigurationException(getUnknownHostErrorMessage());
         }
     }

@@ -26,22 +26,9 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         this.repository = checkNotNull(userRecordRepository);
     }
 
-
     @Override
-    public Collection<UserId> getUserIds() {
-        return repository.findAll()
-                .map(UserRecord::getUserId)
-                .collect(toList());
-    }
-
-    @Override
-    public List<UserId> getUserIdsContainingIgnoreCase(String userName, long limit) {
-        return repository.findByUserIdContainingIgnoreCase(userName)
-                .map(UserRecord::getUserId)
-                .sorted()
-                .limit(limit)
-                .collect(toList());
-
+    public List<UserId> getUserIdsContainingIgnoreCase(String userName, int limit) {
+        return repository.findByUserIdContainingIgnoreCase(userName, limit).collect(toList());
     }
 
     @Override
@@ -95,10 +82,21 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(!record.isPresent()) {
             return;
         }
-        // TODO: Check that the email isn't used already
+        java.util.Optional<UserRecord> recordByEmail = repository.findOneByEmailAddress(email);
+        if(!record.equals(recordByEmail)) {
+            // TODO: Log failure
+            return;
+        }
         UserRecord theRecord = record.get();
-        UserRecord replacement = new UserRecord(theRecord.getUserId(), theRecord.getRealName(), theRecord.getEmailAddress(), theRecord.getAvatarUrl(), theRecord.getSalt(), theRecord.getSaltedPasswordDigest());
-        repository.delete(theRecord);
+        UserRecord replacement = new UserRecord(
+                theRecord.getUserId(),
+                theRecord.getRealName(),
+                theRecord.getEmailAddress(),
+                theRecord.getAvatarUrl(),
+                theRecord.getSalt(),
+                theRecord.getSaltedPasswordDigest()
+        );
+        repository.delete(userId);
         repository.save(replacement);
     }
 
