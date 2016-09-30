@@ -15,7 +15,6 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 26 Sep 16
  */
-@TypeAlias("IssueClosed")
 public class IssueClosed extends AbstractIssueEvent {
 
     @GwtSerializationConstructor
