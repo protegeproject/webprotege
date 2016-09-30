@@ -18,14 +18,9 @@ public interface IssueRepository extends Repository<Issue, Long> {
 
     Optional<Issue> findByProjectIdAndNumber(ProjectId projectId, long issueNumber);
 
+    Optional<Issue> findOneByProjectIdOrderByNumberDesc(ProjectId projectId);
+
     Stream<Issue> findByProjectId(ProjectId projectId);
 
-    Iterable<Issue> findAll();
-
-    long count();
-
-    void deleteByProjectIdAndNumber(ProjectId projectId, long number);
-
-    void delete(Iterable<? extends Issue> iterable);
-
+    long countByProjectId(ProjectId projectId);
 }

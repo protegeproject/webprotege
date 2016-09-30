@@ -28,7 +28,7 @@ import java.util.List;
  * Date: 8/20/13
  */
 @Configuration
-@EnableMongoRepositories(basePackages = "edu.stanford.bmir.protege.web.server")
+@EnableMongoRepositories(basePackages = {"edu.stanford.bmir.protege.web.server","edu.stanford.bmir.protege.web.shared"})
 @PropertySource(value="classpath:webprotege.properties")
 public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
 
@@ -98,6 +98,8 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         converters.add(new OWLEntityWriteConverter());
         converters.add(new MilestoneReadConverter());
         converters.add(new MilestoneWriteConverter());
+//        converters.add(new MentionReadConverter());
+//        converters.add(new IssueEventReadConverter());
 
         mappingMongoConverter.setCustomConversions(new CustomConversions(converters));
         return mappingMongoConverter;

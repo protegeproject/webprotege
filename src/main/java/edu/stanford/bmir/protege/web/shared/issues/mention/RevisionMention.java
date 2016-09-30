@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.issues.Mention;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.Persistent;
 import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
@@ -15,8 +16,8 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 27 Sep 16
  */
-@TypeAlias("RevisionMention")
-public class RevisionMention implements Mention {
+@Persistent
+public class RevisionMention extends Mention {
 
     private long revisionNumber;
 

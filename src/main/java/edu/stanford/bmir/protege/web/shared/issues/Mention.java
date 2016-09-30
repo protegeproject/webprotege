@@ -13,14 +13,14 @@ import java.util.Optional;
  *
  * Represents the mention of some object in String
  */
-public interface Mention extends IsSerializable {
+public abstract class Mention implements IsSerializable {
 
     /**
      * If this mention mentions a UserId then this method returns the UserId.
      * @return The UserId.
      */
     @Nonnull
-    default Optional<UserId> getMentionedUserId() {
+    public Optional<UserId> getMentionedUserId() {
         return Optional.empty();
     }
 }

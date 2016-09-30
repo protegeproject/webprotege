@@ -14,7 +14,6 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 26 Sep 16
  */
-@TypeAlias("IssueReopened")
 public class IssueReopened extends AbstractIssueEvent {
 
     public IssueReopened(@Nonnull UserId userId, long timestamp) {

@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 26 Sep 16
  */
-@TypeAlias("IssueUnlabelled")
 public class IssueUnlabelled extends AbstractIssueEvent {
 
     @Nonnull

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.issues.mention;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.issues.Mention;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.Persistent;
 import org.springframework.data.annotation.TypeAlias;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -12,8 +13,8 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 27 Sep 16
  */
-@TypeAlias("IssueMention")
-public class IssueMention implements Mention {
+@Persistent
+public class IssueMention extends Mention {
 
     private int issueNumber;
 
