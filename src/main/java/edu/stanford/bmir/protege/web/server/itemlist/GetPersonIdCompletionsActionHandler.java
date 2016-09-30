@@ -46,10 +46,7 @@ public class GetPersonIdCompletionsActionHandler implements ActionHandler<GetPer
 
     @Override
     public GetPersonIdCompletionsResult execute(GetPersonIdCompletionsAction action, ExecutionContext executionContext) {
-        List<PersonId> matches = userDetailsManager.getUserIds().stream()
-                .filter(u -> StringUtils.containsIgnoreCase(u.getUserName(), action.getCompletionText()))
-                .sorted()
-                .limit(7)
+        List<PersonId> matches = userDetailsManager.getUserIdsContainingIgnoreCase(action.getCompletionText(), 7).stream()
                 .map(u -> new PersonId(u.getUserName()))
                 .collect(toList());
         return new GetPersonIdCompletionsResult(matches);

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.AbstractModule;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeApplicationConfig;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.issues.IssueRepository;
@@ -23,6 +25,7 @@ public class RepositoryModule extends AbstractModule {
     @Override
     protected void configure() {
 
+
         ApplicationContext applicationContext = new AnnotationConfigApplicationContext(WebProtegeApplicationConfig.class);
 
         bind(ApplicationContext.class).toInstance(applicationContext);
@@ -30,8 +33,8 @@ public class RepositoryModule extends AbstractModule {
         bind(ProjectEntityCrudKitSettingsRepository.class)
                 .toInstance(applicationContext.getBean(ProjectEntityCrudKitSettingsRepository.class));
 
-        bind(UserRecordRepository.class)
-                .toInstance(applicationContext.getBean(UserRecordRepository.class));
+//        bind(UserRecordRepository.class)
+//                .toInstance(applicationContext.getBean(UserRecordRepository.class));
 
         bind(ProjectRecordRepository.class)
                 .toInstance(applicationContext.getBean(ProjectRecordRepository.class));

@@ -40,8 +40,6 @@ public class GetPersonIdCompletionsActionHandler_TestCase {
             throws Exception
     {
         actionHandler = new GetPersonIdCompletionsActionHandler(userDetailsManager);
-        List<UserId> userIds = Arrays.asList(johnSmith, janeDoe);
-        when(userDetailsManager.getUserIds()).thenReturn(userIds);
         when(johnSmith.getUserName()).thenReturn("John Smith");
         when(janeDoe.getUserName()).thenReturn("Jane Doe");
     }

@@ -49,7 +49,6 @@ public class UserDetailsManagerImpl_TestCase {
         when(userRecord.getEmailAddress()).thenReturn(email);
         userRecords.add(userRecord);
 
-        when(userRecordRepository.findAll()).thenReturn(userRecords.stream());
         when(userRecordRepository.findOne(userId)).thenReturn(java.util.Optional.of(userRecord));
         when(userRecordRepository.findOneByEmailAddress(email)).thenReturn(java.util.Optional.of(userRecord));
 
@@ -59,12 +58,6 @@ public class UserDetailsManagerImpl_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Repository_IsNull() {
         new UserDetailsManagerImpl(null);
-    }
-
-
-    @Test
-    public void should_getUserIds() {
-        assertThat(userDetailsManagerImpl.getUserIds(), hasItem(userId));
     }
 
     @Test

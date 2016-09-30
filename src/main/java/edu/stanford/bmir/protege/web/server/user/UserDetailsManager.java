@@ -12,12 +12,9 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public interface UserDetailsManager extends HasUserIds, HasGetUserIdByEmailAddress, HasGetUserIdByUserIdOrEmail {
+public interface UserDetailsManager extends HasGetUserIdByEmailAddress, HasGetUserIdByUserIdOrEmail {
 
-    List<UserId> getUserIdsContainingIgnoreCase(String userName, long limit);
-
-    @Override
-    Collection<UserId> getUserIds();
+    List<UserId> getUserIdsContainingIgnoreCase(String userName, int limit);
 
     Optional<UserDetails> getUserDetails(UserId userId);
 

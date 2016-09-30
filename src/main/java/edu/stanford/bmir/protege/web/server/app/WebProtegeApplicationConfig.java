@@ -70,9 +70,9 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         catch (IllegalArgumentException e) {
             throw new WebProtegeConfigurationException("Port or host name of database out of range: " + host + " port " + port);
         }
-        catch (UnknownHostException e) {
-            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage(host, port));
-        }
+//        catch (UnknownHostException e) {
+//            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage(host, port));
+//        }
     }
 
     @Override

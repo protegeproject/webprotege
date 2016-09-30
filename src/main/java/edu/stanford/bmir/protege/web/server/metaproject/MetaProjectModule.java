@@ -18,9 +18,12 @@ import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManagerImpl;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Matthew Horridge
@@ -42,6 +45,7 @@ public class MetaProjectModule extends AbstractModule {
         bind(UserDetailsManager.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
         bind(HasGetUserIdByUserIdOrEmail.class).to(new TypeLiteral<UserDetailsManager>() {
         });
-        bind(HasUserIds.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
+        // TODO: FIX THIS
+        bind(HasUserIds.class).toInstance(() -> Collections.emptySet());
     }
 }

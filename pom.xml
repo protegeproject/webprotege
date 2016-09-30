@@ -296,6 +296,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>widgetmap</artifactId>
             <version>1.0.0</version>
