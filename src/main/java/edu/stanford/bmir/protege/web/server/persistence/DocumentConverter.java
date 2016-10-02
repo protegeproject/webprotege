@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.persistence;
 
 import org.bson.Document;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -9,7 +11,7 @@ import org.bson.Document;
  */
 public interface DocumentConverter<T> {
 
-    Document toDocument(T object);
+    Document toDocument(@Nonnull  T object);
 
-    T fromDocument(Document document);
+    T fromDocument(@Nonnull Document document);
 }

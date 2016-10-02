@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -45,10 +47,14 @@ public class ProjectEntityCrudKitHandlerCache {
     }
 
     private EntityCrudKitSettings<?> getCurrentSettings() {
-        ProjectEntityCrudKitSettings projectSettings = repository.findOne(projectId);
-        if (projectSettings == null) {
+        Optional<ProjectEntityCrudKitSettings> settings = repository.findOne(projectId);
+        ProjectEntityCrudKitSettings projectSettings;
+        if (!settings.isPresent()) {
             projectSettings = new ProjectEntityCrudKitSettings(projectId, getDefaultSettings());
             repository.save(projectSettings);
+        }
+        else {
+            projectSettings = settings.get();
         }
         return projectSettings.getSettings();
     }

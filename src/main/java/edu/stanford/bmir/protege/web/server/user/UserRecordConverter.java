@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
+import com.mongodb.client.model.Filters;
 import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
@@ -9,6 +10,8 @@ import org.bson.types.Binary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.mongodb.client.model.Filters.regex;
 
 /**
  * Matthew Horridge
@@ -30,7 +33,7 @@ public class UserRecordConverter implements DocumentConverter<UserRecord> {
     private static final String SALTED_PASSWORD_DIGEST = "pwd";
 
     @Override
-    public Document toDocument(UserRecord object) {
+    public Document toDocument(@Nonnull UserRecord object) {
         Document document = new Document();
         document.append(USER_ID, object.getUserId().getUserName());
         document.append(REAL_NAME, object.getRealName());
@@ -44,7 +47,7 @@ public class UserRecordConverter implements DocumentConverter<UserRecord> {
     }
 
     @Override
-    public UserRecord fromDocument(Document document) {
+    public UserRecord fromDocument(@Nonnull Document document) {
         String userId = document.getString(USER_ID);
         String realName = document.getString(REAL_NAME);
         String email = orEmptyString(document.getString(EMAIL_ADDRESS));
