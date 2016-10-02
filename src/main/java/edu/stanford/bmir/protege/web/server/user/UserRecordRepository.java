@@ -19,9 +19,6 @@ import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.user.UserRecordConverter.*;
-import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 
 /**
  * Matthew Horridge
