@@ -8,10 +8,12 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.issues.IssueRepository;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
 import edu.stanford.bmir.protege.web.server.permissions.WorldProjectPermissionRecordRepository;
-import edu.stanford.bmir.protege.web.server.project.ProjectRecordRepository;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import static com.google.inject.Scopes.SINGLETON;
 
 /**
  * Matthew Horridge
@@ -30,14 +32,15 @@ public class RepositoryModule extends AbstractModule {
 
         bind(ApplicationContext.class).toInstance(applicationContext);
 
-        bind(ProjectEntityCrudKitSettingsRepository.class)
-                .toInstance(applicationContext.getBean(ProjectEntityCrudKitSettingsRepository.class));
+        bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
 
-//        bind(UserRecordRepository.class)
-//                .toInstance(applicationContext.getBean(UserRecordRepository.class));
+        bind(MongoDatabase.class).toProvider(MongoDatabaseProvider.class);
 
-        bind(ProjectRecordRepository.class)
-                .toInstance(applicationContext.getBean(ProjectRecordRepository.class));
+        bind(ProjectEntityCrudKitSettingsRepository.class).in(SINGLETON);
+
+        bind(UserRecordRepository.class).in(SINGLETON);
+
+        bind(ProjectDetailsRepository.class).in(SINGLETON);
 
         bind(ProjectPermissionRecordRepository.class)
                 .toInstance(applicationContext.getBean(ProjectPermissionRecordRepository.class));

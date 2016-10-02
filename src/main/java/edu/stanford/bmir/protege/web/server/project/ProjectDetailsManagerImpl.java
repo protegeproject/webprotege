@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator.translateToProjectDetails;
 
 /**
  * Matthew Horridge
@@ -21,66 +20,55 @@ import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslat
  */
 public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
-    private final ProjectRecordRepository repository;
+    private final ProjectDetailsRepository repository;
 
     @Inject
-    public ProjectDetailsManagerImpl(ProjectRecordRepository repository) {
+    public ProjectDetailsManagerImpl(ProjectDetailsRepository repository) {
         this.repository = checkNotNull(repository);
     }
 
     @Override
     public void registerProject(ProjectId projectId, NewProjectSettings settings) {
-        ProjectRecord record = new ProjectRecord(
+        ProjectDetails record = new ProjectDetails(
                 projectId,
-                settings.getProjectOwner(),
                 settings.getDisplayName(),
                 settings.getProjectDescription(),
+                settings.getProjectOwner(),
                 false);
         repository.save(record);
     }
 
     @Override
     public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
-        Optional<ProjectRecord> record = repository.findOne(projectId);
+        Optional<ProjectDetails> record = repository.findOne(projectId);
         if(!record.isPresent()) {
             throw new UnknownProjectException(projectId);
         }
-        return translateToProjectDetails(record.get());
+        return record.get();
     }
 
     @Override
     public boolean isExistingProject(ProjectId projectId) {
-        return repository.findOne(projectId).isPresent();
+        return repository.containsProject(projectId);
     }
 
     @Override
     public boolean isProjectOwner(UserId userId, ProjectId projectId) {
-        if (userId.isGuest()) {
-            return false;
-        }
-        Optional<ProjectRecord> record = repository.findOne(projectId);
-        return record.isPresent() && userId.equals(record.get().getOwner());
+        return !userId.isGuest() && repository.containsProjectWithOwner(projectId, userId);
     }
-
-
 
     @Override
     public void setInTrash(ProjectId projectId, boolean b) {
-        Optional<ProjectRecord> record = repository.findOne(projectId);
-        if(!record.isPresent()) {
-            return;
-        }
-        ProjectRecord replacementRecord = record.get().builder().setInTrash(b).build();
-        repository.save(replacementRecord);
+        repository.setInTrash(projectId, b);
     }
 
     @Override
     public void setProjectSettings(ProjectSettings projectSettings) {
-        Optional<ProjectRecord> record = repository.findOne(projectSettings.getProjectId());
+        Optional<ProjectDetails> record = repository.findOne(projectSettings.getProjectId());
         if(!record.isPresent()) {
             return;
         }
-        ProjectRecord updatedRecord = record.get().builder()
+        ProjectDetails updatedRecord = record.get().builder()
                 .setDisplayName(projectSettings.getProjectDisplayName())
                 .setDescription(projectSettings.getProjectDescription())
                 .build();

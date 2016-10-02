@@ -28,7 +28,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 
     @Override
     public List<UserId> getUserIdsContainingIgnoreCase(String userName, int limit) {
-        return repository.findByUserIdContainingIgnoreCase(userName, limit).collect(toList());
+        return repository.findByUserIdContainingIgnoreCase(userName, limit);
     }
 
     @Override
