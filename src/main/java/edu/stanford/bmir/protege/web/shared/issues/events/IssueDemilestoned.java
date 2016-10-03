@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.issues.Milestone;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +25,7 @@ public class IssueDemilestoned extends AbstractIssueEvent {
     private IssueDemilestoned() {
     }
 
-    @PersistenceConstructor
+
     public IssueDemilestoned(@Nonnull UserId userId, long timestamp, @Nonnull Milestone milestone) {
         super(userId, timestamp);
         this.milestone = checkNotNull(milestone);

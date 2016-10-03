@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import org.junit.Test;
-import org.springframework.data.annotation.TypeAlias;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -46,10 +45,4 @@ public class EntityCrudKitSettingsTestCase {
         assertEquals(settingsA, settingsB);
     }
 
-    @Test
-    public void classShouldHaveTypeAliasAnnotation() {
-        TypeAlias typeAlias = EntityCrudKitSettings.class.getAnnotation(TypeAlias.class);
-        assertNotNull(typeAlias);
-        assertEquals("EntityCrudKitSettings", typeAlias.value());
-    }
 }

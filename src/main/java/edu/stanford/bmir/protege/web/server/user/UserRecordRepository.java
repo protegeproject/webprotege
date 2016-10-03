@@ -2,20 +2,15 @@ package edu.stanford.bmir.protege.web.server.user;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
-import org.springframework.data.mongodb.core.MongoTemplate;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Spliterators;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.user.UserRecordConverter.*;

@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import com.google.common.io.BaseEncoding;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 
-import org.springframework.data.convert.ReadingConverter;
-
 import java.util.Locale;
 
 /**
@@ -12,7 +10,6 @@ import java.util.Locale;
  * Stanford Center for Biomedical Informatics Research
  * 09/03/16
  */
-@ReadingConverter
 public class SaltedPasswordDigestReadConverter implements Converter<String, SaltedPasswordDigest> {
 
     @Override

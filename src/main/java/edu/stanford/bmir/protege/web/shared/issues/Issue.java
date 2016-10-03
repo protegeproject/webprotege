@@ -8,11 +8,6 @@ import edu.stanford.bmir.protege.web.shared.issues.events.IssueEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +135,7 @@ public class Issue implements IsSerializable {
     /**
      * This is a persistence constructor for SpringData.
      */
-    @PersistenceConstructor
+
     protected Issue(@Nonnull ProjectId projectId,
                     int number,
                     @Nonnull UserId creator,

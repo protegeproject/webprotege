@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues.events;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +23,7 @@ public class IssueAssigned extends AbstractIssueEvent {
     private IssueAssigned() {
     }
 
-    @PersistenceConstructor
+
     public IssueAssigned(@Nonnull UserId userId, long timestamp, @Nonnull UserId assignee) {
         super(userId, timestamp);
         this.assignee = checkNotNull(assignee);

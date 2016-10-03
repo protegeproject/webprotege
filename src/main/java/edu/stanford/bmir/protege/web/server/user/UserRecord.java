@@ -4,10 +4,6 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -22,8 +18,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class UserRecord {
 
-    @Id
-    @Indexed(unique = true)
     private final UserId userId;
 
     private final String realName;

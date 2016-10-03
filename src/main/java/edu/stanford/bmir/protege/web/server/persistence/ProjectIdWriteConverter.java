@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import org.springframework.data.convert.WritingConverter;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -13,7 +11,6 @@ import org.springframework.data.convert.WritingConverter;
  *     An implementation of {@link Converter} that writes a {@link ProjectId} to a {@link String}.
  * </p>
  */
-@WritingConverter
 public class ProjectIdWriteConverter implements Converter<ProjectId, String> {
 
     public String convert(ProjectId projectId) {

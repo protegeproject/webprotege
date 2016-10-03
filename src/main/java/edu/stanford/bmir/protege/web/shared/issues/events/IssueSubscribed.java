@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues.events;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
