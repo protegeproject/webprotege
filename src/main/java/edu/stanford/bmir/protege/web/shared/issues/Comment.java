@@ -4,8 +4,6 @@ import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +39,6 @@ public class Comment implements IsSerializable {
                 body);
     }
 
-    @PersistenceConstructor
     private Comment(@Nonnull UserId createdBy,
                       long createdAt,
                       @Nullable Long updatedAt,

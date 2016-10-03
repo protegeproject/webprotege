@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.crud.persistence;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -73,21 +71,5 @@ public class ProjectEntityCrudKitSettingsTestCase {
         } catch (NoSuchFieldException e) {
             fail("projectId field does not exist");
         }
-    }
-
-    @Test
-    public void projectFieldShouldHaveAnIdAnnotation() {
-        try {
-            ProjectEntityCrudKitSettings.class.getDeclaredField(PROJECT_ID_FIELD_NAME).getAnnotation(Id.class);
-        } catch (NoSuchFieldException e) {
-            fail("projectId field does not exist");
-        }
-    }
-
-    @Test
-    public void classShouldHaveTypeAlias() {
-        TypeAlias typeAlias = ProjectEntityCrudKitSettings.class.getAnnotation(TypeAlias.class);
-        assertNotNull("ProjectEntityCrudKitSettings does not have a type alias annotation", typeAlias);
-        assertEquals("ProjectEntityCrudKitSettings", typeAlias.value());
     }
 }

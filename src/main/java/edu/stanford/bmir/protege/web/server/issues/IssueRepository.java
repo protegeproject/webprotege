@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.shared.issues.Issue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -12,7 +11,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-public interface IssueRepository extends Repository<Issue, Long> {
+public interface IssueRepository {
 
     Issue save(Issue s);
 

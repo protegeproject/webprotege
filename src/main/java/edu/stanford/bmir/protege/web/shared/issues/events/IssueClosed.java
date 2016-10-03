@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues.events;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +19,7 @@ public class IssueClosed extends AbstractIssueEvent {
     private IssueClosed() {
     }
 
-    @PersistenceConstructor
+
     public IssueClosed(@Nonnull UserId userId, long timestamp) {
         super(userId, timestamp);
     }
