@@ -24,8 +24,7 @@ public class ProjectSharingSettings_TestCase {
     @Mock
     private ProjectId projectId;
 
-    @Mock
-    private Optional<SharingPermission> linkSharingPermission;
+    private Optional<SharingPermission> linkSharingPermission = Optional.of(SharingPermission.EDIT);
 
     private List<SharingSetting> sharingSettings = new ArrayList<>();
 
@@ -86,7 +85,7 @@ public class ProjectSharingSettings_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_linkSharingPermission() {
-        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(projectId, mock(Optional.class), sharingSettings))));
+        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(projectId, Optional.of(SharingPermission.COMMENT), sharingSettings))));
     }
 
     @Test

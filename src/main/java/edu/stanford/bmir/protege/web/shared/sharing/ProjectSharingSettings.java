@@ -37,7 +37,7 @@ public class ProjectSharingSettings implements Serializable {
     public ProjectSharingSettings(ProjectId projectId, Optional<SharingPermission> linkSharingPermission, List<SharingSetting> sharingSettings) {
         this.projectId = checkNotNull(projectId);
         this.sharingSettings.addAll(checkNotNull(sharingSettings));
-        this.linkSharingPermission = checkNotNull(linkSharingPermission.orElse(null));
+        this.linkSharingPermission = checkNotNull(linkSharingPermission).orElse(null);
     }
 
     public ProjectId getProjectId() {
