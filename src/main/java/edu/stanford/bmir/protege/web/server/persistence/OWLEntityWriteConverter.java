@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.springframework.core.convert.converter.Converter;
+
 
 /**
  * Matthew Horridge

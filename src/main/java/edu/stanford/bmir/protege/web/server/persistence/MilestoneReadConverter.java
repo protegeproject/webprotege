@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import edu.stanford.bmir.protege.web.shared.issues.Milestone;
-import org.springframework.core.convert.converter.Converter;
+
 
 /**
  * Matthew Horridge

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge

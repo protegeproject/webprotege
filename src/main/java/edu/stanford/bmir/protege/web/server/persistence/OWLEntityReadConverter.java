@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.mongodb.DBObject;
 import org.semanticweb.owlapi.model.*;
-import org.springframework.core.convert.converter.Converter;
+
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 

@@ -10,7 +10,9 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -21,18 +23,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
-@Document(collection = "ProjectPermissionRecords")
-@TypeAlias("ProjectPermissionRecord")
-@CompoundIndex(unique = true, def = "{'projectId': 1, 'userId': 1}")
 public class ProjectPermissionRecord {
 
+    @Nonnull
     private final ProjectId projectId;
 
-    private final UserId userId;
+    @Nonnull
+    private final Optional<UserId> userId;
 
+    @Nonnull
     private final ImmutableSet<Permission> permissions;
 
-    public ProjectPermissionRecord(ProjectId projectId, UserId userId, ImmutableSet<Permission> permissions) {
+    public ProjectPermissionRecord(@Nonnull ProjectId projectId,
+                                   @Nonnull Optional<UserId> userId,
+                                   @Nonnull ImmutableSet<Permission> permissions) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.permissions = checkNotNull(ImmutableSet.copyOf(permissions));
@@ -42,7 +46,7 @@ public class ProjectPermissionRecord {
         return projectId;
     }
 
-    public UserId getUserId() {
+    public Optional<UserId> getUserId() {
         return userId;
     }
 

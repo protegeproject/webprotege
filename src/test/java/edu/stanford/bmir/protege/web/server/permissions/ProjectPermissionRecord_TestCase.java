@@ -1,105 +1,106 @@
 
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import java.util.Optional;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.mock;
-
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class ProjectPermissionRecord_TestCase {
 
     private ProjectPermissionRecord projectPermissionRecord;
     @Mock
     private ProjectId projectId;
+    private Optional userId;
     @Mock
-    private UserId userId;
-    @Mock
-    private ImmutableSet<Permission> permissions;
+    private ImmutableSet permissions;
 
     @Before
     public void setUp()
+        throws Exception
     {
         projectPermissionRecord = new ProjectPermissionRecord(projectId, userId, permissions);
     }
 
-    @Test(expected = NullPointerException.class)
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
         new ProjectPermissionRecord(null, userId, permissions);
     }
 
     @Test
     public void shouldReturnSupplied_projectId() {
-        assertThat(projectPermissionRecord.getProjectId(), is(this.projectId));
+        MatcherAssert.assertThat(projectPermissionRecord.getProjectId(), Matchers.is(this.projectId));
     }
 
-    @Test(expected = NullPointerException.class)
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_userId_IsNull() {
         new ProjectPermissionRecord(projectId, null, permissions);
     }
 
     @Test
     public void shouldReturnSupplied_userId() {
-        assertThat(projectPermissionRecord.getUserId(), is(this.userId));
+        MatcherAssert.assertThat(projectPermissionRecord.getUserId(), Matchers.is(this.userId));
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_permission_IsNull() {
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = java.lang.NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_permissions_IsNull() {
         new ProjectPermissionRecord(projectId, userId, null);
     }
 
     @Test
-    public void shouldReturnSupplied_permission() {
-        assertThat(projectPermissionRecord.getPermissions(), is(this.permissions));
+    public void shouldReturnSupplied_permissions() {
+        MatcherAssert.assertThat(projectPermissionRecord.getPermissions(), Matchers.is(this.permissions));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(projectPermissionRecord, is(projectPermissionRecord));
+        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(projectPermissionRecord));
     }
 
     @Test
+    @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(projectPermissionRecord.equals(null), is(false));
+        MatcherAssert.assertThat(projectPermissionRecord.equals(null), Matchers.is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(projectPermissionRecord, is(new ProjectPermissionRecord(projectId, userId, permissions)));
+        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(new ProjectPermissionRecord(projectId, userId, permissions)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(projectPermissionRecord, is(not(new ProjectPermissionRecord(mock(ProjectId.class), userId, permissions))));
+        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(Matchers.not(new ProjectPermissionRecord(Mockito.mock(ProjectId.class), userId, permissions))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        assertThat(projectPermissionRecord, is(not(new ProjectPermissionRecord(projectId, mock(UserId.class), permissions))));
+        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(Matchers.not(new ProjectPermissionRecord(projectId, Mockito.mock(Optional.class), permissions))));
     }
 
     @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_permission() {
-        assertThat(projectPermissionRecord, is(not(new ProjectPermissionRecord(projectId, userId, mock(ImmutableSet.class)))));
+    public void shouldNotBeEqualToOtherThatHasDifferent_permissions() {
+        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(Matchers.not(new ProjectPermissionRecord(projectId, userId, Mockito.mock(ImmutableSet.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(projectPermissionRecord.hashCode(), is(new ProjectPermissionRecord(projectId, userId, permissions).hashCode()));
+        MatcherAssert.assertThat(projectPermissionRecord.hashCode(), Matchers.is(new ProjectPermissionRecord(projectId, userId, permissions).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(projectPermissionRecord.toString(), startsWith("ProjectPermissionRecord"));
+        MatcherAssert.assertThat(projectPermissionRecord.toString(), Matchers.startsWith("ProjectPermissionRecord"));
     }
 
 }

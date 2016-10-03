@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
+import edu.stanford.bmir.protege.web.server.persistence.Indexable;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -9,6 +11,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -16,7 +19,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 1 Oct 2016
  */
-public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails> {
+public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails>, Indexable {
 
     public static final String PROJECT_ID = "_id";
 
@@ -27,6 +30,15 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
     public static final String OWNER = "owner";
 
     public static final String IN_TRASH = "inTrash";
+
+    @Inject
+    public ProjectDetailsConverter() {
+    }
+
+    @Override
+    public void ensureIndexes(@Nonnull MongoCollection<Document> collection) {
+        collection.createIndex(new Document(PROJECT_ID, 1).append(DISPLAY_NAME, 1));
+    }
 
     @Override
     public Document toDocument(@Nonnull ProjectDetails object) {

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -20,16 +21,15 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     private final ProjectPermissionRecordRepository projectPermissionRecordRepository;
 
-    private final WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository;
-
     private final ProjectDetailsRepository projectDetailsRepository;
 
     private final ProjectExistsFilter projectExistsFilter;
 
     @Inject
-    public ProjectPermissionsManagerImpl(ProjectPermissionRecordRepository projectPermissionRecordRepository, WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository, ProjectDetailsRepository projectDetailsRepository, ProjectExistsFilter projectExistsFilter) {
+    public ProjectPermissionsManagerImpl(@Nonnull ProjectPermissionRecordRepository projectPermissionRecordRepository,
+                                         @Nonnull ProjectDetailsRepository projectDetailsRepository,
+                                         @Nonnull ProjectExistsFilter projectExistsFilter) {
         this.projectPermissionRecordRepository = projectPermissionRecordRepository;
-        this.worldProjectPermissionRecordRepository = worldProjectPermissionRecordRepository;
         this.projectDetailsRepository = projectDetailsRepository;
         this.projectExistsFilter = projectExistsFilter;
     }
@@ -37,7 +37,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     @Override
     public PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId) {
         PermissionsSet.Builder builder = PermissionsSet.builder();
-        projectPermissionRecordRepository.findByProjectIdAndUserId(projectId, userId)
+        projectPermissionRecordRepository.findByProjectIdAndUserIdIfExists(projectId, userId)
                 .forEach(r -> {
                     r.getPermissions().forEach(permission -> {
                         builder.addPermission(permission);
@@ -58,25 +58,20 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
             builder.addPermission(Permission.getCommentPermission());
             builder.addPermission(Permission.getReadPermission());
         }
-        // World permissions
-        Optional<WorldProjectPermissionRecord> worldRecord = worldProjectPermissionRecordRepository.findOneByProjectId(
-                projectId);
-        if (worldRecord.isPresent()) {
-            worldRecord.get().getPermissions().forEach(builder::addPermission);
-        }
         return builder.build();
     }
 
     @Override
     public List<ProjectDetails> getReadableProjects(UserId userId) {
         Set<ProjectDetails> result = new HashSet<>();
-        projectPermissionRecordRepository.findByUserId(userId)
+        projectPermissionRecordRepository.findByUserIdAndPermission(userId, Permission.getReadPermission())
                 .forEach(r -> {
                     Optional<ProjectDetails> record = projectDetailsRepository.findOne(r.getProjectId());
                     if (record.isPresent() && projectExistsFilter.isProjectPresent(record.get().getProjectId())) {
                         result.add(record.get());
                     }
                 });
+        // Always add owned in case permissions are screwed up - yes?
         result.addAll(projectDetailsRepository.findByOwner(userId));
 
         // We don't show projects for which the user can access due to world permissions
@@ -85,13 +80,6 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     @Override
     public boolean hasPermission(ProjectId projectId, UserId userId, Permission permission) {
-        int count = projectPermissionRecordRepository.countByProjectIdAndUserIdAndPermissions(projectId,
-                                                                                              userId,
-                                                                                              permission);
-        if (count > 0) {
-            return true;
-        }
-        int worldCount = worldProjectPermissionRecordRepository.countByProjectIdAndPermissions(projectId, permission);
-        return worldCount > 0;
+        return projectPermissionRecordRepository.hasPermission(projectId, userId, permission);
     }
 }

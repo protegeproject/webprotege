@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.shared.issues.mention.IssueMention;
 import edu.stanford.bmir.protege.web.shared.issues.mention.RevisionMention;
 import edu.stanford.bmir.protege.web.shared.issues.mention.UserIdMention;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.core.convert.converter.Converter;
+
 
 /**
  * Matthew Horridge

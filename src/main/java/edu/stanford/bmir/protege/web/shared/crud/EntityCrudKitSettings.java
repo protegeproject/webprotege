@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 import com.google.common.base.Objects;
-import org.springframework.data.annotation.TypeAlias;
 
 import java.io.Serializable;
 
@@ -13,7 +12,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-@TypeAlias("EntityCrudKitSettings")
 public class EntityCrudKitSettings<S extends EntityCrudKitSuffixSettings> implements Serializable {
 
     private EntityCrudKitPrefixSettings prefixSettings;

@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.crud.persistence;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,10 +15,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     Captures the {@link EntityCrudKitSettings} for a project.
  * </p>
  */
-@TypeAlias("ProjectEntityCrudKitSettings")
 public class ProjectEntityCrudKitSettings {
 
-    @Id
     private ProjectId projectId;
 
     private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings;

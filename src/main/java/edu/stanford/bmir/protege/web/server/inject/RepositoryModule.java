@@ -7,12 +7,9 @@ import edu.stanford.bmir.protege.web.server.app.WebProtegeApplicationConfig;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.issues.IssueRepository;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
-import edu.stanford.bmir.protege.web.server.permissions.WorldProjectPermissionRecordRepository;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepositoryProvider;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import static com.google.inject.Scopes.SINGLETON;
 
 /**
@@ -27,10 +24,11 @@ public class RepositoryModule extends AbstractModule {
     @Override
     protected void configure() {
 
+        System.out.println("Configuring RepositoryModule");
 
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(WebProtegeApplicationConfig.class);
+//        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(WebProtegeApplicationConfig.class);
 
-        bind(ApplicationContext.class).toInstance(applicationContext);
+//        bind(ApplicationContext.class).toInstance(applicationContext);
 
         bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
 
@@ -43,12 +41,10 @@ public class RepositoryModule extends AbstractModule {
         bind(ProjectDetailsRepository.class).in(SINGLETON);
 
         bind(ProjectPermissionRecordRepository.class)
-                .toInstance(applicationContext.getBean(ProjectPermissionRecordRepository.class));
+                .toProvider(ProjectPermissionRecordRepositoryProvider.class)
+                .in(SINGLETON);
 
-        bind(WorldProjectPermissionRecordRepository.class)
-                .toInstance(applicationContext.getBean(WorldProjectPermissionRecordRepository.class));
-
-        bind(IssueRepository.class)
-                .toInstance(applicationContext.getBean(IssueRepository.class));
+//        bind(IssueRepository.class)
+//                .toInstance(applicationContext.getBean(IssueRepository.class));
     }
 }

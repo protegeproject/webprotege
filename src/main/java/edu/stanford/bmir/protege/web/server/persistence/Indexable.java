@@ -8,11 +8,9 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 30 Sep 2016
+ * 2 Oct 2016
  */
-public interface DocumentConverter<T> {
+public interface Indexable {
 
-    Document toDocument(@Nonnull  T object);
-
-    T fromDocument(@Nonnull Document document);
+    void ensureIndexes(@Nonnull MongoCollection<Document> collection);
 }
