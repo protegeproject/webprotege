@@ -2,14 +2,19 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.inject.CreationException;
 import com.google.inject.spi.Message;
+import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class WebProtegeInitializer implements ServletContextListener {
 
@@ -46,6 +51,5 @@ public class WebProtegeInitializer implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
     }
 }

@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.crud.persistence;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
-import org.springframework.data.repository.CrudRepository;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -46,6 +46,8 @@ public class ProjectEntityCrudKitSettingsRepository {
     }
 
     public void save(@Nonnull ProjectEntityCrudKitSettings settings) {
-        collection.insertOne(converter.toDocument(checkNotNull(settings)));
+        collection.replaceOne(withProjectId(settings.getProjectId()),
+                             converter.toDocument(checkNotNull(settings)),
+                             new UpdateOptions().upsert(true));
     }
 }

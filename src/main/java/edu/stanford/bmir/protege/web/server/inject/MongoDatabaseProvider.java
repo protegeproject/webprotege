@@ -4,7 +4,10 @@ import com.google.inject.Provider;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -18,8 +21,8 @@ public class MongoDatabaseProvider implements Provider<MongoDatabase> {
     private final MongoClient mongoClient;
 
     @Inject
-    public MongoDatabaseProvider(MongoClient mongoClient) {
-        this.mongoClient = mongoClient;
+    public MongoDatabaseProvider(@Nonnull MongoClient mongoClient) {
+        this.mongoClient = checkNotNull(mongoClient);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -18,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -127,7 +127,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
             return Optional.of(permission);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
@@ -138,7 +138,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
 
     @Override
     public List<SharingSetting> getSharingSettings() {
-        Optional<List<SharingSetting>> value = sharingSettingsListEditor.getValue();
+        Optional<List<SharingSetting>> value = Optional.ofNullable(sharingSettingsListEditor.getValue().orNull());
         if(value.isPresent()) {
             return value.get();
         }

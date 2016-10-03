@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -10,9 +9,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
-import edu.stanford.bmir.protege.web.shared.issues.events.IssueAssigned;
-import edu.stanford.bmir.protege.web.shared.issues.events.IssueLabelled;
-import edu.stanford.bmir.protege.web.shared.issues.mention.UserIdMention;
+import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -30,13 +28,15 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 
     private final ValidatorFactory<ReadPermissionValidator> readPermissionValidatorValidatorFactory;
 
-    private final IssueRecordRepository repository;
+//    private final IssueRepository repository;
 
     @Inject
-    public GetIssuesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> readPermissionValidatorValidatorFactory, IssueRecordRepository repository) {
+    public GetIssuesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> readPermissionValidatorValidatorFactory
+                                  //IssueRepository repository
+                                  ) {
         super(projectManager);
         this.readPermissionValidatorValidatorFactory = readPermissionValidatorValidatorFactory;
-        this.repository = repository;
+//        this.repository = repository;
     }
 
     @Override
@@ -52,38 +52,31 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
     @Override
     protected GetIssuesResult execute(GetIssuesAction action, OWLAPIProject project, ExecutionContext executionContext) {
         // TODO: Should work out the issue number
-        int issueNumber = (int)repository.count() + 1;
-        long timestamp = System.currentTimeMillis();
-        Issue record = new Issue(
-                project.getProjectId(),
-                issueNumber,
-                executionContext.getUserId(),
-                timestamp,
-                Optional.of(System.currentTimeMillis()),
-                "My new issue" ,
-                "This is a test of the issue system" ,
-                Status.OPEN,
-                Optional.<UserId>empty(),
-                Optional.of(new Milestone("Release 1.0")),
-                ImmutableList.<String>of(),
-                ImmutableList.of(
-                        new Comment(
-                                UserId.getGuest(),
-                                timestamp,
-                                Optional.<Long>empty(),
-                                "The body of the comment")
-                ),
-                ImmutableList.of(new UserIdMention(UserId.getUserId("Matty Horridge"))), ImmutableList.of(), ImmutableList.of(
-                        new IssueAssigned(executionContext.getUserId(), timestamp, UserId.getUserId("Matthew Horridge")),
-                        new IssueLabelled(executionContext.getUserId(), timestamp, "MyLovelyIssue")
-                ));
-        repository.save(record);
+//        int issueNumber = repository.findOneByProjectIdOrderByNumberDesc(project.getProjectId())
+//                .map(i -> i.getNumber())
+//                .orElse(0) + 1;
+//        ProjectId projectId = project.getProjectId();
+//        long timestamp = System.currentTimeMillis();
+//        Issue issue = Issue.builder(projectId, issueNumber, executionContext.getUserId(), timestamp)
+//                .withTitle("My issue")
+//                .withBody("This is a test issue. Ask @{Matthew Horridge} about it.  See Class(<http://ontology.com/classes/A>) as well.")
+//                .assignTo(UserId.getUserId("MH"), executionContext.getUserId(), timestamp)
+//                .addComment(new Comment(executionContext.getUserId(), timestamp, Optional.empty(), "This seems to work.  Check that it's o.k. with revision R33."), timestamp)
+//                .addLabel("Question", executionContext.getUserId(), timestamp)
+//                .milestone(new Milestone("Release 1.0"), executionContext.getUserId(), timestamp)
+//                // TODO: With comments?
+//                .build(new MentionParser());
+//        // TODO: Reparse mentions
+//        repository.save(issue);
+//        System.out.println("Saved: " + issue);
+//
+//        List<Issue> issues = repository.findByProjectId(projectId)
+//                .collect(toList());
+//
 
-        List<Issue> issues = repository.findByProjectId(project.getProjectId())
-                .collect(toList());
 
         System.out.println("Got the issues!");
 
-        return new GetIssuesResult(project.getProjectId(), issues);
+        return new GetIssuesResult(project.getProjectId(), new ArrayList<>());
     }
 }

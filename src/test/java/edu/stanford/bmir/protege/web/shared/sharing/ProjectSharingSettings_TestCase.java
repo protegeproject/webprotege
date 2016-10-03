@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.sharing;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

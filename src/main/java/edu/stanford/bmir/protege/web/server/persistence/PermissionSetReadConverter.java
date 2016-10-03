@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import com.google.common.collect.ImmutableSet;
 import com.mongodb.BasicDBList;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
-import org.springframework.core.convert.converter.Converter;
+
 
 /**
  * Matthew Horridge

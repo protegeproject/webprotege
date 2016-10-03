@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,7 +25,8 @@ public class ProjectSharingSettings implements Serializable {
     
     private List<SharingSetting> sharingSettings = new ArrayList<>();
 
-    private Optional<SharingPermission> linkSharingPermission = Optional.absent();
+    @Nullable
+    private SharingPermission linkSharingPermission = null;
 
     /**
      * Default no-args constructor for GWT serialization purposes.
@@ -34,7 +37,7 @@ public class ProjectSharingSettings implements Serializable {
     public ProjectSharingSettings(ProjectId projectId, Optional<SharingPermission> linkSharingPermission, List<SharingSetting> sharingSettings) {
         this.projectId = checkNotNull(projectId);
         this.sharingSettings.addAll(checkNotNull(sharingSettings));
-        this.linkSharingPermission = checkNotNull(linkSharingPermission);
+        this.linkSharingPermission = checkNotNull(linkSharingPermission.orElse(null));
     }
 
     public ProjectId getProjectId() {
@@ -46,7 +49,7 @@ public class ProjectSharingSettings implements Serializable {
     }
 
     public Optional<SharingPermission> getLinkSharingPermission() {
-        return linkSharingPermission;
+        return Optional.ofNullable(linkSharingPermission);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ProjectSharingSettings implements Serializable {
             return false;
         }
         ProjectSharingSettings other = (ProjectSharingSettings) obj;
-        return other.projectId.equals(this.projectId) && this.linkSharingPermission.equals(other.linkSharingPermission) && other.sharingSettings.equals(this.sharingSettings);
+        return other.projectId.equals(this.projectId) && Objects.equal(this.linkSharingPermission, other.linkSharingPermission) && other.sharingSettings.equals(this.sharingSettings);
     }
 
 

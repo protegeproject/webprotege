@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.shared.issues.Milestone;
 import edu.stanford.bmir.protege.web.shared.issues.events.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.springframework.core.convert.converter.Converter;
+
 
 /**
  * Matthew Horridge

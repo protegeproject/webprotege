@@ -1,30 +1,87 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.repository.Repository;
+import org.bson.Document;
 
-import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordConverter.*;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
-public interface ProjectPermissionRecordRepository extends Repository<ProjectPermissionRecord, Long> {
+public class ProjectPermissionRecordRepository {
 
-    Stream<ProjectPermissionRecord> findByProjectId(ProjectId projectId);
+    private static final String COLLECTION_NAME = "ProjectPermissionRecords";
 
-    Stream<ProjectPermissionRecord> findByUserId(UserId userId);
+    @Nonnull
+    private final MongoCollection<Document> collection;
 
-    Stream<ProjectPermissionRecord> findByProjectIdAndUserId(ProjectId projectId, UserId userId);
+    @Nonnull
+    private final ProjectPermissionRecordConverter converter;
 
-    void deleteByProjectId(ProjectId projectId);
+    public ProjectPermissionRecordRepository(@Nonnull MongoDatabase database,
+                                             @Nonnull ProjectPermissionRecordConverter converter) {
+        this.collection = checkNotNull(database).getCollection(COLLECTION_NAME);
+        this.converter = checkNotNull(converter);
+    }
 
-    ProjectPermissionRecord save(ProjectPermissionRecord entry);
+    public void ensureIndexes() {
+        converter.ensureIndexes(collection);
+    }
 
-    Iterable<ProjectPermissionRecord> save(Iterable<ProjectPermissionRecord> iterable);
+    public boolean hasPermission(@Nonnull ProjectId projectId,
+                                 @Nonnull UserId userId,
+                                 @Nonnull Permission permission) {
+        return collection.find(byProjectIdAndUserIdIfExistsAndPermission(projectId, userId, permission))
+                         .limit(1)
+                         .projection(new Document())
+                         .first() != null;
+    }
 
-    int countByProjectIdAndUserIdAndPermissions(ProjectId projectId, UserId userId, Permission permissions);
+    @Nonnull
+    public List<ProjectPermissionRecord> findByProjectId(@Nonnull ProjectId projectId) {
+        List<ProjectPermissionRecord> result = new ArrayList<>();
+        collection.find(byProjectId(projectId))
+                  .map(d -> converter.fromDocument(d))
+                  .into(result);
+        return result;
+    }
+
+    public List<ProjectPermissionRecord> findByProjectIdAndUserIdIfExists(@Nonnull ProjectId projectId,
+                                                                          @Nonnull UserId userId) {
+        List<ProjectPermissionRecord> result = new ArrayList<>();
+        collection.find(byProjectIdAndUserIdIfExists(projectId, userId))
+                  .map(d -> converter.fromDocument(d))
+                  .into(result);
+        return result;
+    }
+
+    public List<ProjectPermissionRecord> findByUserIdAndPermission(@Nonnull UserId userId,
+                                                                   @Nonnull Permission permission) {
+        List<ProjectPermissionRecord> result = new ArrayList<>();
+        collection.find(byUserIdAndPermission(userId, permission))
+                  .map(d -> converter.fromDocument(d))
+                  .into(result);
+        return result;
+    }
+
+    public void replace(@Nonnull ProjectId projectId,
+                        @Nonnull List<ProjectPermissionRecord> entries) {
+        collection.deleteMany(byProjectId(projectId));
+        List<Document> documents = entries.stream()
+                                          .map(r -> converter.toDocument(r))
+                                          .collect(Collectors.toList());
+        collection.insertMany(documents);
+    }
 }

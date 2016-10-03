@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.user;
 
 import com.mongodb.client.model.Filters;
-import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
+import edu.stanford.bmir.protege.web.server.persistence.*;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -24,13 +24,13 @@ public class UserRecordConverter implements DocumentConverter<UserRecord> {
 
     private static final String REAL_NAME = "realName";
 
-    private static final String EMAIL_ADDRESS = "email";
+    private static final String EMAIL_ADDRESS = "emailAddress";
 
     private static final String AVATAR_URL = "avatar";
 
     private static final String SALT = "salt";
 
-    private static final String SALTED_PASSWORD_DIGEST = "pwd";
+    private static final String SALTED_PASSWORD_DIGEST = "saltedPasswordDigest";
 
     @Override
     public Document toDocument(@Nonnull UserRecord object) {
@@ -41,8 +41,8 @@ public class UserRecordConverter implements DocumentConverter<UserRecord> {
         if (!object.getAvatarUrl().isEmpty()) {
             document.append(AVATAR_URL, object.getAvatarUrl());
         }
-        document.append(SALT, new Binary(object.getSalt().getBytes()));
-        document.append(SALTED_PASSWORD_DIGEST, new Binary(object.getSaltedPasswordDigest().getBytes()));
+        document.append(SALT, new SaltWriteConverter().convert(object.getSalt()));
+        document.append(SALTED_PASSWORD_DIGEST, new SaltedPasswordDigestWriteConverter().convert(object.getSaltedPasswordDigest()));
         return document;
     }
 
@@ -52,16 +52,15 @@ public class UserRecordConverter implements DocumentConverter<UserRecord> {
         String realName = document.getString(REAL_NAME);
         String email = orEmptyString(document.getString(EMAIL_ADDRESS));
         String avatar = orEmptyString(document.getString(AVATAR_URL));
-        Binary salt = (Binary) document.get(SALT);
-        Binary password = (Binary) document.get(SALTED_PASSWORD_DIGEST);
+        Salt salt = new SaltReadConverter().convert(document.getString(SALT));
+        SaltedPasswordDigest password = new SaltedPasswordDigestReadConverter().convert(document.getString(SALTED_PASSWORD_DIGEST));
         return new UserRecord(
                 UserId.getUserId(userId),
                 realName,
                 email,
                 avatar,
-                new Salt(salt.getData()),
-                new SaltedPasswordDigest(password.getData())
-        );
+                salt,
+                password);
     }
 
     public UserId getUserId(Document document) {

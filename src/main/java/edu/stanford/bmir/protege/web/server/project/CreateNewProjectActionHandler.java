@@ -78,7 +78,7 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
         PersonId personId = PersonId.of(userId);
         sharingSettings.add(new SharingSetting(personId, SharingPermission.MANAGE));
         projectSharingSettingsManager.setProjectSharingSettings(
-                new ProjectSharingSettings(projectId, com.google.common.base.Optional.absent(), sharingSettings));
+                new ProjectSharingSettings(projectId, Optional.empty(), sharingSettings));
     }
 
 

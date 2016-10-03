@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge
@@ -15,18 +16,23 @@ import javax.annotation.Nonnull;
  */
 public class ProjectEntityCrudKitSettingsConverter implements DocumentConverter<ProjectEntityCrudKitSettings> {
 
-    private static final String PROJECT_ID = "projectId";
+    private static final String PROJECT_ID = "_id";
 
     private static final String SETTINGS = "settings";
 
-    private DocumentConverter<EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings>> settingsConverter;
+    private EntityCrudKitSettingsConverter converter;
+
+    @Inject
+    public ProjectEntityCrudKitSettingsConverter(EntityCrudKitSettingsConverter converter) {
+        this.converter = converter;
+    }
 
     @Override
     public Document toDocument(@Nonnull ProjectEntityCrudKitSettings object) {
         Document document = new Document();
         document.append(PROJECT_ID, object.getProjectId().getId());
         EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings = object.getSettings();
-        Document settingsDocument = settingsConverter.toDocument(settings);
+        Document settingsDocument = converter.toDocument(settings);
         document.append(SETTINGS, settingsDocument);
         return document;
     }
@@ -35,8 +41,7 @@ public class ProjectEntityCrudKitSettingsConverter implements DocumentConverter<
     public ProjectEntityCrudKitSettings fromDocument(@Nonnull Document document) {
         ProjectId projectId = ProjectId.get(document.getString(PROJECT_ID));
         Document settingsDocument = (Document) document.get(SETTINGS);
-        EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings = settingsConverter.fromDocument(
-                settingsDocument);
+        EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings = converter.fromDocument(settingsDocument);
         return new ProjectEntityCrudKitSettings(projectId, settings);
     }
 

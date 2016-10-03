@@ -45,6 +45,8 @@ public class EntityCrudKitSettingsConverter implements DocumentConverter<EntityC
 
     @Override
     public EntityCrudKitSettings fromDocument(@Nonnull Document document) {
-        return null;
+        Document prefixSettings = (Document) document.get("prefixSettings");
+        Document suffixSettings = (Document) document.get("suffixSettings");
+        return new EntityCrudKitSettings(prefixSettingsConverter.fromDocument(prefixSettings), suffixSettingsConverter.fromDocument(suffixSettings));
     }
 }

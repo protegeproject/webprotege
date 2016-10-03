@@ -3,12 +3,14 @@ package edu.stanford.bmir.protege.web.server.project;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
+import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +22,7 @@ import static edu.stanford.bmir.protege.web.server.project.ProjectDetailsConvert
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
-public class ProjectDetailsRepository {
+public class ProjectDetailsRepository implements Repository {
 
     public static final String COLLECTION_NAME = "ProjectDetails";
 
@@ -29,9 +31,15 @@ public class ProjectDetailsRepository {
 
     private final MongoCollection<Document> collection;
 
+    @Inject
     public ProjectDetailsRepository(@Nonnull MongoDatabase database, @Nonnull ProjectDetailsConverter converter) {
         this.collection = database.getCollection(COLLECTION_NAME);
         this.converter = converter;
+    }
+
+    @Override
+    public void ensureIndexes() {
+        converter.ensureIndexes(collection);
     }
 
     public boolean containsProject(@Nonnull ProjectId projectId) {
@@ -73,7 +81,7 @@ public class ProjectDetailsRepository {
 
     public void save(@Nonnull ProjectDetails projectRecord) {
         Document document = converter.toDocument(projectRecord);
-        collection.updateOne(withProjectId(projectRecord.getProjectId()),
+        collection.replaceOne(withProjectId(projectRecord.getProjectId()),
                              document,
                              new UpdateOptions().upsert(true));
     }

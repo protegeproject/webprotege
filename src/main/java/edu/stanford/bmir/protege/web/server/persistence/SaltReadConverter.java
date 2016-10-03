@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.google.common.io.BaseEncoding;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
-import org.springframework.core.convert.converter.Converter;
+
 import org.springframework.data.convert.ReadingConverter;
 
 import java.util.Locale;
