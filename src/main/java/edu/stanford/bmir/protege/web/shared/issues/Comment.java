@@ -18,7 +18,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-@TypeAlias("Comment")
 public class Comment implements IsSerializable {
 
     @Nonnull

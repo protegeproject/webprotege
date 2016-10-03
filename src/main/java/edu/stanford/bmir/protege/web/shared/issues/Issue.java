@@ -28,12 +28,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-@Document(collection = "Issues" )
-@TypeAlias("Issue" )
-@CompoundIndexes({
-        @CompoundIndex(unique = true, def = "{'projectId': 1, 'number': -1}" ),
-        @CompoundIndex(def = "{'projectId': 1, 'targetEntities': 1}")
-})
 public class Issue implements IsSerializable {
 
     @Nonnull

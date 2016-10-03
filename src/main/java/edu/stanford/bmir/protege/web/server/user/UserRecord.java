@@ -20,8 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Represents the information about a user that is stored in a DB.  This is not a data structure for
  * general purpose use.
  */
-@Document(collection = "UserRecords")
-@TypeAlias("UserRecord")
 public class UserRecord {
 
     @Id
