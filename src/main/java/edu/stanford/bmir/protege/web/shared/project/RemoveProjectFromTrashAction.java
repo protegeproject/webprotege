@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

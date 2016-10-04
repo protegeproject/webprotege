@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationExceptio
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Properties;

@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.issues.Mention;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
-
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

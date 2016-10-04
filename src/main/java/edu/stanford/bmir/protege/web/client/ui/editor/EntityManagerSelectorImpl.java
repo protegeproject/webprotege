@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import org.semanticweb.owlapi.model.EntityType;
 
-import java.io.Serializable;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 

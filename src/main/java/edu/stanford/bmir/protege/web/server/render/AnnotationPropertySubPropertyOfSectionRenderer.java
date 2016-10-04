@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.common.collect.Lists;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import java.util.List;
 import java.util.Set;

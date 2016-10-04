@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -9,6 +8,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;

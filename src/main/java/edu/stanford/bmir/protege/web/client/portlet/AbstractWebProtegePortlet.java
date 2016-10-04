@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.portlet;
 import com.google.common.base.Optional;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.Event;
@@ -22,7 +21,6 @@ import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

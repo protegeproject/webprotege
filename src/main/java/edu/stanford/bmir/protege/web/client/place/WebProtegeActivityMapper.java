@@ -7,7 +7,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
@@ -23,6 +22,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**

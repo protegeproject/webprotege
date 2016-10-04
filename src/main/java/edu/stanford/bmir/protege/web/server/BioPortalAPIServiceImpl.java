@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalConfigurationManager;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalMetadataCache;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalRestAPI;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

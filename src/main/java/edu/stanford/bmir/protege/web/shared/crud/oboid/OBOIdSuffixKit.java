@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
 import com.google.common.base.Optional;
 import com.google.gwt.http.client.URL;
-import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import org.semanticweb.owlapi.model.IRI;
 
 /**

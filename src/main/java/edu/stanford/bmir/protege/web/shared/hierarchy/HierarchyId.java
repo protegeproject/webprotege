@@ -4,7 +4,6 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.*;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.rest;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.notes;
 import edu.stanford.bmir.protege.web.server.notes.api.NotesVocabulary;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.io.Serializable;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

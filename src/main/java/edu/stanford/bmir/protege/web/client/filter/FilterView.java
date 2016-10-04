@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.filter;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.filter.*;
+import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 
 /**
  * Matthew Horridge

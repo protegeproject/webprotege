@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**

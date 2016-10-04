@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.UserWatch;
-import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
 import java.util.Set;
 

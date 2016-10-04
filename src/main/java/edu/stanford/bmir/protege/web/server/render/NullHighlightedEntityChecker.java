@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.render;
 import com.google.common.base.Objects;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**

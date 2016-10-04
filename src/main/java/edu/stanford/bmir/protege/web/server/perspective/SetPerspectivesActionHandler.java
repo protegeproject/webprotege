@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -8,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge

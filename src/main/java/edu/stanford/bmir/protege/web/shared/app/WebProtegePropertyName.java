@@ -10,7 +10,6 @@ package edu.stanford.bmir.protege.web.shared.app;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.WebProtegePropertiesDocumentation;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

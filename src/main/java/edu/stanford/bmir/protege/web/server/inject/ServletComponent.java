@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import dagger.Component;
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl;
 import edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl;

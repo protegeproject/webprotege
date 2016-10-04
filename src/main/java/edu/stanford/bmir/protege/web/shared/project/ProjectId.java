@@ -6,7 +6,6 @@ import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import javax.inject.Inject;
 
 import java.io.Serializable;
 

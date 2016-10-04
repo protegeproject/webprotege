@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.util;
 
 
-import org.apache.commons.io.FileUtils;
-
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;

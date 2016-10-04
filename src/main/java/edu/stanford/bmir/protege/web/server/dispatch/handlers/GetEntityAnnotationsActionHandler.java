@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;

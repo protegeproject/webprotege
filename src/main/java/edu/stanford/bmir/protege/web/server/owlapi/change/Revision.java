@@ -1,18 +1,14 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import com.google.common.base.*;
-import static com.google.common.base.Objects.*;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
-import org.semanticweb.owlapi.change.*;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 
+import java.util.Iterator;
 
-import java.util.*;
-
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

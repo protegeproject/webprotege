@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.inject.assistedinject.Assisted;
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

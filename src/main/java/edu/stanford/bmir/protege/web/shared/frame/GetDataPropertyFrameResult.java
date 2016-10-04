@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

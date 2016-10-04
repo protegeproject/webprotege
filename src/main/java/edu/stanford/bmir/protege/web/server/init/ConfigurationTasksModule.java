@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
-import com.google.inject.multibindings.ProvidesIntoSet;
 import dagger.Module;
 import dagger.Provides;
 

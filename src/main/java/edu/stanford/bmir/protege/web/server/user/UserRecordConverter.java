@@ -1,18 +1,14 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import com.mongodb.client.model.Filters;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
-import org.bson.types.Binary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
-import static com.mongodb.client.model.Filters.regex;
 
 /**
  * Matthew Horridge

@@ -1,16 +1,16 @@
-<%@ page import="edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.WebProtegeProperties" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientApplicationPropertiesEncoder" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.app.WebProtegeProperties" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.inject.ApplicationComponent" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.inject.ApplicationComponent" %>
-<%@ page import="java.io.IOException" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
+<%@ page import="java.io.IOException" %>
 <%@ page import="java.util.Optional" %>
 <!DOCTYPE html>
 

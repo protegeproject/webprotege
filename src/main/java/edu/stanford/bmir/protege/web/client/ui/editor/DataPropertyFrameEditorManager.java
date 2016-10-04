@@ -1,17 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import javax.inject.Inject;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.DataPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameAction;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>

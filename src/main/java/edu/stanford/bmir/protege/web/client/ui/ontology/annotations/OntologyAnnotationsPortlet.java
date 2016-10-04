@@ -24,7 +24,6 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.inject.Inject;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 /**

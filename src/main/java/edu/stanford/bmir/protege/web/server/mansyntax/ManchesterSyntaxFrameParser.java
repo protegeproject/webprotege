@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Lists;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
@@ -17,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;

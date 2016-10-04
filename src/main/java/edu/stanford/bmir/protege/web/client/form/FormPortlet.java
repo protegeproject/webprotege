@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.base.Optional;
-import javax.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge

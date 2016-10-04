@@ -15,8 +15,9 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.IllegalFormatException;
-import java.util.Set;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Matthew Horridge<br>

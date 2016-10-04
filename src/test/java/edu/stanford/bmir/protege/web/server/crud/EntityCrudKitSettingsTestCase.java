@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 /**

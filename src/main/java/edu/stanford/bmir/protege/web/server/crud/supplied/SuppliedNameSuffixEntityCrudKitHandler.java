@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.semanticweb.owlapi.io.XMLUtils;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
-import org.semanticweb.owlapi.vocab.Namespaces;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 
 import javax.inject.Provider;

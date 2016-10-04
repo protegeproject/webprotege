@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.init.*;
+import edu.stanford.bmir.protege.web.server.init.ConfigurationTask;
+import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;

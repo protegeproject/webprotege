@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageCodeParser;

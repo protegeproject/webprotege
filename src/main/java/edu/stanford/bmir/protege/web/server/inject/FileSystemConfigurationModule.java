@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import com.google.inject.AbstractModule;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatcher;
@@ -10,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDi
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 
-import javax.inject.Inject;
 import java.io.File;
 
 /**

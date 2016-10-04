@@ -5,8 +5,6 @@ import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapter;
 
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

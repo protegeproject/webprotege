@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
-import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;

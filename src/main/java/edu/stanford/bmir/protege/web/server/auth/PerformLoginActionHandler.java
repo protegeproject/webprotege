@@ -6,7 +6,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
-import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
+import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
+import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
 
 import javax.inject.Inject;
 

@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import com.google.common.base.Function;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Optional;
 

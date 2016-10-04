@@ -8,8 +8,6 @@ import edu.stanford.bmir.protege.web.server.inject.DbPort;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
-import java.net.UnknownHostException;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

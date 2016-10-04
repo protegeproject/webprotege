@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues.mention;
 
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

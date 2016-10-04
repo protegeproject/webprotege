@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.shared.object.OWLObjectComparatorImpl;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;

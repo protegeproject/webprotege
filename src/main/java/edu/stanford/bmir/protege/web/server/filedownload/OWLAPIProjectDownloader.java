@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;

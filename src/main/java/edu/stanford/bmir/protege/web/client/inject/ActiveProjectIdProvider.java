@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
 import com.google.common.base.Optional;
-import javax.inject.Inject;
 import com.google.inject.Provider;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>

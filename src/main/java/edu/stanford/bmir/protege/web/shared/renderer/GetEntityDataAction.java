@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.renderer;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;

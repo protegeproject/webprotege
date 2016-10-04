@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Optional;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
+
+import javax.inject.Inject;
 
 /**
 * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 19/03/2014

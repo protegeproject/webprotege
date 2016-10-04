@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

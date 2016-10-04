@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.ValidationResult;

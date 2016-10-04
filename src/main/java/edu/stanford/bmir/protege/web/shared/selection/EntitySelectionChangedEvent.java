@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.selection;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.Event;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import static com.google.common.base.Preconditions.checkNotNull;

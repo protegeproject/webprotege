@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.render;
 
-import org.semanticweb.owlapi.model.OWLLiteral;
-
 /**
  * @author Matthew Horridge,
  *         Stanford University,

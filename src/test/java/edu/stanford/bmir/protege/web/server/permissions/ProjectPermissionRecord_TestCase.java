@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.server.permissions;
 
-import java.util.Optional;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.MatcherAssert;
@@ -11,6 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class ProjectPermissionRecord_TestCase {

@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 

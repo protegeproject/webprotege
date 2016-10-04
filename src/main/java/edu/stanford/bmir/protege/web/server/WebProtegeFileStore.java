@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 
 import javax.inject.Inject;

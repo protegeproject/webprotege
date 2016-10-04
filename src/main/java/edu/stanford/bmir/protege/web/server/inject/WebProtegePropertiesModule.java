@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.common.base.Optional;
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
 import javax.inject.Singleton;
-import java.io.File;
 
 /**
  * Matthew Horridge

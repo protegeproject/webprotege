@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapter;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**

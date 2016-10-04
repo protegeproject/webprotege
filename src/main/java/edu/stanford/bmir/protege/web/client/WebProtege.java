@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
-import edu.stanford.bmir.protege.web.client.codegen.Blender;
 import edu.stanford.protege.widgetmap.resources.WidgetMapClientBundle;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;

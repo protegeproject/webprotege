@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.notes;
 import com.google.common.base.Optional;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 

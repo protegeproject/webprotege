@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.server.app;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.app.ClientApplicationPropertiesDecoder;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.io.PrintWriter;
 
 /**
  * Matthew Horridge

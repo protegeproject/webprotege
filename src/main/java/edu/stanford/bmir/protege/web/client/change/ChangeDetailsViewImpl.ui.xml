@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:diff="urn:import:edu.stanford.bmir.protege.web.client.diff"
              xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel"
-             xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.ui.library.popupmenu">
+>
 
     <ui:style>
         .main {

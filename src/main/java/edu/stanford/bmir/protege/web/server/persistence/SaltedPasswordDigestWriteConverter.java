@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import com.google.common.io.BaseEncoding;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 
-
 import java.util.Locale;
 
 /**

@@ -1,16 +1,14 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Matthew Horridge

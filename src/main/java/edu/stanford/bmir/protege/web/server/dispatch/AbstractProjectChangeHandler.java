@@ -12,8 +12,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
-import javax.inject.Inject;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

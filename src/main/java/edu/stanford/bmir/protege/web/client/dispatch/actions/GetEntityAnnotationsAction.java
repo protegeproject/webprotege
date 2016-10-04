@@ -4,8 +4,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.Set;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

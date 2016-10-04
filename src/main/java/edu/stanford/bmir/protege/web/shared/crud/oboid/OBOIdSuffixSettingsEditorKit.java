@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
 import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitEditorKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;

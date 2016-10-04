@@ -4,7 +4,6 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

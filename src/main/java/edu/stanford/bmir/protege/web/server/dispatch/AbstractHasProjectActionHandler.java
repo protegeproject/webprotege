@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

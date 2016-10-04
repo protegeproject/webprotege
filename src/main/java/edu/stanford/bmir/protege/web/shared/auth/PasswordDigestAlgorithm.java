@@ -5,8 +5,6 @@ import com.google.common.io.BaseEncoding;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

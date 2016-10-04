@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.render;
 
-import org.semanticweb.owlapi.util.IRIShortFormProvider;
-
 /**
  * @author Matthew Horridge,
  *         Stanford University,

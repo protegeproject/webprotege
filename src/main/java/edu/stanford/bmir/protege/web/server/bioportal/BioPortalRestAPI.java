@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.bioportal;
 
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.rest.BioPortalUserInfoRestCall;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import java.io.IOException;
 import java.util.ArrayList;

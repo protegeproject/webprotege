@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import org.protege.editor.owl.model.hierarchy.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;

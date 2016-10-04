@@ -1,29 +1,19 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import org.protege.owlapi.model.ProtegeOWLOntologyManager;
-import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;
-import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorer;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorerFactory;
-import org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorer;
 import org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory;
-import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
-import org.semanticweb.owlapi.util.OWLDocumentFormatFactoryImpl;
-import org.semanticweb.owlapi.util.OWLStorerFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyFactoryImpl;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 
 /**
  * Matthew Horridge
