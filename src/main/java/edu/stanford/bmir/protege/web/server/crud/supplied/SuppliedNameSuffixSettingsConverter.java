@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge
@@ -15,6 +16,10 @@ import javax.annotation.Nonnull;
 public class SuppliedNameSuffixSettingsConverter implements DocumentConverter<SuppliedNameSuffixSettings> {
 
     private static final String WHITE_SPACE_TREATMENT = "whiteSpaceTreatment";
+
+    @Inject
+    public SuppliedNameSuffixSettingsConverter() {
+    }
 
     @Override
     public Document toDocument(@Nonnull SuppliedNameSuffixSettings object) {

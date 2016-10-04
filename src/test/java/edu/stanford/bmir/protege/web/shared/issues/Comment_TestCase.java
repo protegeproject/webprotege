@@ -33,6 +33,7 @@ public class Comment_TestCase {
 
     @Before
     public void setUp() {
+        updatedAt = Optional.of(33L);
         comment = new Comment(createdBy, createdAt, updatedAt, body);
     }
 

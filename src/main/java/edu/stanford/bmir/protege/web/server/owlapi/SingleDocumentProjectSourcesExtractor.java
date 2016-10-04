@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Collection;
 
@@ -23,6 +24,9 @@ public class SingleDocumentProjectSourcesExtractor implements RawProjectSourcesE
         return new SingleDocumentProjectSources(inputFile);
     }
 
+    @Inject
+    public SingleDocumentProjectSourcesExtractor() {
+    }
 
     private static class SingleDocumentProjectSources implements RawProjectSources {
 

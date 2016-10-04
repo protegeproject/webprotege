@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -14,15 +16,22 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public abstract class AuthenticatedActionHandler<A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> implements ActionHandler<A, R> {
 
-    private ChapSessionManager chapSessionManager;
+    @Nonnull
+    private final ChapSessionManager chapSessionManager;
 
-    private AuthenticationManager authenticationManager;
+    @Nonnull
+    private final AuthenticationManager authenticationManager;
 
-    private ChapResponseChecker chapResponseChecker;
+    @Nonnull
+    private final ChapResponseChecker chapResponseChecker;
 
-    private WebProtegeLogger logger;
+    @Nonnull
+    private final WebProtegeLogger logger;
 
-    public AuthenticatedActionHandler(ChapSessionManager chapSessionManager, AuthenticationManager authenticationManager, ChapResponseChecker chapResponseChecker, WebProtegeLogger logger) {
+    public AuthenticatedActionHandler(@Nonnull ChapSessionManager chapSessionManager,
+                                      @Nonnull AuthenticationManager authenticationManager,
+                                      @Nonnull ChapResponseChecker chapResponseChecker,
+                                      @Nonnull WebProtegeLogger logger) {
         this.chapSessionManager = chapSessionManager;
         this.authenticationManager = authenticationManager;
         this.chapResponseChecker = chapResponseChecker;

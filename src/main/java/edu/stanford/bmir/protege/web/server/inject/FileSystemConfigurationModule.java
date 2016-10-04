@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.AbstractModule;
+import dagger.Module;
+import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
@@ -8,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDi
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 
+import javax.inject.Inject;
 import java.io.File;
 
 /**
@@ -15,26 +18,35 @@ import java.io.File;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class FileSystemConfigurationModule extends AbstractModule {
+@Module
+public class FileSystemConfigurationModule {
 
-    public FileSystemConfigurationModule() {
+    @Provides
+    @DataDirectory
+    public File provideDataDirectory(DataDirectoryProvider provider) {
+        return provider.get();
     }
 
-    @Override
-    protected void configure() {
 
-        bind(File.class).annotatedWith(DataDirectory.class).toProvider(DataDirectoryProvider.class);
+    @Provides
+    @UploadsDirectory
+    public File provideUploadsDirectory(UploadsDirectoryProvider provider) {
+        return provider.get();
+    }
 
-        bind(File.class).annotatedWith(UploadsDirectory.class).toProvider(UploadsDirectoryProvider.class);
+    @Provides
+    @DefaultPerspectiveDataDirectory
+    public File provideDefaultPerspectiveDataDirectory(DefaultPerspectiveDataDirectoryProvider provider) {
+        return provider.get();
+    }
 
-        bind(File.class).annotatedWith(DefaultPerspectiveDataDirectory.class)
-                .toProvider(DefaultPerspectiveDataDirectoryProvider.class);
+    @Provides
+    public RootOntologyDocumentFileMatcher provideRootOntologyDocumentFileMatcher(RootOntologyDocumentMatcherImpl impl) {
+        return impl;
+    }
 
-        bind(RootOntologyDocumentFileMatcher.class)
-                .to(RootOntologyDocumentMatcherImpl.class);
-
-        bind(TempFileFactory.class)
-                .to(TempFileFactoryImpl.class);
-
+    @Provides
+    public TempFileFactory provideTempFileFactory(TempFileFactoryImpl impl) {
+        return impl;
     }
 }

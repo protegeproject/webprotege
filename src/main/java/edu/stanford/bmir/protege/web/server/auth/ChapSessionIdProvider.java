@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.auth;
 
 import edu.stanford.bmir.protege.web.shared.auth.ChapSessionId;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.UUID;
 
@@ -11,6 +12,10 @@ import java.util.UUID;
  * 14/02/15
  */
 public class ChapSessionIdProvider implements Provider<ChapSessionId> {
+
+    @Inject
+    public ChapSessionIdProvider() {
+    }
 
     @Override
     public ChapSessionId get() {

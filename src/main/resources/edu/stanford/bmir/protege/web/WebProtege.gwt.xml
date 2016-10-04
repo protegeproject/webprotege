@@ -39,6 +39,8 @@
     <inherits name="com.google.gwt.activity.Activity"/>
     <inherits name="com.google.gwt.i18n.I18N"/>
 
+    <inherits name="dagger.Dagger"/>
+
     <extend-property name="locale" values="de" />
 
     <set-configuration-property name="gin.classloading.exceptedPackages" value="com.google.gwt.core.client"/>

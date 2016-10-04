@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.io.BaseEncoding;
 
+import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +20,7 @@ public class Md5MessageDigestAlgorithm implements MessageDigestAlgorithm {
 
     private MessageDigest messageDigest;
 
+    @Inject
     public Md5MessageDigestAlgorithm() {
         try {
             this.messageDigest = MessageDigest.getInstance("MD5");

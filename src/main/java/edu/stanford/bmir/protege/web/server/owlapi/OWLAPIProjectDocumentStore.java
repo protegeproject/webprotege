@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocument;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -17,6 +18,8 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -35,6 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * stored.
  * </p>
  */
+@ProjectSingleton
 public class OWLAPIProjectDocumentStore {
 
     public static final String GENERATED_ONTOLOGY_IRI_PREFIX = "http://webprotege.stanford.edu/project/";
@@ -51,14 +55,18 @@ public class OWLAPIProjectDocumentStore {
 
     private final File rootOntologyDocument;
 
+    private final Provider<ImportsCacheManager> importsCacheManagerProvider;
+
 
     @Inject
     public OWLAPIProjectDocumentStore(ProjectId projectId,
                                       @RootOntologyDocument File rootOntologyDocument,
-                                      WebProtegeLogger logger) {
+                                      WebProtegeLogger logger,
+                                      Provider<ImportsCacheManager> importsCacheManagerProvider) {
         this.logger = logger;
         this.projectId = projectId;
         this.rootOntologyDocument = rootOntologyDocument;
+        this.importsCacheManagerProvider = importsCacheManagerProvider;
     }
 
 
@@ -173,7 +181,7 @@ public class OWLAPIProjectDocumentStore {
             }
         });
         // Important - add last
-        ImportsCacheManager importsCacheManager = new ImportsCacheManager(projectId);
+        ImportsCacheManager importsCacheManager = importsCacheManagerProvider.get();
         OWLOntologyIRIMapper iriMapper = importsCacheManager.getIRIMapper();
         manager.addIRIMapper(iriMapper);
 
@@ -290,7 +298,8 @@ public class OWLAPIProjectDocumentStore {
         rootOntologyDocument.getParentFile().mkdirs();
         rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(),
                 IRI.create(rootOntologyDocument));
-        ImportsCacheManager cacheManager = new ImportsCacheManager(projectId);
+
+        ImportsCacheManager cacheManager = importsCacheManagerProvider.get();
         cacheManager.cacheImports(ontology);
     }
 

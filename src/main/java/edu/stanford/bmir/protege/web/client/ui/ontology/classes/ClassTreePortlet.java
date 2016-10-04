@@ -52,6 +52,9 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
+import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
+import edu.stanford.bmir.protege.web.shared.issues.Issue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
@@ -362,6 +365,15 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         if (selectedClassDataFromTree.isPresent()) {
             getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
         }
+        dispatchServiceManager.execute(new GetIssuesAction(getProjectId()), new DispatchServiceCallback<GetIssuesResult>() {
+            @Override
+            public void handleSuccess(GetIssuesResult result) {
+//                MessageBox.showMessage(result.getIssues().get(0).toString());
+                result.getIssues().stream()
+                        .limit(1)
+                        .forEach(i -> MessageBox.showMessage("Issue", i.toString()));
+            }
+        });
     }
 
     protected void addDragAndDropSupport() {

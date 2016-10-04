@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.inject.Inject;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
 
@@ -16,12 +17,15 @@ import java.util.Set;
  */
 public class ReverseEngineeredChangeDescriptionGenerator<S> implements ChangeDescriptionGenerator<S> {
 
+    @Nonnull
     private final String defaultDescription;
 
+    @Nonnull
     private final List<ChangeMatcher> matchers;
 
     @Inject
-    public ReverseEngineeredChangeDescriptionGenerator(@Assisted String defaultDescription, Set<ChangeMatcher> matchers) {
+    public ReverseEngineeredChangeDescriptionGenerator(@Nonnull String defaultDescription,
+                                                       @Nonnull Set<ChangeMatcher> matchers) {
         this.defaultDescription = defaultDescription;
         this.matchers = new ArrayList<>(matchers);
     }

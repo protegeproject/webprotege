@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.auth.ChapSessionId;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
+@Singleton
 public class ChapSessionManager {
 
     private final Cache<ChapSessionId, ChapSession> messageCache;

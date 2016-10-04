@@ -2,12 +2,18 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import org.semanticweb.owlapi.change.*;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 19/03/15
  */
 public class OWLOntologyChangeDataReverter {
+
+    @Inject
+    public OWLOntologyChangeDataReverter() {
+    }
 
     public OWLOntologyChangeData getRevertingChange(final OWLOntologyChangeRecord record) {
         return record.getData().accept(new OWLOntologyChangeDataVisitor<OWLOntologyChangeData, RuntimeException>() {

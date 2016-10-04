@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.project.ImportsCacheDirectory;
+import edu.stanford.bmir.protege.web.server.inject.project.ImportsCacheDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ImportedOntologyMetadata;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,6 +16,8 @@ import org.semanticweb.owlapi.change.SetOntologyIDData;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -62,12 +65,19 @@ public class ImportsCacheManager {
 
     private final ProjectId projectId;
 
-    private final OWLAPIProjectFileStore projectFileStore;
+//    private final OWLAPIProjectFileStore projectFileStore;
 
-    public ImportsCacheManager(ProjectId projectId) {
-        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    @Nonnull
+    private final File importsCacheDirectory;
+
+    @Inject
+    public ImportsCacheManager(@Nonnull ProjectId projectId,
+                               @Nonnull ImportsCacheDirectoryProvider importsCacheDirectoryProvider,
+                               WebProtegeLogger logger) {
+        this.logger = logger;
         this.projectId = projectId;
-        projectFileStore = WebProtegeInjector.get().getInstance(OWLAPIProjectFileStoreFactory.class).get(projectId);
+        this.importsCacheDirectory = importsCacheDirectoryProvider.get();
+//        projectFileStore = fileStore;
     }
 
     public OWLOntologyIRIMapper getIRIMapper() {
@@ -86,7 +96,8 @@ public class ImportsCacheManager {
             WRITE_LOCK.lock();
             ontologyIDs.clear();
             readCachedImportsFromDisk();
-            projectFileStore.getImportsCacheDataDirectory().mkdirs();
+
+            importsCacheDirectory.mkdirs();
             for(OWLOntology ont : rootOntology.getImportsClosure()) {
                 // TODO: Don't cache project ontologies!
                 if(!ont.equals(rootOntology)) {
@@ -150,7 +161,7 @@ public class ImportsCacheManager {
      * @return A file for caching the import.  Not {@code null}.
      */
     private File getFreshImportCacheFile() {
-        return new File(projectFileStore.getImportsCacheDataDirectory(), UUID.randomUUID() + ".binary");
+        return new File(importsCacheDirectory, UUID.randomUUID() + ".binary");
     }
 
 
@@ -170,8 +181,7 @@ public class ImportsCacheManager {
     private void readCachedImportsFromDisk() {
         try {
             WRITE_LOCK.lock();
-            File importsCacheDataDirectory = projectFileStore.getImportsCacheDataDirectory();
-            final File[] cachedDocuments = importsCacheDataDirectory.listFiles();
+            final File[] cachedDocuments = importsCacheDirectory.listFiles();
             if(cachedDocuments == null) {
                 return;
             }

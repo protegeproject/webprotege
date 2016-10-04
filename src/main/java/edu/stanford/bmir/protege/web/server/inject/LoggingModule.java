@@ -1,18 +1,24 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.AbstractModule;
+import dagger.Module;
+import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+
+import javax.inject.Singleton;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 17/02/15
  */
-public class LoggingModule extends AbstractModule {
+@Module
+public class LoggingModule {
 
-    @Override
-    protected void configure() {
-        bind(WebProtegeLogger.class).to(DefaultLogger.class).asEagerSingleton();
+    @Singleton
+    @Provides
+    public WebProtegeLogger provideWebProtegeLogger(DefaultLogger logger) {
+        return logger;
     }
 }

@@ -814,17 +814,17 @@ public class Issue_TestCase {
         assertThat(issue.toString(), Matchers.startsWith("Issue" ));
     }
 
-    @Test
-    public void shouldBuildIssueWithReturnedBuilder() {
-        IssueBuilder builder = issue.builder();
-        MentionParser noopParser = new MentionParser() {
-            @Nonnull
-            @Override
-            public List<ParsedMention> parseMentions(@Nonnull String text) {
-                return Collections.emptyList();
-            }
-        };
-        Issue rebuiltIssue = builder.build(noopParser);
-        assertThat(rebuiltIssue, is(equalTo(issue)));
-    }
+//    @Test
+//    public void shouldBuildIssueWithReturnedBuilder() {
+//        IssueBuilder builder = issue.builder();
+//        MentionParser noopParser = new MentionParser() {
+//            @Nonnull
+//            @Override
+//            public List<ParsedMention> parseMentions(@Nonnull String text) {
+//                return Collections.emptyList();
+//            }
+//        };
+//        Issue rebuiltIssue = builder.build(noopParser);
+//        assertThat(rebuiltIssue, is(equalTo(issue)));
+//    }
 }

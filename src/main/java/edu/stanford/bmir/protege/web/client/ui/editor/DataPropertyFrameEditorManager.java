@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.DataPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;

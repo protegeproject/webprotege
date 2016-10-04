@@ -22,7 +22,6 @@ import javax.inject.Inject;
  */
 public abstract class AbstractProjectChangeHandler<T, A extends Action<R> & HasProjectId, R extends Result> extends AbstractHasProjectActionHandler<A, R> {
 
-    @Inject
     public AbstractProjectChangeHandler(OWLAPIProjectManager projectManager) {
         super(projectManager);
     }

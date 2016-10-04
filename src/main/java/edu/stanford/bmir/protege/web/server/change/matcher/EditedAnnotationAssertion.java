@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;

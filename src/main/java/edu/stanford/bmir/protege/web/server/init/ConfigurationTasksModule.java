@@ -2,20 +2,35 @@ package edu.stanford.bmir.protege.web.server.init;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.multibindings.ProvidesIntoSet;
+import dagger.Module;
+import dagger.Provides;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class ConfigurationTasksModule extends AbstractModule {
+@Module
+public class ConfigurationTasksModule {
 
-    @Override
-    protected void configure() {
-        Multibinder<ConfigurationTask> multibinder = Multibinder.newSetBinder(binder(), ConfigurationTask.class);
-        multibinder.addBinding().to(CheckWebProtegeDataDirectoryExists.class);
-        multibinder.addBinding().to(CheckDataDirectoryIsReadableAndWritable.class);
-        multibinder.addBinding().to(CheckPerspectivesDataExists.class);
-        multibinder.addBinding().to(CheckMongoDBConnectionTask.class);
+    @Provides(type = Provides.Type.SET)
+    public ConfigurationTask provideCheckWebProtegeDataDirectoryExists(CheckWebProtegeDataDirectoryExists check) {
+        return check;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ConfigurationTask provideCheckDataDirectoryIsReadableAndWritable(CheckDataDirectoryIsReadableAndWritable check) {
+        return check;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ConfigurationTask provideCheckPerspectivesDataExists(CheckPerspectivesDataExists check) {
+        return check;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ConfigurationTask provideCheckMongoDBConnectionTask(CheckMongoDBConnectionTask check) {
+        return check;
     }
 }

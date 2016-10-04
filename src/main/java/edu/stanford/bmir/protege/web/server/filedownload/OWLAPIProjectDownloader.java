@@ -2,17 +2,17 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,25 +33,38 @@ public class OWLAPIProjectDownloader {
 
     public static final String CONTENT_DISPOSITION_HEADER_FIELD = "Content-Disposition";
 
-    private RevisionNumber revision;
+    @Nonnull
+    private final RevisionNumber revision;
 
-    private DownloadFormat format;
+    @Nonnull
+    private final DownloadFormat format;
 
-    private String fileName;
+    @Nonnull
+    private final String fileName;
 
-    private OWLAPIProject project;
+    @Nonnull
+    private final OWLAPIProject project;
+
+    @Nonnull
+    private final String applicationName;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
-     * @param projectId The project to be downloaded.  Not <code>null</code>.
+     * @param project The project to be downloaded.  Not <code>null</code>.
      * @param revision The revision of the project to be downloaded.
      * @param format The format which the project should be downloaded in.
      */
-    public OWLAPIProjectDownloader(String fileName, OWLAPIProject project, RevisionNumber revision, DownloadFormat format) {
+    @Inject
+    public OWLAPIProjectDownloader(@Nonnull String fileName,
+                                   @Nonnull OWLAPIProject project,
+                                   @Nonnull RevisionNumber revision,
+                                   @Nonnull DownloadFormat format,
+                                   @ApplicationName String applicationName) {
         this.project = project;
         this.revision = revision;
         this.format = format;
         this.fileName = fileName;
+        this.applicationName = checkNotNull(applicationName);
     }
     
     public void writeProject(HttpServletResponse response, OutputStream outputStream) throws IOException {
@@ -109,9 +122,7 @@ public class OWLAPIProjectDownloader {
         }
         else {
             // An error - no flipping ontology!
-            WebProtegeProperties properties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
-
-            throw new RuntimeException("The ontology could not be downloaded from " + properties.getApplicationName() + ".  Please contact the administrator.");
+            throw new RuntimeException("The ontology could not be downloaded from " + applicationName + ".  Please contact the administrator.");
         }
     }
 

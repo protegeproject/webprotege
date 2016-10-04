@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.server.frame;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.mansyntax.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -27,10 +25,15 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
 
     private final ValidatorFactory<WritePermissionValidator> validatorFactory;
 
+    private final GetManchesterSyntaxFrameActionHandler handler;
+
     @Inject
-    public SetManchesterSyntaxFrameActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
+    public SetManchesterSyntaxFrameActionHandler(OWLAPIProjectManager projectManager,
+                                                 GetManchesterSyntaxFrameActionHandler handler,
+                                                 ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
         this.validatorFactory = validatorFactory;
+        this.handler = handler;
     }
 
     @Override
@@ -62,7 +65,6 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
 
     @Override
     protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Void> changeApplicationResult, SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        GetManchesterSyntaxFrameActionHandler handler = WebProtegeInjector.get().getInstance(GetManchesterSyntaxFrameActionHandler.class);
         GetManchesterSyntaxFrameResult result = handler.execute(new GetManchesterSyntaxFrameAction(action.getProjectId(),
                                                                                           action.getSubject()),
                                                        project, executionContext);

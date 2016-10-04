@@ -1,17 +1,25 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import com.google.inject.AbstractModule;
+import dagger.Module;
+import dagger.Provides;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-public class DbModule extends AbstractModule {
+@Module
+public class DbModule {
 
-    @Override
-    protected void configure() {
-        bind(String.class).annotatedWith(DbHost.class).toProvider(DbHostProvider.class);
-        bind(Integer.class).annotatedWith(DbPort.class).toProvider(DbPortProvider.class);
+    @Provides
+    @DbHost
+    public String provideDbHost(DbHostProvider dbHostProvider) {
+        return dbHostProvider.get();
+    }
+
+    @Provides
+    @DbPort
+    public int provideDbPort(DbPortProvider dbPortProvider) {
+        return dbPortProvider.get();
     }
 }

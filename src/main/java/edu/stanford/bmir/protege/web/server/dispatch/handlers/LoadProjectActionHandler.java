@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -37,6 +36,8 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
     private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
 
+    private WebProtegeLogger webProtegeLogger;
+
     @Inject
     public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager, ProjectPermissionsManager projectPermissionsManager, OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         this.projectDetailsManager = projectDetailsManager;
@@ -58,7 +59,6 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
     @Override
     public LoadProjectResult execute(final LoadProjectAction action, ExecutionContext executionContext) {
         // Load project in parallel (as we don't return it, but want it ready for further calls).
-        final WebProtegeLogger webProtegeLogger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         Stopwatch stopwatch = Stopwatch.createStarted();
         webProtegeLogger.info("Loading project: " + action.getProjectId());
         projectManager.getProject(action.getProjectId());

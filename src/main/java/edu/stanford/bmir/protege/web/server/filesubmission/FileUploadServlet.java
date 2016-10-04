@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.server.filesubmission;
 
 import edu.stanford.bmir.protege.web.client.upload.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
+import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -11,8 +12,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.UnparsableOntologyException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.UnloadableImportException;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,12 +53,20 @@ public class FileUploadServlet extends HttpServlet {
 
     public static final String RESPONSE_MIME_TYPE = "text/html";
 
+
+    @UploadsDirectory
+    @Nonnull
+    private final File uploadsDirectory;
+
+    @Nonnull
     public final WebProtegeLogger logger;
 
-    private final File uploadsDirectory = WebProtegeInjector.get().getInstance(WebProtegeFileStore.class).getUploadsDirectory();
-
-    public FileUploadServlet() {
-        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    @Inject
+    public FileUploadServlet(
+            @Nonnull File uploadsDirectory,
+            @Nonnull WebProtegeLogger logger) {
+        this.uploadsDirectory = uploadsDirectory;
+        this.logger = logger;
     }
 
     @Override

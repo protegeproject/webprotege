@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import javax.inject.Inject;
 import java.io.File;
 
 /**
@@ -11,6 +12,10 @@ import java.io.File;
 public class RootOntologyDocumentMatcherImpl implements RootOntologyDocumentFileMatcher {
 
     public static final String ROOT_ONTOLOGY_DOCUMENT_FILE_NAME = "root-ontology.owl";
+
+    @Inject
+    public RootOntologyDocumentMatcherImpl() {
+    }
 
     @Override
     public boolean isRootOntologyDocument(File file) {

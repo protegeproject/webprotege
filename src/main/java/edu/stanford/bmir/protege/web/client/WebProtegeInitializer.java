@@ -31,7 +31,7 @@ public class WebProtegeInitializer {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    private WebProtegeInitializer(DispatchServiceManager dispatchServiceManager, LoggedInUserManager loggedInUserManager) {
+    protected WebProtegeInitializer(DispatchServiceManager dispatchServiceManager, LoggedInUserManager loggedInUserManager) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.userManager = loggedInUserManager;
     }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
@@ -24,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2012
  */
+@ProjectSingleton
 public class RevisionManagerImpl implements RevisionManager {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();

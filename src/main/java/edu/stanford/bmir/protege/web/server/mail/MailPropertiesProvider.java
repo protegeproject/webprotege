@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -25,11 +24,8 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
     public static final String MAIL_SMTP_PASSWORD_MISSING_MESSAGE = "Mail properties are not configured correctly.  The mail.smtp.auth has been specified, which means that authentication will be used to send emails, but the mail.smtp.password property has not been specified.  Please specify a password for the smtp mail server by using this property.  Mail properties may be specified using a mail.properties file placed in the root directory of the WebProtégé web-app directory.";
 
-    private final WebProtegeLogger logger;
-
     @Inject
-    public MailPropertiesProvider(WebProtegeLogger logger) {
-        this.logger = logger;
+    public MailPropertiesProvider() {
     }
 
     @Override
@@ -72,7 +68,6 @@ public class MailPropertiesProvider implements Provider<Properties> {
         Properties systemProperties = getSystemProperties();
         for(String systemPropertyName : systemProperties.stringPropertyNames()) {
             if(systemPropertyName.startsWith(MAIL_PROPERTIES_PREFIX)) {
-                logger.info("Overriding %s with system property", systemPropertyName);
                 String propertyValue = systemProperties.getProperty(systemPropertyName);
                 properties.setProperty(systemPropertyName, propertyValue);
             }

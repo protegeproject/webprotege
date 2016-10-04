@@ -7,13 +7,15 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -22,6 +24,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2012
  */
+@SuppressWarnings("GwtServiceNotRegistered")
 public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implements OntologyService {
 
     /**
@@ -48,12 +51,16 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         ANNOTATION_PROPERTIES_ROOT.setBrowserText(ANNOTATION_PROPERTIES_ROOT_NAME);
     }
 
-    private OWLAPIProjectManager projectManager;
+    @Nonnull
+    private final OWLAPIProjectManager projectManager;
 
-    public OntologyServiceOWLAPIImpl() {
-        projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
+    @Inject
+    public OntologyServiceOWLAPIImpl(
+            @Nonnull WebProtegeLogger logger,
+            @Nonnull OWLAPIProjectManager projectManager) {
+        super(logger);
+        this.projectManager = projectManager;
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

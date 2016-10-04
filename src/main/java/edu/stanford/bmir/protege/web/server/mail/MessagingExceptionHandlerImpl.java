@@ -10,12 +10,12 @@ import java.util.logging.Logger;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/11/2013
  */
-public class WebProtegeLoggerMessagingExceptionHandler implements MessagingExceptionHandler {
+public class MessagingExceptionHandlerImpl implements MessagingExceptionHandler {
 
     private final Logger logger;
 
     @Inject
-    public WebProtegeLoggerMessagingExceptionHandler() {
+    public MessagingExceptionHandlerImpl() {
         logger = Logger.getLogger("MessagingException");
     }
 

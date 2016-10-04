@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;

@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server;
 
-import com.google.common.base.*;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -18,9 +18,13 @@ import org.obolibrary.oboformat.parser.OBOFormatConstants;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,14 +32,20 @@ import java.util.regex.Pattern;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2012
  */
+@SuppressWarnings("GwtServiceNotRegistered")
 public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet implements OBOTextEditorService {
 
     public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
 
-    private OWLAPIProjectManager projectManager;
+    @Nonnull
+    private final OWLAPIProjectManager projectManager;
 
-    public OBOTextEditorServiceImpl() {
-        projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
+    @Inject
+    public OBOTextEditorServiceImpl(
+            @Nonnull WebProtegeLogger logger,
+            @Nonnull OWLAPIProjectManager projectManager) {
+        super(logger);
+        this.projectManager = projectManager;
     }
 
     public synchronized Set<OBONamespace> getNamespaces(ProjectId projectId) {

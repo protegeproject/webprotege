@@ -27,7 +27,6 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
 
     private P root;
 
-    @Inject
     public AbstractOWLPropertyHierarchyProvider(@RootOntology OWLOntology rootOntology, P root) {
         this.subPropertiesOfRoot = new HashSet<P>();
         this.rootOntology = rootOntology;

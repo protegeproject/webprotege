@@ -2,12 +2,15 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalConfigurationManager;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalMetadataCache;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalRestAPI;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,15 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
+@SuppressWarnings("GwtServiceNotRegistered")
 public class BioPortalAPIServiceImpl extends WebProtegeRemoteServiceServlet implements BioPortalAPIService {
+
+    @Inject
+    public BioPortalAPIServiceImpl(@Nonnull WebProtegeLogger logger) {
+        super(logger);
+    }
+
+
 
     private BioPortalRestAPI getAPI() {
         String restBase = BioPortalConfigurationManager.getManager().getRestBase();

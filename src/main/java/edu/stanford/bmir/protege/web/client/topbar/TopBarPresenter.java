@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.topbar;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingButtonPresenter;

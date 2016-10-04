@@ -23,15 +23,14 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     private final ProjectDetailsRepository projectDetailsRepository;
 
-    private final ProjectExistsFilter projectExistsFilter;
+//    private final ProjectExistsFilter projectExistsFilter;
 
     @Inject
     public ProjectPermissionsManagerImpl(@Nonnull ProjectPermissionRecordRepository projectPermissionRecordRepository,
-                                         @Nonnull ProjectDetailsRepository projectDetailsRepository,
-                                         @Nonnull ProjectExistsFilter projectExistsFilter) {
+                                         @Nonnull ProjectDetailsRepository projectDetailsRepository) {
         this.projectPermissionRecordRepository = projectPermissionRecordRepository;
         this.projectDetailsRepository = projectDetailsRepository;
-        this.projectExistsFilter = projectExistsFilter;
+//        this.projectExistsFilter = projectExistsFilter;
     }
 
     @Override
@@ -67,7 +66,8 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         projectPermissionRecordRepository.findByUserIdAndPermission(userId, Permission.getReadPermission())
                 .forEach(r -> {
                     Optional<ProjectDetails> record = projectDetailsRepository.findOne(r.getProjectId());
-                    if (record.isPresent() && projectExistsFilter.isProjectPresent(record.get().getProjectId())) {
+//                    if (record.isPresent() && projectExistsFilter.isProjectPresent(record.get().getProjectId())) {
+                    if (record.isPresent()) {
                         result.add(record.get());
                     }
                 });

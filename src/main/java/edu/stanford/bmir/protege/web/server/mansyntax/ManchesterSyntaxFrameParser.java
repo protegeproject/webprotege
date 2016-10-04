@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;

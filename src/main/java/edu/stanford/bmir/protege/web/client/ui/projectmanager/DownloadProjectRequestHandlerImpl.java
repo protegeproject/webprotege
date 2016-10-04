@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.download.DownloadFormatExtensionHandler;
 import edu.stanford.bmir.protege.web.client.download.DownloadSettingsDialog;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
