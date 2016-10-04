@@ -75,11 +75,4 @@ public class MetaProjectModule {
     public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
         return manager;
     }
-
-//    @Provides
-//    @Singleton
-//    public HasUserIds provideHasUserIds() {
-//
-//    }
-
 }

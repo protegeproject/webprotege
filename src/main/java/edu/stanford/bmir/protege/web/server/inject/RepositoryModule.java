@@ -28,18 +28,6 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    public MongoClient provideMongoClient(MongoClientProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @Singleton
-    public MongoDatabase provideMongoDatabase(MongoDatabaseProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @Singleton
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
             MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
         return new ProjectEntityCrudKitSettingsRepository(database, converter);
