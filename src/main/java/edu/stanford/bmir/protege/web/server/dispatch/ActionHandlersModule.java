@@ -1,10 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.google.inject.multibindings.Multibinder;
-import com.google.inject.multibindings.ProvidesIntoSet;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
@@ -21,7 +16,6 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.*;
 import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
@@ -58,14 +52,11 @@ import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsAct
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.user.CreateUserAccountActionHandler;
-import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
-import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
-import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesResult;
 
 /**
  * Matthew Horridge
@@ -74,48 +65,12 @@ import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesRe
  */
 @Module
 public class ActionHandlersModule {
-//
-//    @Override
-//    protected void configure() {
-//
-//        install(new FactoryModuleBuilder()
-//                        .implement(ReadPermissionValidator.class, ReadPermissionValidator.class)
-//                        .build(new TypeLiteral<ValidatorFactory<ReadPermissionValidator>>() {
-//                        }));
-//
-//        install(new FactoryModuleBuilder()
-//                        .implement(CommentPermissionValidator.class, CommentPermissionValidator.class)
-//                        .build(new TypeLiteral<ValidatorFactory<CommentPermissionValidator>>() {
-//                        }));
-//
-//        install(new FactoryModuleBuilder()
-//                        .implement(WritePermissionValidator.class, WritePermissionValidator.class)
-//                        .build(new TypeLiteral<ValidatorFactory<WritePermissionValidator>>() {
-//                        }));
-//
-//        install(new FactoryModuleBuilder()
-//                        .implement(UserIsProjectOwnerValidator.class, UserIsProjectOwnerValidator.class)
-//                        .build(new TypeLiteral<ValidatorFactory<UserIsProjectOwnerValidator>>() {
-//                        }));
-//
-//        install(new FactoryModuleBuilder()
-//                        .implement(AdminPermissionValidator.class, AdminPermissionValidator.class)
-//                        .build(new TypeLiteral<ValidatorFactory<AdminPermissionValidator>>() {
-//                        }));
-//
-//
-//    }
 
     @Provides(type = Provides.Type.SET)
     public ActionHandler provideGetClientApplicationPropertiesActionHandler(
             GetClientApplicationPropertiesActionHandler handler) {
         return handler;
     }
-
-//    @Provides(type = Provides.Type.SET)
-//    public ActionHandler provideGetUserIdsActionHandler(GetUserIdsActionHandler handler) {
-//        return handler;
-//    }
 
     @Provides(type = Provides.Type.SET)
     public ActionHandler provideGetAvailableProjectsHandler(GetAvailableProjectsHandler handler) {

@@ -2,7 +2,15 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.*;
+import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectCache;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreImpl;
@@ -68,5 +76,29 @@ public class ApplicationModule {
     @Provides
     ValidatorFactory<UserIsProjectOwnerValidator> providesUserIsProjectOwnerValidatorFactory(ProjectDetailsManager projectDetailsManager) {
         return (projectId1, userId) -> new UserIsProjectOwnerValidator(projectId1, userId, projectDetailsManager);
+    }
+
+
+    @Provides
+    @Singleton
+    public OWLAPIProjectManager provideOWLAPIProjectManager(OWLAPIProjectCache projectCache) {
+        return new OWLAPIProjectManager(projectCache);
+    }
+
+    @Provides
+    @Singleton
+    public ActionHandlerRegistry provideActionHandlerRegistry(ActionHandlerRegistryImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    public DispatchServiceExecutor provideDispatchServiceExecutor(DispatchServiceExecutorImpl impl) {
+        return impl;
+    }
+
+    @Singleton
+    @Provides
+    public WebProtegeLogger provideWebProtegeLogger(DefaultLogger logger) {
+        return logger;
     }
 }

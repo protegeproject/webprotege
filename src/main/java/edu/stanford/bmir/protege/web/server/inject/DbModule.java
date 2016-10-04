@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
+
+import javax.inject.Singleton;
 
 /**
  * Matthew Horridge
@@ -22,4 +26,17 @@ public class DbModule {
     public int provideDbPort(DbPortProvider dbPortProvider) {
         return dbPortProvider.get();
     }
+
+    @Provides
+    @Singleton
+    public MongoClient provideMongoClient(MongoClientProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    @Singleton
+    public MongoDatabase provideMongoDatabase(MongoDatabaseProvider provider) {
+        return provider.get();
+    }
+
 }
