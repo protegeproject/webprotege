@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
-import javax.inject.Inject;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>

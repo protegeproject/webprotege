@@ -5,8 +5,6 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import static com.google.common.base.Preconditions.checkNotNull;

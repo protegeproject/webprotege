@@ -2,11 +2,7 @@ package edu.stanford.bmir.protege.web.client.dispatch.cache;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
-import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEventHandler;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;

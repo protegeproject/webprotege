@@ -8,7 +8,6 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -19,6 +18,8 @@ import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge

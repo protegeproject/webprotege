@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import org.semanticweb.owlapi.model.EntityType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

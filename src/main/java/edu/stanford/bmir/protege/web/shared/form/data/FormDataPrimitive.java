@@ -3,16 +3,12 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
 
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

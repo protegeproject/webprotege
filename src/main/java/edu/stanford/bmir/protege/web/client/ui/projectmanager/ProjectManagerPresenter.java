@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import javax.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -25,6 +24,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 

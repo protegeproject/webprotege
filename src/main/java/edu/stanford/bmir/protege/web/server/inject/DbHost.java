@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.BindingAnnotation;
 
 import javax.inject.Qualifier;
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Matthew Horridge

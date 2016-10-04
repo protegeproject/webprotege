@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import com.google.inject.AbstractModule;
-import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
@@ -9,12 +7,8 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepositoryProvider;
-import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
-import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 
 import javax.inject.Singleton;
-
-import static com.google.inject.Scopes.SINGLETON;
 
 /**
  * Matthew Horridge

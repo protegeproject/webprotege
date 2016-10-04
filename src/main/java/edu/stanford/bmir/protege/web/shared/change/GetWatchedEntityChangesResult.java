@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.concurrent.Immutable;
-import java.io.Serializable;
 import java.util.Date;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

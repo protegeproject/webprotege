@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.inject.MailProperties;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.inject.Inject;

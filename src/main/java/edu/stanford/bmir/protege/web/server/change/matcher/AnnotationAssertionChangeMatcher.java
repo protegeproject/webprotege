@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import javax.inject.Inject;
 import com.google.inject.TypeLiteral;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**

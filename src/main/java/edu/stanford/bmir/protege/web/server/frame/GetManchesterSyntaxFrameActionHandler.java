@@ -6,14 +6,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxFrameRenderer;
 import org.semanticweb.owlapi.model.OWLOntology;
-
 
 import javax.inject.Inject;
 import java.io.StringWriter;

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;
-import java.nio.file.Paths;
 
 /**
  * Matthew Horridge

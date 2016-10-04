@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
-import javax.servlet.Servlet;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

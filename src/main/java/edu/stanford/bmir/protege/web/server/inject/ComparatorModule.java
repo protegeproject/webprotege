@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomComparatorImpl;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeOrdering;
 import edu.stanford.bmir.protege.web.shared.axiom.DefaultAxiomTypeOrdering;
 import edu.stanford.bmir.protege.web.shared.object.*;

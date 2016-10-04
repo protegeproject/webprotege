@@ -4,11 +4,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
-import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.inject.project.ImportsCacheDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.ImportsCacheDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ImportedOntologyMetadata;

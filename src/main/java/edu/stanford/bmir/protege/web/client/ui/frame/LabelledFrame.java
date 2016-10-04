@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

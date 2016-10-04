@@ -5,8 +5,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualF
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFrameEditor;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 

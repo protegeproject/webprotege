@@ -2,13 +2,11 @@
 package edu.stanford.bmir.protege.web.shared.issues.events;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

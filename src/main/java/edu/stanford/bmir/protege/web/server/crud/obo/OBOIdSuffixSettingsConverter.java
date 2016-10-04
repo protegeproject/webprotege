@@ -3,11 +3,10 @@ package edu.stanford.bmir.protege.web.server.crud.obo;
 import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
-import org.bson.*;
+import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;

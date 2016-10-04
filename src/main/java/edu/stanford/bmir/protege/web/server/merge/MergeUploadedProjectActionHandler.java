@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
+import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -31,8 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge

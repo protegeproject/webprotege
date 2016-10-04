@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.ArrayList;
 import java.util.Collections;

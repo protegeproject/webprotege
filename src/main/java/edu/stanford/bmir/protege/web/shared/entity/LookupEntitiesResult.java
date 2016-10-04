@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

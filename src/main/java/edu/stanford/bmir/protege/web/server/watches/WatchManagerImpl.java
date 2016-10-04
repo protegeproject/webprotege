@@ -6,14 +6,17 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.watches.*;
-import org.semanticweb.owlapi.model.*;
+import edu.stanford.bmir.protege.web.shared.watches.UserWatch;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
+import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
+import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

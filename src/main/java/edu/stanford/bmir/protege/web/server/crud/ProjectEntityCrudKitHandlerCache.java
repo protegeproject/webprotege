@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

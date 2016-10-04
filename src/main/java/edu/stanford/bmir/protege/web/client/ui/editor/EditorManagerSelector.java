@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import java.io.Serializable;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

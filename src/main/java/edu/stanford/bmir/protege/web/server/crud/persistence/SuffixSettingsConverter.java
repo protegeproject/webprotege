@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.crud.persistence;
 
-import com.mongodb.client.MongoCollection;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDSuffixSettingsConverter;

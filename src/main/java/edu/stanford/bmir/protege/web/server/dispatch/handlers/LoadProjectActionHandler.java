@@ -1,19 +1,19 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
-import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
-import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

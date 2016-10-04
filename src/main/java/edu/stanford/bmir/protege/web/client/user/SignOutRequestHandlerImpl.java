@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.place.shared.PlaceController;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>

@@ -2,12 +2,10 @@ package edu.stanford.bmir.protege.web.server.notes.impl.chao;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.notes.api.NoteStoreException;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;

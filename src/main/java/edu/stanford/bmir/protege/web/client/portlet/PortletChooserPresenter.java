@@ -3,10 +3,12 @@ package edu.stanford.bmir.protege.web.client.portlet;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import javax.inject.Inject;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.csv;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

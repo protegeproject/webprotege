@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**

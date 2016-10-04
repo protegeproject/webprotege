@@ -11,7 +11,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueGridGrammar;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -22,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

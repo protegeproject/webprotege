@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.render;
 
-import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.List;

@@ -1,19 +1,13 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.change.matcher.EditedAnnotationAssertion;
-import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -21,8 +15,6 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
-
-import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>

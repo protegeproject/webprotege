@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

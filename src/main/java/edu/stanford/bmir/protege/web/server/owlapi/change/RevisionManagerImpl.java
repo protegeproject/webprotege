@@ -1,18 +1,21 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;

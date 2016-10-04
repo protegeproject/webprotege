@@ -4,17 +4,20 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
-import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

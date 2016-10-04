@@ -1,15 +1,14 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Maps;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.Map;
-import java.util.Set;
 
 /**
 * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014

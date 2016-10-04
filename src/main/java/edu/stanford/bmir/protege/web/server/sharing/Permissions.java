@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
-import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.permissions.Permission.*;
 

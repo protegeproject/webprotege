@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.io.Serializable;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

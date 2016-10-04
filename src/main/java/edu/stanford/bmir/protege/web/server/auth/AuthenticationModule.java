@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.auth.ChallengeMessage;
+import edu.stanford.bmir.protege.web.shared.auth.ChapSessionId;
+import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
+import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 
 import javax.inject.Singleton;
 

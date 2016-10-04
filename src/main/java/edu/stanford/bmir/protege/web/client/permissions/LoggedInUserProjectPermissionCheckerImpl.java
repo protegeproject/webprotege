@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
 import com.google.common.base.Optional;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge

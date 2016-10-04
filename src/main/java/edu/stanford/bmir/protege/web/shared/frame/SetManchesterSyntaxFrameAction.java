@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 

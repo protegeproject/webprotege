@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.common.collect.Lists;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.util.List;

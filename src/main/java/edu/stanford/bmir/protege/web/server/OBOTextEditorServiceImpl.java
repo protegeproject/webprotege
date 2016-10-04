@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -23,8 +22,6 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>

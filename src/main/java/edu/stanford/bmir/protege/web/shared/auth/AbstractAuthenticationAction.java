@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.auth;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.util.Arrays;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

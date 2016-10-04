@@ -4,7 +4,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkElementIndex;
 
 /**
  * Author: Matthew Horridge<br>

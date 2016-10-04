@@ -13,7 +13,6 @@ import javax.inject.Provider;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;

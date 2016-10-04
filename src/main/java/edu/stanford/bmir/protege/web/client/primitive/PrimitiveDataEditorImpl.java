@@ -15,7 +15,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
@@ -29,6 +28,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;

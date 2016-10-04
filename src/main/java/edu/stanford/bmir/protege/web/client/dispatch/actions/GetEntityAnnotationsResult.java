@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;

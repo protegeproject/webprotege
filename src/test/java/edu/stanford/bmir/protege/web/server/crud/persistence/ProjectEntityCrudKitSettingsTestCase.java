@@ -4,7 +4,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 /**

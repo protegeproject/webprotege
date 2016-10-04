@@ -3,19 +3,17 @@ package edu.stanford.bmir.protege.web.server.perspective;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.io.Files;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.server.node.JsonNodeSerializer;
-import edu.stanford.protege.widgetmap.shared.node.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import edu.stanford.protege.widgetmap.shared.node.Node;
 
-import java.io.*;
+import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**

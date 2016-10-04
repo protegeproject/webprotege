@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
 import com.google.web.bindery.event.shared.Event;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>

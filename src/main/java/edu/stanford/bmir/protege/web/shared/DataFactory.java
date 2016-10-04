@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -11,10 +9,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

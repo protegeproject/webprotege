@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectory;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

@@ -1,20 +1,5 @@
 package edu.stanford.bmir.protege.web.server.notes.converter;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
-import edu.stanford.bmir.protege.web.shared.notes.*;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.*;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

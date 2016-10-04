@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.server.frame.FrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;

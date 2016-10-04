@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.metrics;
 
-import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
-
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 22/04/2014
  */

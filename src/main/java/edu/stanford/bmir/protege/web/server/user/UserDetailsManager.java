@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.user;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

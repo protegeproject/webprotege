@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.shared;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import java.io.Serializable;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

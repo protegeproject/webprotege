@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.shared.HasObject;
-import edu.stanford.bmir.protege.web.shared.dispatch.*;
-
-import java.io.Serializable;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import java.io.Serializable;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

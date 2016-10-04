@@ -8,13 +8,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
-import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.Collections;
 
 /**
  * Author: Matthew Horridge<br>

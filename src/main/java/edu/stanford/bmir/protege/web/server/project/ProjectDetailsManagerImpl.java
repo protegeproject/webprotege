@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

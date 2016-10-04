@@ -14,7 +14,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -28,6 +27,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Set;
 

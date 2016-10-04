@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import javax.inject.Inject;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.IRI;
@@ -9,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**

@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlu
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

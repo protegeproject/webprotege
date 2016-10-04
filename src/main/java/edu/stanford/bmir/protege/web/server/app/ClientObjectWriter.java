@@ -6,8 +6,6 @@ import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

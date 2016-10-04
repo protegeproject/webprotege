@@ -6,26 +6,21 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
-import javax.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.protege.widgetmap.client.RootNodeChangedEvent;
-import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
+import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/05/2014

@@ -13,9 +13,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.inject.Inject;
 

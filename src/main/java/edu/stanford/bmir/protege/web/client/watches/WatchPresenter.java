@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.watches;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -16,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.Set;
 
 /**

@@ -2,11 +2,9 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
-import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import javax.mail.MessagingException;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014

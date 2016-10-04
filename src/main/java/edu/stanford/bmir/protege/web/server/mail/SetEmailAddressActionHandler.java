@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
+import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectory;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;

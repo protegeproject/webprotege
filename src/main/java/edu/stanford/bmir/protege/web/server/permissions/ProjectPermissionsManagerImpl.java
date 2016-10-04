@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
-import edu.stanford.bmir.protege.web.server.project.ProjectExistsFilter;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;

@@ -7,7 +7,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
-
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 

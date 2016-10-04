@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.inject.TypeLiteral;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLAxiomChange;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.Optional;
 

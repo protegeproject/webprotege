@@ -8,16 +8,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionVa
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.issues.*;
-import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
+import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
 
 import javax.inject.Inject;
-import java.util.*;
-import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
+import java.util.ArrayList;
 
 /**
  * Matthew Horridge

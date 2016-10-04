@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 

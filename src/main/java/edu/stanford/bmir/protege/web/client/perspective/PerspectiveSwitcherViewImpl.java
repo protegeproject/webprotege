@@ -14,11 +14,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TabBar;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

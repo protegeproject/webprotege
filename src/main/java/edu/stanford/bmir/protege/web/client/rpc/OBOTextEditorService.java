@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.servlet.Servlet;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;

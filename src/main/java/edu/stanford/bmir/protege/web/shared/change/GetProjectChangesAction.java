@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.change;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

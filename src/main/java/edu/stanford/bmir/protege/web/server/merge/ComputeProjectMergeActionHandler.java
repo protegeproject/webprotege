@@ -1,11 +1,5 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
-import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
-import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -14,18 +8,22 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
+import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
+import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;

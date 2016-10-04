@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.suggest;
 
 import com.google.gwt.user.client.ui.SuggestOracle;
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.EntitySuggestOracleSuggestLimit;
@@ -13,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**

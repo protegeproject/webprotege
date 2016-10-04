@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.issues.events.IssueEvent;
-import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
-import edu.stanford.bmir.protege.web.shared.issues.mention.ParsedMention;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Matchers;
@@ -15,14 +13,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;

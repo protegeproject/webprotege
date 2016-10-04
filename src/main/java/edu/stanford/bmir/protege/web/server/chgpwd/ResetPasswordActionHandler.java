@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
-import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCode;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -23,7 +22,6 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCode.*;
-import static edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCode.INVALID_EMAIL_ADDRESS;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
-import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 

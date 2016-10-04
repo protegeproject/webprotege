@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.portlet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.shared.filter.Filter;
 
 /**
  * Matthew Horridge

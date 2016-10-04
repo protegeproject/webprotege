@@ -1,6 +1,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException" %>
-<%@ page import="java.io.StringWriter" %>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="java.io.StringWriter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true"%>
 <html>
 <head>
