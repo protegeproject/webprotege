@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.WatchFile;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -24,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
+@ProjectSingleton
 public class WatchStoreImpl implements WatchStore {
 
 

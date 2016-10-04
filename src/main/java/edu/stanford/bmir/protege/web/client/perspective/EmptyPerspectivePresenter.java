@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;

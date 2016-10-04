@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 
 import java.io.Serializable;
 
@@ -45,7 +45,6 @@ public class ProjectId implements Serializable, IsSerializable {
      * to the regular expression for project id.  See {@link #getIdRegExp()}
      * @throws NullPointerException if the id parameter is <code>null</code>.
      */
-    @Inject
     private ProjectId(String id) throws ProjectIdFormatException{
         this.id = checkFormat(checkNotNull(id));
     }

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;

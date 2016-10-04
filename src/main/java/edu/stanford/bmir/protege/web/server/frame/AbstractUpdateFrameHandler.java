@@ -34,7 +34,6 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
 
     private final ValidatorFactory<WritePermissionValidator> validatorFactory;
 
-    @Inject
     public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager,
                                       ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);

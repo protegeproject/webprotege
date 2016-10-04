@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
-import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
+import dagger.Module;
+import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.permissions.PermissionChecker;
@@ -15,37 +14,72 @@ import edu.stanford.bmir.protege.web.server.project.ProjectExistsFilterImpl;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
-import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManagerImpl;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.io.File;
-import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
+import javax.inject.Singleton;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class MetaProjectModule extends AbstractModule {
+@Module
+public class MetaProjectModule {
 
-    @Override
-    protected void configure() {
-        bind(ProjectExistsFilter.class).to(ProjectExistsFilterImpl.class);
-        bind(File.class).annotatedWith(MetaProjectFile.class).toProvider(MetaProjectFileProvider.class);
-        bind(URI.class).annotatedWith(MetaProjectURI.class).toProvider(MetaProjectURIProvider.class);
-        bind(AuthenticationManager.class).to(AuthenticationManagerImpl.class).asEagerSingleton();
-        bind(ProjectDetailsManager.class).to(ProjectDetailsManagerImpl.class).asEagerSingleton();
-        bind(ProjectPermissionsManager.class).to(ProjectPermissionsManagerImpl.class).asEagerSingleton();
-        bind(PermissionChecker.class).to(ProjectPermissionsManager.class);
-        bind(ProjectSharingSettingsManager.class).to(ProjectSharingSettingsManagerImpl.class).asEagerSingleton();
-        bind(UserDetailsManager.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
-        bind(HasGetUserIdByUserIdOrEmail.class).to(new TypeLiteral<UserDetailsManager>() {
-        });
-        // TODO: FIX THIS
-        bind(HasUserIds.class).toInstance(() -> Collections.emptySet());
+
+    @Provides
+    @Singleton
+    public ProjectExistsFilter provideProjectExistsFilter(ProjectExistsFilterImpl impl) {
+        return impl;
     }
+
+    @Provides
+    @Singleton
+    public AuthenticationManager provideAuthenticationManager(AuthenticationManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public ProjectDetailsManager provideProjectDetailsManager(ProjectDetailsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public ProjectPermissionsManager provideProjectPermissionsManager(ProjectPermissionsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public PermissionChecker providePermissionChecker(ProjectPermissionsManager projectPermissionsManager) {
+        return projectPermissionsManager;
+    }
+
+    @Provides
+    @Singleton
+    public ProjectSharingSettingsManager provideProjectSharingSettingsManager(ProjectSharingSettingsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public UserDetailsManager provideUserDetailsManager(UserDetailsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
+        return manager;
+    }
+
+//    @Provides
+//    @Singleton
+//    public HasUserIds provideHasUserIds() {
+//
+//    }
+
 }

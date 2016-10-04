@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.util;
 
 import org.apache.commons.io.FileUtils;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -14,6 +15,10 @@ import java.util.UUID;
  *         Date: 18/02/2014
  */
 public class TempFileFactoryImpl implements TempFileFactory {
+
+    @Inject
+    public TempFileFactoryImpl() {
+    }
 
     @Override
     public File createTempDirectory() throws IOException {

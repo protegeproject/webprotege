@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;

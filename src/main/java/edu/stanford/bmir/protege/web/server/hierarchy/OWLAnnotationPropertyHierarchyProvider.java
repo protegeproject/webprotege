@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
  * Bio Health Informatics Group<br>
  * Date: Apr 23, 2009<br><br>
  */
+@ProjectSingleton
 public class OWLAnnotationPropertyHierarchyProvider extends AbstractOWLObjectHierarchyProvider<OWLAnnotationProperty> {
 
     private OWLOntology rootOntology;

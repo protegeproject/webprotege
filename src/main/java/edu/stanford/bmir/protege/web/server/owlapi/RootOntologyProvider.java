@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
@@ -29,7 +30,7 @@ import javax.inject.Singleton;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-@Singleton
+@ProjectSingleton
 public class RootOntologyProvider implements Provider<OWLOntology> {
 
     private final OWLAPIProjectDocumentStore documentStore;

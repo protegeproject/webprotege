@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -32,6 +33,10 @@ public class WatchIndex {
     private final Lock readLock = readWriteLock.readLock();
 
     private final Lock writeLock = readWriteLock.writeLock();
+
+    @Inject
+    public WatchIndex() {
+    }
 
     public boolean addWatch(Watch<?> watch, UserId userId) {
         try {

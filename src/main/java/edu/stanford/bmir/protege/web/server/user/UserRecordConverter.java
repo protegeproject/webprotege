@@ -10,6 +10,7 @@ import org.bson.types.Binary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import static com.mongodb.client.model.Filters.regex;
 
@@ -31,6 +32,10 @@ public class UserRecordConverter implements DocumentConverter<UserRecord> {
     private static final String SALT = "salt";
 
     private static final String SALTED_PASSWORD_DIGEST = "saltedPasswordDigest";
+
+    @Inject
+    public UserRecordConverter() {
+    }
 
     @Override
     public Document toDocument(@Nonnull UserRecord object) {

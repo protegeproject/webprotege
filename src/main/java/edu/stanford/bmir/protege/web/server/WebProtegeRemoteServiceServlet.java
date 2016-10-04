@@ -4,13 +4,16 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,8 +29,8 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
 
     public final WebProtegeLogger logger;
 
-    public WebProtegeRemoteServiceServlet() {
-        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    public WebProtegeRemoteServiceServlet(@Nonnull  WebProtegeLogger logger) {
+        this.logger = checkNotNull(logger);
     }
 
     /**

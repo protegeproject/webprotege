@@ -3,11 +3,17 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.AbstractModule;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import dagger.Module;
+import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepositoryProvider;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
+
+import javax.inject.Singleton;
+
 import static com.google.inject.Scopes.SINGLETON;
 
 /**
@@ -17,32 +23,31 @@ import static com.google.inject.Scopes.SINGLETON;
  *
  * A module for binding Spring Data Repositories.
  */
-public class RepositoryModule extends AbstractModule {
+@Module
+public class RepositoryModule {
 
-    @Override
-    protected void configure() {
+    @Provides
+    @Singleton
+    public MongoClient provideMongoClient(MongoClientProvider provider) {
+        return provider.get();
+    }
 
-        System.out.println("Configuring RepositoryModule");
+    @Provides
+    @Singleton
+    public MongoDatabase provideMongoDatabase(MongoDatabaseProvider provider) {
+        return provider.get();
+    }
 
-//        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(WebProtegeApplicationConfig.class);
+    @Provides
+    @Singleton
+    public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
+            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
+        return new ProjectEntityCrudKitSettingsRepository(database, converter);
+    }
 
-//        bind(ApplicationContext.class).toInstance(applicationContext);
-
-        bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
-
-        bind(MongoDatabase.class).toProvider(MongoDatabaseProvider.class);
-
-        bind(ProjectEntityCrudKitSettingsRepository.class).in(SINGLETON);
-
-        bind(UserRecordRepository.class).in(SINGLETON);
-
-        bind(ProjectDetailsRepository.class).in(SINGLETON);
-
-        bind(ProjectPermissionRecordRepository.class)
-                .toProvider(ProjectPermissionRecordRepositoryProvider.class)
-                .in(SINGLETON);
-
-//        bind(IssueRepository.class)
-//                .toInstance(applicationContext.getBean(IssueRepository.class));
+    @Provides
+    @Singleton
+    public ProjectPermissionRecordRepository provideProjectPermissionRecordRepository(ProjectPermissionRecordRepositoryProvider provider) {
+        return provider.get();
     }
 }

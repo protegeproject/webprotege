@@ -30,7 +30,6 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
 
     private OWLAPIProjectManager projectManager;
 
-    @Inject
     public AbstractHasProjectActionHandler(OWLAPIProjectManager projectManager) {
         this.projectManager = checkNotNull(projectManager);
     }

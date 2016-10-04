@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/01/15
  */
+@ProjectSingleton
 public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
     private final HasAnnotationAssertionAxioms annotationAssertionAxiomProvider;

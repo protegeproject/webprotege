@@ -1,12 +1,16 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +30,25 @@ import java.io.IOException;
  */
 public class FileDownloadServlet extends HttpServlet {
 
+    @Nonnull
+    private final OWLAPIProjectManager projectManager;
+
+    @Nonnull
+    private final ProjectDetailsManager projectDetailsManager;
+
+    @Nonnull
+    private final String applicationName;
+
+    @Inject
+    public FileDownloadServlet(
+            @Nonnull OWLAPIProjectManager projectManager,
+            @Nonnull ProjectDetailsManager projectDetailsManager,
+            @Nonnull @ApplicationName String applicationName) {
+        this.projectManager = projectManager;
+        this.projectDetailsManager = projectDetailsManager;
+        this.applicationName = applicationName;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
@@ -33,11 +56,9 @@ public class FileDownloadServlet extends HttpServlet {
             ProjectId projectId = downloadParameters.getProjectId();
             RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
             DownloadFormat format = downloadParameters.getFormat();
-            ProjectDetailsManager projectDetailsManager = WebProtegeInjector.get().getInstance(ProjectDetailsManager.class);
             String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-            OWLAPIProjectManager projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
             OWLAPIProject project = projectManager.getProject(projectId);
-            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(displayName, project, revisionNumber, format);
+            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(displayName, project, revisionNumber, format, applicationName);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();

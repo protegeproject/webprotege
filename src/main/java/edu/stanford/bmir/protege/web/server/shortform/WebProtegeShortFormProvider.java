@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/04/2012
  */
+@ProjectSingleton
 public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final IRIShortFormProvider iriShortFormProvider;

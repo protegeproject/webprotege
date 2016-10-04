@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import com.google.inject.AbstractModule;
+import dagger.Module;
+import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.inject.MailProperties;
 
+import javax.inject.Singleton;
 import java.util.Properties;
 
 /**
@@ -10,13 +14,32 @@ import java.util.Properties;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class MailModule extends AbstractModule {
+@Module
+public class MailModule {
 
-    @Override
-    protected void configure() {
-        bind(MailManager.class).asEagerSingleton();
-        bind(SendMail.class).to(MailManager.class);
-        bind(MessagingExceptionHandler.class).to(WebProtegeLoggerMessagingExceptionHandler.class);
-        bind(Properties.class).annotatedWith(MailProperties.class).toProvider(MailPropertiesProvider.class).asEagerSingleton();
+    @Provides
+    @MailProperties
+    @Singleton
+    public Properties provideMailProperties(MailPropertiesProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    @Singleton
+    public MailManager provideMailManager(@ApplicationName String appName,
+                                          @ApplicationHost String appHost,
+                                          @MailProperties Properties properties,
+                                          MessagingExceptionHandler exceptionHandler) {
+        return new MailManager(appName, appHost, properties, exceptionHandler);
+    }
+
+    @Provides
+    public SendMail provideSendMail(MailManager manager) {
+        return manager;
+    }
+
+    @Provides
+    public MessagingExceptionHandler provideMessagingExceptionHandler(MessagingExceptionHandlerImpl handler) {
+        return handler;
     }
 }

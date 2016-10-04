@@ -24,9 +24,6 @@ public class NullHighlightedEntityChecker implements HighlightedEntityChecker {
         return INSTANCE;
     }
 
-    @Inject
-    private NullHighlightedEntityChecker() {
-    }
 
     @Override
     public boolean isHighlighted(OWLEntity entity) {

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import org.bson.Document;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge
@@ -14,6 +15,10 @@ import javax.annotation.Nonnull;
 public class UUIDSuffixSettingsConverter implements DocumentConverter<UUIDSuffixSettings> {
 
     private static final UUIDSuffixSettings UUID_SUFFIX_SETTINGS = new UUIDSuffixSettings();
+
+    @Inject
+    public UUIDSuffixSettingsConverter() {
+    }
 
     @Override
     public Document toDocument(@Nonnull UUIDSuffixSettings object) {

@@ -9,12 +9,18 @@ import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 12/02/15
  */
 public class LogOutUserActionHandler implements ActionHandler<LogOutUserAction, LogOutUserResult> {
+
+    @Inject
+    public LogOutUserActionHandler() {
+    }
 
     @Override
     public Class<LogOutUserAction> getActionClass() {

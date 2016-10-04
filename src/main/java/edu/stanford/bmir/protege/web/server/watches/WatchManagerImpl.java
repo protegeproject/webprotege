@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -23,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
+@ProjectSingleton
 public class WatchManagerImpl implements WatchManager, HasDispose {
 
     private final ProjectId projectId;

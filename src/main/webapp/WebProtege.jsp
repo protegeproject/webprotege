@@ -8,7 +8,7 @@
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.inject.ApplicationComponent" %>
 <%@ page import="java.io.IOException" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
 <%@ page import="java.util.Optional" %>
@@ -63,13 +63,23 @@
 </html>
 
 <%!
+    private ApplicationComponent getWebProtegeComponent() {
+        ServletContext context = getServletConfig().getServletContext();
+        return (ApplicationComponent) context.getAttribute(ApplicationComponent.class.getName());
+    }
+
+    private WebProtegeProperties getWebProtegeProperties() {
+        ApplicationComponent component = getWebProtegeComponent();
+        return component.getWebProtegeProperties();
+    }
+
     private void writeApplicationName(JspWriter out) throws IOException {
-        WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        WebProtegeProperties webProtegeProperties = getWebProtegeProperties();
         out.print(webProtegeProperties.getApplicationName());
     }
 
     private void writeClientApplicationProperties(JspWriter out) throws IOException {
-        WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        WebProtegeProperties webProtegeProperties = getWebProtegeProperties();
         ClientApplicationProperties props = webProtegeProperties.getClientApplicationProperties();
         ClientObjectWriter.get(
                 "clientApplicationProperties",
@@ -86,7 +96,7 @@
             );
         }
         else {
-            UserDetailsManager userDetailsManager = WebProtegeInjector.get().getInstance(UserDetailsManager.class);
+            UserDetailsManager userDetailsManager = getWebProtegeComponent().getUserDetailsManager();
             Optional<String> email = userDetailsManager.getEmail(userId);
             if(email.isPresent()) {
                 userInSession = new UserInSession(

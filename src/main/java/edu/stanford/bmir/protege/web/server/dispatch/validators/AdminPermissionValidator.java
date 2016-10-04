@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;

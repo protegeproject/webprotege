@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.inject.BindingAnnotation;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -10,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  * Stanford Center for Biomedical Informatics Research
  * 02/06/15
  */
+@Qualifier
 @BindingAnnotation
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ChangeHistoryFile {

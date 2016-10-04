@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.protege.owlapi.inference.cls.ChildClassExtractor;
 import org.protege.owlapi.inference.cls.ParentClassExtractor;
@@ -18,6 +19,7 @@ import java.util.*;
  * Bio-Health Informatics Group<br>
  * Date: 17-Jan-2007<br><br>
  */
+@ProjectSingleton
 public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyProvider<OWLClass> {
 
     /*

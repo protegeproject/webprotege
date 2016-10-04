@@ -42,7 +42,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
     private final PortletUi portletUi = new PortletUiImpl();
 
-    @Inject
     public AbstractWebProtegePortlet(SelectionModel selectionModel,
                                      EventBus eventBus,
                                      LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {

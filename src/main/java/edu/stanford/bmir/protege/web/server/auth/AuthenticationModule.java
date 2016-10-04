@@ -2,29 +2,52 @@ package edu.stanford.bmir.protege.web.server.auth;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import dagger.Module;
+import dagger.Provides;
 import edu.stanford.bmir.protege.web.shared.auth.*;
+
+import javax.inject.Singleton;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 17/02/15
  */
-public class AuthenticationModule extends AbstractModule {
+@Module
+public class AuthenticationModule {
 
     private static final long MAX_SESSION_DURATION_MS = 2 * 60 * 1000;
 
-    @Override
-    protected void configure() {
-        bind(MessageDigestAlgorithm.class).to(Md5MessageDigestAlgorithm.class);
+    @Provides
+    public MessageDigestAlgorithm provide(Md5MessageDigestAlgorithm algorithm) {
+        return algorithm;
+    }
 
-        // Chap session
-        bind(ChapSessionManager.class).asEagerSingleton();
-        bindConstant().annotatedWith(ChapSessionMaxDuration.class).to(MAX_SESSION_DURATION_MS);
+    @Provides
+    @ChapSessionMaxDuration
+    public long provideMaxSessionDuration() {
+        return MAX_SESSION_DURATION_MS;
+    }
 
-        // Creating ChapData
-        bind(ChapSessionId.class).toProvider(ChapSessionIdProvider.class);
-        bind(ChallengeMessage.class).toProvider(ChallengeMessageProvider.class);
-        install(new FactoryModuleBuilder().build(ChapSessionFactory.class));
+    @Singleton
+    @Provides
+    public ChapSessionManager provideChapSessionManager(ChapSessionFactory factory,
+                                                        @ChapSessionMaxDuration long maxSessionDuration) {
+        return new ChapSessionManager(factory, maxSessionDuration);
+    }
 
+    @Provides
+    public ChapSessionId provideChapSessionId(ChapSessionIdProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    public ChallengeMessage provideChallengeMessage(ChallengeMessageProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    public ChapSessionFactory provideChapSessionFactory(ChapSessionId chapSessionId, ChallengeMessage challengeMessage) {
+        return new ChapSessionFactory(chapSessionId, challengeMessage);
     }
 }

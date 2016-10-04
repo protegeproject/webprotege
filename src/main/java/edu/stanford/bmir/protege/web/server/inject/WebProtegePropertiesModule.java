@@ -3,8 +3,11 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import dagger.Module;
+import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
+import javax.inject.Singleton;
 import java.io.File;
 
 /**
@@ -12,13 +15,30 @@ import java.io.File;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class WebProtegePropertiesModule extends AbstractModule {
+@Module
+public class WebProtegePropertiesModule {
 
-    @Override
-    protected void configure() {
-        bind(WebProtegeProperties.class).toProvider(WebProtegePropertiesProvider.class).asEagerSingleton();
-        bind(String.class).annotatedWith(ApplicationName.class).toProvider(ApplicationNameProvider.class).asEagerSingleton();
-        bind(String.class).annotatedWith(ApplicationHost.class).toProvider(ApplicationHostProvider.class).asEagerSingleton();
-        bind(new TypeLiteral<Optional<String>>(){}).annotatedWith(AdminEmail.class).toProvider(AdminEmailProvider.class).asEagerSingleton();
+    @Provides
+    @Singleton
+    public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
+        return povider.get();
+    }
+
+    @Provides
+    @ApplicationName
+    public String provideApplicationName(ApplicationNameProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    @ApplicationHost
+    public String provideApplicationHost(ApplicationHostProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    @AdminEmail
+    public Optional<String> provideAdminEmail(AdminEmailProvider provider) {
+        return provider.get();
     }
 }

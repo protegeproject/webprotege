@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.*;

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.render.*;
@@ -27,7 +27,6 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.inject.Inject;
-import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -41,6 +40,7 @@ import java.util.*;
  * This class is here to deal with the confusion/mess surrounding "names" in web-protege.  It translates between OWLObjects
  * and EntityData and names.
  */
+@ProjectSingleton
 public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasHtmlBrowserText, LegacyEntityDataProvider {
 
     public static final String NULL_BROWSER_TEXT = "\"\"";
@@ -71,12 +71,13 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                             DeprecatedEntityChecker deprecatedChecker,
                             BidirectionalShortFormProvider shortFormProvider,
                             OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                            HighlightedEntityChecker highlightedEntityChecker) {
+                            HighlightedEntityChecker highlightedEntityChecker,
+                            WebProtegeLogger logger) {
         this.rootOntology = rootOnt;
         this.dataFactory = dataFactory;
         this.shortFormProvider = shortFormProvider;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
-        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+        this.logger = logger;
 
         ImmutableMap.Builder<IRI, OWLEntity> builtInEntities = ImmutableMap.builder();
 

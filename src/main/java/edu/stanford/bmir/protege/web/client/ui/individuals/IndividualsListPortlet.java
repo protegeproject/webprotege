@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.individuals;
 
 import com.google.common.base.Optional;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListPresenter;

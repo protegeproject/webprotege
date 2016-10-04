@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;

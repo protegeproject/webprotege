@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,10 @@ import java.util.List;
  * Date: 8/19/13
  */
 public class GetEntityCrudKitsActionHandler implements ActionHandler<GetEntityCrudKitsAction, GetEntityCrudKitsResult> {
+
+    @Inject
+    public GetEntityCrudKitsActionHandler() {
+    }
 
     @Override
     public Class<GetEntityCrudKitsAction> getActionClass() {

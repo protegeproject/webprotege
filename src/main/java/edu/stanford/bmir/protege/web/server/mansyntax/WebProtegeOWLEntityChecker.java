@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;

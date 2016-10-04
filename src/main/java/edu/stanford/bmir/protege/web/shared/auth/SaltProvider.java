@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Random;
 
@@ -12,6 +13,7 @@ public class SaltProvider implements Provider<Salt> {
 
     private Random random;
 
+    @Inject
     public SaltProvider() {
         random = new Random();
     }

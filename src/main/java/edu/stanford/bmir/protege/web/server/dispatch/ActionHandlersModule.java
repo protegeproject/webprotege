@@ -4,6 +4,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.multibindings.ProvidesIntoSet;
+import dagger.Module;
+import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
@@ -49,6 +52,8 @@ import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsAc
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
+import edu.stanford.bmir.protege.web.server.revision.GetHeadRevisionNumberActionHandler;
+import edu.stanford.bmir.protege.web.server.revision.GetRevisionSummariesActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
@@ -58,170 +63,495 @@ import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
-import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesResult;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class ActionHandlersModule extends AbstractModule {
+@Module
+public class ActionHandlersModule {
+//
+//    @Override
+//    protected void configure() {
+//
+//        install(new FactoryModuleBuilder()
+//                        .implement(ReadPermissionValidator.class, ReadPermissionValidator.class)
+//                        .build(new TypeLiteral<ValidatorFactory<ReadPermissionValidator>>() {
+//                        }));
+//
+//        install(new FactoryModuleBuilder()
+//                        .implement(CommentPermissionValidator.class, CommentPermissionValidator.class)
+//                        .build(new TypeLiteral<ValidatorFactory<CommentPermissionValidator>>() {
+//                        }));
+//
+//        install(new FactoryModuleBuilder()
+//                        .implement(WritePermissionValidator.class, WritePermissionValidator.class)
+//                        .build(new TypeLiteral<ValidatorFactory<WritePermissionValidator>>() {
+//                        }));
+//
+//        install(new FactoryModuleBuilder()
+//                        .implement(UserIsProjectOwnerValidator.class, UserIsProjectOwnerValidator.class)
+//                        .build(new TypeLiteral<ValidatorFactory<UserIsProjectOwnerValidator>>() {
+//                        }));
+//
+//        install(new FactoryModuleBuilder()
+//                        .implement(AdminPermissionValidator.class, AdminPermissionValidator.class)
+//                        .build(new TypeLiteral<ValidatorFactory<AdminPermissionValidator>>() {
+//                        }));
+//
+//
+//    }
 
-    @Override
-    protected void configure() {
-
-        install(new FactoryModuleBuilder()
-                .implement(ReadPermissionValidator.class, ReadPermissionValidator.class)
-                .build(new TypeLiteral<ValidatorFactory<ReadPermissionValidator>>(){}));
-
-        install(new FactoryModuleBuilder()
-                .implement(CommentPermissionValidator.class, CommentPermissionValidator.class)
-                .build(new TypeLiteral<ValidatorFactory<CommentPermissionValidator>>(){}));
-
-        install(new FactoryModuleBuilder()
-                .implement(WritePermissionValidator.class, WritePermissionValidator.class)
-                .build(new TypeLiteral<ValidatorFactory<WritePermissionValidator>>(){}));
-
-        install(new FactoryModuleBuilder()
-                .implement(UserIsProjectOwnerValidator.class, UserIsProjectOwnerValidator.class)
-                .build(new TypeLiteral<ValidatorFactory<UserIsProjectOwnerValidator>>(){}));
-
-        install(new FactoryModuleBuilder()
-                .implement(AdminPermissionValidator.class, AdminPermissionValidator.class)
-                .build(new TypeLiteral<ValidatorFactory<AdminPermissionValidator>>(){}));
-
-
-
-
-
-        Multibinder<ActionHandler> multibinder = Multibinder.newSetBinder(binder(), ActionHandler.class);
-        multibinder.addBinding().to(GetClientApplicationPropertiesActionHandler.class);
-        multibinder.addBinding().to(GetUserIdsActionHandler.class);
-
-        multibinder.addBinding().to(GetAvailableProjectsHandler.class);
-        multibinder.addBinding().to(GetProjectDetailsActionHandler.class);
-        multibinder.addBinding().to(LoadProjectActionHandler.class);
-
-        multibinder.addBinding().to(CreateNewProjectActionHandler.class);
-
-        multibinder.addBinding().to(GetProjectEventsActionHandler.class);
-
-        multibinder.addBinding().to(GetProjectSettingsActionHandler.class);
-        multibinder.addBinding().to(SetProjectSettingsActionHandler.class);
-
-        multibinder.addBinding().to(GetClassFrameActionHandler.class);
-        multibinder.addBinding().to(UpdateClassFrameActionHandler.class);
-
-        multibinder.addBinding().to(GetObjectPropertyFrameActionHandler.class);
-        multibinder.addBinding().to(UpdateObjectPropertyFrameHandler.class);
-
-        multibinder.addBinding().to(GetDataPropertyFrameActionHandler.class);
-        multibinder.addBinding().to(UpdateDataPropertyFrameHandler.class);
-
-        multibinder.addBinding().to(GetAnnotationPropertyFrameActionHandler.class);
-        multibinder.addBinding().to(UpdateAnnotationPropertyFrameActionHandler.class);
-
-        multibinder.addBinding().to(GetNamedIndividualFrameActionHandler.class);
-        multibinder.addBinding().to(UpdateNamedIndividualFrameHandler.class);
-
-        multibinder.addBinding().to(GetOntologyFramesActionHandler.class);
-
-        multibinder.addBinding().to(GetRootOntologyIdActionHandler.class);
-        multibinder.addBinding().to(GetOntologyAnnotationsActionHandler.class);
-        multibinder.addBinding().to(SetOntologyAnnotationsActionHandler.class);
-        multibinder.addBinding().to(GetEntityAnnotationsActionHandler.class);
-
-        multibinder.addBinding().to(DeleteEntityActionHandler.class);
-
-        multibinder.addBinding().to(CreateClassActionHandler.class);
-        multibinder.addBinding().to(CreateClassesActionHandler.class);
-        multibinder.addBinding().to(CreateObjectPropertyActionHandler.class);
-        multibinder.addBinding().to(CreateDataPropertiesActionHandler.class);
-        multibinder.addBinding().to(CreateAnnotationPropertiesActionHandler.class);
-        multibinder.addBinding().to(CreateNamedIndividualsActionHandler.class);
-
-        multibinder.addBinding().to(LookupEntitiesActionHandler.class);
-
-        multibinder.addBinding().to(AddWatchActionHandler.class);
-        multibinder.addBinding().to(RemoveWatchActionHandler.class);
-        multibinder.addBinding().to(SetEntityWatchesActionHandler.class);
-        multibinder.addBinding().to(GetWatchesActionHandler.class);
-
-        multibinder.addBinding().to(GetCurrentUserInSessionActionHandler.class);
-        multibinder.addBinding().to(SetEmailAddressActionHandler.class);
-        multibinder.addBinding().to(GetEmailAddressActionHandler.class);
-
-        multibinder.addBinding().to(GetDiscussionThreadActionHandler.class);
-        multibinder.addBinding().to(AddNoteToEntityActionHandler.class);
-        multibinder.addBinding().to(AddReplyToNoteActionHandler.class);
-        multibinder.addBinding().to(SetNoteStatusActionHandler.class);
-        multibinder.addBinding().to(DeleteNoteActionHandler.class);
-
-        multibinder.addBinding().to(MoveProjectsToTrashActionHandler.class);
-        multibinder.addBinding().to(RemoveProjectsFromTrashActionHandler.class);
-
-        multibinder.addBinding().to(GetCSVGridActionHandler.class);
-        multibinder.addBinding().to(ImportCSVFileActionHandler.class);
-
-        multibinder.addBinding().to(GetUsageActionHandler.class);
-
-        multibinder.addBinding().to(GetIndividualsActionHandler.class);
-
-        multibinder.addBinding().to(GetEntityRenderingActionHandler.class);
-        multibinder.addBinding().to(GetEntityDataActionHandler.class);
-
-
-        multibinder.addBinding().to(GetDataPropertyFrameActionHandler.class);
-
-        multibinder.addBinding().to(GetMetricsActionHandler.class);
-
-        multibinder.addBinding().to(GetEntityCrudKitsActionHandler.class);
-        multibinder.addBinding().to(SetEntityCrudKitSettingsActionHandler.class);
-        multibinder.addBinding().to(GetEntityCrudKitSettingsActionHandler.class);
-
-        multibinder.addBinding().to(GetManchesterSyntaxFrameActionHandler.class);
-        multibinder.addBinding().to(SetManchesterSyntaxFrameActionHandler.class);
-        multibinder.addBinding().to(CheckManchesterSyntaxFrameActionHandler.class);
-        multibinder.addBinding().to(GetManchesterSyntaxFrameCompletionsActionHandler.class);
-
-        multibinder.addBinding().to(ResetPasswordActionHandler.class);
-
-        multibinder.addBinding().to(GetProjectSharingSettingsActionHandler.class);
-
-        multibinder.addBinding().to(SetProjectSharingSettingsActionHandler.class);
-
-        multibinder.addBinding().to(LogOutUserActionHandler.class);
-        multibinder.addBinding().to(GetChapSessionActionHandler.class);
-
-        multibinder.addBinding().to(PerformLoginActionHandler.class);
-        multibinder.addBinding().to(ChangePasswordActionHandler.class);
-        multibinder.addBinding().to(CreateUserAccountActionHandler.class);
-
-        multibinder.addBinding().to(GetHeadRevisionNumberActionHandler.class);
-        multibinder.addBinding().to(GetRevisionSummariesActionHandler.class);
-
-        multibinder.addBinding().to(GetPermissionsActionHandler.class);
-
-        multibinder.addBinding().to(ComputeProjectMergeActionHandler.class);
-        multibinder.addBinding().to(MergeUploadedProjectActionHandler.class);
-
-        multibinder.addBinding().to(GetProjectChangesActionHandler.class);
-        multibinder.addBinding().to(GetWatchedEntityChangesActionHandler.class);
-
-        multibinder.addBinding().to(RevertRevisionActionHandler.class);
-
-        multibinder.addBinding().to(GetPersonIdCompletionsActionHandler.class);
-        multibinder.addBinding().to(GetUserIdCompletionsActionHandler.class);
-        multibinder.addBinding().to(GetPersonIdItemsActionHandler.class);
-
-        multibinder.addBinding().to(GetPerspectiveLayoutActionHandler.class);
-        multibinder.addBinding().to(SetPerspectiveLayoutActionHandler.class);
-        multibinder.addBinding().to(GetPerspectivesActionHandler.class);
-        multibinder.addBinding().to(SetPerspectivesActionHandler.class);
-
-        multibinder.addBinding().to(GetFormDescriptorActionHander.class);
-
-        multibinder.addBinding().to(GetIssuesActionHandler.class);
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetClientApplicationPropertiesActionHandler(
+            GetClientApplicationPropertiesActionHandler handler) {
+        return handler;
     }
+
+//    @Provides(type = Provides.Type.SET)
+//    public ActionHandler provideGetUserIdsActionHandler(GetUserIdsActionHandler handler) {
+//        return handler;
+//    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetAvailableProjectsHandler(GetAvailableProjectsHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetProjectDetailsActionHandler(GetProjectDetailsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideLoadProjectActionHandler(LoadProjectActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateNewProjectActionHandler(CreateNewProjectActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetProjectEventsActionHandler(GetProjectEventsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetProjectSettingsActionHandler(GetProjectSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetProjectSettingsActionHandler(SetProjectSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetClassFrameActionHandler(GetClassFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideUpdateClassFrameActionHandler(UpdateClassFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetObjectPropertyFrameActionHandler(
+            GetObjectPropertyFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideUpdateObjectPropertyFrameHandler(UpdateObjectPropertyFrameHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideUpdateDataPropertyFrameHandler(UpdateDataPropertyFrameHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetAnnotationPropertyFrameActionHandler(
+            GetAnnotationPropertyFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideUpdateAnnotationPropertyFrameActionHandler(
+            UpdateAnnotationPropertyFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetNamedIndividualFrameActionHandler(
+            GetNamedIndividualFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideUpdateNamedIndividualFrameHandler(UpdateNamedIndividualFrameHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetOntologyFramesActionHandler(GetOntologyFramesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetRootOntologyIdActionHandler(GetRootOntologyIdActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetOntologyAnnotationsActionHandler(
+            GetOntologyAnnotationsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetOntologyAnnotationsActionHandler(
+            SetOntologyAnnotationsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetEntityAnnotationsActionHandler(GetEntityAnnotationsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideDeleteEntityActionHandler(DeleteEntityActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateClassActionHandler(CreateClassActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateClassesActionHandler(CreateClassesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateObjectPropertyActionHandler(CreateObjectPropertyActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateDataPropertiesActionHandler(CreateDataPropertiesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateAnnotationPropertiesActionHandler(
+            CreateAnnotationPropertiesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateNamedIndividualsActionHandler(
+            CreateNamedIndividualsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideLookupEntitiesActionHandler(LookupEntitiesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideAddWatchActionHandler(AddWatchActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideRemoveWatchActionHandler(RemoveWatchActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetEntityWatchesActionHandler(SetEntityWatchesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetWatchesActionHandler(GetWatchesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetCurrentUserInSessionActionHandler(
+            GetCurrentUserInSessionActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetEmailAddressActionHandler(SetEmailAddressActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetEmailAddressActionHandler(GetEmailAddressActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetDiscussionThreadActionHandler(GetDiscussionThreadActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideAddNoteToEntityActionHandler(AddNoteToEntityActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideAddReplyToNoteActionHandler(AddReplyToNoteActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetNoteStatusActionHandler(SetNoteStatusActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideDeleteNoteActionHandler(DeleteNoteActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideMoveProjectsToTrashActionHandler(MoveProjectsToTrashActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideRemoveProjectsFromTrashActionHandler(
+            RemoveProjectsFromTrashActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetCSVGridActionHandler(GetCSVGridActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideImportCSVFileActionHandler(ImportCSVFileActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetUsageActionHandler(GetUsageActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetIndividualsActionHandler(GetIndividualsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetEntityRenderingActionHandler(GetEntityRenderingActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetEntityDataActionHandler(GetEntityDataActionHandler handler) {
+        return handler;
+    }
+
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetDataPropertyFrameActionHandler(GetDataPropertyFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetMetricsActionHandler(GetMetricsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetEntityCrudKitSettingsActionHandler(
+            SetEntityCrudKitSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetEntityCrudKitSettingsActionHandler(
+            GetEntityCrudKitSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetManchesterSyntaxFrameActionHandler(
+            GetManchesterSyntaxFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetManchesterSyntaxFrameActionHandler(
+            SetManchesterSyntaxFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCheckManchesterSyntaxFrameActionHandler(
+            CheckManchesterSyntaxFrameActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetManchesterSyntaxFrameCompletionsActionHandler(
+            GetManchesterSyntaxFrameCompletionsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideResetPasswordActionHandler(ResetPasswordActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetProjectSharingSettingsActionHandler(
+            GetProjectSharingSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetProjectSharingSettingsActionHandler(
+            SetProjectSharingSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideLogOutUserActionHandler(LogOutUserActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetChapSessionActionHandler(GetChapSessionActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler providePerformLoginActionHandler(PerformLoginActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideChangePasswordActionHandler(ChangePasswordActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateUserAccountActionHandler(CreateUserAccountActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetHeadRevisionNumberActionHandler(
+            GetHeadRevisionNumberActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetRevisionSummariesActionHandler(GetRevisionSummariesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetPermissionsActionHandler(GetPermissionsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideComputeProjectMergeActionHandler(ComputeProjectMergeActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideMergeUploadedProjectActionHandler(MergeUploadedProjectActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetProjectChangesActionHandler(GetProjectChangesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetWatchedEntityChangesActionHandler(
+            GetWatchedEntityChangesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideRevertRevisionActionHandler(RevertRevisionActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetPersonIdCompletionsActionHandler(
+            GetPersonIdCompletionsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetUserIdCompletionsActionHandler(GetUserIdCompletionsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetPersonIdItemsActionHandler(GetPersonIdItemsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetPerspectiveLayoutActionHandler(GetPerspectiveLayoutActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetPerspectiveLayoutActionHandler(SetPerspectiveLayoutActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetPerspectivesActionHandler(GetPerspectivesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideSetPerspectivesActionHandler(SetPerspectivesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetFormDescriptorActionHander(GetFormDescriptorActionHander handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetIssuesActionHandler(GetIssuesActionHandler handler) {
+        return handler;
+    }
+
 }

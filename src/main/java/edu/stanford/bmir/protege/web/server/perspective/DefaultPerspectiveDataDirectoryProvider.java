@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 
 import javax.inject.Provider;
@@ -15,7 +15,7 @@ public class DefaultPerspectiveDataDirectoryProvider implements Provider<File> {
 
     private final DataDirectoryProvider dataDirectoryProvider;
 
-    @Inject
+    @javax.inject.Inject
     public DefaultPerspectiveDataDirectoryProvider(DataDirectoryProvider dataDirectoryProvider) {
         this.dataDirectoryProvider = dataDirectoryProvider;
     }

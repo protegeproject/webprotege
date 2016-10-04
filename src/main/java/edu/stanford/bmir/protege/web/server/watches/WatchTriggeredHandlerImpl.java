@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.stanford.bmir.protege.web.client.place.ItemSelection;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
@@ -44,7 +45,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
     @Inject
     public WatchTriggeredHandlerImpl(ProjectId projectId,
                                      BrowserTextProvider browserTextProvider,
-                                     String applicationHost,
+                                     @ApplicationHost String applicationHost,
                                      SendMail mailManager,
                                      UserDetailsManager userDetailsManager) {
         this.projectId = projectId;

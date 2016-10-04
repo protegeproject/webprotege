@@ -20,73 +20,8 @@
 	<!-- Listener for initializing and disposing WebProtege -->
 	
 	<listener>
-		<listener-class>edu.stanford.bmir.protege.web.server.WebProtegeInitializer</listener-class>
+		<listener-class>edu.stanford.bmir.protege.web.server.WebProtegeServletContextListener</listener-class>
 	</listener>
-
-
-	<!-- WebProtege servlets -->
-
-    <servlet>
-		<servlet-name>DispatchService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>DownloadServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.filedownload.FileDownloadServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OntologyServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.owlapi.OntologyServiceOWLAPIImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OBOTextEditorService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>BioPortalAPIService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ProjectUploadServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.filesubmission.FileUploadServlet</servlet-class>
-	</servlet>
-
-	<!-- Servlet mappings -->
-
-    <servlet-mapping>
-		<servlet-name>DispatchService</servlet-name>
-		<url-pattern>/webprotege/dispatchservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>DownloadServlet</servlet-name>
-		<url-pattern>/download</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OntologyServiceImpl</servlet-name>
-		<url-pattern>/webprotege/ontology</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ProjectUploadServlet</servlet-name>
-		<url-pattern>/webprotege/submitfile</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OBOTextEditorService</servlet-name>
-		<url-pattern>/webprotege/obotexteditorservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>BioPortalAPIService</servlet-name>
-		<url-pattern>/webprotege/bioportalapi</url-pattern>
-	</servlet-mapping>
 
 	<!-- Default page to serve -->
 	
