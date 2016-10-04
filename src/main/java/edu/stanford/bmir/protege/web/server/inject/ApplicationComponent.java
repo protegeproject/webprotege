@@ -49,23 +49,7 @@ public interface ApplicationComponent {
 
     UserDetailsManager getUserDetailsManager();
 
-    WebProtegeLogger getLogger();
-
     ProjectComponent getProjectComponent(ProjectModule module);
 
-    OWLAPIProjectManager getProjectManager();
-
-    ProjectDetailsManager getProjectDetailsManager();
-
-    DispatchServiceImpl getDispatchService();
-
-    OntologyServiceOWLAPIImpl getOntologyService();
-
-    OBOTextEditorServiceImpl getOBOTextEditorService();
-
-    BioPortalAPIServiceImpl getBioPortalAPIService();
-
-    FileDownloadServlet getFileDownloadServlet();
-
-    FileUploadServlet getFileUploadServlet();
+    ServletComponent getServletComponent();
 }

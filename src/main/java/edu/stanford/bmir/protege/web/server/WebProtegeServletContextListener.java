@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.DaggerApplicationComponent;
+import edu.stanford.bmir.protege.web.server.inject.ServletComponent;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.servlet.ServletContext;
@@ -27,22 +28,24 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             servletContext.setAttribute(ApplicationComponent.class.getName(), applicationComponent);
 
-            servletContext.addServlet("DispatchService", applicationComponent.getDispatchService())
+            ServletComponent servletComponent = applicationComponent.getServletComponent();
+
+            servletContext.addServlet("DispatchService", servletComponent.getDispatchService())
                           .addMapping("/webprotege/dispatchservice");
 
-            servletContext.addServlet("OntologyServiceImpl", applicationComponent.getOntologyService())
+            servletContext.addServlet("OntologyServiceImpl", servletComponent.getOntologyService())
                           .addMapping("/webprotege/ontology");
 
-            servletContext.addServlet("OBOTextEditorService", applicationComponent.getOBOTextEditorService())
+            servletContext.addServlet("OBOTextEditorService", servletComponent.getOBOTextEditorService())
                           .addMapping("/webprotege/obotexteditorservice");
 
-            servletContext.addServlet("BioPortalAPIService", applicationComponent.getBioPortalAPIService())
+            servletContext.addServlet("BioPortalAPIService", servletComponent.getBioPortalAPIService())
                           .addMapping("/webprotege/bioportalapi");
 
-            servletContext.addServlet("FileDownloadServlet", applicationComponent.getFileDownloadServlet())
+            servletContext.addServlet("FileDownloadServlet", servletComponent.getFileDownloadServlet())
                           .addMapping("/download");
 
-            servletContext.addServlet("FileUploadServlet", applicationComponent.getFileUploadServlet())
+            servletContext.addServlet("FileUploadServlet", servletComponent.getFileUploadServlet())
                           .addMapping("/webprotege/submitfile");
 
 
