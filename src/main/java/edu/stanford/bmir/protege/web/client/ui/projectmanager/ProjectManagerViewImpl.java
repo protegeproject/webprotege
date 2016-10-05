@@ -54,27 +54,11 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     protected CheckBox inTrashCheckBox;
 
 
-    private CreateProjectRequestHandler createProjectRequestHandler = new CreateProjectRequestHandler() {
-        @Override
-        public void handleCreateProjectRequest() {
-            GWT.log("No CreateProjectRequestHandler registered");
-        }
-    };
+    private CreateProjectRequestHandler createProjectRequestHandler = () -> {};
 
+    private UploadProjectRequestHandler uploadProjectRequestHandler = () -> {};
 
-    private UploadProjectRequestHandler uploadProjectRequestHandler = new UploadProjectRequestHandler() {
-        @Override
-        public void handleUploadProjectRequest() {
-            GWT.log("No UploadProjectRequestHandler registered");
-        }
-    };
-
-    private ViewFilterChangedHandler viewFilterChangedHandler = new ViewFilterChangedHandler() {
-        @Override
-        public void handleViewFilterChanged() {
-
-        }
-    };
+    private ViewFilterChangedHandler viewFilterChangedHandler = () -> {};
 
     @Inject
     public ProjectManagerViewImpl(ProjectListViewImpl projectListView) {
