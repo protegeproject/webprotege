@@ -125,6 +125,7 @@ public class ClientProjectModule {
     }
 
     @Provides
+    @ProjectSingleton
     ShowFreshEntitySettingsHandler provideShowFreshEntitySettingsHandler(ShowFreshEntitySettingsHandlerImpl handler) {
         return handler;
     }
