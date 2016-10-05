@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -31,8 +33,9 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     protected TextArea descriptionField;
 
 
-    private Optional<ProjectSettings> pristineValue = Optional.absent();
+    private java.util.Optional<ProjectSettings> pristineValue = java.util.Optional.empty();
 
+    @Inject
     public ProjectSettingsViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
@@ -55,14 +58,14 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     @Override
     public void setValue(ProjectSettings object) {
-        pristineValue = Optional.of(object);
+        pristineValue = java.util.Optional.of(object);
         displayNameField.setText(object.getProjectDisplayName());
         descriptionField.setText(object.getProjectDescription());
     }
 
     @Override
     public void clearValue() {
-        pristineValue = Optional.absent();
+        pristineValue = java.util.Optional.empty();
         displayNameField.setText("");
         descriptionField.setText("");
     }

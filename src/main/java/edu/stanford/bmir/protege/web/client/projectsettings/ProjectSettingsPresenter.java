@@ -5,10 +5,14 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -17,28 +21,28 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.*;
  */
 public class ProjectSettingsPresenter {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private ProjectSettingsView projectSettingsView;
-
+    @Nonnull
     private EventBus eventBus;
 
-    public ProjectSettingsPresenter(ProjectSettingsView projectSettingsView,  EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        this.projectSettingsView = projectSettingsView;
-        this.eventBus = eventBus;
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
+    @Nonnull
+    private ProjectSettingsView projectSettingsView;
+
+    @Inject
+    public ProjectSettingsPresenter(@Nonnull EventBus eventBus,
+                                    @Nonnull DispatchServiceManager dispatchServiceManager,
+                                    @Nonnull ProjectSettingsView projectSettingsView) {
+        this.eventBus = checkNotNull(eventBus);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.projectSettingsView = checkNotNull(projectSettingsView);
     }
 
     public void showDialog(ProjectId projectId) {
         final ProjectSettingsDialogController controller = new ProjectSettingsDialogController(projectSettingsView);
 
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSettings>() {
-            public void handleHide(ProjectSettings data, final WebProtegeDialogCloser closer) {
-                hideDialogAndSaveSettings(data, closer);
-
-            }
-        });
-
+        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> hideDialogAndSaveSettings(data, closer));
 
         dispatchServiceManager.execute(new GetProjectSettingsAction(projectId),
                 new DispatchServiceCallback<GetProjectSettingsResult>() {
