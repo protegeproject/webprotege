@@ -8,7 +8,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -17,7 +17,6 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
  */
 public class IssueTargetRemoved extends AbstractIssueEvent {
 
-    @Nonnull
     private OWLEntity entity;
 
     public IssueTargetRemoved(@Nonnull UserId userId, long timestamp, @Nonnull OWLEntity entity) {
