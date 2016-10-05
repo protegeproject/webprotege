@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
@@ -15,8 +14,11 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,32 +28,31 @@ import javax.inject.Provider;
  */
 public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettingsHandler {
 
+    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final ActiveProjectManager activeProjectManager;
+    @Nonnull
+    private final ProjectId projectId;
 
+    @Nonnull
     private final Provider<EntityCrudKitSettingsDialogController> dialogControllerProvider;
 
     @Inject
     public ShowFreshEntitySettingsHandlerImpl(DispatchServiceManager dispatchServiceManager,
-                                              ActiveProjectManager activeProjectManager,
+                                              ProjectId projectId,
                                               Provider<EntityCrudKitSettingsDialogController> dialogControllerProvider) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.activeProjectManager = activeProjectManager;
-        this.dialogControllerProvider = dialogControllerProvider;
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.projectId = checkNotNull(projectId);
+        this.dialogControllerProvider = checkNotNull(dialogControllerProvider);
     }
 
     @Override
     public void handleShowFreshEntitySettings() {
-        Optional<ProjectId> activeProject = activeProjectManager.getActiveProjectId();
-        if(!activeProject.isPresent()) {
-            return;
-        }
-        getSettingsAndShowDialog(activeProject);
+        getSettingsAndShowDialog(projectId);
     }
 
-    private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {
-        GetEntityCrudKitSettingsAction action = new GetEntityCrudKitSettingsAction(activeProject.get());
+    private void getSettingsAndShowDialog(@Nonnull ProjectId projectId) {
+        GetEntityCrudKitSettingsAction action = new GetEntityCrudKitSettingsAction(projectId);
         dispatchServiceManager.execute(action, new DispatchServiceCallbackWithProgressDisplay<GetEntityCrudKitSettingsResult>() {
             @Override
             public String getProgressDisplayTitle() {
@@ -111,14 +112,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
         }
     }
 
-
     private void updateFreshEntitySettingsWithStrategy(EntityCrudKitSettings<?> fromSettings, EntityCrudKitSettings<?> toSettings, final WebProtegeDialogCloser closer, IRIPrefixUpdateStrategy iriPrefixUpdateStrategy) {
-        Optional<ProjectId> activeProject = activeProjectManager.getActiveProjectId();
-        if(!activeProject.isPresent()) {
-            GWT.log("Active project is not present");
-            return;
-        }
-        ProjectId projectId = activeProject.get();
         dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new DispatchServiceCallback<SetEntityCrudKitSettingsResult>() {
             @Override
             public void handleSuccess(SetEntityCrudKitSettingsResult result) {
