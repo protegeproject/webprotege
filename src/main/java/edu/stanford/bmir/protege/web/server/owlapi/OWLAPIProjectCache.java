@@ -50,7 +50,7 @@ public class OWLAPIProjectCache {
 
     private final ReadWriteLock PROJECT_ID_LOCK = new ReentrantReadWriteLock();
 
-    private Map<ProjectId, Long> lastAccessMap = new HashMap<ProjectId, Long>();
+    private Map<ProjectId, Long> lastAccessMap = new HashMap<>();
 
     private final ProjectImporterFactory projectImporterFactory;
 
