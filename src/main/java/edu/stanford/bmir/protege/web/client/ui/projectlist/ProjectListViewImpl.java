@@ -61,7 +61,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         itemContainer.clear();
         entries.clear();
         for(final ProjectDetails details : projectDetails) {
-            ProjectDetailsPresenter itemPresenter = presenterFactory.createPresenter(details);
+            ProjectDetailsPresenter itemPresenter = presenterFactory.create(details);
             entries.add(itemPresenter);
             itemContainer.add(itemPresenter.getView());
         }
@@ -69,7 +69,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
     @Override
     public void addListData(ProjectDetails details) {
-        ProjectDetailsPresenter itemPresenter = presenterFactory.createPresenter(details);
+        ProjectDetailsPresenter itemPresenter = presenterFactory.create(details);
         itemContainer.insert(itemPresenter.getView(), 0);
         entries.add(0, itemPresenter);
     }

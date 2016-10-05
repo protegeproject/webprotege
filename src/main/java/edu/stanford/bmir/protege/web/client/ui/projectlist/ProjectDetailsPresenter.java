@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectlist;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.gwt.event.dom.client.ClickEvent;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
@@ -20,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@AutoFactory
 public class ProjectDetailsPresenter {
 
     @Nonnull
@@ -42,11 +45,11 @@ public class ProjectDetailsPresenter {
 
     @Inject
     public ProjectDetailsPresenter(@Nonnull ProjectDetails details,
-                                   @Nonnull ProjectDetailsView view,
-                                   @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
-                                   @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
-                                   @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
-                                   @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
+                                   @Provided @Nonnull ProjectDetailsView view,
+                                   @Provided @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
+                                   @Provided @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
+                                   @Provided @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
+                                   @Provided @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
         this.view = checkNotNull(view);
         this.details = checkNotNull(details);
         this.loadProjectInNewWindowRequestHandler = checkNotNull(loadProjectInNewWindowRequestHandler);
