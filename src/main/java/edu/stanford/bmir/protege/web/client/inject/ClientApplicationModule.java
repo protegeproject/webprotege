@@ -301,7 +301,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @Singleton
     ProjectMenuView provideProjectMenuView(ProjectMenuViewImpl view) {
         return view;
     }

@@ -16,9 +16,12 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -44,12 +47,8 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
 
     private ProjectId projectId;
 
-    private LoadProjectRequestHandler loadProjectRequestHandler = new LoadProjectRequestHandler() {
-        @Override
-        public void handleProjectLoadRequest(ProjectId projectId) {
-
-        }
-    };
+    @Nonnull
+    private LoadProjectRequestHandler loadProjectRequestHandler = pId -> {};
 
     private final List<UIAction> actions = new ArrayList<>();
 
@@ -68,8 +67,8 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     }
 
     @Override
-    public void setLoadProjectRequestHandler(LoadProjectRequestHandler loadProjectRequestHandler) {
-        this.loadProjectRequestHandler = loadProjectRequestHandler;
+    public void setLoadProjectRequestHandler(@Nonnull LoadProjectRequestHandler loadProjectRequestHandler) {
+        this.loadProjectRequestHandler = checkNotNull(loadProjectRequestHandler);
     }
 
     @UiHandler("displayNameField")
@@ -78,7 +77,7 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     }
 
     @Override
-    public void setProject(ProjectId projectId, String projectName) {
+    public void setProject(@Nonnull ProjectId projectId, @Nonnull String projectName) {
         this.projectId = projectId;
         displayNameField.setText(projectName);
     }
@@ -90,7 +89,6 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
 
     @Override
     public void setDescription(String description) {
-//        descriptionField.setText(description);
     }
 
     @Override

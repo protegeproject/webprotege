@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectlist;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectInNewWindowRequestHandler;
@@ -11,7 +10,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -20,26 +22,37 @@ import javax.inject.Inject;
  */
 public class ProjectDetailsPresenter {
 
+    @Nonnull
     private final ProjectDetailsView view;
 
+    @Nonnull
     private final ProjectDetails details;
 
+    @Nonnull
     private final TrashManagerRequestHandler trashManagerRequestHandler;
 
+    @Nonnull
     private final LoadProjectRequestHandler loadProjectRequestHandler;
 
+    @Nonnull
     private final DownloadProjectRequestHandler downloadProjectRequestHandler;
 
+    @Nonnull
     private LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler;
 
     @Inject
-    public ProjectDetailsPresenter(@Assisted ProjectDetails details, ProjectDetailsView view, LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler, TrashManagerRequestHandler trashManagerRequestHandler, LoadProjectRequestHandler loadProjectRequestHandler, DownloadProjectRequestHandler downloadProjectRequestHandler) {
-        this.view = view;
-        this.details = details;
-        this.loadProjectInNewWindowRequestHandler = loadProjectInNewWindowRequestHandler;
-        this.trashManagerRequestHandler = trashManagerRequestHandler;
-        this.loadProjectRequestHandler = loadProjectRequestHandler;
-        this.downloadProjectRequestHandler = downloadProjectRequestHandler;
+    public ProjectDetailsPresenter(@Nonnull ProjectDetails details,
+                                   @Nonnull ProjectDetailsView view,
+                                   @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
+                                   @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
+                                   @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
+                                   @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
+        this.view = checkNotNull(view);
+        this.details = checkNotNull(details);
+        this.loadProjectInNewWindowRequestHandler = checkNotNull(loadProjectInNewWindowRequestHandler);
+        this.trashManagerRequestHandler = checkNotNull(trashManagerRequestHandler);
+        this.loadProjectRequestHandler = checkNotNull(loadProjectRequestHandler);
+        this.downloadProjectRequestHandler = checkNotNull(downloadProjectRequestHandler);
         view.setProject(details.getProjectId(), details.getDisplayName());
         view.setProjectOwner(details.getOwner());
         view.setDescription(details.getDescription());
