@@ -49,19 +49,14 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
         for (WebProtegeDialogValidator validator : uploadFileWidget.getDialogValidators()) {
             addDialogValidator(validator);
         }
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<UploadFileInfo>() {
-            public void handleHide(final UploadFileInfo data, final WebProtegeDialogCloser closer) {
-                ProgressMonitor.get().showProgressMonitor(PROGRESS_DIALOG_TITLE, "Uploading file");
-                data.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-                    public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                        ProgressMonitor.get().hideProgressMonitor();
-                        handleSubmissionComplete(data, event);
-                        closer.hide();
-
-                    }
-                });
-                data.submit();
-            }
+        setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            ProgressMonitor.get().showProgressMonitor(PROGRESS_DIALOG_TITLE, "Uploading file");
+            data.addSubmitCompleteHandler(event -> {
+                ProgressMonitor.get().hideProgressMonitor();
+                handleSubmissionComplete(data, event);
+                closer.hide();
+            });
+            data.submit();
         });
         this.dispatchServiceManager = dispatchServiceManager;
     }

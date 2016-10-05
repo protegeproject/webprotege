@@ -25,16 +25,6 @@ public class UploadProjectRequestHandlerImpl implements UploadProjectRequestHand
 
     @Override
     public void handleUploadProjectRequest() {
-        // Code splitting
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
-            }
-
-            @Override
-            public void onSuccess() {
-                WebProtegeDialog.showDialog(uploadProjectDialogController.get());
-            }
-        });
+        WebProtegeDialog.showDialog(uploadProjectDialogController.get());
     }
 }
