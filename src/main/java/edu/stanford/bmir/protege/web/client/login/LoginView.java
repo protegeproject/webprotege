@@ -4,24 +4,37 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
+ *
+ * A view that displays a login page.  The page has an area to enter a user name and
+ * password.
  */
 public interface LoginView extends IsWidget, RequiresResize, ProvidesResize {
 
+    @Nonnull
     String getUserName();
 
-    void setUserName(String userName);
+    void setUserName(@Nonnull String userName);
 
+    /**
+     * Gets the password as typed into the view.
+     * @return The password in clear text.
+     */
+    @Nonnull
     String getPassword();
 
-    void setPassword(String password);
+    /**
+     * Sets the displayed password.
+     * @param password The password.
+     */
+    void setPassword(@Nonnull String password);
 
     void clearView();
-
-    void setSignInHandler(SignInRequestHandler handler);
 
     void showLoginFailedErrorMessage();
 
@@ -31,9 +44,9 @@ public interface LoginView extends IsWidget, RequiresResize, ProvidesResize {
 
     void hideErrorMessages();
 
-    void setForgotPasswordHandler(ForgotPasswordHandler handler);
+    void setSignInHandler(@Nonnull SignInRequestHandler handler);
 
-    void setSignUpForAccountHandler(SignUpForAccountHandler handler);
+    void setForgotPasswordHandler(@Nonnull ForgotPasswordHandler handler);
 
-
+    void setSignUpForAccountHandler(@Nonnull SignUpForAccountHandler handler);
 }

@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -86,23 +87,25 @@ public class LoginViewImpl extends Composite implements LoginView {
         }
     }
 
+    @Nonnull
     @Override
     public String getUserName() {
         return userNameField.getText().trim();
     }
 
     @Override
-    public void setUserName(String userName) {
+    public void setUserName(@Nonnull String userName) {
         userNameField.setText(userName);
     }
 
+    @Nonnull
     @Override
     public String getPassword() {
         return passwordField.getText().trim();
     }
 
     @Override
-    public void setPassword(String password) {
+    public void setPassword(@Nonnull String password) {
         passwordField.setText(password);
     }
 
@@ -114,7 +117,7 @@ public class LoginViewImpl extends Composite implements LoginView {
     }
 
     @Override
-    public void setSignInHandler(SignInRequestHandler handler) {
+    public void setSignInHandler(@Nonnull SignInRequestHandler handler) {
         this.signInRequestHandler = handler;
     }
 
@@ -139,12 +142,12 @@ public class LoginViewImpl extends Composite implements LoginView {
     }
 
     @Override
-    public void setForgotPasswordHandler(ForgotPasswordHandler handler) {
+    public void setForgotPasswordHandler(@Nonnull ForgotPasswordHandler handler) {
         this.forgotPasswordHandler = checkNotNull(handler);
     }
 
     @Override
-    public void setSignUpForAccountHandler(SignUpForAccountHandler handler) {
+    public void setSignUpForAccountHandler(@Nonnull SignUpForAccountHandler handler) {
         this.signUpForAccountHandler = handler;
     }
 
