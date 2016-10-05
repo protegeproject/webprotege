@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
@@ -131,7 +129,7 @@ public class OWLAPIProjectCache {
         try {
             READ_LOCK.lock();
             if(!isActive(projectId)) {
-                return Optional.absent();
+                return Optional.empty();
             }
             else {
                 return Optional.of(getProjectInternal(projectId, AccessMode.QUIET));
