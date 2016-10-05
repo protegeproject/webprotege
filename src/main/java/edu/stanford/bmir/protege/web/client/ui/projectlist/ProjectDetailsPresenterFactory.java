@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -18,7 +21,7 @@ import javax.inject.Inject;
 public class ProjectDetailsPresenterFactory {
 
     @Nonnull
-    private ProjectDetailsView view;
+    private Provider<ProjectDetailsView> viewProvider;
 
     @Nonnull
     private LoadProjectInNewWindowRequestHandler loadInNewWindowRequestHandler;
@@ -33,21 +36,21 @@ public class ProjectDetailsPresenterFactory {
     private DownloadProjectRequestHandler downloadProjectRequestHandler;
 
     @Inject
-    public ProjectDetailsPresenterFactory(@Nonnull ProjectDetailsView view,
+    public ProjectDetailsPresenterFactory(@Nonnull Provider<ProjectDetailsView> viewProvider,
                                           @Nonnull LoadProjectInNewWindowRequestHandler loadInNewWindowRequestHandler,
                                           @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
                                           @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
                                           @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
-        this.view = view;
-        this.loadInNewWindowRequestHandler = loadInNewWindowRequestHandler;
-        this.trashManagerRequestHandler = trashManagerRequestHandler;
-        this.loadProjectRequestHandler = loadProjectRequestHandler;
-        this.downloadProjectRequestHandler = downloadProjectRequestHandler;
+        this.viewProvider = checkNotNull(viewProvider);
+        this.loadInNewWindowRequestHandler = checkNotNull(loadInNewWindowRequestHandler);
+        this.trashManagerRequestHandler = checkNotNull(trashManagerRequestHandler);
+        this.loadProjectRequestHandler = checkNotNull(loadProjectRequestHandler);
+        this.downloadProjectRequestHandler = checkNotNull(downloadProjectRequestHandler);
     }
 
     public ProjectDetailsPresenter createPresenter(ProjectDetails projectDetails) {
         return new ProjectDetailsPresenter(projectDetails,
-                                           view,
+                                           viewProvider.get(),
                                            loadInNewWindowRequestHandler,
                                            trashManagerRequestHandler,
                                            loadProjectRequestHandler,

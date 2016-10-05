@@ -39,7 +39,6 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
-import javax.inject.Singleton;
 
 import java.util.List;
 
