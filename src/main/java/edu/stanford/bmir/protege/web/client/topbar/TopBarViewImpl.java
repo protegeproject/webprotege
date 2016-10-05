@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -21,6 +23,7 @@ public class TopBarViewImpl extends Composite implements TopBarView {
 
     private static TopBarViewImplUiBinder ourUiBinder = GWT.create(TopBarViewImplUiBinder.class);
 
+    @Inject
     public TopBarViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

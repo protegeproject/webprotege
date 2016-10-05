@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.inject.BindingAnnotation;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -11,8 +12,8 @@ import java.lang.annotation.RetentionPolicy;
  * Bio-Medical Informatics Research Group<br>
  * Date: 16/01/2014
  */
+@Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-@BindingAnnotation
 public @interface EntitySuggestOracleSuggestLimit {
 
 }

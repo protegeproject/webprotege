@@ -21,7 +21,9 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,16 +34,21 @@ import java.util.Map;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  */
+@Singleton
 public class DispatchServiceManager {
 
+    @Nonnull
     private final DispatchServiceAsync async;
 
+    @Nonnull
     private final EventBus eventBus;
 
+    @Nonnull
     private final SignInRequiredHandler signInRequiredHandler;
 
     @Inject
-    public DispatchServiceManager(EventBus eventBus, SignInRequiredHandler signInRequiredHandler) {
+    public DispatchServiceManager(@Nonnull EventBus eventBus,
+                                  @Nonnull SignInRequiredHandler signInRequiredHandler) {
         async = GWT.create(DispatchService.class);
         this.eventBus = eventBus;
         this.signInRequiredHandler = signInRequiredHandler;

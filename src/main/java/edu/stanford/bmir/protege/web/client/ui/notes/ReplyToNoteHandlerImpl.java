@@ -37,12 +37,9 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
     @Override
     public void handleReplyToNote(final NoteId noteId, final OWLEntity targetEntity) {
-        NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
-            @Override
-            public void handleAccept(Optional<NoteContent> noteContent) {
-                if (noteContent.isPresent()) {
-                    doReply(noteId, noteContent.get(), targetEntity);
-                }
+        NoteEditorDialogController controller = new NoteEditorDialogController(noteContent -> {
+            if (noteContent.isPresent()) {
+                doReply(noteId, noteContent.get(), targetEntity);
             }
         });
         controller.setMode(NoteContentEditorMode.REPLY);

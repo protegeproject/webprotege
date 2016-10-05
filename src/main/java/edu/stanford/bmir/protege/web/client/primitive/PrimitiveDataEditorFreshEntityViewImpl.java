@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import org.semanticweb.owlapi.model.EntityType;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -39,6 +40,7 @@ public class PrimitiveDataEditorFreshEntityViewImpl extends Composite implements
 
     private Map<EntityType<?>, Anchor> entityTypeAnchorMap = new HashMap<EntityType<?>, Anchor>();
 
+    @Inject
     public PrimitiveDataEditorFreshEntityViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.ui.UIAction;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -26,6 +28,7 @@ public class ProjectMenuViewImpl extends Composite implements ProjectMenuView {
 
     private PopupMenu popupMenu = new PopupMenu();
 
+    @Inject
     public ProjectMenuViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

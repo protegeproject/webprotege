@@ -347,7 +347,7 @@
             <plugin>
                 <groupId>edu.stanford.protege</groupId>
                 <artifactId>webprotege-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>

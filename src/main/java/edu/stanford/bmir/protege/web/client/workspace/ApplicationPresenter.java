@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.workspace;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -9,6 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11/02/16
  */
+@Singleton
 public class ApplicationPresenter {
 
     private final ApplicationView applicationView;

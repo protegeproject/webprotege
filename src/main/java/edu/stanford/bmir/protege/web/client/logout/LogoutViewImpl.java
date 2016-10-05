@@ -22,12 +22,7 @@ public class LogoutViewImpl extends Composite implements LogoutView {
 
     private static LogoutViewImplUiBinder ourUiBinder = GWT.create(LogoutViewImplUiBinder.class);
 
-    private LogoutHandler logoutHandler = new LogoutHandler() {
-        @Override
-        public void handleLogout() {
-
-        }
-    };
+    private LogoutHandler logoutHandler = () -> {};
 
     @UiField
     protected HasClickHandlers logoutButton;

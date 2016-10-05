@@ -7,6 +7,7 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 
 /**
@@ -15,6 +16,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/04/2013
  */
+@Singleton
 public class PlaceManager {
 
     private PlaceController placeController;

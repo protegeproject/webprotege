@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.help;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -9,6 +11,10 @@ package edu.stanford.bmir.protege.web.client.help;
 public class ShowUserGuideHandlerImpl implements ShowUserGuideHandler {
 
     private static final String USER_GUIDE_URL = "http://protegewiki.stanford.edu/wiki/WebProtegeUsersGuide";
+
+    @Inject
+    public ShowUserGuideHandlerImpl() {
+    }
 
     @Override
     public void handleShowUserGuide() {

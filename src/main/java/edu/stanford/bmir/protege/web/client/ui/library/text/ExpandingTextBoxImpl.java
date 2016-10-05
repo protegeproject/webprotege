@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasAcceptKeyHandler;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -72,6 +74,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         }
     };
 
+    @Inject
     public ExpandingTextBoxImpl() {
         final TextArea textArea = new TextArea();
         SuggestOracle proxyOracle = createProxySuggestOracle();

@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.selection;
 import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -16,6 +18,7 @@ public class SelectedEntityManager<D extends OWLEntity> {
     private Optional<D> lastSelection = Optional.absent();
 
 
+    @Inject
     public SelectedEntityManager() {
     }
 

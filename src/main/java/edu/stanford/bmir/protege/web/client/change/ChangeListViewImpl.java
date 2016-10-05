@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -19,6 +21,7 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
 
     private static ChangeListViewImplUiBinder ourUiBinder = GWT.create(ChangeListViewImplUiBinder.class);
 
+    @Inject
     public ChangeListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

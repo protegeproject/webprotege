@@ -68,12 +68,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
 
     @Inject
     public SharingSettingsViewImpl(final DispatchServiceManager dispatchServiceManager) {
-        sharingSettingsListEditor = new ValueListEditorImpl<>(new ValueEditorFactory<SharingSetting>() {
-            @Override
-            public ValueEditor<SharingSetting> createEditor() {
-                return new SharingSettingEditorImpl(dispatchServiceManager);
-            }
-        });
+        sharingSettingsListEditor = new ValueListEditorImpl<>(() -> new SharingSettingEditorImpl(dispatchServiceManager));
         initWidget(ourUiBinder.createAndBindUi(this));
         for(SharingPermission permission : SharingPermission.values()) {
             linkSharingPermissionDropDown.addItem(permission.name());

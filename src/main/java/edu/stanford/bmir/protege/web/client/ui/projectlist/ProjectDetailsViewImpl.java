@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
 
     private final List<UIAction> actions = new ArrayList<>();
 
+    @Inject
     public ProjectDetailsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

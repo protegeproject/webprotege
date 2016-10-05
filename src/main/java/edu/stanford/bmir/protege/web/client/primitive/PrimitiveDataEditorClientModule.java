@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.gwt.inject.client.AbstractGinModule;
+import dagger.Module;
+import dagger.Provides;
+import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
+import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxImpl;
 
 /**
  * Author: Matthew Horridge<br>
@@ -8,20 +11,56 @@ import com.google.gwt.inject.client.AbstractGinModule;
  * Bio-Medical Informatics Research Group<br>
  * Date: 16/01/2014
  */
-public class PrimitiveDataEditorClientModule extends AbstractGinModule {
+@Module
+public class PrimitiveDataEditorClientModule {
 
     public static final int SUGGEST_LIMIT = 20;
 
-    @Override
-    protected void configure() {
-        bind(PrimitiveDataEditor.class).to(PrimitiveDataEditorImpl.class);
-        bind(PrimitiveDataEditorView.class).to(PrimitiveDataEditorViewImpl.class);
-        bind(LanguageEditor.class).to(DefaultLanguageEditor.class);
-        bind(PrimitiveDataParser.class).to(PrimitiveDataParserImpl.class);
-        bind(EntityDataLookupHandler.class).to(EntityDataLookupHandlerImpl.class);
-        bind(FreshEntitiesHandler.class).to(NullFreshEntitiesHandler.class);
-        bind(PrimitiveDataEditorFreshEntityView.class).to(PrimitiveDataEditorFreshEntityViewImpl.class);
-        bindConstant().annotatedWith(EntitySuggestOracleSuggestLimit.class).to(SUGGEST_LIMIT);
-        bindConstant().annotatedWith(EntitySuggestOracleSuggestMode.class).to(FreshEntitySuggestMode.SUGGEST_CREATE_FRESH_ENTITIES);
+    @Provides
+    PrimitiveDataEditor providePrimitiveDataEditor(PrimitiveDataEditorImpl editor) {
+        return editor;
     }
+
+    @Provides
+    PrimitiveDataEditorView providePrimitiveDataEditorView(PrimitiveDataEditorViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    LanguageEditor provideLanguageEditor(DefaultLanguageEditor editor) {
+        return editor;
+    }
+
+    @Provides
+    PrimitiveDataParser providePrimitiveDataParser(PrimitiveDataParserImpl parser) {
+        return parser;
+    }
+
+    @Provides
+    EntityDataLookupHandler provideEntityDataLookupHandler(EntityDataLookupHandlerImpl handler) {
+        return handler;
+    }
+
+    @Provides
+    FreshEntitiesHandler provideFreshEntitiesHandler(NullFreshEntitiesHandler handler) {
+        return handler;
+    }
+
+    @Provides
+    PrimitiveDataEditorFreshEntityView providePrimitiveDataEditorFreshEntityView(PrimitiveDataEditorFreshEntityViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    @EntitySuggestOracleSuggestLimit
+    int provideSuggestLimit() {
+        return SUGGEST_LIMIT;
+    }
+
+    @Provides
+    @EntitySuggestOracleSuggestMode
+    FreshEntitySuggestMode provideFreshEntitySuggestMode() {
+        return FreshEntitySuggestMode.SUGGEST_CREATE_FRESH_ENTITIES;
+    }
+
 }

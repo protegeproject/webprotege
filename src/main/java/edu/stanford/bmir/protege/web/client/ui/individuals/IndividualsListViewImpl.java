@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected EntitiesListImpl<OWLNamedIndividualData> individualsList;
 
+    @Inject
     public IndividualsListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

@@ -8,15 +8,19 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
+import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
+import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
-import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenterFactory;
 import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsActivity;
@@ -32,7 +36,7 @@ import javax.inject.Provider;
  */
 public class WebProtegeActivityMapper implements ActivityMapper {
 
-    private final ProjectPresenterFactory projectPresenterFactory;
+    private final ClientApplicationComponent applicationComponent;
 
     private final Provider<ProjectManagerPresenter> projectListPresenterProvider;
 
@@ -44,23 +48,19 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final PlaceController placeController;
 
-    private final SharingSettingsPresenterFactory sharingSettingsPresenterFactory;
-
     @Inject
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
-                                    ProjectPresenterFactory projectPresenterFactory,
+                                    ClientApplicationComponent applicationComponent,
                                     Provider<ProjectManagerPresenter> projectListPresenterProvider,
                                     Provider<LoginPresenter> loginPresenterProvider,
                                     Provider<SignUpPresenter> signUpPresenterProvider,
-                                    SharingSettingsPresenterFactory sharingSettingsPresenterFactory,
                                     PlaceController placeController) {
+        this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.projectPresenterFactory = projectPresenterFactory;
         this.projectListPresenterProvider = projectListPresenterProvider;
         this.signUpPresenterProvider = signUpPresenterProvider;
         this.loginPresenterProvider = loginPresenterProvider;
         this.placeController = placeController;
-        this.sharingSettingsPresenterFactory = sharingSettingsPresenterFactory;
     }
 
     private Optional<ProjectPresenter> lastProjectPresenter = Optional.absent();
@@ -71,12 +71,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
             LoginPresenter presenter = loginPresenterProvider.get();
             presenter.setNextPlace(place);
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    placeController.goTo(new LoginPlace(place));
-                }
-            });
+            Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
             return new LoginActivity(presenter);
         }
         if(place instanceof LoginPlace) {
@@ -116,7 +111,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         if(place instanceof SharingSettingsPlace) {
             SharingSettingsPlace sharingSettingsPlace = (SharingSettingsPlace) place;
             ProjectId projectId = sharingSettingsPlace.getProjectId();
-            SharingSettingsPresenter presenter = sharingSettingsPresenterFactory.getPresenter(projectId);
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(new ClientProjectModule(projectId));
+            SharingSettingsPresenter presenter = projectComponent.getSharingSettingsPresenter();
             return new SharingSettingsActivity(presenter, sharingSettingsPlace);
         }
 
@@ -137,7 +133,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
         ProjectIdProvider.setProjectId(projectViewPlace.getProjectId());
         GWT.log("[WebProtegeActivityMapper] Instantiating project presenter for " + projectViewPlace.getProjectId());
-        return projectPresenterFactory.createProjectPresenter(projectViewPlace.getProjectId());
+        ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(
+                new ClientProjectModule(projectViewPlace.getProjectId()));
+        return projectComponent.getProjectPresenter();
     }
 
 }

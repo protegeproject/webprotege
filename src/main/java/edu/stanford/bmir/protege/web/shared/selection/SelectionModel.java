@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 15/05/15
  */
+@Singleton
 public class SelectionModel {
 
     private final EventBus eventBus;

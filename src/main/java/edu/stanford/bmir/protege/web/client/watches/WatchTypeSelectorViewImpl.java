@@ -7,6 +7,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -20,6 +22,7 @@ public class WatchTypeSelectorViewImpl extends Composite implements WatchTypeSel
 
     private static WatchTypeSelectorViewImplUiBinder ourUiBinder = GWT.create(WatchTypeSelectorViewImplUiBinder.class);
 
+    @Inject
     public WatchTypeSelectorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

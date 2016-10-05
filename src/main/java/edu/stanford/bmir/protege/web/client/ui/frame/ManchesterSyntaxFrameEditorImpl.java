@@ -20,6 +20,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 
+import javax.inject.Inject;
+
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
@@ -42,6 +44,7 @@ public class ManchesterSyntaxFrameEditorImpl extends Composite implements Manche
 
     private boolean dirty = false;
 
+    @Inject
     public ManchesterSyntaxFrameEditorImpl() {
         editor = new GWTCodeMirror();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.events;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 /**
@@ -10,6 +11,10 @@ import javax.inject.Provider;
 public class EventPollingPeriodProvider implements Provider<Integer> {
 
     public static final int TEN_SECONDS = 10 * 1000;
+
+    @Inject
+    public EventPollingPeriodProvider() {
+    }
 
     @Override
     public Integer get() {

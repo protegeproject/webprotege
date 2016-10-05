@@ -26,7 +26,9 @@ public class PlaceHistoryHandlerProvider implements Provider<PlaceHistoryHandler
     private final Place defaultPlace;
 
     @Inject
-    public PlaceHistoryHandlerProvider(WebProtegePlaceHistoryMapper placeHistoryMapper, PlaceController placeController, EventBus eventBus) {
+    public PlaceHistoryHandlerProvider(WebProtegePlaceHistoryMapper placeHistoryMapper,
+                                       PlaceController placeController,
+                                       EventBus eventBus) {
         this.placeHistoryMapper = placeHistoryMapper;
         this.placeController = placeController;
         this.eventBus = eventBus;

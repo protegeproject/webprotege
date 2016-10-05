@@ -36,18 +36,8 @@ public class EntityChangesPortlet extends AbstractWebProtegePortlet {
         this.presenter = presenter;
         setWidget(presenter.getView().asWidget());
 
-        addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
-            @Override
-            public void handleProjectChanged(ProjectChangedEvent event) {
-                EntityChangesPortlet.this.handleProjectChanged(event);
-            }
-        });
-        addApplicationEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                updateDisplayForSelectedEntity();
-            }
-        });
+        addProjectEventHandler(ProjectChangedEvent.TYPE, event -> EntityChangesPortlet.this.handleProjectChanged(event));
+        addApplicationEventHandler(PermissionsChangedEvent.TYPE, event -> updateDisplayForSelectedEntity());
         setTitle("Changes");
 	}
 

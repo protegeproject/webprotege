@@ -333,6 +333,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String errorLabel();
 
+        @ClassName("gwt-TextBox")
+        String gwtTextBox();
+
+        @ClassName("gwt-PasswordTextBox")
+        String gwtPasswordTextBox();
+
+        @ClassName("gwt-Label")
+        String gwtLabel();
     }
 
     public static interface WebProtegeMenu extends CssResource {

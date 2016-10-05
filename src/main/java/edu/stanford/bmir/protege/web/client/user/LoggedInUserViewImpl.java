@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -56,6 +58,7 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
 
     private final PopupMenu popupMenu = new PopupMenu();
 
+    @Inject
     public LoggedInUserViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         popupMenu.addItem("Sign Out", new ClickHandler() {

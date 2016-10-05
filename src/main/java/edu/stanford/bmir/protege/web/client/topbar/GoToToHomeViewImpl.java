@@ -9,6 +9,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -25,16 +27,12 @@ public class GoToToHomeViewImpl extends Composite implements GoToHomeView {
     private static GoToHomeViewImplUiBinder ourUiBinder = GWT.create(GoToHomeViewImplUiBinder.class);
 
 
-    private GoToHomeHandler goToHomeHandler = new GoToHomeHandler() {
-        @Override
-        public void handleGoToHome() {
-
-        }
-    };
+    private GoToHomeHandler goToHomeHandler = () -> {};
 
     @UiField
     protected HasClickHandlers goToHomeButton;
 
+    @Inject
     public GoToToHomeViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
