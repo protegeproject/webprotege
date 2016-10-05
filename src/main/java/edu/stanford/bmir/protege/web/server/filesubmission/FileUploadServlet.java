@@ -61,7 +61,7 @@ public class FileUploadServlet extends HttpServlet {
 
     @Inject
     public FileUploadServlet(
-            @Nonnull File uploadsDirectory,
+            @Nonnull @UploadsDirectory File uploadsDirectory,
             @Nonnull WebProtegeLogger logger) {
         this.uploadsDirectory = uploadsDirectory;
         this.logger = logger;
