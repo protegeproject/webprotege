@@ -16,7 +16,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 01/04/2013
  */
-public interface ProjectListView extends IsWidget, HasSelectionHandlers<ProjectId>, HasLoadProjectRequestHandler, HasDownloadProjectRequestHandler, HasTrashManagerRequestHandler {
+public interface ProjectListView extends IsWidget, HasSelectionHandlers<ProjectId> {
 
     void setListData(List<ProjectDetails> projectDetails);
 

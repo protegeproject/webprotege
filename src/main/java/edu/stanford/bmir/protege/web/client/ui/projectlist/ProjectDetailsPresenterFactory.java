@@ -15,7 +15,7 @@ import javax.inject.Inject;
  * 21/02/16
  */
 // TODO: Auto-generate
-public class ProjectDetailPresenterFactory {
+public class ProjectDetailsPresenterFactory {
 
     @Nonnull
     private ProjectDetailsView view;
@@ -33,11 +33,11 @@ public class ProjectDetailPresenterFactory {
     private DownloadProjectRequestHandler downloadProjectRequestHandler;
 
     @Inject
-    public ProjectDetailPresenterFactory(@Nonnull ProjectDetailsView view,
-                                         @Nonnull LoadProjectInNewWindowRequestHandler loadInNewWindowRequestHandler,
-                                         @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
-                                         @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
-                                         @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
+    public ProjectDetailsPresenterFactory(@Nonnull ProjectDetailsView view,
+                                          @Nonnull LoadProjectInNewWindowRequestHandler loadInNewWindowRequestHandler,
+                                          @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
+                                          @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
+                                          @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
         this.view = view;
         this.loadInNewWindowRequestHandler = loadInNewWindowRequestHandler;
         this.trashManagerRequestHandler = trashManagerRequestHandler;
