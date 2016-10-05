@@ -31,16 +31,10 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
     private static NoteActionBarUiBinder ourUiBinder = GWT.create(NoteActionBarUiBinder.class);
 
 
-    private ReplyToNoteHandler replyToNoteHandler = new ReplyToNoteHandler() {
-        @Override
-        public void handleReplyToNote(NoteId noteId, OWLEntity targetEntity) {
-        }
+    private ReplyToNoteHandler replyToNoteHandler = (noteId1, targetEntity) -> {
     };
 
-    private DeleteNoteHandler deleteNoteHandler = new DeleteNoteHandler() {
-        @Override
-        public void handleDeleteNote(OWLEntity targetEntity, NoteId noteId) {
-        }
+    private DeleteNoteHandler deleteNoteHandler = (targetEntity, noteId1) -> {
     };
 
     @UiField

@@ -80,40 +80,17 @@ public class DiscussionThreadPresenter implements HasDispose {
         this.projectId = checkNotNull(projectId);
         this.activeProjectManager = activeProjectManager;
 
-        handlerRegistrationManager.registerHandlerToProject(projectId, NotePostedEvent.TYPE, new NotePostedHandler() {
-            @Override
-            public void handleNotePosted(NotePostedEvent event) {
-                refreshForNotePosted(event);
-            }
-        });
+        handlerRegistrationManager.registerHandlerToProject(projectId, NotePostedEvent.TYPE,
+                                                            event -> refreshForNotePosted(event));
 
-        handlerRegistrationManager.registerHandlerToProject(projectId, NoteDeletedEvent.TYPE, new NoteDeletedHandler() {
-            @Override
-            public void handleNoteDeleted(NoteDeletedEvent event) {
-                reload();
-            }
-        });
+        handlerRegistrationManager.registerHandlerToProject(projectId, NoteDeletedEvent.TYPE, event -> reload());
 
-        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
-            @Override
-            public void handleUserLoggedIn(UserLoggedInEvent event) {
-                updateButtonState();
-            }
-        });
+        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, event -> updateButtonState());
 
-        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
-            @Override
-            public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                updateButtonState();
-            }
-        });
+        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, event -> updateButtonState());
 
-        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                updateButtonState();
-            }
-        });
+        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE,
+                                                            event -> updateButtonState());
     }
 
     public void installActions(HasPortletActions hasPortletActions) {

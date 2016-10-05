@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.about.AboutBox;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -30,14 +32,12 @@ public class HelpViewImpl extends Composite implements HelpView {
 
     private final PopupMenu popupMenu = new PopupMenu();
 
+    @Inject
     public HelpViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        popupMenu.addItem("About", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                AboutBox box = new AboutBox();
-                box.show();
-            }
+        popupMenu.addItem("About", event -> {
+            AboutBox box = new AboutBox();
+            box.show();
         });
     }
 

@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -11,6 +13,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Date: 18/12/2012
  */
 public class NullFreshEntitiesHandler implements FreshEntitiesHandler {
+
+    @Inject
+    public NullFreshEntitiesHandler() {
+    }
 
     @Override
     public FreshEntitiesPolicy getFreshEntitiesPolicy() {

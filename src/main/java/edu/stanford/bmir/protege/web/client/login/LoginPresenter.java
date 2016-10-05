@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -25,6 +26,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
+@Singleton
 public class LoginPresenter {
 
     private final LoginView view;

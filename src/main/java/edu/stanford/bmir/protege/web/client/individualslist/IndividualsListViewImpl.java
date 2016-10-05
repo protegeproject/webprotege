@@ -5,6 +5,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -18,6 +20,7 @@ public class IndividualsListViewImpl extends Composite {
 
     private static IndividualsListViewImplUiBinder ourUiBinder = GWT.create(IndividualsListViewImplUiBinder.class);
 
+    @Inject
     public IndividualsListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

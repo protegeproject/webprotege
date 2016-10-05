@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.notes.NoteStatus;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -25,11 +27,7 @@ public class NoteHeaderViewImpl extends Composite implements NoteHeaderView {
     private static NoteHeaderViewImplUiBinder ourUiBinder = GWT.create(NoteHeaderViewImplUiBinder.class);
 
 
-    private ResolveNoteHandler resolvedHandler = new ResolveNoteHandler() {
-        @Override
-        public void handleResolvePressed() {
-        }
-    };
+    private ResolveNoteHandler resolvedHandler = () -> {};
 
     @UiField
     protected Label subjectLabel;
@@ -43,6 +41,7 @@ public class NoteHeaderViewImpl extends Composite implements NoteHeaderView {
     @UiField
     protected Label statusLabel;
 
+    @Inject
     public NoteHeaderViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

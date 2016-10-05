@@ -26,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChang
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
@@ -34,6 +35,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
+@Singleton
 public class ProjectManagerPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;

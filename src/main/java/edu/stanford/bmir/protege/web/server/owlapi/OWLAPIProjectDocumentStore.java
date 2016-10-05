@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.server.IdUtil;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocument;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

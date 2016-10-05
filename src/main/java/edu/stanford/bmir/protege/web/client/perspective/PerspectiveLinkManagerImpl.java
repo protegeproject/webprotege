@@ -27,7 +27,9 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
     private final ProjectId projectId;
 
     @Inject
-    public PerspectiveLinkManagerImpl(DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
+    public PerspectiveLinkManagerImpl(ProjectId projectId,
+                                      DispatchServiceManager dispatchServiceManager,
+                                      LoggedInUserProvider loggedInUserProvider) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;

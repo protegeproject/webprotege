@@ -48,7 +48,7 @@ public class OBOIdSuffixSettingsEditor extends Composite implements EntityCrudKi
     @Inject
     protected Provider<UserIdRangeEditor> userIdRangeEditorProvider;
 
-
+    @Inject
     public OBOIdSuffixSettingsEditor() {
         userRangeTable = new ValueListEditorImpl<>(() -> userIdRangeEditorProvider.get());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

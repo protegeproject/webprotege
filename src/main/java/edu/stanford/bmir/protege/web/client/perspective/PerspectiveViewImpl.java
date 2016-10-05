@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -25,6 +27,7 @@ public class PerspectiveViewImpl extends Composite implements PerspectiveView {
     @UiField
     protected SimpleLayoutPanel mainPanel;
 
+    @Inject
     public PerspectiveViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

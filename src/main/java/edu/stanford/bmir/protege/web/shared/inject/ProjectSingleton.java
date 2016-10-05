@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.inject.project;
+package edu.stanford.bmir.protege.web.shared.inject;
 
 import javax.inject.Scope;
 import java.lang.annotation.Documented;

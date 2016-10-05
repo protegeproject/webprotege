@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 
+import javax.inject.Inject;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
@@ -32,6 +34,7 @@ public class ResetPasswordViewImpl extends Composite implements ResetPasswordVie
 
     private boolean dirty = false;
 
+    @Inject
     public ResetPasswordViewImpl() {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

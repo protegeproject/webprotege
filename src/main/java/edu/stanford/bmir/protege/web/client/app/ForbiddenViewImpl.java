@@ -5,6 +5,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -18,6 +20,7 @@ public class ForbiddenViewImpl extends Composite implements ForbiddenView {
 
     private static ForbiddenViewImplUiBinder ourUiBinder = GWT.create(ForbiddenViewImplUiBinder.class);
 
+    @Inject
     public ForbiddenViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.client.ui.anchor.HasAnchor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -28,7 +30,9 @@ public class ExpandingTextBox extends SimplePanel implements Focusable, HasText,
 
     private final ExpandingTextBoxImpl impl;
 
+    @Inject
     public ExpandingTextBox() {
+        // TODO
         impl = new ExpandingTextBoxImpl();
         setWidget(impl);
     }

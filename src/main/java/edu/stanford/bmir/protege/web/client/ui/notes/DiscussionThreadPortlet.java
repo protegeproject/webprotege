@@ -22,10 +22,14 @@ import javax.inject.Inject;
         tooltip = "Displays discussions for the selected entity.")
 public class DiscussionThreadPortlet extends AbstractWebProtegePortlet {
 
-    private DiscussionThreadPresenter presenter;
+    private final DiscussionThreadPresenter presenter;
 
     @Inject
-    public DiscussionThreadPortlet(ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider, DiscussionThreadPresenter discussionThreadPresenter) {
+    public DiscussionThreadPortlet(ProjectId projectId,
+                                   EventBus eventBus,
+                                   SelectionModel selectionModel,
+                                   LoggedInUserProvider loggedInUserProvider,
+                                   DiscussionThreadPresenter discussionThreadPresenter) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         presenter = discussionThreadPresenter;
         presenter.installActions(this);

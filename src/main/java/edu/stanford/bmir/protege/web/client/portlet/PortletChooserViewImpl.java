@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class PortletChooserViewImpl extends Composite implements PortletChooserV
 
     private static PortletChooserViewImplUiBinder ourUiBinder = GWT.create(PortletChooserViewImplUiBinder.class);
 
+    @Inject
     public PortletChooserViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -40,6 +42,8 @@ public class PortletChooserViewImpl extends Composite implements PortletChooserV
 
     @UiField
     Label tooltipField;
+
+
 
     @UiHandler("listBox")
     protected void handleSelectionChanged(ChangeEvent event) {

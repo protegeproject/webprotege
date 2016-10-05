@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -29,6 +31,7 @@ public class UserStoppedViewingProjectEventView extends Composite implements Pro
     @UiField
     protected ElapsedTimeLabel timeLabel;
 
+    @Inject
     public UserStoppedViewingProjectEventView() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

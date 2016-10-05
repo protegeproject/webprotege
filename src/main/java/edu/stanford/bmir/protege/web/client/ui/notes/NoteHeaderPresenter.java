@@ -39,27 +39,23 @@ public class NoteHeaderPresenter implements HasDispose {
     private HandlerRegistration registration;
 
     @Inject
-    public NoteHeaderPresenter(NoteHeaderView view,  EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ActiveProjectManager activeProjectManager) {
+    public NoteHeaderPresenter(NoteHeaderView view,
+                               EventBus eventBus,
+                               DispatchServiceManager dispatchServiceManager,
+                               LoggedInUserProvider loggedInUserProvider,
+                               ActiveProjectManager activeProjectManager) {
         this.noteHeaderView = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.activeProjectManager = activeProjectManager;
-        noteHeaderView.setResolveNoteHandler(new ResolveNoteHandler() {
-            @Override
-            public void handleResolvePressed() {
-                setNoteResolved();
-            }
-        });
+        noteHeaderView.setResolveNoteHandler(() -> setNoteResolved());
         registration = eventBus.addHandlerToSource(NoteStatusChangedEvent.TYPE, activeProjectManager.getActiveProjectId().get(),
-        new NoteStatusChangedHandler() {
-            @Override
-            public void handleNoteStatusChanged(NoteStatusChangedEvent event) {
-                if (note != null && event.getNoteId().equals(note.getNoteId())) {
-                    currentNoteStatus = event.getNoteStatus();
-                    updateStatus();
-                }
-            }
-        });
+                                                   event -> {
+                                                       if (note != null && event.getNoteId().equals(note.getNoteId())) {
+                                                           currentNoteStatus = event.getNoteStatus();
+                                                           updateStatus();
+                                                       }
+                                                   });
     }
 
     public void setNote(Note note) {

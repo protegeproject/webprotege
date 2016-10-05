@@ -17,10 +17,10 @@ public class WebProtegeClientInjector {
 
     private static WebProtegeClientInjector instance;
 
-    private ApplicationClientInjector injector;
+    private ClientApplicationComponent injector;
 
     public WebProtegeClientInjector() {
-        injector = GWT.create(ApplicationClientInjector.class);
+        injector = DaggerClientApplicationComponent.create();
     }
 
     public static WebProtegeClientInjector get() {
@@ -52,7 +52,7 @@ public class WebProtegeClientInjector {
         return getInjector().getPlaceHistoryHandler();
     }
 
-    private ApplicationClientInjector getInjector() {
+    private ClientApplicationComponent getInjector() {
         return injector;
     }
 }

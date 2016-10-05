@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveImpl;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -41,6 +43,7 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
     };
 
 
+    @Inject
     public ProjectViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

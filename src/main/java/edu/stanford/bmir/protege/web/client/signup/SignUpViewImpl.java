@@ -8,6 +8,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.text.PlaceholderTextBox;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -51,6 +53,7 @@ public class SignUpViewImpl extends Composite implements SignUpView {
     @UiField
     Label emailAddressErrorLabel;
 
+    @Inject
     public SignUpViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

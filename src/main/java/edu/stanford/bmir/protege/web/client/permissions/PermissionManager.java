@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserIdProjectIdKey;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import java.util.Map;
  * Manages the permissions for projects and users.
  * @author Matthew Horridge
  */
+@Singleton
 public class PermissionManager implements HasDispose, PermissionChecker {
 
     private final EventBus eventBus;
@@ -52,19 +54,8 @@ public class PermissionManager implements HasDispose, PermissionChecker {
         this.dispatchServiceManager = dispatchServiceManager;
         this.activeProjectManager = activeProjectManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        loggedInHandler = eventBus.addHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
-            @Override
-            public void handleUserLoggedIn(UserLoggedInEvent event) {
-                firePermissionsChanged();
-            }
-        });
-
-        loggedOutHandler = eventBus.addHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
-            @Override
-            public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                firePermissionsChanged();
-            }
-        });
+        loggedInHandler = eventBus.addHandler(UserLoggedInEvent.TYPE, event -> firePermissionsChanged());
+        loggedOutHandler = eventBus.addHandler(UserLoggedOutEvent.TYPE, event -> firePermissionsChanged());
     }
 
     /**
