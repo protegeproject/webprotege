@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -18,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.events.ProjectEventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
