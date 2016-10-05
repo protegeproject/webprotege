@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.auth.Salt;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -15,19 +16,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-// TODO Auto-generate this
 public class ChapSessionFactory {
 
 
     @Nonnull
-    private final ChapSessionId id;
+    private final Provider<ChapSessionId> id;
 
     @Nonnull
-    private final ChallengeMessage challengeMessage;
+    private final Provider<ChallengeMessage> challengeMessage;
 
     @Inject
-    public ChapSessionFactory(@Nonnull ChapSessionId id,
-                              @Nonnull ChallengeMessage challengeMessage) {
+    public ChapSessionFactory(@Nonnull Provider<ChapSessionId> id,
+                              @Nonnull Provider<ChallengeMessage> challengeMessage) {
         this.id = checkNotNull(id);
         this.challengeMessage = checkNotNull(challengeMessage);
     }
@@ -39,7 +39,7 @@ public class ChapSessionFactory {
      * will be generated and a random {@link edu.stanford.bmir.protege.web.shared.auth.ChallengeMessage}
      * will be generated.
      */
-    public ChapSession getChapSession(Salt salt) {
-        return new ChapSession(id, challengeMessage, salt);
+    public ChapSession create(Salt salt) {
+        return new ChapSession(id.get(), challengeMessage.get(), salt);
     }
 }

@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.shared.auth;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.inject.assistedinject.Assisted;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -22,27 +24,30 @@ public class ChapSession implements IsSerializable {
 
     private Salt salt;
 
-    /**
-     * For serialization only
-     */
-    private ChapSession() {
-    }
-
     @Inject
-    public ChapSession(ChapSessionId id, ChallengeMessage challengeMessage, @Assisted Salt salt) {
+    public ChapSession(@Nonnull ChapSessionId id,
+                       @Nonnull ChallengeMessage challengeMessage,
+                       @Nonnull Salt salt) {
         this.id = checkNotNull(id);
         this.challengeMessage = checkNotNull(challengeMessage);
         this.salt = checkNotNull(salt);
     }
 
+    @GwtSerializationConstructor
+    private ChapSession() {
+    }
+
+    @Nonnull
     public ChapSessionId getId() {
         return id;
     }
 
+    @Nonnull
     public ChallengeMessage getChallengeMessage() {
         return challengeMessage;
     }
 
+    @Nonnull
     public Salt getSalt() {
         return salt;
     }
