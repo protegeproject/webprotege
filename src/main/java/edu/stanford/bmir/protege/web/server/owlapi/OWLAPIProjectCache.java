@@ -74,16 +74,12 @@ public class OWLAPIProjectCache {
 
     private final ApplicationComponent applicationComponent;
 
-    private final WebProtegeProperties properties;
-
     @Inject
-    public OWLAPIProjectCache(ApplicationComponent applicationComponent,
-                              WebProtegeProperties properties,
+    public OWLAPIProjectCache(@Nonnull ApplicationComponent applicationComponent,
                               @Nonnull ProjectImporterFactory projectImporterFactory,
-                              WebProtegeLogger logger) {
-        this.applicationComponent = applicationComponent;
+                              @Nonnull WebProtegeLogger logger) {
+        this.applicationComponent = checkNotNull(applicationComponent);
         this.logger = checkNotNull(logger);
-        this.properties = checkNotNull(properties);
         this.projectImporterFactory = checkNotNull(projectImporterFactory);
         Timer timer = new Timer(true);
         timer.schedule(new TimerTask() {
@@ -105,7 +101,7 @@ public class OWLAPIProjectCache {
         try {
 
             READ_LOCK.lock();
-            return new ArrayList<ProjectId>(lastAccessMap.keySet());
+            return new ArrayList<>(lastAccessMap.keySet());
         }
         finally {
             READ_LOCK.unlock();
