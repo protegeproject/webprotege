@@ -43,7 +43,7 @@ public class ChapSessionManager_TestCase {
     public void setUp() throws Exception {
         when(chapSession.getId()).thenReturn(sessionId);
         manager = new ChapSessionManager(chapSessionFactory, MAX_SESSION_DURATION);
-        when(chapSessionFactory.getChapSession(salt)).thenReturn(chapSession);
+        when(chapSessionFactory.create(salt)).thenReturn(chapSession);
     }
 
     @Test(expected = NullPointerException.class)
@@ -54,7 +54,7 @@ public class ChapSessionManager_TestCase {
     @Test
     public void shouldGetChapDataFromFactory() {
         manager.getSession(salt);
-        verify(chapSessionFactory, times(1)).getChapSession(salt);
+        verify(chapSessionFactory, times(1)).create(salt);
     }
 
     @Test

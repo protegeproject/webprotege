@@ -39,7 +39,7 @@ public class ChapSessionManager {
     }
 
     public ChapSession getSession(Salt salt) {
-        ChapSession message = chapSessionFactory.getChapSession(salt);
+        ChapSession message = chapSessionFactory.create(salt);
         messageCache.put(message.getId(), message);
         return message;
     }

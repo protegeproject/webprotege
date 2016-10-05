@@ -46,9 +46,4 @@ public class AuthenticationModule {
     public ChallengeMessage provideChallengeMessage(ChallengeMessageProvider provider) {
         return provider.get();
     }
-
-    @Provides
-    public ChapSessionFactory provideChapSessionFactory(ChapSessionId chapSessionId, ChallengeMessage challengeMessage) {
-        return new ChapSessionFactory(chapSessionId, challengeMessage);
-    }
 }
