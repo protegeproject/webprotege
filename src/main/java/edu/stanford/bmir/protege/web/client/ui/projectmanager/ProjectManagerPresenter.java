@@ -56,12 +56,10 @@ public class ProjectManagerPresenter {
                                    final ProjectManagerView projectManagerView,
                                    final DispatchServiceManager dispatchServiceManager,
                                    final LoggedInUserProvider loggedInUserProvider,
-                                   final LoggedInUserPresenter loggedInUserPresenter,
-                                   final LoadProjectRequestHandler loadProjectRequestHandler) {
+                                   final LoggedInUserPresenter loggedInUserPresenter) {
         this.projectManagerView = projectManagerView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        projectManagerView.setLoadProjectRequestHandler(loadProjectRequestHandler);
 
         viewCat2Filter.put(ProjectManagerViewFilter.OWNED_BY_ME, new ProjectDetailsFilter() {
             @Override
@@ -91,8 +89,6 @@ public class ProjectManagerPresenter {
                 return new UploadProjectDialogController(eventBus, dispatchServiceManager, loggedInUserProvider);
             }
         }));
-        projectManagerView.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
-        projectManagerView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl(dispatchServiceManager));
 
         projectManagerView.setViewFilterChangedHandler(new ViewFilterChangedHandler() {
             @Override

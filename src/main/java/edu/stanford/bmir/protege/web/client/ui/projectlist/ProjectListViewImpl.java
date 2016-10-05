@@ -9,9 +9,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.TrashManagerRequestHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -37,62 +34,17 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
     private static ProjectListViewUIImplUiBinder ourUiBinder = GWT.create(ProjectListViewUIImplUiBinder.class);
 
-    private final ProjectDetailPresenterFactory presenterFactory;
+    private final ProjectDetailsPresenterFactory presenterFactory;
 
 
     @UiField
     protected FlowPanel itemContainer;
 
-    private DownloadProjectRequestHandler downloadProjectRequestHandler = new DownloadProjectRequestHandler() {
-        @Override
-        public void handleProjectDownloadRequest(ProjectId projectId) {
-            GWT.log("handleProjectDownloadRequest:  No handler registered.");
-        }
-    };
-
-    private LoadProjectRequestHandler loadProjectRequestHandler = new LoadProjectRequestHandler() {
-        @Override
-        public void handleProjectLoadRequest(ProjectId projectId) {
-            GWT.log("handleProjectLoadRequest: No handler registered.");
-        }
-    };
-
-    private TrashManagerRequestHandler trashManagerRequestHandler = new TrashManagerRequestHandler() {
-        @Override
-        public void handleMoveProjectToTrash(ProjectId projectId) {
-            GWT.log("handleMoveProjectToTrash: No handler registered.");
-        }
-
-        @Override
-        public void handleRemoveProjectFromTrash(ProjectId projectId) {
-            GWT.log("handleRemoveProjectFromTrash: No handler registered.");
-        }
-    };
-
-
-
-
-
     @Inject
-    public ProjectListViewImpl(ProjectDetailPresenterFactory presenterFactory) {
+    public ProjectListViewImpl(ProjectDetailsPresenterFactory presenterFactory) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         this.presenterFactory = presenterFactory;
-    }
-
-    @Override
-    public void setDownloadProjectRequestHandler(DownloadProjectRequestHandler handler) {
-        this.downloadProjectRequestHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setLoadProjectRequestHandler(LoadProjectRequestHandler handler) {
-        this.loadProjectRequestHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setTrashManagerRequestHandler(TrashManagerRequestHandler handler) {
-        this.trashManagerRequestHandler = checkNotNull(handler);
     }
 
     @Override
@@ -109,19 +61,15 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         itemContainer.clear();
         entries.clear();
         for(final ProjectDetails details : projectDetails) {
-            ProjectDetailsPresenter itemPresenter = getProjectDetailsPresenter(details);
+            ProjectDetailsPresenter itemPresenter = presenterFactory.createPresenter(details);
             entries.add(itemPresenter);
             itemContainer.add(itemPresenter.getView());
         }
     }
 
-    private ProjectDetailsPresenter getProjectDetailsPresenter(ProjectDetails details) {
-        return presenterFactory.createPresenter(details);
-    }
-
     @Override
     public void addListData(ProjectDetails details) {
-        ProjectDetailsPresenter itemPresenter = getProjectDetailsPresenter(details);
+        ProjectDetailsPresenter itemPresenter = presenterFactory.createPresenter(details);
         itemContainer.insert(itemPresenter.getView(), 0);
         entries.add(0, itemPresenter);
     }

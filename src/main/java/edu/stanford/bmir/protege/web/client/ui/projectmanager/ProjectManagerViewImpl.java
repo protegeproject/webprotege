@@ -143,23 +143,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
         viewFilterChangedHandler.handleViewFilterChanged();
     }
 
-
-
-    @Override
-    public void setLoadProjectRequestHandler(LoadProjectRequestHandler handler) {
-        projectListView.setLoadProjectRequestHandler(checkNotNull(handler));
-    }
-
-    @Override
-    public void setDownloadProjectRequestHandler(DownloadProjectRequestHandler handler) {
-        projectListView.setDownloadProjectRequestHandler(handler);
-    }
-
-    @Override
-    public void setTrashManagerRequestHandler(TrashManagerRequestHandler handler) {
-        projectListView.setTrashManagerRequestHandler(handler);
-    }
-
     @Override
     public void setCreateProjectRequestHandler(CreateProjectRequestHandler handler) {
         this.createProjectRequestHandler = handler;
