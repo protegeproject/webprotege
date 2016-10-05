@@ -257,20 +257,4 @@ public class OWLAPIProjectCache {
             LAST_ACCESS_LOCK.writeLock().unlock();
         }
     }
-
-//    private void logMemoryUsage(ProjectId projectId) {
-//        Runtime runtime = Runtime.getRuntime();
-//        long totalMemoryBytes = runtime.totalMemory();
-//        long freeMemoryBytes = runtime.freeMemory();
-//        long freeMemoryMB = toMB(freeMemoryBytes);
-//        long usedMemoryBytes = totalMemoryBytes - freeMemoryBytes;
-//        long usedMemoryMB = toMB(usedMemoryBytes);
-//        long totalMemoryMB = toMB(totalMemoryBytes);
-//        double percentageUsed = (100.0 * usedMemoryBytes) / totalMemoryBytes;
-//        LOGGER.info("Using %d MB of %d MB (%.2f%%) [%d MB free]", usedMemoryMB, totalMemoryMB, percentageUsed, freeMemoryMB);
-//    }
-//
-//    private long toMB(long bytes) {
-//        return bytes / (1024 * 1024);
-//    }
 }
