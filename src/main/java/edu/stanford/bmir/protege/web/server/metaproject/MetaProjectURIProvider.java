@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import com.google.inject.Provider;
+import javax.inject.Provider;
 
 import javax.inject.Inject;
 import java.io.File;

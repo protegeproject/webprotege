@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import com.google.inject.BindingAnnotation;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -10,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-@BindingAnnotation
+
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataPropertyHierarchyRoot {
 }

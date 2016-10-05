@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import com.google.inject.Provider;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.File;
 
 /**

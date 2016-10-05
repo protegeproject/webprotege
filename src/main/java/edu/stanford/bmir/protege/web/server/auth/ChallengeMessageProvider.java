@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.inject.Provider;
+import javax.inject.Provider;
 import edu.stanford.bmir.protege.web.shared.auth.ChallengeMessage;
 
 import javax.inject.Inject;

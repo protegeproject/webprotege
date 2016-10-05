@@ -30,11 +30,4 @@ public class WebProtegeOWLManager {
         manager.getOntologyStorers().add(new BinaryOWLStorerFactory());
 
     }
-
-    //        delegateManager.getOntologyStorers().add(new RDFXMLStorerFactory());
-//        delegateManager.getOntologyStorers().add(new OWLXMLStorerFactory());
-//        delegateManager.getOntologyStorers().add(new FunctionalSyntaxStorerFactory());
-//        delegateManager.getOntologyStorers().add(new ManchesterSyntaxStorerFactory());
-
-
 }

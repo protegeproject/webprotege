@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import com.google.inject.TypeLiteral;
+import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
@@ -18,7 +18,7 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
 
     @Inject
     public SubClassOfAxiomMatcher(OWLObjectStringFormatter formatter) {
-        super(new TypeLiteral<OWLSubClassOfAxiom>(){});
+        super(new TypeToken<OWLSubClassOfAxiom>(){});
         this.formatter = formatter;
     }
 

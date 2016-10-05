@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.server;
 
-import com.google.inject.CreationException;
-import com.google.inject.spi.Message;
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.DaggerApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.ServletComponent;
-import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -57,18 +54,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
         }
         catch (ExceptionInInitializerError error) {
             error.printStackTrace();
-            Throwable rootCause = ExceptionUtils.getRootCause(error);
-            if (rootCause instanceof CreationException) {
-                for(Message msg : ((CreationException) rootCause.getCause()).getErrorMessages()) {
-                    if(msg.getCause() instanceof WebProtegeConfigurationException) {
-                        WebProtegeWebAppFilter.setConfigError((WebProtegeConfigurationException) msg.getCause());
-                        return;
-                    }
-                }
-            }
-            else {
-                WebProtegeWebAppFilter.setError(error);
-            }
+            WebProtegeWebAppFilter.setError(error);
         }
         catch (Throwable error) {
             WebProtegeWebAppFilter.setError(error);

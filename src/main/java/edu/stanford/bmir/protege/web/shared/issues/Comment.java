@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -18,7 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Comment implements IsSerializable {
 
-    @Nonnull
     private UserId createdBy;
 
     private long createdAt;
@@ -26,7 +26,6 @@ public class Comment implements IsSerializable {
     @Nullable
     private Long updatedAt;
 
-    @Nonnull
     private String body;
 
     public Comment(@Nonnull UserId createdBy,
@@ -83,5 +82,20 @@ public class Comment implements IsSerializable {
                 && this.createdAt == other.createdAt
                 && Objects.equal(this.updatedAt, other.updatedAt)
                 && this.body.equals(other.body);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(createdAt, createdBy, updatedAt, body);
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper("Comment")
+                .add("createdBy", createdBy)
+                .add("createdAt", createdAt)
+                .add("updatedAt", updatedAt)
+                .add("body", body)
+                .toString();
     }
 }
