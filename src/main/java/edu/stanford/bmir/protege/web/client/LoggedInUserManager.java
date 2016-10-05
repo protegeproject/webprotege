@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client;
 
-import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
@@ -18,9 +16,10 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,20 +31,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LoggedInUserManager implements LoggedInUserProvider {
 
+    @Nonnull
+    private final EventBus eventBus;
+
+    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
     private UserId userId = UserId.getGuest();
 
     private UserDetails userDetails = UserDetails.getGuestUserDetails();
 
-    private Map<String, String> currentUserProperties = new HashMap<String, String>();
-
-    private EventBus eventBus;
-
     @Inject
-    public LoggedInUserManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        this.eventBus = eventBus;
-        this.dispatchServiceManager = dispatchServiceManager;
+    public LoggedInUserManager(@Nonnull EventBus eventBus,
+                               @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.eventBus = checkNotNull(eventBus);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     /**
@@ -54,6 +54,7 @@ public class LoggedInUserManager implements LoggedInUserProvider {
      * @return A {@link LoggedInUserManager} instances which is initialised immediately with the guest user details and
      * initialised asynchronously with the server side session details.
      */
+    @Nonnull
     public static LoggedInUserManager getAndRestoreFromServer(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         LoggedInUserManager manager = new LoggedInUserManager(eventBus, dispatchServiceManager);
         manager.readUserInSession();
@@ -66,10 +67,12 @@ public class LoggedInUserManager implements LoggedInUserProvider {
      * @return The id of the currently logged in user.  Not {@code null}.  The returned id may correspond to the id
      * of the guest user.
      */
+    @Nonnull
     public UserId getLoggedInUserId() {
         return userId;
     }
 
+    @Nonnull
     @Override
     public UserId getCurrentUserId() {
         return userId;
@@ -80,9 +83,8 @@ public class LoggedInUserManager implements LoggedInUserProvider {
      * @param userId The user id of the logged in user.  Not {@code null}.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    public void setLoggedInUser(final UserId userId, AsyncCallback<UserDetails> callback) {
-        checkNotNull(userId);
-        if(userId.equals(this.userId)) {
+    public void setLoggedInUser(@Nonnull final UserId userId, @Nonnull AsyncCallback<UserDetails> callback) {
+        if(checkNotNull(userId).equals(this.userId)) {
             callback.onSuccess(userDetails);
             return;
         }
@@ -129,15 +131,10 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         UserInSessionDecoder decoder = new UserInSessionDecoder();
         UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
         UserDetails userDetails = userInSession.getUserDetails();
-        GWT.log("Decoded user in session: " + userDetails);
         replaceUserAndBroadcastChanges(userDetails);
     }
 
-    // TODO:  A temp hack - I'd like to make this type safe or get rid of it.
-
     private void replaceUserAndBroadcastChanges(UserDetails newUserDetails) {
-        currentUserProperties.clear();
-
         UserId previousUserId = this.userId;
         this.userId = newUserDetails.getUserId();
         this.userDetails = newUserDetails;
