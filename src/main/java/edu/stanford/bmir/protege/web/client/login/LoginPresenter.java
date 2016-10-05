@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.login;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -16,10 +15,14 @@ import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.Optional;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -39,28 +42,24 @@ public class LoginPresenter {
 
     private final ResetPasswordPresenter resetPasswordPresenter;
 
-    private Optional<Place> nextPlace = Optional.absent();
+    private Optional<Place> nextPlace = Optional.empty();
 
 
 
     @Inject
-    public LoginPresenter(LoginView view,
-                          AuthenticatedActionExecutor loginExecutor,
-                          LoggedInUserManager loggedInUserManager,
-                          final PlaceController placeController,
-                          ResetPasswordPresenter resetPasswordPresenter) {
-        this.view = view;
-        this.loginExecutor = loginExecutor;
-        this.loggedInUserManager = loggedInUserManager;
-        this.placeController = placeController;
-        this.resetPasswordPresenter = resetPasswordPresenter;
+    public LoginPresenter(@Nonnull LoginView view,
+                          @Nonnull AuthenticatedActionExecutor loginExecutor,
+                          @Nonnull LoggedInUserManager loggedInUserManager,
+                          @Nonnull PlaceController placeController,
+                          @Nonnull ResetPasswordPresenter resetPasswordPresenter) {
+        this.view = checkNotNull(view);
+        this.loginExecutor = checkNotNull(loginExecutor);
+        this.loggedInUserManager = checkNotNull(loggedInUserManager);
+        this.placeController = checkNotNull(placeController);
+        this.resetPasswordPresenter = checkNotNull(resetPasswordPresenter);
         view.setSignInHandler(this::handleSignIn);
         view.setForgotPasswordHandler(this::handleResetPassword);
         view.setSignUpForAccountHandler(this::handleSignUpForAccout);
-    }
-
-    private void handleSignUpForAccout() {
-        placeController.goTo(new SignUpPlace());
     }
 
     public LoginView getView() {
@@ -74,6 +73,10 @@ public class LoginPresenter {
     public void start() {
         view.clearView();
         view.hideErrorMessages();
+    }
+
+    private void handleSignUpForAccout() {
+        placeController.goTo(new SignUpPlace());
     }
 
     private void handleSignIn() {
@@ -110,7 +113,6 @@ public class LoginPresenter {
 
     private void handleAuthenticationResponse(UserId userId, AuthenticationResponse response) {
         if(response == AuthenticationResponse.SUCCESS) {
-            GWT.log("[LoginPresenter] Login successful.  Logged in user: " + userId + "  Next place: " + nextPlace);
             loggedInUserManager.setLoggedInUser(userId, new AsyncCallback<UserDetails>() {
                 @Override
                 public void onFailure(Throwable caught) {
@@ -119,14 +121,11 @@ public class LoginPresenter {
 
                 @Override
                 public void onSuccess(UserDetails result) {
-                    GWT.log("[LoginPresenter] Switched user");
-                    // Next place
                     if(nextPlace.isPresent()) {
                         placeController.goTo(nextPlace.get());
                     }
                 }
             });
-
         }
         else {
             view.showLoginFailedErrorMessage();
