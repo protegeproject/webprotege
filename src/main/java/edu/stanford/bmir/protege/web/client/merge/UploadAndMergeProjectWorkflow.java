@@ -7,6 +7,11 @@ import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -14,10 +19,12 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class UploadAndMergeProjectWorkflow {
 
-    private MergeUploadedProjectWorkflow mergeWorkflow;
+    @Nonnull
+    private final MergeUploadedProjectWorkflow mergeWorkflow;
 
-    public UploadAndMergeProjectWorkflow(MergeUploadedProjectWorkflow mergeWorkflow) {
-        this.mergeWorkflow = mergeWorkflow;
+    @Inject
+    public UploadAndMergeProjectWorkflow(@Nonnull MergeUploadedProjectWorkflow mergeWorkflow) {
+        this.mergeWorkflow = checkNotNull(mergeWorkflow);
     }
 
     public void start(ProjectId projectId) {

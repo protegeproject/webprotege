@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.merge.MergeUploadedProjectWorkflow;
 import edu.stanford.bmir.protege.web.client.merge.UploadAndMergeProjectWorkflow;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -15,23 +16,22 @@ import javax.inject.Inject;
  */
 public class UploadAndMergeHandlerImpl implements UploadAndMergeHandler {
 
-    private final DispatchServiceManager dispatchServiceManager;
+    @Nonnull
+    private final ProjectId projectId;
 
-    private final ActiveProjectManager activeProjectManager;
+    @Nonnull
+    private final Provider<UploadAndMergeProjectWorkflow> workflowProvider;
 
     @Inject
-    public UploadAndMergeHandlerImpl(DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.activeProjectManager = activeProjectManager;
+    public UploadAndMergeHandlerImpl(@Nonnull ProjectId projectId,
+                                     @Nonnull Provider<UploadAndMergeProjectWorkflow> workflowProvider) {
+        this.projectId = checkNotNull(projectId);
+        this.workflowProvider = checkNotNull(workflowProvider);
     }
 
     @Override
     public void handleUploadAndMerge() {
-        MergeUploadedProjectWorkflow mergeWorkflow = new MergeUploadedProjectWorkflow(dispatchServiceManager);
-        UploadAndMergeProjectWorkflow workflow = new UploadAndMergeProjectWorkflow(mergeWorkflow);
-        Optional<ProjectId> currentProject = activeProjectManager.getActiveProjectId();
-        if (currentProject.isPresent()) {
-            workflow.start(currentProject.get());
-        }
+        UploadAndMergeProjectWorkflow workflow = workflowProvider.get();
+        workflow.start(projectId);
     }
 }

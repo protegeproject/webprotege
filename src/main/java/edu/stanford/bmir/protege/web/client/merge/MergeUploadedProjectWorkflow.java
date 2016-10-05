@@ -11,6 +11,11 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.merge.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -18,11 +23,12 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class MergeUploadedProjectWorkflow {
 
-    private DispatchServiceManager dispatchServiceManager;
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
 
-
-    public MergeUploadedProjectWorkflow(DispatchServiceManager dispatchServiceManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Inject
+    public MergeUploadedProjectWorkflow(@Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     public void start(ProjectId projectId, DocumentId documentId) {
