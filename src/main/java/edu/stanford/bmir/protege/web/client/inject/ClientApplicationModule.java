@@ -234,31 +234,37 @@ public class ClientApplicationModule {
     }
 
     @Provides
+    @Singleton
     LoginView provideLoginView(LoginViewImpl loginView) {
         return loginView;
     }
 
     @Provides
+    @Singleton
     LogoutView provideLogoutView(LogoutViewImpl logoutView) {
         return logoutView;
     }
 
     @Provides
+    @Singleton
     ResetPasswordView provideResetPasswordView(ResetPasswordViewImpl resetPasswordView) {
         return resetPasswordView;
     }
 
     @Provides
+    @Singleton
     LoggedInUserView provideLoggedInUserView(LoggedInUserViewImpl loggedInUserView) {
         return loggedInUserView;
     }
 
     @Provides
+    @Singleton
     HelpView provideHelpView(HelpViewImpl helpView) {
         return helpView;
     }
 
     @Provides
+    @Singleton
     GoToHomeView provideGoToHomeView(GoToToHomeViewImpl goToToHomeView) {
         return goToToHomeView;
     }
@@ -269,6 +275,7 @@ public class ClientApplicationModule {
     }
 
     @Provides
+    @Singleton
     PerspectiveSwitcherView providePerspectiveSwitcherView(PerspectiveSwitcherViewImpl view) {
         return view;
     }
@@ -289,6 +296,7 @@ public class ClientApplicationModule {
     }
 
     @Provides
+    @Singleton
     ForbiddenView provideForbiddenView(ForbiddenViewImpl view) {
         return view;
     }
