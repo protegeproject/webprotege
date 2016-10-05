@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.auto.factory.Provided;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
@@ -20,6 +21,8 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerIm
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
 import edu.stanford.bmir.protege.web.client.project.*;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorManagerSelector;
@@ -147,6 +150,11 @@ public class ClientProjectModule {
 
     @Provides
     SharingSettingsView provideSharingSettingsView(SharingSettingsViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    ProjectSettingsView provideProjectSettingsView(ProjectSettingsViewImpl view) {
         return view;
     }
 

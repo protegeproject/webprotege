@@ -7,7 +7,10 @@ import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPrese
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,29 +20,21 @@ import javax.inject.Inject;
  */
 public class ShowProjectDetailsHandlerImpl implements ShowProjectDetailsHandler {
 
-    private final EventBus eventBus;
+    @Nonnull
+    private final ProjectId projectId;
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final ActiveProjectManager activeProjectManager;
+    @Nonnull
+    private final ProjectSettingsPresenter presenter;
 
     @Inject
-    public ShowProjectDetailsHandlerImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
-        this.eventBus = eventBus;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.activeProjectManager = activeProjectManager;
+    public ShowProjectDetailsHandlerImpl(@Nonnull ProjectId projectId,
+                                         @Nonnull ProjectSettingsPresenter presenter) {
+        this.projectId = projectId;
+        this.presenter = presenter;
     }
 
     @Override
     public void handleShowProjectDetails() {
-        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        if(!projectId.isPresent()) {
-            return;
-        }
-        ProjectSettingsPresenter presenter = new ProjectSettingsPresenter(
-                new ProjectSettingsViewImpl(),
-                eventBus,
-                dispatchServiceManager);
-        presenter.showDialog(projectId.get());
+        presenter.showDialog(projectId);
     }
 }
