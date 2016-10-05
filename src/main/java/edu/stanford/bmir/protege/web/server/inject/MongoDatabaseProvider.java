@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import com.google.inject.Provider;
+import javax.inject.Provider;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 

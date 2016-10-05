@@ -2,7 +2,9 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,16 +19,18 @@ import java.util.Optional;
 public class ProjectPermissionRecord_TestCase {
 
     private ProjectPermissionRecord projectPermissionRecord;
+
     @Mock
     private ProjectId projectId;
-    private Optional userId;
+
+    private Optional<UserId> userId = Optional.of(UserId.getUserId("The User"));
+
     @Mock
-    private ImmutableSet permissions;
+    private ImmutableSet<Permission> permissions;
 
     @Before
     public void setUp()
-        throws Exception
-    {
+            throws Exception {
         projectPermissionRecord = new ProjectPermissionRecord(projectId, userId, permissions);
     }
 
@@ -76,27 +80,38 @@ public class ProjectPermissionRecord_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(new ProjectPermissionRecord(projectId, userId, permissions)));
+        MatcherAssert.assertThat(projectPermissionRecord,
+                                 Matchers.is(new ProjectPermissionRecord(projectId, userId, permissions)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(Matchers.not(new ProjectPermissionRecord(Mockito.mock(ProjectId.class), userId, permissions))));
+        MatcherAssert.assertThat(projectPermissionRecord,
+                                 Matchers.is(Matchers.not(new ProjectPermissionRecord(Mockito.mock(ProjectId.class),
+                                                                                      userId,
+                                                                                      permissions))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(Matchers.not(new ProjectPermissionRecord(projectId, Mockito.mock(Optional.class), permissions))));
+        MatcherAssert.assertThat(projectPermissionRecord,
+                                 Matchers.is(Matchers.not(new ProjectPermissionRecord(projectId,
+                                                                                      Optional.of(UserId.getUserId("Other User")),
+                                                                                      permissions))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_permissions() {
-        MatcherAssert.assertThat(projectPermissionRecord, Matchers.is(Matchers.not(new ProjectPermissionRecord(projectId, userId, Mockito.mock(ImmutableSet.class)))));
+        MatcherAssert.assertThat(projectPermissionRecord,
+                                 Matchers.is(Matchers.not(new ProjectPermissionRecord(projectId,
+                                                                                      userId,
+                                                                                      ImmutableSet.of()))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(projectPermissionRecord.hashCode(), Matchers.is(new ProjectPermissionRecord(projectId, userId, permissions).hashCode()));
+        MatcherAssert.assertThat(projectPermissionRecord.hashCode(),
+                                 Matchers.is(new ProjectPermissionRecord(projectId, userId, permissions).hashCode()));
     }
 
     @Test

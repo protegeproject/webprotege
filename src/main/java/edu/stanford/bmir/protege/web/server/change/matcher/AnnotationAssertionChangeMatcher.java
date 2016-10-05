@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import com.google.inject.TypeLiteral;
+import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -19,7 +19,7 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
 
     @Inject
     public AnnotationAssertionChangeMatcher(OWLObjectRenderer renderer, OWLObjectStringFormatter formatter) {
-        super(new TypeLiteral<OWLAnnotationAssertionAxiom>(){});
+        super(new TypeToken<OWLAnnotationAssertionAxiom>(){});
         this.formatter = formatter;
     }
 

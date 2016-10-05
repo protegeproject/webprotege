@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import com.google.inject.TypeLiteral;
+import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
@@ -15,12 +15,9 @@ import java.util.Optional;
  */
 public abstract class AbstractAxiomMatcher<A extends OWLAxiom> implements ChangeMatcher {
 
-    private final TypeLiteral<A> axiomCls;
+    private final TypeToken<A> axiomCls;
 
-
-
-
-    public AbstractAxiomMatcher(TypeLiteral<A> axiomCls) {
+    public AbstractAxiomMatcher(TypeToken<A> axiomCls) {
         this.axiomCls = axiomCls;
     }
 

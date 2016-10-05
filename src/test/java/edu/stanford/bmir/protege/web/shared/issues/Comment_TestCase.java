@@ -101,7 +101,7 @@ public class Comment_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_updatedAt() {
-        assertThat(comment, is(not(new Comment(createdBy, createdAt, mock(Optional.class), body))));
+        assertThat(comment, is(not(new Comment(createdBy, createdAt, Optional.of(67L), body))));
     }
 
     @Test

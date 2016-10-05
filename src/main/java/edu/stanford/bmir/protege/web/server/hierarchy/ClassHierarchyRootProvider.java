@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import com.google.inject.Provider;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Matthew Horridge

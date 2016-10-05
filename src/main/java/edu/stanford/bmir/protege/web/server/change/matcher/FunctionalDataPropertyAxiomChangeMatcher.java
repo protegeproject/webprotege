@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import com.google.inject.TypeLiteral;
+import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.OWLFunctionalDataPropertyAxiom;
 
@@ -18,7 +18,7 @@ public class FunctionalDataPropertyAxiomChangeMatcher extends AbstractAxiomMatch
 
     @Inject
     public FunctionalDataPropertyAxiomChangeMatcher(OWLObjectStringFormatter formatter) {
-        super(new TypeLiteral<OWLFunctionalDataPropertyAxiom>(){});
+        super(new TypeToken<OWLFunctionalDataPropertyAxiom>(){});
         this.formatter = formatter;
     }
 

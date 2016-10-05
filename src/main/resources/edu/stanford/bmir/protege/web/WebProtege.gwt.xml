@@ -23,7 +23,6 @@
     <inherits name="com.google.common.base.Base"/>
     <inherits name="com.google.gwt.http.HTTP"/>
     <inherits name="com.google.gwt.json.JSON"/>
-    <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="com.google.common.io.Io"/>
     <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
@@ -42,9 +41,6 @@
     <inherits name="dagger.Dagger"/>
 
     <extend-property name="locale" values="de" />
-
-    <set-configuration-property name="gin.classloading.exceptedPackages" value="com.google.gwt.core.client"/>
-    <extend-configuration-property name="gin.classloading.exceptedPackages" value="com.google.gwt.core.client.impl"/>
 
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 

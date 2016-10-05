@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import com.google.inject.Provider;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Matthew Horridge

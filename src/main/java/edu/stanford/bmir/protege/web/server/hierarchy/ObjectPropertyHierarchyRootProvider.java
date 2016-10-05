@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import com.google.inject.Provider;
+import javax.inject.Provider;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
-import com.google.inject.TypeLiteral;
+import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import org.semanticweb.owlapi.model.OWLPropertyRangeAxiom;
 
@@ -18,7 +18,7 @@ public class PropertyRangeAxiomChangeMatcher extends AbstractAxiomMatcher<OWLPro
 
     @Inject
     public PropertyRangeAxiomChangeMatcher(OWLObjectStringFormatter formatter) {
-        super(new TypeLiteral<OWLPropertyRangeAxiom<?, ?>>(){});
+        super(new TypeToken<OWLPropertyRangeAxiom<?,?>>(){});
         this.formatter = formatter;
     }
 
