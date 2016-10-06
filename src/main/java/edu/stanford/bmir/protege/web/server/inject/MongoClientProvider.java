@@ -29,7 +29,6 @@ public class MongoClientProvider implements Provider<MongoClient> {
 
     @Override
     public MongoClient get() {
-        System.out.println("Getting MONGO CLIENT");
         return new MongoClient(host, port);
     }
 }

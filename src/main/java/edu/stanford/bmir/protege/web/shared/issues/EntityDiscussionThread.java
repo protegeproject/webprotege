@@ -5,11 +5,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+
+import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,27 +25,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * A thread of comments that are attached to an entity
  */
+@Entity(value = "EntityComments", noClassnameStored = true)
 public class EntityDiscussionThread implements IsSerializable {
 
+    @Id
     private ThreadId id;
 
     private ProjectId projectId;
 
-    private OWLEntity targetEntity;
-
-    private ImmutableList<Comment> comments;
+    private OWLEntity entity;
 
     private Status status;
+
+    private List<Comment> comments;
 
     @Inject
     public EntityDiscussionThread(@Nonnull ThreadId id,
                                   @Nonnull ProjectId projectId,
-                                  @Nonnull OWLEntity targetEntity,
-                                  @Nonnull ImmutableList<Comment> comments,
-                                  @Nonnull Status status) {
+                                  @Nonnull OWLEntity entity,
+                                  @Nonnull Status status, @Nonnull ImmutableList<Comment> comments) {
         this.id = checkNotNull(id);
         this.projectId = checkNotNull(projectId);
-        this.targetEntity = checkNotNull(targetEntity);
+        this.entity = checkNotNull(entity);
         this.comments = checkNotNull(comments);
         this.status = checkNotNull(status);
     }
@@ -59,8 +64,8 @@ public class EntityDiscussionThread implements IsSerializable {
     }
 
     @Nonnull
-    public OWLEntity getTargetEntity() {
-        return targetEntity;
+    public OWLEntity getEntity() {
+        return entity;
     }
 
     @Nonnull
@@ -70,12 +75,12 @@ public class EntityDiscussionThread implements IsSerializable {
 
     @Nonnull
     public ImmutableList<Comment> getComments() {
-        return comments;
+        return ImmutableList.copyOf(comments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, targetEntity, comments, status);
+        return Objects.hashCode(id, entity, comments, status);
     }
 
     @Override
@@ -88,7 +93,7 @@ public class EntityDiscussionThread implements IsSerializable {
         }
         EntityDiscussionThread other = (EntityDiscussionThread) obj;
         return this.id.equals(other.id)
-                && this.targetEntity.equals(other.targetEntity)
+                && this.entity.equals(other.entity)
                 && this.comments.equals(other.comments)
                 && this.status.equals(other.status);
     }
@@ -98,7 +103,7 @@ public class EntityDiscussionThread implements IsSerializable {
     public String toString() {
         return toStringHelper("EntityCommentsThread")
                 .addValue(id)
-                .add("targetEntity", targetEntity)
+                .add("entity", entity)
                 .add("status", status)
                 .add("comments", comments)
                 .toString();

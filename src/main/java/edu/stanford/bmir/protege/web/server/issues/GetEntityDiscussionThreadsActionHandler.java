@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.shared.issues.*;
-import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -56,8 +55,10 @@ public class GetEntityDiscussionThreadsActionHandler implements ActionHandler<Ge
                 new Comment(executionContext.getUserId(), System.currentTimeMillis(), Optional.empty(), "Yes hello"),
                 new Comment(executionContext.getUserId(), System.currentTimeMillis(), Optional.empty(), "Hello world")
                 );
-        EntityDiscussionThread t = new EntityDiscussionThread(new ThreadId(UUID.randomUUID().toString()), action.getProjectId(), action.getEntity(), comments,
-                                                              Status.OPEN);
+        EntityDiscussionThread t = new EntityDiscussionThread(new ThreadId(UUID.randomUUID().toString()), action.getProjectId(), action.getEntity(),
+                                                              Status.OPEN,
+                                                              comments
+        );
         repository.saveThread(t);
         System.out.println("Getting threads");
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
