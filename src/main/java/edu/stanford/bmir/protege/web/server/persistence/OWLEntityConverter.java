@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
+import com.mongodb.BasicDBObject;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationDataFactory;
 import org.bson.Document;
+import org.mongodb.morphia.mapping.MappedField;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -13,7 +15,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
-public class OWLEntityConverter implements DocumentConverter<OWLEntity> {
+public class OWLEntityConverter extends TypeSafeConverter<BasicDBObject, OWLEntity> {
 
     private static final String TYPE = "type";
 
@@ -24,19 +26,12 @@ public class OWLEntityConverter implements DocumentConverter<OWLEntity> {
 
     @Inject
     public OWLEntityConverter(@Nonnull @ApplicationDataFactory OWLDataFactory dataFactory) {
+        super(OWLEntity.class);
         this.dataFactory = dataFactory;
     }
 
     @Override
-    public Document toDocument(@Nonnull OWLEntity entity) {
-        Document document = new Document();
-        document.append(TYPE, entity.getEntityType().getName());
-        document.append(IRI, entity.getIRI().toString());
-        return document;
-    }
-
-    @Override
-    public OWLEntity fromDocument(@Nonnull Document document) {
+    public OWLEntity decodeObject(BasicDBObject document, MappedField optionalExtraInfo) {
         Object typeObject = document.get("type");
         if(typeObject == null) {
             throw new IllegalArgumentException("Missing type property value");
@@ -64,5 +59,13 @@ public class OWLEntityConverter implements DocumentConverter<OWLEntity> {
             default:
                 throw new RuntimeException("Unknown entity type");
         }
+    }
+
+    @Override
+    public BasicDBObject encodeObject(OWLEntity entity, MappedField optionalExtraInfo) {
+        BasicDBObject document = new BasicDBObject();
+        document.append(TYPE, entity.getEntityType().getName());
+        document.append(IRI, entity.getIRI().toString());
+        return document;
     }
 }

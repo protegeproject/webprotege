@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;
+
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,6 +22,12 @@ public class ThreadId implements IsSerializable {
 
     public ThreadId(@Nonnull String id) {
         this.id = checkNotNull(id);
+    }
+
+    @GwtIncompatible
+    public static ThreadId create() {
+        //noinspection NonJREEmulationClassesInClientCode
+        return new ThreadId(UUID.randomUUID().toString());
     }
 
     @GwtSerializationConstructor
@@ -49,7 +58,7 @@ public class ThreadId implements IsSerializable {
 
     @Override
     public String toString() {
-        return toStringHelper("CommentThreadId")
+        return toStringHelper("ThreadId")
                 .addValue(id)
                 .toString();
     }

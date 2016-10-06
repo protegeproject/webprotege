@@ -54,47 +54,50 @@ public class EntityDiscussionThreadConverter implements DocumentConverter<Entity
 
     @Override
     public Document toDocument(@Nonnull EntityDiscussionThread thread) {
-        Document document = new Document();
-        document.append(THREAD_ID,
-                        thread.getId()
-                              .getId());
-        document.append(PROJECT_ID,
-                        thread.getProjectId()
-                              .getId());
-        document.append(ENTITY, entityConverter.toDocument(thread.getTargetEntity()));
-        List<Document> commentDocuments = thread.getComments()
-                                                .stream()
-                                                .map(c -> commentConverter.toDocument(c))
-                                                .collect(toList());
-        document.append(COMMENTS, commentDocuments);
-        document.append(STATUS,
-                        thread.getStatus()
-                              .name());
-        return document;
+//        Document document = new Document();
+//        document.append(THREAD_ID,
+//                        thread.getId()
+//                              .getId());
+//        document.append(PROJECT_ID,
+//                        thread.getProjectId()
+//                              .getId());
+//        document.append(ENTITY, entityConverter.toDocument(thread.getEntity()));
+//        List<Document> commentDocuments = thread.getComments()
+//                                                .stream()
+//                                                .map(c -> commentConverter.toDocument(c))
+//                                                .collect(toList());
+//        document.append(COMMENTS, commentDocuments);
+//        document.append(STATUS,
+//                        thread.getStatus()
+//                              .name());
+//        return document;
+        throw new RuntimeException();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public EntityDiscussionThread fromDocument(@Nonnull Document document) {
-        ProjectId projectId = ProjectId.get(document.getString(PROJECT_ID));
-        ThreadId threadId = new ThreadId(document.getString(THREAD_ID));
-        OWLEntity entity = entityConverter.fromDocument((Document) document.get(ENTITY));
-        List<Comment> comments = ((List<Document>) document.get(COMMENTS)).stream()
-                                                                          .map(d -> commentConverter.fromDocument(d))
-                                                                          .collect(toList());
-        Status status = Status.valueOf(document.getString(STATUS));
-        return new EntityDiscussionThread(threadId,
-                                          projectId,
-                                          entity,
-                                          ImmutableList.copyOf(comments),
-                                          status);
+//        ProjectId projectId = ProjectId.get(document.getString(PROJECT_ID));
+//        ThreadId threadId = new ThreadId(document.getString(THREAD_ID));
+//        OWLEntity entity = entityConverter.fromDocument((Document) document.get(ENTITY));
+//        List<Comment> comments = ((List<Document>) document.get(COMMENTS)).stream()
+//                                                                          .map(d -> commentConverter.fromDocument(d))
+//                                                                          .collect(toList());
+//        Status status = Status.valueOf(document.getString(STATUS));
+//        return new EntityDiscussionThread(threadId,
+//                                          projectId,
+//                                          entity,
+//                                          status, ImmutableList.copyOf(comments)
+//        );
+        throw new RuntimeException();
     }
 
     public Document byProjectIdAndEntity(ProjectId projectId, OWLEntity entity) {
-        Document document = new Document();
-        document.append(PROJECT_ID, projectId.getId());
-        document.append(ENTITY, entityConverter.toDocument(entity));
-        return document;
+//        Document document = new Document();
+//        document.append(PROJECT_ID, projectId.getId());
+//        document.append(ENTITY, entityConverter.toDocument(entity));
+//        return document;
+        throw new RuntimeException();
     }
 
     public void ensureIndexes(MongoCollection<Document> collection) {
