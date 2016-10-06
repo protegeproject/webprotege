@@ -10,6 +10,4 @@ import java.io.Serializable;
  * 27 Jul 16
  */
 public class IssueTarget implements Serializable, IsSerializable {
-
-
 }

@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            padding: 5px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="statusLabel"/>
+        <g:FlowPanel ui:field="commentViewContainer"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

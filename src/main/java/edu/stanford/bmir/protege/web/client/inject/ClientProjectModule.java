@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
-import com.google.auto.factory.Provided;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
@@ -12,6 +11,9 @@ import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
 import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
+import edu.stanford.bmir.protege.web.client.issues.*;
+import edu.stanford.bmir.protege.web.client.issues.DiscussionThreadView;
+import edu.stanford.bmir.protege.web.client.issues.DiscussionThreadViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
 import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -78,7 +80,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    DiscussionThreadView provideDiscussionThreadView(DiscussionThreadViewImpl view) {
+    edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadView provideDiscussionThreadView(edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadViewImpl view) {
         return view;
     }
 
@@ -201,4 +203,19 @@ public class ClientProjectModule {
     PortletFactory providePortletFactory(PortletFactoryGenerated portletFactoryGenerated) {
         return portletFactoryGenerated;
     }
+
+    @Provides
+    DiscussionThreadListView provideEntityDiscussionThreadListView(DiscussionThreadListViewImpl view) {
+        return view;
+    }
+
+    @Provides
+    DiscussionThreadView provideEntityDiscussionThreadView(DiscussionThreadViewImpl view) {
+        return view;
+    }
+
+//    @Provides
+//    CommentView provideCommentView() {
+//        return new CommentView2Impl();
+//    }
 }
