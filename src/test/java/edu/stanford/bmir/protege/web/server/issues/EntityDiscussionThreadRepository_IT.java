@@ -109,7 +109,7 @@ public class EntityDiscussionThreadRepository_IT {
 
     private MongoCollection<Document> getCollection() {
         return mongoClient.getDatabase(getTestDbName())
-                          .getCollection("EntityComments");
+                          .getCollection("EntityDiscussionThreads");
     }
 
 }

@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * A thread of comments that are attached to an entity
  */
-@Entity(value = "EntityComments", noClassnameStored = true)
+@Entity(value = "EntityDiscussionThreads", noClassnameStored = true)
 public class EntityDiscussionThread implements IsSerializable {
 
     @Id
