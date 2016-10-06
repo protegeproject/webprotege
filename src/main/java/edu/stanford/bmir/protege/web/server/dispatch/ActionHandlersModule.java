@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
+import edu.stanford.bmir.protege.web.server.issues.GetEntityDiscussionThreadsActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.GetIssuesActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdCompletionsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdItemsActionHandler;
@@ -506,6 +507,11 @@ public class ActionHandlersModule {
 
     @Provides(type = Provides.Type.SET)
     public ActionHandler provideGetIssuesActionHandler(GetIssuesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideGetDiscussionThreadsActionHandler(GetEntityDiscussionThreadsActionHandler handler) {
         return handler;
     }
 

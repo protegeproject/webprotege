@@ -18,6 +18,10 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import javax.inject.Singleton;
 import java.util.Collections;
@@ -100,5 +104,12 @@ public class ApplicationModule {
     @Provides
     public WebProtegeLogger provideWebProtegeLogger(DefaultLogger logger) {
         return logger;
+    }
+
+    @Provides
+    @Singleton
+    @ApplicationDataFactory
+    public OWLDataFactory provideOWLDataFactory() {
+        return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
     }
 }
