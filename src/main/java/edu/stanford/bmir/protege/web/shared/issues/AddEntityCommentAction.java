@@ -31,6 +31,12 @@ public class AddEntityCommentAction implements Action<AddEntityCommentResult> {
         this.comment = checkNotNull(comment);
     }
 
+    public static AddEntityCommentAction addEntityComment(@Nonnull ProjectId projectId,
+                                                          @Nonnull ThreadId threadId,
+                                                          @Nonnull String comment) {
+        return new AddEntityCommentAction(projectId, threadId, comment);
+    }
+
     @GwtSerializationConstructor
     private AddEntityCommentAction() {
     }

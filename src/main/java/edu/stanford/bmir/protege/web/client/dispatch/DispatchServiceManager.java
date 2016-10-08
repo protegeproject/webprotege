@@ -27,6 +27,7 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Author: Matthew Horridge<br>
@@ -82,6 +83,17 @@ public class DispatchServiceManager {
         requestCount++;
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
+
+    public <A extends Action<R>, R extends Result> void execute(A action, final Consumer<R> successConsumer) {
+        execute(action, new DispatchServiceCallback<R>() {
+            @Override
+            public void handleSuccess(R r) {
+                successConsumer.accept(r);
+            }
+        });
+    }
+
+
 
 
     private class AsyncCallbackProxy<R extends Result> implements AsyncCallback<DispatchServiceResultContainer> {

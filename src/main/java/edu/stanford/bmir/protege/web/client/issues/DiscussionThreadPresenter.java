@@ -11,11 +11,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -27,6 +23,8 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 
 /**
  * Matthew Horridge
@@ -106,14 +104,14 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private void updateEnabled() {
         view.setEnabled(false);
-        if(addCommentAction != null) {
+        if (addCommentAction != null) {
             addCommentAction.setEnabled(false);
         }
         permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean b) {
                 view.setEnabled(b);
-                if(addCommentAction != null) {
+                if (addCommentAction != null) {
                     addCommentAction.setEnabled(b);
                 }
             }
@@ -123,12 +121,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     public void setEntity(@Nonnull OWLEntity entity) {
         this.entity = java.util.Optional.of(entity);
         dispatch.execute(new GetEntityDiscussionThreadsAction(projectId, entity),
-                         new DispatchServiceCallback<GetEntityDiscussionThreadsResult>() {
-                                           @Override
-                                           public void handleSuccess(GetEntityDiscussionThreadsResult result) {
-                                               displayThreads(result.getThreads());
-                                           }
-                                       });
+                         result -> displayThreads(result.getThreads()));
     }
 
     private void displayThreads(List<EntityDiscussionThread> threads) {
@@ -161,7 +154,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         final boolean userIsCommentCreator = isLoggedInUserCommentCreator(comment);
         commentView.setDeleteButtonVisible(userIsCommentCreator);
         commentView.setEditButtonVisible(userIsCommentCreator);
-        if(userIsCommentCreator) {
+        if (userIsCommentCreator) {
             commentView.setEditCommentHandler(() -> handleEditComment(threadId, comment));
             commentView.setDeleteCommentHandler(() -> handleDeleteComment(threadId, comment));
         }
@@ -187,27 +180,17 @@ public class DiscussionThreadPresenter implements HasDispose {
                 CreateEntityDiscussionThreadAction action = new CreateEntityDiscussionThreadAction(projectId,
                                                                                                    targetEntity,
                                                                                                    body);
-                dispatch.execute(action,
-                                 new DispatchServiceCallback<CreateEntityDiscussionThreadResult>() {
-                                     @Override
-                                     public void handleSuccess(
-                                             CreateEntityDiscussionThreadResult result) {
-                                         displayThreads(result.getThreads());
-                                     }
-                                 });
+                dispatch.execute(action, result -> displayThreads(result.getThreads()));
             });
         });
     }
 
     private void handleReplyToComment(ThreadId threadId) {
         CommentEditorDialog dlg = new CommentEditorDialog(new CommentEditorViewImpl());
-        dlg.show((body) -> {dispatch.execute(new AddEntityCommentAction(projectId, threadId, body),
-                                             new DispatchServiceCallback<AddEntityCommentResult>() {
-                                                 @Override
-                                                 public void handleSuccess(AddEntityCommentResult result) {
-                                                     handleCommentAdded(threadId, result.getComment());
-                                                 }
-                                             });});
+        dlg.show((body) -> dispatch.execute(
+                addEntityComment(projectId, threadId, body),
+                result -> handleCommentAdded(threadId, result.getComment()))
+        );
 
     }
 
@@ -233,7 +216,7 @@ public class DiscussionThreadPresenter implements HasDispose {
             return;
         }
         DiscussionThreadView view = discussionThreadViewMap.get(threadId);
-        if(view != null) {
+        if (view != null) {
             CommentView commentView = createCommentView(threadId, comment);
             view.addCommentView(commentView);
         }
