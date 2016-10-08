@@ -33,36 +33,6 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
         });
     }
 
-//    private void doPost(NoteContent content) {
-//        ProjectId projectId = Application.get().getActiveProjectId().get();
-//        DispatchServiceManager.get().execute(new AddNoteToEntityAction(projectId, entity.get(), content), new AsyncCallback<AddNoteToEntityResult>() {
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                GWT.log("Post failed", caught);
-//            }
-//
-//            @Override
-//            public void handleSuccess(AddNoteToEntityResult result) {
-//                GWT.log("Posted o.k. " + result);
-//            }
-//        });
-//    }
-//
-//    private void doReply(NoteContent content) {
-//        ProjectId projectId = Application.get().getActiveProjectId().get();
-//        DispatchServiceManager.get().execute(new AddReplyToNoteAction(projectId, noteId, content), new AsyncCallback<AddReplyToNoteResult>() {
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                GWT.log("Reply failed", caught);
-//            }
-//
-//            @Override
-//            public void handleSuccess(AddReplyToNoteResult result) {
-//                GWT.log("Replied o.k. " + result);
-//            }
-//        });
-//    }
-
     public void setMode(NoteContentEditorMode mode) {
         view.setMode(mode);
     }

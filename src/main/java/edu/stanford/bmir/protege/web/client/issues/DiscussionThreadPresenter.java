@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -139,15 +140,19 @@ public class DiscussionThreadPresenter implements HasDispose {
         commentView.setCreatedAt(comment.getCreatedAt());
         commentView.setUpdatedAt(comment.getUpdatedAt());
         commentView.setBody(comment.getBody());
-        commentView.setReplyToCommentHandler(() -> handleReplyToComment(threadId));
         final boolean userIsCommentCreator = isLoggedInUserCommentCreator(comment);
         commentView.setDeleteButtonVisible(userIsCommentCreator);
         commentView.setEditButtonVisible(userIsCommentCreator);
+        if(userIsCommentCreator) {
+            commentView.setEditCommentHandler(() -> handleEditComment(threadId, comment));
+            commentView.setDeleteCommentHandler(() -> handleDeleteComment(threadId, comment));
+        }
         commentView.setReplyButtonVisible(false);
         permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean canComment) {
                 commentView.setReplyButtonVisible(canComment);
+                commentView.setReplyToCommentHandler(() -> handleReplyToComment(threadId));
             }
         });
         return commentView;
@@ -193,6 +198,15 @@ public class DiscussionThreadPresenter implements HasDispose {
                                            }
                                        });
     }
+
+    private void handleEditComment(ThreadId threadId, Comment comment) {
+        MessageBox.showAlert("Edit comment!");
+    }
+
+    private void handleDeleteComment(ThreadId threadId, Comment comment) {
+        MessageBox.showAlert("Delete comment!");
+    }
+
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
         if (displayedComments.get(threadId).contains(comment)) {

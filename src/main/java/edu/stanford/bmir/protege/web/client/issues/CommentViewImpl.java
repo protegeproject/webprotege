@@ -50,7 +50,11 @@ public class CommentViewImpl extends Composite implements CommentView {
     @UiField
     Button editButton;
 
-    private ReplyToCommentHandler handler = () -> {};
+    private ReplyToCommentHandler replyHandler = () -> {};
+
+    private EditCommentHandler editHandler = () -> {};
+
+    private DeleteCommentHandler deleteHandler = () -> {};
 
     private boolean enabled = false;
 
@@ -63,8 +67,22 @@ public class CommentViewImpl extends Composite implements CommentView {
 
     @UiHandler("replyButton")
     protected void handleReplyButtonPressed(ClickEvent event) {
-        handler.handleReplyToComment();
+        replyHandler.handleReplyToComment();
     }
+
+    @UiHandler("editButton")
+    protected void handleEditButtonPressed(ClickEvent event) {
+        editHandler.handleEditComment();
+    }
+
+    @UiHandler("deleteButton")
+    protected void handleDeleteButtonPressed(ClickEvent event) {
+        deleteHandler.handleDeleteComment();
+    }
+
+
+
+
 
     @Override
     public void setCreatedBy(UserId createdBy) {
@@ -90,7 +108,17 @@ public class CommentViewImpl extends Composite implements CommentView {
 
     @Override
     public void setReplyToCommentHandler(ReplyToCommentHandler handler) {
-        this.handler = checkNotNull(handler);
+        this.replyHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setEditCommentHandler(EditCommentHandler handler) {
+        this.editHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setDeleteCommentHandler(DeleteCommentHandler handler) {
+        this.deleteHandler = checkNotNull(handler);
     }
 
     /**
