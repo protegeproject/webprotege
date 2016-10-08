@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +53,8 @@ public class DiscussionThreadPresenter implements HasDispose {
     @Nonnull
     private final ProjectId projectId;
 
-//    @Nonnull
-//    private final Provider<DiscussionThreadView2> discussionThreadViewProvider;
+    @Nonnull
+    private final Provider<DiscussionThreadView> discussionThreadViewProvider;
 
 //    @Nonnull
 //    private final Provider<CommentView> commentViewProvider;
@@ -76,18 +77,15 @@ public class DiscussionThreadPresenter implements HasDispose {
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull LoggedInUserProvider loggedInUserProvider,
             @Nonnull DiscussionThreadListView view,
-            @Nonnull ProjectId projectId
-//            @Nonnull Provider<DiscussionThreadView2> discussionThreadViewProvider,
-//            @Nonnull Provider<CommentView> commentViewProvider
-    ) {
+            @Nonnull ProjectId projectId,
+            @Nonnull Provider<DiscussionThreadView> discussionThreadViewProvider) {
         this.eventBus = eventBus;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
         this.loggedInUserProvider = loggedInUserProvider;
         this.view = view;
         this.projectId = projectId;
-//        this.discussionThreadViewProvider = discussionThreadViewProvider;
-//        this.commentViewProvider = commentViewProvider;
+        this.discussionThreadViewProvider = discussionThreadViewProvider;
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
@@ -132,7 +130,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         GWT.log("Displaying " + threads.size() + " threads");
         for (EntityDiscussionThread thread : threads) {
             try {
-                DiscussionThreadView threadView = new DiscussionThreadViewImpl();
+                DiscussionThreadView threadView = discussionThreadViewProvider.get();
                 discussionThreadViewMap.put(thread.getId(), threadView);
                 for (Comment comment : thread.getComments()) {
                     CommentView commentView = createCommentView(thread.getId(), comment);
