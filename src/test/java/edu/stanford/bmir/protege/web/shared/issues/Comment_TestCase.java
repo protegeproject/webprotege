@@ -1,44 +1,57 @@
 
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import java.util.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class Comment_TestCase {
 
     private Comment comment;
-
+    @Mock
+    private CommentId id;
     @Mock
     private UserId createdBy;
 
     private long createdAt = 1L;
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType" )
-    private Optional<Long> updatedAt;
+    private Optional<Long> updatedAt = Optional.of(33L);
 
     private String body = "The body";
 
     @Before
     public void setUp() {
-        updatedAt = Optional.of(33L);
-        comment = new Comment(createdBy, createdAt, updatedAt, body);
+        comment = new Comment(id, createdBy, createdAt, updatedAt, body);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_id_IsNull() {
+        new Comment(null, createdBy, createdAt, updatedAt, body);
+    }
+
+    @Test
+    public void shouldReturnSupplied_id() {
+        assertThat(comment.getId(), is(this.id));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_createdBy_IsNull() {
-        new Comment(null, createdAt, updatedAt, body);
+        new Comment(id, null, createdAt, updatedAt, body);
     }
 
     @Test
@@ -54,7 +67,7 @@ public class Comment_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_updatedAt_IsNull() {
-        new Comment(createdBy, createdAt, null, body);
+        new Comment(id, createdBy, createdAt, null, body);
     }
 
     @Test
@@ -65,7 +78,7 @@ public class Comment_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_body_IsNull() {
-        new Comment(createdBy, createdAt, updatedAt, null);
+        new Comment(id, createdBy, createdAt, updatedAt, null);
     }
 
     @Test
@@ -86,37 +99,42 @@ public class Comment_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(comment, is(new Comment(createdBy, createdAt, updatedAt, body)));
+        assertThat(comment, is(new Comment(id, createdBy, createdAt, updatedAt, body)));
+    }
+
+    @Test
+    public void shouldNotBeEqualToOtherThatHasDifferent_id() {
+        assertThat(comment, is(not(new Comment(mock(CommentId.class), createdBy, createdAt, updatedAt, body))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_createdBy() {
-        assertThat(comment, is(not(new Comment(mock(UserId.class), createdAt, updatedAt, body))));
+        assertThat(comment, is(not(new Comment(id, mock(UserId.class), createdAt, updatedAt, body))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_createdAt() {
-        assertThat(comment, is(not(new Comment(createdBy, 2L, updatedAt, body))));
+        assertThat(comment, is(not(new Comment(id, createdBy, 2L, updatedAt, body))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_updatedAt() {
-        assertThat(comment, is(not(new Comment(createdBy, createdAt, Optional.of(67L), body))));
+        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, Optional.of(55L), body))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_body() {
-        assertThat(comment, is(not(new Comment(createdBy, createdAt, updatedAt, "String-e426d6fd-1276-4893-868c-919466862dcd"))));
+        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, updatedAt, "String-3765ff88-b38c-4ec4-a4bd-8403225ebe25"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(comment.hashCode(), is(new Comment(createdBy, createdAt, updatedAt, body).hashCode()));
+        assertThat(comment.hashCode(), is(new Comment(id, createdBy, createdAt, updatedAt, body).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(comment.toString(), startsWith("Comment"));
+        assertThat(comment.toString(), Matchers.startsWith("Comment"));
     }
 
 }
