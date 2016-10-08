@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
+import edu.stanford.bmir.protege.web.shared.issues.CommentId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.Converters;
 import org.mongodb.morphia.mapping.Mapper;
@@ -27,15 +28,20 @@ public class MorphiaProvider implements Provider<Morphia> {
     @Nonnull
     private final ThreadIdConverter threadIdConverter;
 
+    @Nonnull
+    private final CommentIdConverter commentIdConverter;
+
     @Inject
     public MorphiaProvider(@Nonnull UserIdConverter userIdConverter,
                            @Nonnull OWLEntityConverter entityConverter,
                            @Nonnull ProjectIdConverter projectIdConverter,
-                           @Nonnull ThreadIdConverter threadIdConverter) {
+                           @Nonnull ThreadIdConverter threadIdConverter,
+                           @Nonnull CommentIdConverter commentIdConverter) {
         this.userIdConverter = userIdConverter;
         this.entityConverter = entityConverter;
         this.projectIdConverter = projectIdConverter;
         this.threadIdConverter = threadIdConverter;
+        this.commentIdConverter = commentIdConverter;
     }
 
     @Override
@@ -47,6 +53,7 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(entityConverter);
         converters.addConverter(projectIdConverter);
         converters.addConverter(threadIdConverter);
+        converters.addConverter(commentIdConverter);
         return morphia;
     }
 }

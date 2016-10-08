@@ -19,10 +19,12 @@ public class MongoTestUtils {
     }
 
     public static Morphia createMorphia() {
-        return new MorphiaProvider(new UserIdConverter(),
-                            new OWLEntityConverter(new OWLDataFactoryImpl()),
-                            new ProjectIdConverter(),
-                            new ThreadIdConverter()).get();
+        return new MorphiaProvider(
+                new UserIdConverter(),
+                new OWLEntityConverter(new OWLDataFactoryImpl()),
+                new ProjectIdConverter(),
+                new ThreadIdConverter(),
+                new CommentIdConverter()).get();
     }
 
 

@@ -4,6 +4,7 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -22,6 +23,10 @@ public class CommentId implements IsSerializable {
         this.id = checkNotNull(id);
     }
 
+    public static CommentId fromString(@Nonnull String idString) {
+        return new CommentId(checkNotNull(idString));
+    }
+
     @GwtIncompatible
     public static CommentId create() {
         //noinspection NonJREEmulationClassesInClientCode
@@ -30,6 +35,11 @@ public class CommentId implements IsSerializable {
 
     @GwtSerializationConstructor
     private CommentId() {
+    }
+
+    @Nonnull
+    public String getId() {
+        return id;
     }
 
     @Override
