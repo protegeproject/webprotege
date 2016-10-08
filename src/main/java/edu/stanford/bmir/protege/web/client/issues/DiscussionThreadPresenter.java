@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
+import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 
 /**
  * Matthew Horridge
@@ -177,10 +178,10 @@ public class DiscussionThreadPresenter implements HasDispose {
         entity.ifPresent(targetEntity -> {
             CommentEditorDialog dlg = new CommentEditorDialog(new CommentEditorViewImpl());
             dlg.show((body) -> {
-                CreateEntityDiscussionThreadAction action = new CreateEntityDiscussionThreadAction(projectId,
-                                                                                                   targetEntity,
-                                                                                                   body);
-                dispatch.execute(action, result -> displayThreads(result.getThreads()));
+                dispatch.execute(
+                        createEntityDiscussionThread(projectId, targetEntity, body),
+                        result -> displayThreads(result.getThreads())
+                );
             });
         });
     }

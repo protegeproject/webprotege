@@ -32,6 +32,12 @@ public class CreateEntityDiscussionThreadAction implements Action<CreateEntityDi
         this.projectId = checkNotNull(projectId);
     }
 
+    public static CreateEntityDiscussionThreadAction createEntityDiscussionThread(@Nonnull ProjectId projectId,
+                                                                                  @Nonnull OWLEntity entity,
+                                                                                  @Nonnull String comment) {
+        return new CreateEntityDiscussionThreadAction(projectId, entity, comment);
+    }
+
     @GwtSerializationConstructor
     public CreateEntityDiscussionThreadAction() {
     }
