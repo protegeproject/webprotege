@@ -26,8 +26,6 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     @Nonnull
     private final DiscussionThreadPresenter presenter;
 
-    private final PortletAction addCommentAction;
-
     private final LoggedInUserProjectPermissionChecker checker;
 
     @Inject
@@ -39,21 +37,12 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.checker = checker;
         this.presenter = presenter;
+        this.presenter.installActions(this);
         setWidget(presenter.getView());
-        addCommentAction = new PortletAction("Add comment", (action, event) -> presenter.createThread());
-        addPortletAction(addCommentAction);
     }
 
     @Override
     public void handlePermissionsChanged() {
-        addCommentAction.setEnabled(false);
-        checker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean canComment) {
-                addCommentAction.setEnabled(canComment);
-            }
-        });
-
     }
 
     @Override
