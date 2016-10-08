@@ -451,17 +451,10 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
             return;
         }
 
-        MessageBox.showYesNoConfirmBox("Delete selected property?", "Are you sure you want to delete the selected property ?", new YesNoHandler() {
-            @Override
-            public void handleYes() {
-                deleteProperty((OWLProperty) entity);
-            }
-
-            @Override
-            public void handleNo() {
-
-            }
-        });
+        String subMessage = "Are you sure you want to delete the selected property ?";
+        MessageBox.showYesNoConfirmBox("Delete selected property?",
+                                       subMessage,
+                                       () -> deleteProperty((OWLProperty) entity));
     }
 
 

@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -44,7 +43,9 @@ public class ChangeListViewPresenter {
     private Optional<ProjectId> projectId = Optional.absent();
 
     @Inject
-    public ChangeListViewPresenter(ChangeListView view, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    public ChangeListViewPresenter(ChangeListView view,
+                                   EventBus eventBus,
+                                   DispatchServiceManager dispatchServiceManager) {
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
     }
@@ -64,46 +65,61 @@ public class ChangeListViewPresenter {
     public void setChangesForProject(ProjectId projectId) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()), new DispatchServiceCallback<GetProjectChangesResult>() {
-            @Override
-            public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible, downloadVisible);
-            }
-        });
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()),
+                                       new DispatchServiceCallback<GetProjectChangesResult>() {
+                                           @Override
+                                           public void handleSuccess(GetProjectChangesResult result) {
+                                               fillView(result.getChanges(),
+                                                        SubjectDisplay.DISPLAY_SUBJECT,
+                                                        revertChangesVisible,
+                                                        downloadVisible);
+                                           }
+                                       });
     }
 
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)), new DispatchServiceCallback<GetProjectChangesResult>() {
-            @Override
-            public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT, revertChangesVisible, downloadVisible);
-            }
-        });
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)),
+                                       new DispatchServiceCallback<GetProjectChangesResult>() {
+                                           @Override
+                                           public void handleSuccess(GetProjectChangesResult result) {
+                                               fillView(result.getChanges(),
+                                                        SubjectDisplay.DO_NOT_DISPLAY_SUBJECT,
+                                                        revertChangesVisible,
+                                                        downloadVisible);
+                                           }
+                                       });
     }
 
     public void setChangesForWatches(ProjectId projectId, UserId userId) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetWatchedEntityChangesAction(projectId, userId), new DispatchServiceCallback<GetWatchedEntityChangesResult>() {
-            @Override
-            public void handleSuccess(GetWatchedEntityChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible, downloadVisible);
-            }
-        });
+        dispatchServiceManager.execute(new GetWatchedEntityChangesAction(projectId, userId),
+                                       new DispatchServiceCallback<GetWatchedEntityChangesResult>() {
+                                           @Override
+                                           public void handleSuccess(GetWatchedEntityChangesResult result) {
+                                               fillView(result.getChanges(),
+                                                        SubjectDisplay.DISPLAY_SUBJECT,
+                                                        revertChangesVisible,
+                                                        downloadVisible);
+                                           }
+                                       });
     }
 
-    private void fillView(ImmutableList<ProjectChange> changes, SubjectDisplay subjectDisplay, boolean revertChangesVisible, boolean downloadVisible) {
+    private void fillView(ImmutableList<ProjectChange> changes,
+                          SubjectDisplay subjectDisplay,
+                          boolean revertChangesVisible,
+                          boolean downloadVisible) {
         view.clear();
         List<ProjectChange> projectChanges = new ArrayList<>(changes);
         Collections.sort(projectChanges, Ordering.compound(Arrays.asList(
 //                new ProjectChangeSubjectsComparator(),
                 Ordering.from(new ProjectChangeTimestampComparator()).reverse())));
         long previousTimeStamp = 0;
-        for(final ProjectChange projectChange : projectChanges) {
+        for (final ProjectChange projectChange : projectChanges) {
             long changeTimeStamp = projectChange.getTimestamp();
-            if(!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
+            if (!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
                 previousTimeStamp = changeTimeStamp;
                 Date date = new Date(changeTimeStamp);
                 view.addSeparator("\u25C9   Changes on " + DateTimeFormat.getFormat("EEE, d MMM yyyy").format(date));
@@ -157,31 +173,27 @@ public class ChangeListViewPresenter {
     }
 
     private void startRevertChangesWorkflow(final ProjectChange projectChange) {
-        MessageBox.showYesNoConfirmBox("Revert changes?", "Are you sure that you want to revert the changes in Revision " + projectChange.getRevisionNumber().getValue() + "?", new YesNoHandler() {
-            @Override
-            public void handleYes() {
-                revertChanges(projectChange);
-            }
-
-            @Override
-            public void handleNo() {
-
-            }
-        });
+        String subMessage = "Are you sure that you want to revert the changes in Revision "
+                + projectChange.getRevisionNumber()
+                                                                                                           .getValue() + "?";
+        MessageBox.showYesNoConfirmBox("Revert changes?",
+                                       subMessage,
+                                       () -> revertChanges(projectChange));
     }
 
     private void revertChanges(ProjectChange projectChange) {
         GWT.log("Reverting revision " + projectChange.getRevisionNumber().getValue());
-        if(!projectId.isPresent()) {
+        if (!projectId.isPresent()) {
             return;
         }
         final RevisionNumber revisionNumber = projectChange.getRevisionNumber();
-        dispatchServiceManager.execute(new RevertRevisionAction(projectId.get(), revisionNumber), new DispatchServiceCallback<RevertRevisionResult>() {
-            @Override
-            public void handleSuccess(RevertRevisionResult revertRevisionResult) {
-                MessageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
-            }
-        });
+        dispatchServiceManager.execute(new RevertRevisionAction(projectId.get(), revisionNumber),
+                                       new DispatchServiceCallback<RevertRevisionResult>() {
+                                           @Override
+                                           public void handleSuccess(RevertRevisionResult revertRevisionResult) {
+                                               MessageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
+                                           }
+                                       });
     }
 
 }
