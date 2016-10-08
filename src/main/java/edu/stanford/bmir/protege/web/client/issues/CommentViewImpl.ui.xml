@@ -2,12 +2,17 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel"
 >
-
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
             display: block;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 10px;
         }
-
+        .main:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
         .author {
             padding-bottom: 2px;
         }
@@ -40,6 +45,19 @@
             display: inline-block;
             vertical-align: middle;
         }
+        .buttonBar {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .replyButton {
+
+        }
+        .editButton {
+
+        }
+        .deleteButton {
+
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:SimplePanel ui:field="userIconField" addStyleNames="{style.iconHolder}" debugId="iconHolder"/>
@@ -48,5 +66,14 @@
             <timelabel:ElapsedTimeLabel ui:field="createdAtField" addStyleNames="{style.date}"/>
         </g:HTMLPanel>
         <g:HTML ui:field="bodyField" addStyleNames="{style.body}" debugId="bodyField"/>
+        <g:HTMLPanel addStyleNames="{style.buttonBar}">
+            <g:Button text="Reply" ui:field="replyButton"
+                      addStyleNames="{wp.buttons.toolbarButton} {style.replyButton}"/>
+            <g:Button text="Edit" ui:field="editButton"
+                      addStyleNames="{wp.buttons.toolbarButton} {style.editButton}"/>
+            <g:Button text="Delete" ui:field="deleteButton"
+                      addStyleNames="{wp.buttons.toolbarButton} {style.deleteButton}"/>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>

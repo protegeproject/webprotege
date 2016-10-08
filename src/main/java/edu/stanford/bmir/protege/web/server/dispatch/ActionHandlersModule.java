@@ -22,7 +22,9 @@ import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
-import edu.stanford.bmir.protege.web.server.issues.GetEntityDiscussionThreadsActionHandler;
+import edu.stanford.bmir.protege.web.server.issues.AddEntityCommentHandler;
+import edu.stanford.bmir.protege.web.server.issues.CreateEntityDiscussionThreadHandler;
+import edu.stanford.bmir.protege.web.server.issues.GetEntityDiscussionThreadsHandler;
 import edu.stanford.bmir.protege.web.server.issues.GetIssuesActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdCompletionsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdItemsActionHandler;
@@ -511,7 +513,17 @@ public class ActionHandlersModule {
     }
 
     @Provides(type = Provides.Type.SET)
-    public ActionHandler provideGetDiscussionThreadsActionHandler(GetEntityDiscussionThreadsActionHandler handler) {
+    public ActionHandler provideGetDiscussionThreadsActionHandler(GetEntityDiscussionThreadsHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideCreateEntityDiscussionThreadActionHandler(CreateEntityDiscussionThreadHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = Provides.Type.SET)
+    public ActionHandler provideAddEntityCommentActionHandler(AddEntityCommentHandler handler) {
         return handler;
     }
 

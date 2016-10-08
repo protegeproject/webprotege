@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
-public class GetEntityDiscussionThreadsActionHandler implements ActionHandler<GetEntityDiscussionThreadsAction, GetEntityDiscussionThreadsResult> {
+public class GetEntityDiscussionThreadsHandler implements ActionHandler<GetEntityDiscussionThreadsAction, GetEntityDiscussionThreadsResult> {
 
     @Nonnull
     private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
@@ -32,8 +32,8 @@ public class GetEntityDiscussionThreadsActionHandler implements ActionHandler<Ge
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
-    public GetEntityDiscussionThreadsActionHandler(@Nonnull ValidatorFactory<ReadPermissionValidator> validatorFactory,
-                                                   @Nonnull EntityDiscussionThreadRepository repository) {
+    public GetEntityDiscussionThreadsHandler(@Nonnull ValidatorFactory<ReadPermissionValidator> validatorFactory,
+                                             @Nonnull EntityDiscussionThreadRepository repository) {
         this.validatorFactory = checkNotNull(validatorFactory);
         this.repository = checkNotNull(repository);
     }
@@ -50,16 +50,6 @@ public class GetEntityDiscussionThreadsActionHandler implements ActionHandler<Ge
 
     @Override
     public GetEntityDiscussionThreadsResult execute(GetEntityDiscussionThreadsAction action, ExecutionContext executionContext) {
-        ImmutableList<Comment> comments = ImmutableList.of(
-                new Comment(executionContext.getUserId(), System.currentTimeMillis(), Optional.empty(), "Hello world"),
-                new Comment(executionContext.getUserId(), System.currentTimeMillis(), Optional.empty(), "Yes hello"),
-                new Comment(executionContext.getUserId(), System.currentTimeMillis(), Optional.empty(), "Hello world")
-                );
-        EntityDiscussionThread t = new EntityDiscussionThread(new ThreadId(UUID.randomUUID().toString()), action.getProjectId(), action.getEntity(),
-                                                              Status.OPEN,
-                                                              comments
-        );
-        repository.saveThread(t);
         System.out.println("Getting threads");
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
         return new GetEntityDiscussionThreadsResult(ImmutableList.copyOf(threads));

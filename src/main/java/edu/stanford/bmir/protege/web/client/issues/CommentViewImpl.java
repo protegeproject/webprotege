@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
@@ -39,6 +41,15 @@ public class CommentViewImpl extends Composite implements CommentView {
     @UiField
     HTML bodyField;
 
+    @UiField
+    Button replyButton;
+
+    @UiField
+    Button deleteButton;
+
+    @UiField
+    Button editButton;
+
     private ReplyToCommentHandler handler = () -> {};
 
     private boolean enabled = false;
@@ -48,6 +59,11 @@ public class CommentViewImpl extends Composite implements CommentView {
     public CommentViewImpl() {
         HTMLPanel ui = ourUiBinder.createAndBindUi(this);
         initWidget(ui);
+    }
+
+    @UiHandler("replyButton")
+    protected void handleReplyButtonPressed(ClickEvent event) {
+        handler.handleReplyToComment();
     }
 
     @Override
@@ -94,5 +110,21 @@ public class CommentViewImpl extends Composite implements CommentView {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        replyButton.setEnabled(enabled);
+    }
+
+    @Override
+    public void setDeleteButtonVisible(boolean visible) {
+        deleteButton.setVisible(visible);
+    }
+
+    @Override
+    public void setEditButtonVisible(boolean visible) {
+        editButton.setVisible(visible);
+    }
+
+    @Override
+    public void setReplyButtonVisible(boolean visible) {
+        replyButton.setVisible(visible);
     }
 }

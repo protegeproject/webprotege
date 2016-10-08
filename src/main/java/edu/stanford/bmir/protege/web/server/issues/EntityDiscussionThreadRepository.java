@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.issues.Status;
 import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.bson.Document;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
@@ -34,8 +35,9 @@ public class EntityDiscussionThreadRepository {
     }
 
     public List<EntityDiscussionThread> findThreads(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+        datastore.createQuery(EntityDiscussionThread.class);
         return datastore.find(EntityDiscussionThread.class)
-                        .field("projectId").equal(projectId)
+//                        .field("projectId").equal(projectId)
                         .field("entity").equal(entity)
                         .asList();
     }
