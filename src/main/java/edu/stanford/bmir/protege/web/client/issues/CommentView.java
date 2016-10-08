@@ -21,12 +21,16 @@ public interface CommentView extends IsWidget, HasEnabled {
 
     void setBody(String body);
 
-    void setReplyToCommentHandler(ReplyToCommentHandler handler);
-
     void setReplyButtonVisible(boolean visible);
 
     void setEditButtonVisible(boolean visible);
 
     void setDeleteButtonVisible(boolean visible);
 
+
+    void setReplyToCommentHandler(ReplyToCommentHandler handler);
+
+    void setEditCommentHandler(EditCommentHandler handler);
+
+    void setDeleteCommentHandler(DeleteCommentHandler handler);
 }
