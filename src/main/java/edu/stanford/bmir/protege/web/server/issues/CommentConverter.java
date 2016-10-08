@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
+import edu.stanford.bmir.protege.web.shared.issues.CommentId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 
@@ -45,6 +46,6 @@ public class CommentConverter implements DocumentConverter<Comment> {
         long createdAt = document.getLong(CREATED_AT);
         Optional<Long> updatedAt = Optional.ofNullable(document.getLong(UPDATED_AT));
         String body = document.getString(BODY);
-        return new Comment(createdBy, createdAt, updatedAt, body);
+        return new Comment(CommentId.create(), createdBy, createdAt, updatedAt, body);
     }
 }

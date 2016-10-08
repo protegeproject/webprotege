@@ -6,10 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction;
-import edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentResult;
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
-import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -50,7 +47,7 @@ public class AddEntityCommentHandler implements ActionHandler<AddEntityCommentAc
     public AddEntityCommentResult execute(AddEntityCommentAction action, ExecutionContext executionContext) {
         UserId createdBy = executionContext.getUserId();
         long createdAt = System.currentTimeMillis();
-        Comment comment = new Comment(createdBy, createdAt, Optional.empty(), action.getComment());
+        Comment comment = new Comment(CommentId.create(), createdBy, createdAt, Optional.empty(), action.getComment());
         ThreadId threadId = action.getThreadId();
         repository.addCommentToThread(threadId, comment);
         return new AddEntityCommentResult(action.getProjectId(), threadId, comment);

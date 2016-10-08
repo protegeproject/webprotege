@@ -49,10 +49,12 @@ public class CreateEntityDiscussionThreadHandler implements ActionHandler<Create
     public CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
                                                       ExecutionContext executionContext) {
         // TODO: CHECK COMMENT IS NOT MALICIOUS
-        Comment comment = new Comment(executionContext.getUserId(),
-                                      System.currentTimeMillis(),
-                                      Optional.empty(),
-                                      action.getComment());
+        Comment comment = new Comment(
+                CommentId.create(),
+                executionContext.getUserId(),
+                System.currentTimeMillis(),
+                Optional.empty(),
+                action.getComment());
         EntityDiscussionThread thread = new EntityDiscussionThread(ThreadId.create(),
                                                                    action.getProjectId(),
                                                                    action.getEntity(),

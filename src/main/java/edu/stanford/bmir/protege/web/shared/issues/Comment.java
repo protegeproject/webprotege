@@ -19,6 +19,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Comment implements IsSerializable {
 
+    private CommentId id;
+
     private UserId createdBy;
 
     private long createdAt;
@@ -28,20 +30,24 @@ public class Comment implements IsSerializable {
 
     private String body;
 
-    public Comment(@Nonnull UserId createdBy,
+    public Comment(@Nonnull CommentId id,
+                    @Nonnull UserId createdBy,
                    long createdAt,
                    @Nonnull Optional<Long> updatedAt,
                    @Nonnull String body) {
-        this(createdBy,
-                createdAt,
-                checkNotNull(updatedAt).orElse(null),
-                body);
+        this(id,
+             createdBy,
+             createdAt,
+             checkNotNull(updatedAt).orElse(null),
+             body);
     }
 
-    private Comment(@Nonnull UserId createdBy,
-                      long createdAt,
-                      @Nullable Long updatedAt,
-                      @Nonnull String body) {
+    private Comment(@Nonnull CommentId id,
+                    @Nonnull UserId createdBy,
+                    long createdAt,
+                    @Nullable Long updatedAt,
+                    @Nonnull String body) {
+        this.id = checkNotNull(id);
         this.createdBy = checkNotNull(createdBy);
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -52,7 +58,12 @@ public class Comment implements IsSerializable {
     private Comment() {
     }
 
+    @Nonnull
+    public CommentId getId() {
+        return id;
+    }
 
+    @Nonnull
     public UserId getCreatedBy() {
         return createdBy;
     }
@@ -61,10 +72,12 @@ public class Comment implements IsSerializable {
         return createdAt;
     }
 
+    @Nonnull
     public Optional<Long> getUpdatedAt() {
         return Optional.ofNullable(updatedAt);
     }
 
+    @Nonnull
     public String getBody() {
         return body;
     }
@@ -78,7 +91,8 @@ public class Comment implements IsSerializable {
             return false;
         }
         Comment other = (Comment) obj;
-        return this.createdBy.equals(other.createdBy)
+        return this.id.equals(other.id)
+                && this.createdBy.equals(other.createdBy)
                 && this.createdAt == other.createdAt
                 && Objects.equal(this.updatedAt, other.updatedAt)
                 && this.body.equals(other.body);
@@ -86,12 +100,13 @@ public class Comment implements IsSerializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(createdAt, createdBy, updatedAt, body);
+        return Objects.hashCode(id, createdAt, createdBy, updatedAt, body);
     }
 
     @Override
     public String toString() {
         return toStringHelper("Comment")
+                .addValue(id)
                 .add("createdBy", createdBy)
                 .add("createdAt", createdAt)
                 .add("updatedAt", updatedAt)

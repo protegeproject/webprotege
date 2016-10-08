@@ -6,10 +6,7 @@ import com.mongodb.client.MongoCollection;
 import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
-import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.Status;
-import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
@@ -59,10 +56,12 @@ public class EntityDiscussionThreadRepository_IT {
                                             projectId,
                                             entity,
                                             Status.OPEN,
-                                            ImmutableList.of(new Comment(UserId.getUserId("John"),
-                                                                         System.currentTimeMillis(),
-                                                                         Optional.of(33L),
-                                                                         "The body"))
+                                            ImmutableList.of(new Comment(
+                                                    CommentId.create(),
+                                                    UserId.getUserId("John"),
+                                                    System.currentTimeMillis(),
+                                                    Optional.of(33L),
+                                                    "The body"))
         );
         repository.saveThread(thread);
     }
@@ -103,7 +102,9 @@ public class EntityDiscussionThreadRepository_IT {
     public void shouldAddComment() {
         repository.saveThread(thread);
         long createdAt = System.currentTimeMillis();
-        Comment theComment = new Comment(UserId.getUserId("Matthew"),
+        Comment theComment = new Comment(
+                CommentId.create(),
+                UserId.getUserId("Matthew"),
                                       createdAt,
                                       Optional.empty(),
                                       "The body");
