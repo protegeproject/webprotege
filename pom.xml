@@ -130,6 +130,19 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.auto.value</groupId>
+            <artifactId>auto-value</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.auto.factory</groupId>
             <artifactId>auto-factory</artifactId>
             <version>1.0-beta3</version>
@@ -513,17 +526,6 @@
 
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
-            </plugin>
-        </plugins>
-    </reporting>
-
 
     <profiles>
         <!-- Profile for local development of WebProtege -->

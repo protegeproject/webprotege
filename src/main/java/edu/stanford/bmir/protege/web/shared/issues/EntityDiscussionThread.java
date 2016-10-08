@@ -3,8 +3,11 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.server.persistence.OWLEntityConverter;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.mongodb.morphia.annotations.Converters;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -33,6 +36,7 @@ public class EntityDiscussionThread implements IsSerializable {
 
     private ProjectId projectId;
 
+    @Embedded
     private OWLEntity entity;
 
     private Status status;

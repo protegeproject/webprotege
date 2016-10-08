@@ -11,6 +11,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ApplicationDataFactory {
+public @interface Application {
 
 }

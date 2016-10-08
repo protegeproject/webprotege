@@ -3,13 +3,19 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
+            border: 5px solid #f0f0f0;
+        }
+        .inner {
             padding: 5px;
-            border-bottom: 1px solid #f0f0f0;
             padding-bottom: 10px;
+            box-shadow: 1px 2px 3px #c0c0c0;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Label ui:field="statusLabel"/>
-        <g:FlowPanel ui:field="commentViewContainer"/>
+        <g:HTMLPanel addStyleNames="{style.inner}">
+            <g:Label ui:field="statusLabel"/>
+            <g:FlowPanel ui:field="commentViewContainer"/>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>

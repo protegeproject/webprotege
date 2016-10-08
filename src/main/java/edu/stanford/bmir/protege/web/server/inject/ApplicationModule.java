@@ -19,8 +19,8 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import javax.inject.Singleton;
@@ -108,8 +108,15 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    @ApplicationDataFactory
+    @Application
     public OWLDataFactory provideOWLDataFactory() {
         return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
+    }
+
+    @Provides
+    @Singleton
+    @Application
+    public OWLEntityProvider provideOWLProvider(@Application OWLDataFactory dataFactory) {
+        return dataFactory;
     }
 }

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.issues.Status;
 import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 import org.junit.After;
@@ -17,7 +18,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.semanticweb.owlapi.model.OWLClass;
 
+import java.util.List;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.getTestDbName;
@@ -36,6 +39,10 @@ import static org.hamcrest.core.Is.is;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class EntityDiscussionThreadRepository_IT {
 
+    private final ProjectId projectId = ProjectIdFactory.getFreshProjectId();
+
+    private final OWLClass entity = MockingUtils.mockOWLClass();
+
     private MongoClient mongoClient;
 
     private EntityDiscussionThread thread;
@@ -49,8 +56,8 @@ public class EntityDiscussionThreadRepository_IT {
         Datastore datastore = morphia.createDatastore(mongoClient, getTestDbName());
         repository = new EntityDiscussionThreadRepository(datastore);
         thread = new EntityDiscussionThread(ThreadId.create(),
-                                            ProjectIdFactory.getFreshProjectId(),
-                                            MockingUtils.mockOWLClass(),
+                                            projectId,
+                                            entity,
                                             Status.OPEN,
                                             ImmutableList.of(new Comment(UserId.getUserId("John"),
                                                                          System.currentTimeMillis(),
@@ -77,6 +84,12 @@ public class EntityDiscussionThreadRepository_IT {
     public void shouldFindThread() {
         Optional<EntityDiscussionThread> foundThread = repository.getThread(thread.getId());
         assertThat(foundThread, is(Optional.of(thread)));
+    }
+
+    @Test
+    public void shouldFindThreadByProjectIdAndEntity() {
+        List<EntityDiscussionThread> threads = repository.findThreads(projectId, entity);
+        assertThat(threads, hasItem(thread));
     }
 
     @Test

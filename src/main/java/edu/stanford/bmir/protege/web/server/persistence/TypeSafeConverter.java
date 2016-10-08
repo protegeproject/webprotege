@@ -11,7 +11,7 @@ import org.mongodb.morphia.mapping.MappedField;
  */
 public abstract class TypeSafeConverter<D, O> extends TypeConverter {
 
-    public TypeSafeConverter(Class<O> cls) {
+    public TypeSafeConverter(Class ... cls) {
         super(cls);
     }
 
