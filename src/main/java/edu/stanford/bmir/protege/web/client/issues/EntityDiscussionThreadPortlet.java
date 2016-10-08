@@ -26,16 +26,13 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     @Nonnull
     private final DiscussionThreadPresenter presenter;
 
-    private final LoggedInUserProjectPermissionChecker checker;
-
     @Inject
     public EntityDiscussionThreadPortlet(SelectionModel selectionModel,
                                          EventBus eventBus,
                                          LoggedInUserProvider loggedInUserProvider,
-                                         LoggedInUserProjectPermissionChecker checker, ProjectId projectId,
+                                         ProjectId projectId,
                                          @Nonnull DiscussionThreadPresenter presenter) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
-        this.checker = checker;
         this.presenter = presenter;
         this.presenter.installActions(this);
         setWidget(presenter.getView());
