@@ -203,19 +203,4 @@ public class ClientProjectModule {
     PortletFactory providePortletFactory(PortletFactoryGenerated portletFactoryGenerated) {
         return portletFactoryGenerated;
     }
-
-    @Provides
-    DiscussionThreadListView provideEntityDiscussionThreadListView(DiscussionThreadListViewImpl view) {
-        return view;
-    }
-
-    @Provides
-    DiscussionThreadView provideEntityDiscussionThreadView(DiscussionThreadViewImpl view) {
-        return view;
-    }
-
-//    @Provides
-//    CommentView provideCommentView() {
-//        return new CommentView2Impl();
-//    }
 }

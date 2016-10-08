@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 @Subcomponent(
         modules = {
                 ClientProjectModule.class,
+                ClientIssuesModule.class,
                 PrimitiveDataEditorClientModule.class
         }
 )

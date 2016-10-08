@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -180,48 +181,58 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     public void createThread() {
-        entity.ifPresent(e -> {
-
-            NoteEditorDialogController ctrl = new NoteEditorDialogController(noteContent -> {
-                if (noteContent.get().getBody().isPresent()) {
-                    CreateEntityDiscussionThreadAction action = new CreateEntityDiscussionThreadAction(projectId,
-                                                                                                       e,
-                                                                                                       noteContent.get()
-                                                                                                                  .getBody()
-                                                                                                                  .get());
-                    dispatch.execute(action,
-                                     new DispatchServiceCallback<CreateEntityDiscussionThreadResult>() {
-                                                       @Override
-                                                       public void handleSuccess(
-                                                               CreateEntityDiscussionThreadResult result) {
-                                                           displayThreads(result.getThreads());
-                                                       }
-                                                   });
-                }
+        entity.ifPresent(targetEntity -> {
+            CommentEditorDialog dlg = new CommentEditorDialog(new CommentEditorViewImpl());
+            dlg.show((body) -> {
+                CreateEntityDiscussionThreadAction action = new CreateEntityDiscussionThreadAction(projectId,
+                                                                                                   targetEntity,
+                                                                                                   body);
+                dispatch.execute(action,
+                                 new DispatchServiceCallback<CreateEntityDiscussionThreadResult>() {
+                                     @Override
+                                     public void handleSuccess(
+                                             CreateEntityDiscussionThreadResult result) {
+                                         displayThreads(result.getThreads());
+                                     }
+                                 });
             });
-            ctrl.setMode(NoteContentEditorMode.REPLY);
-            WebProtegeDialog.showDialog(ctrl);
-
         });
     }
 
     private void handleReplyToComment(ThreadId threadId) {
-        String body = "The new reply";
-        dispatch.execute(new AddEntityCommentAction(projectId, threadId, body),
-                         new DispatchServiceCallback<AddEntityCommentResult>() {
-                                           @Override
-                                           public void handleSuccess(AddEntityCommentResult result) {
-                                               handleCommentAdded(threadId, result.getComment());
-                                           }
-                                       });
+        CommentEditorDialog dlg = new CommentEditorDialog(new CommentEditorViewImpl());
+        dlg.show((body) -> {dispatch.execute(new AddEntityCommentAction(projectId, threadId, body),
+                                             new DispatchServiceCallback<AddEntityCommentResult>() {
+                                                 @Override
+                                                 public void handleSuccess(AddEntityCommentResult result) {
+                                                     handleCommentAdded(threadId, result.getComment());
+                                                 }
+                                             });});
+
     }
 
     private void handleEditComment(ThreadId threadId, Comment comment) {
-        MessageBox.showAlert("Edit comment!");
+        CommentEditorDialog dlg = new CommentEditorDialog(new CommentEditorViewImpl());
+        dlg.setCommentBody(comment.getBody());
+        dlg.show((body) -> {
+
+        });
     }
 
     private void handleDeleteComment(ThreadId threadId, Comment comment) {
-        MessageBox.showAlert("Delete comment!");
+        MessageBox.showYesNoConfirmBox("Delete Comment?",
+                                       "Are you sure that you want to delete this comment?  This cannot be undone.",
+                                       new YesNoHandler() {
+                                           @Override
+                                           public void handleYes() {
+
+                                           }
+
+                                           @Override
+                                           public void handleNo() {
+
+                                           }
+                                       });
     }
 
 
