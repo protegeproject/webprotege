@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHandler> {
 
-    public static final transient Event.Type<PermissionsChangedHandler> TYPE = new Event.Type<PermissionsChangedHandler>();
+    public static final transient Event.Type<PermissionsChangedHandler> ON_PERMISSIONS_CHANGED = new Event.Type<PermissionsChangedHandler>();
 
 
     public PermissionsChangedEvent(ProjectId source) {
@@ -26,7 +26,7 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
 
     @Override
     public Event.Type<PermissionsChangedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_PERMISSIONS_CHANGED;
     }
 
     @Override

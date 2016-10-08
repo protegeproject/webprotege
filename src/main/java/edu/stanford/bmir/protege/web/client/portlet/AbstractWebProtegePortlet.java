@@ -26,6 +26,7 @@ import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 
 public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, HasEventHandlerManagement {
@@ -51,7 +52,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
         addApplicationEventHandler(UserLoggedOutEvent.TYPE, event -> handleLogout(event.getUserId()));
 
-        addProjectEventHandler(PermissionsChangedEvent.TYPE, event -> handlePermissionsChanged());
+        addProjectEventHandler(ON_PERMISSIONS_CHANGED, event -> handlePermissionsChanged());
 
         HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
                 if (portletUi.asWidget().isAttached()) {

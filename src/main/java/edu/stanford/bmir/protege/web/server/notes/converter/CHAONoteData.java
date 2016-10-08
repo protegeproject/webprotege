@@ -86,7 +86,7 @@ public class CHAONoteData implements Comparable<CHAONoteData> {
 
 
         sb.append(prefix);
-        sb.append("TYPE     : ");
+        sb.append("ON_PERMISSIONS_CHANGED     : ");
         sb.append(type);
         sb.append("\n");
 

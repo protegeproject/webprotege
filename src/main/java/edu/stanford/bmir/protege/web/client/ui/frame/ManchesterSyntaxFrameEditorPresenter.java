@@ -30,6 +30,8 @@ import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
@@ -118,12 +120,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                 updateState();
             }
         });
-        management.addProjectEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                updateState();
-            }
-        });
+        management.addProjectEventHandler(ON_PERMISSIONS_CHANGED, event -> updateState());
         management.addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {

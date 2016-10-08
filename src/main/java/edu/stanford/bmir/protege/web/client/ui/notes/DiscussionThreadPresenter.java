@@ -10,9 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadResult;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
@@ -22,7 +20,6 @@ import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 import edu.stanford.bmir.protege.web.shared.notes.NoteDeletedEvent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteDeletedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -34,6 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -89,7 +87,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
         handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, event -> updateButtonState());
 
-        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE,
+        handlerRegistrationManager.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED,
                                                             event -> updateButtonState());
     }
 

@@ -6,9 +6,7 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -16,6 +14,8 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.ChangesByEntity",
         title = "Entity Changes",
@@ -37,7 +37,7 @@ public class EntityChangesPortlet extends AbstractWebProtegePortlet {
         setWidget(presenter.getView().asWidget());
 
         addProjectEventHandler(ProjectChangedEvent.TYPE, event -> EntityChangesPortlet.this.handleProjectChanged(event));
-        addApplicationEventHandler(PermissionsChangedEvent.TYPE, event -> updateDisplayForSelectedEntity());
+        addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
         setTitle("Changes");
 	}
 
