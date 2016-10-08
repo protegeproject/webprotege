@@ -27,6 +27,11 @@ public class GetEntityDiscussionThreadsAction implements Action<GetEntityDiscuss
         this.entity = checkNotNull(entity);
     }
 
+    public static GetEntityDiscussionThreadsAction getDiscussionThreads(@Nonnull ProjectId projectId,
+                                                                        @Nonnull OWLEntity entity) {
+        return new GetEntityDiscussionThreadsAction(projectId, entity);
+    }
+
     @GwtSerializationConstructor
     private GetEntityDiscussionThreadsAction() {
     }

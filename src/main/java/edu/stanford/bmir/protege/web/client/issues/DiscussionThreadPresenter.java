@@ -29,6 +29,7 @@ import java.util.Optional;
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
+import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.*;
 
 /**
  * Matthew Horridge
@@ -107,7 +108,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     public void setEntity(@Nonnull OWLEntity entity) {
         this.entity = Optional.of(entity);
         dispatch.execute(
-                new GetEntityDiscussionThreadsAction(projectId, entity),
+                getDiscussionThreads(projectId, entity),
                 result -> displayThreads(result.getThreads())
         );
     }
