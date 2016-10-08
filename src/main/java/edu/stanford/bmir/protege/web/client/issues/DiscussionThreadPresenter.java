@@ -222,16 +222,8 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleDeleteComment(ThreadId threadId, Comment comment) {
         MessageBox.showYesNoConfirmBox("Delete Comment?",
                                        "Are you sure that you want to delete this comment?  This cannot be undone.",
-                                       new YesNoHandler() {
-                                           @Override
-                                           public void handleYes() {
-
-                                           }
-
-                                           @Override
-                                           public void handleNo() {
-
-                                           }
+                                       () -> {
+                                           // TODO: Delete comment
                                        });
     }
 

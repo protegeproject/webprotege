@@ -634,16 +634,10 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
         final OWLClassData theClassData = currentSelection.get();
         final String displayName = theClassData.getBrowserText();
-        MessageBox.showYesNoConfirmBox("Delete class?", "Are you sure you want to delete class \"" + displayName + "\"?", new YesNoHandler() {
-            @Override
-            public void handleYes() {
-                deleteCls(theClassData.getEntity());
-            }
-
-            @Override
-            public void handleNo() {
-            }
-        });
+        String subMessage = "Are you sure you want to delete class \"" + displayName + "\"?";
+        MessageBox.showYesNoConfirmBox("Delete class?",
+                                       subMessage,
+                                       () -> deleteCls(theClassData.getEntity()));
     }
 
     private void showClassNotSelectedMessage() {

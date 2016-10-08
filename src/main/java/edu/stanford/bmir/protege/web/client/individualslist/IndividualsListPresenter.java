@@ -147,16 +147,10 @@ public class IndividualsListPresenter {
         if(!sel.isPresent()) {
             return;
         }
-        MessageBox.showYesNoConfirmBox("Delete individual?", "Are you sure you want to delete " + sel.get().getBrowserText() + "?", new YesNoHandler() {
-            @Override
-            public void handleYes() {
-                deleteSelectedIndividuals();
-            }
-
-            @Override
-            public void handleNo() {
-            }
-        });
+        String subMessage = "Are you sure you want to delete " + sel.get().getBrowserText() + "?";
+        MessageBox.showYesNoConfirmBox("Delete individual?",
+                                       subMessage,
+                                       () -> deleteSelectedIndividuals());
     }
 
 
