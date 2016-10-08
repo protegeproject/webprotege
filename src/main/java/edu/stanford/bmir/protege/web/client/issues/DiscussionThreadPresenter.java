@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
@@ -65,12 +67,15 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private Multimap<ThreadId, Comment> displayedComments = HashMultimap.create();
 
+    private PortletAction addCommentAction;
+
     @Inject
     public DiscussionThreadPresenter(
             @Nonnull EventBus eventBus,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-            @Nonnull LoggedInUserProvider loggedInUserProvider, @Nonnull DiscussionThreadListView view,
+            @Nonnull LoggedInUserProvider loggedInUserProvider,
+            @Nonnull DiscussionThreadListView view,
             @Nonnull ProjectId projectId
 //            @Nonnull Provider<DiscussionThreadView2> discussionThreadViewProvider,
 //            @Nonnull Provider<CommentView> commentViewProvider
@@ -85,6 +90,12 @@ public class DiscussionThreadPresenter implements HasDispose {
 //        this.commentViewProvider = commentViewProvider;
     }
 
+    public void installActions(HasPortletActions hasPortletActions) {
+        addCommentAction = new PortletAction("Start new thread",
+                                             (action, event) -> createThread());
+        hasPortletActions.addPortletAction(addCommentAction);
+    }
+
     public void start() {
         handlerRegistration = eventBus.addHandler(PermissionsChangedEvent.TYPE, event -> {
             updateEnabled();
@@ -94,10 +105,16 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private void updateEnabled() {
         view.setEnabled(false);
+        if(addCommentAction != null) {
+            addCommentAction.setEnabled(false);
+        }
         permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean b) {
                 view.setEnabled(b);
+                if(addCommentAction != null) {
+                    addCommentAction.setEnabled(b);
+                }
             }
         });
     }
