@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction;
 import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -27,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.*;
@@ -100,8 +100,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     public void start() {
-        handlerRegistration = eventBus.addHandler(
-                PermissionsChangedEvent.TYPE, event -> updateEnabled());
+        handlerRegistration = eventBus.addHandler(ON_PERMISSIONS_CHANGED, event -> updateEnabled());
         updateEnabled();
     }
 

@@ -25,6 +25,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -78,7 +80,7 @@ public class EditorPresenter implements HasDispose {
         this.permissionChecker = permissionChecker;
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
 
-        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE, event -> updatePermissionBasedItems());
+        handlerRegistrationManager.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updatePermissionBasedItems());
         handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, event -> updatePermissionBasedItems());
         handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, event -> updatePermissionBasedItems());
     }

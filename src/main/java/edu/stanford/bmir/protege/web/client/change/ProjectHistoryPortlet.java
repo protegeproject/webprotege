@@ -22,6 +22,8 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+
 @Portlet(id = "portlets.ProjectHistory",
         title = "Project History",
         tooltip = "Displays a list of all changes that have been made to the project")
@@ -50,7 +52,7 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
         addPortletAction(refreshAction);
 
         addProjectEventHandler(ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
-        addApplicationEventHandler(PermissionsChangedEvent.TYPE, event -> reload());
+        addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
 
         FilterView filterView = new FilterViewImpl();
         filterView.addFilter(SHOW_DETAILS_FILTER, FilterSetting.ON);
