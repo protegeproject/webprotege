@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -11,7 +9,6 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -23,7 +20,6 @@ import java.util.*;
 
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.*;
 
@@ -47,29 +43,22 @@ public class DiscussionThreadListPresenter implements HasDispose {
     private final DiscussionThreadListView view;
 
     @Nonnull
-    private final ProjectId projectId;
+    private final PortletAction addCommentAction;
 
     @Nonnull
-    private final Provider<DiscussionThreadView> discussionThreadViewProvider;
+    private final ProjectId projectId;
 
     @Nonnull
     private final Provider<CommentEditorDialog> commentEditorDialogProvider;
 
-    @Nonnull
-    private final CommentViewFactory commentViewFactory;
+    private HandlerRegistration handlerRegistration = () -> {};
 
-    private HandlerRegistration handlerRegistration = () -> {
-    };
+    private final Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider;
 
-    private final Map<ThreadId, DiscussionThreadView> discussionThreadViewMap = new HashMap<>();
+    private final List<DiscussionThreadPresenter> threadPresenters = new ArrayList<>();
 
-    private final Map<CommentId, CommentView> displayedComments = new HashMap<>();
-
-    private final PortletAction addCommentAction;
 
     private Optional<OWLEntity> entity = Optional.empty();
-
-    private Messages messages;
 
 
     @Inject
@@ -79,21 +68,18 @@ public class DiscussionThreadListPresenter implements HasDispose {
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull DiscussionThreadListView view,
             @Nonnull ProjectId projectId,
-            @Nonnull Provider<DiscussionThreadView> discussionThreadViewProvider,
             @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
-            @Nonnull CommentViewFactory commentViewFactory,
-            @Nonnull Messages messages) {
+            @Nonnull Messages messages,
+            @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider) {
         this.eventBus = eventBus;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.projectId = projectId;
-        this.discussionThreadViewProvider = discussionThreadViewProvider;
         this.commentEditorDialogProvider = commentEditorDialogProvider;
-        this.commentViewFactory = commentViewFactory;
-        this.messages = messages;
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
                                                   (action, event) -> handleCreateThread());
+        this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
@@ -113,15 +99,8 @@ public class DiscussionThreadListPresenter implements HasDispose {
         );
     }
 
-    @Override
-    public void dispose() {
-        handlerRegistration.removeHandler();
-    }
-
     public void clear() {
         view.clear();
-        displayedComments.clear();
-        displayedComments.clear();
     }
 
     @Nonnull
@@ -144,27 +123,15 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     private void displayThreads(List<EntityDiscussionThread> threads) {
         view.clear();
-        discussionThreadViewMap.clear();
-        displayedComments.clear();
+        stopThreadPresenters();
         for (EntityDiscussionThread thread : threads) {
-            DiscussionThreadView threadView = discussionThreadViewProvider.get();
-            discussionThreadViewMap.put(thread.getId(), threadView);
-            for (Comment comment : thread.getComments()) {
-                CommentView commentView = createCommentView(thread.getId(), comment);
-                threadView.addCommentView(commentView);
-                displayedComments.put(comment.getId(), commentView);
-            }
+            DiscussionThreadPresenter presenter = discussionThreadPresenterProvider.get();
+            threadPresenters.add(presenter);
+            presenter.start();
+            presenter.setDiscussionThread(thread);
+            DiscussionThreadView threadView = presenter.getView();
             view.addDiscussionThreadView(threadView);
         }
-    }
-
-    private CommentView createCommentView(ThreadId threadId, Comment comment) {
-        return commentViewFactory.createAndInitView(
-                comment,
-                () -> handleReplyToComment(threadId),
-                () -> handleEditComment(threadId, comment),
-                () -> handleDeleteComment(threadId, comment)
-        );
     }
 
     public void handleCreateThread() {
@@ -177,48 +144,15 @@ public class DiscussionThreadListPresenter implements HasDispose {
         });
     }
 
-    private void handleReplyToComment(ThreadId threadId) {
-        CommentEditorDialog dlg = commentEditorDialogProvider.get();
-        dlg.show((body) -> dispatch.execute(
-                addEntityComment(projectId, threadId, body),
-                result -> handleCommentAdded(threadId, result.getComment()))
-        );
-
+    private void stopThreadPresenters() {
+        threadPresenters.forEach(p -> p.dispose());
+        threadPresenters.clear();
     }
 
-    private void handleEditComment(ThreadId threadId, Comment comment) {
-        CommentEditorDialog dlg = commentEditorDialogProvider.get();
-        dlg.setCommentBody(comment.getBody());
-        dlg.show((body) -> {
-            dispatch.execute(new EditCommentAction(projectId, threadId, comment.getId(), body),
-                             result -> updateComment(result.getEditedComment()));
-        });
-    }
-
-    private void updateComment(Comment comment) {
-        CommentView view = displayedComments.get(comment.getId());
-        if(view != null) {
-            view.setBody(comment.getBody());
-        }
-    }
-
-    private void handleDeleteComment(ThreadId threadId, Comment comment) {
-        showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
-                            messages.deleteCommentConfirmationBoxText(),
-                            () -> {
-                                // TODO: Delete comment
-                            });
-    }
-
-    private void handleCommentAdded(ThreadId threadId, Comment comment) {
-        if (displayedComments.containsKey(comment.getId())) {
-            return;
-        }
-        DiscussionThreadView view = discussionThreadViewMap.get(threadId);
-        if (view != null) {
-            CommentView commentView = createCommentView(threadId, comment);
-            view.addCommentView(commentView);
-        }
+    @Override
+    public void dispose() {
+        handlerRegistration.removeHandler();
+        stopThreadPresenters();
     }
 
 }

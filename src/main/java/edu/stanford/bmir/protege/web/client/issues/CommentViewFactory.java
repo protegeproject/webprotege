@@ -48,25 +48,11 @@ public class CommentViewFactory {
         commentView.setCreatedAt(comment.getCreatedAt());
         commentView.setUpdatedAt(comment.getUpdatedAt());
         commentView.setBody(comment.getBody());
-        final boolean userIsCommentCreator = isLoggedInUserCommentCreator(comment);
-        commentView.setDeleteButtonVisible(userIsCommentCreator);
-        commentView.setEditButtonVisible(userIsCommentCreator);
-        if (userIsCommentCreator) {
-            commentView.setEditCommentHandler(editHandler);
-            commentView.setDeleteCommentHandler(deleteHandler);
-        }
+        commentView.setReplyToCommentHandler(replyHandler);
+        commentView.setEditCommentHandler(editHandler);
+        commentView.setDeleteCommentHandler(deleteHandler);
         commentView.setReplyButtonVisible(false);
-        permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean canComment) {
-                commentView.setReplyButtonVisible(canComment);
-                commentView.setReplyToCommentHandler(replyHandler);
-            }
-        });
         return commentView;
     }
 
-    private boolean isLoggedInUserCommentCreator(Comment comment) {
-        return comment.getCreatedBy().equals(loggedInUserProvider.getCurrentUserId());
-    }
 }

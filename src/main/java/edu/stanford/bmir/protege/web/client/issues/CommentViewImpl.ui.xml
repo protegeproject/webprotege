@@ -69,10 +69,13 @@
         <g:HTML ui:field="bodyField" addStyleNames="{style.body}" debugId="bodyField"/>
         <g:HTMLPanel addStyleNames="{style.buttonBar}">
             <g:Button text="{msg.replyToComment}" ui:field="replyButton"
+                      visible="false"
                       addStyleNames="{wp.buttons.toolbarButton} {style.replyButton}"/>
             <g:Button text="{msg.editComment}" ui:field="editButton"
+                      visible="false"
                       addStyleNames="{wp.buttons.toolbarButton} {style.editButton}"/>
             <g:Button text="{msg.deleteComment}" ui:field="deleteButton"
+                      visible="false"
                       addStyleNames="{wp.buttons.toolbarButton} {style.deleteButton}"/>
         </g:HTMLPanel>
 

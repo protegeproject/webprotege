@@ -32,7 +32,6 @@ import edu.stanford.bmir.protege.web.client.ui.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.individuals.IndividualsListViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.notes.*;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditor;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsView;
@@ -77,41 +76,6 @@ public class ClientProjectModule {
     @Provides
     AnnotationsView provideAnnotationsView(AnnotationsViewImpl view) {
         return view;
-    }
-
-    @Provides
-    edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadView provideDiscussionThreadView(edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadViewImpl view) {
-        return view;
-    }
-
-    @Provides
-    NoteView provideNoteView(NoteViewImpl noteView) {
-        return noteView;
-    }
-
-    @Provides
-    NoteContainerView provideNoteContainerView(NoteContainerViewImpl view) {
-        return view;
-    }
-
-    @Provides
-    NoteHeaderView provideNoteHeaderView(NoteHeaderViewImpl view) {
-        return view;
-    }
-
-    @Provides
-    NoteActionView provideNoteActionView(NoteActionViewImpl view) {
-        return view;
-    }
-
-    @Provides
-    ReplyToNoteHandler provideReplyToNoteHandler(ReplyToNoteHandlerImpl handler) {
-        return handler;
-    }
-
-    @Provides
-    DeleteNoteHandler provideDeleteNoteHandler(DeleteNoteHandlerImpl handler) {
-        return handler;
     }
 
     @Provides
