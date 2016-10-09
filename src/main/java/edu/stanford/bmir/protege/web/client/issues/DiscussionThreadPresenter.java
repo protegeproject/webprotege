@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -11,19 +12,14 @@ import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
-import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
@@ -67,12 +63,13 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private final Map<ThreadId, DiscussionThreadView> discussionThreadViewMap = new HashMap<>();
 
-    private final Multimap<ThreadId, Comment> displayedComments = HashMultimap.create();
+    private final Map<CommentId, CommentView> displayedComments = new HashMap<>();
 
-    private final PortletAction addCommentAction = new PortletAction("Start new thread",
-                                                                     (action, event) -> handleCreateThread());
+    private final PortletAction addCommentAction;
 
     private Optional<OWLEntity> entity = Optional.empty();
+
+    private Messages messages;
 
 
     @Inject
@@ -84,7 +81,8 @@ public class DiscussionThreadPresenter implements HasDispose {
             @Nonnull ProjectId projectId,
             @Nonnull Provider<DiscussionThreadView> discussionThreadViewProvider,
             @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
-            @Nonnull CommentViewFactory commentViewFactory) {
+            @Nonnull CommentViewFactory commentViewFactory,
+            @Nonnull Messages messages) {
         this.eventBus = eventBus;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
@@ -93,6 +91,9 @@ public class DiscussionThreadPresenter implements HasDispose {
         this.discussionThreadViewProvider = discussionThreadViewProvider;
         this.commentEditorDialogProvider = commentEditorDialogProvider;
         this.commentViewFactory = commentViewFactory;
+        this.messages = messages;
+        this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
+                                                  (action, event) -> handleCreateThread());
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
@@ -151,7 +152,7 @@ public class DiscussionThreadPresenter implements HasDispose {
             for (Comment comment : thread.getComments()) {
                 CommentView commentView = createCommentView(thread.getId(), comment);
                 threadView.addCommentView(commentView);
-                displayedComments.put(thread.getId(), comment);
+                displayedComments.put(comment.getId(), commentView);
             }
             view.addDiscussionThreadView(threadView);
         }
@@ -189,20 +190,28 @@ public class DiscussionThreadPresenter implements HasDispose {
         CommentEditorDialog dlg = commentEditorDialogProvider.get();
         dlg.setCommentBody(comment.getBody());
         dlg.show((body) -> {
-
+            dispatch.execute(new EditCommentAction(projectId, threadId, comment.getId(), body),
+                             result -> updateComment(result.getEditedComment()));
         });
     }
 
+    private void updateComment(Comment comment) {
+        CommentView view = displayedComments.get(comment.getId());
+        if(view != null) {
+            view.setBody(comment.getBody());
+        }
+    }
+
     private void handleDeleteComment(ThreadId threadId, Comment comment) {
-        showYesNoConfirmBox("Delete Comment?",
-                            "Are you sure that you want to delete this comment?  This cannot be undone.",
+        showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
+                            messages.deleteCommentConfirmationBoxText(),
                             () -> {
                                 // TODO: Delete comment
                             });
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
-        if (displayedComments.get(threadId).contains(comment)) {
+        if (displayedComments.containsKey(comment.getId())) {
             return;
         }
         DiscussionThreadView view = discussionThreadViewMap.get(threadId);

@@ -72,4 +72,12 @@ public class EntityDiscussionThreadRepository {
         return datastore.createQuery(EntityDiscussionThread.class)
                         .field("_id").equal(threadId);
     }
+
+    public void updateComment(ThreadId id, Comment comment) {
+        Query<EntityDiscussionThread> query = createQueryForThread(id)
+                .field("comments.id").equal(comment.getId());
+        UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
+                .set("comments.$", comment);
+        datastore.updateFirst(query, update);
+    }
 }
