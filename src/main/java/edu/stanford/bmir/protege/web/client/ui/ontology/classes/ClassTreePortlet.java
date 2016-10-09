@@ -38,10 +38,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
@@ -131,15 +129,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                             DispatchServiceManager dispatchServiceManager,
                             final ProjectId projectId,
                             LoggedInUserProvider loggedInUserProvider,
-                            Provider<DiscussionThreadDialog> discussionThreadDialogProvider,
                             LoggedInUserProjectPermissionChecker permissionChecker,
                             Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
-        this(selectionModel, primitiveDataEditorProvider, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
+        this(selectionModel, primitiveDataEditorProvider, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, permissionChecker);
     }
 
     private ClassTreePortlet(SelectionModel selectionModel,
                              Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                             WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+                             WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
