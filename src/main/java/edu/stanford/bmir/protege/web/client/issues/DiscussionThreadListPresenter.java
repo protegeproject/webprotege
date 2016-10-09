@@ -32,7 +32,7 @@ import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThr
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
-public class DiscussionThreadPresenter implements HasDispose {
+public class DiscussionThreadListPresenter implements HasDispose {
 
     @Nonnull
     private final EventBus eventBus;
@@ -73,7 +73,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
 
     @Inject
-    public DiscussionThreadPresenter(
+    public DiscussionThreadListPresenter(
             @Nonnull EventBus eventBus,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
