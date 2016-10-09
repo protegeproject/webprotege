@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
+import com.google.googlejavaformat.Op;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import edu.stanford.bmir.protege.web.MockingUtils;
@@ -46,22 +47,25 @@ public class EntityDiscussionThreadRepository_IT {
 
     private EntityDiscussionThreadRepository repository;
 
+    private Comment comment;
+
     @Before
     public void setUp() throws Exception {
         Morphia morphia = MongoTestUtils.createMorphia();
         mongoClient = MongoTestUtils.createMongoClient();
         Datastore datastore = morphia.createDatastore(mongoClient, getTestDbName());
         repository = new EntityDiscussionThreadRepository(datastore);
+        comment = new Comment(
+                CommentId.create(),
+                UserId.getUserId("John"),
+                System.currentTimeMillis(),
+                Optional.of(33L),
+                "The body");
         thread = new EntityDiscussionThread(ThreadId.create(),
                                             projectId,
                                             entity,
                                             Status.OPEN,
-                                            ImmutableList.of(new Comment(
-                                                    CommentId.create(),
-                                                    UserId.getUserId("John"),
-                                                    System.currentTimeMillis(),
-                                                    Optional.of(33L),
-                                                    "The body"))
+                                            ImmutableList.of(comment)
         );
         repository.saveThread(thread);
     }
@@ -119,6 +123,19 @@ public class EntityDiscussionThreadRepository_IT {
         repository.setThreadStatus(thread.getId(), Status.CLOSED);
         Optional<EntityDiscussionThread> readThread = repository.getThread(thread.getId());
         assertThat(readThread.get().getStatus(), is(Status.CLOSED));
+    }
+
+    @Test
+    public void shouldUpdateComment() {
+        String updatedBody = "The updated body";
+        Comment updatedComment = new Comment(comment.getId(), comment.getCreatedBy(), comment.getCreatedAt(), Optional.of(44L), updatedBody);
+        repository.updateComment(thread.getId(), updatedComment);
+        Optional<EntityDiscussionThread> t = repository.getThread(thread.getId());
+        assertThat(t.isPresent(), is(true));
+        t.ifPresent(updatedThread -> {
+            assertThat(updatedThread.getComments(), hasItem(updatedComment));
+        });
+
     }
 
     private MongoCollection<Document> getCollection() {

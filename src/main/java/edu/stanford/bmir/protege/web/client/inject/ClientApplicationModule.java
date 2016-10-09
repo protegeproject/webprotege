@@ -13,6 +13,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
@@ -92,6 +93,12 @@ public class ClientApplicationModule {
     @Singleton
     WebProtegePlaceHistoryMapper provideWebProtegePlaceHistoryMapper() {
         return GWT.create(WebProtegePlaceHistoryMapper.class);
+    }
+
+    @Provides
+    @Singleton
+    Messages provideMessages() {
+        return GWT.create(Messages.class);
     }
 
     @Provides
