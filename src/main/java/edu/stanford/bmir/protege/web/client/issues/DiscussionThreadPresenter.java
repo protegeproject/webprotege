@@ -102,7 +102,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private void updateCommentView(Comment comment, CommentView commentView) {
         final boolean userIsCommentCreator = isLoggedInUserCommentCreator(comment);
-        commentView.setDeleteButtonVisible(userIsCommentCreator);
+//        commentView.setDeleteButtonVisible(userIsCommentCreator);
         commentView.setEditButtonVisible(userIsCommentCreator);
         commentView.setReplyButtonVisible(false);
         permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
@@ -171,12 +171,13 @@ public class DiscussionThreadPresenter implements HasDispose {
         showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
                             messages.deleteCommentConfirmationBoxText(),
                             () -> {
-                                // TODO: Delete comment
+                                dispatch.execute(new DeleteEntityCommentAction(comment.getId()),
+                                                 result -> {});
                             });
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
-        if (displayedComments.containsKey(comment.getId())) {
+        if (displayedComments.containsKey(comment)) {
             return;
         }
         CommentView commentView = createCommentView(threadId, comment);

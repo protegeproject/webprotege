@@ -1,15 +1,13 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
-import edu.stanford.bmir.protege.web.server.persistence.Repository;
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
-import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.Status;
-import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.bson.Document;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -26,19 +24,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityDiscussionThreadRepository {
 
+    public static final String COMMENTS_ID_PATH = "comments.id";
+
+    public static final String MATCHED_COMMENT_PATH = "comments.$";
+
     @Nonnull
     private final Datastore datastore;
 
     @Inject
     public EntityDiscussionThreadRepository(@Nonnull Datastore datastore) {
         this.datastore = checkNotNull(datastore);
+        this.datastore.ensureIndexes();
     }
 
     public List<EntityDiscussionThread> findThreads(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
         datastore.createQuery(EntityDiscussionThread.class);
         return datastore.find(EntityDiscussionThread.class)
-//                        .field("projectId").equal(projectId)
+                        .disableValidation()
+                        .field("projectId").equal(projectId)
                         .field("entity").equal(entity)
+                        .order("-comments.0.createdAt")
                         .asList();
     }
 
@@ -75,9 +80,25 @@ public class EntityDiscussionThreadRepository {
 
     public void updateComment(ThreadId id, Comment comment) {
         Query<EntityDiscussionThread> query = createQueryForThread(id)
-                .field("comments.id").equal(comment.getId());
+                .field(COMMENTS_ID_PATH).equal(comment.getId());
         UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
-                .set("comments.$", comment);
+                .set(MATCHED_COMMENT_PATH, comment);
         datastore.updateFirst(query, update);
+    }
+
+    public Optional<EntityDiscussionThread> findThreadByCommentId(CommentId commentId) {
+        return Optional.ofNullable(datastore.find(EntityDiscussionThread.class)
+                                            .field("comments.id").equal(commentId)
+                                            .limit(1)
+                                            .get());
+    }
+
+    public boolean deleteComment(CommentId commentId) {
+        Query<EntityDiscussionThread> query = datastore.createQuery(EntityDiscussionThread.class)
+                .field(COMMENTS_ID_PATH).equal(commentId);
+        UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
+                .removeAll("comments", new BasicDBObject("id", commentId.getId()));
+        UpdateResults updateResults = datastore.updateFirst(query, update);
+        return updateResults.getUpdatedCount() == 1;
     }
 }
