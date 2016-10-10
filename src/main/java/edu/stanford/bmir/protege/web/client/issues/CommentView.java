@@ -25,7 +25,7 @@ public interface CommentView extends IsWidget, HasEnabled {
 
     void setEditButtonVisible(boolean visible);
 
-    void setDeleteButtonVisible(boolean visible);
+//    void setDeleteButtonVisible(boolean visible);
 
 
     void setReplyToCommentHandler(ReplyToCommentHandler handler);

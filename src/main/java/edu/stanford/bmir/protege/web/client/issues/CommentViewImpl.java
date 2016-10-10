@@ -141,10 +141,10 @@ public class CommentViewImpl extends Composite implements CommentView {
         replyButton.setEnabled(enabled);
     }
 
-    @Override
-    public void setDeleteButtonVisible(boolean visible) {
-        deleteButton.setVisible(visible);
-    }
+//    @Override
+//    public void setDeleteButtonVisible(boolean visible) {
+//        deleteButton.setVisible(visible);
+//    }
 
     @Override
     public void setEditButtonVisible(boolean visible) {

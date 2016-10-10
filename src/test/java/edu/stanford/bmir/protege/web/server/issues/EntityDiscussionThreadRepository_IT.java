@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
-import com.google.googlejavaformat.Op;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import edu.stanford.bmir.protege.web.MockingUtils;
@@ -25,6 +24,7 @@ import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.ge
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * Matthew Horridge
@@ -135,7 +135,20 @@ public class EntityDiscussionThreadRepository_IT {
         t.ifPresent(updatedThread -> {
             assertThat(updatedThread.getComments(), hasItem(updatedComment));
         });
+    }
 
+    @Test
+    public void shouldFindThreadByCommentId() {
+        Optional<EntityDiscussionThread> foundThread = repository.findThreadByCommentId(comment.getId());
+        assertThat(foundThread, is(Optional.of(thread)));
+    }
+
+    @Test
+    public void shouldDeleteCommentById() {
+        repository.deleteComment(comment.getId());
+        Optional<EntityDiscussionThread> updatedThread = repository.getThread(thread.getId());
+        assertThat(updatedThread.isPresent(), is(true));
+        assertThat(updatedThread.get().getComments(), not(hasItem(comment)));
     }
 
     private MongoCollection<Document> getCollection() {
