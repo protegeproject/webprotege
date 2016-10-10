@@ -6,10 +6,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.server.persistence.OWLEntityConverter;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.mongodb.morphia.annotations.Converters;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -29,6 +26,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * A thread of comments that are attached to an entity
  */
 @Entity(value = "EntityDiscussionThreads", noClassnameStored = true)
+@Indexes(
+        {
+                @Index(fields = {@Field("projectId"), @Field("entity")}),
+                @Index(fields = @Field("comments.id"), options = @IndexOptions(unique = true))
+        }
+)
 public class EntityDiscussionThread implements IsSerializable {
 
     @Id
