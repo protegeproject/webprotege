@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
+import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.CommentId;
+import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.Converters;
 import org.mongodb.morphia.mapping.Mapper;
@@ -47,13 +49,18 @@ public class MorphiaProvider implements Provider<Morphia> {
     @Override
     public Morphia get() {
         Morphia morphia = new Morphia();
+        morphia.map(EntityDiscussionThread.class);
+
         Mapper mapper = morphia.getMapper();
+        mapper.getOptions().setStoreEmpties(true);
         Converters converters = mapper.getConverters();
         converters.addConverter(userIdConverter);
         converters.addConverter(entityConverter);
         converters.addConverter(projectIdConverter);
         converters.addConverter(threadIdConverter);
         converters.addConverter(commentIdConverter);
+
+
         return morphia;
     }
 }
