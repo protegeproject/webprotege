@@ -11,4 +11,5 @@ out/
 
 logs/
 
-velocity.log*
+velocity.log
+velocity.log.1
