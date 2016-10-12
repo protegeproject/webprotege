@@ -265,6 +265,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String userName();
 
         String sharingDropDown();
+
+        String discussionThreadStatusOpen();
+
+        String discussionThreadStatusClosed();
     }
 
     public static interface WebProtegeButtons extends CssResource {

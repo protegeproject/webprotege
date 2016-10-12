@@ -4,6 +4,8 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.issues.Status;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -13,9 +15,12 @@ public interface DiscussionThreadView extends IsWidget, HasEnabled {
 
     void clear();
 
-    void setStatus(Status status);
+    void setStatus(@Nonnull Status status);
 
-    void addCommentView(CommentView commentView);
+    @Nonnull
+    Status getStatus();
 
-    void setStatusChangedHandler(StatusChangedHandler handler);
+    void addCommentView(@Nonnull CommentView commentView);
+
+    void setStatusChangedHandler(@Nonnull StatusChangedHandler handler);
 }

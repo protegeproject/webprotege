@@ -284,3 +284,19 @@
 .entityIcon {
     color: #007fff;
 }
+
+.discussionThreadStatusOpen {
+    color: #990099 !important;
+}
+
+.discussionThreadStatusOpen:hover {
+    color: white !important;
+}
+
+.discussionThreadStatusClosed {
+    color: #009900 !important;
+}
+
+.discussionThreadStatusClosed:hover {
+    color: white !important;
+}

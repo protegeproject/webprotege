@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -23,6 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON_COMMENT_UPDATED;
+import static edu.stanford.bmir.protege.web.shared.issues.SetDiscussionThreadStatusAction.setDiscussionThreadStatus;
 
 /**
  * Matthew Horridge
@@ -126,6 +128,8 @@ public class DiscussionThreadPresenter implements HasDispose {
         view.clear();
         commentViewMap.clear();
         for (Comment comment : thread.getComments()) {
+            view.setStatus(thread.getStatus());
+            view.setStatusChangedHandler(() -> handleToggleStatus(thread.getId()));
             addCommentView(thread.getId(), comment);
         }
     }
@@ -143,6 +147,14 @@ public class DiscussionThreadPresenter implements HasDispose {
                 () -> handleReplyToComment(threadId),
                 () -> handleEditComment(threadId, comment),
                 () -> handleDeleteComment(threadId, comment)
+        );
+    }
+
+    private void handleToggleStatus(ThreadId threadId) {
+        Status nextStatus = view.getStatus() == Status.OPEN ? Status.CLOSED : Status.OPEN;
+        dispatch.execute(
+                setDiscussionThreadStatus(projectId, threadId, nextStatus),
+                (result) -> view.setStatus(result.getResult())
         );
     }
 

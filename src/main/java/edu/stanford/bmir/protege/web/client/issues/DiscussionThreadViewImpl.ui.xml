@@ -10,10 +10,20 @@
             padding-bottom: 10px;
             box-shadow: 1px 2px 3px #c0c0c0;
         }
+        .statusLabelHolder {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: row;
+        }
+        .statusLabel {
+            cursor: hand;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.inner}">
-            <g:Label ui:field="statusLabel"/>
+            <g:HTMLPanel addStyleNames="{style.statusLabelHolder}">
+                <g:Button ui:field="statusLabel" addStyleNames="{style.statusLabel} {wp.buttons.toolbarButton}"/>
+            </g:HTMLPanel>
             <g:FlowPanel ui:field="commentViewContainer"/>
         </g:HTMLPanel>
 

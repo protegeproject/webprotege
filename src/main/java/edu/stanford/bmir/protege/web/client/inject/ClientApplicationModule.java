@@ -49,6 +49,7 @@ import edu.stanford.bmir.protege.web.client.ui.projectmanager.*;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationViewImpl;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationPropertiesProvider;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
@@ -99,6 +100,13 @@ public class ClientApplicationModule {
     @Singleton
     Messages provideMessages() {
         return GWT.create(Messages.class);
+    }
+
+    @Provides
+    @Singleton
+    WebProtegeClientBundle provideClientBundle() {
+        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
+        return WebProtegeClientBundle.BUNDLE;
     }
 
     @Provides

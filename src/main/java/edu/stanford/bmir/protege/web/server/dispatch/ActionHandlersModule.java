@@ -536,4 +536,9 @@ public class ActionHandlersModule {
         return handler;
     }
 
+    @Provides(type = SET)
+    public ActionHandler provideSetDiscussionThreadStatusHandler(SetDiscussionThreadStatusHandler handler) {
+        return handler;
+    }
+
 }
