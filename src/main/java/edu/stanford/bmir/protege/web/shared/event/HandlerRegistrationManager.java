@@ -5,6 +5,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,8 @@ public class HandlerRegistrationManager {
 
     private final EventBus eventBus;
 
-    public HandlerRegistrationManager(EventBus eventBus) {
+    @Inject
+    public HandlerRegistrationManager(@Nonnull EventBus eventBus) {
         this.eventBus = eventBus;
     }
 

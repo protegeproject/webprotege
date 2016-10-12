@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -9,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -18,9 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
-import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
+import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.*;
 
 /**
@@ -29,9 +28,6 @@ import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThr
  * 5 Oct 2016
  */
 public class DiscussionThreadListPresenter implements HasDispose {
-
-    @Nonnull
-    private final EventBus eventBus;
 
     @Nonnull
     private final DispatchServiceManager dispatch;
@@ -51,19 +47,18 @@ public class DiscussionThreadListPresenter implements HasDispose {
     @Nonnull
     private final Provider<CommentEditorDialog> commentEditorDialogProvider;
 
-    private HandlerRegistration handlerRegistration = () -> {};
-
     private final Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider;
 
-    private final List<DiscussionThreadPresenter> threadPresenters = new ArrayList<>();
+    private final Map<ThreadId, DiscussionThreadPresenter> threadPresenters = new HashMap<>();
 
+    private final HandlerRegistrationManager eventBus;
 
     private Optional<OWLEntity> entity = Optional.empty();
 
 
     @Inject
     public DiscussionThreadListPresenter(
-            @Nonnull EventBus eventBus,
+            @Nonnull HandlerRegistrationManager eventBus,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull DiscussionThreadListView view,
@@ -87,7 +82,8 @@ public class DiscussionThreadListPresenter implements HasDispose {
     }
 
     public void start() {
-        handlerRegistration = eventBus.addHandler(ON_PERMISSIONS_CHANGED, event -> updateEnabled());
+        eventBus.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
+        eventBus.registerHandlerToProject(projectId, ON_DISCUSSION_THREAD_CREATED, event -> addThread(event.getThread()));
         updateEnabled();
     }
 
@@ -125,13 +121,20 @@ public class DiscussionThreadListPresenter implements HasDispose {
         view.clear();
         stopThreadPresenters();
         for (EntityDiscussionThread thread : threads) {
-            DiscussionThreadPresenter presenter = discussionThreadPresenterProvider.get();
-            threadPresenters.add(presenter);
-            presenter.start();
-            presenter.setDiscussionThread(thread);
-            DiscussionThreadView threadView = presenter.getView();
-            view.addDiscussionThreadView(threadView);
+            addThread(thread);
         }
+    }
+
+    private void addThread(EntityDiscussionThread thread) {
+        if(threadPresenters.containsKey(thread.getId())) {
+            return;
+        }
+        DiscussionThreadPresenter presenter = discussionThreadPresenterProvider.get();
+        threadPresenters.put(thread.getId(), presenter);
+        presenter.start();
+        presenter.setDiscussionThread(thread);
+        DiscussionThreadView threadView = presenter.getView();
+        view.addDiscussionThreadView(threadView);
     }
 
     public void handleCreateThread() {
@@ -145,13 +148,13 @@ public class DiscussionThreadListPresenter implements HasDispose {
     }
 
     private void stopThreadPresenters() {
-        threadPresenters.forEach(p -> p.dispose());
+        threadPresenters.forEach((t,p) -> p.dispose());
         threadPresenters.clear();
     }
 
     @Override
     public void dispose() {
-        handlerRegistration.removeHandler();
+        eventBus.removeHandlers();
         stopThreadPresenters();
     }
 

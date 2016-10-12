@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -16,11 +15,14 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
+import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
+import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON_COMMENT_UPDATED;
 
 /**
  * Matthew Horridge
@@ -36,7 +38,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final EventBus eventBus;
+    private final HandlerRegistrationManager eventBus;
 
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
@@ -56,10 +58,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     @Nonnull
     private final Provider<CommentEditorDialog> commentEditorDialogProvider;
 
-    private final Map<Comment, CommentView> displayedComments = new HashMap<>();
-
-    private HandlerRegistration permissionsChangedHandlerRegistration = () -> {};
-
+    private final Map<CommentId, CommentView> commentViewMap = new HashMap<>();
 
 
     @Inject
@@ -67,7 +66,7 @@ public class DiscussionThreadPresenter implements HasDispose {
                                      @Nonnull Messages messages,
                                      @Nonnull ProjectId projectId,
                                      @Nonnull DispatchServiceManager dispatch,
-                                     @Nonnull EventBus eventBus,
+                                     @Nonnull HandlerRegistrationManager eventBus,
                                      @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                      @Nonnull LoggedInUserProvider loggedInUserProvider,
                                      @Nonnull CommentViewFactory commentViewFactory,
@@ -89,20 +88,24 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     public void start() {
-        permissionsChangedHandlerRegistration =
-        eventBus.addHandlerToSource(ON_PERMISSIONS_CHANGED,
-                                    projectId,
-                                    event -> updateDisplayedViews());
-        // TODO: Respond to CommentAdded, CommentEdited and CommentDeletedEvents
+        eventBus.registerHandlerToProject(projectId,
+                                          ON_PERMISSIONS_CHANGED,
+                                          event -> updateDisplayedViews());
+        eventBus.registerHandlerToProject(projectId,
+                                          ON_COMMENT_UPDATED,
+                                          event -> updateComment(event.getComment()));
+        eventBus.registerHandlerToProject(projectId,
+                                          ON_COMMENT_POSTED,
+                                          event -> handleCommentAdded(event.getThreadId(), event.getComment()));
     }
 
     private void updateDisplayedViews() {
-        displayedComments.forEach((comment, view) -> updateCommentView(comment, view));
+        commentViewMap.forEach((commentId, view) -> updateCommentView(view));
     }
 
-    private void updateCommentView(Comment comment, CommentView commentView) {
-        final boolean userIsCommentCreator = isLoggedInUserCommentCreator(comment);
+    private void updateCommentView(CommentView commentView) {
 //        commentView.setDeleteButtonVisible(userIsCommentCreator);
+        final boolean userIsCommentCreator = commentView.getCreatedBy().equals(Optional.of(loggedInUserProvider.getCurrentUserId()));
         commentView.setEditButtonVisible(userIsCommentCreator);
         commentView.setReplyButtonVisible(false);
         permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
@@ -113,25 +116,25 @@ public class DiscussionThreadPresenter implements HasDispose {
         });
     }
 
-    private boolean isLoggedInUserCommentCreator(Comment comment) {
-        return comment.getCreatedBy().equals(loggedInUserProvider.getCurrentUserId());
-    }
-
 
     @Override
     public void dispose() {
-        permissionsChangedHandlerRegistration.removeHandler();
+        eventBus.removeHandlers();
     }
 
     public void setDiscussionThread(@Nonnull EntityDiscussionThread thread) {
         view.clear();
-        displayedComments.clear();
+        commentViewMap.clear();
         for (Comment comment : thread.getComments()) {
-            CommentView commentView = createCommentView(thread.getId(), comment);
-            updateCommentView(comment, commentView);
-            view.addCommentView(commentView);
-            displayedComments.put(comment, commentView);
+            addCommentView(thread.getId(), comment);
         }
+    }
+
+    private void addCommentView(@Nonnull ThreadId threadId, Comment comment) {
+        CommentView commentView = createCommentView(threadId, comment);
+        updateCommentView(commentView);
+        view.addCommentView(commentView);
+        commentViewMap.put(comment.getId(), commentView);
     }
 
     private CommentView createCommentView(ThreadId threadId, Comment comment) {
@@ -154,15 +157,14 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleEditComment(ThreadId threadId, Comment comment) {
         CommentEditorDialog dlg = commentEditorDialogProvider.get();
         dlg.setCommentBody(comment.getBody());
-        dlg.show((body) -> {
-            dispatch.execute(new EditCommentAction(projectId, threadId, comment.getId(), body),
-                             result -> updateComment(result.getEditedComment()));
-        });
+        dlg.show((body) -> dispatch.execute(new EditCommentAction(projectId, threadId, comment.getId(), body),
+                                            result -> result.getEditedComment().ifPresent(c -> updateComment(c))));
     }
 
     private void updateComment(Comment comment) {
-        CommentView view = displayedComments.get(comment);
+        CommentView view = commentViewMap.get(comment.getId());
         if (view != null) {
+            view.setUpdatedAt(comment.getUpdatedAt());
             view.setBody(comment.getBody());
         }
     }
@@ -172,16 +174,16 @@ public class DiscussionThreadPresenter implements HasDispose {
                             messages.deleteCommentConfirmationBoxText(),
                             () -> {
                                 dispatch.execute(new DeleteEntityCommentAction(comment.getId()),
-                                                 result -> {});
+                                                 result -> {
+                                                 });
                             });
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
-        if (displayedComments.containsKey(comment)) {
+        if (commentViewMap.containsKey(comment.getId())) {
             return;
         }
-        CommentView commentView = createCommentView(threadId, comment);
-        view.addCommentView(commentView);
+        addCommentView(threadId, comment);
     }
 
 }

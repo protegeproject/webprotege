@@ -50,6 +50,12 @@ public class CommentViewImpl extends Composite implements CommentView {
     @UiField
     Button editButton;
 
+    @UiField
+    ElapsedTimeLabel updatedAtField;
+
+    @UiField
+    HTMLPanel updatedAtPanel;
+
     private ReplyToCommentHandler replyHandler = () -> {};
 
     private EditCommentHandler editHandler = () -> {};
@@ -91,13 +97,27 @@ public class CommentViewImpl extends Composite implements CommentView {
     }
 
     @Override
+    public Optional<UserId> getCreatedBy() {
+        if(userNameField.getText().trim().isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(UserId.getUserId(userNameField.getText().trim()));
+    }
+
+    @Override
     public void setCreatedAt(long timestamp) {
         createdAtField.setBaseTime(timestamp);
     }
 
     @Override
     public void setUpdatedAt(Optional<Long> updatedAt) {
-
+        if(updatedAt.isPresent()) {
+            updatedAtField.setBaseTime(updatedAt.get());
+            updatedAtPanel.setVisible(true);
+        }
+        else {
+            updatedAtPanel.setVisible(false);
+        }
     }
 
     @Override
