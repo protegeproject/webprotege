@@ -1,8 +1,14 @@
 package edu.stanford.bmir.protege.web.client.filter;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -14,7 +20,7 @@ import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
  * Stanford Center for Biomedical Informatics Research
  * 21/03/16
  */
-public class FilterCheckBox extends Composite {
+public class FilterCheckBox extends Composite implements HasValueChangeHandlers<Boolean> {
 
     interface FilterCheckBoxUiBinder extends UiBinder<HTMLPanel, FilterCheckBox> {
 
@@ -34,6 +40,16 @@ public class FilterCheckBox extends Composite {
     public void setFilterId(FilterId id, String rendering) {
         this.filterId = id;
         checkBox.setText(rendering);
+    }
+
+    @UiHandler("checkBox")
+    protected void handleCheckBoxValueChanged(ValueChangeEvent<Boolean> event) {
+        ValueChangeEvent.fire(this, checkBox.getValue());
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
     public FilterId getFilterId() {
