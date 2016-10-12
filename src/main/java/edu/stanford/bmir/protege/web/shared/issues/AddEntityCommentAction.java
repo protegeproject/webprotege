@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 7 Oct 2016
  */
-public class AddEntityCommentAction implements Action<AddEntityCommentResult> {
+public class AddEntityCommentAction implements Action<AddEntityCommentResult>, HasProjectId {
 
     private ProjectId projectId;
 

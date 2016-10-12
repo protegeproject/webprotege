@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 
 import javax.annotation.Nonnull;
@@ -19,7 +19,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 6 Oct 2016
  */
-public class CreateEntityDiscussionThreadHandler implements ActionHandler<CreateEntityDiscussionThreadAction, CreateEntityDiscussionThreadResult> {
+public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActionHandler<CreateEntityDiscussionThreadAction, CreateEntityDiscussionThreadResult> {
 
     @Nonnull
     private final ValidatorFactory<ReadPermissionValidator> validator;
@@ -28,8 +28,10 @@ public class CreateEntityDiscussionThreadHandler implements ActionHandler<Create
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
-    public CreateEntityDiscussionThreadHandler(@Nonnull ValidatorFactory<ReadPermissionValidator> validator,
+    public CreateEntityDiscussionThreadHandler(@Nonnull OWLAPIProjectManager projectManager,
+                                               @Nonnull ValidatorFactory<ReadPermissionValidator> validator,
                                                @Nonnull EntityDiscussionThreadRepository repository) {
+        super(projectManager);
         this.validator = validator;
         this.repository = repository;
     }
@@ -40,15 +42,15 @@ public class CreateEntityDiscussionThreadHandler implements ActionHandler<Create
     }
 
     @Override
-    public RequestValidator getRequestValidator(CreateEntityDiscussionThreadAction action,
-                                                RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(CreateEntityDiscussionThreadAction action,
+                                                             RequestContext requestContext) {
         return validator.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override
-    public CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
-                                                      ExecutionContext executionContext) {
-        // TODO: CHECK COMMENT IS NOT MALICIOUS
+    protected CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
+                                                         OWLAPIProject project,
+                                                         ExecutionContext executionContext) {
         Comment comment = new Comment(
                 CommentId.create(),
                 executionContext.getUserId(),
@@ -61,6 +63,7 @@ public class CreateEntityDiscussionThreadHandler implements ActionHandler<Create
                                                                    Status.OPEN,
                                                                    ImmutableList.of(comment));
         repository.saveThread(thread);
+        project.getEventManager().postEvent(new DiscussionThreadCreatedEvent(thread));
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
         return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));
     }

@@ -65,6 +65,10 @@
         <g:HTMLPanel addStyleNames="{style.rightBox}">
             <g:Label ui:field="userNameField" addStyleNames="{style.author}" debugId="userNameField"/>
             <timelabel:ElapsedTimeLabel ui:field="createdAtField" addStyleNames="{style.date}"/>
+            <g:HTMLPanel ui:field="updatedAtPanel">
+                <g:InlineLabel text="Last updated " addStyleNames="{style.date}"/>
+                <timelabel:ElapsedTimeLabel ui:field="updatedAtField" addStyleNames="{style.date}"/>
+            </g:HTMLPanel>
         </g:HTMLPanel>
         <g:HTML ui:field="bodyField" addStyleNames="{style.body}" debugId="bodyField"/>
         <g:HTMLPanel addStyleNames="{style.buttonBar}">

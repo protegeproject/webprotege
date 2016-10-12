@@ -42,11 +42,15 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     @Override
     public void handleActivated() {
         presenter.start();
+        updatePresenter(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        // TODO: Set title
+        updatePresenter(entity);
+    }
+
+    private void updatePresenter(Optional<OWLEntity> entity) {
         if(entity.isPresent()) {
             presenter.setEntity(entity.get());
         }

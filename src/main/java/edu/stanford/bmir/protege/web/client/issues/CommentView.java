@@ -33,4 +33,6 @@ public interface CommentView extends IsWidget, HasEnabled {
     void setEditCommentHandler(EditCommentHandler handler);
 
     void setDeleteCommentHandler(DeleteCommentHandler handler);
+
+    Optional<UserId> getCreatedBy();
 }
