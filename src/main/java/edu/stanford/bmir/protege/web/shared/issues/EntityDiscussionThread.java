@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.server.persistence.OWLEntityConverter;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.mongodb.morphia.annotations.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -83,6 +84,16 @@ public class EntityDiscussionThread implements IsSerializable {
     @Nonnull
     public ImmutableList<Comment> getComments() {
         return ImmutableList.copyOf(comments);
+    }
+
+    /**
+     * Determines whether or not the thread was created by the specified user.  The user who posted the first
+     * comment is deemed to have created a thread.
+     * @param userId The userId to test for.
+     * @return {@code true} if the thread was created by the user, otherwise {@code false}.
+     */
+    public boolean isCreatedBy(UserId userId) {
+        return !comments.isEmpty() && comments.get(0).getCreatedBy().equals(userId);
     }
 
     @Override

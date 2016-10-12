@@ -1,14 +1,16 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.issues.Status;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
     FlowPanel commentViewContainer;
 
     @UiField
-    Label statusLabel;
+    Button statusLabel;
 
     private boolean enabled = false;
 
@@ -40,9 +42,22 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
 
     private StatusChangedHandler statusChangedHandler = () -> {};
 
+    private final WebProtegeClientBundle clientBundle;
+
+    private final Messages messages;
+
+    private Status status = Status.OPEN;
+
     @Inject
-    public DiscussionThreadViewImpl() {
+    public DiscussionThreadViewImpl(Messages messages, WebProtegeClientBundle clientBundle) {
         initWidget(ourUiBinder.createAndBindUi(this));
+        this.clientBundle = clientBundle;
+        this.messages = messages;
+    }
+
+    @UiHandler("statusLabel")
+    protected void handleStatusLabelClicked(ClickEvent event) {
+        statusChangedHandler.handleStatusChanged();
     }
 
     @Override
@@ -52,17 +67,34 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
     }
 
     @Override
-    public void setStatus(Status status) {
-        statusLabel.setText(status.name());
+    public void setStatus(@Nonnull Status status) {
+        this.statusLabel.setVisible(true);
+        this.status = checkNotNull(status);
+        if(status == Status.OPEN) {
+            statusLabel.setText(messages.discussionThreadResolve());
+            statusLabel.addStyleName(clientBundle.style().discussionThreadStatusOpen());
+            statusLabel.removeStyleName(clientBundle.style().discussionThreadStatusClosed());
+        }
+        else {
+            statusLabel.setText(messages.discussionThreadReopen());
+            statusLabel.addStyleName(clientBundle.style().discussionThreadStatusClosed());
+            statusLabel.removeStyleName(clientBundle.style().discussionThreadStatusOpen());
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Status getStatus() {
+        return status;
     }
 
     @Override
-    public void setStatusChangedHandler(StatusChangedHandler handler) {
+    public void setStatusChangedHandler(@Nonnull StatusChangedHandler handler) {
         this.statusChangedHandler = checkNotNull(handler);
     }
 
     @Override
-    public void addCommentView(CommentView commentView) {
+    public void addCommentView(@Nonnull CommentView commentView) {
         commentViewContainer.add(commentView);
     }
 
