@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.filter;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -16,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,15 +36,11 @@ public class FilterViewImpl extends Composite implements FilterView {
     @UiField
     HTMLPanel container;
 
-    private FilterIdRenderer renderer = new FilterIdRenderer() {
-        @Override
-        public String render(FilterId filterId) {
-            return filterId.getLabel();
-        }
-    };
+    private FilterIdRenderer renderer = filterId -> filterId.getLabel();
 
     private List<FilterCheckBox> currentGroup = new ArrayList<>();
 
+    @Inject
     public FilterViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
@@ -70,18 +65,8 @@ public class FilterViewImpl extends Composite implements FilterView {
             return;
         }
         final List<FilterCheckBox> currentGroupCopy = new ArrayList<>(currentGroup);
-        filterGroupHeader.setSelectAllClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                handleSelect(currentGroupCopy, FilterSetting.ON);
-            }
-        });
-        filterGroupHeader.setSelectNoneClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                handleSelect(currentGroupCopy, FilterSetting.OFF);
-            }
-        });
+        filterGroupHeader.setSelectAllClickHandler(event -> handleSelect(currentGroupCopy, FilterSetting.ON));
+        filterGroupHeader.setSelectNoneClickHandler(event -> handleSelect(currentGroupCopy, FilterSetting.OFF));
         currentGroup.clear();
         filterGroupHeader = null;
     }
@@ -90,6 +75,7 @@ public class FilterViewImpl extends Composite implements FilterView {
         for(FilterCheckBox checkBox : group) {
             checkBox.setSetting(setting);
         }
+        ValueChangeEvent.fire(this, getFilterSet());
     }
 
     @Override
@@ -97,6 +83,7 @@ public class FilterViewImpl extends Composite implements FilterView {
         FilterCheckBox checkBox = new FilterCheckBox();
         checkBox.setFilterId(filterId, renderer.render(filterId));
         checkBox.setSetting(initialSetting);
+        checkBox.addValueChangeHandler((v) -> ValueChangeEvent.fire(this, getFilterSet()));
         container.add(checkBox);
         currentGroup.add(checkBox);
     }

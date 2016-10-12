@@ -3,7 +3,11 @@ package edu.stanford.bmir.protege.web.client.issues;
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -28,10 +32,12 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
                                          EventBus eventBus,
                                          LoggedInUserProvider loggedInUserProvider,
                                          ProjectId projectId,
-                                         @Nonnull DiscussionThreadListPresenter presenter) {
+                                         @Nonnull DiscussionThreadListPresenter presenter,
+                                         @Nonnull FilterView filterView) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.presenter = presenter;
         this.presenter.installActions(this);
+        setFilter(presenter.getFilterView());
         setWidget(presenter.getView());
     }
 

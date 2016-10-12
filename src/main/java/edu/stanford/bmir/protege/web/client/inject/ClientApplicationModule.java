@@ -22,6 +22,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
 import edu.stanford.bmir.protege.web.client.events.EventPollingPeriod;
 import edu.stanford.bmir.protege.web.client.events.EventPollingPeriodProvider;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.login.*;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
@@ -341,5 +343,10 @@ public class ClientApplicationModule {
     @Provides
     ActiveProjectManager provideActiveProjectManager(ActiveProjectManagerImpl manager) {
         return manager;
+    }
+
+    @Provides
+    FilterView provideFilterView(FilterViewImpl filterView) {
+        return filterView;
     }
 }

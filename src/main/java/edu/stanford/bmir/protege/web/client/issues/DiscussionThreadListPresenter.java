@@ -3,11 +3,15 @@ package edu.stanford.bmir.protege.web.client.issues;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
+import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -29,14 +33,20 @@ import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThr
  */
 public class DiscussionThreadListPresenter implements HasDispose {
 
+
+    public static final FilterId DISPLAY_RESOLVED_THREADS = new FilterId("Display resolved threads");
+
+    @Nonnull
+    private final DiscussionThreadListView view;
+
+    @Nonnull
+    private final FilterView filterView;
+
     @Nonnull
     private final DispatchServiceManager dispatch;
 
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
-
-    @Nonnull
-    private final DiscussionThreadListView view;
 
     @Nonnull
     private final PortletAction addCommentAction;
@@ -58,23 +68,28 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     @Inject
     public DiscussionThreadListPresenter(
+            @Nonnull DiscussionThreadListView view,
+            @Nonnull FilterView filterView,
             @Nonnull HandlerRegistrationManager eventBus,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-            @Nonnull DiscussionThreadListView view,
             @Nonnull ProjectId projectId,
             @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
             @Nonnull Messages messages,
             @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider) {
+        this.view = view;
+        this.filterView = filterView;
         this.eventBus = eventBus;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
-        this.view = view;
         this.projectId = projectId;
         this.commentEditorDialogProvider = commentEditorDialogProvider;
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
                                                   (action, event) -> handleCreateThread());
         this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
+        filterView.addFilter(DISPLAY_RESOLVED_THREADS, FilterSetting.OFF);
+        filterView.addValueChangeHandler(event -> refresh());
+
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
@@ -95,6 +110,11 @@ public class DiscussionThreadListPresenter implements HasDispose {
         );
     }
 
+    private void refresh() {
+        this.entity.ifPresent(e -> setEntity(e));
+    }
+
+
     public void clear() {
         view.clear();
     }
@@ -102,6 +122,11 @@ public class DiscussionThreadListPresenter implements HasDispose {
     @Nonnull
     public DiscussionThreadListView getView() {
         return view;
+    }
+
+    @Nonnull
+    public FilterView getFilterView() {
+        return filterView;
     }
 
     private void updateEnabled() {
@@ -129,12 +154,20 @@ public class DiscussionThreadListPresenter implements HasDispose {
         if(threadPresenters.containsKey(thread.getId())) {
             return;
         }
+        if(thread.getStatus() == Status.CLOSED && !isDisplayClosedThreads()) {
+            return;
+        }
         DiscussionThreadPresenter presenter = discussionThreadPresenterProvider.get();
         threadPresenters.put(thread.getId(), presenter);
         presenter.start();
         presenter.setDiscussionThread(thread);
         DiscussionThreadView threadView = presenter.getView();
         view.addDiscussionThreadView(threadView);
+    }
+
+    private boolean isDisplayClosedThreads() {
+        return filterView.getFilterSet()
+                         .getFilterSetting(DISPLAY_RESOLVED_THREADS, FilterSetting.OFF) == FilterSetting.ON;
     }
 
     public void handleCreateThread() {
@@ -157,5 +190,4 @@ public class DiscussionThreadListPresenter implements HasDispose {
         eventBus.removeHandlers();
         stopThreadPresenters();
     }
-
 }
