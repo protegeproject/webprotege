@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -46,6 +49,35 @@ public class DiscussionThreadListViewImpl extends Composite implements Discussio
     public void addDiscussionThreadView(DiscussionThreadView view) {
         threadContainer.add(view);
         threadViews.add(view);
+    }
+
+    @Override
+    public void hideDiscussionThreadView(DiscussionThreadView threadView) {
+        if(threadViews.remove(threadView)) {
+            Animation animation = new Animation() {
+                @Override
+                protected void onUpdate(double progress) {
+                    double opacity = 1 - (progress);
+                    final Element element = threadView.asWidget().getElement();
+                    element.getStyle().setOpacity(opacity);
+                    final double height = element.getClientHeight();
+                    if (progress == 1) {
+                        Animation slideAnimation = new Animation() {
+                            @Override
+                            protected void onUpdate(double progress) {
+                                double slideHeight = height * (1 - progress);
+                                element.getStyle().setHeight((int) slideHeight, Style.Unit.PX);
+                                if(progress == 1) {
+                                    threadContainer.remove(threadView);
+                                }
+                            }
+                        };
+                        slideAnimation.run(500);
+                    }
+                }
+            };
+            animation.run(400);
+        }
     }
 
     /**

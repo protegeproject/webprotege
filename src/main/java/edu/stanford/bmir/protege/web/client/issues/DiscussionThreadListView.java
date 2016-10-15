@@ -13,4 +13,6 @@ public interface DiscussionThreadListView extends HasEnabled, IsWidget {
     void clear();
 
     void addDiscussionThreadView(DiscussionThreadView view);
+
+    void hideDiscussionThreadView(DiscussionThreadView threadView);
 }

@@ -24,6 +24,7 @@ import java.util.*;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
+import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.*;
 
 /**
@@ -99,7 +100,20 @@ public class DiscussionThreadListPresenter implements HasDispose {
     public void start() {
         eventBus.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
         eventBus.registerHandlerToProject(projectId, ON_DISCUSSION_THREAD_CREATED, event -> addThread(event.getThread()));
+        eventBus.registerHandlerToProject(projectId, ON_STATUS_CHANGED, event -> handleThreadStatusChanged(event.getThreadId(), event.getStatus()));
         updateEnabled();
+    }
+
+    private void handleThreadStatusChanged(ThreadId threadId, Status status) {
+        if(isDisplayClosedThreads()) {
+            return;
+        }
+        DiscussionThreadPresenter threadPresenter = threadPresenters.get(threadId);
+        if(threadPresenter != null && status == Status.CLOSED) {
+            DiscussionThreadView threadView = threadPresenter.getView();
+            view.hideDiscussionThreadView(threadView);
+            threadPresenters.remove(threadId);
+        }
     }
 
     public void setEntity(@Nonnull OWLEntity entity) {
