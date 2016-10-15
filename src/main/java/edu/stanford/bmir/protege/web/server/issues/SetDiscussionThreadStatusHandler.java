@@ -7,6 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsDicussionT
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -58,6 +61,7 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
     protected SetDiscussionThreadStatusResult execute(SetDiscussionThreadStatusAction action,
                                                       OWLAPIProject project,
                                                       ExecutionContext executionContext) {
+        EventTag fromTag = project.getEventManager().getCurrentTag();
         ThreadId threadId = action.getThreadId();
         Status status = action.getStatus();
         repository.setThreadStatus(threadId, status);
@@ -65,6 +69,7 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
         project.getEventManager().postEvent(new DiscussionThreadStatusChangedEvent(projectId,
                                                                                    threadId,
                                                                                    status));
-        return new SetDiscussionThreadStatusResult(threadId, status);
+        EventList<ProjectEvent<?>> eventList = project.getEventManager().getEventsFromTag(fromTag);
+        return new SetDiscussionThreadStatusResult(threadId, status, eventList);
     }
 }

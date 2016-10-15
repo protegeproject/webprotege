@@ -62,6 +62,8 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private final Map<CommentId, CommentView> commentViewMap = new HashMap<>();
 
+    private Optional<ThreadId> currentThreadId = Optional.empty();
+
 
     @Inject
     public DiscussionThreadPresenter(@Nonnull DiscussionThreadView view,
@@ -125,6 +127,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     public void setDiscussionThread(@Nonnull EntityDiscussionThread thread) {
+        currentThreadId = Optional.of(checkNotNull(thread).getId());
         view.clear();
         commentViewMap.clear();
         for (Comment comment : thread.getComments()) {
@@ -192,6 +195,9 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {
+        if(!threadId.equals(currentThreadId.orElse(null))) {
+            return;
+        }
         if (commentViewMap.containsKey(comment.getId())) {
             return;
         }
