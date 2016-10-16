@@ -60,7 +60,7 @@ public class EntityDiscussionThreadRepository_IT {
                 UserId.getUserId("John"),
                 System.currentTimeMillis(),
                 Optional.of(33L),
-                "The body");
+                "The body", "The rendered body");
         thread = new EntityDiscussionThread(ThreadId.create(),
                                             projectId,
                                             entity,
@@ -111,7 +111,7 @@ public class EntityDiscussionThreadRepository_IT {
                 UserId.getUserId("Matthew"),
                                       createdAt,
                                       Optional.empty(),
-                                      "The body");
+                                      "The body", "The rendered body");
         repository.addCommentToThread(thread.getId(),
                                       theComment);
         Optional<EntityDiscussionThread> foundThread = repository.getThread(thread.getId());
@@ -128,7 +128,7 @@ public class EntityDiscussionThreadRepository_IT {
     @Test
     public void shouldUpdateComment() {
         String updatedBody = "The updated body";
-        Comment updatedComment = new Comment(comment.getId(), comment.getCreatedBy(), comment.getCreatedAt(), Optional.of(44L), updatedBody);
+        Comment updatedComment = new Comment(comment.getId(), comment.getCreatedBy(), comment.getCreatedAt(), Optional.of(44L), updatedBody, updatedBody);
         repository.updateComment(thread.getId(), updatedComment);
         Optional<EntityDiscussionThread> t = repository.getThread(thread.getId());
         assertThat(t.isPresent(), is(true));

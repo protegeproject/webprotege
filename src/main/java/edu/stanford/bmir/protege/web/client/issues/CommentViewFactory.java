@@ -47,7 +47,7 @@ public class CommentViewFactory {
         commentView.setCreatedBy(comment.getCreatedBy());
         commentView.setCreatedAt(comment.getCreatedAt());
         commentView.setUpdatedAt(comment.getUpdatedAt());
-        commentView.setBody(comment.getBody());
+        commentView.setBody(comment.getRenderedBody());
         commentView.setReplyToCommentHandler(replyHandler);
         commentView.setEditCommentHandler(editHandler);
         commentView.setDeleteCommentHandler(deleteHandler);

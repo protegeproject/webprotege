@@ -1,4 +1,5 @@
 @external web-protege-laf;
+@external blockquote
 @url classIconUrl svgClassIcon;
 @url datatypeIconUrl svgDatatypeIcon;
 @url propertyIconUrl svgPropertyIcon;
@@ -299,4 +300,12 @@
 
 .discussionThreadStatusClosed:hover {
     color: white !important;
+}
+
+blockquote {
+    margin: 5px;
+    border-left: 3px solid #d0d0d0;
+    color: #808080;
+    padding: 5px;
+    margin-left: 10px;
 }

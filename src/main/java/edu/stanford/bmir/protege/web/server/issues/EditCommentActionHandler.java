@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -55,6 +54,7 @@ public class EditCommentActionHandler extends AbstractHasProjectActionHandler<Ed
             throw new RuntimeException("Invalid comment thread");
         }
         EntityDiscussionThread t = thread.get();
+        String renderedComment = new CommentRenderer().renderComment(action.getBody());
         Optional<Comment> updatedComment = t.getComments().stream()
                                             .filter(c -> c.getId().equals(action.getCommentId()))
                                             .limit(1)
@@ -62,7 +62,8 @@ public class EditCommentActionHandler extends AbstractHasProjectActionHandler<Ed
                                                                   c.getCreatedBy(),
                                                                   c.getCreatedAt(),
                                                                   Optional.of(System.currentTimeMillis()),
-                                                                  action.getBody()))
+                                                                  action.getBody(),
+                                                                  renderedComment))
                                             .peek(c -> repository.updateComment(t.getId(), c))
                                             .findFirst();
         updatedComment.ifPresent(comment -> project.getEventManager().postEvent(new CommentUpdatedEvent(action.getProjectId(), t.getId(), comment)));

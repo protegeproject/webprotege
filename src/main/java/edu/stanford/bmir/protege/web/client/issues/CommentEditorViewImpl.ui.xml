@@ -1,8 +1,21 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:richtext="urn:import:edu.stanford.bmir.protege.web.client.ui.library.richtext">
-    <g:HTMLPanel>
-        <richtext:RichTextToolbarImpl ui:field="toolbar"/>
-        <richtext:RichTextEditorViewImpl ui:field="bodyField" tabIndex="2" width="60em"/>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .main {
+            /*display: flex;*/
+        }
+        .help {
+            padding-top: 10px;
+            padding-left: 5px;
+            display: inline-block;
+            color: #909090;
+        }
+        .editor {
+            display: block;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:TextArea ui:field="bodyField" width="60em" tabIndex="2" height="10em" addStyleNames="{style.editor}"/>
+        <g:Anchor text="Markdown supported" target="_blank" href="http://www.markdown-tutorial.com/" addStyleNames="{style.help}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
