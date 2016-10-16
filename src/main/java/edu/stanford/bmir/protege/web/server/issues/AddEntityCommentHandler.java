@@ -3,15 +3,15 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
+import edu.stanford.bmir.protege.web.shared.issues.mention.ParsedMention;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,6 +26,7 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
     private final ValidatorFactory<CommentPermissionValidator> validator;
 
     private final EntityDiscussionThreadRepository repository;
+
 
 
     @Inject
@@ -54,11 +55,19 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
                                              ExecutionContext executionContext) {
         UserId createdBy = executionContext.getUserId();
         long createdAt = System.currentTimeMillis();
-        Comment comment = new Comment(CommentId.create(), createdBy, createdAt, Optional.empty(), action.getComment());
+        MentionParser mentionParser = new MentionParser();
+        List<ParsedMention> mentionList = mentionParser.parseMentions(action.getComment());
+        // TODO: Mail mentioned users
+        mentionList.forEach(m -> m.getParsedMention().getMentionedUserId().ifPresent(u -> System.out.println("User mentioned: " + u)));
+
+        CommentRenderer r = new CommentRenderer();
+        String rendering = r.renderComment(action.getComment());
+
+        Comment comment = new Comment(CommentId.create(), createdBy, createdAt, Optional.empty(), action.getComment(), rendering);
         ThreadId threadId = action.getThreadId();
         repository.addCommentToThread(threadId, comment);
         project.getEventManager().postEvent(new CommentPostedEvent(action.getProjectId(), threadId, comment));
-        return new AddEntityCommentResult(action.getProjectId(), threadId, comment);
+        return new AddEntityCommentResult(action.getProjectId(), threadId, comment, rendering);
 
     }
 }

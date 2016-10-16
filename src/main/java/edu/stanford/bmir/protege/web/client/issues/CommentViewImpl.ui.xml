@@ -31,6 +31,16 @@
             padding-left: 30px;
             padding-top: 3px;
         }
+        .body ul,ol {
+            padding-left: 10px;
+            margin: 10px;
+        }
+        .body ul li {
+            list-style-type: disc;
+        }
+        .body ol li {
+            list-style-type: decimal;
+        }
 
         .links:hover {
             color: #648dbe !important;

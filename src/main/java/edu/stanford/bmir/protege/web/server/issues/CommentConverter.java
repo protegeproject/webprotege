@@ -46,6 +46,6 @@ public class CommentConverter implements DocumentConverter<Comment> {
         long createdAt = document.getLong(CREATED_AT);
         Optional<Long> updatedAt = Optional.ofNullable(document.getLong(UPDATED_AT));
         String body = document.getString(BODY);
-        return new Comment(CommentId.create(), createdBy, createdAt, updatedAt, body);
+        return new Comment(CommentId.create(), createdBy, createdAt, updatedAt, body, body);
     }
 }

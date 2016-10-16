@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextEditorPresenter;
 import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextEditorViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextToolbarImpl;
@@ -21,8 +22,6 @@ import javax.inject.Inject;
  */
 public class CommentEditorViewImpl extends Composite implements CommentEditorView {
 
-    private final RichTextEditorPresenter richTextEditorPresenter;
-
     interface CommentEditorViewImplUiBinder extends UiBinder<HTMLPanel, CommentEditorViewImpl> {
 
     }
@@ -30,15 +29,11 @@ public class CommentEditorViewImpl extends Composite implements CommentEditorVie
     private static CommentEditorViewImplUiBinder ourUiBinder = GWT.create(CommentEditorViewImplUiBinder.class);
 
     @UiField
-    RichTextToolbarImpl toolbar;
-
-    @UiField
-    RichTextEditorViewImpl bodyField;
+    TextArea bodyField;
 
     @Inject
     public CommentEditorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        richTextEditorPresenter = new RichTextEditorPresenter(toolbar, bodyField);
     }
 
     @Override

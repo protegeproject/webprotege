@@ -180,7 +180,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         CommentView view = commentViewMap.get(comment.getId());
         if (view != null) {
             view.setUpdatedAt(comment.getUpdatedAt());
-            view.setBody(comment.getBody());
+            view.setBody(comment.getRenderedBody());
         }
     }
 

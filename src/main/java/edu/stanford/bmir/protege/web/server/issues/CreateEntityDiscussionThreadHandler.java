@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionVa
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 
 import javax.annotation.Nonnull;
@@ -51,12 +50,16 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     protected CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
                                                          OWLAPIProject project,
                                                          ExecutionContext executionContext) {
+        CommentRenderer commentRenderer = new CommentRenderer();
+        String renderedComment = commentRenderer.renderComment(action.getComment());
+
         Comment comment = new Comment(
                 CommentId.create(),
                 executionContext.getUserId(),
                 System.currentTimeMillis(),
                 Optional.empty(),
-                action.getComment());
+                action.getComment(),
+                renderedComment);
         EntityDiscussionThread thread = new EntityDiscussionThread(ThreadId.create(),
                                                                    action.getProjectId(),
                                                                    action.getEntity(),

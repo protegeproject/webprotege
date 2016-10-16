@@ -30,28 +30,35 @@ public class Comment implements IsSerializable {
 
     private String body;
 
+    @Nullable
+    private String renderedBody;
+
     public Comment(@Nonnull CommentId id,
                     @Nonnull UserId createdBy,
                    long createdAt,
                    @Nonnull Optional<Long> updatedAt,
-                   @Nonnull String body) {
+                   @Nonnull String body,
+                   @Nonnull String renderedBody) {
         this(id,
              createdBy,
              createdAt,
              checkNotNull(updatedAt).orElse(null),
-             body);
+             body,
+             renderedBody);
     }
 
     private Comment(@Nonnull CommentId id,
                     @Nonnull UserId createdBy,
                     long createdAt,
                     @Nullable Long updatedAt,
-                    @Nonnull String body) {
+                    @Nonnull String body,
+                    @Nullable String renderedBody) {
         this.id = checkNotNull(id);
         this.createdBy = checkNotNull(createdBy);
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.body = checkNotNull(body);
+        this.renderedBody = renderedBody;
     }
 
     @GwtSerializationConstructor
@@ -80,6 +87,14 @@ public class Comment implements IsSerializable {
     @Nonnull
     public String getBody() {
         return body;
+    }
+
+    @Nonnull
+    public String getRenderedBody() {
+        if(renderedBody == null) {
+            return body;
+        }
+        return renderedBody;
     }
 
     @Override

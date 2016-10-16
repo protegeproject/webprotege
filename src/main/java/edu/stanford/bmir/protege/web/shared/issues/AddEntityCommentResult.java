@@ -23,13 +23,17 @@ public class AddEntityCommentResult implements Result, HasProjectId {
 
     private Comment comment;
 
+    private String commentRendering;
+
     @Inject
     public AddEntityCommentResult(@Nonnull ProjectId projectId,
                                   @Nonnull ThreadId threadId,
-                                  @Nonnull Comment comment) {
+                                  @Nonnull Comment comment,
+                                  @Nonnull String commentRendering) {
         this.projectId = checkNotNull(projectId);
         this.threadId = checkNotNull(threadId);
         this.comment = checkNotNull(comment);
+        this.commentRendering = checkNotNull(commentRendering);
     }
 
     @GwtSerializationConstructor
@@ -49,5 +53,7 @@ public class AddEntityCommentResult implements Result, HasProjectId {
         return comment;
     }
 
-
+    public String getCommentRendering() {
+        return commentRendering;
+    }
 }
