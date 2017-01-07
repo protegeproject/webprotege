@@ -43,7 +43,12 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
 
     @Override
     protected ChangeDescriptionGenerator<Set<OWLDataProperty>> getChangeDescription(CreateDataPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<Set<OWLDataProperty>>(action.getBrowserTexts().size() == 1 ? "Created data property" : "Created data properties");
+        return new FixedMessageChangeDescriptionGenerator<>(action.getBrowserTexts().size() == 1 ?
+                                                                    String.format("Created data property %s as a sub-property of %s",
+                                                                                  action.getBrowserTexts().iterator().next(),
+                                                                                  action.getParent().transform(p -> project.getRenderingManager().getBrowserText(p)).or("owl:topDataProperty"))
+                                                                    :
+                                                                    "Created data properties");
     }
 
     @Override
