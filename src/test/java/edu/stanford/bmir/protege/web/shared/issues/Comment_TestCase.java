@@ -20,7 +20,7 @@ public class Comment_TestCase {
     @Mock
     private UserId createdBy;
     private long createdAt = 1L;
-    private Optional updatedAt;
+    private Optional updatedAt = Optional.of(33L);
     private String body = "The body";
     private String renderedBody = "The renderedBody";
 

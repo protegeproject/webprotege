@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class FormViewImpl extends Composite implements FormView {
     @UiField
     FlowPanel holder;
 
+    @Inject
     public FormViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

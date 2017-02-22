@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
+@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
 public class FormPortlet extends AbstractWebProtegePortlet {
 
     private FormPresenter formPresenter;
