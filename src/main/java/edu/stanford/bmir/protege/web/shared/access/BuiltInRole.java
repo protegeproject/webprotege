@@ -1,0 +1,147 @@
+package edu.stanford.bmir.protege.web.shared.access;
+
+import com.google.common.base.CaseFormat;
+import com.google.common.collect.ImmutableList;
+
+import java.util.Arrays;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 5 Jan 2017
+ */
+public enum BuiltInRole {
+
+    // Application Roles
+
+    PROJECT_CREATOR(CREATE_EMPTY_PROJECT),
+
+    PROJECT_UPLOADER(UPLOAD_PROJECT),
+
+    ACCOUNT_CREATOR(CREATE_USER),
+
+    USER_ADMIN(VIEW_ANY_USER_DETAILS,
+               DELETE_ANY_USER,
+               RESET_ANY_USER_PASSWORD),
+
+    SYSTEM_ADMIN(USER_ADMIN,
+                 MOVE_ANY_PROJECT_TO_TRASH,
+                 SUBSTITUTE_USER),
+
+
+    // Project Roles
+
+    PROJECT_DOWNLOADER(DOWNLOAD_PROJECT),
+
+
+
+    ISSUE_VIEWER(VIEW_ANY_ISSUE),
+
+    ISSUE_COMMENTER(ISSUE_VIEWER,
+                    COMMENT_ON_ISSUE),
+
+    ISSUE_CREATOR(ISSUE_COMMENTER,
+                  CREATE_ISSUE,
+                  ASSIGN_OWN_ISSUE_TO_SELF,
+                  CLOSE_OWN_ISSUE),
+
+    ISSUE_MANAGER(ISSUE_CREATOR,
+                  ASSIGN_ANY_ISSUE_TO_ANYONE,
+                  CLOSE_ANY_ISSUE,
+                  UPDATE_ANY_ISSUE_TITLE,
+                  UPDATE_ANY_ISSUE_BODY),
+
+
+
+    PROJECT_VIEWER(VIEW_PROJECT,
+                   VIEW_OBJECT_COMMENTS,
+                   SAVE_OWN_PROJECT_LAYOUT),
+
+    OBJECT_COMMENTER(PROJECT_VIEWER,
+                     CREATE_OBJECT_COMMENT,
+                     EDIT_OWN_OBJECT_COMMENT),
+
+    PROJECT_EDITOR(OBJECT_COMMENTER,
+                   ADD_AXIOM,
+                   REMOVE_AXIOM,
+                   ADD_ONTOLOGY_ANNOTATION,
+                   REMOVE_ONTOLOGY_ANNOTATION,
+                   CREATE_CLASS,
+                   DELETE_CLASS,
+                   CREATE_OBJECT_PROPERTY,
+                   DELETE_OBJECT_PROPERTY,
+                   CREATE_DATA_PROPERTY,
+                   DELETE_DATA_PROPERTY,
+                   CREATE_ANNOTATION_PROPERTY,
+                   DELETE_ANNOTATION_PROPERTY,
+                   CREATE_INDIVIDUAL,
+                   DELETE_INDIVIDUAL,
+                   CREATE_DATATYPE,
+                   DELETE_DATATYPE),
+
+    PROJECT_MANAGER(PROJECT_EDITOR,
+                    SAVE_DEFAULT_PROJECT_LAYOUT),
+
+
+    // Roles that relate to the UI
+
+    CAN_VIEW(PROJECT_VIEWER, ISSUE_VIEWER),
+
+    CAN_COMMENT(CAN_VIEW, ISSUE_CREATOR),
+
+    CAN_EDIT(PROJECT_EDITOR, CAN_COMMENT),
+
+    CAN_MANAGE(CAN_EDIT, PROJECT_MANAGER, ISSUE_MANAGER)
+
+    ;
+
+
+
+
+
+
+    private final RoleId roleId;
+
+    private final ImmutableList<BuiltInRole> parents;
+
+    private final ImmutableList<BuiltInAction> actions;
+
+
+
+    BuiltInRole(ImmutableList<BuiltInRole> parents, ImmutableList<BuiltInAction> actions) {
+        this.roleId = new RoleId(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name()));
+        this.parents = parents;
+        this.actions = actions;
+    }
+
+    BuiltInRole(BuiltInAction... actions) {
+        this(ImmutableList.of(), ImmutableList.copyOf(Arrays.asList(actions)));
+    }
+
+
+    BuiltInRole(BuiltInRole parentRole, BuiltInAction... actions) {
+        this(ImmutableList.of(parentRole), ImmutableList.copyOf(Arrays.asList(actions)));
+    }
+
+    BuiltInRole(BuiltInRole parentRole1, BuiltInRole parentRole2, BuiltInAction... actions) {
+        this(ImmutableList.of(parentRole1, parentRole2), ImmutableList.copyOf(Arrays.asList(actions)));
+    }
+
+    BuiltInRole(BuiltInRole parentRole1, BuiltInRole parentRole2, BuiltInRole parentRole3, BuiltInAction... actions) {
+        this(ImmutableList.of(parentRole1, parentRole2, parentRole3), ImmutableList.copyOf(Arrays.asList(actions)));
+    }
+
+    public RoleId getRoleId() {
+        return roleId;
+    }
+
+    public ImmutableList<BuiltInRole> getParents() {
+        return parents;
+    }
+
+    public ImmutableList<BuiltInAction> getActions() {
+        return actions;
+    }
+}
