@@ -103,7 +103,7 @@ public class FormPresenter {
         if (!editorFactory.isPresent()) {
             return Optional.<FormElementEditor>absent();
         }
-        return Optional.<FormElementEditor>of(
+        return Optional.of(
                 new FormElementEditorImpl(
                         editorFactory.get(),
                         descriptor.getRepeatability())
@@ -112,48 +112,42 @@ public class FormPresenter {
 
     private Optional<ValueEditorFactory<FormDataValue>> getValueEditorFactory(final FormFieldDescriptor formFieldDescriptor) {
         if (formFieldDescriptor.getAssociatedFieldTypeId().equals(StringFieldDescriptor.getFieldTypeId())) {
-            return Optional.<ValueEditorFactory<FormDataValue>>of(
-                    new ValueEditorFactory<FormDataValue>() {
-                        @Override
-                        public ValueEditor<FormDataValue> createEditor() {
-                            StringFieldDescriptor descriptor = (StringFieldDescriptor) formFieldDescriptor;
-                            StringFieldEditor stringFieldEditor = new StringFieldEditor(primitiveDataEditorProvider);
-                            stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
-                            stringFieldEditor.setLineMode(descriptor.getLineMode());
-                            stringFieldEditor.setStringType(descriptor.getStringType());
-                            if (!descriptor.getPattern().isEmpty()) {
-                                stringFieldEditor.setPattern(descriptor.getPattern());
-                                stringFieldEditor.setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage());
-                            }
-                            return stringFieldEditor;
+            return Optional.of(
+                    () -> {
+                        StringFieldDescriptor descriptor = (StringFieldDescriptor) formFieldDescriptor;
+                        StringFieldEditor stringFieldEditor = new StringFieldEditor(primitiveDataEditorProvider);
+                        stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
+                        stringFieldEditor.setLineMode(descriptor.getLineMode());
+                        stringFieldEditor.setStringType(descriptor.getStringType());
+                        if (!descriptor.getPattern().isEmpty()) {
+                            stringFieldEditor.setPattern(descriptor.getPattern());
+                            stringFieldEditor.setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage());
                         }
+                        return stringFieldEditor;
                     }
             );
         }
         else if (formFieldDescriptor.getAssociatedFieldTypeId().equals(ChoiceFieldDescriptor.getFieldTypeId())) {
-            return Optional.<ValueEditorFactory<FormDataValue>>of(
-                    new ValueEditorFactory<FormDataValue>() {
-                        @Override
-                        public ValueEditor<FormDataValue> createEditor() {
-                            ChoiceFieldDescriptor descriptor = (ChoiceFieldDescriptor) formFieldDescriptor;
-                            ChoiceFieldEditor editor;
-                            if (descriptor.getType() == ChoiceFieldType.RADIO_BUTTON) {
-                                editor = new ChoiceFieldRadioButtonEditor();
-                            }
-                            else if (descriptor.getType() == ChoiceFieldType.CHECK_BOX) {
-                                editor = new ChoiceFieldCheckBoxEditor();
-                            }
-                            else {
-                                editor = new ChoiceFieldComboBoxEditor();
-                            }
-                            editor.setChoices(descriptor.getChoiceDescriptors());
-                            return editor;
+            return Optional.of(
+                    () -> {
+                        ChoiceFieldDescriptor descriptor = (ChoiceFieldDescriptor) formFieldDescriptor;
+                        ChoiceFieldEditor editor;
+                        if (descriptor.getType() == ChoiceFieldType.RADIO_BUTTON) {
+                            editor = new ChoiceFieldRadioButtonEditor();
                         }
+                        else if (descriptor.getType() == ChoiceFieldType.CHECK_BOX) {
+                            editor = new ChoiceFieldCheckBoxEditor();
+                        }
+                        else {
+                            editor = new ChoiceFieldComboBoxEditor();
+                        }
+                        editor.setChoices(descriptor.getChoiceDescriptors());
+                        return editor;
                     }
             );
         }
         else if (formFieldDescriptor.getAssociatedFieldTypeId().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
-            return Optional.<ValueEditorFactory<FormDataValue>>of(
+            return Optional.of(
                     () -> new ClassNameFieldEditor(projectId, primitiveDataEditorProvider)
             );
         }
