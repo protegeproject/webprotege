@@ -16,10 +16,4 @@ public interface LoggedInUserProjectPermissionChecker {
     void hasPermission(ActionId actionId, DispatchServiceCallback<Boolean> callback);
 
     void hasPermission(BuiltInAction action, Consumer<Boolean> callback);
-
-    void hasWritePermission(DispatchServiceCallback<Boolean> callback);
-
-    void hasReadPermission(DispatchServiceCallback<Boolean> callback);
-
-    void hasCommentPermission(DispatchServiceCallback<Boolean> callback);
 }

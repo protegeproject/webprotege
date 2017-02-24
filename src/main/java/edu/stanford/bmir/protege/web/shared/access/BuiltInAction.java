@@ -37,9 +37,7 @@ public enum BuiltInAction {
 
     REVERT_CHANGES,
 
-    ADD_AXIOM,
-
-    REMOVE_AXIOM,
+    EDIT_ONTOLOGY,
 
     EDIT_ONTOLOGY_ANNOTATIONS,
 

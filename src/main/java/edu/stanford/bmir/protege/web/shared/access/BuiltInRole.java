@@ -68,8 +68,7 @@ public enum BuiltInRole {
                      SET_OBJECT_COMMENT_STATUS),
 
     PROJECT_EDITOR(OBJECT_COMMENTER,
-                   ADD_AXIOM,
-                   REMOVE_AXIOM,
+                   EDIT_ONTOLOGY,
                    EDIT_ONTOLOGY_ANNOTATIONS,
                    CREATE_CLASS,
                    DELETE_CLASS,

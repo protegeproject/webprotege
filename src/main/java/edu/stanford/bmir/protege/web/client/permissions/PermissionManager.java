@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Matthew Horridge
  */
 @Singleton
-public class PermissionManager implements HasDispose, PermissionChecker {
+public class PermissionManager implements HasDispose {
 
     private final EventBus eventBus;
 
@@ -111,49 +111,6 @@ public class PermissionManager implements HasDispose, PermissionChecker {
                                                callback.handleErrorFinally(throwable);
                                            }
                                        });
-    }
-
-    private void hasPermission(final UserId userId, final ProjectId projectId, final Permission permission, final DispatchServiceCallback<Boolean> callback) {
-        final UserIdProjectIdKey key = new UserIdProjectIdKey(userId, projectId);
-        PermissionsSet cachedPermissionSet = cache.get(key);
-        if(cachedPermissionSet != null) {
-            GWT.log("[PermissionManager] Using cached value for key: " + key);
-            callback.onSuccess(cachedPermissionSet.contains(permission));
-            return;
-        }
-        dispatchServiceManager.execute(new GetPermissionsAction(projectId, userId), new DispatchServiceCallback<GetPermissionsResult>() {
-            @Override
-            public void handleSubmittedForExecution() {
-                GWT.log("[PermissionManager] Retrieving permissions from the server for key: " + key);
-            }
-
-            @Override
-            public void handleSuccess(GetPermissionsResult result) {
-                cache.put(key, result.getPermissionsSet());
-                boolean hasPermission = result.getPermissionsSet().contains(permission);
-                callback.onSuccess(hasPermission);
-            }
-
-            @Override
-            public void handleErrorFinally(Throwable throwable) {
-                callback.handleErrorFinally(throwable);
-            }
-        });
-    }
-
-    @Override
-    public void hasWritePermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback) {
-        hasPermission(userId, projectId, Permission.getWritePermission(), callback);
-    }
-
-    @Override
-    public void hasReadPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback) {
-        hasPermission(userId, projectId, Permission.getReadPermission(), callback);
-    }
-
-    @Override
-    public void hasCommentPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback) {
-        hasPermission(userId, projectId, Permission.getCommentPermission(), callback);
     }
 
     public void dispose() {

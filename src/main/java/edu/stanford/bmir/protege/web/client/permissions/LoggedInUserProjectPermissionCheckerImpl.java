@@ -52,37 +52,4 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
             }
         });
     }
-
-    @Override
-    public void hasWritePermission(DispatchServiceCallback<Boolean> callback) {
-        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        if(!projectId.isPresent()) {
-            callback.onSuccess(false);
-            return;
-        }
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        permissionManager.hasWritePermissionForProject(userId, projectId.get(), callback);
-    }
-
-    @Override
-    public void hasReadPermission(DispatchServiceCallback<Boolean> callback) {
-        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        if(!projectId.isPresent()) {
-            callback.onSuccess(false);
-            return;
-        }
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        permissionManager.hasReadPermissionForProject(userId, projectId.get(), callback);
-    }
-
-    @Override
-    public void hasCommentPermission(DispatchServiceCallback<Boolean> callback) {
-        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        if(!projectId.isPresent()) {
-            callback.onSuccess(false);
-            return;
-        }
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        permissionManager.hasCommentPermissionForProject(userId, projectId.get(), callback);
-    }
 }

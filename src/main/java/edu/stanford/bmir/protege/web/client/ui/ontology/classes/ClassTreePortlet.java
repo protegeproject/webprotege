@@ -78,6 +78,7 @@ import java.util.*;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -705,14 +706,12 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         if (oldParent.equals(newParent)) {
             return;
         }
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean hasPermission) {
-                if (hasPermission) {
-                    OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
-                }
-            }
-        });
+        permissionChecker.hasPermission(EDIT_ONTOLOGY,
+                                        canMove -> {
+                                            if (canMove) {
+                                                OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
+                                            }
+                                        });
 
     }
 
