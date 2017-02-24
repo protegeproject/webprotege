@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
@@ -30,6 +31,7 @@ import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
@@ -108,25 +110,10 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(dispatchServiceManager,
                                                                                        projectId, this, this));
         editor.setApplyChangesHandler(applyChangesActionHandler);
-        management.addProjectEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
-            @Override
-            public void handleUserLoggedIn(UserLoggedInEvent event) {
-                updateState();
-            }
-        });
-        management.addProjectEventHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
-            @Override
-            public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                updateState();
-            }
-        });
+        management.addProjectEventHandler(UserLoggedInEvent.TYPE, event -> updateState());
+        management.addProjectEventHandler(UserLoggedOutEvent.TYPE, event -> updateState());
         management.addProjectEventHandler(ON_PERMISSIONS_CHANGED, event -> updateState());
-        management.addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
-            @Override
-            public void handleProjectChanged(ProjectChangedEvent event) {
-                refreshIfPristine();
-            }
-        });
+        management.addProjectEventHandler(ProjectChangedEvent.TYPE, event -> refreshIfPristine());
         updateState();
     }
 
@@ -169,15 +156,9 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
 
     private void updateState() {
-        UserId userId = loggedInUserProvider.getCurrentUserId();
         setEnabled(false);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean hasWritePermission) {
-                setEnabled(hasWritePermission);
-            }
-        });
-
+        permissionChecker.hasPermission(EDIT_ONTOLOGY,
+                                        canEdit -> setEnabled(canEdit));
     }
 
 

@@ -28,8 +28,6 @@ import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.login.*;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
-import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.place.PlaceHistoryHandlerProvider;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
@@ -121,12 +119,6 @@ public class ClientApplicationModule {
     @Singleton
     ActivityManager provideActivityManager(WebProtegeActivityManager manager) {
         return manager;
-    }
-
-    @Provides
-    @Singleton
-    PermissionChecker providesPermissionChecker(PermissionManager permissionManager) {
-        return permissionManager;
     }
 
     @Provides

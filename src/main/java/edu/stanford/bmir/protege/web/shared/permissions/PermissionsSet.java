@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PermissionsSet implements Serializable, Iterable<Permission> {
 
-    private static final PermissionsSet EMPTY_SET = new PermissionsSet(Collections.<Permission>emptySet());
+    private static final PermissionsSet EMPTY_SET = new PermissionsSet(Collections.emptySet());
 
     private Set<Permission> permissions;
 

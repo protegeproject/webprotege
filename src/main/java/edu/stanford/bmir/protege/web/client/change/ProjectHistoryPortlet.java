@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
@@ -22,6 +23,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.ProjectHistory",
@@ -56,12 +58,7 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
         FilterView filterView = new FilterViewImpl();
         filterView.addFilter(SHOW_DETAILS_FILTER, FilterSetting.ON);
-        filterView.addValueChangeHandler(new ValueChangeHandler<FilterSet>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<FilterSet> event) {
-                changeListView.setDetailsVisible(event.getValue().hasSetting(SHOW_DETAILS_FILTER, FilterSetting.ON));
-            }
-        });
+        filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue().hasSetting(SHOW_DETAILS_FILTER, FilterSetting.ON)));
         setFilter(filterView);
         reload();
     }
@@ -76,14 +73,12 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
     private void reload() {
         refreshAction.setEnabled(false);
-        permissionChecker.hasReadPermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean result) {
-                ProjectId projectId = getProjectId();
-                presenter.setRevertChangesVisible(result);
-                presenter.setChangesForProject(projectId);
-            }
-        });
+        permissionChecker.hasPermission(VIEW_CHANGES,
+                                        canViewChanges -> {
+                                            ProjectId projectId = getProjectId();
+                                            presenter.setRevertChangesVisible(canViewChanges);
+                                            presenter.setChangesForProject(projectId);
+                                        });
 
     }
 }

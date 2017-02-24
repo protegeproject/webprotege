@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
@@ -25,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
@@ -203,17 +205,8 @@ public class EditorPresenter implements HasDispose {
         if (editorHolder.getWidget() instanceof HasEnabled) {
             final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
             hasEnabled.setEnabled(false);
-            permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-                @Override
-                public void handleSuccess(Boolean result) {
-                    hasEnabled.setEnabled(result);
-                }
-
-                @Override
-                public void handleErrorFinally(Throwable throwable) {
-                    GWT.log("[EditorPresenter] An error occurred updating the permission based items");
-                }
-            });
+            permissionChecker.hasPermission(EDIT_ONTOLOGY,
+                                            canEdit -> hasEnabled.setEnabled(canEdit));
         }
     }
 
