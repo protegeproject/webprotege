@@ -47,6 +47,8 @@ import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -74,6 +76,8 @@ import javax.inject.Provider;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -1013,14 +1017,13 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     public void updateButtonStates() {
         createClassAction.setEnabled(false);
         deleteClassAction.setEnabled(false);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean result) {
-                createClassAction.setEnabled(result);
-                deleteClassAction.setEnabled(result);
-            }
-        });
-        watchClassAction.setEnabled(!loggedInUserProvider.getCurrentUserId().isGuest());
+        watchClassAction.setEnabled(false);
+        permissionChecker.hasPermission(CREATE_CLASS,
+                                        canCreateClass -> createClassAction.setEnabled(canCreateClass));
+        permissionChecker.hasPermission(DELETE_CLASS,
+                                        canDeleteClass -> deleteClassAction.setEnabled(canDeleteClass));
+        permissionChecker.hasPermission(BuiltInAction.WATCH_CHANGES,
+                                        canWatchChanges -> watchClassAction.setEnabled(canWatchChanges));
     }
 
     public String getNodeClsName(final Node node) {

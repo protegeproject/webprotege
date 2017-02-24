@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
@@ -35,6 +36,9 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_INDIVIDUAL;
 
 /**
  * Author: Matthew Horridge<br>
@@ -175,13 +179,8 @@ public class IndividualsListPresenter {
     private void updateButtonStates() {
         createAction.setEnabled(false);
         deleteAction.setEnabled(false);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean result) {
-                createAction.setEnabled(result);
-                deleteAction.setEnabled(result);
-            }
-        });
+        permissionChecker.hasPermission(CREATE_INDIVIDUAL, canCreate -> createAction.setEnabled(canCreate));
+        permissionChecker.hasPermission(DELETE_INDIVIDUAL, canDelete -> deleteAction.setEnabled(canDelete));
     }
 
 }

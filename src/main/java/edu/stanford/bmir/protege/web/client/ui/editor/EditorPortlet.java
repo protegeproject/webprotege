@@ -21,8 +21,7 @@ import javax.inject.Inject;
  */
 @Portlet(id = "portlets.EntityEditor",
         title = "Entity Editor",
-        tooltip = "Displays a simple property-value oriented description of the selected class, property or individual " +
-                "for viewing and editing.")
+        tooltip = "Displays a simple property-value oriented description of the selected class, property or individual for viewing and editing.")
 public class EditorPortlet extends AbstractWebProtegePortlet {
 
     private EditorPresenter editorPresenter;

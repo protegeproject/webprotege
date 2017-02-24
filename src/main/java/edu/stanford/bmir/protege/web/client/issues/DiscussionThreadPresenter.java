@@ -2,10 +2,8 @@ package edu.stanford.bmir.protege.web.client.issues;
 
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -20,6 +18,7 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
@@ -108,16 +107,19 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void updateCommentView(CommentView commentView) {
-//        commentView.setDeleteButtonVisible(userIsCommentCreator);
         final boolean userIsCommentCreator = commentView.getCreatedBy().equals(Optional.of(loggedInUserProvider.getCurrentUserId()));
-        commentView.setEditButtonVisible(userIsCommentCreator);
+        if (userIsCommentCreator) {
+            permissionChecker.hasPermission(EDIT_OWN_OBJECT_COMMENT,
+                                            canEditOwnComment -> commentView.setEditButtonVisible(canEditOwnComment));
+        }
+        else {
+            permissionChecker.hasPermission(EDIT_ANY_OBJECT_COMMENT,
+                                            canEditAnyComment -> commentView.setEditButtonVisible(canEditAnyComment));
+        }
+
         commentView.setReplyButtonVisible(false);
-        permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean canComment) {
-                commentView.setReplyButtonVisible(canComment);
-            }
-        });
+        permissionChecker.hasPermission(CREATE_OBJECT_COMMENT,
+                                        canComment -> commentView.setReplyButtonVisible(canComment));
     }
 
 
@@ -130,9 +132,13 @@ public class DiscussionThreadPresenter implements HasDispose {
         currentThreadId = Optional.of(checkNotNull(thread).getId());
         view.clear();
         commentViewMap.clear();
-        for (Comment comment : thread.getComments()) {
-            view.setStatus(thread.getStatus());
+        view.setStatus(thread.getStatus());
+        permissionChecker.hasPermission(SET_OBJECT_COMMENT_STATUS, canSetStatus -> {
+            view.setStatusVisible(canSetStatus);
             view.setStatusChangedHandler(() -> handleToggleStatus(thread.getId()));
+        });
+
+        for (Comment comment : thread.getComments()) {
             addCommentView(thread.getId(), comment);
         }
     }

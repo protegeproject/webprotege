@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -33,6 +34,9 @@ public class GetPermissionsActionHandler_TestCase {
     private ProjectPermissionsManager permissionManager;
 
     @Mock
+    private AccessManager accessManager;
+
+    @Mock
     private PermissionsSet permissionsSet;
 
     @Mock
@@ -44,9 +48,10 @@ public class GetPermissionsActionHandler_TestCase {
     @Mock
     private GetPermissionsAction action;
 
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetPermissionsActionHandler(permissionManager);
+        handler = new GetPermissionsActionHandler(permissionManager, accessManager);
         when(permissionManager.getPermissionsSet(projectId, userId)).thenReturn(permissionsSet);
 
         when(action.getUserId()).thenReturn(userId);

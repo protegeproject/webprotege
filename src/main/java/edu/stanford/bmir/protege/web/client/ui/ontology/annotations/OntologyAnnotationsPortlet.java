@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotati
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -86,12 +87,8 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
 
     private void updateState() {
         annotationsView.setEnabled(false);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean result) {
-                annotationsView.setEnabled(result);
-            }
-        });
+        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY_ANNOTATIONS,
+                                        canEdit -> annotationsView.setEnabled(canEdit));
     }
 
     @Override

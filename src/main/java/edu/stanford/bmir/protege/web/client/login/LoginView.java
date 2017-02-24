@@ -49,4 +49,6 @@ public interface LoginView extends IsWidget, RequiresResize, ProvidesResize {
     void setForgotPasswordHandler(@Nonnull ForgotPasswordHandler handler);
 
     void setSignUpForAccountHandler(@Nonnull SignUpForAccountHandler handler);
+
+    void setSignUpForAccountVisible(boolean visible);
 }

@@ -20,6 +20,8 @@ public interface DiscussionThreadView extends IsWidget, HasEnabled {
     @Nonnull
     Status getStatus();
 
+    void setStatusVisible(boolean visible);
+
     void addCommentView(@Nonnull CommentView commentView);
 
     void setStatusChangedHandler(@Nonnull StatusChangedHandler handler);

@@ -5,7 +5,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
 
 import javax.inject.Inject;
 
@@ -21,8 +24,12 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
 
     private static ChangeListViewImplUiBinder ourUiBinder = GWT.create(ChangeListViewImplUiBinder.class);
 
+    private final ForbiddenView forbiddenView;
+
     @Inject
-    public ChangeListViewImpl() {
+    public ChangeListViewImpl(ForbiddenView forbiddenView) {
+        this.forbiddenView = forbiddenView;
+        forbiddenView.setSubMessage("You do not have permission to view changes for this project");
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -59,5 +66,13 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
             }
         }
         this.detailsVisible = detailsVisible;
+    }
+
+    @Override
+    public void setViewChangesAllowed(boolean viewChangesAllowed) {
+        rootElement.clear();
+        if(!viewChangesAllowed) {
+            rootElement.add(forbiddenView);
+        }
     }
 }

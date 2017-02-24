@@ -30,7 +30,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
@@ -51,6 +50,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
 @Portlet(id = "portlets.PropertyHierarchy",
@@ -516,13 +517,10 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     public void updateButtonStates() {
         createAction.setEnabled(false);
         deleteAction.setEnabled(false);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean hasPermission) {
-                createAction.setEnabled(hasPermission);
-                deleteAction.setEnabled(hasPermission);
-            }
-        });
+        permissionChecker.hasPermission(CREATE_PROPERTY,
+                                        hasPermission -> createAction.setEnabled(hasPermission));
+        permissionChecker.hasPermission(DELETE_PROPERTY,
+                                        hasPermission -> deleteAction.setEnabled(hasPermission));
     }
 
     public void setTreeNodeIcon(TreeNode node) {

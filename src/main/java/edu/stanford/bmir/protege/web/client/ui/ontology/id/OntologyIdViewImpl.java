@@ -79,13 +79,15 @@ public class OntologyIdViewImpl extends Composite implements OntologyIdView, Has
         if(object.isAnonymous()) {
             return;
         }
-        ontologyIRIField.setValue(object.getOntologyIRI().toString());
-        final Optional<IRI> versionIRI = object.getVersionIRI();
-        if(versionIRI.isPresent()) {
-            versionIRIField.setValue(versionIRI.toString());
-        }
-        else {
-            versionIRIField.setText("");
+        if (object.getOntologyIRI().isPresent()) {
+            ontologyIRIField.setValue(object.getOntologyIRI().get().toString());
+            final Optional<IRI> versionIRI = object.getVersionIRI();
+            if(versionIRI.isPresent()) {
+                versionIRIField.setValue(versionIRI.get().toString());
+            }
+            else {
+                versionIRIField.setText("");
+            }
         }
     }
 

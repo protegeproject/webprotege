@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
@@ -62,9 +63,12 @@ public class CreateNewProjectActionHandler_TestCase {
     @Mock
     private RequestContext requestContext;
 
+    @Mock
+    private AccessManager accessManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, projectSharingSettingsManager);
+        handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, projectSharingSettingsManager, accessManager);
         when(projectManager.createNewProject(newProjectSettings)).thenReturn(project);
         when(executionContext.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("User_Name");

@@ -39,6 +39,11 @@
     background: #bc4d26;
 }
 
+.btn-b:disabled {
+    background: lightgray;
+    cursor: default;
+}
+
 .btn-e {
     background: #6c1a91;
 }
@@ -143,17 +148,16 @@
     color: dodgerblue;
 }
 
-.toolbarButton:hover {
+.toolbarButton:hover:enabled {
     border: solid 1px #464646;
     background: #707070;
     color: #ffffff;
 }
 
-.toolbarButton:active {
+.toolbarButton:active:enabled {
     border: solid 1px #464646;
     background: #424242;
     color: #ffffff;
-
 }
 
 .toolbarButton:disabled {

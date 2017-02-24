@@ -10,6 +10,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
@@ -25,6 +26,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.inject.Inject;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REVERT_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -36,17 +40,22 @@ public class ChangeListViewPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     private boolean revertChangesVisible = false;
 
     private boolean downloadVisible = false;
 
     private Optional<ProjectId> projectId = Optional.absent();
 
+
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
                                    EventBus eventBus,
-                                   DispatchServiceManager dispatchServiceManager) {
+                                   DispatchServiceManager dispatchServiceManager,
+                                   LoggedInUserProjectPermissionChecker permissionChecker) {
         this.view = view;
+        this.permissionChecker = permissionChecker;
         this.dispatchServiceManager = dispatchServiceManager;
     }
 
@@ -65,46 +74,31 @@ public class ChangeListViewPresenter {
     public void setChangesForProject(ProjectId projectId) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()),
-                                       new DispatchServiceCallback<GetProjectChangesResult>() {
-                                           @Override
-                                           public void handleSuccess(GetProjectChangesResult result) {
-                                               fillView(result.getChanges(),
-                                                        SubjectDisplay.DISPLAY_SUBJECT,
-                                                        revertChangesVisible,
-                                                        downloadVisible);
-                                           }
-                                       });
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.absent()),
+                                       result -> fillView(result.getChanges(),
+                                                          SubjectDisplay.DISPLAY_SUBJECT,
+                                                          revertChangesVisible,
+                                                          downloadVisible));
     }
 
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
         this.projectId = Optional.of(projectId);
         view.clear();
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)),
-                                       new DispatchServiceCallback<GetProjectChangesResult>() {
-                                           @Override
-                                           public void handleSuccess(GetProjectChangesResult result) {
-                                               fillView(result.getChanges(),
-                                                        SubjectDisplay.DO_NOT_DISPLAY_SUBJECT,
-                                                        revertChangesVisible,
-                                                        downloadVisible);
-                                           }
-                                       });
+                                       result -> fillView(result.getChanges(),
+                                                          SubjectDisplay.DO_NOT_DISPLAY_SUBJECT,
+                                                          revertChangesVisible,
+                                                          downloadVisible));
     }
 
     public void setChangesForWatches(ProjectId projectId, UserId userId) {
         this.projectId = Optional.of(projectId);
         view.clear();
         dispatchServiceManager.execute(new GetWatchedEntityChangesAction(projectId, userId),
-                                       new DispatchServiceCallback<GetWatchedEntityChangesResult>() {
-                                           @Override
-                                           public void handleSuccess(GetWatchedEntityChangesResult result) {
-                                               fillView(result.getChanges(),
-                                                        SubjectDisplay.DISPLAY_SUBJECT,
-                                                        revertChangesVisible,
-                                                        downloadVisible);
-                                           }
-                                       });
+                                       result -> fillView(result.getChanges(),
+                                                      SubjectDisplay.DISPLAY_SUBJECT,
+                                                      revertChangesVisible,
+                                                      downloadVisible));
     }
 
     private void fillView(ImmutableList<ProjectChange> changes,
@@ -112,9 +106,25 @@ public class ChangeListViewPresenter {
                           boolean revertChangesVisible,
                           boolean downloadVisible) {
         view.clear();
+        permissionChecker.hasPermission(VIEW_CHANGES,
+                                        viewChanges -> {
+                                            if(viewChanges) {
+                                                insertChangesIntoView(changes,
+                                                                      subjectDisplay,
+                                                                      revertChangesVisible,
+                                                                      downloadVisible);
+                                            }
+                                            else {
+                                                view.setViewChangesAllowed(false);
+                                            }
+                                        });
+    }
+
+    private void insertChangesIntoView(ImmutableList<ProjectChange> changes,
+                                       SubjectDisplay subjectDisplay,
+                                       boolean revertChangesVisible, boolean downloadVisible) {
         List<ProjectChange> projectChanges = new ArrayList<>(changes);
         Collections.sort(projectChanges, Ordering.compound(Arrays.asList(
-//                new ProjectChangeSubjectsComparator(),
                 Ordering.from(new ProjectChangeTimestampComparator()).reverse())));
         long previousTimeStamp = 0;
         for (final ProjectChange projectChange : projectChanges) {
@@ -128,33 +138,24 @@ public class ChangeListViewPresenter {
             ChangeDetailsView view = new ChangeDetailsViewImpl();
             if (subjectDisplay == SubjectDisplay.DISPLAY_SUBJECT) {
                 List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
-                Collections.sort(subjects, new Comparator<OWLEntityData>() {
-                    @Override
-                    public int compare(OWLEntityData o1, OWLEntityData o2) {
-                        return o1.compareToIgnoreCase(o2);
-                    }
-                });
+                Collections.sort(subjects, (o1, o2) -> o1.compareToIgnoreCase(o2));
                 view.setSubjects(subjects);
             }
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());
             view.setHighLevelDescription(projectChange.getSummary());
-            view.setRevertRevisionVisible(revertChangesVisible);
-            view.setRevertRevisionHandler(new RevertRevisionHandler() {
-                @Override
-                public void handleRevertRevision(RevisionNumber revisionNumber) {
-                    ChangeListViewPresenter.this.handleRevertRevision(projectChange);
-                }
-            });
-            view.setDownloadRevisionHandler(new DownloadRevisionHandler() {
-                @Override
-                public void handleDownloadRevision(RevisionNumber revisionNumber) {
-                    ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
-                            projectId.get(),
-                            revisionNumber,
-                            DownloadFormatExtension.owl);
-                    downloader.download();
-                }
+            view.setRevertRevisionVisible(false);
+            if(revertChangesVisible) {
+                permissionChecker.hasPermission(REVERT_CHANGES,
+                                                canRevertChanges -> view.setRevertRevisionVisible(canRevertChanges));
+            }
+            view.setRevertRevisionHandler(revisionNumber -> ChangeListViewPresenter.this.handleRevertRevision(projectChange));
+            view.setDownloadRevisionHandler(revisionNumber -> {
+                ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
+                        projectId.get(),
+                        revisionNumber,
+                        DownloadFormatExtension.owl);
+                downloader.download();
             });
             view.setDownloadRevisionVisible(downloadVisible);
             Page<DiffElement<String, SafeHtml>> page = projectChange.getDiff();

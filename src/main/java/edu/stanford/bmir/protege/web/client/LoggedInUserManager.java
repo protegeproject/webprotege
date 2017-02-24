@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSes
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
@@ -19,7 +21,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +41,8 @@ public class LoggedInUserManager implements LoggedInUserProvider {
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
+
+    private final Set<ActionId> applicationActions = new HashSet<>();
 
     private UserId userId = UserId.getGuest();
 
@@ -102,9 +109,24 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         dispatchServiceManager.execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
             @Override
             public void handleSuccess(LogOutUserResult logOutUserResult) {
-                replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails());
+                replaceUserAndBroadcastChanges(new UserInSession(
+                        UserDetails.getGuestUserDetails(),
+                        Collections.emptySet()
+                ));
             }
         });
+    }
+
+    public Set<ActionId> getLoggedInUserApplicationActions() {
+        return applicationActions;
+    }
+
+    public boolean isAllowedApplicationAction(ActionId actionId) {
+        return applicationActions.contains(actionId);
+    }
+
+    public boolean isAllowedApplicationAction(BuiltInAction action) {
+        return isAllowedApplicationAction(action.getActionId());
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
@@ -118,9 +140,9 @@ public class LoggedInUserManager implements LoggedInUserProvider {
 
             @Override
             public void handleSuccess(GetCurrentUserInSessionResult result) {
-                replaceUserAndBroadcastChanges(result.getUserDetails());
+                replaceUserAndBroadcastChanges(result.getUserInSession());
                 if (callback.isPresent()) {
-                    callback.get().onSuccess(result.getUserDetails());
+                    callback.get().onSuccess(result.getUserInSession().getUserDetails());
                 }
             }
 
@@ -130,14 +152,15 @@ public class LoggedInUserManager implements LoggedInUserProvider {
     private void readUserInSession() {
         UserInSessionDecoder decoder = new UserInSessionDecoder();
         UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
-        UserDetails userDetails = userInSession.getUserDetails();
-        replaceUserAndBroadcastChanges(userDetails);
+        replaceUserAndBroadcastChanges(userInSession);
     }
 
-    private void replaceUserAndBroadcastChanges(UserDetails newUserDetails) {
+    private void replaceUserAndBroadcastChanges(UserInSession userInSession) {
         UserId previousUserId = this.userId;
-        this.userId = newUserDetails.getUserId();
-        this.userDetails = newUserDetails;
+        this.userId = userInSession.getUserDetails().getUserId();
+        this.userDetails = userInSession.getUserDetails();
+        this.applicationActions.clear();
+        this.applicationActions.addAll(userInSession.getAllowedApplicationActions());
         if(userId.isGuest()) {
             eventBus.fireEvent(new UserLoggedOutEvent(previousUserId).asGWTEvent());
         }

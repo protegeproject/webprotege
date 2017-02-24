@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.access.RoleId;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -52,8 +53,8 @@ public interface AccessManager {
      * @return A collection of action ids that belong to the role closure of the specified subject and resource pair.
      */
     @Nonnull
-    Collection<ActionId> getActionClosure(@Nonnull Subject subject,
-                                          @Nonnull Resource resource);
+    Set<ActionId> getActionClosure(@Nonnull Subject subject,
+                                   @Nonnull Resource resource);
 
     /**
      * Tests to see if the specified subject has permission to execute the specified action on the specified resource.

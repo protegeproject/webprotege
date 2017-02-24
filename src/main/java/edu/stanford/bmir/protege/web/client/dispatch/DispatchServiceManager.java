@@ -165,7 +165,7 @@ public class DispatchServiceManager {
             execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
                 @Override
                 public void handleSuccess(GetCurrentUserInSessionResult result) {
-                    if(result.getUserDetails().getUserId().isGuest()) {
+                    if(result.getUserInSession().getUserDetails().getUserId().isGuest()) {
                         signInRequiredHandler.handleSignInRequired();
                     }
                     else {

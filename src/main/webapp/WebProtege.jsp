@@ -12,6 +12,12 @@
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
 <%@ page import="java.io.IOException" %>
 <%@ page import="java.util.Optional" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.access.AccessManager" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.access.ActionId" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.access.ApplicationResource" %>
+<%@ page import="java.util.HashSet" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -78,6 +84,11 @@
         out.print(webProtegeProperties.getApplicationName());
     }
 
+    private AccessManager getAccessManager() {
+        ApplicationComponent component = getWebProtegeComponent();
+        return component.getAccessManager();
+    }
+
     private void writeClientApplicationProperties(JspWriter out) throws IOException {
         WebProtegeProperties webProtegeProperties = getWebProtegeProperties();
         ClientApplicationProperties props = webProtegeProperties.getClientApplicationProperties();
@@ -90,25 +101,22 @@
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
         UserId userId = webProtegeSession.getUserInSession();
         final UserInSession userInSession;
+        final UserDetails userDetails;
         if(userId.isGuest()) {
-            userInSession = new UserInSession(
-                UserDetails.getGuestUserDetails()
-            );
+            userDetails = UserDetails.getGuestUserDetails();
         }
         else {
             UserDetailsManager userDetailsManager = getWebProtegeComponent().getUserDetailsManager();
             Optional<String> email = userDetailsManager.getEmail(userId);
             if(email.isPresent()) {
-                userInSession = new UserInSession(
-                        UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.of(email.get()))
-                );
+                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.of(email.get()));
             }
             else {
-                userInSession = new UserInSession(
-                        UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.<String>absent())
-                );
+                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.<String>absent());
             }
         }
+        Set<ActionId> allowedApplicationActions = new HashSet<>(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));
+        userInSession = new UserInSession(userDetails, allowedApplicationActions);
         ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
                 .writeVariableDeclaration(userInSession, out);
     }
