@@ -91,6 +91,11 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
     }
 
     @Override
+    public void setStatusVisible(boolean visible) {
+        statusLabel.setVisible(visible);
+    }
+
+    @Override
     public void setStatusChangedHandler(@Nonnull StatusChangedHandler handler) {
         this.statusChangedHandler = checkNotNull(handler);
     }

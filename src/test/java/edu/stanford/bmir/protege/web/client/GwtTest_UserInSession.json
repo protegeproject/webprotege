@@ -6,5 +6,8 @@
     "X",
     "Y",
     "Z"
+  ],
+  "allowedActions" : [
+    "MyAction"
   ]
 }

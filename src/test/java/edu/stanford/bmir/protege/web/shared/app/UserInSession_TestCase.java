@@ -1,74 +1,93 @@
+
 package edu.stanford.bmir.protege.web.shared.app;
 
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
 
-/**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 29/12/14
- */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class UserInSession_TestCase {
 
-
     private UserInSession userInSession;
-
-    private UserInSession otherUserInSession;
 
     @Mock
     private UserDetails userDetails;
 
+    private Set<ActionId> allowedActions = ImmutableSet.of(mock(ActionId.class));
+
     @Before
-    public void setUp() throws Exception {
-        userInSession = new UserInSession(userDetails);
-        otherUserInSession = new UserInSession(userDetails);
+    public void setUp() {
+        userInSession = new UserInSession(userDetails, allowedActions);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIsUserDetailsIsNull() {
-        new UserInSession(null);
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = java.lang.NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_userDetails_IsNull() {
+        new UserInSession(null, allowedActions);
+    }
+
+    @Test
+    public void shouldReturnSupplied_userDetails() {
+        assertThat(userInSession.getUserDetails(), is(this.userDetails));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = java.lang.NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_allowedActions_IsNull() {
+        new UserInSession(userDetails, null);
+    }
+
+    @Test
+    public void shouldReturnSupplied_allowedActions() {
+        assertThat(userInSession.getAllowedApplicationActions(), is(this.allowedActions));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(userInSession, is(equalTo(userInSession)));
+        assertThat(userInSession, is(userInSession));
     }
 
     @Test
+    @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(userInSession, is(not(equalTo(null))));
+        assertThat(userInSession.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(userInSession, is(equalTo(otherUserInSession)));
+        assertThat(userInSession, is(new UserInSession(userDetails, allowedActions)));
     }
 
     @Test
-    public void shouldHaveSameHashCodeAsOther() {
-        assertThat(userInSession.hashCode(), is(otherUserInSession.hashCode()));
+    public void shouldNotBeEqualToOtherThatHasDifferent_userDetails() {
+        assertThat(userInSession, is(not(new UserInSession(mock(UserDetails.class), allowedActions))));
     }
 
     @Test
-    public void shouldGenerateToString() {
-        assertThat(userInSession.toString(), startsWith("UserInSession"));
+    public void shouldNotBeEqualToOtherThatHasDifferent_allowedActions() {
+        assertThat(userInSession, is(not(new UserInSession(userDetails, ImmutableSet.of(mock(ActionId.class))))));
     }
 
     @Test
-    public void shouldReturnSuppliedUserDetails() {
-        assertThat(userInSession.getUserDetails(), is(userDetails));
+    public void shouldBeEqualToOtherHashCode() {
+        assertThat(userInSession.hashCode(), is(new UserInSession(userDetails, allowedActions).hashCode()));
     }
 
+    @Test
+    public void shouldImplementToString() {
+        assertThat(userInSession.toString(), Matchers.startsWith("UserInSession"));
+    }
 
 }

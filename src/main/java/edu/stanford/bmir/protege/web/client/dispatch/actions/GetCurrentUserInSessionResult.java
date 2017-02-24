@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetCurrentUserInSessionResult implements Result {
 
-    private UserDetails userDetails;
+    private UserInSession userInSession;
 
     /**
      * For serialization only
@@ -21,12 +22,12 @@ public class GetCurrentUserInSessionResult implements Result {
     private GetCurrentUserInSessionResult() {
     }
 
-    public GetCurrentUserInSessionResult(UserDetails userDetails) {
-        this.userDetails = checkNotNull(userDetails);
+    public GetCurrentUserInSessionResult(UserInSession userInSession) {
+        this.userInSession = checkNotNull(userInSession);
     }
 
-    public UserDetails getUserDetails() {
-        return userDetails;
+    public UserInSession getUserInSession() {
+        return userInSession;
     }
 
 }

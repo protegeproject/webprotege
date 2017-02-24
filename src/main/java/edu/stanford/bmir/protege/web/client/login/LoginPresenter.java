@@ -8,12 +8,15 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.place.SignUpPlace;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginActionFactory;
 import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.vocab.Namespaces;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,6 +26,7 @@ import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_USER;
 
 /**
  * Matthew Horridge
@@ -43,6 +47,7 @@ public class LoginPresenter {
     private final ResetPasswordPresenter resetPasswordPresenter;
 
     private Optional<Place> nextPlace = Optional.empty();
+
 
 
 
@@ -73,6 +78,9 @@ public class LoginPresenter {
     public void start() {
         view.clearView();
         view.hideErrorMessages();
+        boolean canCreateUser = loggedInUserManager.isAllowedApplicationAction(CREATE_USER);
+        GWT.log("Can create user: " + canCreateUser);
+        view.setSignUpForAccountVisible(canCreateUser);
     }
 
     private void handleSignUpForAccout() {

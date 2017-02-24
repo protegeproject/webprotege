@@ -152,6 +152,11 @@ public class LoginViewImpl extends Composite implements LoginView {
     }
 
     @Override
+    public void setSignUpForAccountVisible(boolean visible) {
+        signUpForAccountButton.setVisible(visible);
+    }
+
+    @Override
     public void onResize() {
 
     }

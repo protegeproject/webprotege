@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+
+import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,11 +19,18 @@ public class GetPermissionsResult implements Result {
 
     private PermissionsSet permissionsSet;
 
+    private Set<ActionId> allowedActions;
+
     private GetPermissionsResult() {
     }
 
-    public GetPermissionsResult(PermissionsSet permissionsSet) {
+    public GetPermissionsResult(PermissionsSet permissionsSet, Set<ActionId> allowedActions) {
         this.permissionsSet = checkNotNull(permissionsSet);
+        this.allowedActions = ImmutableSet.copyOf(allowedActions);
+    }
+
+    public Set<ActionId> getAllowedActions() {
+        return allowedActions;
     }
 
     public PermissionsSet getPermissionsSet() {

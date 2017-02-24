@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -9,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -25,12 +29,13 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
 
     private final UserDetailsManager userDetailsManager;
 
-    private final ProjectPermissionsManager projectPermissionsManager;
+    private final AccessManager accessManager;
 
     @Inject
-    public GetCurrentUserInSessionActionHandler(UserDetailsManager userDetailsManager, ProjectPermissionsManager projectPermissionsManager) {
+    public GetCurrentUserInSessionActionHandler(UserDetailsManager userDetailsManager,
+                                                AccessManager accessManager) {
         this.userDetailsManager = userDetailsManager;
-        this.projectPermissionsManager = projectPermissionsManager;
+        this.accessManager = accessManager;
     }
 
     /**
@@ -51,11 +56,17 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
     public GetCurrentUserInSessionResult execute(GetCurrentUserInSessionAction action, ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
         Optional<UserDetails> userDetails = userDetailsManager.getUserDetails(userId);
+        UserDetails theUserDetails;
         if (userDetails.isPresent()) {
-            return new GetCurrentUserInSessionResult(userDetails.get());
+            theUserDetails = userDetails.get();
         }
         else {
-            return new GetCurrentUserInSessionResult(UserDetails.getGuestUserDetails());
+            theUserDetails = UserDetails.getGuestUserDetails();
         }
+        return new GetCurrentUserInSessionResult(
+                new UserInSession(
+                        theUserDetails,
+                        accessManager.getActionClosure(Subject.forUser(executionContext.getUserId()),
+                                                       ApplicationResource.get())));
     }
 }

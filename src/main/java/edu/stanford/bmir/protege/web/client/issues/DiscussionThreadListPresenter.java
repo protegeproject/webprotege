@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
@@ -146,12 +148,9 @@ public class DiscussionThreadListPresenter implements HasDispose {
     private void updateEnabled() {
         view.setEnabled(false);
         addCommentAction.setEnabled(false);
-        permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean b) {
-                view.setEnabled(b);
-                addCommentAction.setEnabled(b);
-            }
+        permissionChecker.hasPermission(CREATE_OBJECT_COMMENT, hasPermission -> {
+            view.setEnabled(hasPermission);
+            addCommentAction.setEnabled(hasPermission);
         });
     }
 

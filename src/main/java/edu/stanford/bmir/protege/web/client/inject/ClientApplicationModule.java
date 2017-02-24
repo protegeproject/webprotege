@@ -313,7 +313,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @Singleton
     ForbiddenView provideForbiddenView(ForbiddenViewImpl view) {
         return view;
     }

@@ -39,13 +39,8 @@ public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasF
     }
 
     private void updateDisplay() {
-        dispatchServiceManager.execute(new GetRootOntologyIdAction(getProjectId()), new DispatchServiceCallback<GetRootOntologyIdResult>() {
-
-            @Override
-            public void handleSuccess(GetRootOntologyIdResult result) {
-                editor.setValue(result.getObject());
-            }
-        });
+        dispatchServiceManager.execute(new GetRootOntologyIdAction(getProjectId()),
+                                       result -> editor.setValue(result.getObject()));
     }
 
     @Override

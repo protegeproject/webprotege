@@ -8,11 +8,14 @@ import org.mongodb.morphia.query.Query;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.server.access.RoleAssignment.*;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -30,6 +33,7 @@ public class AccessManagerMongoDbImpl implements AccessManager {
      * @param roleOracle An oracle for looking up information about roles.
      * @param datastore A Morphia datastore that is used to access MongoDb.
      */
+    @Inject
     public AccessManagerMongoDbImpl(RoleOracle roleOracle, Datastore datastore) {
         this.roleOracle = roleOracle;
         this.datastore = datastore;
@@ -115,14 +119,14 @@ public class AccessManagerMongoDbImpl implements AccessManager {
 
     @Nonnull
     @Override
-    public Collection<ActionId> getActionClosure(@Nonnull Subject subject, @Nonnull Resource resource) {
+    public Set<ActionId> getActionClosure(@Nonnull Subject subject, @Nonnull Resource resource) {
         Query<RoleAssignment> query = withUserOrAnyUserAndTarget(subject,
                                                                  resource);
         return query.asList()
                     .stream()
                     .flatMap(ra -> ra.getActionClosure().stream())
                     .map(ActionId::new)
-                    .collect(toList());
+                    .collect(toSet());
     }
 
     @Override

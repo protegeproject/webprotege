@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -9,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInVa
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -39,11 +43,14 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
 
     private final ProjectSharingSettingsManager projectSharingSettingsManager;
 
+    private final AccessManager accessManager;
+
     @Inject
-    public CreateNewProjectActionHandler(OWLAPIProjectManager pm, ProjectDetailsManager projectDetailsManager, ProjectSharingSettingsManager projectSharingSettingsManager) {
+    public CreateNewProjectActionHandler(OWLAPIProjectManager pm, ProjectDetailsManager projectDetailsManager, ProjectSharingSettingsManager projectSharingSettingsManager, AccessManager accessManager) {
         this.pm = pm;
         this.projectDetailsManager = projectDetailsManager;
         this.projectSharingSettingsManager = projectSharingSettingsManager;
+        this.accessManager = accessManager;
     }
 
     @Override
@@ -59,6 +66,11 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
     @Override
     public CreateNewProjectResult execute(CreateNewProjectAction action, ExecutionContext executionContext) {
         try {
+            if(!accessManager.hasPermission(Subject.forUser(executionContext.getUserId()), ApplicationResource.get(),
+                                        BuiltInAction.CREATE_EMPTY_PROJECT.getActionId())) {
+                System.out.println("USER DOES NOT HAVE PERMISSION TO CREATE NEW PROJECTS!");
+            }
+
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
             OWLAPIProject project = pm.createNewProject(newProjectSettings);
             ProjectId projectId = project.getProjectId();
