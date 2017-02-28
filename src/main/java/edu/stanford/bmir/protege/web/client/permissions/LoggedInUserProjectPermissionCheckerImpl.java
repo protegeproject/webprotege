@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.function.Consumer;
 
@@ -34,10 +35,9 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasPermission(ActionId actionId, DispatchServiceCallback<Boolean> callback) {
-        GWT.log("Check permission: " + actionId);
+    public void hasPermission(@Nonnull ActionId actionId,
+                              @Nonnull DispatchServiceCallback<Boolean> callback) {
         Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        GWT.log("   for project: " + projectId);
         if(!projectId.isPresent()) {
             callback.onSuccess(false);
             return;
@@ -47,7 +47,8 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasPermission(ActionId action, Consumer<Boolean> callback) {
+    public void hasPermission(@Nonnull ActionId action,
+                              @Nonnull Consumer<Boolean> callback) {
         hasPermission(action, new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean hasPermission) {
@@ -57,7 +58,8 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     }
 
     @Override
-    public void hasPermission(BuiltInAction action, Consumer<Boolean> callback) {
+    public void hasPermission(@Nonnull BuiltInAction action,
+                              @Nonnull Consumer<Boolean> callback) {
         hasPermission(action.getActionId(), new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean hasPermission) {
