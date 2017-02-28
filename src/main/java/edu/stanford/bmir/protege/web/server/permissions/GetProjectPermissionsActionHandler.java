@@ -12,11 +12,13 @@ import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 
 /**
  * Matthew Horridge
@@ -25,13 +27,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectPermissionsActionHandler implements ActionHandler<GetProjectPermissionsAction, GetProjectPermissionsResult> {
 
-    private ProjectPermissionsManager permissionsManager;
-
     private AccessManager accessManager;
 
     @Inject
-    public GetProjectPermissionsActionHandler(ProjectPermissionsManager permissionsManager, AccessManager accessManager) {
-        this.permissionsManager = checkNotNull(permissionsManager);
+    public GetProjectPermissionsActionHandler(@Nonnull AccessManager accessManager) {
         this.accessManager = checkNotNull(accessManager);
     }
 
@@ -48,7 +47,7 @@ public class GetProjectPermissionsActionHandler implements ActionHandler<GetProj
     @Override
     public GetProjectPermissionsResult execute(GetProjectPermissionsAction action, ExecutionContext executionContext) {
         Set<ActionId> allowedActions = accessManager.getActionClosure(
-                Subject.forUser(executionContext.getUserId()),
+                forUser(executionContext.getUserId()),
                 new ProjectResource(action.getProjectId())
         );
         return new GetProjectPermissionsResult(allowedActions);
