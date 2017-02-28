@@ -19,7 +19,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addEntityComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON_COMMENT_UPDATED;
