@@ -14,9 +14,14 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
 
     @Override
     public void displayPermissionDeniedErrorMessage() {
+        displayPermissionDeniedErrorMessage("You do not have permission to carry out the specified action.");
+    }
+
+    @Override
+    public void displayPermissionDeniedErrorMessage(String specificMessage) {
         MessageBox.showAlert(
                 "Permission denied",
-                "You do not have permission to carry out the specified action.");
+                specificMessage);
     }
 
     @Override

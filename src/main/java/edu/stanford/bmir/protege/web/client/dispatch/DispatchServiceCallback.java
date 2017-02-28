@@ -89,7 +89,12 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     public void handlePermissionDeniedException(PermissionDeniedException e) {
-        errorMessageDisplay.displayPermissionDeniedErrorMessage();
+        if(e.getMessage() != null) {
+            errorMessageDisplay.displayPermissionDeniedErrorMessage(e.getMessage());
+        }
+        else {
+            errorMessageDisplay.displayPermissionDeniedErrorMessage();
+        }
     }
 
     private void displayAndLogError(Throwable throwable) {
