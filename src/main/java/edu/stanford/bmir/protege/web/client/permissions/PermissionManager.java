@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gwt.core.client.GWT;
@@ -10,7 +9,6 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -24,8 +22,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserIdProjectIdKey;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * Manages the permissions for projects and users.
@@ -59,7 +56,7 @@ public class PermissionManager implements HasDispose {
     }
 
     /**
-     * Fires a {@link edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent} for the
+     * Fires a {@link PermissionsChangedEvent} for the
      * current project on the event bus.
      */
     public void firePermissionsChanged() {

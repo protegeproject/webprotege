@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -10,8 +12,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public interface ActiveProjectManager {
 
+    /**
+     * Gets the {@link ProjectId} of the active project.
+     * @return The {@link ProjectId} of the active project.
+     */
+    @Nonnull
     Optional<ProjectId> getActiveProjectId();
-
-//    void setActiveProject(Optional<ProjectId> project);
 
 }
