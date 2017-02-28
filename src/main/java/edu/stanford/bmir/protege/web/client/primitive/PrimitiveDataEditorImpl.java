@@ -89,33 +89,15 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         view.asWidget().addStyleName("web-protege-form-layout-editor-input");
         view.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
         view.setSuggestOracle(entitySuggestOracle);
-        view.addSelectionHandler(new SelectionHandler<EntitySuggestion>() {
-            @Override
-            public void onSelection(SelectionEvent<EntitySuggestion> event) {
-                EntitySuggestion suggestion = event.getSelectedItem();
-                selectedSuggestion = Optional.of(suggestion);
-                setCurrentData(Optional.<OWLPrimitiveData>of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
-            }
+        view.addSelectionHandler(event -> {
+            EntitySuggestion suggestion = event.getSelectedItem();
+            selectedSuggestion = Optional.of(suggestion);
+            setCurrentData(Optional.of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
         });
-        view.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                handleValueChanged();
-            }
-        });
-        languageEditor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<String>> event) {
-                handleLanguageChanged();
-            }
-        });
+        view.addValueChangeHandler(event -> handleValueChanged());
+        languageEditor.addValueChangeHandler(event -> handleLanguageChanged());
         view.setAnchorVisible(false);
-        view.addAnchorClickedHandler(new AnchorClickedHandler() {
-            @Override
-            public void handleAnchorClicked(AnchorClickedEvent event) {
-                handleAnchorClick();
-            }
-        });
+        view.addAnchorClickedHandler(event -> handleAnchorClick());
         initWidget(view.asWidget());
     }
 

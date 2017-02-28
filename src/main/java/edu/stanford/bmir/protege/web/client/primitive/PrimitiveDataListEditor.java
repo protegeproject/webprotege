@@ -20,14 +20,11 @@ public class PrimitiveDataListEditor extends ValueListEditorImpl<OWLPrimitiveDat
 
     public PrimitiveDataListEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                    final PrimitiveType ... allowedTypes) {
-        super(new ValueEditorFactory<OWLPrimitiveData>() {
-            @Override
-            public ValueEditor<OWLPrimitiveData> createEditor() {
-                PrimitiveDataEditor editor = primitiveDataEditorProvider.get();
-                editor.setAllowedTypes(Arrays.asList(allowedTypes));
-                editor.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
-                return editor;
-            }
+        super(() -> {
+            PrimitiveDataEditor editor = primitiveDataEditorProvider.get();
+            editor.setAllowedTypes(Arrays.asList(allowedTypes));
+            editor.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
+            return editor;
         });
     }
 }
