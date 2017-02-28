@@ -26,7 +26,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private EntitySuggestOracle delegate;
 
-    private Set<PrimitiveType> allowedPrimitiveTypes = new LinkedHashSet<PrimitiveType>();
+    private Set<PrimitiveType> allowedPrimitiveTypes = new LinkedHashSet<>();
 
 //    private FreshEntitySuggestMode mode;
 
