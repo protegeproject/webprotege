@@ -20,12 +20,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * 23/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetPermissionsAction_TestCase {
+public class GetProjectPermissionsAction_TestCase {
 
 
-    private GetPermissionsAction action;
+    private GetProjectPermissionsAction action;
 
-    private GetPermissionsAction otherAction;
+    private GetProjectPermissionsAction otherAction;
 
     @Mock
     private ProjectId projectId;
@@ -36,19 +36,19 @@ public class GetPermissionsAction_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        action = new GetPermissionsAction(projectId, userId);
-        otherAction = new GetPermissionsAction(projectId, userId);
+        action = new GetProjectPermissionsAction(projectId, userId);
+        otherAction = new GetProjectPermissionsAction(projectId, userId);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ProjectId_IsNull() {
-        new GetPermissionsAction(null, userId);
+        new GetProjectPermissionsAction(null, userId);
     }
 
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_UserId_IsNull() {
-        new GetPermissionsAction(projectId, null);
+        new GetProjectPermissionsAction(projectId, null);
     }
 
     @Test

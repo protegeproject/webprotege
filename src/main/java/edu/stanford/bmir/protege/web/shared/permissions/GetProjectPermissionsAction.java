@@ -3,11 +3,14 @@ package edu.stanford.bmir.protege.web.shared.permissions;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import static com.google.common.base.Objects.toStringHelper;
+import javax.annotation.Nonnull;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -15,28 +18,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 23/02/15
  */
-public class GetPermissionsAction implements Action<GetPermissionsResult>, HasProjectId, HasUserId {
+public class GetProjectPermissionsAction implements Action<GetProjectPermissionsResult>, HasProjectId, HasUserId {
 
     private ProjectId projectId;
 
     private UserId userId;
 
-    /**
-     * For serialization purposes only
-     */
-    private GetPermissionsAction() {
+    @GwtSerializationConstructor
+    private GetProjectPermissionsAction() {
     }
 
-    public GetPermissionsAction(ProjectId projectId, UserId userId) {
+    public GetProjectPermissionsAction(@Nonnull ProjectId projectId,
+                                       @Nonnull UserId userId) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @Nonnull
     @Override
     public UserId getUserId() {
         return userId;
@@ -52,10 +56,10 @@ public class GetPermissionsAction implements Action<GetPermissionsResult>, HasPr
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GetPermissionsAction)) {
+        if (!(obj instanceof GetProjectPermissionsAction)) {
             return false;
         }
-        GetPermissionsAction other = (GetPermissionsAction) obj;
+        GetProjectPermissionsAction other = (GetProjectPermissionsAction) obj;
         return this.projectId.equals(other.projectId)
                 && this.userId.equals(other.userId);
     }

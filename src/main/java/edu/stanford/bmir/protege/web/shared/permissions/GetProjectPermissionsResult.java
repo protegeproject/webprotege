@@ -15,14 +15,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 23/02/15
  */
-public class GetPermissionsResult implements Result {
+public class GetProjectPermissionsResult implements Result {
 
     private Set<ActionId> allowedActions;
 
-    private GetPermissionsResult() {
+    private GetProjectPermissionsResult() {
     }
 
-    public GetPermissionsResult(Set<ActionId> allowedActions) {
+    public GetProjectPermissionsResult(Set<ActionId> allowedActions) {
         this.allowedActions = ImmutableSet.copyOf(allowedActions);
     }
 
@@ -40,10 +40,10 @@ public class GetPermissionsResult implements Result {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GetPermissionsResult)) {
+        if (!(obj instanceof GetProjectPermissionsResult)) {
             return false;
         }
-        GetPermissionsResult other = (GetPermissionsResult) obj;
+        GetProjectPermissionsResult other = (GetProjectPermissionsResult) obj;
         return this.allowedActions.equals(other.allowedActions);
     }
 

@@ -31,7 +31,7 @@ import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
-import edu.stanford.bmir.protege.web.server.permissions.GetPermissionsActionHandler;
+import edu.stanford.bmir.protege.web.server.permissions.GetProjectPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.GetPerspectiveLayoutActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.GetPerspectivesActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.SetPerspectiveLayoutActionHandler;
@@ -411,7 +411,7 @@ public class ActionHandlersModule {
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetPermissionsActionHandler(GetPermissionsActionHandler handler) {
+    public ActionHandler provideGetPermissionsActionHandler(GetProjectPermissionsActionHandler handler) {
         return handler;
     }
 
