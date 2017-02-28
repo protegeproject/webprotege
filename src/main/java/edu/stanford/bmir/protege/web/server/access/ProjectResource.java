@@ -20,6 +20,10 @@ public final class ProjectResource implements Resource {
         this.projectId = checkNotNull(projectId);
     }
 
+    public static ProjectResource forProject(ProjectId projectId) {
+        return new ProjectResource(projectId);
+    }
+
     @Override
     public Optional<ProjectId> getProjectId() {
         return Optional.of(projectId);
