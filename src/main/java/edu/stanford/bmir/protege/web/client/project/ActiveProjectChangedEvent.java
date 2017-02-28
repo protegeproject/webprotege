@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.util.Optional;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -19,13 +22,17 @@ public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChan
 
     private ProjectId projectId;
 
+    @GwtSerializationConstructor
+    private ActiveProjectChangedEvent() {
+    }
+
     /**
      * Constructs an {@link ActiveProjectChangedEvent}.
      * @param newProjectId The id of the new active project.  Not {@code null}.
      * @throws NullPointerException if {@code newProjectId} is {@code null}.
      */
     public ActiveProjectChangedEvent(Optional<ProjectId> newProjectId) {
-        this.projectId = checkNotNull(newProjectId).orNull();
+        this.projectId = checkNotNull(newProjectId).orElse(null);
     }
 
     /**
@@ -35,7 +42,7 @@ public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChan
      * home tab for example).
      */
     public Optional<ProjectId> getProjectId() {
-        return Optional.fromNullable(projectId);
+        return Optional.ofNullable(projectId);
     }
 
     @Override
@@ -48,13 +55,11 @@ public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChan
         handler.handleActiveProjectChanged(this);
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ActiveProjectChangedEvent");
-        sb.append("(");
-        sb.append(projectId);
-        sb.append(")");
-        return sb.toString();
+        return toStringHelper("ActiveProjectChangedEvent")
+                .addValue(projectId)
+                .toString();
     }
 }

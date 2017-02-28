@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
@@ -12,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
