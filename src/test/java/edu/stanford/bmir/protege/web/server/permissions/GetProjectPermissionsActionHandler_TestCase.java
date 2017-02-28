@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Matchers;
@@ -25,9 +24,9 @@ import static org.mockito.Mockito.when;
  * 23/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetPermissionsActionHandler_TestCase {
+public class GetProjectPermissionsActionHandler_TestCase {
 
-    private GetPermissionsActionHandler handler;
+    private GetProjectPermissionsActionHandler handler;
 
     @Mock
     private ProjectPermissionsManager permissionManager;
@@ -42,20 +41,20 @@ public class GetPermissionsActionHandler_TestCase {
     private ProjectId projectId;
 
     @Mock
-    private GetPermissionsAction action;
+    private GetProjectPermissionsAction action;
 
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetPermissionsActionHandler(permissionManager, accessManager);
+        handler = new GetProjectPermissionsActionHandler(permissionManager, accessManager);
         when(action.getUserId()).thenReturn(userId);
         when(action.getProjectId()).thenReturn(projectId);
     }
 
     @Test
     public void shouldReturnActionClass() {
-        Class<GetPermissionsAction> cls = handler.getActionClass();
-        assertThat(cls, Matchers.<Class<GetPermissionsAction>>is(GetPermissionsAction.class));
+        Class<GetProjectPermissionsAction> cls = handler.getActionClass();
+        assertThat(cls, Matchers.<Class<GetProjectPermissionsAction>>is(GetProjectPermissionsAction.class));
     }
 
     @Test

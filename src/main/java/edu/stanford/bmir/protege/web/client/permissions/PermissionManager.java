@@ -14,8 +14,8 @@ import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserIdProjectIdKey;
@@ -68,7 +68,7 @@ public class PermissionManager implements HasDispose {
             return;
         }
         final ProjectId theProjectId = projectId.get();
-        dispatchServiceManager.execute(new GetPermissionsAction(projectId.get(), userId), result -> {
+        dispatchServiceManager.execute(new GetProjectPermissionsAction(projectId.get(), userId), result -> {
             UserIdProjectIdKey key = new UserIdProjectIdKey(userId, theProjectId);
             permittedActionCache.putAll(key, result.getAllowedActions());
             GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
@@ -94,10 +94,10 @@ public class PermissionManager implements HasDispose {
             callback.onSuccess(permittedActionCache.get(key).contains(actionId));
             return;
         }
-        dispatchServiceManager.execute(new GetPermissionsAction(projectId, userId),
-                                       new DispatchServiceCallback<GetPermissionsResult>() {
+        dispatchServiceManager.execute(new GetProjectPermissionsAction(projectId, userId),
+                                       new DispatchServiceCallback<GetProjectPermissionsResult>() {
                                            @Override
-                                           public void handleSuccess(GetPermissionsResult result) {
+                                           public void handleSuccess(GetProjectPermissionsResult result) {
                                                permittedActionCache.putAll(key, result.getAllowedActions());
                                                callback.onSuccess(result.getAllowedActions().contains(actionId));
                                            }

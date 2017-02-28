@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.permissions;
 import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

@@ -9,8 +9,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
 
 import javax.inject.Inject;
 
@@ -23,34 +23,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 23/02/15
  */
-public class GetPermissionsActionHandler implements ActionHandler<GetPermissionsAction, GetPermissionsResult> {
+public class GetProjectPermissionsActionHandler implements ActionHandler<GetProjectPermissionsAction, GetProjectPermissionsResult> {
 
     private ProjectPermissionsManager permissionsManager;
 
     private AccessManager accessManager;
 
     @Inject
-    public GetPermissionsActionHandler(ProjectPermissionsManager permissionsManager, AccessManager accessManager) {
+    public GetProjectPermissionsActionHandler(ProjectPermissionsManager permissionsManager, AccessManager accessManager) {
         this.permissionsManager = checkNotNull(permissionsManager);
         this.accessManager = checkNotNull(accessManager);
     }
 
     @Override
-    public Class<GetPermissionsAction> getActionClass() {
-        return GetPermissionsAction.class;
+    public Class<GetProjectPermissionsAction> getActionClass() {
+        return GetProjectPermissionsAction.class;
     }
 
     @Override
-    public RequestValidator getRequestValidator(GetPermissionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetProjectPermissionsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 
     @Override
-    public GetPermissionsResult execute(GetPermissionsAction action, ExecutionContext executionContext) {
+    public GetProjectPermissionsResult execute(GetProjectPermissionsAction action, ExecutionContext executionContext) {
         Set<ActionId> allowedActions = accessManager.getActionClosure(
                 Subject.forUser(executionContext.getUserId()),
                 new ProjectResource(action.getProjectId())
         );
-        return new GetPermissionsResult(allowedActions);
+        return new GetProjectPermissionsResult(allowedActions);
     }
 }
