@@ -1,26 +1,35 @@
-package edu.stanford.bmir.protege.web.shared.event;
+package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.annotation.Nonnull;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/04/2013
+ *
+ * An event that is fired when the permissions for a project change.
  */
 public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHandler> {
 
     public static final transient Event.Type<PermissionsChangedHandler> ON_PERMISSIONS_CHANGED = new Event.Type<PermissionsChangedHandler>();
 
 
-    public PermissionsChangedEvent(ProjectId source) {
-        super(source);
+    public PermissionsChangedEvent(@Nonnull ProjectId source) {
+        super(checkNotNull(source));
     }
 
-    /**
-     * For serialization only
-     */
+    @GwtSerializationConstructor
     private PermissionsChangedEvent() {
     }
 
@@ -36,7 +45,7 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
 
     @Override
     public int hashCode() {
-        return "PermissionsChangedEvent".hashCode() + getProjectId().hashCode();
+        return Objects.hashCode(getProjectId());
     }
 
     @Override
@@ -51,13 +60,11 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
         return this.getProjectId().equals(other.getProjectId());
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("PermissionsChangedEvent");
-        sb.append("(");
-        sb.append(getProjectId());
-        sb.append(")");
-        return sb.toString();
+        return toStringHelper("PermissionsChangedEvent")
+                .addValue(getProjectId())
+                .toString();
     }
 }

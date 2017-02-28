@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
