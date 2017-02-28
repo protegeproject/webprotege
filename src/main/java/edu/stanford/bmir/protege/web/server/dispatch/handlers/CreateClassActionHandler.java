@@ -2,24 +2,24 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -33,13 +33,12 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
 
     private final WebProtegeLogger logger;
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     @Inject
-    public CreateClassActionHandler(OWLAPIProjectManager projectManager, WebProtegeLogger logger, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
+    public CreateClassActionHandler(OWLAPIProjectManager projectManager,
+                                    AccessManager accessManager,
+                                    WebProtegeLogger logger) {
+        super(projectManager, accessManager);
         this.logger = logger;
-        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -47,11 +46,11 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
         return CreateClassAction.class;
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateClassAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return Arrays.asList(BuiltInAction.CREATE_CLASS, BuiltInAction.EDIT_ONTOLOGY);
     }
-
 
     @Override
     protected ChangeListGenerator<OWLClass> getChangeListGenerator(final CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext) {

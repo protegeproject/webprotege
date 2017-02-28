@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ProjectResource;
+import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecord;
-import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
@@ -14,12 +15,12 @@ import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static edu.stanford.bmir.protege.web.server.sharing.Permissions.toSharingPermission;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -30,58 +31,64 @@ import static java.util.stream.Collectors.toMap;
 public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettingsManager {
 
     private final WebProtegeLogger logger;
-    
-    private final ProjectPermissionRecordRepository projectPermissionRepository;
+
+    private final AccessManager accessManager;
 
     private final HasGetUserIdByUserIdOrEmail userLookup;
 
     @Inject
-    public ProjectSharingSettingsManagerImpl(WebProtegeLogger logger, ProjectPermissionRecordRepository repository, HasGetUserIdByUserIdOrEmail userLookup) {
+    public ProjectSharingSettingsManagerImpl(WebProtegeLogger logger,
+                                             AccessManager accessManager,
+                                             HasGetUserIdByUserIdOrEmail userLookup) {
         this.logger = logger;
-        this.projectPermissionRepository = repository;
+        this.accessManager = accessManager;
         this.userLookup = userLookup;
     }
 
     @Override
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        List<ProjectPermissionRecord> records = projectPermissionRepository.findByProjectId(projectId);
         List<SharingSetting> sharingSettings = new ArrayList<>();
-        Optional<SharingPermission> linkSharing = Optional.empty();
-        for(ProjectPermissionRecord record : records) {
-            Optional<UserId> userId = record.getUserId();
-            if(userId.isPresent()) {
-                Optional<SharingPermission> sharingPermission = toSharingPermission(record.getPermissions());
-                SharingSetting sharingSetting = new SharingSetting(
-                        PersonId.of(userId.get()),
-                        sharingPermission.get()
-                );
-                sharingSettings.add(sharingSetting);
-            }
-            else {
-                linkSharing = toSharingPermission(record.getPermissions());
-            }
-        }
+        ProjectResource projectResource = new ProjectResource(projectId);
+        Collection<Subject> subjects = accessManager.getSubjectsWithAccessToResource(projectResource);
+        subjects.stream()
+                .filter(s -> !s.isGuest())
+                .filter(s -> s.getUserName().isPresent())
+                .map(s -> UserId.getUserId(s.getUserName().get()))
+                .forEach(u -> {
+                    Collection<RoleId> roles = accessManager.getAssignedRoles(Subject.forUser(u), projectResource);
+                    Roles.toSharingPermission(roles).ifPresent(
+                            p -> sharingSettings.add(new SharingSetting(PersonId.of(u), p)));
+
+                });
+        Collection<RoleId> signedInUserRoles = accessManager.getAssignedRoles(forAnySignedInUser(), projectResource);
+        Optional<SharingPermission> linkSharing = Roles.toSharingPermission(signedInUserRoles);
         return new ProjectSharingSettings(projectId, linkSharing, sharingSettings);
     }
-
 
 
     @Override
     public void setProjectSharingSettings(ProjectSharingSettings settings) {
         ProjectId projectId = settings.getProjectId();
-        List<ProjectPermissionRecord> entries = new ArrayList<>();
+        ProjectResource projectResource = new ProjectResource(projectId);
+
         Map<PersonId, SharingSetting> map = settings.getSharingSettings().stream()
-                .collect(toMap(s -> s.getPersonId(), s -> s, (s1, s2) -> s1));
-        for(SharingSetting setting : map.values()) {
+                                                    .collect(toMap(s -> s.getPersonId(), s -> s, (s1, s2) -> s1));
+        Optional<SharingPermission> linkSharingPermission = settings.getLinkSharingPermission();
+        linkSharingPermission.ifPresent(permission -> {
+            Collection<RoleId> roleId = Roles.fromSharingPermission(permission);
+            accessManager.setAssignedRoles(forAnySignedInUser(), projectResource, roleId);
+        });
+        if(!linkSharingPermission.isPresent()) {
+            accessManager.setAssignedRoles(forAnySignedInUser(), projectResource, emptySet());
+        }
+        for (SharingSetting setting : map.values()) {
             PersonId personId = setting.getPersonId();
             Optional<UserId> userId = userLookup.getUserByUserIdOrEmail(personId.getId());
-            if(userId.isPresent()) {
-                ImmutableSet<Permission> permissions = Permissions.fromSharingPermission(setting.getSharingPermission());
-                ProjectPermissionRecord e = new ProjectPermissionRecord(
-                        projectId,
-                        userId,
-                        permissions);
-                entries.add(e);
+            if (userId.isPresent()) {
+                ImmutableSet<RoleId> roles = Roles.fromSharingPermission(setting.getSharingPermission());
+                accessManager.setAssignedRoles(forUser(userId.get()),
+                                               projectResource,
+                                               roles);
             }
             else {
                 logger.info(projectId, "User in sharing setting not found.  An email invitation needs to be sent");
@@ -89,9 +96,5 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                 // We need to send the user an email invitation
             }
         }
-        projectPermissionRepository.replace(projectId, entries);
-//        if(!entries.isEmpty()) {
-//            projectPermissionRepository.save(entries);
-//        }
     }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -10,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +27,8 @@ import java.util.Set;
 public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUsageAction, GetUsageResult> {
 
     @Inject
-    public GetUsageActionHandler(OWLAPIProjectManager projectManager) {
-        super(projectManager);
+    public GetUsageActionHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -34,6 +36,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
         return GetUsageAction.class;
     }
 
+    @Nonnull
     @Override
     protected RequestValidator getAdditionalRequestValidator(GetUsageAction action, RequestContext requestContext) {
         return NullValidator.get();

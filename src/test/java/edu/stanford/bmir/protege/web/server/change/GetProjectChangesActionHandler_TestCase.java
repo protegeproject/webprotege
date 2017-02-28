@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.ProjectChangesManager;
@@ -54,12 +53,12 @@ public class GetProjectChangesActionHandler_TestCase {
     private OWLAPIProjectManager projectManager;
 
     @Mock
-    private ValidatorFactory<ReadPermissionValidator> validatorFactory;
+    private AccessManager accessManager;
 
     @Before
     public void setUp() throws Exception {
         when(action.getSubject()).thenReturn(subject);
-        handler = new GetProjectChangesActionHandler(projectManager, validatorFactory);
+        handler = new GetProjectChangesActionHandler(projectManager, accessManager);
         when(project.getProjectChangesManager()).thenReturn(changeManager);
         when(changeManager.getProjectChanges(subject)).thenReturn(projectChanges);
     }

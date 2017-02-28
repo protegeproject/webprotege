@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -8,11 +9,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileResult;
@@ -20,10 +20,13 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static java.util.Arrays.asList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -35,13 +38,12 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     private final File uploadsDirectory;
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     @Inject
-    public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
+    public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory,
+                                      OWLAPIProjectManager projectManager,
+                                      AccessManager accessManager) {
+        super(projectManager, accessManager);
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
-        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -79,8 +81,9 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
         return new ImportCSVFileResult(new EventList<ProjectEvent<?>>(EventTag.get(0), EventTag.get(1)), changeApplicationResult.getSubject().get());
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(ImportCSVFileAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return asList(EDIT_ONTOLOGY);
     }
 }

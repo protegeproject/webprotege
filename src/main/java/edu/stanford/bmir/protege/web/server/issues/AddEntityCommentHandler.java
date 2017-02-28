@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
 import edu.stanford.bmir.protege.web.shared.issues.mention.ParsedMention;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 
 /**
  * Matthew Horridge
@@ -23,18 +24,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<AddEntityCommentAction, AddEntityCommentResult> {
 
-    private final ValidatorFactory<CommentPermissionValidator> validator;
-
     private final EntityDiscussionThreadRepository repository;
-
-
 
     @Inject
     public AddEntityCommentHandler(OWLAPIProjectManager projectManager,
-                                   ValidatorFactory<CommentPermissionValidator> validator,
+                                   AccessManager accessManager,
                                    EntityDiscussionThreadRepository repository) {
-        super(projectManager);
-        this.validator = checkNotNull(validator);
+        super(projectManager, accessManager);
         this.repository = checkNotNull(repository);
     }
 
@@ -44,9 +40,8 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
     }
 
     @Override
-    protected RequestValidator getAdditionalRequestValidator(AddEntityCommentAction action,
-                                                             RequestContext requestContext) {
-        return validator.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return CREATE_OBJECT_COMMENT;
     }
 
     @Override

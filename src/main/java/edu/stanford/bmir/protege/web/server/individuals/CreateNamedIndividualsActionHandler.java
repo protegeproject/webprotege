@@ -2,22 +2,25 @@ package edu.stanford.bmir.protege.web.server.individuals;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,18 +30,16 @@ import java.util.Set;
  */
 public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
-
     @Inject
-    public CreateNamedIndividualsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public CreateNamedIndividualsActionHandler(OWLAPIProjectManager projectManager,
+                                               AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateNamedIndividualsAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return Arrays.asList(EDIT_ONTOLOGY, CREATE_INDIVIDUAL);
     }
 
     @Override

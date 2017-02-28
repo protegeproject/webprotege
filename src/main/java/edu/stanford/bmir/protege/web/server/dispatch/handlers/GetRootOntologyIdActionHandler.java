@@ -2,18 +2,19 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,13 +24,10 @@ import javax.inject.Inject;
  */
 public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetRootOntologyIdAction, GetRootOntologyIdResult> {
 
-
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public GetRootOntologyIdActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public GetRootOntologyIdActionHandler(OWLAPIProjectManager projectManager,
+                                          AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     /**
@@ -41,12 +39,10 @@ public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHand
         return GetRootOntologyIdAction.class;
     }
 
-    /**
-     * Returns an additional validator which ensures the requesting user had read permission for the project.
-     */
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetRootOntologyIdAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return VIEW_PROJECT;
     }
 
     /**

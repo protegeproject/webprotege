@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
@@ -60,12 +59,12 @@ public class GetEntityDataActionHandler_TestCase {
     private OWLAPIProjectManager projectManager;
 
     @Mock
-    private ValidatorFactory<ReadPermissionValidator> validatorFactory;
+    private AccessManager accessManager;
 
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetEntityDataActionHandler(projectManager, validatorFactory);
+        handler = new GetEntityDataActionHandler(projectManager, accessManager);
 
         renderingMap = new HashMap<>();
         renderingMap.put(entity, entityData);

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.project;
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -13,29 +13,28 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInRole;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
-import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Collections;
+
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.CAN_MANAGE;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewProjectAction, CreateNewProjectResult> {
+public class CreateNewProjectActionHandler implements ActionHandler<CreateNewProjectAction, CreateNewProjectResult> {
 
     private final OWLAPIProjectManager pm;
 
@@ -46,7 +45,10 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
     private final AccessManager accessManager;
 
     @Inject
-    public CreateNewProjectActionHandler(OWLAPIProjectManager pm, ProjectDetailsManager projectDetailsManager, ProjectSharingSettingsManager projectSharingSettingsManager, AccessManager accessManager) {
+    public CreateNewProjectActionHandler(OWLAPIProjectManager pm,
+                                         ProjectDetailsManager projectDetailsManager,
+                                         ProjectSharingSettingsManager projectSharingSettingsManager,
+                                         AccessManager accessManager) {
         this.pm = pm;
         this.projectDetailsManager = projectDetailsManager;
         this.projectSharingSettingsManager = projectSharingSettingsManager;
@@ -66,9 +68,10 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
     @Override
     public CreateNewProjectResult execute(CreateNewProjectAction action, ExecutionContext executionContext) {
         try {
-            if(!accessManager.hasPermission(Subject.forUser(executionContext.getUserId()), ApplicationResource.get(),
-                                        BuiltInAction.CREATE_EMPTY_PROJECT.getActionId())) {
-                System.out.println("USER DOES NOT HAVE PERMISSION TO CREATE NEW PROJECTS!");
+            if (!accessManager.hasPermission(forUser(executionContext.getUserId()),
+                                             ApplicationResource.get(),
+                                             BuiltInAction.CREATE_EMPTY_PROJECT.getActionId())) {
+                throw new PermissionDeniedException("You do not have permission to create new projects");
             }
 
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
@@ -86,11 +89,9 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
     }
 
     private void applyOwnerPermissions(ProjectId projectId, UserId userId) {
-        List<SharingSetting> sharingSettings = new ArrayList<>();
-        PersonId personId = PersonId.of(userId);
-        sharingSettings.add(new SharingSetting(personId, SharingPermission.MANAGE));
-        projectSharingSettingsManager.setProjectSharingSettings(
-                new ProjectSharingSettings(projectId, Optional.empty(), sharingSettings));
+        accessManager.setAssignedRoles(forUser(userId),
+                                       new ProjectResource(projectId),
+                                       Collections.singleton(CAN_MANAGE.getRoleId()));
     }
 
 

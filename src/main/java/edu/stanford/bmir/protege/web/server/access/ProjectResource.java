@@ -26,12 +26,17 @@ public final class ProjectResource implements Resource {
     }
 
     @Override
-    public boolean isProjectTarget(ProjectId projectId) {
+    public boolean isProject(ProjectId projectId) {
         return this.projectId.equals(projectId);
     }
 
     @Override
-    public boolean isApplicationTarget() {
+    public boolean isProject() {
+        return true;
+    }
+
+    @Override
+    public boolean isApplication() {
         return false;
     }
 

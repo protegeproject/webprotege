@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
-import edu.stanford.bmir.protege.web.server.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
@@ -50,12 +49,6 @@ public class MetaProjectModule {
     @Singleton
     public ProjectPermissionsManager provideProjectPermissionsManager(ProjectPermissionsManagerImpl impl) {
         return impl;
-    }
-
-    @Provides
-    @Singleton
-    public PermissionChecker providePermissionChecker(ProjectPermissionsManager projectPermissionsManager) {
-        return projectPermissionsManager;
     }
 
     @Provides

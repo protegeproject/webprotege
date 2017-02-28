@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -15,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
 
@@ -26,19 +28,15 @@ import java.util.Set;
 public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandler<SetEntityWatchesAction, SetEntityWatchesResult> {
 
     @Inject
-    public SetEntityWatchesActionHandler(OWLAPIProjectManager projectManager) {
-        super(projectManager);
+    public SetEntityWatchesActionHandler(OWLAPIProjectManager projectManager,
+                                         AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
 
     @Override
     public Class<SetEntityWatchesAction> getActionClass() {
         return SetEntityWatchesAction.class;
-    }
-
-    @Override
-    protected RequestValidator getAdditionalRequestValidator(SetEntityWatchesAction action, RequestContext requestContext) {
-        return NullValidator.get();
     }
 
     @Override

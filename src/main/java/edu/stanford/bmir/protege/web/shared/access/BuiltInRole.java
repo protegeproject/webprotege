@@ -81,7 +81,8 @@ public enum BuiltInRole {
                    REVERT_CHANGES),
 
     PROJECT_MANAGER(PROJECT_EDITOR,
-                    SAVE_DEFAULT_PROJECT_LAYOUT),
+                    SAVE_DEFAULT_PROJECT_LAYOUT,
+                    EDIT_SHARING_SETTINGS),
 
 
     // Roles that relate to the UI

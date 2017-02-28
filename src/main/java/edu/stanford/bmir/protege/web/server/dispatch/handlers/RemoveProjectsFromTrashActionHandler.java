@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -28,12 +24,9 @@ public class RemoveProjectsFromTrashActionHandler implements ActionHandler<Remov
 
     private final ProjectDetailsManager projectDetailsManager;
 
-    private final ValidatorFactory<UserIsProjectOwnerValidator> validatorFactory;
-
     @Inject
-    public RemoveProjectsFromTrashActionHandler(ProjectDetailsManager projectDetailsManager, ValidatorFactory<UserIsProjectOwnerValidator> validatorFactory) {
+    public RemoveProjectsFromTrashActionHandler(ProjectDetailsManager projectDetailsManager) {
         this.projectDetailsManager = projectDetailsManager;
-        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -43,7 +36,9 @@ public class RemoveProjectsFromTrashActionHandler implements ActionHandler<Remov
 
     @Override
     public RequestValidator getRequestValidator(RemoveProjectFromTrashAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+        return new UserIsProjectOwnerValidator(action.getProjectId(),
+                                               requestContext.getUserId(),
+                                               projectDetailsManager);
     }
 
     @Override

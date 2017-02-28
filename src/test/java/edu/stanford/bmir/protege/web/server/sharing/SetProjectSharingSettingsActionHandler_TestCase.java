@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
@@ -48,19 +48,13 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     private OWLAPIProjectManager projectManager;
 
     @Mock
-    private ValidatorFactory<UserIsProjectOwnerValidator> validatorFactory;
+    private AccessManager accessManager;
 
     @Before
     public void setUp() throws Exception {
-        handler = new SetProjectSharingSettingsActionHandler(projectManager, sharingSettingsManager, validatorFactory);
-        when(validatorFactory.getValidator(any(), any())).thenReturn(validator);
+        handler = new SetProjectSharingSettingsActionHandler(projectManager, sharingSettingsManager, accessManager);
+//        when(validatorFactory.getValidator(any(), any())).thenReturn(validator);
         when(action.getProjectSharingSettings()).thenReturn(sharingSettings);
-    }
-
-    @Test
-    public void shouldReturnSuppliedValidator() {
-        RequestValidator v = handler.getAdditionalRequestValidator(action, mock(RequestContext.class));
-        assertThat(v, Matchers.<RequestValidator>is(validator));
     }
 
     @Test

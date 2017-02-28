@@ -3,20 +3,20 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -29,12 +29,10 @@ import java.util.Set;
  */
 public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHandler<Set<OWLObjectProperty>, CreateObjectPropertiesAction, CreateObjectPropertiesResult> {
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     @Inject
-    public CreateObjectPropertyActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public CreateObjectPropertyActionHandler(OWLAPIProjectManager projectManager,
+                                             AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -42,9 +40,10 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
         return CreateObjectPropertiesAction.class;
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateObjectPropertiesAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return Arrays.asList(BuiltInAction.CREATE_PROPERTY, BuiltInAction.EDIT_ONTOLOGY);
     }
 
     @Override

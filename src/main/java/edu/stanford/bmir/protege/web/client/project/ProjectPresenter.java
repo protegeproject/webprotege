@@ -1,16 +1,14 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -29,10 +27,6 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final ProjectView view;
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private final TopBarPresenter topBarPresenter;
 
     private final PerspectiveSwitcherPresenter linkBarPresenter;
@@ -47,8 +41,6 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     public ProjectPresenter(ProjectId projectId,
                             ProjectView view,
                             EventPollingManager eventPollingManager,
-                            DispatchServiceManager dispatchServiceManager,
-                            LoggedInUserProvider loggedInUserProvider,
                             TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
                             PerspectivePresenter perspectivePresenter,
@@ -56,12 +48,10 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.projectId = projectId;
         this.view = view;
         this.eventPollingManager = eventPollingManager;
-        this.dispatchServiceManager = dispatchServiceManager;
         this.permissionScreener = permissionScreener;
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
-        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     @Override
@@ -78,12 +68,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     }
 
     public void start(final AcceptsOneWidget container, final ProjectViewPlace place) {
-        permissionScreener.checkPermission(projectId, Permission.getReadPermission(), container, new PermissionScreener.Callback() {
-            @Override
-            public void onPermissionGranted() {
-                displayProject(container, place);
-            }
-        });
+        permissionScreener.checkPermission(BuiltInAction.VIEW_PROJECT.getActionId(),
+                                           container,
+                                           () -> displayProject(container, place));
     }
 
     private void displayProject(AcceptsOneWidget container, ProjectViewPlace place) {

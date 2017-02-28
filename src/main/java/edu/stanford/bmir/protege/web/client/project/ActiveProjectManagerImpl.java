@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -33,21 +34,16 @@ public class ActiveProjectManagerImpl implements ActiveProjectManager {
     public ActiveProjectManagerImpl(EventBus eventBus, PlaceController placeController) {
         this.eventBus = checkNotNull(eventBus);
         this.placeController = placeController;
-        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
-            @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
-                handlePlaceChange();
-            }
-        });
+        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> handlePlaceChange());
     }
 
     @Override
     public Optional<ProjectId> getActiveProjectId() {
         Place place = placeController.getWhere();
-        if(!(place instanceof ProjectViewPlace)) {
+        if(!(place instanceof HasProjectId)) {
             return Optional.absent();
         }
-        ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
+        HasProjectId projectViewPlace = (HasProjectId) place;
         return Optional.of(projectViewPlace.getProjectId());
     }
 

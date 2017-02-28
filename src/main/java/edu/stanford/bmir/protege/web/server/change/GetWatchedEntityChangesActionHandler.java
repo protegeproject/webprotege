@@ -1,21 +1,23 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesResult;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 
 /**
  * Matthew Horridge
@@ -24,17 +26,16 @@ import java.util.Set;
  */
 public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActionHandler<GetWatchedEntityChangesAction, GetWatchedEntityChangesResult> {
 
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public GetWatchedEntityChangesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public GetWatchedEntityChangesActionHandler(OWLAPIProjectManager projectManager,
+                                                AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetWatchedEntityChangesAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return VIEW_CHANGES;
     }
 
     @Override

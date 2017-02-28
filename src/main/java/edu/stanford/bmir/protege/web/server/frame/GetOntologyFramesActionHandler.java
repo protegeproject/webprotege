@@ -1,22 +1,23 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsComparator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
  * Matthew Horridge
@@ -26,17 +27,15 @@ import java.util.stream.Collectors;
 public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHandler<GetOntologyFramesAction, GetOntologyFramesResult> {
 
 
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public GetOntologyFramesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public GetOntologyFramesActionHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetOntologyFramesAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return VIEW_PROJECT;
     }
 
     @Override

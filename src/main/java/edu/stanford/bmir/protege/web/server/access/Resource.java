@@ -13,8 +13,10 @@ public interface Resource {
 
     Optional<ProjectId> getProjectId();
 
-    boolean isApplicationTarget();
+    boolean isApplication();
 
-    boolean isProjectTarget(ProjectId projectId);
+    boolean isProject();
+
+    boolean isProject(ProjectId projectId);
 }
 

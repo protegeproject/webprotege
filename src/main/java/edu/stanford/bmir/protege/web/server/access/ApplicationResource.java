@@ -30,12 +30,17 @@ public final class ApplicationResource implements Resource {
     }
 
     @Override
-    public boolean isApplicationTarget() {
+    public boolean isApplication() {
         return true;
     }
 
     @Override
-    public boolean isProjectTarget(ProjectId projectId) {
+    public boolean isProject() {
+        return false;
+    }
+
+    @Override
+    public boolean isProject(ProjectId projectId) {
         return false;
     }
 

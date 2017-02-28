@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Objects;
@@ -13,7 +14,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 13/03/16
  */
-public class SharingSettingsPlace extends Place {
+public class SharingSettingsPlace extends Place implements HasProjectId {
 
     private final ProjectId projectId;
 

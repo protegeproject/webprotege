@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsDicussionThreadCreatorValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
@@ -14,8 +14,11 @@ import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Arrays;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.SET_OBJECT_COMMENT_STATUS;
 
 /**
  * Matthew Horridge
@@ -25,17 +28,13 @@ import java.util.Arrays;
 public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHandler<SetDiscussionThreadStatusAction, SetDiscussionThreadStatusResult> {
 
     @Nonnull
-    private final ValidatorFactory<CommentPermissionValidator> validatorFactory;
-
-    @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
     public SetDiscussionThreadStatusHandler(@Nonnull OWLAPIProjectManager projectManager,
-                                            @Nonnull ValidatorFactory<CommentPermissionValidator> validatorFactory,
+                                            @Nonnull AccessManager accessManager,
                                             @Nonnull EntityDiscussionThreadRepository repository) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+        super(projectManager, accessManager);
         this.repository = repository;
     }
 
@@ -44,17 +43,10 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
         return SetDiscussionThreadStatusAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(SetDiscussionThreadStatusAction action,
-                                                             RequestContext requestContext) {
-        return CompositeRequestValidator.get(
-                Arrays.asList(
-                        validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId()),
-                        new UserIsDicussionThreadCreatorValidator(repository,
-                                                                  action.getThreadId(),
-                                                                  requestContext.getUserId())
-                )
-        );
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return SET_OBJECT_COMMENT_STATUS;
     }
 
     @Override

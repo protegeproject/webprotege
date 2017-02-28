@@ -1,16 +1,16 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
@@ -21,16 +21,14 @@ import java.util.ArrayList;
  */
 public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetIssuesAction, GetIssuesResult> {
 
-    private final ValidatorFactory<ReadPermissionValidator> readPermissionValidatorValidatorFactory;
-
 //    private final IssueRepository repository;
 
     @Inject
-    public GetIssuesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> readPermissionValidatorValidatorFactory
+    public GetIssuesActionHandler(OWLAPIProjectManager projectManager,
+                                  @Nonnull AccessManager accessManager
                                   //IssueRepository repository
                                   ) {
-        super(projectManager);
-        this.readPermissionValidatorValidatorFactory = readPermissionValidatorValidatorFactory;
+        super(projectManager, accessManager);
 //        this.repository = repository;
     }
 
@@ -39,9 +37,10 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
         return GetIssuesAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetIssuesAction action, RequestContext requestContext) {
-        return readPermissionValidatorValidatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return BuiltInAction.VIEW_ANY_ISSUE;
     }
 
     @Override

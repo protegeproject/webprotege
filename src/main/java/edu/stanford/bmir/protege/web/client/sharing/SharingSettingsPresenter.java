@@ -11,11 +11,12 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
 
 /**
  * Matthew Horridge
@@ -59,31 +60,15 @@ public class SharingSettingsPresenter {
 
     public void start(final AcceptsOneWidget container) {
         permissionScreener.checkPermission(
-                projectId,
-                Permission.getAdminPermission(),
-                container, new PermissionScreener.Callback() {
-            @Override
-            public void onPermissionGranted() {
-                displaySharingSettings(container);
-            }
-        });
+                EDIT_SHARING_SETTINGS.getActionId(),
+                container, () -> displaySharingSettings(container));
     }
 
 
 
     private void displaySharingSettings(AcceptsOneWidget container) {
-        view.setApplyChangesHandler(new SharingSettingsView.ApplyChangesHandler() {
-            @Override
-            public void handleApplyChanges() {
-                applyChangesAndGoToNextPlace();
-            }
-        });
-        view.setCancelHandler(new SharingSettingsView.CancelHandler() {
-            @Override
-            public void handleCancel() {
-                cancelChangesAndGoToNextPlace();
-            }
-        });
+        view.setApplyChangesHandler(() -> applyChangesAndGoToNextPlace());
+        view.setCancelHandler(() -> cancelChangesAndGoToNextPlace());
         dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), new DispatchServiceCallback<GetProjectSharingSettingsResult>() {
             @Override
             public void handleSuccess(GetProjectSharingSettingsResult result) {

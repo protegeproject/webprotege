@@ -1,20 +1,21 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.FindAndReplaceIRIPrefixChangeGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,12 +25,10 @@ import javax.inject.Inject;
  */
 public class SetEntityCrudKitSettingsActionHandler extends AbstractHasProjectActionHandler<SetEntityCrudKitSettingsAction, SetEntityCrudKitSettingsResult> {
 
-    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
-
     @Inject
-    public SetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public SetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager,
+                                                 AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -37,9 +36,10 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
         return SetEntityCrudKitSettingsAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(SetEntityCrudKitSettingsAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return MANAGE_PROJECT;
     }
 
     @Override

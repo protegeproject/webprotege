@@ -2,23 +2,27 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,12 +32,10 @@ import java.util.Set;
  */
 public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHandler<Set<OWLDataProperty>, CreateDataPropertiesAction, CreateDataPropertiesResult> {
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     @Inject
-    public CreateDataPropertiesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public CreateDataPropertiesActionHandler(OWLAPIProjectManager projectManager,
+                                             AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -60,9 +62,10 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
         return new CreateDataPropertiesResult(map, project.getProjectId(), action.getParent(), eventList);
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateDataPropertiesAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return CREATE_PROPERTY;
     }
 
     @Override

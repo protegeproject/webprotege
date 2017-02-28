@@ -12,15 +12,12 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserIdProjectIdKey;
@@ -49,8 +46,6 @@ public class PermissionManager implements HasDispose {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private final Map<UserIdProjectIdKey, PermissionsSet> cache = new HashMap<>();
-
     private final Multimap<UserIdProjectIdKey, ActionId> actionCache = HashMultimap.create();
 
     @Inject
@@ -68,7 +63,6 @@ public class PermissionManager implements HasDispose {
      * current project on the event bus.
      */
     public void firePermissionsChanged() {
-        cache.clear();
         actionCache.clear();
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         final Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
@@ -79,7 +73,6 @@ public class PermissionManager implements HasDispose {
             @Override
             public void handleSuccess(GetPermissionsResult result) {
                 UserIdProjectIdKey key = new UserIdProjectIdKey(userId, projectId.get());
-                cache.put(key, result.getPermissionsSet());
                 actionCache.putAll(key, result.getAllowedActions());
                 GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
                 eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId.get()).asGWTEvent(), projectId.get());
@@ -101,7 +94,6 @@ public class PermissionManager implements HasDispose {
                                        new DispatchServiceCallback<GetPermissionsResult>() {
                                            @Override
                                            public void handleSuccess(GetPermissionsResult result) {
-                                               cache.put(key, result.getPermissionsSet());
                                                actionCache.putAll(key, result.getAllowedActions());
                                                callback.onSuccess(result.getAllowedActions().contains(actionId));
                                            }

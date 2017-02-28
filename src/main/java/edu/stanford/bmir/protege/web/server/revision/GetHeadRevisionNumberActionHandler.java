@@ -1,17 +1,19 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 
 /**
  * Matthew Horridge
@@ -20,12 +22,10 @@ import javax.inject.Inject;
  */
 public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectActionHandler<GetHeadRevisionNumberAction, GetHeadRevisionNumberResult> {
 
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public GetHeadRevisionNumberActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public GetHeadRevisionNumberActionHandler(OWLAPIProjectManager projectManager,
+                                              AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -33,9 +33,10 @@ public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectAction
         return GetHeadRevisionNumberAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetHeadRevisionNumberAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return VIEW_CHANGES;
     }
 
     @Override

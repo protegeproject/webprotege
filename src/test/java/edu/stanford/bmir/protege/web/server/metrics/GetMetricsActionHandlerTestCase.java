@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.metrics;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
@@ -44,7 +43,7 @@ public class GetMetricsActionHandlerTestCase {
     private OWLAPIProjectManager projectManager;
 
     @Mock
-    private ValidatorFactory<ReadPermissionValidator> validatorFactory;
+    private AccessManager accessManager;
 
 
     @Before
@@ -55,7 +54,7 @@ public class GetMetricsActionHandlerTestCase {
 
     @Test
     public void shouldReturnMetricValues() {
-        GetMetricsActionHandler handler = new GetMetricsActionHandler(projectManager, validatorFactory);
+        GetMetricsActionHandler handler = new GetMetricsActionHandler(projectManager, accessManager);
         GetMetricsResult result = handler.execute(new GetMetricsAction(projectId), project, mock(ExecutionContext.class));
         assertThat(result.getMetricValues(), is(equalTo(metricValues)));
     }

@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -31,22 +28,15 @@ import java.util.List;
  */
 public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandler<GetFormDescriptorAction, GetFormDescriptorResult> {
 
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public GetFormDescriptorActionHander(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public GetFormDescriptorActionHander(OWLAPIProjectManager projectManager,
+                                         AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
     public Class<GetFormDescriptorAction> getActionClass() {
         return GetFormDescriptorAction.class;
-    }
-
-    @Override
-    protected RequestValidator getAdditionalRequestValidator(GetFormDescriptorAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
@@ -23,8 +22,9 @@ import javax.inject.Inject;
 public class UpdateDataPropertyFrameHandler extends AbstractUpdateFrameHandler<UpdateDataPropertyFrameAction, DataPropertyFrame, OWLDataProperty> {
 
     @Inject
-    public UpdateDataPropertyFrameHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager, validatorFactory);
+    public UpdateDataPropertyFrameHandler(OWLAPIProjectManager projectManager,
+                                          AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override

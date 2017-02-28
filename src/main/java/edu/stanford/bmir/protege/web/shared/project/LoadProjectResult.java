@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,8 +22,6 @@ public class LoadProjectResult implements Result, HasUserId, HasProjectId {
 
     private ProjectDetails projectDetails;
 
-    private PermissionsSet permissionsSet;
-
     /**
      * For serialization purposes only
      */
@@ -32,20 +29,15 @@ public class LoadProjectResult implements Result, HasUserId, HasProjectId {
 
     }
 
-    public LoadProjectResult(ProjectId projectId, UserId loadedBy, PermissionsSet permissionsSet, ProjectDetails projectDetails) {
+    public LoadProjectResult(ProjectId projectId, UserId loadedBy, ProjectDetails projectDetails) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(loadedBy);
         this.projectDetails = checkNotNull(projectDetails);
-        this.permissionsSet = checkNotNull(permissionsSet);
     }
 
     @Override
     public UserId getUserId() {
         return userId;
-    }
-
-    public PermissionsSet getRequestingUserProjectPermissionSet() {
-        return permissionsSet;
     }
 
     public ProjectId getProjectId() {
@@ -66,7 +58,7 @@ public class LoadProjectResult implements Result, HasUserId, HasProjectId {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getProjectId(), userId, projectDetails, permissionsSet);
+        return Objects.hashCode(getProjectId(), userId, projectDetails);
     }
 
     @Override
@@ -80,7 +72,6 @@ public class LoadProjectResult implements Result, HasUserId, HasProjectId {
         LoadProjectResult other = (LoadProjectResult) obj;
         return this.getProjectId().equals(other.getProjectId())
                 && this.userId.equals(other.userId)
-                && this.projectDetails.equals(other.projectDetails)
-                && this.permissionsSet.equals(other.permissionsSet);
+                && this.projectDetails.equals(other.projectDetails);
     }
 }

@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Matchers;
@@ -37,9 +36,6 @@ public class GetPermissionsActionHandler_TestCase {
     private AccessManager accessManager;
 
     @Mock
-    private PermissionsSet permissionsSet;
-
-    @Mock
     private UserId userId;
 
     @Mock
@@ -52,8 +48,6 @@ public class GetPermissionsActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetPermissionsActionHandler(permissionManager, accessManager);
-        when(permissionManager.getPermissionsSet(projectId, userId)).thenReturn(permissionsSet);
-
         when(action.getUserId()).thenReturn(userId);
         when(action.getProjectId()).thenReturn(projectId);
     }
@@ -62,11 +56,6 @@ public class GetPermissionsActionHandler_TestCase {
     public void shouldReturnActionClass() {
         Class<GetPermissionsAction> cls = handler.getActionClass();
         assertThat(cls, Matchers.<Class<GetPermissionsAction>>is(GetPermissionsAction.class));
-    }
-
-    @Test
-    public void shouldGetPermissionsSet() {
-        assertThat(handler.execute(action, mock(ExecutionContext.class)).getPermissionsSet(), is(permissionsSet));
     }
 
     @Test
