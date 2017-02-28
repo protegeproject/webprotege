@@ -29,9 +29,6 @@ public class GetProjectPermissionsActionHandler_TestCase {
     private GetProjectPermissionsActionHandler handler;
 
     @Mock
-    private ProjectPermissionsManager permissionManager;
-
-    @Mock
     private AccessManager accessManager;
 
     @Mock
@@ -46,7 +43,7 @@ public class GetProjectPermissionsActionHandler_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetProjectPermissionsActionHandler(permissionManager, accessManager);
+        handler = new GetProjectPermissionsActionHandler(accessManager);
         when(action.getUserId()).thenReturn(userId);
         when(action.getProjectId()).thenReturn(projectId);
     }

@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.access.ProjectResource.forProject;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 
 /**
@@ -27,7 +28,8 @@ import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
  */
 public class GetProjectPermissionsActionHandler implements ActionHandler<GetProjectPermissionsAction, GetProjectPermissionsResult> {
 
-    private AccessManager accessManager;
+    @Nonnull
+    private final AccessManager accessManager;
 
     @Inject
     public GetProjectPermissionsActionHandler(@Nonnull AccessManager accessManager) {
@@ -48,7 +50,7 @@ public class GetProjectPermissionsActionHandler implements ActionHandler<GetProj
     public GetProjectPermissionsResult execute(GetProjectPermissionsAction action, ExecutionContext executionContext) {
         Set<ActionId> allowedActions = accessManager.getActionClosure(
                 forUser(executionContext.getUserId()),
-                new ProjectResource(action.getProjectId())
+                forProject(action.getProjectId())
         );
         return new GetProjectPermissionsResult(allowedActions);
     }
