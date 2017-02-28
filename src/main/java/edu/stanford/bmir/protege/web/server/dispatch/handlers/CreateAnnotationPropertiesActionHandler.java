@@ -2,23 +2,30 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesResult;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static java.util.Arrays.asList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,12 +35,10 @@ import java.util.Set;
  */
 public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotationProperty>, CreateAnnotationPropertiesAction, CreateAnnotationPropertiesResult> {
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     @Inject
-    public CreateAnnotationPropertiesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public CreateAnnotationPropertiesActionHandler(OWLAPIProjectManager projectManager,
+                                                   AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -55,9 +60,10 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
         return new CreateAnnotationPropertiesResult(map, project.getProjectId(), action.getParent(), eventList);
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateAnnotationPropertiesAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return asList(EDIT_ONTOLOGY, CREATE_PROPERTY);
     }
 
     @Override

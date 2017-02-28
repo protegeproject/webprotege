@@ -1,20 +1,24 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.watches.EntityBasedWatch;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
 
 /**
  * Matthew Horridge
@@ -24,8 +28,9 @@ import java.util.Set;
 public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<GetWatchesAction, GetWatchesResult> {
 
     @Inject
-    public GetWatchesActionHandler(OWLAPIProjectManager projectManager) {
-        super(projectManager);
+    public GetWatchesActionHandler(OWLAPIProjectManager projectManager,
+                                   AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -33,9 +38,10 @@ public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<Get
         return GetWatchesAction.class;
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetWatchesAction action, RequestContext requestContext) {
-        return NullValidator.get();
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return Arrays.asList(WATCH_CHANGES, VIEW_PROJECT);
     }
 
     @Override

@@ -1,23 +1,25 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 
@@ -27,22 +29,20 @@ import java.util.List;
 public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChangeHandler<Void, SetManchesterSyntaxFrameAction, SetManchesterSyntaxFrameResult> {
 
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     private final GetManchesterSyntaxFrameActionHandler handler;
 
     @Inject
     public SetManchesterSyntaxFrameActionHandler(OWLAPIProjectManager projectManager,
                                                  GetManchesterSyntaxFrameActionHandler handler,
-                                                 ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+                                                 AccessManager accessManager) {
+        super(projectManager, accessManager);
         this.handler = handler;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(SetManchesterSyntaxFrameAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return BuiltInAction.EDIT_ONTOLOGY;
     }
 
     @Override

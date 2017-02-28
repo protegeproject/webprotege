@@ -31,10 +31,6 @@ import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
-import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
-import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
-import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
-import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.GetPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.GetPerspectiveLayoutActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.GetPerspectivesActionHandler;
@@ -265,26 +261,6 @@ public class ActionHandlersModule {
 
     @Provides(type = SET)
     public ActionHandler provideGetDiscussionThreadActionHandler(GetDiscussionThreadActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideAddNoteToEntityActionHandler(AddNoteToEntityActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideAddReplyToNoteActionHandler(AddReplyToNoteActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetNoteStatusActionHandler(SetNoteStatusActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideDeleteNoteActionHandler(DeleteNoteActionHandler handler) {
         return handler;
     }
 

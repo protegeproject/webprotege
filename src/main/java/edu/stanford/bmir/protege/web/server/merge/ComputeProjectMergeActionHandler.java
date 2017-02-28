@@ -4,12 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
@@ -28,10 +25,15 @@ import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
 
 /**
  * Matthew Horridge
@@ -42,18 +44,18 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
 
     private final File uploadsDirectory;
 
-    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
-
     @Inject
-    public ComputeProjectMergeActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
-        super(projectManager);
+    public ComputeProjectMergeActionHandler(@UploadsDirectory File uploadsDirectory,
+                                            OWLAPIProjectManager projectManager,
+                                            AccessManager accessManager) {
+        super(projectManager, accessManager);
         this.uploadsDirectory = uploadsDirectory;
-        this.validatorFactory = validatorFactory;
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(ComputeProjectMergeAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable getRequiredExecutableBuiltInActions() {
+        return Arrays.asList(EDIT_ONTOLOGY, MANAGE_PROJECT);
     }
 
     @Override

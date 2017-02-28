@@ -1,13 +1,13 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -27,13 +29,10 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
 
     private final Provider<OWLOntologyChangeDataReverter> reverterProvider;
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     @Inject
-    public RevertRevisionActionHandler(OWLAPIProjectManager projectManager, Provider<OWLOntologyChangeDataReverter> reverterProvider, ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
+    public RevertRevisionActionHandler(OWLAPIProjectManager projectManager, Provider<OWLOntologyChangeDataReverter> reverterProvider, AccessManager accessManager) {
+        super(projectManager, accessManager);
         this.reverterProvider = reverterProvider;
-        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -52,9 +51,10 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
         return new RevertRevisionResult(project.getProjectId(), eventList);
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(RevertRevisionAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return BuiltInAction.REVERT_CHANGES;
     }
 
     @Override

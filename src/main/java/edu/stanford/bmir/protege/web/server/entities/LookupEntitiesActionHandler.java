@@ -1,21 +1,20 @@
 package edu.stanford.bmir.protege.web.server.entities;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -27,12 +26,10 @@ import java.util.*;
  */
 public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
 
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public LookupEntitiesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public LookupEntitiesActionHandler(OWLAPIProjectManager projectManager,
+                                       AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -40,9 +37,10 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         return LookupEntitiesAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(LookupEntitiesAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return BuiltInAction.VIEW_PROJECT;
     }
 
     @Override

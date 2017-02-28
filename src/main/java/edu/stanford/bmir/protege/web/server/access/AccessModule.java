@@ -19,14 +19,6 @@ public class AccessModule {
     @Provides
     @Singleton
     public AccessManager provideAccessManager(AccessManagerMongoDbImpl impl) {
-        impl.setAssignedRoles(Subject.forGuestUser(), ApplicationResource.get(), Collections.singletonList(BuiltInRole.PROJECT_CREATOR.getRoleId()));
-        impl.setAssignedRoles(Subject.forAnySignedInUser(),
-                              ApplicationResource.get(),
-                              Arrays.asList(
-                                      BuiltInRole.PROJECT_CREATOR.getRoleId()
-//                                      BuiltInRole.ACCOUNT_CREATOR.getRoleId(),
-//                                      BuiltInRole.PROJECT_UPLOADER.getRoleId()
-                              ));
         return impl;
     }
 

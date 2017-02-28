@@ -67,4 +67,10 @@ public interface AccessManager {
     boolean hasPermission(@Nonnull Subject subject,
                           @Nonnull Resource resource,
                           @Nonnull ActionId actionId);
+
+    Collection<Subject> getSubjectsWithAccessToResource(Resource resource);
+
+    Collection<Resource> getResourcesAccessibleToSubject(Subject subject, ActionId actionId);
+
+
 }

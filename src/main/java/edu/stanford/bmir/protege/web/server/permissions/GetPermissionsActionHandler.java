@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 
 import javax.inject.Inject;
 
@@ -48,11 +47,10 @@ public class GetPermissionsActionHandler implements ActionHandler<GetPermissions
 
     @Override
     public GetPermissionsResult execute(GetPermissionsAction action, ExecutionContext executionContext) {
-        PermissionsSet permissionsSet = permissionsManager.getPermissionsSet(action.getProjectId(), action.getUserId());
         Set<ActionId> allowedActions = accessManager.getActionClosure(
                 Subject.forUser(executionContext.getUserId()),
                 new ProjectResource(action.getProjectId())
         );
-        return new GetPermissionsResult(permissionsSet, allowedActions);
+        return new GetPermissionsResult(allowedActions);
     }
 }

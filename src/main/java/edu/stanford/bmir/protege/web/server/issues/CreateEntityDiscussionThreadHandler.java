@@ -1,17 +1,20 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 
 /**
  * Matthew Horridge
@@ -21,17 +24,13 @@ import java.util.Optional;
 public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActionHandler<CreateEntityDiscussionThreadAction, CreateEntityDiscussionThreadResult> {
 
     @Nonnull
-    private final ValidatorFactory<ReadPermissionValidator> validator;
-
-    @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
     public CreateEntityDiscussionThreadHandler(@Nonnull OWLAPIProjectManager projectManager,
-                                               @Nonnull ValidatorFactory<ReadPermissionValidator> validator,
+                                               @Nonnull AccessManager accessManager,
                                                @Nonnull EntityDiscussionThreadRepository repository) {
-        super(projectManager);
-        this.validator = validator;
+        super(projectManager, accessManager);
         this.repository = repository;
     }
 
@@ -40,10 +39,10 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
         return CreateEntityDiscussionThreadAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateEntityDiscussionThreadAction action,
-                                                             RequestContext requestContext) {
-        return validator.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return CREATE_OBJECT_COMMENT;
     }
 
     @Override

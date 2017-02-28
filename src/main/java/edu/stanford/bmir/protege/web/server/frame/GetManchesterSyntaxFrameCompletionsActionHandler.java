@@ -6,12 +6,9 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionChoice;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionResult;
 import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -35,6 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
  */
@@ -43,17 +41,9 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
-    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
-
     @Inject
-    public GetManchesterSyntaxFrameCompletionsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
-    }
-
-    @Override
-    protected RequestValidator getAdditionalRequestValidator(GetManchesterSyntaxFrameCompletionsAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    public GetManchesterSyntaxFrameCompletionsActionHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override

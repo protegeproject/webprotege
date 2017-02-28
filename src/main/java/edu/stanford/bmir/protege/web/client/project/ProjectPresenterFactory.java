@@ -67,8 +67,6 @@ public class ProjectPresenterFactory {
         return new ProjectPresenter(projectId,
                                     view,
                                     eventPollingManager,
-                                    dispatchServiceManager,
-                                    loggedInUserProvider,
                                     topBarPresenter,
                                     perspectiveSwitcherPresenter,
                                     perspectivePersenter,

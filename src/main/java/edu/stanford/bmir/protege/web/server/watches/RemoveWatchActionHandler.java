@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -23,14 +25,11 @@ import javax.inject.Inject;
 public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<RemoveWatchesAction, RemoveWatchesResult> {
 
     @Inject
-    public RemoveWatchActionHandler(OWLAPIProjectManager projectManager) {
-        super(projectManager);
+    public RemoveWatchActionHandler(OWLAPIProjectManager projectManager,
+                                    AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
-    @Override
-    protected RequestValidator getAdditionalRequestValidator(RemoveWatchesAction action, RequestContext requestContext) {
-        return NullValidator.get();
-    }
 
     @Override
     protected RemoveWatchesResult execute(RemoveWatchesAction action, OWLAPIProject project, ExecutionContext executionContext) {

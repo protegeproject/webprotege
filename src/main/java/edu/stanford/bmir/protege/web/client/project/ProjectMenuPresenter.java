@@ -3,12 +3,10 @@ package edu.stanford.bmir.protege.web.client.project;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -20,10 +18,6 @@ import javax.inject.Inject;
  */
 public class ProjectMenuPresenter {
 
-    private final ProjectId projectId;
-
-    private final DispatchServiceManager dispatchServiceManager;
-
     private final ProjectMenuView view;
 
     private final ShowProjectDetailsHandler showProjectDetailsHandler;
@@ -32,32 +26,32 @@ public class ProjectMenuPresenter {
 
     private final UploadAndMergeHandler uploadAndMergeHandler;
 
-    private final LoggedInUserProvider loggedInUserProvider;
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public ProjectMenuPresenter(ProjectId projectId, DispatchServiceManager dispatchServiceManager, ProjectMenuView view, ShowProjectDetailsHandler showProjectDetailsHandler, ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler, UploadAndMergeHandler uploadAndMergeHandler, LoggedInUserProvider loggedInUserProvider) {
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
+    public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
+                                ProjectMenuView view,
+                                ShowProjectDetailsHandler showProjectDetailsHandler,
+                                ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler,
+                                UploadAndMergeHandler uploadAndMergeHandler) {
+        this.permissionChecker = permissionChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.showFreshEntitySettingsHandler = showFreshEntitySettingsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
-        this.loggedInUserProvider = loggedInUserProvider;
         setupActions();
     }
 
     public void start(final AcceptsOneWidget container) {
-        dispatchServiceManager.execute(new GetPermissionsAction(projectId, loggedInUserProvider.getCurrentUserId()), new DispatchServiceCallback<GetPermissionsResult>() {
-            @Override
-            public void handleSuccess(GetPermissionsResult result) {
-                if(result.getPermissionsSet().contains(Permission.getAdminPermission())) {
-                    displayButton(container);
-                }
-                else {
-                    view.asWidget().removeFromParent();
-                }
-            }
-        });
+        permissionChecker.hasPermission(BuiltInAction.MANAGE_PROJECT,
+                                        canManage -> {
+                                            if(canManage) {
+                                                displayButton(container);
+                                            }
+                                            else {
+                                                view.asWidget().removeFromParent();
+                                            }
+                                        });
     }
 
     private void displayButton(AcceptsOneWidget container) {

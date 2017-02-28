@@ -2,13 +2,10 @@
 package edu.stanford.bmir.protege.web.server.access;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
@@ -76,17 +73,17 @@ public class ProjectResource_TestCase {
 
     @Test
     public void shouldReturn_true_For_isProjectTarget() {
-        assertThat(projectResource.isProjectTarget(projectId), is(true));
+        assertThat(projectResource.isProject(projectId), is(true));
     }
 
     @Test
     public void shouldReturn_false_For_isProjectTarget() {
-        assertThat(projectResource.isProjectTarget(mock(ProjectId.class)), is(false));
+        assertThat(projectResource.isProject(mock(ProjectId.class)), is(false));
     }
 
     @Test
     public void shouldReturn_false_For_isApplicationTarget() {
-        assertThat(projectResource.isApplicationTarget(), is(false));
+        assertThat(projectResource.isApplication(), is(false));
     }
 
 }

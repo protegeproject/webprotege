@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -15,6 +15,9 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,29 +27,15 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntity> extends AbstractHasProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
 
-    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
-
     public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager,
-                                      ValidatorFactory<WritePermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+                                      AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
-    /**
-     * Gets an additional validator that is specific to the implementing handler.  This is returned as part of a
-     * {@link edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequestValidator} by the the implementation
-     * of
-     * the {@link #getRequestValidator(edu.stanford.bmir.protege.web.shared.dispatch.Action,
-     * edu.stanford.bmir.protege.web.server.dispatch.RequestContext)} method.
-     * @param action The action that the validation will be completed against.
-     * @param requestContext The {@link edu.stanford.bmir.protege.web.server.dispatch.RequestContext} that describes the
-     * context for the request.
-     * @return A {@link edu.stanford.bmir.protege.web.server.dispatch.RequestValidator} for this handler.  Not {@code
-     *         null}.
-     */
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(A action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return BuiltInAction.EDIT_ONTOLOGY;
     }
 
     /**

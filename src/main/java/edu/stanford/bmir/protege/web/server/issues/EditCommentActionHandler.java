@@ -1,17 +1,20 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_OWN_OBJECT_COMMENT;
 
 /**
  * Matthew Horridge
@@ -20,16 +23,13 @@ import java.util.Optional;
  */
 public class EditCommentActionHandler extends AbstractHasProjectActionHandler<EditCommentAction, EditCommentResult> {
 
-    private final ValidatorFactory<CommentPermissionValidator> validator;
-
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
     public EditCommentActionHandler(OWLAPIProjectManager projectManager,
-                                    ValidatorFactory<CommentPermissionValidator> validator,
+                                    AccessManager accessManager,
                                     EntityDiscussionThreadRepository repository) {
-        super(projectManager);
-        this.validator = validator;
+        super(projectManager, accessManager);
         this.repository = repository;
     }
 
@@ -38,9 +38,10 @@ public class EditCommentActionHandler extends AbstractHasProjectActionHandler<Ed
         return EditCommentAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(EditCommentAction action, RequestContext requestContext) {
-        return validator.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return EDIT_OWN_OBJECT_COMMENT;
     }
 
     @Override

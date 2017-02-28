@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -20,8 +21,8 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
  */
 public abstract class AbstractProjectChangeHandler<T, A extends Action<R> & HasProjectId, R extends Result> extends AbstractHasProjectActionHandler<A, R> {
 
-    public AbstractProjectChangeHandler(OWLAPIProjectManager projectManager) {
-        super(projectManager);
+    public AbstractProjectChangeHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override

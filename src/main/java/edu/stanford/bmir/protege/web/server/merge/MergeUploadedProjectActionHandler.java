@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.merge;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
@@ -10,26 +11,28 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
 
 /**
  * Matthew Horridge
@@ -40,18 +43,18 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
 
     private final File uploadsDirectory;
 
-    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
-
     @Inject
-    public MergeUploadedProjectActionHandler(OWLAPIProjectManager projectManager, @UploadsDirectory File uploadsDirectory, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
-        super(projectManager);
+    public MergeUploadedProjectActionHandler(OWLAPIProjectManager projectManager,
+                                             @UploadsDirectory File uploadsDirectory,
+                                             AccessManager accessManager) {
+        super(projectManager, accessManager);
         this.uploadsDirectory = uploadsDirectory;
-        this.validatorFactory = validatorFactory;
     }
 
+    @Nonnull
     @Override
-    protected RequestValidator getAdditionalRequestValidator(MergeUploadedProjectAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
+        return Arrays.asList(MANAGE_PROJECT, EDIT_ONTOLOGY);
     }
 
     @Override

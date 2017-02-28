@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.server.access.RoleAssignment.*;
@@ -30,8 +31,9 @@ public class AccessManagerMongoDbImpl implements AccessManager {
 
     /**
      * Constructs an {@link AccessManager} that is backed by MongoDb.
+     *
      * @param roleOracle An oracle for looking up information about roles.
-     * @param datastore A Morphia datastore that is used to access MongoDb.
+     * @param datastore  A Morphia datastore that is used to access MongoDb.
      */
     @Inject
     public AccessManagerMongoDbImpl(RoleOracle roleOracle, Datastore datastore) {
@@ -54,6 +56,7 @@ public class AccessManagerMongoDbImpl implements AccessManager {
                                             .flatMap(id -> roleOracle.getRoleClosure(id).stream())
                                             .flatMap(r -> r.getActions().stream())
                                             .map(ActionId::getId)
+                                            .sorted()
                                             .collect(toList());
         RoleAssignment assignment = new RoleAssignment(userName,
                                                        projectId,
@@ -136,10 +139,47 @@ public class AccessManagerMongoDbImpl implements AccessManager {
         return query.count() > 0;
     }
 
+    @Override
+    public Collection<Subject> getSubjectsWithAccessToResource(Resource resource) {
+        String projectId = toProjectId(resource);
+        Query<RoleAssignment> query = datastore.createQuery(RoleAssignment.class)
+                                               .field(PROJECT_ID).equal(projectId);
+        return query.asList().stream()
+                    .map(ra -> {
+                        Optional<String> userName = ra.getUserName();
+                        if (userName.isPresent()) {
+                            return Subject.forUser(userName.get());
+                        }
+                        else {
+                            return Subject.forAnySignedInUser();
+                        }
+                    })
+                    .collect(toList());
+    }
+
+    @Override
+    public Collection<Resource> getResourcesAccessibleToSubject(Subject subject, ActionId actionId) {
+        String userName = toUserName(subject);
+        Query<RoleAssignment> query = datastore.createQuery(RoleAssignment.class)
+                                               .field(USER_NAME).equal(userName)
+                                               .field(ACTION_CLOSURE).equal(actionId.getId());
+        return query.asList().stream()
+                    .map(ra -> {
+                        Optional<String> projectId = ra.getProjectId();
+                        if (projectId.isPresent()) {
+                            return new ProjectResource(ProjectId.get(projectId.get()));
+                        }
+                        else {
+                            return ApplicationResource.get();
+                        }
+                    })
+                    .collect(toList());
+    }
 
     /**
      * Converts the specified subject to a user name or a null value if the specified subject does not
      * represent a user.
+     *
      * @param subject The subject.
      * @return The user name for the subject.
      */

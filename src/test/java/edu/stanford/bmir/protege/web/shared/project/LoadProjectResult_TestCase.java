@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.project;
 
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -15,25 +14,25 @@ import org.mockito.Mockito;
 public class LoadProjectResult_TestCase {
 
     private LoadProjectResult loadProjectResult;
+
     @Mock
     private ProjectId projectId;
+
     @Mock
     private UserId loadedBy;
-    @Mock
-    private PermissionsSet permissionsSet;
+
     @Mock
     private ProjectDetails projectDetails;
 
     @Before
     public void setUp()
-        throws Exception
-    {
-        loadProjectResult = new LoadProjectResult(projectId, loadedBy, permissionsSet, projectDetails);
+            throws Exception {
+        loadProjectResult = new LoadProjectResult(projectId, loadedBy, projectDetails);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new LoadProjectResult(null, loadedBy, permissionsSet, projectDetails);
+        new LoadProjectResult(null, loadedBy, projectDetails);
     }
 
     @Test
@@ -43,17 +42,12 @@ public class LoadProjectResult_TestCase {
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_loadedBy_IsNull() {
-        new LoadProjectResult(projectId, null, permissionsSet, projectDetails);
-    }
-
-    @Test(expected = java.lang.NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_permissionsSet_IsNull() {
-        new LoadProjectResult(projectId, loadedBy, null, projectDetails);
+        new LoadProjectResult(projectId, null, projectDetails);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectDetails_IsNull() {
-        new LoadProjectResult(projectId, loadedBy, permissionsSet, null);
+        new LoadProjectResult(projectId, loadedBy, null);
     }
 
     @Test
@@ -73,32 +67,38 @@ public class LoadProjectResult_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(loadProjectResult, Matchers.is(new LoadProjectResult(projectId, loadedBy, permissionsSet, projectDetails)));
+        MatcherAssert.assertThat(loadProjectResult,
+                                 Matchers.is(new LoadProjectResult(projectId, loadedBy, projectDetails)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        MatcherAssert.assertThat(loadProjectResult, Matchers.is(Matchers.not(new LoadProjectResult(Mockito.mock(ProjectId.class), loadedBy, permissionsSet, projectDetails))));
+        MatcherAssert.assertThat(loadProjectResult,
+                                 Matchers.is(Matchers.not(new LoadProjectResult(Mockito.mock(ProjectId.class),
+                                                                                loadedBy,
+                                                                                projectDetails))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_loadedBy() {
-        MatcherAssert.assertThat(loadProjectResult, Matchers.is(Matchers.not(new LoadProjectResult(projectId, Mockito.mock(UserId.class), permissionsSet, projectDetails))));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_permissionsSet() {
-        MatcherAssert.assertThat(loadProjectResult, Matchers.is(Matchers.not(new LoadProjectResult(projectId, loadedBy, Mockito.mock(PermissionsSet.class), projectDetails))));
+        MatcherAssert.assertThat(loadProjectResult,
+                                 Matchers.is(Matchers.not(new LoadProjectResult(projectId,
+                                                                                Mockito.mock(UserId.class),
+                                                                                projectDetails))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectDetails() {
-        MatcherAssert.assertThat(loadProjectResult, Matchers.is(Matchers.not(new LoadProjectResult(projectId, loadedBy, permissionsSet, Mockito.mock(ProjectDetails.class)))));
+        MatcherAssert.assertThat(loadProjectResult,
+                                 Matchers.is(Matchers.not(new LoadProjectResult(projectId,
+                                                                                loadedBy,
+                                                                                Mockito.mock(ProjectDetails.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(loadProjectResult.hashCode(), Matchers.is(new LoadProjectResult(projectId, loadedBy, permissionsSet, projectDetails).hashCode()));
+        MatcherAssert.assertThat(loadProjectResult.hashCode(),
+                                 Matchers.is(new LoadProjectResult(projectId, loadedBy, projectDetails).hashCode()));
     }
 
     @Test
@@ -110,10 +110,4 @@ public class LoadProjectResult_TestCase {
     public void should_getUserId() {
         MatcherAssert.assertThat(loadProjectResult.getUserId(), Matchers.is(loadedBy));
     }
-
-    @Test
-    public void should_getRequestingUserProjectPermissionSet() {
-        MatcherAssert.assertThat(loadProjectResult.getRequestingUserProjectPermissionSet(), Matchers.is(permissionsSet));
-    }
-
 }

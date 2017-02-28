@@ -1,17 +1,19 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,12 +23,10 @@ import javax.inject.Inject;
  */
 public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectActionHandler<GetEntityCrudKitSettingsAction, GetEntityCrudKitSettingsResult> {
 
-    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
-
     @Inject
-    public GetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
-        super(projectManager);
-        this.validatorFactory = validatorFactory;
+    public GetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager,
+                                                 AccessManager accessManager) {
+        super(projectManager, accessManager);
     }
 
     @Override
@@ -34,9 +34,10 @@ public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
         return GetEntityCrudKitSettingsAction.class;
     }
 
+    @Nullable
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetEntityCrudKitSettingsAction action, RequestContext requestContext) {
-        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return MANAGE_PROJECT;
     }
 
     @Override

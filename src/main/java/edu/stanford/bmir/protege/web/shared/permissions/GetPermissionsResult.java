@@ -17,15 +17,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetPermissionsResult implements Result {
 
-    private PermissionsSet permissionsSet;
-
     private Set<ActionId> allowedActions;
 
     private GetPermissionsResult() {
     }
 
-    public GetPermissionsResult(PermissionsSet permissionsSet, Set<ActionId> allowedActions) {
-        this.permissionsSet = checkNotNull(permissionsSet);
+    public GetPermissionsResult(Set<ActionId> allowedActions) {
         this.allowedActions = ImmutableSet.copyOf(allowedActions);
     }
 
@@ -33,13 +30,9 @@ public class GetPermissionsResult implements Result {
         return allowedActions;
     }
 
-    public PermissionsSet getPermissionsSet() {
-        return permissionsSet;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hashCode(permissionsSet);
+        return Objects.hashCode(allowedActions);
     }
 
     @Override
@@ -51,14 +44,14 @@ public class GetPermissionsResult implements Result {
             return false;
         }
         GetPermissionsResult other = (GetPermissionsResult) obj;
-        return this.permissionsSet.equals(other.permissionsSet);
+        return this.allowedActions.equals(other.allowedActions);
     }
 
 
     @Override
     public String toString() {
         return toStringHelper("GetPermissionsResult")
-                .addValue(permissionsSet)
+                .addValue(allowedActions)
                 .toString();
     }
 }

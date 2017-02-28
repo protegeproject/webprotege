@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
@@ -54,11 +53,11 @@ public class GetProjectSettingsActionHandler_TestCase {
     private OWLAPIProjectManager projectManager;
 
     @Mock
-    private ValidatorFactory<AdminPermissionValidator> validatorFactory;
+    private AccessManager accessManager;
 
     @Before
     public void setUp() throws Exception {
-        actionHandler = new GetProjectSettingsActionHandler(projectManager, mdm, validatorFactory);
+        actionHandler = new GetProjectSettingsActionHandler(projectManager, mdm, accessManager);
 
         when(action.getProjectId()).thenReturn(projectId);
         when(mdm.getProjectSettings(projectId)).thenReturn(projectSettings);

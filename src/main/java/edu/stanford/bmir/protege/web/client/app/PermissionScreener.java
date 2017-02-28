@@ -1,13 +1,8 @@
 package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
-import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,38 +14,31 @@ import javax.inject.Provider;
  */
 public class PermissionScreener {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private final Provider<ForbiddenView> forbiddenViewProvider;
 
-    public static interface Callback {
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    public interface Callback {
         void onPermissionGranted();
     }
 
     @Inject
-    public PermissionScreener(DispatchServiceManager dispatchServiceManager,
-                              LoggedInUserProvider loggedInUserProvider,
-                              Provider<ForbiddenView> forbiddenViewProvider) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserProvider = loggedInUserProvider;
+    public PermissionScreener(Provider<ForbiddenView> forbiddenViewProvider,
+                              LoggedInUserProjectPermissionChecker permissionChecker) {
         this.forbiddenViewProvider = forbiddenViewProvider;
+        this.permissionChecker = permissionChecker;
     }
 
-    public void checkPermission(final ProjectId projectId,
-                                final Permission expectedPermission,
+    public void checkPermission(final ActionId expectedPermission,
                                 final AcceptsOneWidget acceptsOneWidget,
                                 final Callback callback) {
-        dispatchServiceManager.execute(new GetPermissionsAction(projectId, loggedInUserProvider.getCurrentUserId()), new DispatchServiceCallback<GetPermissionsResult>() {
-            @Override
-            public void handleSuccess(GetPermissionsResult result) {
-                if(result.getPermissionsSet().contains(expectedPermission)) {
-                    callback.onPermissionGranted();
-                }
-                else {
-                    acceptsOneWidget.setWidget(forbiddenViewProvider.get());
-                }
+
+        permissionChecker.hasPermission(expectedPermission, hasPermission -> {
+            if(hasPermission) {
+                callback.onPermissionGranted();
+            }
+            else {
+                acceptsOneWidget.setWidget(forbiddenViewProvider.get());
             }
         });
     }
