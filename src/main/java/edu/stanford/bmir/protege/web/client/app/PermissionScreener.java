@@ -4,8 +4,11 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -25,13 +28,13 @@ public class PermissionScreener {
     @Inject
     public PermissionScreener(Provider<ForbiddenView> forbiddenViewProvider,
                               LoggedInUserProjectPermissionChecker permissionChecker) {
-        this.forbiddenViewProvider = forbiddenViewProvider;
-        this.permissionChecker = permissionChecker;
+        this.forbiddenViewProvider = checkNotNull(forbiddenViewProvider);
+        this.permissionChecker = checkNotNull(permissionChecker);
     }
 
-    public void checkPermission(final ActionId expectedPermission,
-                                final AcceptsOneWidget acceptsOneWidget,
-                                final Callback callback) {
+    public void checkPermission(@Nonnull final ActionId expectedPermission,
+                                @Nonnull final AcceptsOneWidget acceptsOneWidget,
+                                @Nonnull final Callback callback) {
 
         permissionChecker.hasPermission(expectedPermission, hasPermission -> {
             if(hasPermission) {
