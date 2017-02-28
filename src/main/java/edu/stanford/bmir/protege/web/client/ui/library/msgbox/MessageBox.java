@@ -166,14 +166,11 @@ public class MessageBox {
     }
 
     private static void scheduleCentering(final WebProtegeDialog<Void> dlg) {
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                int left = (Window.getClientWidth() - dlg.getOffsetWidth()) / 2;
-                int top = (Window.getClientHeight() - dlg.getOffsetHeight()) / 2;
-                dlg.setPopupPosition(left, top);
-                dlg.setVisible(true);
-            }
+        Scheduler.get().scheduleDeferred(() -> {
+            int left = (Window.getClientWidth() - dlg.getOffsetWidth()) / 2;
+            int top = (Window.getClientHeight() - dlg.getOffsetHeight()) / 2;
+            dlg.setPopupPosition(left, top);
+            dlg.setVisible(true);
         });
     }
 

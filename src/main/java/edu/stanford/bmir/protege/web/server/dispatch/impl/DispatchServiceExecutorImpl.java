@@ -41,6 +41,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         try {
             R result = actionHandler.execute(action, executionContext);
             return new DispatchServiceResultContainer(result);
+        } catch (PermissionDeniedException e) {
+            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e);

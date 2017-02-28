@@ -59,7 +59,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -355,9 +355,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         checkNotNull(changeDescriptionGenerator);
 
         // Final check of whether the user can actually edit the project
-        if(!accessManager.hasPermission(forUser(userId),
-                                    new ProjectResource(projectId),
-                                    EDIT_ONTOLOGY.getActionId())) {
+        Subject subject = forUser(userId);
+        ProjectResource projectResource = new ProjectResource(projectId);
+        if(!accessManager.hasPermission(subject,
+                                        projectResource,
+                                        EDIT_ONTOLOGY.getActionId())) {
             throw new PermissionDeniedException("You do not have permission to edit this project");
         }
 
@@ -391,6 +393,26 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             for (OWLOntologyChange change : changes) {
                 for (OWLEntity entity : change.getSignature()) {
                     if (DataFactory.isFreshEntity(entity)) {
+                        if(entity.isOWLClass()) {
+                            if(!accessManager.hasPermission(subject, projectResource, CREATE_CLASS.getActionId())) {
+                                throw new PermissionDeniedException("You do not have permission to create new classes");
+                            }
+                        }
+                        else if(entity.isOWLObjectProperty() || entity.isOWLDataProperty() || entity.isOWLAnnotationProperty()) {
+                            if(!accessManager.hasPermission(subject, projectResource, CREATE_PROPERTY.getActionId())) {
+                                throw new RuntimeException("You do not have permission to create new properties");
+                            }
+                        }
+                        else if(entity.isOWLNamedIndividual()) {
+                            if(!accessManager.hasPermission(subject, projectResource, CREATE_INDIVIDUAL.getActionId())) {
+                                throw new RuntimeException("You do not have permission to create new individuals");
+                            }
+                        }
+                        else if(entity.isOWLDatatype()) {
+                            if(!accessManager.hasPermission(subject, projectResource, CREATE_DATATYPE.getActionId())) {
+                                throw new RuntimeException("You do not have permission to create new datatypes");
+                            }
+                        }
                         changesToRename.add(change);
                         IRI currentIRI = entity.getIRI();
                         if (!iriRenameMap.containsKey(currentIRI)) {
