@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            padding: 2px;
+        }
+        .button {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+        .number {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+        .label {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label text="Page " addStyleNames="{style.label}"/>
+        <g:TextBox ui:field="pageNumberField" addStyleNames="{style.number}" visibleLength="5"/>
+        <g:Label text=" of " addStyleNames="{style.label}"/>
+        <g:Label ui:field="pageCountField" addStyleNames="{style.label}"/>
+        <g:Button ui:field="previousButton" addStyleNames="{style.button}" text="Prev"/>
+        <g:Button ui:field="nextButton" addStyleNames="{style.number}" text="Next"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
