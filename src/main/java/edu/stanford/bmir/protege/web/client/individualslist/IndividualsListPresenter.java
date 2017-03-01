@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialo
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -89,6 +90,7 @@ public class IndividualsListPresenter {
         view.setSearchStringChangedHandler(() -> {
             searchStringDelayTimer.cancel();
             searchStringDelayTimer.schedule(SEARCH_DELAY);});
+        view.setPageNumberChangedHandler(pageNumber -> updateList());
 
     }
 
@@ -120,12 +122,16 @@ public class IndividualsListPresenter {
         GetIndividualsAction action = new GetIndividualsAction(projectId,
                                                                currentType.orElse(DataFactory.getOWLThing()),
                                                                view.getSearchString(),
-                                                               Optional.of(PageRequest.requestPageWithSize(1, PAGE_SIZE)));
+                                                               Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
+                                                                                                           PAGE_SIZE)));
         dispatchServiceManager.execute(action, result -> {
             view.setListData(result.getIndividuals());
             view.setStatusMessageVisible(true);
             int displayedIndividuals = result.getIndividuals().size();
             int totalIndividuals = result.getTotalIndividuals();
+            Page<OWLNamedIndividualData> paginatedResult = result.getPaginatedResult();
+            view.setPageCount(paginatedResult.getPageCount());
+            view.setPageNumber(paginatedResult.getPageNumber());
             updateStatusLabel(displayedIndividuals, totalIndividuals);
         });
     }
