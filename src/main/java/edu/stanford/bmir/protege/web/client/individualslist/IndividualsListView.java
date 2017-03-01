@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,6 +15,10 @@ import java.util.List;
  * Date: 12/09/2013
  */
 public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, IsWidget {
+
+    interface SearchStringChangedHandler {
+        void handleSearchStringChanged();
+    }
 
     void setListData(List<OWLNamedIndividualData> individuals);
 
@@ -27,4 +31,14 @@ public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndivi
     Optional<OWLNamedIndividualData> getSelectedIndividual();
 
     void setSelectedIndividual(OWLNamedIndividualData individual);
+
+    void setStatusMessage(String statusMessage);
+
+    void setStatusMessageVisible(boolean visible);
+
+    String getSearchString();
+
+    void clearSearchString();
+
+    void setSearchStringChangedHandler(SearchStringChangedHandler handler);
 }

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -59,7 +59,7 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
      */
     public CreateNamedIndividualsAction(ProjectId projectId, Optional<OWLClass> type, Set<String> shortNames) {
         super(projectId);
-        this.type = checkNotNull(type).orNull();
+        this.type = checkNotNull(type).orElse(null);
         this.shortNames = checkNotNull(shortNames);
     }
 
@@ -68,7 +68,7 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
      * @return The type. Not {@code null}.
      */
     public Optional<OWLClass> getType() {
-        return Optional.fromNullable(type);
+        return Optional.ofNullable(type);
     }
 
     /**

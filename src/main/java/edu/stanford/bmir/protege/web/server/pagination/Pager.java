@@ -24,6 +24,8 @@ public class Pager<T> implements Serializable {
 
     private List<List<T>> partition;
 
+    private int sourceDataSize;
+
     /**
      * For serialization purposes only
      */
@@ -36,6 +38,7 @@ public class Pager<T> implements Serializable {
 
     private Pager(List<T> sourceData, int pageSize) {
         checkArgument(pageSize > 0);
+        this.sourceDataSize = sourceData.size();
         this.partition = Lists.partition(sourceData, pageSize);
 
     }
@@ -67,10 +70,10 @@ public class Pager<T> implements Serializable {
     public Page<T> getPage(int pageNumber) {
         checkElementIndex(pageNumber - 1, getPageCount());
         if(partition.isEmpty()) {
-            return new Page<T>(pageNumber, getPageCount(), Collections.<T>emptyList());
+            return new Page<T>(pageNumber, getPageCount(), Collections.emptyList(), 0);
         }
         else {
-            return new Page<T>(pageNumber, getPageCount(), partition.get(pageNumber - 1));
+            return new Page<T>(pageNumber, getPageCount(), partition.get(pageNumber - 1), sourceDataSize);
         }
     }
 }

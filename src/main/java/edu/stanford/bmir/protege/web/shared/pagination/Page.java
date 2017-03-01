@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.pagination;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,23 +25,29 @@ public class Page<T> implements Serializable, Iterable<T>, IsSerializable {
 
     private List<T> pageElements;
 
-    /**
-     * For serialization purposes only
-     */
+    private long totalElements;
+
+    @GwtSerializationConstructor
     private Page() {
     }
 
-    public Page(int pageNumber, int pageCount, List<T> pageElements) {
+    public Page(int pageNumber, int pageCount, List<T> pageElements, long totalElements) {
         checkArgument(pageNumber > 0, "pageNumber must be greater than 0");
         this.pageNumber = pageNumber;
         checkArgument(pageCount > 0, "pageCount must be greater than 0");
         this.pageCount = pageCount;
         checkArgument(!(pageNumber > pageCount));
         this.pageElements = new ArrayList<T>(checkNotNull(pageElements));
+        checkArgument(totalElements > -1);
+        this.totalElements = totalElements;
     }
 
     public List<T> getPageElements() {
         return new ArrayList<T>(pageElements);
+    }
+
+    public long getTotalElements() {
+        return totalElements;
     }
 
     public int getPageNumber() {

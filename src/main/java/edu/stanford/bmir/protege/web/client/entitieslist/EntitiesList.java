@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.entitieslist;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

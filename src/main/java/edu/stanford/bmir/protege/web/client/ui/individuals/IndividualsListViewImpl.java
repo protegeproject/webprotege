@@ -1,20 +1,30 @@
 package edu.stanford.bmir.protege.web.client.ui.individuals;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -32,9 +42,22 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected EntitiesListImpl<OWLNamedIndividualData> individualsList;
 
+    @UiField
+    protected Label statusLabel;
+
+    @UiField
+    protected TextBox searchBox;
+
+    private SearchStringChangedHandler searchStringChangedHandler = () -> {};
+
     @Inject
     public IndividualsListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @UiHandler("searchBox")
+    protected void handleSearchStringChanged(KeyUpEvent event) {
+        searchStringChangedHandler.handleSearchStringChanged();
     }
 
     @Override
@@ -54,7 +77,12 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Override
     public Collection<OWLNamedIndividualData> getSelectedIndividuals() {
-        return individualsList.getSelectedEntity().asSet();
+        if(individualsList.getSelectedEntity().isPresent()) {
+            return Collections.singleton(individualsList.getSelectedEntity().get());
+        }
+        else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -72,4 +100,28 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
         return individualsList.addSelectionHandler(handler);
     }
 
+    @Override
+    public void setStatusMessage(String statusMessage) {
+        statusLabel.setText(statusMessage);
+    }
+
+    @Override
+    public void setStatusMessageVisible(boolean visible) {
+        statusLabel.setVisible(visible);
+    }
+
+    @Override
+    public String getSearchString() {
+        return searchBox.getText();
+    }
+
+    @Override
+    public void clearSearchString() {
+        searchBox.setText("");
+    }
+
+    @Override
+    public void setSearchStringChangedHandler(SearchStringChangedHandler handler) {
+        searchStringChangedHandler = checkNotNull(handler);
+    }
 }

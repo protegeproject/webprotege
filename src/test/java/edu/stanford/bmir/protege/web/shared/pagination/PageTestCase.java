@@ -18,28 +18,28 @@ public class PageTestCase {
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorThrowsIllegalArgumentExceptionIfPageNumberIsGreaterThanPageCount() {
-        new Page<String>(2, 1, Collections.<String>emptyList());
+        new Page<String>(2, 1, Collections.emptyList(), 100);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorThrowsIndexOfOutBoundsExceptionForPageNumberOfZero() {
-        new Page<String>(0, 1, Collections.<String>emptyList());
+        new Page<String>(0, 1, Collections.emptyList(), 100);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorThrowsIllegalArgumentExceptionForPageCountOfZero() {
-        new Page<String>(1, 0, Collections.<String>emptyList());
+        new Page<String>(1, 0, Collections.emptyList(), 100);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructorThrowsNullPointerExceptionForNullElements() {
-        new Page<String>(1, 1, null);
+        new Page<String>(1, 1, null, 100);
     }
 
     @Test
     public void getElementsReturnsCopy() {
         List<String> suppliedElements = Arrays.asList("A");
-        Page<String> p = new Page<String>(1, 1, suppliedElements);
+        Page<String> p = new Page(1, 1, suppliedElements, 100);
         List<String> elements = p.getPageElements();
         elements.clear();
         assertEquals(suppliedElements, p.getPageElements());
@@ -47,7 +47,7 @@ public class PageTestCase {
 
     @Test
     public void getPageNumberReturnsSuppliedPageNumber() {
-        Page<String> p = new Page<String>(2, 2, Collections.<String>emptyList());
+        Page<String> p = new Page<String>(2, 2, Collections.emptyList(), 100);
         assertEquals(2, p.getPageNumber());
     }
 }
