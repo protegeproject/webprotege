@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -19,8 +18,6 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -65,7 +62,7 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         List<OWLNamedIndividualData> individualsData = stream.peek(i -> counter.increment())
                                                              .map(i -> project.getRenderingManager().getRendering(i))
                                                              .filter(i -> {
-                                                                 String searchString = action.getSearchString();
+                                                                 String searchString = action.getFilterString();
                                                                  return searchString.isEmpty()
                                                                          || i.getBrowserText().contains(searchString);
                                                              })

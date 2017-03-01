@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.shared.individualslist;
 
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -39,20 +39,20 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @param projectId The projectId.  Not {@code null}.
      * @param type      The asserted type of the individuals.  Not {@code null}.  A type of owl:Thing means all individuals
      *                  in the ontology should be in the result.
-     * @param searchString A search string that can be used to filter results.  Can be empty to indicate
-     *                                      no filtering
+     * @param filterString A string that can be used to filter results.  Can be empty to indicate
+     *                    no filtering (match everything).  Individuals with browser text containing
+     *                    the specified filter string will be included in the result.
      * @param pageRequest     The optional pageRequest for pagination.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public GetIndividualsAction(@Nonnull ProjectId projectId,
                                 @Nonnull OWLClass type,
-                                @Nonnull String searchString,
+                                @Nonnull String filterString,
                                 @Nonnull Optional<PageRequest> pageRequest) {
         super(projectId);
         this.type = checkNotNull(type);
-        this.searchString = checkNotNull(searchString);
-        checkNotNull(pageRequest);
-        if(pageRequest.isPresent()) {
+        this.searchString = checkNotNull(filterString);
+        if(checkNotNull(pageRequest).isPresent()) {
             this.pageRequest = pageRequest.get();
         }
         else {
@@ -75,7 +75,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @return The search string.  An empty string matches all results.
      */
     @Nonnull
-    public String getSearchString() {
+    public String getFilterString() {
         return searchString;
     }
 
