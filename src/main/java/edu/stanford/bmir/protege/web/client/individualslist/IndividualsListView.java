@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import java.util.Collection;
@@ -41,4 +42,12 @@ public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndivi
     void clearSearchString();
 
     void setSearchStringChangedHandler(SearchStringChangedHandler handler);
+
+    void setPageCount(int pageCount);
+
+    void setPageNumber(int pageNumber);
+
+    int getPageNumber();
+
+    void setPageNumberChangedHandler(PaginatorPresenter.PageNumberChangedHandler handler);
 }

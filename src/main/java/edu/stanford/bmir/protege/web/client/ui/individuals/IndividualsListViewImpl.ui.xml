@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
     <ui:style>
         .main {
             display: flex;
@@ -16,9 +17,8 @@
         .statusLabel {
             flex-grow: 0;
             flex-shrink: 0;
-            padding: 2px;
+            padding: 3px;
             border-top: 1px solid #f0f0f0;
-            text-align: right;
             padding-right: 10px;
         }
         .individualsList {
@@ -26,10 +26,17 @@
             flex-shrink: 1;
             overflow: auto;
         }
+        .bottomBar {
+            background: #f0f0f0;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="Enter search string to filter list"/>
         <entitieslist:EntitiesListImpl ui:field="individualsList" addStyleNames="{style.individualsList}"/>
-        <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
+        <g:HTMLPanel addStyleNames="{style.bottomBar}">
+            <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
+            <pagination:PaginatorViewImpl ui:field="paginator"/>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>

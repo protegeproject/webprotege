@@ -16,6 +16,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import javax.inject.Inject;
@@ -33,6 +35,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class IndividualsListViewImpl extends Composite implements IndividualsListView {
 
+    private final PaginatorPresenter paginatorPresenter;
+
     interface IndividualsListViewImplUiBinder extends UiBinder<HTMLPanel, IndividualsListViewImpl> {
 
     }
@@ -48,11 +52,15 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected TextBox searchBox;
 
+    @UiField
+    protected PaginatorView paginator;
+
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
     @Inject
     public IndividualsListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        paginatorPresenter = new PaginatorPresenter(paginator);
     }
 
     @UiHandler("searchBox")
@@ -123,5 +131,25 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @Override
     public void setSearchStringChangedHandler(SearchStringChangedHandler handler) {
         searchStringChangedHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setPageCount(int pageCount) {
+        paginatorPresenter.setPageCount(pageCount);
+    }
+
+    @Override
+    public void setPageNumber(int pageNumber) {
+        paginatorPresenter.setPageNumber(pageNumber);
+    }
+
+    @Override
+    public int getPageNumber() {
+        return paginatorPresenter.getPageNumber();
+    }
+
+    @Override
+    public void setPageNumberChangedHandler(PaginatorPresenter.PageNumberChangedHandler handler) {
+        paginatorPresenter.setPageNumberChangedHandler(handler);
     }
 }
