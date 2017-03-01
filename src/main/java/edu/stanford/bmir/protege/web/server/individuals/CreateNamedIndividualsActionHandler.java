@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
@@ -44,7 +46,14 @@ public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActio
 
     @Override
     protected CreateNamedIndividualsResult execute(CreateNamedIndividualsAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        ChangeApplicationResult<Set<OWLNamedIndividual>> result = project.applyChanges(executionContext.getUserId(), new CreateIndividualsChangeListGenerator(action.getShortNames(), action.getType()), new FixedMessageChangeDescriptionGenerator<Set<OWLNamedIndividual>>("Created individuals"));
+        Optional<OWLClass> type;
+        if(action.getType().isPresent()) {
+            type = Optional.of(action.getType().get());
+        }
+        else {
+            type = Optional.absent();
+        }
+        ChangeApplicationResult<Set<OWLNamedIndividual>> result = project.applyChanges(executionContext.getUserId(), new CreateIndividualsChangeListGenerator(action.getShortNames(), type), new FixedMessageChangeDescriptionGenerator<Set<OWLNamedIndividual>>("Created individuals"));
         Set<OWLNamedIndividual> individuals = result.getSubject().get();
         Set<OWLNamedIndividualData> individualData = new HashSet<OWLNamedIndividualData>();
         for(OWLNamedIndividual individual : individuals) {

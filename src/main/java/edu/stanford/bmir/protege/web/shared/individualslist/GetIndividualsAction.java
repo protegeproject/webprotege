@@ -1,12 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.individualslist;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,21 +25,11 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
 
     private PageRequest pageRequest;
 
-    /**
-     * For serialization purposes only
-     */
-    private GetIndividualsAction() {
-    }
+    private String searchString;
 
-    /**
-     * Specifies that all individuals in the signature of the specified project should be retrieved.
-     *
-     * @param projectId The projectId.  Not {@code null}.
-     * @param range     The optional range for pagination.  Not {@code null}.
-     * @throws NullPointerException if any parameters are {@code null}.
-     */
-    public GetIndividualsAction(ProjectId projectId, Optional<PageRequest> range) {
-        this(projectId, DataFactory.get().getOWLThing(), range);
+
+    @GwtSerializationConstructor
+    private GetIndividualsAction() {
     }
 
     /**
@@ -46,12 +39,18 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @param projectId The projectId.  Not {@code null}.
      * @param type      The asserted type of the individuals.  Not {@code null}.  A type of owl:Thing means all individuals
      *                  in the ontology should be in the result.
+     * @param searchString A search string that can be used to filter results.  Can be empty to indicate
+     *                                      no filtering
      * @param pageRequest     The optional pageRequest for pagination.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public GetIndividualsAction(ProjectId projectId, OWLClass type, Optional<PageRequest> pageRequest) {
+    public GetIndividualsAction(@Nonnull ProjectId projectId,
+                                @Nonnull OWLClass type,
+                                @Nonnull String searchString,
+                                @Nonnull Optional<PageRequest> pageRequest) {
         super(projectId);
         this.type = checkNotNull(type);
+        this.searchString = checkNotNull(searchString);
         checkNotNull(pageRequest);
         if(pageRequest.isPresent()) {
             this.pageRequest = pageRequest.get();
@@ -66,8 +65,18 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      *
      * @return The requested type.  This could be owl:Thing.  Not {@code null}.
      */
+    @Nonnull
     public OWLClass getType() {
         return type;
+    }
+
+    /**
+     * Gets the search string.
+     * @return The search string.  An empty string matches all results.
+     */
+    @Nonnull
+    public String getSearchString() {
+        return searchString;
     }
 
     /**

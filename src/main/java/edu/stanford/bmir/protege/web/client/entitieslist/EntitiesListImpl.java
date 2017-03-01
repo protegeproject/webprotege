@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.entitieslist;
 
-import com.google.common.base.Optional;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -23,10 +22,7 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeCellListResources;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -148,7 +144,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
     @Override
     public Optional<E> getSelectedEntity() {
         E sel = getSingleSelectionModel().getSelectedObject();
-        return Optional.fromNullable(sel);
+        return Optional.ofNullable(sel);
     }
 
     @SuppressWarnings("unchecked")
