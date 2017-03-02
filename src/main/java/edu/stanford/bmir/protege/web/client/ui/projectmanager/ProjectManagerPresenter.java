@@ -7,25 +7,17 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashHandler;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashHandler;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.*;
 
@@ -118,12 +110,6 @@ public class ProjectManagerPresenter {
         loggedInUserPresenter.start(projectManagerView.getLoggedInUserButton());
 
     }
-
-
-//    public void setLoadProjectRequestHandler(LoadProjectRequestHandler loadProjectRequestHandler) {
-//        projectListView.setLoadProjectRequestHandler(loadProjectRequestHandler);
-//    }
-
 
     private void applyFilters() {
         List<ProjectManagerViewFilter> selectedFilters = projectManagerView.getViewFilters();
