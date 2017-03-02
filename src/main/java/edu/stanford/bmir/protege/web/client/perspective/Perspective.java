@@ -24,4 +24,6 @@ public interface Perspective extends IsWidget, HasRootNode, RequiresResize, HasD
 
     void setEmptyPerspectiveWidget(IsWidget widget);
 
+    void setViewsCloseable(boolean closeable);
+
 }

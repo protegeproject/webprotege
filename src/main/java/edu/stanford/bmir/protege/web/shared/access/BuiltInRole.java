@@ -57,7 +57,8 @@ public enum BuiltInRole {
 
     PROJECT_VIEWER(VIEW_PROJECT,
                    VIEW_OBJECT_COMMENTS,
-                   SAVE_OWN_PROJECT_LAYOUT,
+                   ADD_OR_REMOVE_VIEW,
+                   ADD_OR_REMOVE_PERSPECTIVE,
                    VIEW_CHANGES,
                    WATCH_CHANGES,
                    VIEW_OBJECT_COMMENTS),

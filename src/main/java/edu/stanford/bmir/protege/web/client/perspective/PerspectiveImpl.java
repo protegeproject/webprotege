@@ -42,8 +42,12 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         WidgetMapPanelManager panelManager = new WidgetMapPanelManager(rootWidget, widgetMapper);
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
         initWidget(widgetMapPanel);
-
         rootNode = Optional.absent();
+    }
+
+    @Override
+    public void setViewsCloseable(boolean closeable) {
+        widgetMapper.setViewsCloseable(closeable);
     }
 
     @Override

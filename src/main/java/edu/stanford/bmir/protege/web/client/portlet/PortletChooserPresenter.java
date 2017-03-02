@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class PortletChooserPresenter {
 
-    public static interface PortletSelectedHandler {
+    public interface PortletSelectedHandler {
         void handlePortletSelected(PortletId portletId);
     }
 

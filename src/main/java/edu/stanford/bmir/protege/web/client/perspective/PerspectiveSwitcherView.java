@@ -14,30 +14,30 @@ public interface PerspectiveSwitcherView extends IsWidget {
     /**
      * Handles notifications for when a perspective link has been activated.
      */
-    public static interface PerspectiveLinkActivatedHandler {
+    interface PerspectiveLinkActivatedHandler {
         void handlePerspectiveLinkActivated(PerspectiveId perspectiveId);
     }
 
     /**
      * Handles request to add a new perspective link.
      */
-    public static interface AddPerspectiveLinkRequestHandler {
+    interface AddPerspectiveLinkRequestHandler {
         void handleAddNewPerspectiveLinkRequest();
     }
 
-    public static interface AddBookmarkedPerspectiveLinkHandler {
+    interface AddBookmarkedPerspectiveLinkHandler {
         void handleAddBookmarkedPerspective(PerspectiveId perspectiveId);
     }
 
-    public static interface RemovePerspectiveLinkRequestHandler {
+    interface RemovePerspectiveLinkRequestHandler {
         void handleRemovePerspectiveLinkRequest(PerspectiveId perspectiveId);
     }
 
-    public static interface ResetPerspectiveToDefaultStateHandler {
+    interface ResetPerspectiveToDefaultStateHandler {
         void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId);
     }
 
-    public static interface AddViewHandler {
+    interface AddViewHandler {
         void handleAddViewToPerspective(PerspectiveId perspectiveId);
     }
 
@@ -91,4 +91,10 @@ public interface PerspectiveSwitcherView extends IsWidget {
     void setAddViewHandler(AddViewHandler handler);
 
     void setBookmarkedPerspectives(List<PerspectiveId> perspectives);
+
+    void setAddPerspectiveAllowed(boolean addPerspectiveAllowed);
+
+    void setClosePerspectiveAllowed(boolean closePerspectiveAllowed);
+
+    void setAddViewAllowed(boolean addViewAllowed);
 }

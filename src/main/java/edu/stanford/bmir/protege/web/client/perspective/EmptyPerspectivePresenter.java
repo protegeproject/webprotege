@@ -26,12 +26,7 @@ public class EmptyPerspectivePresenter {
         this.perspectiveId = perspectiveId;
         this.view = view;
         this.eventBus = eventBus;
-        view.asWidget().addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                handleAddContent();
-            }
-        }, ClickEvent.getType());
+        view.asWidget().addDomHandler(event -> handleAddContent(), ClickEvent.getType());
     }
 
     public EmptyPerspectiveView getView() {
