@@ -1,0 +1,37 @@
+{
+  "direction": "ROW",
+  "children": [
+    {
+      "weight": 0.3,
+      "node": {
+        "portlet": "portlets.PropertyHierarchy"
+      }
+    },
+    {
+      "weight": 0.5,
+      "node": {
+        "portlet": "portlets.owl.EntityDescriptionEditor"
+      }
+    },
+    {
+      "weight": 0.2,
+      "node": {
+        "direction": "COLUMN",
+        "children": [
+          {
+            "weight": 0.6,
+            "node": {
+              "portlet": "portlets.Comments"
+            }
+          },
+          {
+            "weight": 0.4,
+            "node": {
+              "portlet": "portlets.ProjectFeed"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
