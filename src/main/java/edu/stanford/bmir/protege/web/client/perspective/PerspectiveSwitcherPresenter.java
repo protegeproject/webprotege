@@ -8,8 +8,10 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
@@ -17,6 +19,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 23/06/2014
@@ -32,57 +36,29 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
 
     private final CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler;
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     @Inject
     public PerspectiveSwitcherPresenter(PerspectiveSwitcherView view,
                                         PerspectiveLinkManager perspectiveLinkManager,
                                         CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler,
                                         PlaceController placeController,
-                                        final EventBus eventBus) {
+                                        final EventBus eventBus,
+                                        LoggedInUserProjectPermissionChecker permissionChecker) {
         this.view = view;
         this.createFreshPerspectiveRequestHandler = createFreshPerspectiveRequestHandler;
         this.perspectiveLinkManager = perspectiveLinkManager;
         this.placeController = placeController;
-        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
-            @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
-                if(event.getNewPlace() instanceof ProjectViewPlace) {
-                    displayPlace((ProjectViewPlace) event.getNewPlace());
-                }
+        this.permissionChecker = permissionChecker;
+        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
+            if(event.getNewPlace() instanceof ProjectViewPlace) {
+                displayPlace((ProjectViewPlace) event.getNewPlace());
             }
         });
-        view.setPerspectiveLinkActivatedHandler(new PerspectiveSwitcherView.PerspectiveLinkActivatedHandler() {
-            public void handlePerspectiveLinkActivated(PerspectiveId perspectiveId) {
-                goToPlaceForPerspective(perspectiveId);
-            }
-        });
-        view.setRemovePerspectiveLinkHandler(new PerspectiveSwitcherView.RemovePerspectiveLinkRequestHandler() {
-            public void handleRemovePerspectiveLinkRequest(PerspectiveId perspectiveId) {
-                handleRemoveLinkedPerspective(perspectiveId);
-            }
-        });
-        view.setAddPerspectiveLinkRequestHandler(new PerspectiveSwitcherView.AddPerspectiveLinkRequestHandler() {
-            public void handleAddNewPerspectiveLinkRequest() {
-                handleCreateNewPerspective();
-            }
-        });
-        view.setAddBookMarkedPerspectiveLinkHandler(new PerspectiveSwitcherView.AddBookmarkedPerspectiveLinkHandler() {
-            @Override
-            public void handleAddBookmarkedPerspective(PerspectiveId perspectiveId) {
-                addNewPerspective(perspectiveId);
-            }
-        });
-        view.setResetPerspectiveToDefaultStateHandler(new PerspectiveSwitcherView.ResetPerspectiveToDefaultStateHandler() {
-            @Override
-            public void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId) {
-                eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId));
-            }
-        });
-        view.setAddViewHandler(new PerspectiveSwitcherView.AddViewHandler() {
-            @Override
-            public void handleAddViewToPerspective(PerspectiveId perspectiveId) {
-                eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId));
-            }
-        });
+        view.setPerspectiveLinkActivatedHandler(perspectiveId -> goToPlaceForPerspective(perspectiveId));
+        view.setAddBookMarkedPerspectiveLinkHandler(perspectiveId -> addNewPerspective(perspectiveId));
+        view.setResetPerspectiveToDefaultStateHandler(perspectiveId -> eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId)));
+        view.setAddViewHandler(perspectiveId -> eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId)));
     }
 
     public void start(AcceptsOneWidget container, final ProjectViewPlace place) {
@@ -90,19 +66,25 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         checkNotNull(container);
         checkNotNull(place);
         container.setWidget(view);
-        perspectiveLinkManager.getLinkedPerspectives(new PerspectiveLinkManager.Callback() {
-            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
-                setLinkedPerspectives(perspectiveIds);
-                displayPlace(place);
-            }
+        perspectiveLinkManager.getLinkedPerspectives(perspectiveIds -> {
+            setLinkedPerspectives(perspectiveIds);
+            displayPlace(place);
         });
-        perspectiveLinkManager.getBookmarkedPerspectives(new PerspectiveLinkManager.Callback() {
-            @Override
-            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
-                view.setBookmarkedPerspectives(perspectiveIds);
-            }
-        });
-
+        perspectiveLinkManager.getBookmarkedPerspectives(perspectiveIds -> view.setBookmarkedPerspectives(perspectiveIds));
+        view.setAddPerspectiveAllowed(false);
+        view.setClosePerspectiveAllowed(false);
+        view.setAddViewAllowed(false);
+        permissionChecker.hasPermission(ADD_OR_REMOVE_PERSPECTIVE,
+                                        canAddRemove -> {
+                                            view.setClosePerspectiveAllowed(canAddRemove);
+                                            view.setAddPerspectiveAllowed(canAddRemove);
+                                            view.setAddPerspectiveLinkRequestHandler(() -> handleCreateNewPerspective());
+                                            view.setRemovePerspectiveLinkHandler(perspectiveId -> handleRemoveLinkedPerspective(perspectiveId));
+                                        });
+        permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
+                                        canAddRemove -> {
+                                            view.setAddViewAllowed(canAddRemove);
+                                        });
     }
 
     /**

@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.CouldNotFindPortletWidget;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
@@ -19,6 +20,7 @@ import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +36,20 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private final PortletFactory portletFactory;
 
+    private boolean viewsCloseable = true;
+
     @Inject
-    public PortletWidgetMapper(PortletFactory portletFactory) {
+    public PortletWidgetMapper(@Nonnull PortletFactory portletFactory) {
         this.portletFactory = portletFactory;
+    }
+
+
+    public boolean isViewsCloseable() {
+        return viewsCloseable;
+    }
+
+    public void setViewsCloseable(boolean viewsCloseable) {
+        this.viewsCloseable = viewsCloseable;
     }
 
     @Override
@@ -66,6 +79,7 @@ public class PortletWidgetMapper implements WidgetMapper {
         else {
             viewHolder = new ViewHolder(new Label("No view class specified"), NodeProperties.emptyNodeProperties());
         }
+        viewHolder.setCloseable(viewsCloseable);
         nodeId2ViewHolderMap.put(terminalNode.getNodeId(), viewHolder);
         return viewHolder;
 
@@ -82,12 +96,9 @@ public class PortletWidgetMapper implements WidgetMapper {
         }
         portlet.asWidget().setSize("100%", "100%");
         viewHolder.addStyleName("drop-zone");
-        viewHolder.addCloseHandler(new CloseHandler<Widget>() {
-            @Override
-            public void onClose(CloseEvent<Widget> event) {
-                portlet.dispose();
-                nodeId2ViewHolderMap.remove(nodeId);
-            }
+        viewHolder.addCloseHandler(event -> {
+            portlet.dispose();
+            nodeId2ViewHolderMap.remove(nodeId);
         });
         return viewHolder;
     }

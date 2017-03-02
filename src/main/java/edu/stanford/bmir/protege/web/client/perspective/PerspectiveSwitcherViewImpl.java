@@ -5,7 +5,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.BeforeSelectionEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -30,7 +29,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PerspectiveSwitcherViewImpl extends Composite implements PerspectiveSwitcherView {
 
-
     interface PerspectiveSwitcherViewImplUiBinder extends UiBinder<HTMLPanel, PerspectiveSwitcherViewImpl> {
 
     }
@@ -53,42 +51,23 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     private final List<PerspectiveId> bookmarkedPerspectives = new ArrayList<>();
 
 
-    private PerspectiveLinkActivatedHandler linkActivatedHandler = new PerspectiveLinkActivatedHandler() {
-        public void handlePerspectiveLinkActivated(PerspectiveId perspectiveId) {
-        }
-    };
+    private PerspectiveLinkActivatedHandler linkActivatedHandler = perspectiveId -> {};
 
-    private AddPerspectiveLinkRequestHandler addPerspectiveLinkRequestHandler = new AddPerspectiveLinkRequestHandler() {
-        public void handleAddNewPerspectiveLinkRequest() {
-        }
-    };
+    private AddPerspectiveLinkRequestHandler addPerspectiveLinkRequestHandler = () -> {};
 
-    private AddBookmarkedPerspectiveLinkHandler addBookMarkedPerspectiveLinkHandler = new AddBookmarkedPerspectiveLinkHandler() {
-        @Override
-        public void handleAddBookmarkedPerspective(PerspectiveId perspectiveId) {
+    private AddBookmarkedPerspectiveLinkHandler addBookMarkedPerspectiveLinkHandler = perspectiveId -> {};
 
-        }
-    };
+    private RemovePerspectiveLinkRequestHandler removePerspectiveLinkRequestHandler = perspectiveId -> {};
 
-    private RemovePerspectiveLinkRequestHandler removePerspectiveLinkRequestHandler = new RemovePerspectiveLinkRequestHandler() {
-        public void handleRemovePerspectiveLinkRequest(PerspectiveId perspectiveId) {
+    private ResetPerspectiveToDefaultStateHandler resetPerspectiveToDefaultStateHandler = perspectiveId -> {};
 
-        }
-    };
+    private AddViewHandler addViewHandler = perspectiveId -> {};
 
-    private ResetPerspectiveToDefaultStateHandler resetPerspectiveToDefaultStateHandler = new ResetPerspectiveToDefaultStateHandler() {
-        @Override
-        public void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId) {
+    private boolean addPerspectiveAllowed = true;
 
-        }
-    };
+    private boolean closePerspectiveAllowed = true;
 
-    private AddViewHandler addViewHandler = new AddViewHandler() {
-        @Override
-        public void handleAddViewToPerspective(PerspectiveId perspectiveId) {
-
-        }
-    };
+    private boolean addViewAllowed = true;
 
     @Inject
     public PerspectiveSwitcherViewImpl(PerspectiveLinkFactory linkFactory) {
@@ -103,13 +82,16 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
          * Veto the selection if it does not correspond to the highlighted link
          */
         PerspectiveId link = displayedPerspectives.get(event.getItem());
-        if (!highlightedPerspective.equals(Optional.<PerspectiveId>of(link))) {
+        if (!highlightedPerspective.equals(Optional.of(link))) {
             event.cancel();
         }
     }
 
     @UiHandler("newTabButton")
     protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
+        if(!addPerspectiveAllowed) {
+            return;
+        }
         PopupMenu popupMenu = new PopupMenu();
         for (final PerspectiveId perspectiveId : bookmarkedPerspectives) {
             AbstractUiAction action = new AbstractUiAction(perspectiveId.getId()) {
@@ -122,12 +104,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             popupMenu.addItem(action);
         }
         popupMenu.addSeparator();
-        popupMenu.addItem("Add blank tab\u2026", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                addPerspectiveLinkRequestHandler.handleAddNewPerspectiveLinkRequest();
-            }
-        });
+        popupMenu.addItem("Add blank tab\u2026",
+                          event -> addPerspectiveLinkRequestHandler.handleAddNewPerspectiveLinkRequest());
         popupMenu.showRelativeTo(newTabButton);
     }
 
@@ -144,32 +122,28 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         this.displayedPerspectives.add(perspectiveId);
         PerspectiveLink linkWidget = linkFactory.createPerspectiveLink(perspectiveId);
         linkWidget.setLabel(perspectiveId.getId());
-        linkWidget.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                GWT.log("[PerspectiveSwitcherViewImpl] link clicked");
-                highlightedPerspective = Optional.of(perspectiveId);
-                linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
-            }
+        linkWidget.addClickHandler(event -> {
+            GWT.log("[PerspectiveSwitcherViewImpl] link clicked");
+            highlightedPerspective = Optional.of(perspectiveId);
+            linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
         });
-        linkWidget.addActionHandler("Add view", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                addViewHandler.handleAddViewToPerspective(perspectiveId);
-            }
-        });
-        linkWidget.addActionHandler("Reset", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveId);
-            }
-        });
-        linkWidget.addActionHandler("Close", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                removePerspectiveLinkRequestHandler.handleRemovePerspectiveLinkRequest(perspectiveId);
-            }
-        });
+        if (addViewAllowed) {
+            linkWidget.addActionHandler("Add view", event -> {
+                if (addViewAllowed) {
+                    addViewHandler.handleAddViewToPerspective(perspectiveId);
+                }
+            });
+        }
+        linkWidget.addActionHandler("Reset",
+                                    event -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveId));
+        if (closePerspectiveAllowed) {
+            linkWidget.addActionHandler("Close",
+                                        event -> {
+                                            if (closePerspectiveAllowed) {
+                                                removePerspectiveLinkRequestHandler.handleRemovePerspectiveLinkRequest(perspectiveId);
+                                            }
+                                        });
+        }
         tabBar.addTab(linkWidget.asWidget());
     }
 
@@ -251,4 +225,19 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         }
     }
 
+    @Override
+    public void setAddPerspectiveAllowed(boolean addPerspectiveAllowed) {
+        newTabButton.setVisible(addPerspectiveAllowed);
+        this.addPerspectiveAllowed = addPerspectiveAllowed;
+    }
+
+    @Override
+    public void setClosePerspectiveAllowed(boolean closePerspectiveAllowed) {
+        this.closePerspectiveAllowed = closePerspectiveAllowed;
+    }
+
+    @Override
+    public void setAddViewAllowed(boolean addViewAllowed) {
+        this.addViewAllowed = addViewAllowed;
+    }
 }

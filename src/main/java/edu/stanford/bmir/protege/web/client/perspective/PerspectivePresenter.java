@@ -10,17 +10,23 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_VIEW;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/05/2014
@@ -47,12 +53,15 @@ public class PerspectivePresenter implements HasDispose {
 
     private final PortletChooserPresenter portletChooserPresenter;
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     private Optional<PerspectiveId> currentPerspective = Optional.absent();
 
 
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
                                 final LoggedInUserProvider loggedInUserProvider,
+                                LoggedInUserProjectPermissionChecker permissionChecker,
                                 ProjectId projectId,
                                 DispatchServiceManager dispatchServiceManager,
                                 PerspectiveFactory perspectiveFactory,
@@ -61,6 +70,7 @@ public class PerspectivePresenter implements HasDispose {
                                 PortletChooserPresenter portletChooserPresenter) {
         this.perspectiveView = perspectiveView;
         this.loggedInUserProvider = loggedInUserProvider;
+        this.permissionChecker = permissionChecker;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.perspectiveFactory = perspectiveFactory;
@@ -135,29 +145,38 @@ public class PerspectivePresenter implements HasDispose {
             perspectiveView.setWidget(p);
             return;
         }
-        perspectiveView.setWidget(new Label("Loading..."));
+        perspectiveView.setWidget(new BusyView());
         GWT.log("[PerspectivePresenter] Loading perspective for project " + projectId);
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, userId, perspectiveId),
-                new DispatchServiceCallback<GetPerspectiveLayoutResult>() {
-                    @Override
-                    public void handleSuccess(GetPerspectiveLayoutResult result) {
-                        GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
-                        Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
-                        EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
-                        perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
-                        Optional<Node> rootNode = result.getPerspectiveLayout().getRootNode();
-                        perspective.setRootNode(rootNode);
-                        perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
-                            savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
-                        });
-                        perspectiveCache.put(perspectiveId, perspective);
-                        perspectiveView.setWidget(perspective);
-                        if (rootNode.isPresent()) {
-                            originalRootNodeMap.put(perspectiveId, rootNode.get().duplicate());
-                        }
-                    }
+                result -> {
+                    GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
+                    permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
+                                                    canAddRemove -> {
+                                                        GWT.log("[PerspectivePresenter] Can close views: " + canAddRemove);
+                                                        installPerspective(perspectiveId, result, canAddRemove);
+                                                    });
+
                 });
+    }
+
+    private void installPerspective(@Nonnull PerspectiveId perspectiveId,
+                                    @Nonnull GetPerspectiveLayoutResult result,
+                                    boolean viewsCloseable) {
+        Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
+        perspective.setViewsCloseable(viewsCloseable);
+        EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
+        perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
+        Optional<Node> rootNode = result.getPerspectiveLayout().getRootNode();
+        perspective.setRootNode(rootNode);
+        perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
+            savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
+        });
+        perspectiveCache.put(perspectiveId, perspective);
+        perspectiveView.setWidget(perspective);
+        if (rootNode.isPresent()) {
+            originalRootNodeMap.put(perspectiveId, rootNode.get().duplicate());
+        }
     }
 
     private final Map<PerspectiveId, SavePerspectiveRunner> perspectivesToSave = new HashMap<>();
