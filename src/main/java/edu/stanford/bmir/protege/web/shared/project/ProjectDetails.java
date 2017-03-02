@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -29,9 +31,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
 
     private boolean inTrash;
 
-    /**
-     * For serialization purposes only
-     */
+    @GwtSerializationConstructor
     private ProjectDetails() {
 
     }
@@ -136,12 +136,12 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ProjectDetails")
-                .addValue(projectId)
-                .add("displayName", displayName)
-                .add("description", description)
-                .add("owner", owner)
-                .add("inTrash", inTrash).toString();
+        return toStringHelper("ProjectDetails")
+                          .addValue(projectId)
+                          .add("displayName", displayName)
+                          .add("description", description)
+                          .add("owner", owner)
+                          .add("inTrash", inTrash).toString();
     }
 
 
