@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_AND_MERGE;
 
 /**
  * Matthew Horridge
@@ -54,7 +54,7 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
     @Nonnull
     @Override
     protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
-        return Arrays.asList(MANAGE_PROJECT, EDIT_ONTOLOGY);
+        return Arrays.asList(UPLOAD_AND_MERGE, EDIT_ONTOLOGY);
     }
 
     @Override

@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.UIAction;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -34,18 +36,11 @@ public class MenuItem extends Composite implements HasEnabled, HasText {
     public MenuItem(final UIAction action, final PopupMenu popupMenu) {
         this.uiAction = action;
         this.popupMenu = popupMenu;
-        this.uiAction.setStateChangedHandler(new UIAction.StateChangedHandler() {
-            @Override
-            public void handleStateChanged(UIAction action) {
-                setEnabled(action.isEnabled());
-            }
+        this.uiAction.setStateChangedHandler(a -> {
+            setEnabled(a.isEnabled());
+            setVisible(a.isVisible());
         });
-        this.uiAction.setLabelChangedHandler(new UIAction.LabelChangedHandler() {
-            @Override
-            public void handleLabelChanged(UIAction action) {
-                setText(action.getLabel());
-            }
-        });
+        this.uiAction.setLabelChangedHandler(a -> setText(a.getLabel()));
         initWidget(ourUiBinder.createAndBindUi(this));
         setText(action.getLabel());
         setEnabled(action.isEnabled());
@@ -61,16 +56,16 @@ public class MenuItem extends Composite implements HasEnabled, HasText {
 
     @Override
     public boolean isEnabled() {
-        return  !getStyleName().contains(WebProtegeClientBundle.BUNDLE.menu().popupMenuItemDisabled());
+        return  !getStyleName().contains(BUNDLE.menu().popupMenuItemDisabled());
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         if(enabled) {
-            removeStyleName(WebProtegeClientBundle.BUNDLE.menu().popupMenuItemDisabled());
+            removeStyleName(BUNDLE.menu().popupMenuItemDisabled());
         }
         else {
-            addStyleName(WebProtegeClientBundle.BUNDLE.menu().popupMenuItemDisabled());
+            addStyleName(BUNDLE.menu().popupMenuItemDisabled());
         }
     }
 

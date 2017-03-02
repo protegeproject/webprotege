@@ -10,26 +10,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class AbstractUiAction implements UIAction {
 
-    private static final StateChangedHandler EMPTY_STATE_CHANGED_HANDLER = new StateChangedHandler() {
-        public void handleStateChanged(UIAction action) {
-
-        }
-    };
-
-    private static final LabelChangedHandler EMPTY_LABEL_CHANGED_HANDLER = new LabelChangedHandler() {
-        public void handleLabelChanged(UIAction action) {
-
-        }
-    };
     public static final boolean ENABLED_BY_DEFAULT = true;
+
+    public static final boolean VISIBLE_BY_DEFAULT = true;
 
     private String label;
 
     private boolean enabled = ENABLED_BY_DEFAULT;
 
-    private LabelChangedHandler labelChangedHandler = EMPTY_LABEL_CHANGED_HANDLER;
+    private boolean visible = VISIBLE_BY_DEFAULT;
 
-    private StateChangedHandler stateChangedHandler = EMPTY_STATE_CHANGED_HANDLER;
+    private LabelChangedHandler labelChangedHandler = action -> {};
+
+    private StateChangedHandler stateChangedHandler = action -> {};
 
     protected AbstractUiAction(String label) {
         this.label = label;
@@ -44,8 +37,7 @@ public abstract class AbstractUiAction implements UIAction {
     }
 
     public void setLabel(String label) {
-        checkNotNull(label);
-        if(this.label.equals(label)) {
+        if(this.label.equals(checkNotNull(label))) {
             return;
         }
         this.label = label;
@@ -58,6 +50,17 @@ public abstract class AbstractUiAction implements UIAction {
         }
         this.enabled = enabled;
         stateChangedHandler.handleStateChanged(this);
+    }
+
+    public void setVisible(boolean visible) {
+        if(this.visible != visible) {
+            this.visible = visible;
+            stateChangedHandler.handleStateChanged(this);
+        }
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public final void setLabelChangedHandler(LabelChangedHandler labelChangedHandler) {

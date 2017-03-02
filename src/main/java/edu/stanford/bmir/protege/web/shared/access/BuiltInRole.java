@@ -82,7 +82,10 @@ public enum BuiltInRole {
 
     PROJECT_MANAGER(PROJECT_EDITOR,
                     SAVE_DEFAULT_PROJECT_LAYOUT,
-                    EDIT_SHARING_SETTINGS),
+                    EDIT_PROJECT_SETTINGS,
+                    EDIT_SHARING_SETTINGS,
+                    EDIT_NEW_ENTITY_SETTINGS,
+                    UPLOAD_AND_MERGE),
 
 
     // Roles that relate to the UI

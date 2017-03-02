@@ -11,6 +11,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_NEW_ENTITY_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_AND_MERGE;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -28,6 +32,27 @@ public class ProjectMenuPresenter {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    private AbstractUiAction editProjectSettings = new AbstractUiAction("Settings") {
+        @Override
+        public void execute(ClickEvent e) {
+            showProjectDetailsHandler.handleShowProjectDetails();
+        }
+    };
+
+    private AbstractUiAction editNewEntitySettings = new AbstractUiAction("New entity settings") {
+        @Override
+        public void execute(ClickEvent e) {
+            showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
+        }
+    };
+
+    private AbstractUiAction uploadAndMerge = new AbstractUiAction("Upload and merge") {
+        @Override
+        public void execute(ClickEvent e) {
+            uploadAndMergeHandler.handleUploadAndMerge();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
                                 ProjectMenuView view,
@@ -43,15 +68,16 @@ public class ProjectMenuPresenter {
     }
 
     public void start(final AcceptsOneWidget container) {
-        permissionChecker.hasPermission(BuiltInAction.MANAGE_PROJECT,
-                                        canManage -> {
-                                            if(canManage) {
-                                                displayButton(container);
-                                            }
-                                            else {
-                                                view.asWidget().removeFromParent();
-                                            }
-                                        });
+        editProjectSettings.setEnabled(false);
+        editNewEntitySettings.setEnabled(false);
+        uploadAndMerge.setEnabled(false);
+        displayButton(container);
+        permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
+                                        canEdit -> editProjectSettings.setEnabled(canEdit));
+        permissionChecker.hasPermission(UPLOAD_AND_MERGE,
+                                        canUploadAndMerge -> uploadAndMerge.setVisible(canUploadAndMerge));
+        permissionChecker.hasPermission(EDIT_NEW_ENTITY_SETTINGS,
+                                        canEdit -> editNewEntitySettings.setVisible(canEdit));
     }
 
     private void displayButton(AcceptsOneWidget container) {
@@ -59,25 +85,9 @@ public class ProjectMenuPresenter {
     }
 
     private void setupActions() {
-
-        view.addMenuAction(new AbstractUiAction("Settings") {
-            @Override
-            public void execute(ClickEvent e) {
-                showProjectDetailsHandler.handleShowProjectDetails();
-            }
-        });
-        view.addMenuAction(new AbstractUiAction("New entity settings") {
-            @Override
-            public void execute(ClickEvent e) {
-                showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
-            }
-        });
-        view.addMenuAction(new AbstractUiAction("Upload and merge") {
-            @Override
-            public void execute(ClickEvent e) {
-                uploadAndMergeHandler.handleUploadAndMerge();
-            }
-        });
+        view.addMenuAction(editProjectSettings);
+        view.addMenuAction(editNewEntitySettings);
+        view.addMenuAction(uploadAndMerge);
     }
 
 

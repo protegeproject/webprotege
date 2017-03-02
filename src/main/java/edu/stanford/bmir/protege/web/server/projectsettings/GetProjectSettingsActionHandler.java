@@ -15,6 +15,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_SETTINGS;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -40,7 +42,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     @Nullable
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
-        return BuiltInAction.MANAGE_PROJECT;
+        return EDIT_PROJECT_SETTINGS;
     }
 
     @Override
