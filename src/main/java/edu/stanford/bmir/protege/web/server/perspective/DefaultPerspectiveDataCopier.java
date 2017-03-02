@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -17,20 +20,26 @@ import java.net.URL;
  */
 public class DefaultPerspectiveDataCopier {
 
+    private final WebProtegeLogger logger;
+
     private final File defaultPerspectiveDataDirectory;
 
     @Inject
-    public DefaultPerspectiveDataCopier(@DefaultPerspectiveDataDirectory File defaultPerspectiveDataDirectory) {
+    public DefaultPerspectiveDataCopier(@DefaultPerspectiveDataDirectory File defaultPerspectiveDataDirectory,
+                                        WebProtegeLogger logger) {
+        this.logger = logger;
         this.defaultPerspectiveDataDirectory = defaultPerspectiveDataDirectory;
     }
 
     public void copyDefaultPerspectiveData() {
         try {
             URL url = getClass().getResource("/default-perspective-data");
-            System.out.println("COPYING DEFAUT PERSPECTIVE DATA: " + url);
             File templateDefaultPerspectiveDataDirectory = new File(url.toURI());
             defaultPerspectiveDataDirectory.getParentFile().mkdirs();
             FileUtils.copyDirectory(templateDefaultPerspectiveDataDirectory, defaultPerspectiveDataDirectory);
+            logger.info("Copied default perspective data to {} (from {})",
+                        defaultPerspectiveDataDirectory,
+                        templateDefaultPerspectiveDataDirectory);
             File[] perspectiveFiles = defaultPerspectiveDataDirectory.listFiles();
             if (perspectiveFiles != null) {
                 for(File file : perspectiveFiles) {
