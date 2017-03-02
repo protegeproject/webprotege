@@ -114,6 +114,7 @@ public class IndividualsListPresenter {
             return;
         }
         currentType = Optional.of(type);
+        view.setPageNumber(1);
         updateList();
     }
 
@@ -124,7 +125,7 @@ public class IndividualsListPresenter {
                                                                view.getSearchString(),
                                                                Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
                                                                                                            PAGE_SIZE)));
-        dispatchServiceManager.execute(action, result -> {
+        dispatchServiceManager.execute(action, view, result -> {
             view.setListData(result.getIndividuals());
             view.setStatusMessageVisible(true);
             int displayedIndividuals = result.getIndividuals().size();

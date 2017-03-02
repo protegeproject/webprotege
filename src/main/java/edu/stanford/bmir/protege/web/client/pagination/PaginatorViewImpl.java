@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,6 +46,7 @@ public class PaginatorViewImpl extends Composite implements PaginatorView {
 
     private static PaginatorViewImplUiBinder ourUiBinder = GWT.create(PaginatorViewImplUiBinder.class);
 
+    @Inject
     public PaginatorViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

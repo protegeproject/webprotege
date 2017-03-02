@@ -18,6 +18,8 @@ import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import javax.inject.Inject;
@@ -52,15 +54,25 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     @UiField
     protected TextBox searchBox;
 
-    @UiField
+    @UiField(provided = true)
     protected PaginatorView paginator;
+
+    @UiField
+    protected BusyView busyView;
 
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
     @Inject
-    public IndividualsListViewImpl() {
+    public IndividualsListViewImpl(PaginatorPresenter paginatorPresenter) {
+        this.paginatorPresenter = paginatorPresenter;
+        paginator = paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
-        paginatorPresenter = new PaginatorPresenter(paginator);
+    }
+
+    @Override
+    public void setBusy(boolean busy) {
+        GWT.log("Set Busy: " + busy);
+        busyView.setVisible(busy);
     }
 
     @UiHandler("searchBox")

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.library.progress;
+package edu.stanford.bmir.protege.web.client.progress;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import java.util.Collection;
@@ -15,7 +16,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, IsWidget {
+public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, HasBusy, IsWidget {
 
     interface SearchStringChangedHandler {
         void handleSearchStringChanged();

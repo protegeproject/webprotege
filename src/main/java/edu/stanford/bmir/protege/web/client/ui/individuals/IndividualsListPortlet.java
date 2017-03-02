@@ -37,11 +37,6 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
         setTitle("Individuals by Class");
         presenter.installActions(this);
         presenter.start(this);
-
-//        if (preconfiguredClass != null && preconfiguredClass.isPresent()) {
-            // TODO:
-//            presenter.setType(preconfiguredClass.get());
-//        }
     }
 
     @Override
