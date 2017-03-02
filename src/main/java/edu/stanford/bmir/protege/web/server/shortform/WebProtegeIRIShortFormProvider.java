@@ -82,7 +82,7 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
                     if (value instanceof OWLLiteral) {
                         OWLLiteral litValue = (OWLLiteral) value;
                         String lang = litValue.getLang();
-                        if (lang != null) {
+                        if (!lang.isEmpty()) {
                             if (lang.equals(defaultLanguage)) {
                                 matchedDefaultLang = true;
                                 renderingValue = litValue;
