@@ -35,13 +35,13 @@
           {
             "weight": 0.6,
             "node": {
-              "portlet": "edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet"
+              "portlet": "portlets.Comments"
             }
           },
           {
             "weight": 0.4,
             "node": {
-              "portlet": "edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet"
+              "portlet": "portlets.ProjectFeed"
             }
           }
         ]

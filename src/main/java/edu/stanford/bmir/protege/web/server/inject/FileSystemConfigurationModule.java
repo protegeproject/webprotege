@@ -4,6 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentMatcherImpl;
+import edu.stanford.bmir.protege.web.server.perspective.PerspectiveDataCopier;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
@@ -36,6 +37,11 @@ public class FileSystemConfigurationModule {
     @DefaultPerspectiveDataDirectory
     public File provideDefaultPerspectiveDataDirectory(DefaultPerspectiveDataDirectoryProvider provider) {
         return provider.get();
+    }
+
+    @Provides
+    public PerspectiveDataCopier provideDefaultPerspectiveDataCopier(PerspectiveDataCopier copier) {
+        return copier;
     }
 
     @Provides

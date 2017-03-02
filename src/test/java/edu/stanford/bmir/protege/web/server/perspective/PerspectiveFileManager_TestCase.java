@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -55,14 +56,20 @@ public class PerspectiveFileManager_TestCase {
     private ProjectId projectId;
 
     @Mock
-    private DefaultPerspectiveDataCopier defaultPerspectiveDataCopier;
+    private PerspectiveDataCopier perspectiveDataCopier;
+
+    @Mock
+    private WebProtegeLogger logger;
 
     @Before
     public void setUp() {
         when(algorithm.computeDigestAsBase16Encoding()).thenReturn(DIGEST);
         when(algorithmProvider.get()).thenReturn(algorithm);
         when(projectDirectoryFactory.getProjectDirectory(projectId)).thenReturn(PROJECT_DIRECTORY);
-        fileManager = new PerspectiveFileManager(defaultPerspectivesDirectory, projectDirectoryFactory, algorithmProvider, defaultPerspectiveDataCopier);
+        fileManager = new PerspectiveFileManager(defaultPerspectivesDirectory,
+                                                 projectDirectoryFactory,
+                                                 algorithmProvider,
+                                                 logger);
     }
 
     @Test

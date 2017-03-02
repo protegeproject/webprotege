@@ -10,7 +10,7 @@
     {
       "weight": 0.7,
       "node": {
-        "portlet": "portlets.Discussions"
+        "portlet": "portlets.Comments"
       }
     }
   ]
