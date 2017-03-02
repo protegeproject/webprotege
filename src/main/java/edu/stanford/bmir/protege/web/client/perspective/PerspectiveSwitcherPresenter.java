@@ -9,6 +9,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -16,7 +17,9 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
@@ -37,6 +40,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private final CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    private final Map<PerspectiveId, ItemSelection> perspective2Selection = new HashMap<>();
 
     @Inject
     public PerspectiveSwitcherPresenter(PerspectiveSwitcherView view,
@@ -109,8 +114,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
      */
     private void displayPlace(ProjectViewPlace place) {
         GWT.log("[PerspectiveSwitcherPresenter] displayPlace: " + place);
-        checkNotNull(place);
-        PerspectiveId perspectiveId = place.getPerspectiveId();
+        PerspectiveId perspectiveId = checkNotNull(place).getPerspectiveId();
         ensurePerspectiveLinkExists(perspectiveId);
         ensurePerspectiveLinkIsActive(perspectiveId);
     }
@@ -134,6 +138,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     public void stop() {
     }
 
+
+
     private void goToPlaceForPerspective(PerspectiveId perspectiveId) {
         Place currentPlace = placeController.getWhere();
         GWT.log("[PerspectiveSwitcherPresenter] Current Place: " + currentPlace);
@@ -141,21 +147,30 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
             return;
         }
         ProjectViewPlace projectPerspectivePlace = (ProjectViewPlace) currentPlace;
-        ProjectViewPlace nextPlace = projectPerspectivePlace.builder().withPerspectiveId(perspectiveId).build();
+        // Preserve the selection for the current perspective.
+        // (This could be optional.  Previously, we carried selection over)
+        perspective2Selection.put(projectPerspectivePlace.getPerspectiveId(), projectPerspectivePlace.getItemSelection());
+        ItemSelection previousSelection = perspective2Selection.get(perspectiveId);
+        ProjectViewPlace.Builder builder = projectPerspectivePlace.builder();
+        builder.withPerspectiveId(perspectiveId);
+        if(previousSelection != null) {
+            // Restore the selection
+            builder.clearSelection();
+            builder.withSelectedItems(previousSelection);
+        }
+        ProjectViewPlace nextPlace = builder.build();
         placeController.goTo(nextPlace);
     }
 
 
     private void handleRemoveLinkedPerspective(final PerspectiveId perspectiveId) {
-        perspectiveLinkManager.removeLinkedPerspective(perspectiveId, new PerspectiveLinkManager.Callback() {
-            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
-                view.setPerspectiveLinks(perspectiveIds);
-                Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
-                if (currentPlacePerspective.isPresent() && currentPlacePerspective.get().equals(perspectiveId)) {
-                    // Need to change place
-                    PerspectiveId nextPerspective = perspectiveIds.get(0);
-                    goToPlaceForPerspective(nextPerspective);
-                }
+        perspectiveLinkManager.removeLinkedPerspective(perspectiveId, perspectiveIds -> {
+            view.setPerspectiveLinks(perspectiveIds);
+            Optional<PerspectiveId> currentPlacePerspective = getCurrentPlacePerspectiveId();
+            if (currentPlacePerspective.isPresent() && currentPlacePerspective.get().equals(perspectiveId)) {
+                // Need to change place
+                PerspectiveId nextPerspective = perspectiveIds.get(0);
+                goToPlaceForPerspective(nextPerspective);
             }
         });
 
@@ -172,20 +187,13 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
     private void handleCreateNewPerspective() {
-        createFreshPerspectiveRequestHandler.createFreshPerspective(new CreateFreshPerspectiveRequestHandler.Callback() {
-            @Override
-            public void createNewPerspective(PerspectiveId perspectiveId) {
-                addNewPerspective(perspectiveId);
-            }
-        });
+        createFreshPerspectiveRequestHandler.createFreshPerspective(perspectiveId -> addNewPerspective(perspectiveId));
     }
 
     private void addNewPerspective(final PerspectiveId perspectiveId) {
-        perspectiveLinkManager.addLinkedPerspective(perspectiveId, new PerspectiveLinkManager.Callback() {
-            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
-                view.setPerspectiveLinks(perspectiveIds);
-                goToPlaceForPerspective(perspectiveId);
-            }
+        perspectiveLinkManager.addLinkedPerspective(perspectiveId, perspectiveIds -> {
+            view.setPerspectiveLinks(perspectiveIds);
+            goToPlaceForPerspective(perspectiveId);
         });
     }
 
