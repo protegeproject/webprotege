@@ -18,7 +18,9 @@ public enum DefaultShortFormAnnotationPropertyIRIs implements HasIRI {
 
     RDFS_LABEL(OWLRDFVocabulary.RDFS_LABEL.getIRI()),
 
-    DC_TITLE(DublinCoreVocabulary.TITLE.getIRI());
+    DC_TITLE(DublinCoreVocabulary.TITLE.getIRI()),
+
+    DC_TERMS_TITLE(IRI.create("http://purl.org/dc/terms/title"));
 
     private final IRI iri;
 
