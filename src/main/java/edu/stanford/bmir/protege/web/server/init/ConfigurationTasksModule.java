@@ -22,11 +22,6 @@ public class ConfigurationTasksModule {
     }
 
     @Provides(type = Provides.Type.SET)
-    public ConfigurationTask provideCheckPerspectivesDataExists(CheckPerspectivesDataExists check) {
-        return check;
-    }
-
-    @Provides(type = Provides.Type.SET)
     public ConfigurationTask provideCheckMongoDBConnectionTask(CheckMongoDBConnectionTask check) {
         return check;
     }

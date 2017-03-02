@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -29,17 +30,17 @@ public class PerspectiveFileManager {
 
     private final ProjectDirectoryFactory projectDirectoryFactory;
 
-    private final DefaultPerspectiveDataCopier defaultPerspectiveDataCopier;
+    private final WebProtegeLogger logger;
 
     @Inject
     public PerspectiveFileManager(@DefaultPerspectiveDataDirectory File defaultPerspectivesDirectory,
                                   ProjectDirectoryFactory projectDirectoryFactory,
                                   Provider<Md5MessageDigestAlgorithm> algorithmProvider,
-                                  DefaultPerspectiveDataCopier defaultPerspectiveDataCopier) {
+                                  WebProtegeLogger logger) {
         this.defaultPerspectivesDirectory = defaultPerspectivesDirectory;
         this.projectDirectoryFactory = projectDirectoryFactory;
         this.algorithmProvider = algorithmProvider;
-        this.defaultPerspectiveDataCopier = defaultPerspectiveDataCopier;
+        this.logger = logger;
     }
 
     public File getDefaultPerspectiveLayout(PerspectiveId perspectiveId) {
@@ -50,7 +51,8 @@ public class PerspectiveFileManager {
 
     private synchronized void copyDefaultPerspectiveDataIfNecessary() {
         if(!defaultPerspectivesDirectory.exists()) {
-            defaultPerspectiveDataCopier.copyDefaultPerspectiveData();
+            PerspectiveDataCopier copier = new PerspectiveDataCopier(defaultPerspectivesDirectory, logger);
+            copier.copyDefaultPerspectiveData();
         }
     }
 
