@@ -2,7 +2,8 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
-             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
+             xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress">
     <ui:style>
         .main {
             display: flex;
@@ -31,12 +32,12 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
+        <progress:BusyView ui:field="busyView" visible="false"/>
         <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="Enter search string to filter list"/>
         <entitieslist:EntitiesListImpl ui:field="individualsList" addStyleNames="{style.individualsList}"/>
         <g:HTMLPanel addStyleNames="{style.bottomBar}">
             <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
-            <pagination:PaginatorViewImpl ui:field="paginator"/>
+            <pagination:PaginatorView ui:field="paginator"/>
         </g:HTMLPanel>
-
     </g:HTMLPanel>
 </ui:UiBinder>

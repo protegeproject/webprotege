@@ -28,6 +28,8 @@ import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.login.*;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.place.PlaceHistoryHandlerProvider;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
@@ -339,5 +341,10 @@ public class ClientApplicationModule {
     @Provides
     FilterView provideFilterView(FilterViewImpl filterView) {
         return filterView;
+    }
+
+    @Provides
+    PaginatorView providePaginatorView(PaginatorViewImpl view) {
+        return view;
     }
 }

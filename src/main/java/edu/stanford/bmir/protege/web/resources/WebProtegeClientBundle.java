@@ -31,6 +31,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("feedback.html")
     TextResource feedbackBoxText();
 
+    @Source("busy.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource busy();
+
     @Source("class.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();

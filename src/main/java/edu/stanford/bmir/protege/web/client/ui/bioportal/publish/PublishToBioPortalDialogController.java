@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIServiceAsy
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
+import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;

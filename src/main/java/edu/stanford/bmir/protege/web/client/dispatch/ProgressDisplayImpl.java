@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
+import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 
 /**
  * Matthew Horridge

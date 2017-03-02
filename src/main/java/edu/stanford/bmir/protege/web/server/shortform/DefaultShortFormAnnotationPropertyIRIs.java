@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.collect.ImmutableList;
 import org.semanticweb.owlapi.model.HasIRI;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
@@ -15,7 +16,9 @@ public enum DefaultShortFormAnnotationPropertyIRIs implements HasIRI {
 
     SKOS_PREF_LABEL(SKOSVocabulary.PREFLABEL.getIRI()),
 
-    RDFS_PREF_LABEL(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+    RDFS_LABEL(OWLRDFVocabulary.RDFS_LABEL.getIRI()),
+
+    DC_TITLE(DublinCoreVocabulary.TITLE.getIRI());
 
     private final IRI iri;
 

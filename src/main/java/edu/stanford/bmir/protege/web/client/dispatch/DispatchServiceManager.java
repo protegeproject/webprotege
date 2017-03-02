@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.EventBus;
@@ -9,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSes
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -89,6 +91,34 @@ public class DispatchServiceManager {
             @Override
             public void handleSuccess(R r) {
                 successConsumer.accept(r);
+            }
+        });
+    }
+
+    public <A extends Action<R>, R extends Result> void execute(A action, HasBusy hasBusy, final Consumer<R> successConsumer) {
+        execute(action, new DispatchServiceCallback<R>() {
+
+            private Timer timer = new Timer() {
+                @Override
+                public void run() {
+                    hasBusy.setBusy(true);
+                }
+            };
+
+            @Override
+            public void handleFinally() {
+                hasBusy.setBusy(false);
+            }
+
+            @Override
+            public void handleSuccess(R r) {
+                timer.cancel();
+                successConsumer.accept(r);
+            }
+
+            @Override
+            public void handleSubmittedForExecution() {
+                timer.schedule(1000);
             }
         });
     }
