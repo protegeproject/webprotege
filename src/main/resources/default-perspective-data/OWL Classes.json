@@ -21,7 +21,7 @@
           {
             "weight": 0.6,
             "node": {
-              "portlet": "portlets.DiscussionThread"
+              "portlet": "portlets.Comments"
             }
           },
           {
