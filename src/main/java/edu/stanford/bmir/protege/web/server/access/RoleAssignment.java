@@ -49,11 +49,11 @@ public class RoleAssignment {
     @Nullable
     private String projectId;
 
-    private List<String> assignedRoles;
+    private List<String> assignedRoles = ImmutableList.of();
 
-    private List<String> roleClosure;
+    private List<String> roleClosure = ImmutableList.of();
 
-    private List<String> actionClosure;
+    private List<String> actionClosure = ImmutableList.of();
 
 
     private RoleAssignment() {
