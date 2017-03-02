@@ -81,7 +81,11 @@ public enum BuiltInRole {
                    DELETE_DATATYPE,
                    REVERT_CHANGES),
 
+    LAYOUT_EDITOR(ADD_OR_REMOVE_PERSPECTIVE,
+                  ADD_OR_REMOVE_VIEW),
+
     PROJECT_MANAGER(PROJECT_EDITOR,
+                    LAYOUT_EDITOR,
                     SAVE_DEFAULT_PROJECT_LAYOUT,
                     EDIT_PROJECT_SETTINGS,
                     EDIT_SHARING_SETTINGS,

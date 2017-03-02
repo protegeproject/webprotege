@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInRole;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
@@ -24,10 +23,16 @@ import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
+import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.CAN_MANAGE;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.LAYOUT_EDITOR;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.PROJECT_DOWNLOADER;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 
 /**
  * Matthew Horridge
@@ -80,7 +85,7 @@ public class CreateNewProjectActionHandler implements ActionHandler<CreateNewPro
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);
                 UserId userId = executionContext.getUserId();
-                applyOwnerPermissions(projectId, userId);
+                applyDefaultPermissions(projectId, userId);
             }
             return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));
         } catch (OWLOntologyCreationException | OWLOntologyStorageException | IOException e) {
@@ -88,10 +93,16 @@ public class CreateNewProjectActionHandler implements ActionHandler<CreateNewPro
         }
     }
 
-    private void applyOwnerPermissions(ProjectId projectId, UserId userId) {
+    private void applyDefaultPermissions(ProjectId projectId, UserId userId) {
+        ProjectResource projectResource = new ProjectResource(projectId);
+        // Owner is manager
         accessManager.setAssignedRoles(forUser(userId),
-                                       new ProjectResource(projectId),
-                                       Collections.singleton(CAN_MANAGE.getRoleId()));
+                                       projectResource,
+                                       asList(CAN_MANAGE.getRoleId(), PROJECT_DOWNLOADER.getRoleId()));
+        // Any signed in user can edit the layout
+        accessManager.setAssignedRoles(forAnySignedInUser(),
+                                       projectResource,
+                                       singleton(LAYOUT_EDITOR.getRoleId()));
     }
 
 
