@@ -47,7 +47,9 @@ public class PerspectiveDataCopier {
                     String fileName = file.getName();
                     if(fileName.endsWith(".json") && !fileName.equals("perspective.list.json")) {
                         String strippedFileName = fileName.substring(0, fileName.length() - 5);
-                        file.renameTo(new File(defaultPerspectiveDataDirectory, computeMD5(strippedFileName) + ".json"));
+                        String hashedFileName = computeMD5(strippedFileName) + ".json";
+                        file.renameTo(new File(defaultPerspectiveDataDirectory, hashedFileName));
+                        logger.info("Installed \"%s\" as %s", fileName, hashedFileName);
                     }
                 }
             }
