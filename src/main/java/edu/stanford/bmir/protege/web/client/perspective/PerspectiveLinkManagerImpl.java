@@ -52,6 +52,7 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
                         new PerspectiveId("Classes"),
                         new PerspectiveId("OWL Classes"),
                         new PerspectiveId("Properties"),
+                        new PerspectiveId("OWL Properties"),
                         new PerspectiveId("Individuals"),
                         new PerspectiveId("Discussions"),
                         new PerspectiveId("Changes by Entity"),
