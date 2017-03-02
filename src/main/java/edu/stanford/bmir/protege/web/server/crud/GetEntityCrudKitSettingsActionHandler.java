@@ -9,11 +9,10 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsResult;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_NEW_ENTITY_SETTINGS;
 
 /**
  * Author: Matthew Horridge<br>
@@ -37,7 +36,7 @@ public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
     @Nullable
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
-        return MANAGE_PROJECT;
+        return EDIT_NEW_ENTITY_SETTINGS;
     }
 
     @Override

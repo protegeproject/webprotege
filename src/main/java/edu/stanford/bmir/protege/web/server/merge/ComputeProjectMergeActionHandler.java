@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_AND_MERGE;
 
 /**
  * Matthew Horridge
@@ -55,7 +55,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     @Nonnull
     @Override
     protected Iterable getRequiredExecutableBuiltInActions() {
-        return Arrays.asList(EDIT_ONTOLOGY, MANAGE_PROJECT);
+        return Arrays.asList(EDIT_ONTOLOGY, UPLOAD_AND_MERGE);
     }
 
     @Override

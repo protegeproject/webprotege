@@ -10,11 +10,8 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsResult;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MANAGE_PROJECT;
 
 /**
  * Matthew Horridge
@@ -41,7 +38,7 @@ public class SetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     @Nullable
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
-        return MANAGE_PROJECT;
+        return BuiltInAction.EDIT_PROJECT_SETTINGS;
     }
 
     @Override

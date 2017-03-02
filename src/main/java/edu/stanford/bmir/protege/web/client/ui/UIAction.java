@@ -7,11 +7,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
  */
 public interface UIAction {
 
-    public static interface LabelChangedHandler {
+
+    interface LabelChangedHandler {
         void handleLabelChanged(UIAction action);
     }
 
-    public static interface StateChangedHandler {
+    interface StateChangedHandler {
         void handleStateChanged(UIAction action);
     }
     void setLabelChangedHandler(LabelChangedHandler labelChangedHandler);
@@ -22,6 +23,8 @@ public interface UIAction {
     String getLabel();
 
     boolean isEnabled();
+
+    boolean isVisible();
 
     void execute(ClickEvent clickEvent);
 }
