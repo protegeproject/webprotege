@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import java.util.ArrayList;
@@ -16,14 +17,12 @@ public class GetAvailableProjectsResult implements Result {
 
     private List<ProjectDetails> details;
 
-    /**
-     * For serialization only
-     */
+    @GwtSerializationConstructor
     private GetAvailableProjectsResult() {
     }
 
     public GetAvailableProjectsResult(List<ProjectDetails> details) {
-        this.details = new ArrayList<ProjectDetails>(details);
+        this.details = new ArrayList<>(details);
     }
 
 
