@@ -468,7 +468,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     private OWLAPIProject getProject(ProjectId projectId) {
-        return projectManager.getProject(projectId);
+        return projectManager.getProject(projectId, getUserInSession());
     }
 
     public Collection<OBOTermSynonym> getSynonyms(ProjectId projectId, OWLEntity term) {

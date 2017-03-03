@@ -63,7 +63,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
         // Load project in parallel (as we don't return it, but want it ready for further calls).
         Stopwatch stopwatch = Stopwatch.createStarted();
         webProtegeLogger.info("Loading project: " + action.getProjectId());
-        projectManager.getProject(action.getProjectId());
+        projectManager.getProject(action.getProjectId(), executionContext.getUserId());
         stopwatch.stop();
         webProtegeLogger.info(".... loaded project in %s ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         final ProjectId projectId = action.getProjectId();//project.getProjectId();

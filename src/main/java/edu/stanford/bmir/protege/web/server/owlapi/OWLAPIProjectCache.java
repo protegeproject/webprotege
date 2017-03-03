@@ -226,7 +226,7 @@ public class OWLAPIProjectCache {
      * @return The time stamp of the last access of the specified project from the cache.  This time stamp will be 0
      *         if the project does not exist.
      */
-    public long getLastAccessTime(ProjectId projectId) {
+    private long getLastAccessTime(ProjectId projectId) {
         Long timestamp = null;
         try {
             LAST_ACCESS_LOCK.readLock().lock();

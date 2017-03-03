@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
@@ -55,7 +57,8 @@ public class FileDownloadServlet extends HttpServlet {
             RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
             DownloadFormat format = downloadParameters.getFormat();
             String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-            OWLAPIProject project = projectManager.getProject(projectId);
+            WebProtegeSession session = new WebProtegeSessionImpl(req.getSession());
+            OWLAPIProject project = projectManager.getProject(projectId, session.getUserInSession());
             OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(displayName, project, revisionNumber, format, applicationName);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
