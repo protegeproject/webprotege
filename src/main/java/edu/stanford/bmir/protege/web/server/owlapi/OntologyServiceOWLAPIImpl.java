@@ -98,7 +98,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * @return The OWL API project. Not <code>null</code>.
      */
     private OWLAPIProject getProject(ProjectId projectId) {
-        return projectManager.getProject(projectId);
+        return projectManager.getProject(projectId, getUserId());
     }
 
     /**
@@ -108,7 +108,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      */
     private OWLOntology getOntology(String projectName) {
         ProjectId projectId = ProjectId.get(projectName);
-        return projectManager.getProject(projectId).getRootOntology();
+        return projectManager.getProject(projectId, getUserId()).getRootOntology();
     }
 
     private String toName(OWLOntologyID id) {

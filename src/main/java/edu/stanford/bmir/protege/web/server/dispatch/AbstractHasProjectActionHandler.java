@@ -123,7 +123,7 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
 
     @Override
     final public R execute(A action, ExecutionContext executionContext) {
-        OWLAPIProject project = projectManager.getProject(action.getProjectId());
+        OWLAPIProject project = projectManager.getProject(action.getProjectId(), executionContext.getUserId());
         return execute(action, project, executionContext);
     }
 

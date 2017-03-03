@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
@@ -128,8 +128,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private final Lock changeProcesssingLock = new ReentrantLock();
 
+    private final ProjectDetailsRepository projectDetailsRepository;
+
     @Inject
-    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology,  ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -154,6 +156,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         this.eventTranslatorManagerProvider = eventTranslatorManagerProvider;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
         this.changeDescriptionGeneratorFactory = changeDescriptionGeneratorFactory;
+        this.projectDetailsRepository = projectDetailsRepository;
     }
 
     public ProjectId getProjectId() {
@@ -465,6 +468,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 if (!appliedChanges.isEmpty()) {
                     Revision rev = logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
                     revision = Optional.of(rev);
+                    projectDetailsRepository.setModified(projectId, rev.getTimestamp(), userId);
                 }
                 else {
                     revision = Optional.absent();
