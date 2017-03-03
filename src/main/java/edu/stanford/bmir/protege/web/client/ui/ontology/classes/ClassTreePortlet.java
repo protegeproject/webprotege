@@ -33,7 +33,6 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
@@ -141,7 +140,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     private ClassTreePortlet(SelectionModel selectionModel,
                              Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                              WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;

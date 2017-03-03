@@ -4,13 +4,8 @@ import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
-import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.filter.FilterId;
-import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -46,7 +41,7 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
                                          ProjectId projectId,
                                          @Nonnull DiscussionThreadListPresenter presenter,
                                          @Nonnull ForbiddenView forbiddenView) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.presenter = presenter;
         this.presenter.installActions(this);
         this.forbiddenView = forbiddenView;

@@ -44,7 +44,7 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
                                   ProjectId projectId,
                                   LoggedInUserProvider loggedInUserProvider,
                                   ForbiddenView forbiddenView) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;

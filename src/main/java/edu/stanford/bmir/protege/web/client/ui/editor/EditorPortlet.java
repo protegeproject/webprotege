@@ -33,7 +33,7 @@ public class EditorPortlet extends AbstractWebProtegePortlet {
             final ProjectId projectId,
             LoggedInUserProvider loggedInUserProvider,
             EditorPresenter editorPresenter) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.editorPresenter = editorPresenter;
         setTitle("Nothing selected");
         final Widget editorView = editorPresenter.getView();
