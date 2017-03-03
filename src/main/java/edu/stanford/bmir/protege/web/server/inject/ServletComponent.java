@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Subcomponent;
-import edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl;
 import edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceImpl;
 import edu.stanford.bmir.protege.web.server.filedownload.FileDownloadServlet;
@@ -24,8 +23,6 @@ public interface ServletComponent {
     OntologyServiceOWLAPIImpl getOntologyService();
 
     OBOTextEditorServiceImpl getOBOTextEditorService();
-
-    BioPortalAPIServiceImpl getBioPortalAPIService();
 
     FileDownloadServlet getFileDownloadServlet();
 
