@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
@@ -26,7 +27,6 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
 
     @Inject
     public ComputeProjectMergeActionHandler(@UploadsDirectory File uploadsDirectory,
-                                            OWLAPIProjectManager projectManager,
+                                            ProjectManager projectManager,
                                             AccessManager accessManager) {
         super(projectManager, accessManager);
         this.uploadsDirectory = uploadsDirectory;

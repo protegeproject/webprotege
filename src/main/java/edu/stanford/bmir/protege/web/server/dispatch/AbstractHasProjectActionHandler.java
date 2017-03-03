@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequest
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -35,16 +35,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasProjectId, R extends Result> implements ActionHandler<A, R> {
 
-    private final OWLAPIProjectManager projectManager;
+    private final ProjectManager projectManager;
 
     private final AccessManager accessManager;
 
-    public AbstractHasProjectActionHandler(@Nonnull OWLAPIProjectManager projectManager, AccessManager accessManager) {
+    public AbstractHasProjectActionHandler(@Nonnull ProjectManager projectManager, AccessManager accessManager) {
         this.projectManager = checkNotNull(projectManager);
         this.accessManager = checkNotNull(accessManager);
     }
 
-    public OWLAPIProjectManager getProjectManager() {
+    public ProjectManager getProjectManager() {
         return projectManager;
     }
 

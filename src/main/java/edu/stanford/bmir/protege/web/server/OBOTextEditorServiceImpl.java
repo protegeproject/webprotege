@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.obo.*;
@@ -35,12 +35,12 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
 
     @Nonnull
-    private final OWLAPIProjectManager projectManager;
+    private final ProjectManager projectManager;
 
     @Inject
     public OBOTextEditorServiceImpl(
             @Nonnull WebProtegeLogger logger,
-            @Nonnull OWLAPIProjectManager projectManager) {
+            @Nonnull ProjectManager projectManager) {
         super(logger);
         this.projectManager = projectManager;
     }

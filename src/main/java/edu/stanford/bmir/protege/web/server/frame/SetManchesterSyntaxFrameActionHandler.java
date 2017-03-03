@@ -5,12 +5,10 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -18,7 +16,6 @@ import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
@@ -32,7 +29,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     private final GetManchesterSyntaxFrameActionHandler handler;
 
     @Inject
-    public SetManchesterSyntaxFrameActionHandler(OWLAPIProjectManager projectManager,
+    public SetManchesterSyntaxFrameActionHandler(ProjectManager projectManager,
                                                  GetManchesterSyntaxFrameActionHandler handler,
                                                  AccessManager accessManager) {
         super(projectManager, accessManager);

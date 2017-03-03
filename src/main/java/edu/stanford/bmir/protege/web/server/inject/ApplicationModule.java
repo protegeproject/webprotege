@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
@@ -10,7 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecuto
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectCache;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
@@ -52,8 +51,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public OWLAPIProjectManager provideOWLAPIProjectManager(OWLAPIProjectCache projectCache) {
-        return new OWLAPIProjectManager(projectCache);
+    public ProjectManager provideOWLAPIProjectManager(OWLAPIProjectCache projectCache) {
+        return new ProjectManager(projectCache);
     }
 
     @Provides

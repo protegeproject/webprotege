@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -34,7 +33,7 @@ public class CreateNewProjectActionHandler_TestCase {
     private CreateNewProjectActionHandler handler;
 
     @Mock
-    private OWLAPIProjectManager projectManager;
+    private ProjectManager projectManager;
 
     @Mock
     private ProjectDetailsManager projectDetailsManager;

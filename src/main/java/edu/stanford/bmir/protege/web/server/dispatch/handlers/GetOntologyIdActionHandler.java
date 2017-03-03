@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetOntologyIdAction, GetOntologyIdResult> {
 
     @Inject
-    public GetOntologyIdActionHandler(OWLAPIProjectManager projectManager,
+    public GetOntologyIdActionHandler(ProjectManager projectManager,
                                       AccessManager accessManager) {
         super(projectManager, accessManager);
     }

@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -30,7 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
 public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetEntityAnnotationsAction, GetEntityAnnotationsResult> {
 
     @Inject
-    public GetEntityAnnotationsActionHandler(OWLAPIProjectManager projectManager,
+    public GetEntityAnnotationsActionHandler(ProjectManager projectManager,
                                              AccessManager accessManager) {
         super(projectManager, accessManager);
     }

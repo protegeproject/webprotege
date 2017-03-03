@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -40,7 +40,7 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     private RevisionNumber revisionNumber;
 
     @Mock
-    private OWLAPIProjectManager projectManager;
+    private ProjectManager projectManager;
 
     @Mock
     private AccessManager accessManager;

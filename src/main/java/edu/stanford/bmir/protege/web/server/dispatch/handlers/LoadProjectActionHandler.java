@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
@@ -30,7 +30,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
     private final ProjectDetailsManager projectDetailsManager;
 
-    private final OWLAPIProjectManager projectManager;
+    private final ProjectManager projectManager;
 
     private final AccessManager accessManager;
 
@@ -38,7 +38,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
     @Inject
     public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager,
-                                    OWLAPIProjectManager projectManager,
+                                    ProjectManager projectManager,
                                     WebProtegeLogger webProtegeLogger,
                                     AccessManager accessManager) {
         this.projectDetailsManager = projectDetailsManager;

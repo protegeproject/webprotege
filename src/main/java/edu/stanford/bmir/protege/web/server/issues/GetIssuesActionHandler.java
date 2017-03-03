@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
@@ -24,7 +24,7 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 //    private final IssueRepository repository;
 
     @Inject
-    public GetIssuesActionHandler(OWLAPIProjectManager projectManager,
+    public GetIssuesActionHandler(ProjectManager projectManager,
                                   @Nonnull AccessManager accessManager
                                   //IssueRepository repository
                                   ) {

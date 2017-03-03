@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -28,7 +28,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
     private static final NamedIndividualFrameTranslator TRANSLATOR = new NamedIndividualFrameTranslator();
 
     @Inject
-    public GetNamedIndividualFrameActionHandler(OWLAPIProjectManager projectManager,
+    public GetNamedIndividualFrameActionHandler(ProjectManager projectManager,
                                                 AccessManager accessManager) {
         super(projectManager, accessManager);
     }

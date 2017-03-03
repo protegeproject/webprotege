@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHiera
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -52,12 +53,12 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     @Nonnull
-    private final OWLAPIProjectManager projectManager;
+    private final ProjectManager projectManager;
 
     @Inject
     public OntologyServiceOWLAPIImpl(
             @Nonnull WebProtegeLogger logger,
-            @Nonnull OWLAPIProjectManager projectManager) {
+            @Nonnull ProjectManager projectManager) {
         super(logger);
         this.projectManager = projectManager;
     }

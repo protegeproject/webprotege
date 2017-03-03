@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
@@ -42,7 +42,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
     @Inject
-    public GetManchesterSyntaxFrameCompletionsActionHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+    public GetManchesterSyntaxFrameCompletionsActionHandler(ProjectManager projectManager, AccessManager accessManager) {
         super(projectManager, accessManager);
     }
 

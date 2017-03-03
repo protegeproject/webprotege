@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
@@ -28,7 +28,7 @@ import javax.inject.Inject;
 public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWatchAction, AddWatchResult> {
 
     @Inject
-    public AddWatchActionHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+    public AddWatchActionHandler(ProjectManager projectManager, AccessManager accessManager) {
         super(projectManager, accessManager);
     }
 

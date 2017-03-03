@@ -4,14 +4,13 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -27,7 +26,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     private final ProjectDetailsManager projectDetailsManager;
 
     @Inject
-    public GetProjectSettingsActionHandler(OWLAPIProjectManager projectManager,
+    public GetProjectSettingsActionHandler(ProjectManager projectManager,
                                            ProjectDetailsManager projectDetailsManager,
                                            AccessManager accessManager) {
         super(projectManager, accessManager);

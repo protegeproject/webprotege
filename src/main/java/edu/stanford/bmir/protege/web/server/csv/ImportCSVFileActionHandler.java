@@ -7,11 +7,9 @@ import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
@@ -40,7 +38,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     @Inject
     public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory,
-                                      OWLAPIProjectManager projectManager,
+                                      ProjectManager projectManager,
                                       AccessManager accessManager) {
         super(projectManager, accessManager);
         this.uploadsDirectory = checkNotNull(uploadsDirectory);

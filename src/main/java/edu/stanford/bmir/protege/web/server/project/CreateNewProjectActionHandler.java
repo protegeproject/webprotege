@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -23,8 +22,6 @@ import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
@@ -41,7 +38,7 @@ import static java.util.Collections.singleton;
  */
 public class CreateNewProjectActionHandler implements ActionHandler<CreateNewProjectAction, CreateNewProjectResult> {
 
-    private final OWLAPIProjectManager pm;
+    private final ProjectManager pm;
 
     private final ProjectDetailsManager projectDetailsManager;
 
@@ -50,7 +47,7 @@ public class CreateNewProjectActionHandler implements ActionHandler<CreateNewPro
     private final AccessManager accessManager;
 
     @Inject
-    public CreateNewProjectActionHandler(OWLAPIProjectManager pm,
+    public CreateNewProjectActionHandler(ProjectManager pm,
                                          ProjectDetailsManager projectDetailsManager,
                                          ProjectSharingSettingsManager projectSharingSettingsManager,
                                          AccessManager accessManager) {

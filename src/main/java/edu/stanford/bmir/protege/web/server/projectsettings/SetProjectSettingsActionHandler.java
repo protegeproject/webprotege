@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
@@ -23,7 +23,7 @@ public class SetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     private final ProjectDetailsManager projectDetailsManager;
 
     @Inject
-    public SetProjectSettingsActionHandler(OWLAPIProjectManager projectManager,
+    public SetProjectSettingsActionHandler(ProjectManager projectManager,
                                            ProjectDetailsManager projectDetailsManager,
                                            AccessManager accessManager) {
         super(projectManager, accessManager);

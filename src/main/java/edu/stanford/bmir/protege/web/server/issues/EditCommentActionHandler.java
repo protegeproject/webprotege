@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -26,7 +26,7 @@ public class EditCommentActionHandler extends AbstractHasProjectActionHandler<Ed
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
-    public EditCommentActionHandler(OWLAPIProjectManager projectManager,
+    public EditCommentActionHandler(ProjectManager projectManager,
                                     AccessManager accessManager,
                                     EntityDiscussionThreadRepository repository) {
         super(projectManager, accessManager);

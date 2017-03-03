@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescription
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -33,7 +33,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
 public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
 
     @Inject
-    public CreateNamedIndividualsActionHandler(OWLAPIProjectManager projectManager,
+    public CreateNamedIndividualsActionHandler(ProjectManager projectManager,
                                                AccessManager accessManager) {
         super(projectManager, accessManager);
     }

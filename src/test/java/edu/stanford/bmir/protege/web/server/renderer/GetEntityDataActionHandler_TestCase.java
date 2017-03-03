@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
@@ -56,7 +56,7 @@ public class GetEntityDataActionHandler_TestCase {
     private ExecutionContext executionContext;
 
     @Mock
-    private OWLAPIProjectManager projectManager;
+    private ProjectManager projectManager;
 
     @Mock
     private AccessManager accessManager;

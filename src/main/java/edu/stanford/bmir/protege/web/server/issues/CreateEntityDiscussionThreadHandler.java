@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 
@@ -27,7 +27,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     private final EntityDiscussionThreadRepository repository;
 
     @Inject
-    public CreateEntityDiscussionThreadHandler(@Nonnull OWLAPIProjectManager projectManager,
+    public CreateEntityDiscussionThreadHandler(@Nonnull ProjectManager projectManager,
                                                @Nonnull AccessManager accessManager,
                                                @Nonnull EntityDiscussionThreadRepository repository) {
         super(projectManager, accessManager);

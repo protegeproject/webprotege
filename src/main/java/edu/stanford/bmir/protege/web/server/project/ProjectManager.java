@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectCache;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -19,12 +21,13 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/03/2012
  */
-public class OWLAPIProjectManager {
+public class ProjectManager {
 
     private final OWLAPIProjectCache projectCache;
 
+
     @Inject
-    public OWLAPIProjectManager(OWLAPIProjectCache projectCache) {
+    public ProjectManager(OWLAPIProjectCache projectCache) {
         this.projectCache = projectCache;
     }
 
