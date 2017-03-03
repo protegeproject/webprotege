@@ -19,6 +19,7 @@ import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +34,18 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
     private final EventBus eventBus;
 
-    private List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
+    private final List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
 
     private final ProjectId projectId;
 
     private final PortletUi portletUi = new PortletUiImpl();
 
-    public AbstractWebProtegePortlet(SelectionModel selectionModel,
-                                     EventBus eventBus,
-                                     ProjectId projectId) {
-        this.selectionModel = selectionModel;
-        this.eventBus = eventBus;
-        this.projectId = projectId;
+    public AbstractWebProtegePortlet(@Nonnull SelectionModel selectionModel,
+                                     @Nonnull EventBus eventBus,
+                                     @Nonnull ProjectId projectId) {
+        this.selectionModel = checkNotNull(selectionModel);
+        this.eventBus = checkNotNull(eventBus);
+        this.projectId = checkNotNull(projectId);
 
         addApplicationEventHandler(UserLoggedInEvent.TYPE, event -> handleLogin(event.getUserId()));
 
