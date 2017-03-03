@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -31,6 +31,14 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
 
     private boolean inTrash;
 
+    private long createdAt;
+
+    private UserId createdBy;
+
+    private long lastModifiedAt;
+
+    private UserId lastModifiedBy;
+
     @GwtSerializationConstructor
     private ProjectDetails() {
 
@@ -48,12 +56,20 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
                           String displayName,
                           String description,
                           UserId owner,
-                          boolean inTrash) {
+                          boolean inTrash,
+                          long createdAt,
+                          UserId createdBy,
+                          long lastModifiedAt,
+                          UserId lastModifiedBy) {
         this.projectId = checkNotNull(projectId);
         this.displayName = checkNotNull(displayName);
         this.owner = checkNotNull(owner);
         this.description = checkNotNull(description);
         this.inTrash = inTrash;
+        this.createdAt = createdAt;
+        this.createdBy = checkNotNull(createdBy);
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedBy = checkNotNull(lastModifiedBy);
     }
 
     /**
@@ -96,6 +112,22 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
         return inTrash;
     }
 
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public UserId getCreatedBy() {
+        return createdBy;
+    }
+
+    public long getLastModifiedAt() {
+        return lastModifiedAt;
+    }
+
+    public UserId getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if(o == this) {
@@ -105,12 +137,26 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
             return false;
         }
         ProjectDetails other = (ProjectDetails) o;
-        return this.projectId.equals(other.projectId) && this.displayName.equals(other.displayName) && this.description.equals(other.description) && this.owner.equals(other.owner) && this.inTrash == other.inTrash;
+        return this.projectId.equals(other.projectId)
+                && this.displayName.equals(other.displayName)
+                && this.description.equals(other.description)
+                && this.owner.equals(other.owner)
+                && this.inTrash == other.inTrash
+                && this.lastModifiedAt == other.lastModifiedAt
+                && this.lastModifiedBy.equals(other.lastModifiedBy);
     }
 
     @Override
     public int hashCode() {
-        return "ProjectDetails".hashCode() + projectId.hashCode() + displayName.hashCode() + description.hashCode() + owner.hashCode() + (inTrash ? 7 : 37);
+        return Objects.hashCode(
+                projectId,
+                displayName,
+                description,
+                owner,
+                inTrash,
+                lastModifiedAt,
+                lastModifiedBy
+        );
     }
 
     @Override
@@ -141,7 +187,10 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
                           .add("displayName", displayName)
                           .add("description", description)
                           .add("owner", owner)
-                          .add("inTrash", inTrash).toString();
+                          .add("inTrash", inTrash)
+                          .add("lastModifiedAt", lastModifiedAt)
+                          .add("lastModifiedBy", lastModifiedBy)
+                          .toString();
     }
 
 
@@ -150,7 +199,15 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
     }
 
     public Builder builder() {
-        return new Builder(projectId, owner, displayName, description, inTrash);
+        return new Builder(projectId,
+                           owner,
+                           displayName,
+                           description,
+                           inTrash,
+                           createdAt,
+                           createdBy,
+                           lastModifiedAt,
+                           lastModifiedBy);
     }
 
 
@@ -166,19 +223,41 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
 
         private boolean inTrash;
 
+        private long createdAt;
+
+        private UserId createdBy;
+
+        private long lastModifiedAt;
+
+        private UserId lastModifiedBy;
+
         public Builder(ProjectId projectId, UserId owner, String displayName, String description) {
             this.projectId = projectId;
             this.owner = owner;
             this.displayName = displayName;
             this.description = description;
+            this.lastModifiedAt = 0;
+            this.lastModifiedBy = owner;
         }
 
-        public Builder(ProjectId projectId, UserId owner, String displayName, String description, boolean inTrash) {
+        public Builder(ProjectId projectId,
+                       UserId owner,
+                       String displayName,
+                       String description,
+                       boolean inTrash,
+                       long createdAt,
+                       UserId createdBy,
+                       long lastModifiedAt,
+                       UserId lastModifiedBy) {
             this.projectId = projectId;
             this.owner = owner;
             this.displayName = displayName;
             this.description = description;
             this.inTrash = inTrash;
+            this.createdAt = createdAt;
+            this.createdBy = createdBy;
+            this.lastModifiedAt = lastModifiedAt;
+            this.lastModifiedBy = lastModifiedBy;
         }
 
         public UserId getOwner() {
@@ -217,8 +296,29 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
             return this;
         }
 
+        public Builder setLastModifiedAt(long lastModifiedAt) {
+            this.lastModifiedAt = lastModifiedAt;
+            return this;
+        }
+
+        public Builder setLastModifiedBy(UserId lastModifiedBy) {
+            this.lastModifiedBy = lastModifiedBy;
+            return this;
+        }
+
+        public Builder setCreatedAt(long createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder setCreatedBy(UserId createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
         public ProjectDetails build() {
-            return new ProjectDetails(projectId, displayName, description, owner, inTrash);
+            return new ProjectDetails(projectId, displayName, description, owner, inTrash,
+                                      createdAt, createdBy, lastModifiedAt, lastModifiedBy);
         }
     }
 }

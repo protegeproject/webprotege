@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.googlecode.gwt.crypto.util.Sys;
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -28,12 +29,17 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     @Override
     public void registerProject(ProjectId projectId, NewProjectSettings settings) {
+        long now = System.currentTimeMillis();
         ProjectDetails record = new ProjectDetails(
                 projectId,
                 settings.getDisplayName(),
                 settings.getProjectDescription(),
                 settings.getProjectOwner(),
-                false);
+                false,
+                now,
+                settings.getProjectOwner(),
+                now,
+                settings.getProjectOwner());
         repository.save(record);
     }
 

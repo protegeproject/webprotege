@@ -26,11 +26,18 @@
             flex-grow: 0;
             padding: 5px;
         }
+        .modifiedAtCol {
+            width: 200px;
+            flex-grow: 0;
+            padding: 5px;
+        }
         .menuButtonCol {
             flex-grow: 0;
+            flex-shrink: 0;
             padding-top: 3px;
             padding-right: 10px;
             padding-left: 10px;
+            width: 12px;
         }
     </ui:style>
 
@@ -38,6 +45,7 @@
         <g:Label ui:field="displayNameField" addStyleNames="{style.displayNameCol}" title="Click to open"/>
         <!--<g:Label ui:field="descriptionField" addStyleNames="{style.descriptionCol}"/>-->
         <g:Label ui:field="ownerField" addStyleNames="{style.ownerCol}"/>
+        <g:Label ui:field="modifiedAtField" addStyleNames="{style.modifiedAtCol}"/>
         <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.menuButtonCol}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
