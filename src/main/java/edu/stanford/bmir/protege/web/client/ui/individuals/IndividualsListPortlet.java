@@ -32,7 +32,7 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
                                   EventBus eventBus,
                                   LoggedInUserProvider loggedInUserProvider,
                                   ProjectId projectId) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.presenter = presenter;
         setTitle("Individuals by Class");
         presenter.installActions(this);

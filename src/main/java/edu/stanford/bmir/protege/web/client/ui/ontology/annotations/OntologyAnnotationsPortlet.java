@@ -48,7 +48,7 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
 
     @Inject
     public OntologyAnnotationsPortlet(AnnotationsView annotationsView, SelectionModel selectionModel, EventBus eventBus,  DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

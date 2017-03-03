@@ -31,7 +31,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
 
     @Inject
     public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         html = new HTML();
         setWidget(new ScrollPanel(html));

@@ -23,7 +23,7 @@ public class FormPortlet extends AbstractWebProtegePortlet {
 
     @Inject
     public FormPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, FormPresenter formPresenter) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.formPresenter = formPresenter;
         setTitle("Form");
     }

@@ -22,7 +22,7 @@ public abstract class AbstractOBOTermPortlet extends AbstractWebProtegePortlet {
     private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
 
     protected AbstractOBOTermPortlet(SelectionModel selectionModel,  EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         // TODO:
 //        addStyleName("web-protege-laf");
     }

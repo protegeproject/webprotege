@@ -33,7 +33,7 @@ public class ProjectFeedPortlet extends AbstractWebProtegePortlet {
 
     @Inject
     public ProjectFeedPortlet(ProjectFeedPresenter presenter, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserManager) {
-        super(selectionModel, eventBus, loggedInUserManager, projectId);
+        super(selectionModel, eventBus, projectId);
         this.loggedInUserProvider = loggedInUserManager;
         this.presenter = presenter;
         presenter.bind(this);

@@ -29,7 +29,7 @@ public class RevisionsPortlet extends AbstractWebProtegePortlet {
 
     @Inject
     public RevisionsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
-        super(selectionModel, eventBus, loggedInUserManager, projectId);
+        super(selectionModel, eventBus, projectId);
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);

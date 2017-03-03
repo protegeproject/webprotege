@@ -24,7 +24,7 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet
 
     @Inject
     public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, ManchesterSyntaxFrameEditorPresenter presenter) {
-        super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        super(selectionModel, eventBus, projectId);
         this.presenter = presenter;
         presenter.attach(this);
         setWidget(presenter.getView());

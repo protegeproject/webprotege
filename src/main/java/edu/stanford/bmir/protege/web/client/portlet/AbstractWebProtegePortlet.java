@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -42,7 +41,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
     public AbstractWebProtegePortlet(SelectionModel selectionModel,
                                      EventBus eventBus,
-                                     LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
+                                     ProjectId projectId) {
         this.selectionModel = selectionModel;
         this.eventBus = eventBus;
         this.projectId = projectId;
