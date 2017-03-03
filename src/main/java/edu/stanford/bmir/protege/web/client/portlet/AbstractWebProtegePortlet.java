@@ -74,11 +74,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         portletUi.setToolbarVisible(visible);
     }
 
-//    @Override
-//    public AcceptsOneWidget getContentHolder() {
-//        return portletUi.getContentHolder();
-//    }
-
     public SelectionModel getSelectionModel() {
         return selectionModel;
     }
