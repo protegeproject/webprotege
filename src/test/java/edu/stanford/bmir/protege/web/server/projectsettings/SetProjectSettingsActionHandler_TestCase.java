@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.projectsettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -42,7 +42,7 @@ public class SetProjectSettingsActionHandler_TestCase {
     private SetProjectSettingsActionHandler handler;
 
     @Mock
-    private OWLAPIProjectManager projectManager;
+    private ProjectManager projectManager;
 
     @Mock
     private AccessManager accessManager;

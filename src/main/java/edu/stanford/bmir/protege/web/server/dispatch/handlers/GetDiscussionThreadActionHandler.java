@@ -6,11 +6,10 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -25,7 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJ
 public class GetDiscussionThreadActionHandler extends AbstractHasProjectActionHandler<GetDiscussionThreadAction, GetDiscussionThreadResult> {
 
     @Inject
-    public GetDiscussionThreadActionHandler(OWLAPIProjectManager projectManager,
+    public GetDiscussionThreadActionHandler(ProjectManager projectManager,
                                             AccessManager accessManager) {
         super(projectManager, accessManager);
     }

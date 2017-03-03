@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -27,7 +27,7 @@ import java.util.Set;
 public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUsageAction, GetUsageResult> {
 
     @Inject
-    public GetUsageActionHandler(OWLAPIProjectManager projectManager, AccessManager accessManager) {
+    public GetUsageActionHandler(ProjectManager projectManager, AccessManager accessManager) {
         super(projectManager, accessManager);
     }
 

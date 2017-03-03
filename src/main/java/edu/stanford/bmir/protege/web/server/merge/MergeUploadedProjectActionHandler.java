@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -44,7 +45,7 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
     private final File uploadsDirectory;
 
     @Inject
-    public MergeUploadedProjectActionHandler(OWLAPIProjectManager projectManager,
+    public MergeUploadedProjectActionHandler(ProjectManager projectManager,
                                              @UploadsDirectory File uploadsDirectory,
                                              AccessManager accessManager) {
         super(projectManager, accessManager);

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsCompar
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -30,7 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
 public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, GetOntologyAnnotationsResult> {
 
     @Inject
-    public GetOntologyAnnotationsActionHandler(OWLAPIProjectManager projectManager,
+    public GetOntologyAnnotationsActionHandler(ProjectManager projectManager,
                                                AccessManager accessManager) {
         super(projectManager, accessManager);
     }

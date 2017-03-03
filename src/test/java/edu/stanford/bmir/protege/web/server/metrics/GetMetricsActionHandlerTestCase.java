@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
@@ -40,7 +40,7 @@ public class GetMetricsActionHandlerTestCase {
     protected ImmutableList<MetricValue> metricValues;
 
     @Mock
-    private OWLAPIProjectManager projectManager;
+    private ProjectManager projectManager;
 
     @Mock
     private AccessManager accessManager;

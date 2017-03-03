@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsResult;
@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_NEW
 public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectActionHandler<GetEntityCrudKitSettingsAction, GetEntityCrudKitSettingsResult> {
 
     @Inject
-    public GetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager,
+    public GetEntityCrudKitSettingsActionHandler(ProjectManager projectManager,
                                                  AccessManager accessManager) {
         super(projectManager, accessManager);
     }

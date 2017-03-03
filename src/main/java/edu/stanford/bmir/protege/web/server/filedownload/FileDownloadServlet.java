@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
@@ -31,7 +31,7 @@ import java.io.IOException;
 public class FileDownloadServlet extends HttpServlet {
 
     @Nonnull
-    private final OWLAPIProjectManager projectManager;
+    private final ProjectManager projectManager;
 
     @Nonnull
     private final ProjectDetailsManager projectDetailsManager;
@@ -41,7 +41,7 @@ public class FileDownloadServlet extends HttpServlet {
 
     @Inject
     public FileDownloadServlet(
-            @Nonnull OWLAPIProjectManager projectManager,
+            @Nonnull ProjectManager projectManager,
             @Nonnull ProjectDetailsManager projectDetailsManager,
             @Nonnull @ApplicationName String applicationName) {
         this.projectManager = projectManager;

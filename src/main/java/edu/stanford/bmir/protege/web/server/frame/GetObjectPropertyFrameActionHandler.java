@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
@@ -29,7 +29,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractHasProjectActio
     private static final ObjectPropertyFrameTranslator TRANSLATOR = new ObjectPropertyFrameTranslator();
 
     @Inject
-    public GetObjectPropertyFrameActionHandler(OWLAPIProjectManager projectManager,
+    public GetObjectPropertyFrameActionHandler(ProjectManager projectManager,
                                                AccessManager accessManager) {
         super(projectManager, accessManager);
     }

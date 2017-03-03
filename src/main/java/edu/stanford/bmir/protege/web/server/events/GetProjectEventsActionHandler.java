@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -32,10 +32,10 @@ public class GetProjectEventsActionHandler implements ActionHandler<GetProjectEv
 
     public final WebProtegeLogger logger;
 
-    private OWLAPIProjectManager projectManager;
+    private ProjectManager projectManager;
 
     @Inject
-    public GetProjectEventsActionHandler(OWLAPIProjectManager projectManager, WebProtegeLogger logger) {
+    public GetProjectEventsActionHandler(ProjectManager projectManager, WebProtegeLogger logger) {
         this.projectManager = checkNotNull(projectManager);
         this.logger = checkNotNull(logger);
     }

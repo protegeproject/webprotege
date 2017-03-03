@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -34,7 +34,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     private final WebProtegeLogger logger;
 
     @Inject
-    public CreateClassActionHandler(OWLAPIProjectManager projectManager,
+    public CreateClassActionHandler(ProjectManager projectManager,
                                     AccessManager accessManager,
                                     WebProtegeLogger logger) {
         super(projectManager, accessManager);
