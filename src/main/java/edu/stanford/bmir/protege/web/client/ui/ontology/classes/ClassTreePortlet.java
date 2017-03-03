@@ -463,32 +463,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         }
     }
 
-    protected void onSubclassRemoved(final EntityData entity, final Collection<EntityData> subclasses) {
-        if (subclasses == null || subclasses.size() == 0) {
-            return;
-        }
-
-        final EntityData subclass = ((List<EntityData>) subclasses).get(0);
-        final TreeNode parentNode = findTreeNode(entity.getName());
-
-        if (parentNode == null) {
-            return;
-        }
-
-        // final TreeNode subclassNode = findTreeNode(parentNode, subclass.getName(), new ArrayList<TreeNode>());
-        final TreeNode subclassNode = getDirectChild(parentNode, subclass.getName());
-        if (subclassNode == null) {
-            return;
-        }
-
-        //if (subclassNode.getParentNode().equals(parentNode)) {
-        parentNode.removeChild(subclassNode);
-        if (parentNode.getChildNodes().length < 1) {
-            parentNode.setExpandable(false);
-        }
-        //}
-    }
-
     /**
      * Called to update the browser text in the tree
      *
@@ -520,13 +494,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     protected void onClassCreated(final OWLClass freshClass, final List<OWLClass> superClasses) {
 
-    }
-
-
-    protected void insertNodeInTree(final TreeNode parentNode, final EntityData child) {
-        if (!hasChild(parentNode, child.getName())) {
-            parentNode.appendChild(createTreeNode(child));
-        }
     }
 
     private enum CreateClassesMode {
@@ -1088,43 +1055,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             if (endCallback != null) {
                 endCallback.onSuccess(children);
             }
-        }
-    }
-
-    class GetPropertyHierarchySubclassesOfClassHandler implements AsyncCallback<List<Triple>> {
-
-        private final String clsName;
-
-        private final TreeNode parentNode;
-
-        public GetPropertyHierarchySubclassesOfClassHandler(final String className, final TreeNode parentNode) {
-            super();
-            this.clsName = className;
-            this.parentNode = parentNode;
-        }
-
-        @Override
-        public void onFailure(final Throwable caught) {
-            // getEl().unmask();
-            GWT.log("RPC error at getting subproperties of " + clsName, caught);
-        }
-
-        @Override
-        public void onSuccess(final List<Triple> childTriples) {
-            // getEl().unmask();
-            if (childTriples != null) {
-                for (final Triple childTriple : childTriples) {
-                    final EntityData childData = childTriple.getValue();
-                    if (!hasChild(parentNode, childData.getName())) {
-                        final TreeNode childNode = createTreeNode(childData);
-                        childNode.setExpandable(true); // TODO - we need to get the
-                        // own slot values count
-                        parentNode.appendChild(childNode);
-                    }
-                }
-            }
-
-            setSubclassesLoaded(parentNode, true);
         }
     }
 
