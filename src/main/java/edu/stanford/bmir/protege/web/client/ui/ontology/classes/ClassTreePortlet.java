@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
@@ -38,7 +39,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
@@ -74,9 +74,7 @@ import javax.inject.Provider;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -87,8 +85,8 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
 @Portlet(id = "portlets.ClassHierarchy",
-        title = "Class Hierarchy",
-        tooltip = "Displays the class hierarchy as a tree.")
+         title = "Class Hierarchy",
+         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
@@ -117,11 +115,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private final WatchPresenter watchPresenter;
 
-    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(), (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
+    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
+                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
 
-    private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(), (action, event) -> onDeleteCls());
+    private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(),
+                                                                      (action, event) -> onDeleteCls());
 
-    private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(), (action, event) -> editWatches());
+    private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(),
+                                                                     (action, event) -> editWatches());
 
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
 
@@ -134,12 +135,26 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                             LoggedInUserProvider loggedInUserProvider,
                             LoggedInUserProjectPermissionChecker permissionChecker,
                             Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
-        this(selectionModel, primitiveDataEditorProvider, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, permissionChecker);
+        this(selectionModel,
+             primitiveDataEditorProvider,
+             watchPresenter,
+             eventBus,
+             dispatchServiceManager,
+             loggedInUserProvider,
+             projectId,
+             null,
+             permissionChecker);
     }
 
     private ClassTreePortlet(SelectionModel selectionModel,
                              Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                             WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+                             WatchPresenter watchPresenter,
+                             EventBus eventBus,
+                             DispatchServiceManager dispatchServiceManager,
+                             LoggedInUserProvider loggedInUserProvider,
+                             final ProjectId projectId,
+                             final String topClass,
+                             LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -165,12 +180,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                         Optional<OWLEntity> selectedEntity = getSelectedEntity();
                         if (selectedEntity.isPresent()) {
                             String iri = selectedEntity.get().getIRI().toQuotedString();
-                            InputBox.showOkDialog("Class IRI", true, iri, input -> {});
+                            InputBox.showOkDialog("Class IRI", true, iri, input -> {
+                            });
                         }
                     });
                     contextMenu.addItem("Show direct link", event -> {
                         String location = Window.Location.getHref();
-                        InputBox.showOkDialog("Direct link", true, location, input -> {});
+                        InputBox.showOkDialog("Direct link", true, location, input -> {
+                        });
                     });
                     contextMenu.addSeparator();
                     contextMenu.addItem("Refresh tree", event -> onRefresh());
@@ -203,7 +220,8 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
         addProjectEventHandler(WatchRemovedEvent.TYPE, event -> handleWatchRemoved(event));
 
-        addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE, evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
+        addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE,
+                               evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
 
         addProjectEventHandler(ClassHierarchyParentAddedEvent.TYPE, event -> handleParentAddedEvent(event));
 
@@ -214,11 +232,17 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     private void handleParentAddedEvent(final ClassHierarchyParentAddedEvent event) {
         final TreeNode tn = findTreeNode(event.getParent());
         if (tn != null) {
-            GetEntityDataAction action = new GetEntityDataAction(getProjectId(), ImmutableSet.copyOf(event.getSignature()));
+            GetEntityDataAction action = new GetEntityDataAction(getProjectId(),
+                                                                 ImmutableSet.copyOf(event.getSignature()));
             dispatchServiceManager.execute(action, new DispatchServiceCallback<GetEntityDataResult>() {
                 @Override
                 public void handleSuccess(GetEntityDataResult result) {
-                    SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(), result.getEntityDataMap().get(event.getChild()).getBrowserText(), Collections.<EntityData>emptyList(), 0);
+                    SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(),
+                                                                             result.getEntityDataMap()
+                                                                                   .get(event.getChild())
+                                                                                   .getBrowserText(),
+                                                                             Collections.<EntityData>emptyList(),
+                                                                             0);
                     subClassData.setValueType(ValueType.Cls);
                     onSubclassAdded((EntityData) tn.getUserObject(), Arrays.asList(subClassData), false);
                 }
@@ -369,24 +393,34 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         if (selectedClassDataFromTree.isPresent()) {
             getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
         }
-        dispatchServiceManager.execute(new GetIssuesAction(getProjectId()), new DispatchServiceCallback<GetIssuesResult>() {
-            @Override
-            public void handleSuccess(GetIssuesResult result) {
+        dispatchServiceManager.execute(new GetIssuesAction(getProjectId()),
+                                       new DispatchServiceCallback<GetIssuesResult>() {
+                                           @Override
+                                           public void handleSuccess(GetIssuesResult result) {
 //                MessageBox.showMessage(result.getIssues().get(0).toString());
-                result.getIssues().stream()
-                        .limit(1)
-                        .forEach(i -> MessageBox.showMessage("Issue", i.toString()));
-            }
-        });
+                                               result.getIssues().stream()
+                                                     .limit(1)
+                                                     .forEach(i -> MessageBox.showMessage("Issue", i.toString()));
+                                           }
+                                       });
     }
 
     protected void addDragAndDropSupport() {
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
-            public boolean doBeforeNodeDrop(final TreePanel treePanel, final TreeNode target, final DragData dragData, final String point, final DragDrop source, final TreeNode dropNode, final DropNodeCallback dropNodeCallback) {
-                final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
+            public boolean doBeforeNodeDrop(final TreePanel treePanel,
+                                            final TreeNode target,
+                                            final DragData dragData,
+                                            final String point,
+                                            final DragDrop source,
+                                            final TreeNode dropNode,
+                                            final DropNodeCallback dropNodeCallback) {
+                final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(
+                        dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
                 if (success) {
-                    moveClass((EntityData) dropNode.getUserObject(), (EntityData) dropNode.getParentNode().getUserObject(), (EntityData) target.getUserObject());
+                    moveClass((EntityData) dropNode.getUserObject(),
+                              (EntityData) dropNode.getParentNode().getUserObject(),
+                              (EntityData) target.getUserObject());
                     return true;
                 }
                 else {
@@ -397,7 +431,9 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         });
     }
 
-    protected void onSubclassAdded(final EntityData parent, final Collection<EntityData> subclasses, final boolean selectNewNode) {
+    protected void onSubclassAdded(final EntityData parent,
+                                   final Collection<EntityData> subclasses,
+                                   final boolean selectNewNode) {
         if (subclasses == null || subclasses.size() == 0) {
             return;
         }
@@ -519,22 +555,32 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             showClassNotSelectedMessage();
             return;
         }
-        WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.CLASS, new CreateEntityDialogController.CreateEntityHandler() {
-            @Override
-            public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
-                final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
-                if (!superCls.isPresent()) {
-                    return;
-                }
-                final Set<String> browserTexts = new HashSet<String>(createEntityInfo.getBrowserTexts());
-                if (browserTexts.size() > 1) {
-                    dispatchServiceManager.execute(new CreateClassesAction(getProjectId(), superCls.get(), browserTexts), getCreateClassesActionAsyncHandler());
-                }
-                else {
-                    dispatchServiceManager.execute(new CreateClassAction(getProjectId(), browserTexts.iterator().next(), superCls.get()), getCreateClassAsyncHandler());
-                }
-            }
-        }));
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.CLASS,
+                                                                     new CreateEntityDialogController.CreateEntityHandler() {
+                                                                         @Override
+                                                                         public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
+                                                                             final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
+                                                                             if (!superCls.isPresent()) {
+                                                                                 return;
+                                                                             }
+                                                                             final Set<String> browserTexts = new HashSet<String>(
+                                                                                     createEntityInfo.getBrowserTexts());
+                                                                             if (browserTexts.size() > 1) {
+                                                                                 dispatchServiceManager.execute(new CreateClassesAction(
+                                                                                                                        getProjectId(),
+                                                                                                                        superCls.get(),
+                                                                                                                        browserTexts),
+                                                                                                                getCreateClassesActionAsyncHandler());
+                                                                             }
+                                                                             else {
+                                                                                 dispatchServiceManager.execute(new CreateClassAction(
+                                                                                                                        getProjectId(),
+                                                                                                                        browserTexts.iterator().next(),
+                                                                                                                        superCls.get()),
+                                                                                                                getCreateClassAsyncHandler());
+                                                                             }
+                                                                         }
+                                                                     }));
     }
 
     private void createSubClassesByImportingCSVDocument() {
@@ -542,21 +588,32 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         if (!selCls.isPresent()) {
             return;
         }
-        UploadFileDialogController controller = new UploadFileDialogController("Upload CSV", new UploadFileResultHandler() {
-            @Override
-            public void handleFileUploaded(final DocumentId fileDocumentId) {
-                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
-                        new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get(), dispatchServiceManager, new CSVImportViewImpl(primitiveDataEditorProvider)));
-                csvImportDialog.setVisible(true);
+        UploadFileDialogController controller = new UploadFileDialogController("Upload CSV",
+                                                                               new UploadFileResultHandler() {
+                                                                                   @Override
+                                                                                   public void handleFileUploaded(final DocumentId fileDocumentId) {
+                                                                                       WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
+                                                                                               new CSVImportDialogController(
+                                                                                                       getProjectId(),
+                                                                                                       fileDocumentId,
+                                                                                                       selCls.get(),
+                                                                                                       dispatchServiceManager,
+                                                                                                       new CSVImportViewImpl(
+                                                                                                               primitiveDataEditorProvider)));
+                                                                                       csvImportDialog.setVisible(true);
 
-            }
+                                                                                   }
 
-            @Override
-            public void handleFileUploadFailed(String errorMessage) {
-                ProgressMonitor.get().hideProgressMonitor();
-                MessageBox.showAlert("Error uploading CSV file", errorMessage);
-            }
-        });
+                                                                                   @Override
+                                                                                   public void handleFileUploadFailed(
+                                                                                           String errorMessage) {
+                                                                                       ProgressMonitor.get()
+                                                                                                      .hideProgressMonitor();
+                                                                                       MessageBox.showAlert(
+                                                                                               "Error uploading CSV file",
+                                                                                               errorMessage);
+                                                                                   }
+                                                                               });
 
         WebProtegeDialog.showDialog(controller);
     }
@@ -575,7 +632,11 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                     }
                     for (OWLClass createdCls : createdClasses) {
                         if (!existingClasses.contains(createdCls)) {
-                            final SubclassEntityData entityData = new SubclassEntityData(createdCls.getIRI().toString(), result.getBrowserText(createdCls).or(""), Collections.<EntityData>emptySet(), 0);
+                            final SubclassEntityData entityData = new SubclassEntityData(createdCls.getIRI().toString(),
+                                                                                         result.getBrowserText(
+                                                                                                 createdCls).or(""),
+                                                                                         Collections.<EntityData>emptySet(),
+                                                                                         0);
                             entityData.setValueType(ValueType.Cls);
                             Node n = createTreeNode(entityData);
                             node.appendChild(n);
@@ -650,11 +711,13 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         }
     }
 
-    protected void invokeGetSubclassesRemoteCall(final String parentClsName, AsyncCallback<List<SubclassEntityData>> callback) {
+    protected void invokeGetSubclassesRemoteCall(final String parentClsName,
+                                                 AsyncCallback<List<SubclassEntityData>> callback) {
         OntologyServiceManager.getInstance().getSubclasses(getProjectId(), parentClsName, callback);
     }
 
-    protected AsyncCallback<List<SubclassEntityData>> getSubclassesCallback(final String parentClsName, final TreeNode parentNode) {
+    protected AsyncCallback<List<SubclassEntityData>> getSubclassesCallback(final String parentClsName,
+                                                                            final TreeNode parentNode) {
         return new GetSubclassesOfClassHandler(parentClsName, parentNode, null);
     }
 
@@ -674,18 +737,32 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         permissionChecker.hasPermission(EDIT_ONTOLOGY,
                                         canMove -> {
                                             if (canMove) {
-                                                OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
+                                                OntologyServiceManager.getInstance()
+                                                                      .moveCls(getProjectId(),
+                                                                               cls.getName(),
+                                                                               oldParent.getName(),
+                                                                               newParent.getName(),
+                                                                               false,
+                                                                               loggedInUserProvider.getCurrentUserId(),
+                                                                               getMoveClsOperationDescription(cls,
+                                                                                                              oldParent,
+                                                                                                              newParent),
+                                                                               new MoveClassHandler(cls.getName()));
                                             }
                                         });
 
     }
 
-    protected String getMoveClsOperationDescription(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
-        return "Move class: " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(newParent);
+    protected String getMoveClsOperationDescription(final EntityData cls,
+                                                    final EntityData oldParent,
+                                                    final EntityData newParent) {
+        return "Move class: " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(
+                newParent);
     }
 
     public void getPathToRoot(final OWLEntity entity) {
-        OntologyServiceManager.getInstance().getPathToRoot(getProjectId(), entity.getIRI().toString(), new GetPathToRootHandler());
+        OntologyServiceManager.getInstance()
+                              .getPathToRoot(getProjectId(), entity.getIRI().toString(), new GetPathToRootHandler());
     }
 
     private static String getDisplayText(Object object) {
@@ -824,7 +901,9 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         }
     }
 
-    protected AsyncCallback<List<SubclassEntityData>> getSelectInTreeCallback(TreeNode parentNode, List<EntityData> path, int index) {
+    protected AsyncCallback<List<SubclassEntityData>> getSelectInTreeCallback(TreeNode parentNode,
+                                                                              List<EntityData> path,
+                                                                              int index) {
         return new SelectInTreeHandler(parentNode, path, index);
     }
 
@@ -877,7 +956,10 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                     "position: relative;\n" +
                     "top: 1px;\n" +
                     "padding-right: 2px\">" +
-                    "<img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></div>" +
+                    "<img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon()
+                                                                              .getSafeUri()
+                                                                              .asString() + "\" title=\"" + getNiceNoteCountText(
+                    localAnnotationsCount) + " on this category.\" /></div>" +
                     "<div id=\"" + idLocalAnnotationCnt + "\" style=\"color: #909090;\n" +
                     "font-size: smaller;\n" +
                     "display: inline-block;\n" +
@@ -888,7 +970,10 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
-            text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.commentSmallIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
+            text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.commentSmallIcon()
+                                                                                    .getSafeUri()
+                                                                                    .asString() + "\" title=\"" + getNiceNoteCountText(
+                    childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
         }
 
         return text;
@@ -900,10 +985,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             return "";
         }
         if (w.iterator().next() instanceof EntityFrameWatch) {
-            return "<img src=\"" + BUNDLE.eyeIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+            return "<img src=\"" + BUNDLE.eyeIcon()
+                                         .getSafeUri()
+                                         .asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
-            return "<img src=\"" + BUNDLE.eyeDownIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+            return "<img src=\"" + BUNDLE.eyeDownIcon()
+                                         .getSafeUri()
+                                         .asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
     }
 
@@ -1014,7 +1103,9 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
         private final AsyncCallback<Object> endCallback;
 
-        public GetSubclassesOfClassHandler(final String className, final TreeNode parentNode, final AsyncCallback<Object> endCallback) {
+        public GetSubclassesOfClassHandler(final String className,
+                                           final TreeNode parentNode,
+                                           final AsyncCallback<Object> endCallback) {
             super();
             this.clsName = className;
             this.parentNode = parentNode;
@@ -1066,12 +1157,19 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         @Override
         public void handleSuccess(final CreateClassResult result) {
             onClassCreated(result.getObject(), result.getSuperClasses());
-            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserTextMap().getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
+            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(),
+                                                                     result.getBrowserTextMap()
+                                                                           .getBrowserText(result.getObject())
+                                                                           .or(""),
+                                                                     Collections.<EntityData>emptyList(),
+                                                                     0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
             if (pathToRoot.isEmpty()) {
                 return;
             }
-            onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
+            onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()),
+                            Arrays.<EntityData>asList(subClassData),
+                            false);
             selectPathInTree(pathToRoot);
         }
     }
@@ -1203,7 +1301,8 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                 }
             }
             else {
-                GWT.log("Error at select in tree: could not find child " + nextParent + " of " + parentNode.getUserObject(), null);
+                GWT.log("Error at select in tree: could not find child " + nextParent + " of " + parentNode.getUserObject(),
+                        null);
             }
         }
     }

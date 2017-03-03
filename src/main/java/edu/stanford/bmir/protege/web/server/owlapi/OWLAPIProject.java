@@ -79,8 +79,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private final AccessManager accessManager;
 
-    private final ProjectAccessManager projectAccessManager;
-
     private final RenderingManager renderingManager;
 
     private final EventManager<ProjectEvent<?>> projectEventManager;
@@ -131,12 +129,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private final ProjectDetailsRepository projectDetailsRepository;
 
     @Inject
-    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology,  ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology,  ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
         this.accessManager = accessManager;
-        this.projectAccessManager = projectAccessManager;
         this.renderingManager = renderingManager;
         this.projectEventManager = projectEventManager;
         this.ontology = ontology;
@@ -199,10 +196,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public EventManager<ProjectEvent<?>> getEventManager() {
         return projectEventManager;
-    }
-
-    public ProjectAccessManager getProjectAccessManager() {
-        return projectAccessManager;
     }
 
     public WatchManager getWatchManager() {
@@ -727,7 +720,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         objectPropertyHierarchyProvider.dispose();
         dataPropertyHierarchyProvider.dispose();
         annotationPropertyHierarchyProvider.dispose();
-        projectAccessManager.dispose();
     }
 
 }
