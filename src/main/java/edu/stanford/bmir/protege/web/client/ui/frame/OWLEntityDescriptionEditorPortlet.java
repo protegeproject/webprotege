@@ -23,7 +23,7 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet
     private final ManchesterSyntaxFrameEditorPresenter presenter;
 
     @Inject
-    public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, ManchesterSyntaxFrameEditorPresenter presenter) {
+    public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter) {
         super(selectionModel, eventBus, projectId);
         this.presenter = presenter;
         presenter.attach(this);

@@ -30,8 +30,8 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
 
     @Inject
-    public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+    public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
+        super(selectionModel, eventBus, projectId);
         this.editor = editor;
         setWidget(editor.asWidget());
     }

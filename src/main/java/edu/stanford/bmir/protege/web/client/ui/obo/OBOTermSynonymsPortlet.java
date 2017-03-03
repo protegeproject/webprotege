@@ -27,8 +27,8 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     private OBOTermSynonymListEditor editor;
 
     @Inject
-    public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+    public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
+        super(selectionModel, eventBus, projectId);
         editor = new OBOTermSynonymListEditor();
         editor.setEnabled(true);
         setWidget(editor);

@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
@@ -30,7 +29,10 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel,
+                                              EventBus eventBus,
+                                              DispatchServiceManager dispatchServiceManager,
+                                              ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         html = new HTML();
@@ -53,46 +55,48 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
                 handleEntityChange(event.getEntity());
             }
         });
-        addProjectEventHandler(AnnotationPropertyFrameChangedEvent.TYPE, new AnnotationPropertyFrameChangedEventHandler() {
+        addProjectEventHandler(AnnotationPropertyFrameChangedEvent.TYPE,
+                               new AnnotationPropertyFrameChangedEventHandler() {
 
-            @Override
-            public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
-                handleEntityChange(event.getEntity());
-            }
-        });
+                                   @Override
+                                   public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
+                                       handleEntityChange(event.getEntity());
+                                   }
+                               });
         addProjectEventHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
             @Override
             public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
                 handleEntityChange(event.getEntity());
             }
         });
-        addProjectEventHandler(AnnotationPropertyFrameChangedEvent.TYPE, new AnnotationPropertyFrameChangedEventHandler() {
+        addProjectEventHandler(AnnotationPropertyFrameChangedEvent.TYPE,
+                               new AnnotationPropertyFrameChangedEventHandler() {
 
-            @Override
-            public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
-                handleEntityChange(event.getEntity());
-            }
-        });
+                                   @Override
+                                   public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
+                                       handleEntityChange(event.getEntity());
+                                   }
+                               });
         setTitle("OWL description");
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        if(entity.isPresent()) {
+        if (entity.isPresent()) {
             dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entity.get()),
-                                                 new DispatchServiceCallback<GetEntityRenderingResult>() {
-                                                     @Override
-                                                     public void handleSuccess(GetEntityRenderingResult result) {
-                                                         html.setHTML(result.getRendering());
-                                                     }
-                                                 });
+                                           new DispatchServiceCallback<GetEntityRenderingResult>() {
+                                               @Override
+                                               public void handleSuccess(GetEntityRenderingResult result) {
+                                                   html.setHTML(result.getRendering());
+                                               }
+                                           });
             setTitle("OWL " + entity.get().getEntityType().getPrintName() + " description");
         }
     }
 
 
     private void handleEntityChange(OWLEntity entity) {
-        if(Optional.of(entity).equals(getSelectedEntity())) {
+        if (Optional.of(entity).equals(getSelectedEntity())) {
             handleAfterSetEntity(getSelectedEntity());
         }
     }

@@ -37,7 +37,7 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
 
     @Inject
-    public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         setTitle("Project History");
         this.presenter = presenter;

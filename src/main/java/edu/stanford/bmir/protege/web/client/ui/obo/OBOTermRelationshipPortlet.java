@@ -31,8 +31,8 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     private Optional<List<OBORelationship>> pristineValue = Optional.absent();
 
     @Inject
-    public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+    public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, EventBus eventBus, SelectionModel selectionModel) {
+        super(selectionModel, eventBus, projectId);
         this.editor = editor;
         this.editor.setEnabled(true);
         setWidget(this.editor.getWidget());

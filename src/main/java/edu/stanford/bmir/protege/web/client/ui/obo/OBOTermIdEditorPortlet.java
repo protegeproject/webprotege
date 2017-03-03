@@ -28,8 +28,8 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
     private OBOTermIdEditor editor;
 
     @Inject
-    public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+    public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
+        super(selectionModel, eventBus, projectId);
 //        setAutoScroll(false);
         editor = new OBOTermIdEditorImpl();
         setWidget(editor.asWidget());

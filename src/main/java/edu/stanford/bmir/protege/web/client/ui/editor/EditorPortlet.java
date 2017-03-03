@@ -31,7 +31,6 @@ public class EditorPortlet extends AbstractWebProtegePortlet {
             SelectionModel selectionModel,
             final EventBus eventBus,
             final ProjectId projectId,
-            LoggedInUserProvider loggedInUserProvider,
             EditorPresenter editorPresenter) {
         super(selectionModel, eventBus, projectId);
         this.editorPresenter = editorPresenter;

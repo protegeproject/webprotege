@@ -30,7 +30,6 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
     public IndividualsListPortlet(IndividualsListPresenter presenter,
                                   SelectionModel selectionModel,
                                   EventBus eventBus,
-                                  LoggedInUserProvider loggedInUserProvider,
                                   ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         this.presenter = presenter;

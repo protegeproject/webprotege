@@ -36,7 +36,6 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     @Inject
     public EntityDiscussionThreadPortlet(SelectionModel selectionModel,
                                          EventBus eventBus,
-                                         LoggedInUserProvider loggedInUserProvider,
                                          LoggedInUserProjectPermissionChecker permissionChecker,
                                          ProjectId projectId,
                                          @Nonnull DiscussionThreadListPresenter presenter,
