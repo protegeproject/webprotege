@@ -32,7 +32,8 @@ public class ProjectDetailsRepository implements Repository {
     private final MongoCollection<Document> collection;
 
     @Inject
-    public ProjectDetailsRepository(@Nonnull MongoDatabase database, @Nonnull ProjectDetailsConverter converter) {
+    public ProjectDetailsRepository(@Nonnull MongoDatabase database,
+                                    @Nonnull ProjectDetailsConverter converter) {
         this.collection = database.getCollection(COLLECTION_NAME);
         this.converter = converter;
     }
@@ -60,6 +61,10 @@ public class ProjectDetailsRepository implements Repository {
 
     public void setInTrash(ProjectId projectId, boolean inTrash) {
         collection.updateOne(withProjectId(projectId), updateInTrash(inTrash));
+    }
+
+    public void setModified(ProjectId projectId, long modifiedAt, UserId modifiedBy) {
+        collection.updateOne(withProjectId(projectId), updateModified(modifiedBy, modifiedAt));
     }
 
     public Optional<ProjectDetails> findOne(@Nonnull ProjectId projectId) {

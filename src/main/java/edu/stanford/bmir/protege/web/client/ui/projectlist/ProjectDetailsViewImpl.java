@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -41,6 +42,9 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
 
     @UiField
     Label ownerField;
+
+    @UiField
+    Label modifiedAtField;
 
     @UiField
     MenuButton menuButton;
@@ -89,6 +93,11 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
 
     @Override
     public void setDescription(String description) {
+    }
+
+    @Override
+    public void setModifiedAt(String modifiedAt) {
+        modifiedAtField.setText(modifiedAt);
     }
 
     @Override

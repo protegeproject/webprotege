@@ -17,6 +17,8 @@ public interface ProjectDetailsView extends IsWidget {
 
     void setProjectOwner(UserId userId);
 
+    void setModifiedAt(String modifiedAt);
+
     void setDescription(String description);
 
     void addAction(UIAction uiAction);

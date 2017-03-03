@@ -3,11 +3,14 @@ package edu.stanford.bmir.protege.web.client.ui.projectlist;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.event.dom.client.ClickEvent;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectInNewWindowRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.TrashManagerRequestHandler;
+import edu.stanford.bmir.protege.web.shared.TimeUtil;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -16,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DOWNLOAD_PROJECT;
 
 /**
  * Matthew Horridge
@@ -43,6 +47,8 @@ public class ProjectDetailsPresenter {
     @Nonnull
     private LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler;
 
+
+
     @Inject
     public ProjectDetailsPresenter(@Nonnull ProjectDetails details,
                                    @Provided @Nonnull ProjectDetailsView view,
@@ -56,8 +62,20 @@ public class ProjectDetailsPresenter {
         this.trashManagerRequestHandler = checkNotNull(trashManagerRequestHandler);
         this.loadProjectRequestHandler = checkNotNull(loadProjectRequestHandler);
         this.downloadProjectRequestHandler = checkNotNull(downloadProjectRequestHandler);
+    }
+
+    public void start() {
         view.setProject(details.getProjectId(), details.getDisplayName());
         view.setProjectOwner(details.getOwner());
+        long modifiedAtTs = details.getLastModifiedAt();
+        String modifiedAt;
+        if(modifiedAtTs != 0) {
+            modifiedAt = TimeUtil.getTimeRendering(modifiedAtTs);
+        }
+        else {
+            modifiedAt = "";
+        }
+        view.setModifiedAt(modifiedAt);
         view.setDescription(details.getDescription());
         view.setInTrash(details.isInTrash());
         view.setLoadProjectRequestHandler(loadProjectRequestHandler);
@@ -102,12 +120,14 @@ public class ProjectDetailsPresenter {
     }
 
     private void addDowloadAction() {
-        view.addAction(new AbstractUiAction("Download") {
+        AbstractUiAction downloadAction = new AbstractUiAction("Download") {
             @Override
             public void execute(ClickEvent e) {
                 downloadProjectRequestHandler.handleProjectDownloadRequest(details.getProjectId());
             }
-        });
+        };
+        downloadAction.setEnabled(false);
+        view.addAction(downloadAction);
     }
 
     private void addTrashAction() {

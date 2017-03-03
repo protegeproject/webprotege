@@ -30,6 +30,17 @@ public class ProjectDetailsTestCase {
     @Mock
     private UserId userId;
 
+    private long createdAt = 22L;
+
+    @Mock
+    private UserId createdBy;
+
+    private long modifiedAt = 33L;
+
+    @Mock
+    private UserId modifiedBy;
+
+
     private String displayName;
 
     private String description;
@@ -40,27 +51,37 @@ public class ProjectDetailsTestCase {
     public void setUp() throws Exception {
         displayName = "DisplayName";
         description = "Description";
-        projectDetails = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
+        projectDetails = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullProjectIdInConstructorThrowsNullPointerException() {
-        new ProjectDetails(null, displayName, description, userId, IN_TRASH);
+        new ProjectDetails(null, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullDisplayNameInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, null, displayName, userId, IN_TRASH);
+        new ProjectDetails(projectId, null, displayName, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullProjectDescriptionInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, displayName, null, userId, IN_TRASH);
+        new ProjectDetails(projectId, displayName, null, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullUserIdInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, displayName, "", null, IN_TRASH);
+        new ProjectDetails(projectId, displayName, "", null, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullModifiedByInConstructorThrowsNullPointerException() {
+        new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullCreatedByInConstructorThrowsNullPointerException() {
+        new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, null, modifiedAt, modifiedBy);
     }
 
     @Test
@@ -91,14 +112,14 @@ public class ProjectDetailsTestCase {
     @Test
     public void equalValuesMeansEqualProjectDetails() {
         ProjectDetails projectDetailsA = projectDetails;
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
+        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
         assertEquals(projectDetailsA, projectDetailsB);
     }
 
     @Test
     public void equalValuesMeansEqualHashCodes() {
         ProjectDetails projectDetailsA = projectDetails;
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
+        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
         assertEquals(projectDetailsA.hashCode(), projectDetailsB.hashCode());
     }
     
@@ -112,7 +133,11 @@ public class ProjectDetailsTestCase {
     @Test
     public void buildBuildsCorrectDetails() {
         ProjectDetails details = ProjectDetails.builder(projectId, userId, displayName, description)
-                .setInTrash(IN_TRASH).build();
+                                               .setLastModifiedAt(modifiedAt)
+                                               .setLastModifiedBy(modifiedBy)
+                                               .setCreatedAt(createdAt)
+                                               .setCreatedBy(createdBy)
+                                               .setInTrash(IN_TRASH).build();
         assertThat(details, is(equalTo(projectDetails)));
     }
 
