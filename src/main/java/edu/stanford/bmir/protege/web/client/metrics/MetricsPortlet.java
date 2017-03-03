@@ -21,7 +21,7 @@ public class MetricsPortlet extends AbstractWebProtegePortlet {
     private MetricsView view;
 
     @Inject
-    public MetricsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    public MetricsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         view = new MetricsViewImpl();

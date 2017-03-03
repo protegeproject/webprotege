@@ -28,7 +28,7 @@ public class RevisionsPortlet extends AbstractWebProtegePortlet {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public RevisionsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
+    public RevisionsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;

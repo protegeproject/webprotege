@@ -74,7 +74,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
+    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

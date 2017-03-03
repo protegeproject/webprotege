@@ -26,7 +26,7 @@ public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasF
     private OntologyIdView editor;
 
     @Inject
-    public OntologyIdPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
+    public OntologyIdPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();

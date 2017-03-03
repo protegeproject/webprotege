@@ -55,7 +55,7 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
     private Optional<UsageFilter> filter = Optional.absent();
 
     @Inject
-    public UsagePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
+    public UsagePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
         super(selectionModel, eventBus, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
