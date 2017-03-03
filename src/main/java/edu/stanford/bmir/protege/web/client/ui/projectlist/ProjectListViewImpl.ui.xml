@@ -19,10 +19,10 @@
             flex-direction: row;
             color: #606060;
             font-weight: bold;
-            padding-bottom: 5px;
+            padding: 5px;
             border-bottom: 1px solid #f0f0f0;
             flex-grow: 0;
-            flex-shrink: 0;
+            /*flex-shrink: 0;*/
         }
 
         .displayNameCol {
@@ -37,9 +37,19 @@
             padding: 5px;
             align-items: baseline;
         }
+        .modifiedAtCol {
+            width: 200px;
+            flex-grow: 0;
+            padding: 5px;
+            align-items: baseline;
+        }
         .menuButtonCol {
             flex-grow: 0;
+            flex-shrink: 0;
+            padding-right: 10px;
+            padding-left: 10px;
             align-items: baseline;
+            width: 12px;
         }
 
         .projectList {
@@ -53,6 +63,7 @@
         <g:HTMLPanel addStyleNames="{style.header}">
             <g:Label addStyleNames="{style.displayNameCol}" text="{msg.projectName}"/>
             <g:Label addStyleNames="{style.ownerCol}" text="{msg.owner}"/>
+            <g:Label addStyleNames="{style.modifiedAtCol}" text="{msg.lastModified}"/>
             <g:Label addStyleNames="{style.menuButtonCol}"/>
         </g:HTMLPanel>
         <g:FlowPanel ui:field="itemContainer" addStyleNames="{style.projectList}"/>
