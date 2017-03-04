@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -53,7 +52,7 @@ public class EntityChangesPortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
         updateDisplayForSelectedEntity();
     }
 

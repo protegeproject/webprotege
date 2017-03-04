@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.usage;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -112,12 +111,12 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
 
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entityData) {
         updateDisplayForSelectedEntity();
     }
 
     private void updateDisplayForSelectedEntity() {
-        final Optional<OWLEntity> sel = getSelectedEntity();
+        final java.util.Optional<OWLEntity> sel = getSelectedEntity();
         if(sel.isPresent()) {
             showUsageForEntity(sel.get());
         }

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.selection;
 
-import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
@@ -13,6 +12,7 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -100,7 +100,7 @@ public class SelectionModel {
     public Optional<OWLEntity> getSelection() {
         Place place = placeController.getWhere();
         if(!(place instanceof ProjectViewPlace)) {
-            return Optional.absent();
+            return Optional.empty();
         }
         ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
         return extractEntityFromItem(projectViewPlace.getItemSelection());
@@ -109,14 +109,14 @@ public class SelectionModel {
     private static Optional<OWLEntity> extractEntityFromItem(ItemSelection itemSelection) {
         Optional<Item<?>> firstItem = itemSelection.getFirst();
         if(!firstItem.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         Object selItem = firstItem.get().getItem();
         if(selItem instanceof OWLEntity) {
             return Optional.of((OWLEntity) selItem);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

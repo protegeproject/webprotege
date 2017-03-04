@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.selection;
 
-import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.Event;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,23 +27,23 @@ public class EntitySelectionChangedEvent extends Event<EntitySelectionChangedHan
         this.lastSelection = checkNotNull(selection);
     }
 
-    public Optional<OWLEntity> getPreviousSelection() {
+    public Optional<? extends OWLEntity> getPreviousSelection() {
         if(previousSelection.isPresent()) {
-            return Optional.<OWLEntity>of(previousSelection.get());
+            return Optional.of(previousSelection.get());
 
         }
         else {
-            return Optional.<OWLEntity>absent();
+            return Optional.empty();
         }
     }
 
     public Optional<OWLEntity> getLastSelection() {
         if(lastSelection.isPresent()) {
-            return Optional.<OWLEntity>of(lastSelection.get());
+            return Optional.of(lastSelection.get());
 
         }
         else {
-            return Optional.<OWLEntity>absent();
+            return Optional.empty();
         }
     }
 

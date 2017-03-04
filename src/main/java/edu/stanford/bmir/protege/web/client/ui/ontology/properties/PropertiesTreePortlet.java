@@ -15,7 +15,6 @@ import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.TreeSelectionModel;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
@@ -99,7 +98,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
             public void onContextMenu(TreeNode node, EventObject e) {
                 PopupMenu contextMenu = new PopupMenu();
                 contextMenu.addItem("Show IRI", event -> {
-                    Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                    java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                     if (selectedEntity.isPresent()) {
                         String iri = selectedEntity.get().getIRI().toQuotedString();
                         InputBox.showOkDialog("Property IRI", true, iri, input -> {});
@@ -317,15 +316,15 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     /**
-     * Gets the {@link org.semanticweb.owlapi.model.EntityType} of the selected entity.
+     * Gets the {@link EntityType} of the selected entity.
      *
-     * @return The {@link org.semanticweb.owlapi.model.EntityType} of the selected entity.  Not {@code null}.
+     * @return The {@link EntityType} of the selected entity.  Not {@code null}.
      */
     private Optional<EntityType<?>> getSelectedEntityType() {
         if (isAnnotationPropertiesRootSelected()) {
             return Optional.<EntityType<?>>of(EntityType.ANNOTATION_PROPERTY);
         }
-        Optional<OWLEntity> selectedEntity = getSelectedEntity();
+        java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
         if (!selectedEntity.isPresent()) {
             return Optional.absent();
         }
@@ -336,7 +335,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
 
     private void onCreateProperty() {
-        Optional<EntityType<?>> selectedEntityType = getSelectedEntityType();
+        Optional<? extends EntityType<?>> selectedEntityType = getSelectedEntityType();
         if (!selectedEntityType.isPresent()) {
             return;
         }
@@ -344,7 +343,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private void handleCreateProperty(final CreateEntityInfo createEntityInfo) {
-        Optional<OWLEntity> sel = getSelectedEntity();
+        java.util.Optional<OWLEntity> sel = getSelectedEntity();
         GWT.log("[PropertiesTreePortlet] Creating entity.  Current selection: " + sel);
         if (!sel.isPresent()) {
             // Temp hack
@@ -439,7 +438,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     protected void onDeleteProperty() {
 
-        Optional<OWLEntity> selection = getSelectedEntity();
+        java.util.Optional<OWLEntity> selection = getSelectedEntity();
 
         if (!selection.isPresent()) {
             return;

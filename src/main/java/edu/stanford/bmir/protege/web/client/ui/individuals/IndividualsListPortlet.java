@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.individuals;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -39,7 +38,7 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
         Optional<OWLClass> selectedClass;
         if(preconfiguredClass.isPresent()) {
             selectedClass = preconfiguredClass;
