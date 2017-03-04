@@ -13,6 +13,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 02/04/2012
  */
+@Deprecated
 public abstract class OWLOntologyChangeFactory {
 
     private String changeDescription;
@@ -53,8 +54,8 @@ public abstract class OWLOntologyChangeFactory {
         return getRootOntologyManager().getOWLDataFactory();
     }
 
-    public RenderingManager getRenderingManager() {
-        return project.getRenderingManager();
+    public LegacyEntityDataManager getRenderingManager() {
+        return project.getLegacyEntityDataManager();
     }
 
     protected IRI getIRIFromName(String name) {

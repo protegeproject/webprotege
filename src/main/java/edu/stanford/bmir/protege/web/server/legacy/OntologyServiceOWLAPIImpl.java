@@ -199,7 +199,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         }
         List<SubclassEntityData> result = new ArrayList<SubclassEntityData>();
         Project project = getProject(projectName);
-        RenderingManager rm = project.getRenderingManager();
+        LegacyEntityDataManager rm = project.getLegacyEntityDataManager();
         AssertedClassHierarchyProvider hierarchyProvider = project.getClassHierarchyProvider();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
 
@@ -266,7 +266,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         // TO PROPERTY ENTITY DATA!!!!!
 
         Project project = getProject(projectName);
-        RenderingManager rm = project.getRenderingManager();
+        LegacyEntityDataManager rm = project.getLegacyEntityDataManager();
 
         // propertyName can be null!  This means the top property.
         // I'm not sure if RootPropertyNode is a system property or what but the UI asks for it.  Messy - needs tidying.
@@ -359,7 +359,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     public List<EntityData> getPathToRoot(String projectName, String entityName) {
         Project project = getProject(projectName);
-        RenderingManager rm = project.getRenderingManager();
+        LegacyEntityDataManager rm = project.getLegacyEntityDataManager();
         Set<OWLEntity> entities = rm.getEntities(entityName);
         List<EntityData> result = new ArrayList<EntityData>();
 

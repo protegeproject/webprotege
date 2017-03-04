@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
  *     Parses P3 encoded literals into proper literals.
  * </p>
  */
+@Deprecated
 public class P3LiteralParser {
 
     /**

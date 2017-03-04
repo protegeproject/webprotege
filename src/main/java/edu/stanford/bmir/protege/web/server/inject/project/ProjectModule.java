@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
+import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataManager;
 import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataProvider;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
@@ -318,7 +319,7 @@ public class ProjectModule {
     }
 
     @Provides
-    public LegacyEntityDataProvider provideLegacyEntityDataProvider(RenderingManager renderingManager) {
+    public LegacyEntityDataProvider provideLegacyEntityDataProvider(LegacyEntityDataManager renderingManager) {
         return renderingManager;
     }
 
