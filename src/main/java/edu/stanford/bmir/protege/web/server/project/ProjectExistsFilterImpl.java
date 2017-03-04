@@ -11,10 +11,10 @@ import javax.inject.Inject;
  */
 public class ProjectExistsFilterImpl implements ProjectExistsFilter {
 
-    private OWLAPIProjectFileStoreFactory fileStoreFactory;
+    private ProjectFileStoreFactory fileStoreFactory;
 
     @Inject
-    public ProjectExistsFilterImpl(OWLAPIProjectFileStoreFactory fileStoreFactory) {
+    public ProjectExistsFilterImpl(ProjectFileStoreFactory fileStoreFactory) {
         this.fileStoreFactory = fileStoreFactory;
     }
 
