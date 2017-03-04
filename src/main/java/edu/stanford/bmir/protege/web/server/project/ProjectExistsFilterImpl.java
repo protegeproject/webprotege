@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStoreFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
