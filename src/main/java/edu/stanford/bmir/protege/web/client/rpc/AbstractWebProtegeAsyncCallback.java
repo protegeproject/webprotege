@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  * Bio-Medical Informatics Research Group<br>
  * Date: 02/12/2012
  */
+@Deprecated
 public abstract class AbstractWebProtegeAsyncCallback<T> implements AsyncCallback<T> {
 
     /**

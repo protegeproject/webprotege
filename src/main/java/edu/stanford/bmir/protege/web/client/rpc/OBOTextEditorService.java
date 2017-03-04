@@ -24,6 +24,7 @@ import java.util.Set;
  *     which provides a very nice summary of the functionality.
  * </p>
  */
+@Deprecated
 @RemoteServiceRelativePath("obotexteditorservice")
 public interface OBOTextEditorService extends RemoteService {
     
