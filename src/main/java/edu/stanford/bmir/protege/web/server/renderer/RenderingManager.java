@@ -314,11 +314,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return shortFormProvider.getShortForm(entity);
     }
 
-    public EntityData getEntityData(String entityName, EntityType<?> entityType) {
-        OWLEntity entity = getEntity(entityName, entityType);
-        return getEntityData(entity);
-    }
-    
     public EntityData getEntityData(OWLEntity entity) {
         if (entity instanceof OWLProperty  || entity instanceof OWLAnnotationProperty) {
             return getPropertyEntityData(entity);
@@ -335,14 +330,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
             }
             return entityData;
         }
-    }
-    
-    public List<EntityData> getEntityData(Collection<? extends OWLEntity> entities) {
-        List<EntityData> result = new ArrayList<EntityData>();
-        for(OWLEntity entity : entities) {
-            result.add(getEntityData(entity));
-        }
-        return result;
     }
     
     public EntityData getEntityData(OWLAnnotationValue annotationValue) {
@@ -397,30 +384,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         }
         return entityData;
     }
-    
-    public EntityData getEntityDataFromLexicalValue(String lexicalValue) {
-        if(lexicalValue == null) {
-            throw new NullPointerException("lexicalValue must not be null");
-        }
-        OWL2Datatype datatype = OWL2Datatype.RDF_PLAIN_LITERAL;
-        if(!lexicalValue.isEmpty()) {
-            if(isInteger(lexicalValue)) {
-                datatype = OWL2Datatype.XSD_INTEGER;
-            }
-            else if(isDecimal(lexicalValue)) {
-                datatype = OWL2Datatype.XSD_DECIMAL;
-            }
-            else if(isBoolean(lexicalValue)) {
-                datatype = OWL2Datatype.XSD_BOOLEAN;
-            }
-        }
-        OWLDataFactory df = dataFactory;
-        OWLLiteral result = df.getOWLLiteral(lexicalValue, datatype);
-        return getEntityData(result);
-
-    }
-
-
 
     public boolean isInteger(String lexicalValue) {
         try {
