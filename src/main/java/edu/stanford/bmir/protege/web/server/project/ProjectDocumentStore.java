@@ -40,7 +40,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * </p>
  */
 @ProjectSingleton
-public class OWLAPIProjectDocumentStore {
+public class ProjectDocumentStore {
 
     public static final String GENERATED_ONTOLOGY_IRI_PREFIX = "http://webprotege.stanford.edu/project/";
 
@@ -60,10 +60,10 @@ public class OWLAPIProjectDocumentStore {
 
 
     @Inject
-    public OWLAPIProjectDocumentStore(ProjectId projectId,
-                                      @RootOntologyDocument File rootOntologyDocument,
-                                      WebProtegeLogger logger,
-                                      Provider<ImportsCacheManager> importsCacheManagerProvider) {
+    public ProjectDocumentStore(ProjectId projectId,
+                                @RootOntologyDocument File rootOntologyDocument,
+                                WebProtegeLogger logger,
+                                Provider<ImportsCacheManager> importsCacheManagerProvider) {
         this.logger = logger;
         this.projectId = projectId;
         this.rootOntologyDocument = rootOntologyDocument;

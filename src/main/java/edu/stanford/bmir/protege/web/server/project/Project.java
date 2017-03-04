@@ -71,7 +71,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges, HasLang {
 
 
-    private final OWLAPIProjectDocumentStore documentStore;
+    private final ProjectDocumentStore documentStore;
 
     private final ProjectId projectId;
 
@@ -129,7 +129,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     private final ProjectDetailsRepository projectDetailsRepository;
 
     @Inject
-    public Project(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+    public Project(ProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;

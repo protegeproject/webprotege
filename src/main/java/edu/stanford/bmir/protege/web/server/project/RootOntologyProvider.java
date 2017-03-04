@@ -23,12 +23,12 @@ import javax.inject.Provider;
 @ProjectSingleton
 public class RootOntologyProvider implements Provider<OWLOntology> {
 
-    private final OWLAPIProjectDocumentStore documentStore;
+    private final ProjectDocumentStore documentStore;
 
     private OWLOntology rootOntology = null;
 
     @Inject
-    public RootOntologyProvider(OWLAPIProjectDocumentStore documentStore) {
+    public RootOntologyProvider(ProjectDocumentStore documentStore) {
         this.documentStore = documentStore;
     }
 
