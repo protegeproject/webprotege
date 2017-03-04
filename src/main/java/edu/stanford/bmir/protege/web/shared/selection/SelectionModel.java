@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -59,14 +60,11 @@ public class SelectionModel {
         this.selectedAnnotationPropertyManager = checkNotNull(selectedAnnotationPropertyManager);
         this.selectedDatatypeManager = checkNotNull(selectedDatatypeManager);
         this.selectedIndividualManager = checkNotNull(selectedIndividualManager);
-        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
-            @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
-                Place newPlace = event.getNewPlace();
-                if(newPlace instanceof ProjectViewPlace) {
-                    ProjectViewPlace projectViewPlace = (ProjectViewPlace) newPlace;
-                    updateSelectionFromPlace(projectViewPlace);
-                }
+        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
+            Place newPlace = event.getNewPlace();
+            if(newPlace instanceof ProjectViewPlace) {
+                ProjectViewPlace projectViewPlace = (ProjectViewPlace) newPlace;
+                updateSelectionFromPlace(projectViewPlace);
             }
         });
     }
@@ -76,37 +74,20 @@ public class SelectionModel {
         if(!itemSelection.equals(selection)) {
             Optional<OWLEntity> previousSelection = extractEntityFromItem(selection);
             selection = itemSelection;
-            itemSelection.visitItems(OWLClassItem.getType(), new Item.Handler<OWLClass>() {
-                @Override
-                public void handleItemObject(Item<OWLClass> object) {
-                    selectedClassManager.setSelection(object.getItem());
-                }
-            });
-            itemSelection.visitItems(OWLObjectPropertyItem.getType(), new Item.Handler<OWLObjectProperty>() {
-                @Override
-                public void handleItemObject(Item<OWLObjectProperty> object) {
-                    selectedObjectPropertyManager.setSelection(object.getItem());
-                }
-            });
-            itemSelection.visitItems(OWLDataPropertyItem.getType(), new Item.Handler<OWLDataProperty>() {
-                @Override
-                public void handleItemObject(Item<OWLDataProperty> object) {
-                    selectedDataPropertyManager.setSelection(object.getItem());
-                }
-            });
-            itemSelection.visitItems(OWLAnnotationPropertyItem.getType(), new Item.Handler<OWLAnnotationProperty>() {
-                @Override
-                public void handleItemObject(Item<OWLAnnotationProperty> object) {
-                    selectedAnnotationPropertyManager.setSelection(object.getItem());
-                }
-            });
+            itemSelection.visitItems(OWLClassItem.getType(),
+                                     object -> selectedClassManager.setSelection(object.getItem()));
+
+            itemSelection.visitItems(OWLObjectPropertyItem.getType(),
+                                     object -> selectedObjectPropertyManager.setSelection(object.getItem()));
+
+            itemSelection.visitItems(OWLDataPropertyItem.getType(),
+                                     object -> selectedDataPropertyManager.setSelection(object.getItem()));
+
+            itemSelection.visitItems(OWLAnnotationPropertyItem.getType(),
+                                     object -> selectedAnnotationPropertyManager.setSelection(object.getItem()));
             
-            itemSelection.visitItems(OWLNamedIndividualItem.getType(), new Item.Handler<OWLNamedIndividual>() {
-                @Override
-                public void handleItemObject(Item<OWLNamedIndividual> object) {
-                    selectedIndividualManager.setSelection(object.getItem());
-                }
-            });
+            itemSelection.visitItems(OWLNamedIndividualItem.getType(),
+                                     object -> selectedIndividualManager.setSelection(object.getItem()));
             
             fireEvent(previousSelection);
         }
@@ -170,37 +151,44 @@ public class SelectionModel {
         }
         Item<?> item = entity
                 .accept(new OWLEntityVisitorEx<Item<?>>() {
+                    @Nonnull
                     @Override
-                    public Item<?> visit(OWLClass desc) {
+                    public Item<?> visit(@Nonnull OWLClass desc) {
                         selectedClassManager.setSelection(desc);
                         return new OWLClassItem(desc);
                     }
 
+                    @Nonnull
                     @Override
-                    public Item<?> visit(OWLDatatype node) {
-                        return null;
+                    public Item<?> visit(@Nonnull OWLDatatype node) {
+                        selectedDatatypeManager.setSelection(node);
+                        throw new RuntimeException("Not Supported");
                     }
 
+                    @Nonnull
                     @Override
-                    public Item<?> visit(OWLDataProperty property) {
+                    public Item<?> visit(@Nonnull OWLDataProperty property) {
                         selectedDataPropertyManager.setSelection(property);
                         return new OWLDataPropertyItem(property);
                     }
 
+                    @Nonnull
                     @Override
-                    public Item<?> visit(OWLObjectProperty property) {
+                    public Item<?> visit(@Nonnull OWLObjectProperty property) {
                         selectedObjectPropertyManager.setSelection(property);
                         return new OWLObjectPropertyItem(property);
                     }
 
+                    @Nonnull
                     @Override
-                    public Item<?> visit(OWLNamedIndividual individual) {
+                    public Item<?> visit(@Nonnull OWLNamedIndividual individual) {
                         selectedIndividualManager.setSelection(individual);
                         return new OWLNamedIndividualItem(individual);
                     }
 
+                    @Nonnull
                     @Override
-                    public Item<?> visit(OWLAnnotationProperty property) {
+                    public Item<?> visit(@Nonnull OWLAnnotationProperty property) {
                         selectedAnnotationPropertyManager.setSelection(property);
                         return new OWLAnnotationPropertyItem(property);
                     }
