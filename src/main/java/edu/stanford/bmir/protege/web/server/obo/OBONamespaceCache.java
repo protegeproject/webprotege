@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;

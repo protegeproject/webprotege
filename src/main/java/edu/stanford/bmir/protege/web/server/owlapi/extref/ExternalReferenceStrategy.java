@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.extref;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;

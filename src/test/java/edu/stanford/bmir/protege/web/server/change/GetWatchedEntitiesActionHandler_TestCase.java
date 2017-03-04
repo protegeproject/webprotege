@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.change;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.WatchedChangesManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;

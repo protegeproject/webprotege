@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
+import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
@@ -68,7 +68,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
  * Date: 08/03/2012
  */
 @ProjectSingleton
-public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, HasApplyChanges, HasLang {
+public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges, HasLang {
 
 
     private final OWLAPIProjectDocumentStore documentStore;

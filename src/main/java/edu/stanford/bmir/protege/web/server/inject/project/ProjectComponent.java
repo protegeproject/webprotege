@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
 import dagger.Subcomponent;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 /**

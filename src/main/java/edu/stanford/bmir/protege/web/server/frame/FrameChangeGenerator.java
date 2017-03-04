@@ -7,7 +7,7 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.*;

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;

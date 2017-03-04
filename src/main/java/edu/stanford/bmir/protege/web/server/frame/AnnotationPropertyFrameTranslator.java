@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;

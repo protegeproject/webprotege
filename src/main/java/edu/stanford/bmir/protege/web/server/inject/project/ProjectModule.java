@@ -20,6 +20,8 @@ import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionStore;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionStoreProvider;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.watches.*;

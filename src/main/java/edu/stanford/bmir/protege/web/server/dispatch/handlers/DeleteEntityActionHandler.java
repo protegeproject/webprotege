@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescription
 import edu.stanford.bmir.protege.web.server.crud.DeleteEntityChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;

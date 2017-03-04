@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;

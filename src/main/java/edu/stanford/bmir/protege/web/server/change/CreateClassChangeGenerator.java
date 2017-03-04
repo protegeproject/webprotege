@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.EntityType;

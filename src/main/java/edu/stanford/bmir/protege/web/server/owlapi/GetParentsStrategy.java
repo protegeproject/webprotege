@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 

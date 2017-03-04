@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.ClassClassAncestorChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyDataPropertyAncestorChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.NamedIndividualClassAncestorChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyObjectPropertyAncestorChecker;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLOntology;
 
