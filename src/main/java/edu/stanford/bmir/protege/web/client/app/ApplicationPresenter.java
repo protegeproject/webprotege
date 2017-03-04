@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.workspace;
+package edu.stanford.bmir.protege.web.client.app;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

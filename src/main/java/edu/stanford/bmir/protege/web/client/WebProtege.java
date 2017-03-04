@@ -8,10 +8,12 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import edu.stanford.bmir.protege.web.client.app.HasClientApplicationProperties;
+import edu.stanford.bmir.protege.web.client.app.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
-import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
-import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
+import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
+import edu.stanford.bmir.protege.web.client.app.ApplicationView;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.protege.widgetmap.resources.WidgetMapClientBundle;
 

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.crud;
 
-import edu.stanford.bmir.protege.web.client.ApplicationInitManager;
+import edu.stanford.bmir.protege.web.client.app.ApplicationInitManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
