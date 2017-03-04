@@ -14,12 +14,12 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
+import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -93,8 +94,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
-    private final OWLAPINotesManager notesManager;
-
     private final RevisionManager changeManager;
 
     private final ProjectChangesManager projectChangesManager;
@@ -127,7 +126,28 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     private final ProjectDetailsRepository projectDetailsRepository;
 
     @Inject
-    public Project(ProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+    public Project(ProjectDocumentStore documentStore,
+                   ProjectId projectId,
+                   OWLDataFactory dataFactory,
+                   AccessManager accessManager,
+                   RenderingManager renderingManager,
+                   EventManager<ProjectEvent<?>> projectEventManager,
+                   @RootOntology OWLOntology ontology,
+                   ProjectDetailsRepository projectDetailsRepository,
+                   AssertedClassHierarchyProvider classHierarchyProvider,
+                   OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
+                   OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
+                   OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
+                   RevisionManager changeManager,
+                   ProjectChangesManager projectChangesManager,
+                   WatchedChangesManager watchedChangesManager,
+                   OWLAPIProjectMetricsManager metricsManager,
+                   WatchManager watchManager,
+                   ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache,
+                   ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository,
+                   Provider<EventTranslatorManager> eventTranslatorManagerProvider,
+                   Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider,
+                   ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -139,7 +159,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
         this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
         this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
-        this.notesManager = notesManager;
         this.changeManager = changeManager;
         this.projectChangesManager = projectChangesManager;
         this.watchedChangesManager = watchedChangesManager;
@@ -247,10 +266,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return renderingManager;
     }
 
-    public OWLAPINotesManager getNotesManager() {
-        return notesManager;
-    }
-
     public RevisionNumber getRevisionNumber() {
         try {
             projectChangeReadLock.lock();
@@ -260,7 +275,10 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         }
     }
 
-    private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session, UserId userId, String shortName, EntityType<E> entityType) {
+    private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,
+                                                                       UserId userId,
+                                                                       String shortName,
+                                                                       EntityType<E> entityType) {
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (entity.isPresent()) {
             return new OWLEntityCreator<E>(entity.get(), Collections.<OWLOntologyChange>emptyList());
@@ -270,15 +288,16 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                 getEntityCrudKitHandler();
         handler.createChangeSetSession();
         E ent = handler.create(session, entityType,
-                EntityShortForm.get(shortName),
-                getEntityCrudContext(userId),
-                builder);
+                               EntityShortForm.get(shortName),
+                               getEntityCrudContext(userId),
+                               builder);
         return new OWLEntityCreator<E>(ent, builder.build().getChanges());
 
     }
 
     public void setEntityCrudKitSettings(EntityCrudKitSettings<?> entityCrudKitSettings) {
-        ProjectEntityCrudKitSettings projectSettings = new ProjectEntityCrudKitSettings(getProjectId(), entityCrudKitSettings);
+        ProjectEntityCrudKitSettings projectSettings = new ProjectEntityCrudKitSettings(getProjectId(),
+                                                                                        entityCrudKitSettings);
         entityCrudKitSettingsRepository.save(projectSettings);
     }
 
@@ -315,8 +334,12 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
      * edu.stanford.bmir.protege.web.server.change.ChangeListGenerator, ChangeDescriptionGenerator)}
      */
     @Deprecated
-    public ChangeApplicationResult<?> applyChanges(UserId userId, List<OWLOntologyChange> changes, String changeDescription) {
-        return applyChanges(userId, FixedChangeListGenerator.get(changes), FixedMessageChangeDescriptionGenerator.get(changeDescription));
+    public ChangeApplicationResult<?> applyChanges(UserId userId,
+                                                   List<OWLOntologyChange> changes,
+                                                   String changeDescription) {
+        return applyChanges(userId,
+                            FixedChangeListGenerator.get(changes),
+                            FixedMessageChangeDescriptionGenerator.get(changeDescription));
     }
 
     /**
@@ -338,7 +361,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
      *                                   ontologies in this project.
      */
     @Override
-    public <R> ChangeApplicationResult<R> applyChanges(final UserId userId, final ChangeListGenerator<R> changeListGenerator, final ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException {
+    public <R> ChangeApplicationResult<R> applyChanges(final UserId userId,
+                                                       final ChangeListGenerator<R> changeListGenerator,
+                                                       final ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException {
         checkNotNull(userId);
         checkNotNull(changeListGenerator);
         checkNotNull(changeDescriptionGenerator);
@@ -346,9 +371,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         // Final check of whether the user can actually edit the project
         Subject subject = forUser(userId);
         ProjectResource projectResource = new ProjectResource(projectId);
-        if(!accessManager.hasPermission(subject,
-                                        projectResource,
-                                        EDIT_ONTOLOGY.getActionId())) {
+        if (!accessManager.hasPermission(subject,
+                                         projectResource,
+                                         EDIT_ONTOLOGY.getActionId())) {
             throw new PermissionDeniedException("You do not have permission to edit this project");
         }
 
@@ -382,23 +407,25 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
             for (OWLOntologyChange change : changes) {
                 for (OWLEntity entity : change.getSignature()) {
                     if (DataFactory.isFreshEntity(entity)) {
-                        if(entity.isOWLClass()) {
-                            if(!accessManager.hasPermission(subject, projectResource, CREATE_CLASS.getActionId())) {
+                        if (entity.isOWLClass()) {
+                            if (!accessManager.hasPermission(subject, projectResource, CREATE_CLASS.getActionId())) {
                                 throw new PermissionDeniedException("You do not have permission to create new classes");
                             }
                         }
-                        else if(entity.isOWLObjectProperty() || entity.isOWLDataProperty() || entity.isOWLAnnotationProperty()) {
-                            if(!accessManager.hasPermission(subject, projectResource, CREATE_PROPERTY.getActionId())) {
+                        else if (entity.isOWLObjectProperty() || entity.isOWLDataProperty() || entity.isOWLAnnotationProperty()) {
+                            if (!accessManager.hasPermission(subject, projectResource, CREATE_PROPERTY.getActionId())) {
                                 throw new RuntimeException("You do not have permission to create new properties");
                             }
                         }
-                        else if(entity.isOWLNamedIndividual()) {
-                            if(!accessManager.hasPermission(subject, projectResource, CREATE_INDIVIDUAL.getActionId())) {
+                        else if (entity.isOWLNamedIndividual()) {
+                            if (!accessManager.hasPermission(subject,
+                                                             projectResource,
+                                                             CREATE_INDIVIDUAL.getActionId())) {
                                 throw new RuntimeException("You do not have permission to create new individuals");
                             }
                         }
-                        else if(entity.isOWLDatatype()) {
-                            if(!accessManager.hasPermission(subject, projectResource, CREATE_DATATYPE.getActionId())) {
+                        else if (entity.isOWLDatatype()) {
+                            if (!accessManager.hasPermission(subject, projectResource, CREATE_DATATYPE.getActionId())) {
                                 throw new RuntimeException("You do not have permission to create new datatypes");
                             }
                         }
@@ -406,7 +433,11 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                         IRI currentIRI = entity.getIRI();
                         if (!iriRenameMap.containsKey(currentIRI)) {
                             String shortName = DataFactory.getFreshEntityShortName(entity);
-                            OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(session, userId, shortName, (EntityType<? extends OWLEntity>) entity.getEntityType());
+                            OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(session,
+                                                                                             userId,
+                                                                                             shortName,
+                                                                                             (EntityType<? extends OWLEntity>) entity
+                                                                                                     .getEntityType());
                             freshEntityChanges.addAll(creator.getChanges());
                             IRI replacementIRI = creator.getEntity().getIRI();
                             iriRenameMap.put(currentIRI, replacementIRI);
@@ -484,8 +515,8 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     private List<OWLOntologyChange> getEffectiveChanges(List<OWLOntologyChange> minimisedChanges) {
         List<OWLOntologyChange> result = new ArrayList<>(minimisedChanges.size());
-        for(OWLOntologyChange chg : minimisedChanges) {
-            if(isEffectiveChange(chg)) {
+        for (OWLOntologyChange chg : minimisedChanges) {
+            if (isEffectiveChange(chg)) {
                 result.add(chg);
             }
         }
@@ -521,19 +552,25 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
             @Nonnull
             @Override
             public Boolean visit(RemoveImport removeImport) {
-                return removeImport.getOntology().getImportsDeclarations().contains(removeImport.getImportDeclaration());
+                return removeImport.getOntology()
+                                   .getImportsDeclarations()
+                                   .contains(removeImport.getImportDeclaration());
             }
 
             @Nonnull
             @Override
             public Boolean visit(AddOntologyAnnotation addOntologyAnnotation) {
-                return !addOntologyAnnotation.getOntology().getAnnotations().contains(addOntologyAnnotation.getAnnotation());
+                return !addOntologyAnnotation.getOntology()
+                                             .getAnnotations()
+                                             .contains(addOntologyAnnotation.getAnnotation());
             }
 
             @Nonnull
             @Override
             public Boolean visit(RemoveOntologyAnnotation removeOntologyAnnotation) {
-                return removeOntologyAnnotation.getOntology().getAnnotations().contains(removeOntologyAnnotation.getAnnotation());
+                return removeOntologyAnnotation.getOntology()
+                                               .getAnnotations()
+                                               .contains(removeOntologyAnnotation.getAnnotation());
             }
         });
     }
@@ -550,7 +587,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
      * @param <R>       The type of result.
      * @return The renamed (or untouched if no rename was necessary) result.
      */
-    private <R> Optional<R> getRenamedResult(ChangeListGenerator<R> changeListGenerator, Optional<R> result, RenameMap renameMap) {
+    private <R> Optional<R> getRenamedResult(ChangeListGenerator<R> changeListGenerator,
+                                             Optional<R> result,
+                                             RenameMap renameMap) {
         Optional<R> renamedResult;
         if (result.isPresent()) {
             R actualResult = result.get();
@@ -563,7 +602,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     }
 
 
-    private <R> Revision logAndBroadcastAppliedChanges(UserId userId, ChangeApplicationResult<R> finalResult, ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
+    private <R> Revision logAndBroadcastAppliedChanges(UserId userId,
+                                                       ChangeApplicationResult<R> finalResult,
+                                                       ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
         // Generate a description for the changes that were actually applied
         String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
         // Log the changes

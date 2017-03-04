@@ -212,9 +212,9 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 String name = subclass.getIRI().toString();
                 SubclassEntityData data = new SubclassEntityData(name, browserText, new HashSet<EntityData>(0), subClassSubClassesCount);
                 data.setDeprecated(deprecated);
-                int directNotesCount = project.getNotesManager().getIndirectNotesCount(subclass);
+//                int directNotesCount = project.getNotesManager().getIndirectNotesCount(subclass);
 //                int indirectNotesCount = project.getNotesManager().getIndirectNotesCount(cls);
-                data.setLocalAnnotationsCount(directNotesCount);
+//                data.setLocalAnnotationsCount(directNotesCount);
             Set<Watch<?>> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
             if(!directWatches.isEmpty()) {
                 data.setWatches(directWatches);
@@ -307,8 +307,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 Set<OWLObjectProperty> subProperties = hierarchyProvider.getChildren(entity.asOWLObjectProperty());
                 for (OWLObjectProperty subProperty : subProperties) {
                     final EntityData entityData = rm.getEntityData(subProperty);
-                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
-                    entityData.setLocalAnnotationsCount(notesCount);
+//                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
+                    entityData.setLocalAnnotationsCount(0);
                     result.add(entityData);
                 }
             }
@@ -317,8 +317,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 Set<OWLDataProperty> subProperties = hierarchyProvider.getChildren(entity.asOWLDataProperty());
                 for (OWLDataProperty subProperty : subProperties) {
                     final EntityData entityData = rm.getEntityData(subProperty);
-                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
-                    entityData.setLocalAnnotationsCount(notesCount);
+//                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
+                    entityData.setLocalAnnotationsCount(0);
                     result.add(entityData);
                 }
             }
@@ -327,8 +327,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 Set<OWLAnnotationProperty> subProperties = hierarchyProvider.getChildren(entity.asOWLAnnotationProperty());
                 for (OWLAnnotationProperty subProperty : subProperties) {
                     final EntityData entityData = rm.getEntityData(subProperty);
-                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
-                    entityData.setLocalAnnotationsCount(notesCount);
+//                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
+                    entityData.setLocalAnnotationsCount(0);
                     result.add(entityData);
                 }
             }
