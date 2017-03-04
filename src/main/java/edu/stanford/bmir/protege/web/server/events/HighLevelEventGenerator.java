@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
-import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;

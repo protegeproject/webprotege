@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi.change;
+package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;

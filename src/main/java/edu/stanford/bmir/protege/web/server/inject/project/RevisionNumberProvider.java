@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.inject.Inject;

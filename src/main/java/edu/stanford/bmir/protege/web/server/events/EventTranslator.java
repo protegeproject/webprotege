@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 

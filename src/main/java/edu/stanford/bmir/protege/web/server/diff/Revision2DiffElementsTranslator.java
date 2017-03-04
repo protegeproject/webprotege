@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.diff;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
