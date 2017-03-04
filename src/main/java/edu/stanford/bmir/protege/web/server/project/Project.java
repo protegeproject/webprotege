@@ -93,8 +93,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
-    private final OWLAPISearchManager searchManager;
-
     private final OWLAPINotesManager notesManager;
 
     private final RevisionManager changeManager;
@@ -129,7 +127,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     private final ProjectDetailsRepository projectDetailsRepository;
 
     @Inject
-    public Project(ProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+    public Project(ProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -141,7 +139,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
         this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
         this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
-        this.searchManager = searchManager;
         this.notesManager = notesManager;
         this.changeManager = changeManager;
         this.projectChangesManager = projectChangesManager;
@@ -240,10 +237,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     public OWLDataFactory getDataFactory() {
         return dataFactory;
-    }
-
-    public OWLAPISearchManager getSearchManager() {
-        return searchManager;
     }
 
     public OWLOntology getRootOntology() {
