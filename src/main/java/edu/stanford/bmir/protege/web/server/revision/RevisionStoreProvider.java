@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi.change;
+package edu.stanford.bmir.protege.web.server.revision;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

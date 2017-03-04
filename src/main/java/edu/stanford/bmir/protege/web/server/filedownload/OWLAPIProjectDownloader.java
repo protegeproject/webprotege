@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;

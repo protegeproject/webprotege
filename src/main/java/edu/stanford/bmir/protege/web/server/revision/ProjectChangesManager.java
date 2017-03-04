@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi.change;
+package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -11,6 +11,9 @@ import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator
 import edu.stanford.bmir.protege.web.server.diff.SameSubjectFilter;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
+import edu.stanford.bmir.protege.web.server.revision.EntitiesByRevisionCache;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;

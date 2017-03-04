@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.MatcherAssert;

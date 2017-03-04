@@ -2,6 +2,10 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.revision.EntitiesByRevisionCache;
+import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
+import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.events.EventTranslator;
-import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
