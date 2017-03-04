@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.legacy;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
