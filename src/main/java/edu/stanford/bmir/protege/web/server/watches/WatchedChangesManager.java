@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi.change;
+package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
