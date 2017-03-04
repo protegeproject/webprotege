@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.inject.Inject;
