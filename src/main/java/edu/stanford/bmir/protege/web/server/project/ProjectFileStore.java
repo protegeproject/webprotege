@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/05/2012
  */
-public class OWLAPIProjectFileStore {
+public class ProjectFileStore {
 
 
 
@@ -111,12 +111,12 @@ public class OWLAPIProjectFileStore {
     private File importsCacheDirectory;
 
     /**
-     * Constructs a {@link OWLAPIProjectFileStore} which resides at a given location in the file system.
+     * Constructs a {@link ProjectFileStore} which resides at a given location in the file system.
      * @param webProtegeDataDirectory The root directory where data will be stored.
      * @param projectId The id of the project
      */
     @Inject
-    public OWLAPIProjectFileStore(@DataDirectory File webProtegeDataDirectory, @Assisted ProjectId projectId) {
+    public ProjectFileStore(@DataDirectory File webProtegeDataDirectory, @Assisted ProjectId projectId) {
         checkNotNull(webProtegeDataDirectory);
         File baseDirectory = new File(webProtegeDataDirectory, BASE_DIRECTORY_NAME);
         File allProjectsDirectory = new File(baseDirectory, ALL_PROJECTS_DIRECTORY_NAME);

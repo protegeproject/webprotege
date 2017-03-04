@@ -20,7 +20,7 @@ public class ProjectExistsFilterImpl implements ProjectExistsFilter {
 
     @Override
     public boolean isProjectPresent(ProjectId projectId) {
-        OWLAPIProjectFileStore fileStore = fileStoreFactory.get(projectId);
+        ProjectFileStore fileStore = fileStoreFactory.get(projectId);
         return fileStore.getProjectDirectory().exists();
     }
 }
