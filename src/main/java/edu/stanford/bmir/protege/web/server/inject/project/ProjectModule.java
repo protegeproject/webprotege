@@ -22,7 +22,7 @@ import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreProvider;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
-import edu.stanford.bmir.protege.web.server.render.*;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.watches.*;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;

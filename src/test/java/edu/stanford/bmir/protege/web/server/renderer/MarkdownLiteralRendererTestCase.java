@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import edu.stanford.bmir.protege.web.server.render.MarkdownLiteralRenderer;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.MarkdownLiteralRenderer;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
