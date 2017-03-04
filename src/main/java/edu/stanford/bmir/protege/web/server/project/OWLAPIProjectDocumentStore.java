@@ -1,8 +1,9 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.server.IdUtil;
+import edu.stanford.bmir.protege.web.server.owlapi.ImportsCacheManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocument;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
