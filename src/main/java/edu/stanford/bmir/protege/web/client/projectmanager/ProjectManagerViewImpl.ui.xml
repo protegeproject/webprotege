@@ -1,0 +1,113 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:projectlist="urn:import:edu.stanford.bmir.protege.web.client.projectlist">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            margin: 5px;
+            color: #606060;
+        }
+
+        .topBar {
+            flex-grow: 0;
+            flex-shrink: 0;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            padding-left: 10px;
+        }
+
+        .projectList {
+            display: flex;
+            flex-grow: 100;
+            flex-direction: row;
+        }
+
+        .sideBar {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .loggedInUserView {
+            float: right;
+        }
+
+        .listView {
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .filterPanel {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            padding-top: 50px;
+        }
+
+        .checkBoxHolder {
+            padding: 10px;
+        }
+
+        .checkBox {
+            display: block;
+            padding-bottom: 5px;
+            color: #525252;
+
+        }
+
+        .checkBox input {
+
+        }
+
+        .checkBox label {
+            padding-left: 6px;
+        }
+
+
+    </ui:style>
+
+
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+
+        <g:HTMLPanel addStyleNames="{style.topBar}">
+            <g:SimplePanel ui:field="loggedInUserButton" addStyleNames="{style.loggedInUserView}"/>
+            <h1>
+                <g:Label text="{msg.projects}"/>
+            </h1>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.projectList}">
+            <g:HTMLPanel addStyleNames="{style.sideBar}">
+                <g:Button ui:field="createProjectButton" text="&#x2600; {msg.createProject}" enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+                <div style="height: 10px;"/>
+                <g:Button ui:field="uploadProjectButton" text="&#x21ea; {msg.uploadProject}" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+                <g:HTMLPanel addStyleNames="{style.filterPanel}">
+                    <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
+                        <g:CheckBox ui:field="ownedByMeCheckBox" text="{msg.ownedByMe}" addStyleNames="{style.checkBox}"/>
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
+                        <g:CheckBox ui:field="sharedWithMeCheckBox" text="{msg.sharedWithMe}" addStyleNames="{style.checkBox}"/>
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
+                        <g:CheckBox ui:field="inTrashCheckBox" text="{msg.trash}" addStyleNames="{style.checkBox}"/>
+                    </g:HTMLPanel>
+
+                </g:HTMLPanel>
+
+            </g:HTMLPanel>
+            <projectlist:ProjectListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>
+        </g:HTMLPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder>
