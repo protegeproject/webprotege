@@ -7,7 +7,7 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.*;
@@ -38,7 +38,7 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntity>
         this.translator = translator;
     }
 
-    public List<OWLOntologyChange> createChanges(final OWLOntology rootOntology, OWLAPIProject project) {
+    public List<OWLOntologyChange> createChanges(final OWLOntology rootOntology, Project project) {
         // TODO: Consider axiom annotations!
 
         // TODO: Three way merge incase the frame has been modified "externally" and is different from the original
@@ -134,7 +134,7 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntity>
     }
 
     @Override
-    public OntologyChangeList<S> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<S> generateChanges(Project project, ChangeGenerationContext context) {
         OntologyChangeList.Builder<S> b = new OntologyChangeList.Builder<S>();
         b.addAll(createChanges(project.getRootOntology(), project));
         return b.build(to.getSubject());

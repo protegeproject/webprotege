@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
@@ -34,7 +34,7 @@ public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<Get
     }
 
     @Override
-    protected GetMetricsResult execute(GetMetricsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetMetricsResult execute(GetMetricsAction action, Project project, ExecutionContext executionContext) {
         List<MetricValue> metrics = project.getMetricsManager().getMetrics();
         return new GetMetricsResult(ImmutableList.copyOf(metrics));
     }

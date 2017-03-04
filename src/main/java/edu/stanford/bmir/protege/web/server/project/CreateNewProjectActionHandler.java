@@ -76,7 +76,7 @@ public class CreateNewProjectActionHandler implements ActionHandler<CreateNewPro
             }
 
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
-            OWLAPIProject project = pm.createNewProject(newProjectSettings);
+            Project project = pm.createNewProject(newProjectSettings);
             ProjectId projectId = project.getProjectId();
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);

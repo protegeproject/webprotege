@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -48,7 +48,7 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected GetClassFrameResult execute(GetClassFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetClassFrameResult execute(GetClassFrameAction action, Project project, ExecutionContext executionContext) {
         FrameActionResultTranslator<ClassFrame, OWLClass> translator = new FrameActionResultTranslator<>(action.getSubject(), project, TRANSLATOR);
         LabelledFrame<ClassFrame> f = translator.doIT();
         final BrowserTextMap browserTextMap = new BrowserTextMap(f, project.getRenderingManager());

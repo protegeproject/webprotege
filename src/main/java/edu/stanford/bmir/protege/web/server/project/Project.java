@@ -68,7 +68,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
  * Date: 08/03/2012
  */
 @ProjectSingleton
-public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges, HasLang {
+public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges, HasLang {
 
 
     private final OWLAPIProjectDocumentStore documentStore;
@@ -129,7 +129,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private final ProjectDetailsRepository projectDetailsRepository;
 
     @Inject
-    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology,  ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+    public Project(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, AccessManager accessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, ProjectDetailsRepository projectDetailsRepository, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -335,7 +335,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      *                                   be applied can be created based on the state of the project immediately before they are applied.  This is
      *                                   necessary where the changes depend on the structure/state of the ontology.  This method guarantees that no third
      *                                   party
-     *                                   ontology changes will take place between the {@link ChangeListGenerator#generateChanges(OWLAPIProject,
+     *                                   ontology changes will take place between the {@link ChangeListGenerator#generateChanges(Project,
      *                                   edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext)}
      *                                   method being called and the changes being applied.
      * @param changeDescriptionGenerator A generator that describes the changes that took place.

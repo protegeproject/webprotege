@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
@@ -38,7 +38,7 @@ public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActi
     }
 
     @Override
-    protected GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, Project project, ExecutionContext executionContext) {
         Set<Watch<?>> watches = project.getWatchManager().getWatches(action.getUserId());
         ImmutableList<ProjectChange> changes = project.getWatchedChangesManager().getProjectChangesForWatches(watches);
         return new GetWatchedEntityChangesResult(changes);

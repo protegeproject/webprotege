@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.comparator;
 
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -47,9 +47,9 @@ public class OntologyAnnotationsComparator implements Comparator<OWLAnnotation> 
         addToIndexMap(DataFactory.getOWLAnnotationProperty(vocabulary.getIRI()));
     }
 
-    private OWLAPIProject project;
+    private Project project;
 
-    public OntologyAnnotationsComparator(OWLAPIProject project) {
+    public OntologyAnnotationsComparator(Project project) {
         this.project = project;
     }
 

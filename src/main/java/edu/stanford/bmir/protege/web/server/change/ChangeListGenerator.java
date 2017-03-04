@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 
 /**
@@ -23,7 +23,7 @@ public interface ChangeListGenerator<R> {
      * generating the changes.
      * @return The generated change list and main result bundled up in a {@link OntologyChangeList} object.
      */
-    OntologyChangeList<R> generateChanges(OWLAPIProject project, ChangeGenerationContext context);
+    OntologyChangeList<R> generateChanges(Project project, ChangeGenerationContext context);
 
     R getRenamedResult(R result, RenameMap renameMap);
 

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.extref;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public abstract class ExternalReferenceStrategy<T extends OWLEntity> {
      * @param project
      * @return
      */
-    public final List<OWLOntologyChange> generateOntologyChanges(T referenceSubject, ExternalReferenceData externalReferenceData, OWLAPIProject project) {
+    public final List<OWLOntologyChange> generateOntologyChanges(T referenceSubject, ExternalReferenceData externalReferenceData, Project project) {
         List<OWLOntologyChange> result = new ArrayList<OWLOntologyChange>();
         List<OWLOntologyChange> strategySpecifcChanges = generateStrategySpecificOntologyChanges(referenceSubject, externalReferenceData, project);
         result.addAll(strategySpecifcChanges);
@@ -46,7 +46,7 @@ public abstract class ExternalReferenceStrategy<T extends OWLEntity> {
         return result;
     }
 
-    protected abstract List<OWLOntologyChange> generateStrategySpecificOntologyChanges(T referenceSubject, ExternalReferenceData externalReferenceData, OWLAPIProject project);
+    protected abstract List<OWLOntologyChange> generateStrategySpecificOntologyChanges(T referenceSubject, ExternalReferenceData externalReferenceData, Project project);
 
     /**
      * Generates a list of {@link OWLOntologyChange} objects which will apply the appropriate annotations to the IRI
@@ -57,7 +57,7 @@ public abstract class ExternalReferenceStrategy<T extends OWLEntity> {
      * @param project The project that the changes should be applied to.
      * @return A list of changes.  Not <code>null</code>.
      */
-    protected List<OWLOntologyChange> generateTermAnnotationChanges(ExternalReferenceData externalReferenceData, OWLAPIProject project) {
+    protected List<OWLOntologyChange> generateTermAnnotationChanges(ExternalReferenceData externalReferenceData, Project project) {
         List<OWLOntologyChange> result = new ArrayList<OWLOntologyChange>();
         OWLDataFactory df = project.getDataFactory();
         OWLAnnotation prefLabelAnnotation = externalReferenceData.getPreferredLabelAnnotation(df);
@@ -75,7 +75,7 @@ public abstract class ExternalReferenceStrategy<T extends OWLEntity> {
      * @param project
      * @param result
      */
-    private void generateAddAnnotationChange(OWLAnnotation prefLabelAnnotation, ExternalReferenceData externalReferenceData, OWLAPIProject project, List<OWLOntologyChange> result) {
+    private void generateAddAnnotationChange(OWLAnnotation prefLabelAnnotation, ExternalReferenceData externalReferenceData, Project project, List<OWLOntologyChange> result) {
         OWLOntology rootOntology = project.getRootOntology();
         OWLDataFactory df = project.getDataFactory();
         OWLAnnotationAssertionAxiom annoAssertion = df.getOWLAnnotationAssertionAxiom(externalReferenceData.getTermIRI(), prefLabelAnnotation);

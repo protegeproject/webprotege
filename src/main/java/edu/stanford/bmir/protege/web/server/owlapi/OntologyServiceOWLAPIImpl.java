@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHiera
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -84,7 +84,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * @param projectName The name of the project.
      * @return The OWL API project. Not <code>null</code>.
      */
-    private OWLAPIProject getProject(String projectName) {
+    private Project getProject(String projectName) {
         if (projectName == null) {
             throw new NullPointerException("projectName must not be null");
         }
@@ -99,7 +99,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * @param projectId The id of the project.
      * @return The OWL API project. Not <code>null</code>.
      */
-    private OWLAPIProject getProject(ProjectId projectId) {
+    private Project getProject(ProjectId projectId) {
         return projectManager.getProject(projectId, getUserId());
     }
 
@@ -139,7 +139,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
             List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
             cf.createChanges(changes);
             if (!changes.isEmpty()) {
-                OWLAPIProject project = cf.getProject();
+                Project project = cf.getProject();
                 project.applyChanges(cf.getUserId(), changes, cf.getChangeDescription());
             }
         }
@@ -194,7 +194,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
             return Collections.emptyList();
         }
         List<SubclassEntityData> result = new ArrayList<SubclassEntityData>();
-        OWLAPIProject project = getProject(projectName);
+        Project project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
         AssertedClassHierarchyProvider hierarchyProvider = project.getClassHierarchyProvider();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
@@ -249,7 +249,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles, String user, String operationDescription) {
         // Why check for cycles here and nowhere else?
-        OWLAPIProject project = getProject(projectName);
+        Project project = getProject(projectName);
         UserId userId = getUserId(user);
         MoveClassChangeFactory cf = new MoveClassChangeFactory(project, userId, operationDescription, clsName, oldParentName, newParentName, checkForCycles);
         applyChanges(cf);
@@ -261,7 +261,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         // NOTE:  ALTHOUGH THIS CAN RETURN A LIST OF ENTITY DATA, VARIOUS PLACES IN THE UI CODE PERFORM AN UNCHECKED CAST
         // TO PROPERTY ENTITY DATA!!!!!
 
-        OWLAPIProject project = getProject(projectName);
+        Project project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
 
         // propertyName can be null!  This means the top property.
@@ -354,7 +354,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     public List<EntityData> getPathToRoot(String projectName, String entityName) {
-        OWLAPIProject project = getProject(projectName);
+        Project project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
         Set<OWLEntity> entities = rm.getEntities(entityName);
         List<EntityData> result = new ArrayList<EntityData>();

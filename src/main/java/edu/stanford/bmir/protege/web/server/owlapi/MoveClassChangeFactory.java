@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 
@@ -22,7 +22,7 @@ public class MoveClassChangeFactory extends OWLOntologyChangeFactory {
     
     private String newParent;
 
-    public MoveClassChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String clsName, String oldParent, String newParent, boolean checkForCycles) {
+    public MoveClassChangeFactory(Project project, UserId userId, String changeDescription, String clsName, String oldParent, String newParent, boolean checkForCycles) {
         super(project, userId, changeDescription);
         this.clsName = clsName;
         this.oldParent = oldParent;

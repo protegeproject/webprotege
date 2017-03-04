@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -48,7 +48,7 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
 
     @Override
     protected SetDiscussionThreadStatusResult execute(SetDiscussionThreadStatusAction action,
-                                                      OWLAPIProject project,
+                                                      Project project,
                                                       ExecutionContext executionContext) {
         EventTag fromTag = project.getEventManager().getCurrentTag();
         ThreadId threadId = action.getThreadId();

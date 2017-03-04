@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -32,7 +32,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     @Override
-    public ClassFrame getFrame(OWLClass subject, OWLOntology rootOntology, OWLAPIProject project) {
+    public ClassFrame getFrame(OWLClass subject, OWLOntology rootOntology, Project project) {
         return translateToClassFrame(subject, rootOntology, project);
     }
 
@@ -41,7 +41,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         return translateToAxioms(frame.getSubject(), frame, mode);
     }
 
-    private ClassFrame translateToClassFrame(OWLClass subject, OWLOntology rootOntology, final OWLAPIProject project) {
+    private ClassFrame translateToClassFrame(OWLClass subject, OWLOntology rootOntology, final Project project) {
         ClassFrame.Builder builder = new ClassFrame.Builder(subject);
         List<PropertyValue> propertyValues = Lists.newArrayList();
         final Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject, rootOntology, builder, true);

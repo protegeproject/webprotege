@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.projectsettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -45,7 +45,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     }
 
     @Override
-    protected GetProjectSettingsResult execute(GetProjectSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetProjectSettingsResult execute(GetProjectSettingsAction action, Project project, ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
         return new GetProjectSettingsResult(projectDetailsManager.getProjectSettings(projectId));
     }

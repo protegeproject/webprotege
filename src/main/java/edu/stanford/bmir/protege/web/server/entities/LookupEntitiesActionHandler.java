@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -44,13 +44,13 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
     }
 
     @Override
-    protected LookupEntitiesResult execute(LookupEntitiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected LookupEntitiesResult execute(LookupEntitiesAction action, Project project, ExecutionContext executionContext) {
         return new LookupEntitiesResult(lookupEntities(project, action.getEntityLookupRequest()));
     }
 
 
 
-    private List<EntityLookupResult> lookupEntities(final OWLAPIProject project, final EntityLookupRequest entityLookupRequest) {
+    private List<EntityLookupResult> lookupEntities(final Project project, final EntityLookupRequest entityLookupRequest) {
         final RenderingManager rm = project.getRenderingManager();
         BidirectionalShortFormProvider sfp = rm.getShortFormProvider();
         Set<OWLEntityDataMatch> matches = new TreeSet<>();

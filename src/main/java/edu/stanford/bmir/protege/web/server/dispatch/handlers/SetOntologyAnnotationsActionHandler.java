@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -53,7 +53,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     }
 
     @Override
-    protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
         final Set<OWLAnnotation> fromAnnotations = action.getFromAnnotations();
         final Set<OWLAnnotation> toAnnotations = action.getToAnnotations();
 
@@ -78,12 +78,12 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLAnnotation>> getChangeDescription(SetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Set<OWLAnnotation>> getChangeDescription(SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<Set<OWLAnnotation>>("Edited ontology annotations");
     }
 
     @Override
-    protected SetOntologyAnnotationsResult createActionResult(ChangeApplicationResult<Set<OWLAnnotation>> changeApplicationResult, SetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected SetOntologyAnnotationsResult createActionResult(ChangeApplicationResult<Set<OWLAnnotation>> changeApplicationResult, SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         return new SetOntologyAnnotationsResult(project.getRootOntology().getAnnotations(), eventList);
     }
 }

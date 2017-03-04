@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -44,7 +44,7 @@ public class GetProjectSettingsActionHandler_TestCase {
     private GetProjectSettingsAction action;
 
     @Mock
-    private OWLAPIProject project;
+    private Project project;
 
     @Mock
     private ExecutionContext executionContext;

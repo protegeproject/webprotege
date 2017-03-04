@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
@@ -47,7 +47,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     }
 
     @Override
-    protected GetManchesterSyntaxFrameCompletionsResult execute(GetManchesterSyntaxFrameCompletionsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetManchesterSyntaxFrameCompletionsResult execute(GetManchesterSyntaxFrameCompletionsAction action, Project project, ExecutionContext executionContext) {
         String syntax = action.getSyntax();
         int from = action.getFrom();
         String triggerText = syntax.substring(0, from) + "\u0000";
@@ -90,7 +90,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         return new GetManchesterSyntaxFrameCompletionsResult(AutoCompletionResult.emptyResult());
     }
 
-    private List<AutoCompletionChoice> getEntityAutocompletionChoices(GetManchesterSyntaxFrameCompletionsAction action, OWLAPIProject project, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
+    private List<AutoCompletionChoice> getEntityAutocompletionChoices(GetManchesterSyntaxFrameCompletionsAction action, Project project, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
         List<AutoCompletionMatch> matches = Lists.newArrayList();
         Set<EntityType<?>> expectedEntityTypes = Sets.newHashSet(ManchesterSyntaxFrameParser.getExpectedEntityTypes(e));
         if(!expectedEntityTypes.isEmpty()) {
@@ -127,7 +127,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     }
 
-    private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(OWLAPIProject project, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
+    private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(Project project, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
         List<AutoCompletionChoice> choices = Lists.newArrayList();
         if(e.isOntologyNameExpected()) {
             WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(project.getRootOntology());

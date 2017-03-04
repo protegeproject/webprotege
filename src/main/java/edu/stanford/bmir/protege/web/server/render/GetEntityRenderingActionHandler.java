@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.render;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -38,7 +38,7 @@ public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHan
 
     @Override
     protected GetEntityRenderingResult execute(GetEntityRenderingAction action,
-                                               final OWLAPIProject project,
+                                               final Project project,
                                                ExecutionContext executionContext) {
         OWLEntity entity = action.getEntity();
         HasGetFrameRendering renderer = project.getRenderingManager();

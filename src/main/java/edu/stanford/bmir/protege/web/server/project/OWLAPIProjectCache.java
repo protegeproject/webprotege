@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectImporter;
 import edu.stanford.bmir.protege.web.server.owlapi.ProjectImporterFactory;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -124,11 +123,11 @@ public class OWLAPIProjectCache {
 
 
 
-    public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
+    public Project getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
         return getProjectInternal(projectId, AccessMode.NORMAL);
     }
 
-    public Optional<OWLAPIProject> getProjectIfActive(ProjectId projectId) {
+    public Optional<Project> getProjectIfActive(ProjectId projectId) {
         try {
             READ_LOCK.lock();
             if(!isActive(projectId)) {
@@ -149,7 +148,7 @@ public class OWLAPIProjectCache {
         QUIET
     }
 
-    private OWLAPIProject getProjectInternal(ProjectId projectId, AccessMode accessMode) {
+    private Project getProjectInternal(ProjectId projectId, AccessMode accessMode) {
         // Per project lock
         synchronized (getInternedProjectId(projectId)) {
             try {
@@ -187,7 +186,7 @@ public class OWLAPIProjectCache {
         return projectIdInterner.intern(projectId);
     }
 
-    public OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
+    public Project getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
         if(newProjectSettings.hasSourceDocument()) {
             ProjectImporter importer = projectImporterFactory.getProjectImporter(projectId);
@@ -202,7 +201,7 @@ public class OWLAPIProjectCache {
             LAST_ACCESS_LOCK.writeLock().lock();
             ProjectComponent projectComponent = projectId2ProjectComponent.remove(projectId);
             lastAccessMap.remove(projectId);
-            OWLAPIProject project  = projectComponent.getProject();
+            Project project  = projectComponent.getProject();
             project.dispose();
         }
         finally {

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -42,7 +42,7 @@ public class OWLAPIProjectDownloader {
     private final String fileName;
 
     @Nonnull
-    private final OWLAPIProject project;
+    private final Project project;
 
     @Nonnull
     private final String applicationName;
@@ -55,7 +55,7 @@ public class OWLAPIProjectDownloader {
      */
     @Inject
     public OWLAPIProjectDownloader(@Nonnull String fileName,
-                                   @Nonnull OWLAPIProject project,
+                                   @Nonnull Project project,
                                    @Nonnull RevisionNumber revision,
                                    @Nonnull DownloadFormat format,
                                    @ApplicationName String applicationName) {

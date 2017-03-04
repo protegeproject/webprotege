@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.EntityType;
@@ -27,7 +27,7 @@ public class CreateClassChangeGenerator implements ChangeListGenerator<OWLClass>
     }
 
     @Override
-    public OntologyChangeList<OWLClass> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<OWLClass> generateChanges(Project project, ChangeGenerationContext context) {
         OWLClass freshClass = DataFactory.getFreshOWLEntity(EntityType.CLASS, browserText);
 
         OntologyChangeList.Builder<OWLClass> builder = new OntologyChangeList.Builder<OWLClass>();

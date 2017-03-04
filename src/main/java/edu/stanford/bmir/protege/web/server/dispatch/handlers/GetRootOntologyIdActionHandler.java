@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdRe
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -55,7 +55,7 @@ public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHand
      * @return The result of the execution to be returned to the client.
      */
     @Override
-    protected GetRootOntologyIdResult execute(GetRootOntologyIdAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetRootOntologyIdResult execute(GetRootOntologyIdAction action, Project project, ExecutionContext executionContext) {
         final OWLOntology rootOntology = project.getRootOntology();
         final OWLOntologyID result = rootOntology.getOntologyID();
         return new GetRootOntologyIdResult(project.getProjectId(), result);

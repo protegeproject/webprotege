@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -14,16 +14,16 @@ import java.util.Set;
  */
 public abstract class OntologyServiceStrategy<R> {
 
-    private OWLAPIProject project;
+    private Project project;
 
     private UserId userId;
 
-    protected OntologyServiceStrategy(OWLAPIProject project, UserId userId) {
+    protected OntologyServiceStrategy(Project project, UserId userId) {
         this.project = project;
         this.userId = userId;
     }
 
-    public OWLAPIProject getProject() {
+    public Project getProject() {
         return project;
     }
 

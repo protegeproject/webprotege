@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -46,7 +46,7 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
 
     @Override
     protected AddEntityCommentResult execute(AddEntityCommentAction action,
-                                             OWLAPIProject project,
+                                             Project project,
                                              ExecutionContext executionContext) {
         UserId createdBy = executionContext.getUserId();
         long createdAt = System.currentTimeMillis();

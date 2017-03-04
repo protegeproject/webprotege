@@ -34,14 +34,14 @@ public class ProjectManager {
 
 
     
-    public OWLAPIProject getProject(@Nonnull ProjectId projectId,
-                                    @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
+    public Project getProject(@Nonnull ProjectId projectId,
+                              @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
         long currentTime = System.currentTimeMillis();
         projectAccessManager.logProjectAccess(projectId, requestingUser, currentTime);
         return projectCache.getProject(projectId);
     }
 
-    public Optional<OWLAPIProject> getProjectIfActive(@Nonnull ProjectId projectId) throws ProjectDocumentNotFoundException {
+    public Optional<Project> getProjectIfActive(@Nonnull ProjectId projectId) throws ProjectDocumentNotFoundException {
         return projectCache.getProjectIfActive(projectId);
     }
 
@@ -49,7 +49,7 @@ public class ProjectManager {
         return projectCache.isActive(projectId);
     }
     
-    public OWLAPIProject createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
+    public Project createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
         return projectCache.getProject(newProjectSettings);
     }
 }

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
@@ -19,7 +19,7 @@ import java.util.Set;
 public class AnnotationPropertyFrameTranslator implements FrameTranslator<AnnotationPropertyFrame, OWLAnnotationProperty> {
 
     @Override
-    public AnnotationPropertyFrame getFrame(OWLAnnotationProperty subject, OWLOntology rootOntology, OWLAPIProject project) {
+    public AnnotationPropertyFrame getFrame(OWLAnnotationProperty subject, OWLOntology rootOntology, Project project) {
         Set<PropertyAnnotationValue> propertyValues = new HashSet<PropertyAnnotationValue>();
         Set<OWLEntity> domains = new HashSet<OWLEntity>();
         Set<OWLEntity> ranges = new HashSet<OWLEntity>();

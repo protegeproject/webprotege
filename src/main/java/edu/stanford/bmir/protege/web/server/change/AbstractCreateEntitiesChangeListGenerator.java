@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.EntityType;
@@ -68,7 +68,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     }
 
     @Override
-    public OntologyChangeList<Set<E>> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<Set<E>> generateChanges(Project project, ChangeGenerationContext context) {
         OntologyChangeList.Builder<Set<E>> builder = new OntologyChangeList.Builder<Set<E>>();
         Set<E> freshEntities = new HashSet<E>();
         for (String bt : browserTexts) {
@@ -129,7 +129,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @return A possibly empty set of axioms representing axioms that need to be added to the project ontologies to
      * associate the specified fresh entity with its optional parent.  Not {@code null}.
      */
-    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity, OWLAPIProject project, ChangeGenerationContext context, Optional<P> parent);
+    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity, Project project, ChangeGenerationContext context, Optional<P> parent);
 
 
 

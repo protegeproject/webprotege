@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.FindAndReplaceIRIPrefixChange
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
@@ -43,7 +43,7 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
     }
 
     @Override
-    protected SetEntityCrudKitSettingsResult execute(SetEntityCrudKitSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected SetEntityCrudKitSettingsResult execute(SetEntityCrudKitSettingsAction action, Project project, ExecutionContext executionContext) {
         project.setEntityCrudKitSettings(action.getToSettings());
         if(action.getPrefixUpdateStrategy() == IRIPrefixUpdateStrategy.FIND_AND_REPLACE) {
             String fromPrefix = action.getFromSettings().getPrefixSettings().getIRIPrefix();

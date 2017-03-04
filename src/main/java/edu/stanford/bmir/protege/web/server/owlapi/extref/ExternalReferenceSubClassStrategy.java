@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.extref;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class ExternalReferenceSubClassStrategy extends ExternalReferenceStrategy
     }
 
     @Override
-    protected List<OWLOntologyChange> generateStrategySpecificOntologyChanges(OWLClass referenceSubject, ExternalReferenceData externalReferenceData, OWLAPIProject project) {
+    protected List<OWLOntologyChange> generateStrategySpecificOntologyChanges(OWLClass referenceSubject, ExternalReferenceData externalReferenceData, Project project) {
         List<OWLOntologyChange> result = new ArrayList<OWLOntologyChange>();
         OWLDataFactory df = project.getDataFactory();
         IRI clsIRI = externalReferenceData.getTermIRI();

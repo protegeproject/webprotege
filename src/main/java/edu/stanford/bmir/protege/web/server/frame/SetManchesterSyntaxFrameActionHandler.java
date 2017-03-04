@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -43,7 +43,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected ChangeListGenerator<Void> getChangeListGenerator(SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Void> getChangeListGenerator(SetManchesterSyntaxFrameAction action, Project project, ExecutionContext executionContext) {
         ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(project.getManchesterSyntaxFrameParser());
         try {
             List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering(), action);
@@ -55,7 +55,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Void> getChangeDescription(SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Void> getChangeDescription(SetManchesterSyntaxFrameAction action, Project project, ExecutionContext executionContext) {
         String changeDescription = "Edited description of " + project.getRenderingManager().getShortForm(action.getSubject()) + ".";
         Optional<String> commitMessage = action.getCommitMessage();
         if(commitMessage.isPresent()) {
@@ -65,7 +65,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Void> changeApplicationResult, SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Void> changeApplicationResult, SetManchesterSyntaxFrameAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         GetManchesterSyntaxFrameResult result = handler.execute(new GetManchesterSyntaxFrameAction(action.getProjectId(),
                                                                                           action.getSubject()),
                                                        project, executionContext);

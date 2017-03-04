@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThread
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
@@ -41,7 +41,7 @@ public class GetDiscussionThreadActionHandler extends AbstractHasProjectActionHa
     }
 
     @Override
-    protected GetDiscussionThreadResult execute(GetDiscussionThreadAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetDiscussionThreadResult execute(GetDiscussionThreadAction action, Project project, ExecutionContext executionContext) {
         final DiscussionThread discusssionThread = project.getNotesManager().getDiscusssionThread(action.getTargetEntity());
         return new GetDiscussionThreadResult(discusssionThread);
     }

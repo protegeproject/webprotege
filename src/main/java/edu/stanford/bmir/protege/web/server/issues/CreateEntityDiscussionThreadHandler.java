@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -47,7 +47,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
 
     @Override
     protected CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
-                                                         OWLAPIProject project,
+                                                         Project project,
                                                          ExecutionContext executionContext) {
         CommentRenderer commentRenderer = new CommentRenderer();
         String renderedComment = commentRenderer.renderComment(action.getComment());

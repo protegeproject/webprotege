@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.ClassClassAncestorChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyDataPropertyAncestorChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.NamedIndividualClassAncestorChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyObjectPropertyAncestorChecker;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -19,7 +19,7 @@ public class PropertyValueMinimiser {
 
     public List<PropertyValue> minimisePropertyValues(List<PropertyValue> propertyValues,
                                                     OWLOntology ontology,
-                                                    OWLAPIProject project) {
+                                                    Project project) {
         List<PropertyValue> result = Lists.newArrayList(propertyValues);
         for (int i = 0; i < propertyValues.size(); i++) {
             for (int j = 0; j < propertyValues.size(); j++) {
@@ -44,7 +44,7 @@ public class PropertyValueMinimiser {
     }
 
     private PropertyValueSubsumptionChecker getPropertyValueSubsumptionChecker(OWLOntology ontology,
-                                                                               OWLAPIProject project) {
+                                                                               Project project) {
         ClassClassAncestorChecker classAncestorChecker = new ClassClassAncestorChecker(project
                 .getClassHierarchyProvider());
         ObjectPropertyObjectPropertyAncestorChecker objectPropertyAncestorChecker = new

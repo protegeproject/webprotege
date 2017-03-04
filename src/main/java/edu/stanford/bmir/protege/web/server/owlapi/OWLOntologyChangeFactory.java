@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 
@@ -16,7 +16,7 @@ public abstract class OWLOntologyChangeFactory {
 
     private String changeDescription;
 
-    private OWLAPIProject project;
+    private Project project;
 
     private UserId userId;
 
@@ -26,13 +26,13 @@ public abstract class OWLOntologyChangeFactory {
      * @param userId The id of the user applying the change.
      * @param changeDescription The change description
      */
-    protected OWLOntologyChangeFactory(OWLAPIProject project, UserId userId, String changeDescription) {
+    protected OWLOntologyChangeFactory(Project project, UserId userId, String changeDescription) {
         this.project = project;
         this.userId = userId;
         this.changeDescription = changeDescription;
     }
 
-    public OWLAPIProject getProject() {
+    public Project getProject() {
         return project;
     }
 

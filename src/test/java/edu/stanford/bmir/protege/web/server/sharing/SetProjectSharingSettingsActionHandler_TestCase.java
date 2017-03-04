@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.sharing;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
@@ -39,7 +39,7 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     private ProjectSharingSettings sharingSettings;
 
     @Mock
-    private OWLAPIProject project;
+    private Project project;
 
     @Mock
     private ProjectManager projectManager;

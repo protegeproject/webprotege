@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
@@ -25,7 +25,7 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractHasProjectAct
     }
 
     @Override
-    protected GetManchesterSyntaxFrameResult execute(GetManchesterSyntaxFrameAction action, final OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetManchesterSyntaxFrameResult execute(GetManchesterSyntaxFrameAction action, final Project project, ExecutionContext executionContext) {
         StringWriter writer = new StringWriter();
         final OWLOntology rootOntology = project.getRootOntology();
         EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(project.getRenderingManager().getShortFormProvider());

@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
@@ -60,7 +60,7 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected MergeUploadedProjectResult execute(MergeUploadedProjectAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected MergeUploadedProjectResult execute(MergeUploadedProjectAction action, Project project, ExecutionContext executionContext) {
         try {
             DocumentId documentId = action.getUploadedDocumentId();
             final OWLOntology uploadedRootOntology = loadUploadedOntology(documentId);
@@ -85,10 +85,10 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
         return new MergeUploadedProjectResult();
     }
 
-    private void applyChanges(String commitMessage, OWLAPIProject project, final List<OWLOntologyChange> changes, ExecutionContext executionContext) {
+    private void applyChanges(String commitMessage, Project project, final List<OWLOntologyChange> changes, ExecutionContext executionContext) {
         project.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Void>() {
             @Override
-            public OntologyChangeList<Void> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+            public OntologyChangeList<Void> generateChanges(Project project, ChangeGenerationContext context) {
                 OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
                 builder.addAll(changes);
                 return builder.build();

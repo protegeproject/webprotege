@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualF
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
@@ -50,7 +50,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
 
     @Override
     protected GetNamedIndividualFrameResult execute(GetNamedIndividualFrameAction action,
-                                                    OWLAPIProject project,
+                                                    Project project,
                                                     ExecutionContext executionContext) {
         NamedIndividualFrameTranslator translator = new NamedIndividualFrameTranslator();
         NamedIndividualFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);

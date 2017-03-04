@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
@@ -25,7 +25,7 @@ public class CreateInstanceValueChangeFactory extends OWLOntologyChangeFactory {
     
     String propertyEntity;
 
-    public CreateInstanceValueChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String instName, String typeName, String subjectEntity, String propertyEntity) {
+    public CreateInstanceValueChangeFactory(Project project, UserId userId, String changeDescription, String instName, String typeName, String subjectEntity, String propertyEntity) {
         super(project, userId, changeDescription);
         this.instName = instName;
         this.typeName = typeName;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -23,7 +23,7 @@ public class GetDirectTypesStrategy extends OntologyServiceStrategy<List<EntityD
 
     private String instanceName;
 
-    public GetDirectTypesStrategy(OWLAPIProject project, UserId userId, String instanceName) {
+    public GetDirectTypesStrategy(Project project, UserId userId, String instanceName) {
         super(project, userId);
         this.instanceName = instanceName;
     }
