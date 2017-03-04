@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/03/2012
  */
-public class OWLAPIProjectCache {
+public class ProjectCache {
 
     private final Interner<ProjectId> projectIdInterner;
 
@@ -75,9 +75,9 @@ public class OWLAPIProjectCache {
     private final ApplicationComponent applicationComponent;
 
     @Inject
-    public OWLAPIProjectCache(@Nonnull ApplicationComponent applicationComponent,
-                              @Nonnull ProjectImporterFactory projectImporterFactory,
-                              @Nonnull WebProtegeLogger logger) {
+    public ProjectCache(@Nonnull ApplicationComponent applicationComponent,
+                        @Nonnull ProjectImporterFactory projectImporterFactory,
+                        @Nonnull WebProtegeLogger logger) {
         this.applicationComponent = checkNotNull(applicationComponent);
         this.logger = checkNotNull(logger);
         this.projectImporterFactory = checkNotNull(projectImporterFactory);

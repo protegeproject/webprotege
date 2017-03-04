@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryI
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProjectCache;
+import edu.stanford.bmir.protege.web.server.project.ProjectCache;
 import edu.stanford.bmir.protege.web.server.project.ProjectAccessManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectAccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
@@ -53,7 +53,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public ProjectManager provideOWLAPIProjectManager(OWLAPIProjectCache projectCache, ProjectAccessManager projectAccessManager) {
+    public ProjectManager provideOWLAPIProjectManager(ProjectCache projectCache, ProjectAccessManager projectAccessManager) {
         return new ProjectManager(projectCache, projectAccessManager);
     }
 
