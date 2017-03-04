@@ -9,7 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 
 import javax.inject.Inject;
 

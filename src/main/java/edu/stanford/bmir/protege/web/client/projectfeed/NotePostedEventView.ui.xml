@@ -1,7 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:p='urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel'
-             xmlns:l='urn:import:edu.stanford.bmir.protege.web.client.ui.library.entitylabel'>
+             xmlns:p='urn:import:edu.stanford.bmir.protege.web.client.library.timelabel'
+             xmlns:l='urn:import:edu.stanford.bmir.protege.web.client.library.entitylabel'>
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 

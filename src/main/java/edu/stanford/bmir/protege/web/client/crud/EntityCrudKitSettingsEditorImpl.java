@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UUIDSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;

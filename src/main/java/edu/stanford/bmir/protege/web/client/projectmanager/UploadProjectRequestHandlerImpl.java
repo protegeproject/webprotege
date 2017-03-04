@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ontology.home.UploadProjectDialogController;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

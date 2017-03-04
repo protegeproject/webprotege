@@ -10,9 +10,9 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.ui.anchor.HasAnchor;
-import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
-import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.client.anchor.HasAnchor;
+import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Set;

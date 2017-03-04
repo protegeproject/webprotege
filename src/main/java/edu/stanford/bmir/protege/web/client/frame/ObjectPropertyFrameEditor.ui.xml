@@ -1,0 +1,31 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.primitive'
+             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.frame">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain} {wp.style.webProtegeLaf}">
+
+        <div class="{wp.style.formGroup}">
+            <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextBox ui:field="iriField" width="100%"/>
+        </div>
+
+        <div style="height: 10px;"/>
+
+        <g:Label text="Annotations" addStyleNames="{wp.style.formLabel}"/>
+        <frame:PropertyValueListEditor ui:field="annotations"/>
+
+        <div style="height: 15px;"/>
+
+        <g:Label text="Domain" addStyleNames="{wp.style.formLabel}"/>
+        <wp:PrimitiveDataListEditor ui:field="domains"/>
+
+        <div style="height: 15px;"/>
+
+        <g:Label text="Range" addStyleNames="{wp.style.formLabel}"/>
+        <wp:PrimitiveDataListEditor ui:field="ranges"/>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

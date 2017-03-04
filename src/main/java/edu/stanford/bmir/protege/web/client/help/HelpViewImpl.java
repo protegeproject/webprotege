@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.help;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -10,7 +9,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.about.AboutBox;
-import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 
 import javax.inject.Inject;
 

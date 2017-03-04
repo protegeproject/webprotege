@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.crud.obo;
 
-import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 
 /**

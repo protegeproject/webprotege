@@ -3,12 +3,11 @@ package edu.stanford.bmir.protege.web.client.issues;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Matthew Horridge

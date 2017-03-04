@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.login;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialogController;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.signup.WebProtegeSignupDialogController;
 
 import javax.inject.Inject;
 

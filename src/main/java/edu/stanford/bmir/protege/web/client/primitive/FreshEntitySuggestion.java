@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLAxiom;
 

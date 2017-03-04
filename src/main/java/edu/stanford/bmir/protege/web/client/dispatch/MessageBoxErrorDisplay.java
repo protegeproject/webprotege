@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
 /**
  * Matthew Horridge

@@ -6,7 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.ui.library.text.PlaceholderTextBox;
+import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 
 import javax.inject.Inject;
 

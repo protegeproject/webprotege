@@ -1,6 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel"
+             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.library.timelabel"
 >
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.ui.UIAction;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 
 /**
  * Matthew Horridge

@@ -11,10 +11,10 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.client.anchor.AnchorClickedHandler;
+import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
+import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.inject.Inject;
