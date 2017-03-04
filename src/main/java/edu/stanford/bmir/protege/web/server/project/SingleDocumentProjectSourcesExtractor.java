@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.Lists;
 import org.semanticweb.owlapi.io.FileDocumentSource;

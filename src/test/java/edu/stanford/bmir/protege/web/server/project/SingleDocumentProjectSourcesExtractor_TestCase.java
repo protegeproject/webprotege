@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.owlapi.RawProjectSources;
-import edu.stanford.bmir.protege.web.server.owlapi.SingleDocumentProjectSourcesExtractor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

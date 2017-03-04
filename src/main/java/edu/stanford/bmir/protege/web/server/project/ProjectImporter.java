@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.owlapi.ImportsCacheManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
