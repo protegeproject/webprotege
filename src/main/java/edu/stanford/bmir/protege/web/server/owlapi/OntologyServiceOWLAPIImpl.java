@@ -27,6 +27,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2012
  */
+@Deprecated
 @SuppressWarnings("GwtServiceNotRegistered")
 public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implements OntologyService {
 

@@ -15,6 +15,7 @@ import java.util.List;
  * @author Jennifer Vendetti <vendetti@stanford.edu>
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
+@Deprecated
 @RemoteServiceRelativePath("ontology")
 public interface OntologyService extends RemoteService {
 
