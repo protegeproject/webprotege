@@ -451,7 +451,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
             final Optional<Revision> revision;
             try {
                 projectChangeWriteLock.lock();
-                OWLAPIProjectOWLOntologyManager manager = ((OWLAPIProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
+                ProjectOWLOntologyManager manager = ((ProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
                 List<OWLOntologyChange> effectiveChanges = getEffectiveChanges(minimisedChanges);
                 manager.getDelegate().applyChanges(effectiveChanges);
                 appliedChanges = effectiveChanges;

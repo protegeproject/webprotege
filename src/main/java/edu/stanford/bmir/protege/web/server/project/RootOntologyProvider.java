@@ -50,7 +50,7 @@ public class RootOntologyProvider implements Provider<OWLOntology> {
 
 
         // The wrapper manager
-        OWLAPIProjectOWLOntologyManager manager = new OWLAPIProjectOWLOntologyManager();
+        ProjectOWLOntologyManager manager = new ProjectOWLOntologyManager();
         manager.setDelegate(delegateManager);
 
         try {
