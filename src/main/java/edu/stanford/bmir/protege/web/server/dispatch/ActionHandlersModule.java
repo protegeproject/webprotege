@@ -260,11 +260,6 @@ public class ActionHandlersModule {
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetDiscussionThreadActionHandler(GetDiscussionThreadActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
     public ActionHandler provideMoveProjectsToTrashActionHandler(MoveProjectsToTrashActionHandler handler) {
         return handler;
     }
