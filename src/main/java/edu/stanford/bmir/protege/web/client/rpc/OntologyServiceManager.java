@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.List;
 
+@Deprecated
 public class OntologyServiceManager {
 
     private static OntologyServiceAsync proxy;
