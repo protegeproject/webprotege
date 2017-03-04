@@ -46,6 +46,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/04/2012
  */
+@Deprecated
 public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
 

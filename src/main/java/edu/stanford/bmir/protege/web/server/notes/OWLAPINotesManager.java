@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/04/2012
  */
+@Deprecated
 public interface OWLAPINotesManager {
 
     int getDirectNotesCount(OWLEntity entity);
