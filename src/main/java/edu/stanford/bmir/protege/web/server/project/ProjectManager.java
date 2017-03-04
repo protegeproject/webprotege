@@ -21,12 +21,12 @@ import java.util.Optional;
  */
 public class ProjectManager {
 
-    private final OWLAPIProjectCache projectCache;
+    private final ProjectCache projectCache;
 
     private final ProjectAccessManager projectAccessManager;
 
     @Inject
-    public ProjectManager(@Nonnull OWLAPIProjectCache projectCache,
+    public ProjectManager(@Nonnull ProjectCache projectCache,
                           @Nonnull ProjectAccessManager projectAccessManager) {
         this.projectCache = projectCache;
         this.projectAccessManager = projectAccessManager;
