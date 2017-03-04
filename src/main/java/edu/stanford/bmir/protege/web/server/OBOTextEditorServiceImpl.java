@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.project.Project;
