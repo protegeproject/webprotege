@@ -25,7 +25,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
-public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
+public class ProjectOWLOntologyManager implements OWLOntologyManager {
 
     final private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -37,7 +37,7 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
 
     private boolean sealed = false;
 
-    public OWLAPIProjectOWLOntologyManager() {
+    public ProjectOWLOntologyManager() {
     }
 
     public void setDelegate(OWLOntologyManager delegate) {
