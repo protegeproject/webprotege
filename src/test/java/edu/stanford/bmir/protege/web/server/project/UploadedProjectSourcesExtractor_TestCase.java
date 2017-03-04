@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.owlapi.SingleDocumentProjectSourcesExtractor;
-import edu.stanford.bmir.protege.web.server.owlapi.UploadedProjectSourcesExtractor;
-import edu.stanford.bmir.protege.web.server.owlapi.ZipArchiveProjectSourcesExtractor;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import org.junit.Test;
 import org.junit.runner.RunWith;

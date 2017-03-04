@@ -9,8 +9,6 @@ import edu.stanford.bmir.protege.web.server.inject.project.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
-import edu.stanford.bmir.protege.web.server.owlapi.ProjectImporter;
-import edu.stanford.bmir.protege.web.server.owlapi.ProjectImporterFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
