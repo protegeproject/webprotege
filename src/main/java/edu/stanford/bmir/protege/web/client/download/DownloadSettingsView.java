@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.download;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 
 /**

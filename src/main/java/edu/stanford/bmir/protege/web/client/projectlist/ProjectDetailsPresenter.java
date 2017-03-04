@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.projectlist;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.gwt.event.dom.client.ClickEvent;
-import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectInNewWindowRequestHandler;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;

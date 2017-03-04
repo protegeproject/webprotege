@@ -8,9 +8,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextEditorPresenter;
-import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextEditorViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextToolbarImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

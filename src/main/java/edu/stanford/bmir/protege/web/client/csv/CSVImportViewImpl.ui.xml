@@ -1,7 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:csv="urn:import:edu.stanford.bmir.protege.web.client.csv"
-             xmlns:dlg="urn:import:edu.stanford.bmir.protege.web.client.ui.library.dlg"
+             xmlns:dlg="urn:import:edu.stanford.bmir.protege.web.client.library.dlg"
         >
     <ui:style>
         .holder {

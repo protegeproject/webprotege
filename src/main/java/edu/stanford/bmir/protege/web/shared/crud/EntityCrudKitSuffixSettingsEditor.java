@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
-import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 
 /**
  * Author: Matthew Horridge<br>

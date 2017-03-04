@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.List;

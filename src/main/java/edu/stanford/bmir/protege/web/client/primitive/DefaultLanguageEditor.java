@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.lang.LangSuggestOracle;
-import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
-import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
+import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 

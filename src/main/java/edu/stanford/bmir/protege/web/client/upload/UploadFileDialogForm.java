@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.client.upload;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FileUpload;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
+import edu.stanford.bmir.protege.web.client.library.dlg.ValidationState;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogForm;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogValidator;
 
 /**
  * Author: Matthew Horridge<br>

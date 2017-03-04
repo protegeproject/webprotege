@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.filter;
 
-import edu.stanford.bmir.protege.web.client.ui.library.common.HasLabel;
+import edu.stanford.bmir.protege.web.client.library.common.HasLabel;
 
 import java.util.Objects;
 

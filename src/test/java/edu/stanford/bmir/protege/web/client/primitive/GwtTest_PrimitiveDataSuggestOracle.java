@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.collect.Sets;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
+import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 
 import java.util.ArrayList;

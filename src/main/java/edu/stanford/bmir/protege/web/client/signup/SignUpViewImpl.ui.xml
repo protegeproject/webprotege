@@ -1,6 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>

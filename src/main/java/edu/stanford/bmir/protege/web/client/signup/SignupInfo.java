@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.signup;
 
-import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
+import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import java.io.Serializable;
@@ -36,7 +36,7 @@ public class SignupInfo implements Serializable {
      * @param password The password.  Must not be {@code null}.
      * @param userName The user name for the user signing up for the account. Must not be {@code null}.  Must not be
      * equal to the guest user name.  See {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()}
-     * @param verificationServiceProvider A {@link edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider} which should be used to do human user
+     * @param verificationServiceProvider A {@link edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider} which should be used to do human user
      * verification.
      * @throws NullPointerException if any parameter is {@code null}.
      *

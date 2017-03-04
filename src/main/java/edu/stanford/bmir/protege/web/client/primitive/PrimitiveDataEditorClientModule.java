@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxImpl;
 
 /**
  * Author: Matthew Horridge<br>
