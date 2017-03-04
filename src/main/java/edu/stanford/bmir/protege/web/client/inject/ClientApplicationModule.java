@@ -44,7 +44,7 @@ import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
+import edu.stanford.bmir.protege.web.client.perspective.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectDetailsView;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectDetailsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.*;

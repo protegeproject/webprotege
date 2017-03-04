@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui;
+package edu.stanford.bmir.protege.web.client.perspective;
 
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
