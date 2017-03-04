@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.util.OntologyDocumentFileFilter;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.ZipFileExtractor;

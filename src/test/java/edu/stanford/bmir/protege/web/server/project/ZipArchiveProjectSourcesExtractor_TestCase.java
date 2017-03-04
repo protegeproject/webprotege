@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import org.junit.Before;
 import org.junit.Rule;
