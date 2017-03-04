@@ -27,7 +27,7 @@ public class ApplicationInitManager {
      * @throws NullPointerException if taskLisk is {@code null}.
      */
     public ApplicationInitManager(List<ApplicationInitializationTask> taskList) {
-        this.taskList = new ArrayList<ApplicationInitializationTask>(checkNotNull(taskList));
+        this.taskList = new ArrayList<>(checkNotNull(taskList));
     }
 
     /**
@@ -98,15 +98,15 @@ public class ApplicationInitManager {
 
 
 
-    public static interface ApplicationInitializationTask {
+    public interface ApplicationInitializationTask {
 
-        public abstract void run(ApplicationInitTaskCallback callback);
+        void run(ApplicationInitTaskCallback callback);
 
-        public abstract String getName();
+        String getName();
     }
 
 
-    public static interface ApplicationInitTaskCallback {
+    public interface ApplicationInitTaskCallback {
 
         void taskComplete();
 
