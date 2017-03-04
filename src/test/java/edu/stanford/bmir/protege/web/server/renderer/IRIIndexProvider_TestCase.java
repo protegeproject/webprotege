@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.render.IRIIndexProvider;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.IRIIndexProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

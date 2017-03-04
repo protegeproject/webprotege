@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import edu.stanford.bmir.protege.web.server.render.NullDeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.NullDeprecatedEntityChecker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

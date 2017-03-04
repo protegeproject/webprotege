@@ -40,7 +40,7 @@ import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandle
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetHeadRevisionNumberActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetRevisionSummariesActionHandler;

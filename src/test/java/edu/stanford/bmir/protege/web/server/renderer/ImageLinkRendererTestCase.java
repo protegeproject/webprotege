@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import edu.stanford.bmir.protege.web.server.render.ImageLinkRenderer;
-import edu.stanford.bmir.protege.web.server.render.LinkInfo;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.ImageLinkRenderer;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.LinkInfo;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.server.render.*;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
