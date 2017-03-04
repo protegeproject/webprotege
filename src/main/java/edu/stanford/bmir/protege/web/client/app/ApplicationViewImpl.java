@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.workspace;
+package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;

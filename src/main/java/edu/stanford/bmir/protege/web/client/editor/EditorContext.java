@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.portlet.objecteditor;
+package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;

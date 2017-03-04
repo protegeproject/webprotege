@@ -3,9 +3,8 @@ package edu.stanford.bmir.protege.web.shared.app;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
+import edu.stanford.bmir.protege.web.client.app.HasClientApplicationProperties;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

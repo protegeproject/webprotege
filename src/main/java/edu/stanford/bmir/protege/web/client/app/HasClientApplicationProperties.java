@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client;
+package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
