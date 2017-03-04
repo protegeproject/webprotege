@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client;
+package edu.stanford.bmir.protege.web.client.user;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

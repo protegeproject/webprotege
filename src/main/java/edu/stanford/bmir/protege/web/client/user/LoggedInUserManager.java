@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client;
+package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.user;
 
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.mail.ChangeEmailAddressPresenter;
 
