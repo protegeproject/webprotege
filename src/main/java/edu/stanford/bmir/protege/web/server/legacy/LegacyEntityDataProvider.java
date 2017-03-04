@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
+@Deprecated
 public interface LegacyEntityDataProvider {
 
     EntityData getEntityData(OWLEntity entity);

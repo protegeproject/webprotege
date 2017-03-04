@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHiera
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
@@ -126,12 +127,15 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     private final ProjectDetailsRepository projectDetailsRepository;
 
+    private final LegacyEntityDataManager legacyEntityDataManager;
+
     @Inject
     public Project(ProjectDocumentStore documentStore,
                    ProjectId projectId,
                    OWLDataFactory dataFactory,
                    AccessManager accessManager,
                    RenderingManager renderingManager,
+                   LegacyEntityDataManager legacyEntityDataManager,
                    EventManager<ProjectEvent<?>> projectEventManager,
                    @RootOntology OWLOntology ontology,
                    ProjectDetailsRepository projectDetailsRepository,
@@ -154,6 +158,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         this.dataFactory = dataFactory;
         this.accessManager = accessManager;
         this.renderingManager = renderingManager;
+        this.legacyEntityDataManager = legacyEntityDataManager;
         this.projectEventManager = projectEventManager;
         this.ontology = ontology;
         this.classHierarchyProvider = classHierarchyProvider;
@@ -183,6 +188,11 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     public ReverseEngineeredChangeDescriptionGeneratorFactory getChangeDescriptionGeneratorFactory() {
         return changeDescriptionGeneratorFactory;
+    }
+
+    @Deprecated
+    public LegacyEntityDataManager getLegacyEntityDataManager() {
+        return legacyEntityDataManager;
     }
 
     /**

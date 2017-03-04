@@ -15,6 +15,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 02/04/2012
  */
+@Deprecated
 public class MoveClassChangeFactory extends OWLOntologyChangeFactory {
 
     private String clsName;
@@ -32,7 +33,7 @@ public class MoveClassChangeFactory extends OWLOntologyChangeFactory {
 
     @Override
     public void createChanges(List<OWLOntologyChange> changeListToFill) {
-        RenderingManager rm = getRenderingManager();
+        LegacyEntityDataManager rm = getRenderingManager();
         OWLClass cls = rm.getEntity(clsName, EntityType.CLASS);
         OWLClass oldParentCls = rm.getEntity(oldParent, EntityType.CLASS);
         OWLClass newParentCls = rm.getEntity(newParent, EntityType.CLASS);
