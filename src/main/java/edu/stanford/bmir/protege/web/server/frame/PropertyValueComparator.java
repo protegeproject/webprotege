@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.AnnotationPropertyComparatorImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.IRIIndexProvider;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
