@@ -25,16 +25,21 @@ public class ProjectManager {
 
     private final OWLAPIProjectCache projectCache;
 
+    private final ProjectAccessManager projectAccessManager;
 
     @Inject
-    public ProjectManager(OWLAPIProjectCache projectCache) {
+    public ProjectManager(@Nonnull OWLAPIProjectCache projectCache,
+                          @Nonnull ProjectAccessManager projectAccessManager) {
         this.projectCache = projectCache;
+        this.projectAccessManager = projectAccessManager;
     }
 
 
     
     public OWLAPIProject getProject(@Nonnull ProjectId projectId,
                                     @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
+        long currentTime = System.currentTimeMillis();
+        projectAccessManager.logProjectAccess(projectId, requestingUser, currentTime);
         return projectCache.getProject(projectId);
     }
 

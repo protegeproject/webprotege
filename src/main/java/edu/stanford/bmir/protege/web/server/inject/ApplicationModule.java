@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecuto
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectCache;
+import edu.stanford.bmir.protege.web.server.project.ProjectAccessManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectAccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreImpl;
@@ -51,8 +53,14 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public ProjectManager provideOWLAPIProjectManager(OWLAPIProjectCache projectCache) {
-        return new ProjectManager(projectCache);
+    public ProjectManager provideOWLAPIProjectManager(OWLAPIProjectCache projectCache, ProjectAccessManager projectAccessManager) {
+        return new ProjectManager(projectCache, projectAccessManager);
+    }
+
+    @Singleton
+    @Provides
+    public ProjectAccessManager provideProjectAccessManager(ProjectAccessManagerImpl projectAccessManager) {
+        return projectAccessManager;
     }
 
     @Provides
