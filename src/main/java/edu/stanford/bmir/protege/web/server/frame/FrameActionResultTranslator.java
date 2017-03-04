@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 import org.semanticweb.owlapi.model.OWLEntity;
 

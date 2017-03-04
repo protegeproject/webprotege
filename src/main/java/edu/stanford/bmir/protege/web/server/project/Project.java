@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParse
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;

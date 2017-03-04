@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.renderer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.server.owlapi.LegacyEntityDataProvider;
+import edu.stanford.bmir.protege.web.server.owlapi.P3LiteralParser;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchy
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;

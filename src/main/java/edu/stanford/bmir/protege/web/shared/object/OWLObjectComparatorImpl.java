@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.object;
 
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
