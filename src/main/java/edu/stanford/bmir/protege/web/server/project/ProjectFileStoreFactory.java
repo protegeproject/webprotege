@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-public interface OWLAPIProjectFileStoreFactory {
+public interface ProjectFileStoreFactory {
 
     ProjectFileStore get(ProjectId projectId);
 }
