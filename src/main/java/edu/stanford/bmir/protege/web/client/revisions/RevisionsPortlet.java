@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.revisions;
+package edu.stanford.bmir.protege.web.client.revisions;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;

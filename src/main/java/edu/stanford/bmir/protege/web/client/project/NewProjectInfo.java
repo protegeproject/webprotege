@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.home;
+package edu.stanford.bmir.protege.web.client.project;
 
 /**
  * Author: Matthew Horridge<br>

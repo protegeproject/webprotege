@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.home;
+package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FileUpload;

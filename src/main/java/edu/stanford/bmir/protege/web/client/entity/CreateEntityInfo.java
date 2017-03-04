@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.entity;
+package edu.stanford.bmir.protege.web.client.entity;
 
 import java.util.LinkedHashSet;
 import java.util.List;

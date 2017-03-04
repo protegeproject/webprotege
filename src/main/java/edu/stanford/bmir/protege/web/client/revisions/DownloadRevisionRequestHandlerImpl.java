@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.revisions;
+package edu.stanford.bmir.protege.web.client.revisions;
 
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;

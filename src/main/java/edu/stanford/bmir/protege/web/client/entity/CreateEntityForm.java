@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.entity;
+package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.RegExp;
