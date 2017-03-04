@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.watches;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;

@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;

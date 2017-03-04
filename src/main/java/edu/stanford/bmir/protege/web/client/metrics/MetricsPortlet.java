@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.metrics;
 
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

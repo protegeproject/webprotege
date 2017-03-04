@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;

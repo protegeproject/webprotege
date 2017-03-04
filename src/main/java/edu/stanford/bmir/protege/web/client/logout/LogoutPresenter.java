@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.logout;
 
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 
 import javax.inject.Inject;
