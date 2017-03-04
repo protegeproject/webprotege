@@ -23,7 +23,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
-import edu.stanford.bmir.protege.web.server.owlapi.change.WatchedChangesManager;
+import edu.stanford.bmir.protege.web.server.watches.WatchedChangesManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
