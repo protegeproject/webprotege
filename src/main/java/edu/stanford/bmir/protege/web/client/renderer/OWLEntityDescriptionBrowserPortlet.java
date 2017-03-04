@@ -81,7 +81,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
         if (entity.isPresent()) {
             dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entity.get()),
                                            new DispatchServiceCallback<GetEntityRenderingResult>() {

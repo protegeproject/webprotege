@@ -177,7 +177,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                     treePanel.getSelectionModel().select((TreeNode) node);
                     PopupMenu contextMenu = new PopupMenu();
                     contextMenu.addItem("Show IRI", event -> {
-                        Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                        java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                         if (selectedEntity.isPresent()) {
                             String iri = selectedEntity.get().getIRI().toQuotedString();
                             InputBox.showOkDialog("Class IRI", true, iri, input -> {
@@ -799,17 +799,17 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     private Optional<OWLClassData> getSelectedTreeNodeClassData() {
         List<EntityData> sel = getSelectedTreeNodeEntityData();
         if (sel == null) {
-            return com.google.common.base.Optional.absent();
+            return Optional.absent();
         }
         if (sel.isEmpty()) {
-            return com.google.common.base.Optional.absent();
+            return Optional.absent();
         }
         EntityData firstSel = sel.get(0);
-        com.google.common.base.Optional<OWLClass> cls = toOWLClass(firstSel);
+        Optional<OWLClass> cls = toOWLClass(firstSel);
         if (!cls.isPresent()) {
-            return com.google.common.base.Optional.absent();
+            return Optional.absent();
         }
-        return com.google.common.base.Optional.of(new OWLClassData(cls.get(), firstSel.getBrowserText()));
+        return Optional.of(new OWLClassData(cls.get(), firstSel.getBrowserText()));
     }
 
     public List<EntityData> getSelectedTreeNodeEntityData() {
@@ -854,7 +854,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
 
-    private void setSelectionInTree(Optional<OWLEntity> selection) {
+    private void setSelectionInTree(java.util.Optional<OWLEntity> selection) {
         if (!selection.isPresent()) {
             return;
         }
@@ -1019,7 +1019,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
         if (getSelectedTreeNodeClass().equals(entity)) {
             return;
         }
@@ -1058,7 +1058,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         treePanel.setVisible(true);
         setSubclassesLoaded(root, false);
 
-        Optional<OWLEntity> selection = getSelectedEntity();
+        java.util.Optional<OWLEntity> selection = getSelectedEntity();
         if (selection.isPresent() && !selection.get().isTopEntity()) {
             setSelectionInTree(selection);
         }

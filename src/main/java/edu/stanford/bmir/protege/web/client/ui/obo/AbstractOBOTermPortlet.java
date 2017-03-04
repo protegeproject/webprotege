@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
@@ -9,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -31,7 +32,7 @@ public abstract class AbstractOBOTermPortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    protected void handleBeforeSetEntity(Optional<OWLEntity> existingEntity) {
+    protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {
         if(existingEntity.isPresent() && isDirty()) {
             commitChangesForEntity(existingEntity.get());
         }

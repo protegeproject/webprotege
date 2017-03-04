@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
@@ -57,7 +56,7 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        com.google.common.base.Optional<OWLEntity> current = getSelectedEntity();
+        java.util.Optional<OWLEntity> current = getSelectedEntity();
         if(!current.isPresent()) {
             editor.clearValue();
             pristineValue = Optional.absent();

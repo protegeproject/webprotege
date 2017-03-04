@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -22,6 +21,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -87,7 +87,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         return projectId;
     }
 
-    protected void handleBeforeSetEntity(Optional<OWLEntity> existingEntity) {
+    protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {
     }
 
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {

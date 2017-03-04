@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.selection;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -15,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SelectedEntityManager<D extends OWLEntity> {
 
 
-    private Optional<D> lastSelection = Optional.absent();
+    private Optional<D> lastSelection = Optional.empty();
 
 
     @Inject
@@ -27,8 +28,7 @@ public class SelectedEntityManager<D extends OWLEntity> {
     }
 
     public void setSelection(D entityData) {
-        checkNotNull(entityData);
-        lastSelection = Optional.of(entityData);
+        lastSelection = Optional.of(checkNotNull(entityData));
     }
 
 

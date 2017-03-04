@@ -45,12 +45,12 @@ public class ItemSelection implements Iterable<Item<?>> {
         return items.contains(item);
     }
 
-    public Optional<Item<?>> getFirst() {
+    public java.util.Optional<Item<?>> getFirst() {
         if(items.isEmpty()) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         else {
-            return Optional.<Item<?>>of(items.get(0));
+            return java.util.Optional.<Item<?>>of(items.get(0));
         }
     }
 
