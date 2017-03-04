@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.home;
+package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
@@ -7,7 +7,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;

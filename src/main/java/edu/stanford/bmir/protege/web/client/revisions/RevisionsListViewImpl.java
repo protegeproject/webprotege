@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.revisions;
+package edu.stanford.bmir.protege.web.client.revisions;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.ClickableTextCell;

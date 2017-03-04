@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.entity;
+package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;

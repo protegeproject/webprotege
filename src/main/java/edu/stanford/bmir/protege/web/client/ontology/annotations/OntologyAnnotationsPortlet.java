@@ -35,8 +35,6 @@ import java.util.Set;
 @Portlet(id = "portlets.OntologyAnnotations", title = "Ontology Annotations")
 public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
 
-    private static final int DEFAULT_HEIGHT = 400;
-
     private final AnnotationsView annotationsView;
 
     private Optional<Set<OWLAnnotation>> lastSet = Optional.absent();
@@ -53,18 +51,8 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
         this.permissionChecker = permissionChecker;
         setTitle("Ontology annotations");
         setWidget(new ScrollPanel(annotationsView.asWidget()));
-        annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<Set<OWLAnnotation>>> event) {
-                handleOntologyAnnotationsChanged();
-            }
-        });
-        addProjectEventHandler(OntologyFrameChangedEvent.TYPE, new OntologyFrameChangedEventHandler() {
-            @Override
-            public void ontologyFrameChanged(OntologyFrameChangedEvent event) {
-                updateView();
-            }
-        });
+        annotationsView.addValueChangeHandler(event -> handleOntologyAnnotationsChanged());
+        addProjectEventHandler(OntologyFrameChangedEvent.TYPE, event -> updateView());
         updateState();
         updateView();
     }
