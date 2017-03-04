@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -26,7 +26,7 @@ public abstract class AbstractProjectChangeHandler<T, A extends Action<R> & HasP
     }
 
     @Override
-    final protected R execute(A action, OWLAPIProject project, ExecutionContext executionContext) {
+    final protected R execute(A action, Project project, ExecutionContext executionContext) {
         EventTag tag = project.getEventManager().getCurrentTag();
         ChangeListGenerator<T> changeListGenerator = getChangeListGenerator(action, project, executionContext);
         final ChangeDescriptionGenerator<T> changeDescription = getChangeDescription(action, project, executionContext);
@@ -35,11 +35,11 @@ public abstract class AbstractProjectChangeHandler<T, A extends Action<R> & HasP
         return createActionResult(changeApplicationResult, action, project, executionContext, eventList);
     }
 
-    protected abstract ChangeListGenerator<T> getChangeListGenerator(A action, OWLAPIProject project, ExecutionContext executionContext);
+    protected abstract ChangeListGenerator<T> getChangeListGenerator(A action, Project project, ExecutionContext executionContext);
 
-    protected abstract ChangeDescriptionGenerator<T> getChangeDescription(A action, OWLAPIProject project, ExecutionContext executionContext);
+    protected abstract ChangeDescriptionGenerator<T> getChangeDescription(A action, Project project, ExecutionContext executionContext);
 
-    protected abstract R createActionResult(ChangeApplicationResult<T> changeApplicationResult, A action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList);
+    protected abstract R createActionResult(ChangeApplicationResult<T> changeApplicationResult, A action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList);
 
 
 

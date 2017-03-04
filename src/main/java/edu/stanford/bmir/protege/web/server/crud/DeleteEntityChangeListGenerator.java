@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.RemoveAxiom;
@@ -26,7 +26,7 @@ public class DeleteEntityChangeListGenerator implements ChangeListGenerator<OWLE
     }
 
     @Override
-    public OntologyChangeList<OWLEntity> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<OWLEntity> generateChanges(Project project, ChangeGenerationContext context) {
         OntologyChangeList.Builder<OWLEntity> builder = new OntologyChangeList.Builder<OWLEntity>();
         OWLEntityRemover remover = new OWLEntityRemover(
                 project.getRootOntology().getImportsClosure());

@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameTranslator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
@@ -40,13 +40,13 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
     }
 
     @Override
-    protected GetFormDescriptorResult execute(GetFormDescriptorAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetFormDescriptorResult execute(GetFormDescriptorAction action, Project project, ExecutionContext executionContext) {
         return getDummy(action.getSubject(), project, project.getDataFactory());
     }
 
 
 
-    private GetFormDescriptorResult getDummy(OWLEntity entity, OWLAPIProject project, final OWLDataFactory dataFactory) {
+    private GetFormDescriptorResult getDummy(OWLEntity entity, Project project, final OWLDataFactory dataFactory) {
         if(!entity.isOWLClass()) {
             return new GetFormDescriptorResult(project.getProjectId(), entity, FormDescriptor.empty(), FormData.empty());
         }

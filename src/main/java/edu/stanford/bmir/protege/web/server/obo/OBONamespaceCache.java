@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;
@@ -30,14 +30,14 @@ public class OBONamespaceCache {
 
     private Lock WRITE_LOCK = READ_WRITE_LOCK.writeLock();
 
-    private OWLAPIProject project;
+    private Project project;
 
 
-    public static OBONamespaceCache createCache(OWLAPIProject project) {
+    public static OBONamespaceCache createCache(Project project) {
         return new OBONamespaceCache(project);
     }
 
-    private OBONamespaceCache(OWLAPIProject project) {
+    private OBONamespaceCache(Project project) {
         this.project = project;
         rebuildNamespaceCache();
     }

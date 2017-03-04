@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
@@ -42,7 +42,7 @@ public class GetProjectChangesActionHandler extends AbstractHasProjectActionHand
     }
 
     @Override
-    protected GetProjectChangesResult execute(final GetProjectChangesAction action, final OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetProjectChangesResult execute(final GetProjectChangesAction action, final Project project, ExecutionContext executionContext) {
         List<ProjectChange> changeList = project.getProjectChangesManager().getProjectChanges(action.getSubject());
         return new GetProjectChangesResult(ImmutableList.copyOf(changeList));
     }

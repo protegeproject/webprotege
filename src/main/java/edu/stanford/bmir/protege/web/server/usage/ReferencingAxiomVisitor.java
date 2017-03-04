@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import org.semanticweb.owlapi.model.*;
 
@@ -19,11 +19,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageReference>> {
 
-    private OWLAPIProject project;
+    private Project project;
 
     private OWLEntity usageOf;
 
-    public ReferencingAxiomVisitor(OWLAPIProject project, OWLEntity usageOf) {
+    public ReferencingAxiomVisitor(Project project, OWLEntity usageOf) {
         this.project = checkNotNull(project);
         this.usageOf = checkNotNull(usageOf);
     }

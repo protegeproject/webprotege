@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.change;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
@@ -38,13 +38,13 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(RevertRevisionAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(RevertRevisionAction action, Project project, ExecutionContext executionContext) {
         RevisionNumber revisionNumber = action.getRevisionNumber();
         return new RevisionReverterChangeListGenerator(revisionNumber, reverterProvider.get());
     }
 
     @Override
-    protected RevertRevisionResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult, RevertRevisionAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected RevertRevisionResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult, RevertRevisionAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         return new RevertRevisionResult(project.getProjectId(), eventList);
     }
 
@@ -55,7 +55,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
     }
 
     @Override
-    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(RevertRevisionAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(RevertRevisionAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>("Reverted the changes in Revision " + action.getRevisionNumber().getValue());
     }
 }

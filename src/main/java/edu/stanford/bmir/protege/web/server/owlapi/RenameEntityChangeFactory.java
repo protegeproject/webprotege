@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -25,7 +25,7 @@ public class RenameEntityChangeFactory extends OWLOntologyChangeFactory {
     
     private String newName;
 
-    public RenameEntityChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String oldName, String newName) {
+    public RenameEntityChangeFactory(Project project, UserId userId, String changeDescription, String oldName, String newName) {
         super(project, userId, changeDescription);
         this.oldName = oldName;
         this.newName = newName;

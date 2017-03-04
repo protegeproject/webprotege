@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -47,17 +47,17 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
     }
 
     @Override
-    protected ChangeListGenerator<Set<OWLObjectProperty>> getChangeListGenerator(CreateObjectPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Set<OWLObjectProperty>> getChangeListGenerator(CreateObjectPropertiesAction action, Project project, ExecutionContext executionContext) {
         return new CreateObjectPropertiesChangeGenerator(action.getBrowserTexts(), action.getParent());
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLObjectProperty>> getChangeDescription(CreateObjectPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Set<OWLObjectProperty>> getChangeDescription(CreateObjectPropertiesAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<Set<OWLObjectProperty>>("Created object properties");
     }
 
     @Override
-    protected CreateObjectPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLObjectProperty>> changeApplicationResult, CreateObjectPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected CreateObjectPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLObjectProperty>> changeApplicationResult, CreateObjectPropertiesAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Optional<Set<OWLObjectProperty>> result = changeApplicationResult.getSubject();
         Map<OWLObjectProperty, String> map = new HashMap<OWLObjectProperty, String>();
         for(OWLObjectProperty prop : result.get()) {

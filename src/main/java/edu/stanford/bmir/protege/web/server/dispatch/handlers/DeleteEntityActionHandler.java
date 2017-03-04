@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescription
 import edu.stanford.bmir.protege.web.server.crud.DeleteEntityChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -47,17 +47,17 @@ public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLE
     }
 
     @Override
-    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(DeleteEntityAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(DeleteEntityAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<OWLEntity>(getChangeDescription(action.getSubject(), project.getRenderingManager().getBrowserText(action.getSubject())));
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(DeleteEntityAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(DeleteEntityAction action, Project project, ExecutionContext executionContext) {
         return new DeleteEntityChangeListGenerator(action.getSubject());
     }
 
     @Override
-    protected DeleteEntityResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult, DeleteEntityAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected DeleteEntityResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult, DeleteEntityAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         return new DeleteEntityResult(eventList);
     }
 

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.renderer;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -39,7 +39,7 @@ public class GetEntityDataActionHandler_TestCase {
     private RenderingManager renderingManager;
 
     @Mock
-    private OWLAPIProject project;
+    private Project project;
 
     private Map<OWLEntity, OWLEntityData> renderingMap;
 

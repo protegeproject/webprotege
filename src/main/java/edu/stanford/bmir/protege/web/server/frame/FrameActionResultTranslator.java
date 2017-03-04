@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -14,13 +14,13 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class FrameActionResultTranslator<F extends EntityFrame<E>, E extends OWLEntity> {
 
-    private OWLAPIProject project;
+    private Project project;
 
     private FrameTranslator<F, E> translator;
 
     private E subject;
 
-    public FrameActionResultTranslator(E subject, OWLAPIProject project, FrameTranslator<F, E> translator) {
+    public FrameActionResultTranslator(E subject, Project project, FrameTranslator<F, E> translator) {
         this.subject = subject;
         this.project = project;
         this.translator = translator;

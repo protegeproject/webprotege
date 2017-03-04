@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
@@ -57,7 +57,7 @@ public class GetProjectEventsActionHandler implements ActionHandler<GetProjectEv
         if(!projectManager.isActive(projectId)) {
             return getEmptyResult(projectId, sinceTag);
         }
-        Optional<OWLAPIProject> project = projectManager.getProjectIfActive(projectId);
+        Optional<Project> project = projectManager.getProjectIfActive(projectId);
         if(!project.isPresent()) {
             return getEmptyResult(projectId, sinceTag);
         }

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
@@ -18,7 +18,7 @@ import java.util.Set;
 public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectPropertyFrame, OWLObjectProperty> {
 
     @Override
-    public ObjectPropertyFrame getFrame(OWLObjectProperty subject, OWLOntology rootOntology, OWLAPIProject project) {
+    public ObjectPropertyFrame getFrame(OWLObjectProperty subject, OWLOntology rootOntology, Project project) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<OWLAxiom>();
 
         Set<OWLClass> domains = new HashSet<>();

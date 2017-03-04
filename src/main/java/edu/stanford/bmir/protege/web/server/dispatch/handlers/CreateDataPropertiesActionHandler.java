@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -36,12 +36,12 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     }
 
     @Override
-    protected ChangeListGenerator<Set<OWLDataProperty>> getChangeListGenerator(CreateDataPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Set<OWLDataProperty>> getChangeListGenerator(CreateDataPropertiesAction action, Project project, ExecutionContext executionContext) {
         return new CreateDataPropertiesChangeGenerator(action.getBrowserTexts(), action.getParent());
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLDataProperty>> getChangeDescription(CreateDataPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Set<OWLDataProperty>> getChangeDescription(CreateDataPropertiesAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>(action.getBrowserTexts().size() == 1 ?
                                                                     String.format("Created data property %s as a sub-property of %s",
                                                                                   action.getBrowserTexts().iterator().next(),
@@ -51,7 +51,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     }
 
     @Override
-    protected CreateDataPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLDataProperty>> changeApplicationResult, CreateDataPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected CreateDataPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLDataProperty>> changeApplicationResult, CreateDataPropertiesAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Map<OWLDataProperty, String> map = new HashMap<OWLDataProperty, String>();
         for(OWLDataProperty dataProperty : changeApplicationResult.getSubject().get()) {
             map.put(dataProperty, project.getRenderingManager().getBrowserText(dataProperty));

@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
@@ -60,7 +60,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
     @Override
-    protected ComputeProjectMergeResult execute(ComputeProjectMergeAction action, final OWLAPIProject project, ExecutionContext executionContext) {
+    protected ComputeProjectMergeResult execute(ComputeProjectMergeAction action, final Project project, ExecutionContext executionContext) {
         try {
             DocumentId documentId = action.getProjectDocumentId();
 
@@ -103,7 +103,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
     private List<DiffElement<String, SafeHtml>> renderDiff(
-            OWLAPIProject project,
+            Project project,
             OWLOntology projectRootOntology,
             OWLOntology uploadedRootOntology,
             ShortFormProvider projectShortFormProvider,
@@ -148,7 +148,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
 
-    private void sortDiff(ShortFormProvider dualShortFormProvider, OWLAPIProject project, List<DiffElement<String, OWLAxiom>> diffElements) {
+    private void sortDiff(ShortFormProvider dualShortFormProvider, Project project, List<DiffElement<String, OWLAxiom>> diffElements) {
         final Comparator<OWLAxiom> axiomComparator = getDefaultAxiomComparator(dualShortFormProvider, project);
 
 
@@ -182,7 +182,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
     private Comparator<OWLAxiom> getDefaultAxiomComparator(ShortFormProvider dualShortFormProvider,
-                                                           OWLAPIProject project) {
+                                                           Project project) {
 
         return project.getAxiomComparator();
     }

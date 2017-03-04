@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -38,17 +38,17 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     }
 
     @Override
-    protected ChangeListGenerator<Set<OWLAnnotationProperty>> getChangeListGenerator(CreateAnnotationPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Set<OWLAnnotationProperty>> getChangeListGenerator(CreateAnnotationPropertiesAction action, Project project, ExecutionContext executionContext) {
         return new CreateAnnotationPropertiesChangeGenerator(action.getBrowserTexts(), action.getParent());
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLAnnotationProperty>> getChangeDescription(CreateAnnotationPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Set<OWLAnnotationProperty>> getChangeDescription(CreateAnnotationPropertiesAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<Set<OWLAnnotationProperty>>("Created annotation properties");
     }
 
     @Override
-    protected CreateAnnotationPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLAnnotationProperty>> changeApplicationResult, CreateAnnotationPropertiesAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected CreateAnnotationPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLAnnotationProperty>> changeApplicationResult, CreateAnnotationPropertiesAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Map<OWLAnnotationProperty, String> map = new HashMap<OWLAnnotationProperty, String>();
         for(OWLAnnotationProperty result : changeApplicationResult.getSubject().get()) {
             map.put(result, project.getRenderingManager().getBrowserText(result));

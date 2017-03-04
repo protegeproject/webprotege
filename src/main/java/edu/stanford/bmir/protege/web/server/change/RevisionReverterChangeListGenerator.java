@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
@@ -39,7 +39,7 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
     }
 
     @Override
-    public OntologyChangeList<OWLEntity> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<OWLEntity> generateChanges(Project project, ChangeGenerationContext context) {
         RevisionManager changeManager = project.getChangeManager();
         Optional<Revision> revision = changeManager.getRevision(revisionNumber);
         if(!revision.isPresent()) {

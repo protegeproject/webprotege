@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsComparator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -47,7 +47,7 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
         List<OWLAnnotation> result = new ArrayList<>(project.getRootOntology().getAnnotations());
         Collections.sort(result, new OntologyAnnotationsComparator(project));
         BrowserTextMap browserTextMap = BrowserTextMap.build(project.getRenderingManager(), result);

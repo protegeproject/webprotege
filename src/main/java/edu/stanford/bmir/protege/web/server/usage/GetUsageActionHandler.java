@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
@@ -43,7 +43,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
     }
 
     @Override
-    protected GetUsageResult execute(GetUsageAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetUsageResult execute(GetUsageAction action, Project project, ExecutionContext executionContext) {
         List<UsageReference> usage = new ArrayList<UsageReference>();
         final OWLEntity subject = action.getSubject();
         ReferencingAxiomVisitor visitor = new ReferencingAxiomVisitor(project, subject);

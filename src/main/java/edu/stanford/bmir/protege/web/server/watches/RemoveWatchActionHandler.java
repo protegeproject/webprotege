@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.watches;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
@@ -28,7 +28,7 @@ public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<Re
 
 
     @Override
-    protected RemoveWatchesResult execute(RemoveWatchesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected RemoveWatchesResult execute(RemoveWatchesAction action, Project project, ExecutionContext executionContext) {
         EventTag tag = project.getEventManager().getCurrentTag();
         for(Watch<?> watch : action.getWatches()) {
             project.getWatchManager().removeWatch(watch, action.getUserId());

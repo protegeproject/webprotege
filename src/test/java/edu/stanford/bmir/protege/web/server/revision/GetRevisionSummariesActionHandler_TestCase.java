@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
@@ -35,7 +35,7 @@ public class GetRevisionSummariesActionHandler_TestCase {
     private GetRevisionSummariesAction action;
 
     @Mock
-    private OWLAPIProject project;
+    private Project project;
 
     @Mock
     private ExecutionContext executionContext;

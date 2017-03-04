@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -47,7 +47,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     public synchronized Set<OBONamespace> getNamespaces(ProjectId projectId) {
 //        if (cache == null) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OBONamespaceCache cache = OBONamespaceCache.createCache(project);
 //        }
         return cache.getNamespaces();
@@ -66,7 +66,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
 
     public void setTermId(ProjectId projectId, OWLEntity entity, OBOTermId termId) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OBOTermId existingTermId = getTermId(projectId, entity);
         IRI iri = entity.getIRI();
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
@@ -90,7 +90,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     public List<OBOXRef> getXRefs(ProjectId projectId, OWLEntity term) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         IRI subject = term.getIRI();
         List<OBOXRef> xrefs = new ArrayList<OBOXRef>();
         for (OWLAnnotationAssertionAxiom ax : project.getRootOntology().getAnnotationAssertionAxioms(subject)) {
@@ -117,7 +117,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         IRI subject = term.getIRI();
         Set<OWLAnnotation> annotations = convertOBOXRefsToOWLAnnotations(projectId, xrefs);
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLOntology rootOntology = project.getRootOntology();
 
         // Remove OLD
@@ -138,7 +138,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     private String getStringAnnotationValue(ProjectId projectId, org.semanticweb.owlapi.model.IRI annotationSubject, org.semanticweb.owlapi.model.IRI annotationPropertyIRI, String defaultValue) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLAnnotationAssertionAxiom labelAnnotation = null;
         for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
             Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(annotationSubject);
@@ -159,7 +159,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     public List<OWLOntologyChange> replaceStringAnnotationValue(ProjectId projectId, org.semanticweb.owlapi.model.IRI annotationSubject, org.semanticweb.owlapi.model.IRI annotationPropertyIRI, String replaceWith) {
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLOntology rootOntology = project.getRootOntology();
 
         OWLDataFactory df = project.getDataFactory();
@@ -214,7 +214,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         if (!(term.isOWLClass())) {
             return OBOTermDefinition.empty();
         }
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLAnnotationAssertionAxiom definitionAnnotation = null;
         for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
             Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(term.getIRI());
@@ -266,7 +266,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         List<OBOXRef> xRefs = definition.getXRefs();
         Set<OWLAnnotation> xrefAnnotations = convertOBOXRefsToOWLAnnotations(projectId, xRefs);
 
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         IRI subject = term.getIRI();
         OWLDataFactory df = project.getDataFactory();
         final IRI defIRI = getIRI(OBOFormatConstants.OboFormatTag.TAG_DEF);
@@ -319,7 +319,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
 
     private OWLAnnotation convertXRefToAnnotation(ProjectId projectId, OBOXRef xref) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLDataFactory df = project.getDataFactory();
         OWLAnnotationProperty xrefAnnotationProperty = df.getOWLAnnotationProperty(getXRefPropertyIRI());
         String oboId = xref.toOBOId();
@@ -467,13 +467,13 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         }
     }
 
-    private OWLAPIProject getProject(ProjectId projectId) {
+    private Project getProject(ProjectId projectId) {
         return projectManager.getProject(projectId, getUserInSession());
     }
 
     public Collection<OBOTermSynonym> getSynonyms(ProjectId projectId, OWLEntity term) {
         Set<OBOTermSynonym> result = new HashSet<OBOTermSynonym>();
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
             Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(term.getIRI());
             for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
@@ -491,7 +491,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     public void setSynonyms(ProjectId projectId, OWLEntity term, Collection<OBOTermSynonym> synonyms) throws NotSignedInException {
         org.semanticweb.owlapi.model.IRI subject = term.getIRI();
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLOntology rootOntology = project.getRootOntology();
         OWLDataFactory df = project.getDataFactory();
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
@@ -579,7 +579,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     public OBOTermRelationships getRelationships(ProjectId projectId, OWLClass term) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLClass cls = project.getDataFactory().getOWLClass(term.getIRI());
         Set<OWLSubClassOfAxiom> subClassOfAxioms = project.getRootOntology().getSubClassAxiomsForSubClass(cls);
         Set<OBORelationship> rels = new HashSet<OBORelationship>();
@@ -611,7 +611,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         if (relationships == null) {
             throw new NullPointerException("relationships must not be null");
         }
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
 
         OWLDataFactory dataFactory = project.getDataFactory();
 
@@ -677,7 +677,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     public OBOTermCrossProduct getCrossProduct(ProjectId projectId, OWLClass term) {
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLDataFactory df = project.getDataFactory();
         OWLClass cls = toOWLClass(df, term);
         OWLEquivalentClassesAxiom axiom = getCrossProductEquivalentClassesAxiom(project.getRootOntology(), cls);
@@ -776,7 +776,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             throw new RuntimeException("crossProduct must not be null");
         }
 
-        OWLAPIProject project = getProject(projectId);
+        Project project = getProject(projectId);
         OWLDataFactory df = project.getDataFactory();
 
         Set<OWLClassExpression> intersectionOperands = new HashSet<OWLClassExpression>();
@@ -814,11 +814,11 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
 
-    private OWLClassData toData(OWLClass cls, OWLAPIProject project) {
+    private OWLClassData toData(OWLClass cls, Project project) {
         return new OWLClassData(cls, project.getRenderingManager().getBrowserText(cls));
     }
 
-    private OWLObjectPropertyData toData(OWLObjectProperty property, OWLAPIProject project) {
+    private OWLObjectPropertyData toData(OWLObjectProperty property, Project project) {
         return new OWLObjectPropertyData(property, project.getRenderingManager().getBrowserText(property));
     }
 

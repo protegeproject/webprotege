@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.change.SilentChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.*;
@@ -34,7 +34,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     }
 
     @Override
-    public OntologyChangeList<Integer> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<Integer> generateChanges(Project project, ChangeGenerationContext context) {
         OntologyChangeList.Builder<Integer> changesBuilder = new OntologyChangeList.Builder<Integer>();
         for (CSVRow row : csvGrid.getRows()) {
             for (CSVColumnDescriptor columnDescriptor : descriptor.getColumnDescriptors()) {
@@ -74,7 +74,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         return changesBuilder.build(csvGrid.getRowCount());
     }
 
-    private OWLAxiom getPlacementAxiom(OWLAPIProject project, String displayName) {
+    private OWLAxiom getPlacementAxiom(Project project, String displayName) {
         OWLAxiom placementAxiom;
         if(descriptor.getRowImportType() == CSVRowImportType.CLASS) {
             placementAxiom = project.getDataFactory().getOWLSubClassOfAxiom(DataFactory.getFreshOWLEntity(EntityType.CLASS, displayName), importRootClass);
@@ -85,7 +85,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         return placementAxiom;
     }
 
-    private Optional<OWLClassExpression> getColumnValueAsClassExpression(OWLAPIProject project, String value, OWLObjectProperty columnProperty, ColumnType columnType) {
+    private Optional<OWLClassExpression> getColumnValueAsClassExpression(Project project, String value, OWLObjectProperty columnProperty, ColumnType columnType) {
         if(value.trim().isEmpty()) {
             return Optional.absent();
         }
@@ -104,7 +104,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         return Optional.of(superCls);
     }
 
-    private Optional<? extends OWLAnnotationValue> getColumnValueAsAnnotationValue(OWLAPIProject project, String value, ColumnType columnType) {
+    private Optional<? extends OWLAnnotationValue> getColumnValueAsAnnotationValue(Project project, String value, ColumnType columnType) {
         Optional<? extends OWLAnnotationValue> annotationValue;
         if (columnType == ColumnType.CLASS) {
             annotationValue = Optional.of(DataFactory.getFreshOWLEntityIRI(value));
@@ -118,7 +118,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         return annotationValue;
     }
 
-    private Optional<OWLLiteral> getColumnValueAsLiteral(OWLAPIProject project, String value, ColumnType columnType) {
+    private Optional<OWLLiteral> getColumnValueAsLiteral(Project project, String value, ColumnType columnType) {
         try {
             OWLLiteral filler;
             if (columnType == ColumnType.DOUBLE) {
@@ -141,7 +141,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     }
 
 
-    private OWLAxiom getAxiom(OWLAPIProject project, String rowEntityDisplayName, CSVColumnDescriptor columnDescriptor, OWLClassExpression superCls) {
+    private OWLAxiom getAxiom(Project project, String rowEntityDisplayName, CSVColumnDescriptor columnDescriptor, OWLClassExpression superCls) {
         if (descriptor.getRowImportType() == CSVRowImportType.CLASS) {
             OWLClass rowCls = DataFactory.getFreshOWLEntity(EntityType.CLASS, rowEntityDisplayName);
             return project.getDataFactory().getOWLSubClassOfAxiom(rowCls, superCls);

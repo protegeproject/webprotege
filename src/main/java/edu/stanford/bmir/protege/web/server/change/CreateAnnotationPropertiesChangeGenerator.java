@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -22,7 +22,7 @@ public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEnt
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLAnnotationProperty freshEntity, OWLAPIProject project, ChangeGenerationContext context, Optional<OWLAnnotationProperty> parent) {
+    protected Set<OWLAxiom> createParentPlacementAxioms(OWLAnnotationProperty freshEntity, Project project, ChangeGenerationContext context, Optional<OWLAnnotationProperty> parent) {
         if(parent.isPresent()) {
             OWLAxiom ax = project.getDataFactory().getOWLSubAnnotationPropertyOfAxiom(freshEntity, parent.get());
             return Collections.singleton(ax);

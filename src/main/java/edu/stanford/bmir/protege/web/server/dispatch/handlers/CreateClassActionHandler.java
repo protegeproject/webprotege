@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
@@ -53,17 +53,17 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     }
 
     @Override
-    protected ChangeListGenerator<OWLClass> getChangeListGenerator(final CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<OWLClass> getChangeListGenerator(final CreateClassAction action, Project project, ExecutionContext executionContext) {
         return new CreateClassChangeGenerator(action.getBrowserText(), action.getSuperClass());
     }
 
     @Override
-    protected ChangeDescriptionGenerator<OWLClass> getChangeDescription(CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<OWLClass> getChangeDescription(CreateClassAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>(OWLMessageFormatter.formatMessage("Created {0} as a subclass of {1}", project, action.getBrowserText(), action.getSuperClass()));
     }
 
     @Override
-    protected CreateClassResult createActionResult(ChangeApplicationResult<OWLClass> changeApplicationResult, CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected CreateClassResult createActionResult(ChangeApplicationResult<OWLClass> changeApplicationResult, CreateClassAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         final OWLClass subclass = changeApplicationResult.getSubject().get();
         final ObjectPath<OWLClass> pathToRoot = getPathToRoot(project, subclass, action.getSuperClass());
         BrowserTextMap.Builder browserTextMap = new BrowserTextMap.Builder();
@@ -72,7 +72,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
         return new CreateClassResult(subclass, pathToRoot, browserTextMap.build(project.getRenderingManager()), eventList);
     }
 
-    private ObjectPath<OWLClass> getPathToRoot(OWLAPIProject project, OWLClass subClass, OWLClass superClass) {
+    private ObjectPath<OWLClass> getPathToRoot(Project project, OWLClass subClass, OWLClass superClass) {
         Set<List<OWLClass>> paths = project.getClassHierarchyProvider().getPathsToRoot(subClass);
         if(paths.isEmpty()) {
             logger.info("[WARNING] Path to root not found for SubClass: %s and SuperClass: %", superClass);

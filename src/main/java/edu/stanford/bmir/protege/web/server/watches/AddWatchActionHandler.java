@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -50,7 +50,7 @@ public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWa
     }
 
     @Override
-    protected AddWatchResult execute(AddWatchAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected AddWatchResult execute(AddWatchAction action, Project project, ExecutionContext executionContext) {
         final EventManager<ProjectEvent<?>> eventManager = project.getEventManager();
         EventTag startTag = eventManager.getCurrentTag();
         WatchManager watchManager = project.getWatchManager();

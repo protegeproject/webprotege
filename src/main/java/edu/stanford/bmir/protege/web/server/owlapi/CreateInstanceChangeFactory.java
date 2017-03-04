@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
@@ -19,7 +19,7 @@ public class CreateInstanceChangeFactory extends OWLOntologyChangeFactory {
     
     private String typeName;
 
-    public CreateInstanceChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String individualName, String typeName) {
+    public CreateInstanceChangeFactory(Project project, UserId userId, String changeDescription, String individualName, String typeName) {
         super(project, userId, changeDescription);
         this.individualName = individualName;
         this.typeName = typeName;

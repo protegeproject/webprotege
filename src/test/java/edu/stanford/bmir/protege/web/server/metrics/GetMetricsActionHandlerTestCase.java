@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.metrics;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
@@ -31,7 +31,7 @@ public class GetMetricsActionHandlerTestCase {
     protected ProjectId projectId;
 
     @Mock
-    protected OWLAPIProject project;
+    protected Project project;
 
     @Mock
     protected OWLAPIProjectMetricsManager metricsManager;

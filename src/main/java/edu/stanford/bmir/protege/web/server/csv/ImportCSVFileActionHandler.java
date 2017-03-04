@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescription
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
@@ -50,7 +50,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     }
 
     @Override
-    protected ChangeListGenerator<Integer> getChangeListGenerator(ImportCSVFileAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Integer> getChangeListGenerator(ImportCSVFileAction action, Project project, ExecutionContext executionContext) {
         CSVGrid csvGrid = parseCSVGrid(action);
         return new ImportCSVFileChangeListGenerator(action.getImportRootClass(), csvGrid, action.getDescriptor());
     }
@@ -70,12 +70,12 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Integer> getChangeDescription(ImportCSVFileAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Integer> getChangeDescription(ImportCSVFileAction action, Project project, ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>("Imported CSV File");
     }
 
     @Override
-    protected ImportCSVFileResult createActionResult(ChangeApplicationResult<Integer> changeApplicationResult, ImportCSVFileAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected ImportCSVFileResult createActionResult(ChangeApplicationResult<Integer> changeApplicationResult, ImportCSVFileAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         return new ImportCSVFileResult(new EventList<ProjectEvent<?>>(EventTag.get(0), EventTag.get(1)), changeApplicationResult.getSubject().get());
     }
 

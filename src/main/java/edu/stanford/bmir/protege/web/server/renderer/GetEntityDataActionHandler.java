@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
@@ -31,7 +31,7 @@ public class GetEntityDataActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected GetEntityDataResult execute(GetEntityDataAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetEntityDataResult execute(GetEntityDataAction action, Project project, ExecutionContext executionContext) {
         ImmutableMap.Builder<OWLEntity, OWLEntityData> builder = ImmutableMap.builder();
         builder.putAll(project.getRenderingManager().getRendering(action.getEntities()));
         return new GetEntityDataResult(builder.build());

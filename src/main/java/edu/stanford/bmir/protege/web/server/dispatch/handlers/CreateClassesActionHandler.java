@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescription
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
@@ -53,7 +53,7 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected CreateClassesResult execute(CreateClassesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected CreateClassesResult execute(CreateClassesAction action, Project project, ExecutionContext executionContext) {
         Set<List<OWLClass>> paths = project.getClassHierarchyProvider().getPathsToRoot(action.getSuperClass());
         if(paths.isEmpty()) {
             throw new IllegalStateException("Class does not exist in hierarchy: " + project.getRenderingManager().getBrowserText(action.getSuperClass()));
@@ -70,7 +70,7 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
         return new CreateClassesResult(pathToRoot, createdClasses, browserTextMap);
     }
 
-    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(OWLAPIProject project, CreateClassesAction action) {
+    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(Project project, CreateClassesAction action) {
         action.getBrowserTexts();
         String msg;
         if(action.getBrowserTexts().size() > 1) {

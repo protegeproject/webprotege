@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.server.render.AnnotationPropertyComparatorImpl;
 import edu.stanford.bmir.protege.web.server.render.IRIIndexProvider;
@@ -24,10 +24,10 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
 
     public static final int BEFORE = -AFTER;
 
-    private OWLAPIProject project;
+    private Project project;
     private AnnotationPropertyComparatorImpl annotationPropertyComparator;
 
-    public PropertyValueComparator(OWLAPIProject project) {
+    public PropertyValueComparator(Project project) {
         this.project = project;
         this.annotationPropertyComparator = new AnnotationPropertyComparatorImpl(
                 project.getRenderingManager().getShortFormProvider(),

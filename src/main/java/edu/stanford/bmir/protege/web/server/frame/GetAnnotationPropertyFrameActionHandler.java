@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -38,7 +38,7 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
     }
 
     @Override
-    protected GetAnnotationPropertyFrameResult execute(GetAnnotationPropertyFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetAnnotationPropertyFrameResult execute(GetAnnotationPropertyFrameAction action, Project project, ExecutionContext executionContext) {
         AnnotationPropertyFrameTranslator translator = new AnnotationPropertyFrameTranslator();
         AnnotationPropertyFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
         String label = project.getRenderingManager().getBrowserText(action.getSubject());

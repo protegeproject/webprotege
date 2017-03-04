@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.individuals;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -45,7 +45,7 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
 
     @Override
     protected GetIndividualsResult execute(GetIndividualsAction action,
-                                           OWLAPIProject project,
+                                           Project project,
                                            ExecutionContext executionContext) {
         Stream<OWLNamedIndividual> stream;
         if (action.getType().isOWLThing()) {

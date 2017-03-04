@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.msg;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.text.MessageFormat;
@@ -17,13 +17,13 @@ import java.util.List;
  */
 public class OWLMessageFormatter {
 
-    public static String formatMessage(String message, OWLAPIProject project, Object ... objects) {
+    public static String formatMessage(String message, Project project, Object ... objects) {
         Object [] primitiveFormattedObjects = formatToPrimitives(project, objects);
         return MessageFormat.format(message, primitiveFormattedObjects);
     }
 
 
-    private static Object [] formatToPrimitives(OWLAPIProject project, Object ... objects) {
+    private static Object [] formatToPrimitives(Project project, Object ... objects) {
         List<Object> result = new ArrayList<Object>(objects.length);
         for(Object obj : objects) {
             Object formattedObj = formatToPrimitive(obj, project);
@@ -32,7 +32,7 @@ public class OWLMessageFormatter {
         return result.toArray();
     }
 
-    private static Object formatToPrimitive(Object o, OWLAPIProject project) {
+    private static Object formatToPrimitive(Object o, Project project) {
         if(o instanceof OWLObject) {
             return project.getRenderingManager().getBrowserText((OWLObject) o);
         }
@@ -44,7 +44,7 @@ public class OWLMessageFormatter {
         }
     }
 
-    private static String formatCollection(Collection<?> collection, OWLAPIProject project) {
+    private static String formatCollection(Collection<?> collection, Project project) {
         StringBuilder sb = new StringBuilder();
         for(Iterator<?> it = collection.iterator(); it.hasNext(); ) {
             if(!it.hasNext() && collection.size() > 1) {

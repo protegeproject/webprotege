@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 
@@ -26,7 +26,7 @@ public class GetParentsStrategy extends OntologyServiceStrategy<List<EntityData>
 
     private boolean direct;
 
-    public GetParentsStrategy(OWLAPIProject project, UserId userId, String className, boolean direct) {
+    public GetParentsStrategy(Project project, UserId userId, String className, boolean direct) {
         super(project, userId);
         this.className = className;
         this.direct = direct;
@@ -35,7 +35,7 @@ public class GetParentsStrategy extends OntologyServiceStrategy<List<EntityData>
     public List<EntityData> execute() {
         final List<EntityData> result = new ArrayList<EntityData>();
 
-        final OWLAPIProject project = getProject();
+        final Project project = getProject();
         final RenderingManager rm = project.getRenderingManager();
         Set<OWLEntity> entites = rm.getEntities(className);
         if(entites.isEmpty()) {

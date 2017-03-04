@@ -44,7 +44,7 @@ public class CreateNewProjectActionHandler_TestCase {
     private NewProjectSettings newProjectSettings;
 
     @Mock
-    private OWLAPIProject project;
+    private Project project;
 
     @Mock
     private ExecutionContext executionContext;

@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
@@ -36,7 +36,7 @@ public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandl
     }
 
     @Override
-    protected SetEntityWatchesResult execute(SetEntityWatchesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected SetEntityWatchesResult execute(SetEntityWatchesAction action, Project project, ExecutionContext executionContext) {
         final EventManager<ProjectEvent<?>> eventManager = project.getEventManager();
         EventTag startTag = eventManager.getCurrentTag();
         WatchManager watchManager = project.getWatchManager();

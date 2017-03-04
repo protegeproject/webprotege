@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.individuals;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -25,7 +25,7 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity, OWLAPIProject project, ChangeGenerationContext context, Optional<OWLClass> parent) {
+    protected Set<OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity, Project project, ChangeGenerationContext context, Optional<OWLClass> parent) {
         if(parent.isPresent() && !parent.get().isOWLThing()) {
             return Collections.<OWLAxiom>singleton(project.getDataFactory().getOWLClassAssertionAxiom(parent.get(), freshEntity));
         }

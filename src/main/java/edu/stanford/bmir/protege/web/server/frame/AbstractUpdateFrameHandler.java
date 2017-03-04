@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -47,7 +47,7 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
      * @return The result of the execution to be returned to the client.
      */
     @Override
-    protected Result execute(A action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected Result execute(A action, Project project, ExecutionContext executionContext) {
         LabelledFrame<F> from = action.getFrom();
         LabelledFrame<F> to = action.getTo();
         final EventTag startTag = project.getEventManager().getCurrentTag();

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -32,7 +32,7 @@ public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerat
     }
 
     @Override
-    public OntologyChangeList<Void> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<Void> generateChanges(Project project, ChangeGenerationContext context) {
         OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
         Map<OWLEntity, IRI> renameMap = new HashMap<OWLEntity, IRI>();
         for(OWLEntity entity : project.getRootOntology().getSignature(Imports.INCLUDED)) {

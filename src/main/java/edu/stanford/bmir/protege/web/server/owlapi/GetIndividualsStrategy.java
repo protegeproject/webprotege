@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -20,7 +20,7 @@ public class GetIndividualsStrategy extends OntologyServiceStrategy<List<EntityD
 
     private String className;
     
-    public GetIndividualsStrategy(OWLAPIProject project, UserId userId, String className) {
+    public GetIndividualsStrategy(Project project, UserId userId, String className) {
         super(project, userId);
         this.className = className;
     }
@@ -30,7 +30,7 @@ public class GetIndividualsStrategy extends OntologyServiceStrategy<List<EntityD
         List<EntityData> result = new ArrayList<EntityData>();
 
 
-        OWLAPIProject project = getProject();
+        Project project = getProject();
         RenderingManager rm = project.getRenderingManager();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
         OWLOntology rootOntology = getProject().getRootOntology();

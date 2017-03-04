@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
@@ -39,7 +39,7 @@ public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectAction
     }
 
     @Override
-    protected GetHeadRevisionNumberResult execute(GetHeadRevisionNumberAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetHeadRevisionNumberResult execute(GetHeadRevisionNumberAction action, Project project, ExecutionContext executionContext) {
         return new GetHeadRevisionNumberResult(project.getRevisionNumber());
     }
 }

@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * A skeleton handler for handling actions that pertain to projects (i.e. {@link Action}s that implement
  * {@link HasProjectId}.  Subclasses implement a specialised execute method which has a reference to the relevant
- * {@link OWLAPIProject} as a parameter.  Further more, the validation includes a check to see if the project
+ * {@link Project} as a parameter.  Further more, the validation includes a check to see if the project
  * actually exists and fails if this isn't the case.
  * </p>
  */
@@ -123,7 +123,7 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
 
     @Override
     final public R execute(A action, ExecutionContext executionContext) {
-        OWLAPIProject project = projectManager.getProject(action.getProjectId(), executionContext.getUserId());
+        Project project = projectManager.getProject(action.getProjectId(), executionContext.getUserId());
         return execute(action, project, executionContext);
     }
 
@@ -137,5 +137,5 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
      *                         {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user who requested the action be executed.
      * @return The result of the execution to be returned to the client.
      */
-    protected abstract R execute(A action, OWLAPIProject project, ExecutionContext executionContext);
+    protected abstract R execute(A action, Project project, ExecutionContext executionContext);
 }

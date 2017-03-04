@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
@@ -36,7 +36,7 @@ public class GetProjectChangesActionHandler_TestCase {
     private GetProjectChangesAction action;
 
     @Mock
-    private OWLAPIProject project;
+    private Project project;
 
     @Mock
     private ProjectChangesManager changeManager;

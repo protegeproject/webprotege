@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
@@ -28,7 +28,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     @Override
-    public NamedIndividualFrame getFrame(OWLNamedIndividual subject, OWLOntology rootOntology, OWLAPIProject project) {
+    public NamedIndividualFrame getFrame(OWLNamedIndividual subject, OWLOntology rootOntology, Project project) {
         return translateToNamedIndividualFrame(subject, rootOntology, project);
     }
 
@@ -37,7 +37,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         return translateToAxioms(frame.getSubject(), frame, mode);
     }
 
-    private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividual subject, OWLOntology rootOntology, OWLAPIProject project) {
+    private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividual subject, OWLOntology rootOntology, Project project) {
         Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject, rootOntology);
 
         NamedIndividualFrame.Builder builder = new NamedIndividualFrame.Builder(subject);

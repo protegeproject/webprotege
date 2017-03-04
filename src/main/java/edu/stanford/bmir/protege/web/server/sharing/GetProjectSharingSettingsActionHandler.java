@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.sharing;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
@@ -37,7 +37,7 @@ public class GetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
     }
 
     @Override
-    protected GetProjectSharingSettingsResult execute(GetProjectSharingSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetProjectSharingSettingsResult execute(GetProjectSharingSettingsAction action, Project project, ExecutionContext executionContext) {
         ProjectSharingSettings settings = sharingSettingsManager.getProjectSharingSettings(action.getProjectId());
         return new GetProjectSharingSettingsResult(settings);
     }
