@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;

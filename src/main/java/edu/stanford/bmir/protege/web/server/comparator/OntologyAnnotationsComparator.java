@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.comparator;
 
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;

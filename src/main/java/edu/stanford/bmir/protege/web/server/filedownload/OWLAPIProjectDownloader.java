@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.OWLOntology;

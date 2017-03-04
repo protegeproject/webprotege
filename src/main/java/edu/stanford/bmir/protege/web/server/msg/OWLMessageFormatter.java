@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.msg;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.text.MessageFormat;

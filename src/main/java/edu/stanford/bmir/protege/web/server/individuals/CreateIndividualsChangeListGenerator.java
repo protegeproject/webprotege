@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.individuals;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.project.OWLAPIProject;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
