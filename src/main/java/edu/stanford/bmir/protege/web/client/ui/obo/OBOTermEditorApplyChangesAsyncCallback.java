@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 
 /**
