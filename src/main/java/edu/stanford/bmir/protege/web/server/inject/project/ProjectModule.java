@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
+import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataProvider;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
