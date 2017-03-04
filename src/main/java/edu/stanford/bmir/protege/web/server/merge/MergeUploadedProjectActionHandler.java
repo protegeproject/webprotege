@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;

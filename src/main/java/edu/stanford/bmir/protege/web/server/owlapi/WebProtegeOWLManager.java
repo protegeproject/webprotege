@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi.manager;
+package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.server.owlapi.BinaryOWLStorerFactory;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import org.junit.Test;
 import org.semanticweb.owlapi.formats.OBODocumentFormat;
 import org.semanticweb.owlapi.model.*;

@@ -5,7 +5,7 @@ import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.inject.project.NotesOntologyDocument;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;

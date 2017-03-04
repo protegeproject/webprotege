@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.manager;
 
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class WebProtegeOntologyManagerSaveBinaryDocumentTestCase {
 
     /**
      * Ensures that an ontology can be saved in the binary ontology format.  This doesn't test the format serialization,
-     * it tests that the {@link edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager} is configured
+     * it tests that the {@link WebProtegeOWLManager} is configured
      * with the ability to save an ontology in that format.
      */
     @Test
