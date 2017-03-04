@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.project;
 
 
 import com.google.inject.assistedinject.Assisted;
