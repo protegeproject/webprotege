@@ -14,5 +14,5 @@ public interface PortletFactory {
 
     List<PortletDescriptor> getAvailablePortletDescriptors();
 
-    Optional<WebProtegePortlet> createPortlet(PortletId portletId);
+    Optional<WebProtegePortletComponents> createPortlet(PortletId portletId);
 }
