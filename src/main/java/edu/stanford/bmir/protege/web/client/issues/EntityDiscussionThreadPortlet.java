@@ -4,6 +4,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -30,35 +33,34 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
-    @Nonnull
-    private final ForbiddenView forbiddenView;
+    private Optional<PortletUi> portletUi = Optional.empty();
 
     @Inject
     public EntityDiscussionThreadPortlet(SelectionModel selectionModel,
-                                         EventBus eventBus,
-                                         LoggedInUserProjectPermissionChecker permissionChecker,
-                                         ProjectId projectId,
-                                         @Nonnull DiscussionThreadListPresenter presenter,
-                                         @Nonnull ForbiddenView forbiddenView) {
-        super(selectionModel, eventBus, projectId);
+                                         @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                         @Nonnull ProjectId projectId,
+                                         @Nonnull DiscussionThreadListPresenter presenter) {
+        super(selectionModel, projectId);
         this.presenter = presenter;
-        this.presenter.installActions(this);
-        this.forbiddenView = forbiddenView;
         this.permissionChecker = permissionChecker;
-        forbiddenView.setSubMessage("You do not have permission to view comments in this project");
-        setFilter(presenter.getFilterView());
-        setWidget(presenter.getView());
     }
 
     @Override
-    public void handlePermissionsChanged() {
-
-    }
-
-    @Override
-    public void handleActivated() {
-        presenter.start();
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.portletUi = Optional.of(portletUi);
+        portletUi.setWidget(presenter.getView());
+        this.presenter.installActions(portletUi);
+        portletUi.setFilterView(presenter.getFilterView());
+        presenter.start(eventBus);
         updatePresenter(getSelectedEntity());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        this::handlePemissionsChange);
+        portletUi.setForbiddenMessage("You do not have permission to view comments in this project");
+    }
+
+    private void handlePemissionsChange(PermissionsChangedEvent event) {
+        handleAfterSetEntity(Optional.empty());
     }
 
     @Override
@@ -67,21 +69,21 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     }
 
     private void updatePresenter(Optional<OWLEntity> entity) {
-        permissionChecker.hasPermission(VIEW_OBJECT_COMMENTS, canViewComments -> {
-            if(canViewComments) {
-                setToolbarVisible(true);
-                setWidget(presenter.getView());
-                if(entity.isPresent()) {
-                    presenter.setEntity(entity.get());
+        portletUi.ifPresent(portletUi -> {
+            permissionChecker.hasPermission(VIEW_OBJECT_COMMENTS, canViewComments -> {
+                if(canViewComments) {
+                    portletUi.setForbiddenVisible(false);
+                    if(entity.isPresent()) {
+                        presenter.setEntity(entity.get());
+                    }
+                    else {
+                        presenter.clear();
+                    }
                 }
                 else {
-                    presenter.clear();
+                    portletUi.setForbiddenVisible(true);
                 }
-            }
-            else {
-                setToolbarVisible(false);
-                setWidget(forbiddenView);
-            }
+            });
         });
 
     }

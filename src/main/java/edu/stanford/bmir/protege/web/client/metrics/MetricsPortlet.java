@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.client.metrics;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
@@ -20,20 +23,23 @@ public class MetricsPortlet extends AbstractWebProtegePortlet {
     private MetricsView view;
 
     @Inject
-    public MetricsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public MetricsPortlet(SelectionModel selectionModel,
+                          DispatchServiceManager dispatchServiceManager,
+                          ProjectId projectId) {
+        super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         view = new MetricsViewImpl();
-        setWidget(view.asWidget());
         metricsPresenter = new MetricsPresenter(getProjectId(), view, dispatchServiceManager);
-        metricsPresenter.bind(this);
-        updateDisplay();
     }
 
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("Metrics");
+        portletUi.setWidget(view.asWidget());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        MetricsChangedEvent.getType(),
+                                        event -> metricsPresenter.handleMetricsChanged());
 
-    private void updateDisplay() {
-        setTitle("Metrics");
-        metricsPresenter.reload();
+        metricsPresenter.start();
     }
-
 }

@@ -2,8 +2,9 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -28,13 +29,16 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
     @Inject
     public IndividualsListPortlet(IndividualsListPresenter presenter,
                                   SelectionModel selectionModel,
-                                  EventBus eventBus,
                                   ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+        super(selectionModel, projectId);
         this.presenter = presenter;
-        setTitle("Individuals by Class");
-        presenter.installActions(this);
-        presenter.start(this);
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("Individuals by Class");
+        presenter.installActions(portletUi);
+        presenter.start(portletUi);
     }
 
     @Override
@@ -53,25 +57,9 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
 
         if(selectedClass.isPresent()) {
             presenter.setType(selectedClass.get());
-            updateTitle(selectedClass);
         }
         else {
             presenter.clearType();
         }
     }
-
-    private void updateTitle(Optional<? extends OWLEntity> entityData) {
-        if(entityData.isPresent()) {
-            setTitle("Individuals by Class");
-        }
-        else {
-            setTitle("Individuals by Class (nothing selected)");
-        }
-    }
-
-    @Override
-    public void handlePermissionsChanged() {
-    }
-
-
 }

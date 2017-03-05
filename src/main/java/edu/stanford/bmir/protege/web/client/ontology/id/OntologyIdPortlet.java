@@ -4,6 +4,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
@@ -25,13 +27,17 @@ public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasF
     private OntologyIdView editor;
 
     @Inject
-    public OntologyIdPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public OntologyIdPortlet(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
+        super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
-        setWidget(editor.asWidget());
-        setTitle("Ontology Id");
         editor.setEnabled(false);
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("Ontology Id");
+        portletUi.setWidget(editor.asWidget());
         updateDisplay();
     }
 

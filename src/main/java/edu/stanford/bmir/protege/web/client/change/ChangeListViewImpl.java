@@ -24,12 +24,8 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
 
     private static ChangeListViewImplUiBinder ourUiBinder = GWT.create(ChangeListViewImplUiBinder.class);
 
-    private final ForbiddenView forbiddenView;
-
     @Inject
-    public ChangeListViewImpl(ForbiddenView forbiddenView) {
-        this.forbiddenView = forbiddenView;
-        forbiddenView.setSubMessage("You do not have permission to view changes for this project");
+    public ChangeListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -66,13 +62,5 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
             }
         }
         this.detailsVisible = detailsVisible;
-    }
-
-    @Override
-    public void setViewChangesAllowed(boolean viewChangesAllowed) {
-        rootElement.clear();
-        if(!viewChangesAllowed) {
-            rootElement.add(forbiddenView);
-        }
     }
 }

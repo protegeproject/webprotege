@@ -5,6 +5,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -30,13 +32,16 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     private Optional<List<OBORelationship>> pristineValue = Optional.absent();
 
     @Inject
-    public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, EventBus eventBus, SelectionModel selectionModel) {
-        super(selectionModel, eventBus, projectId);
+    public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, SelectionModel selectionModel) {
+        super(selectionModel, projectId);
         this.editor = editor;
         this.editor.setEnabled(true);
-        setWidget(this.editor.getWidget());
     }
 
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(this.editor.getWidget());
+    }
 
     @Override
     protected boolean isDirty() {

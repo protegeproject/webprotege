@@ -32,12 +32,12 @@ public class TitleHelper {
             manager.execute(new GetEntityRenderingAction(projectId, entity.get()), new DispatchServiceCallback<GetEntityRenderingResult>() {
                 @Override
                 public void handleSuccess(GetEntityRenderingResult result) {
-                    portlet.setTitle(prefix + ": " + result.getRendering());
+//                    portlet.setTitle(prefix + ": " + result.getRendering());
                 }
             });
         }
         else {
-            portlet.setTitle(prefix + ": Nothing selected");
+//            portlet.setTitle(prefix + ": Nothing selected");
         }
     }
 }

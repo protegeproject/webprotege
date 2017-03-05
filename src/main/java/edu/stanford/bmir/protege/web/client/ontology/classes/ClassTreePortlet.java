@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
@@ -18,7 +19,6 @@ import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter
 import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
 import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
@@ -26,23 +26,25 @@ import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
@@ -53,6 +55,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityNotesChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
@@ -75,6 +78,7 @@ import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -104,8 +108,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     private String hierarchyProperty = null;
 
     private TreeNodeListenerAdapter nodeListener;
-
-    private boolean registeredEventHandlers = false;
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -155,19 +157,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                              final ProjectId projectId,
                              final String topClass,
                              LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
-        super(selectionModel, eventBus, projectId);
+        super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         this.watchPresenter = watchPresenter;
         this.primitiveDataEditorProvider = primitiveDataEditorProvider;
-        addPortletAction(createClassAction);
-        addPortletAction(deleteClassAction);
-        addPortletAction(watchClassAction);
 
-        registerEventHandlers();
 
-        updateButtonStates();
         if (nodeListener == null) {
             //listener for click on the comment icon to display notes
             nodeListener = new TreeNodeListenerAdapter() {
@@ -195,38 +192,47 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                 }
             };
         }
-        Scheduler.get().scheduleDeferred(() -> {
-            EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
-            createRoot(root);
-        });
     }
 
-    private void registerEventHandlers() {
-        if (registeredEventHandlers) {
-            return;
-        }
-        registeredEventHandlers = true;
-        ///////////////////////////////////////////////////////////////////////////
-        //
-        // Registration of event handlers that we are interested in
-        //
-        ///////////////////////////////////////////////////////////////////////////
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.addPortletAction(createClassAction);
+        portletUi.addPortletAction(deleteClassAction);
+        portletUi.addPortletAction(watchClassAction);
+        Scheduler.get().scheduleDeferred(() -> {
+            EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
+            createRoot(root, portletUi);
+        });
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        BrowserTextChangedEvent.TYPE,
+                                        event -> onEntityBrowserTextChanged(event));
 
-        addProjectEventHandler(BrowserTextChangedEvent.TYPE, event -> onEntityBrowserTextChanged(event));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        EntityNotesChangedEvent.TYPE, event -> onNotesChanged(event));
 
-        addProjectEventHandler(EntityNotesChangedEvent.TYPE, event -> onNotesChanged(event));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        WatchAddedEvent.TYPE, event -> onWatchAdded(event));
 
-        addProjectEventHandler(WatchAddedEvent.TYPE, event -> onWatchAdded(event));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        WatchRemovedEvent.TYPE, event -> handleWatchRemoved(event));
 
-        addProjectEventHandler(WatchRemovedEvent.TYPE, event -> handleWatchRemoved(event));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        EntityDeprecatedChangedEvent.TYPE,
+                                        evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
 
-        addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE,
-                               evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ClassHierarchyParentAddedEvent.TYPE, event -> handleParentAddedEvent(event));
 
-        addProjectEventHandler(ClassHierarchyParentAddedEvent.TYPE, event -> handleParentAddedEvent(event));
-
-        addProjectEventHandler(ClassHierarchyParentRemovedEvent.TYPE, event -> handleParentRemovedEvent(event));
-
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ClassHierarchyParentRemovedEvent.TYPE,
+                                        event -> handleParentRemovedEvent(event));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ON_PERMISSIONS_CHANGED,
+                                        event -> {
+                                            updateButtonStates();
+                                            onRefresh();
+                                        });
+        updateButtonStates();
     }
 
     private void handleParentAddedEvent(final ClassHierarchyParentAddedEvent event) {
@@ -1000,7 +1006,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         return getDirectChild(parentNode, childId) != null;
     }
 
-    private void createRoot(EntityData rootEnitity) {
+    private void createRoot(EntityData rootEnitity, AcceptsOneWidget contentHolder) {
         if (rootEnitity == null) {
             rootEnitity = new EntityData("Root", "Root node is not defined");
         }
@@ -1009,7 +1015,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         treePanel.setRootNode(root);
         treePanel.setSize("100%", "100%");
         ScrollPanel sp = new ScrollPanel(treePanel);
-        setWidget(sp);
+        contentHolder.setWidget(sp);
         createSelectionListener();
 
         // MH: createTreeNode calls get subclasses, so it was being called twice
@@ -1087,12 +1093,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     public String getNodeBrowserText(final Node node) {
         final EntityData data = (EntityData) node.getUserObject();
         return data.getBrowserText();
-    }
-
-    @Override
-    public void handlePermissionsChanged() {
-        updateButtonStates();
-        onRefresh();
     }
 
     class GetSubclassesOfClassHandler implements AsyncCallback<List<SubclassEntityData>> {

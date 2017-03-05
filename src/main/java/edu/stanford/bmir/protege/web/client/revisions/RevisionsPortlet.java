@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.revisions;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -18,32 +20,31 @@ import javax.inject.Inject;
 @Portlet(id = "portlets.Revisions", title = "Project Revisions")
 public class RevisionsPortlet extends AbstractWebProtegePortlet {
 
-    public static final int INITIAL_HEIGHT = 400;
-
     private RevisionsListViewPresenter presenter;
 
-    private final EventBus eventBus;
-
-    private final DispatchServiceManager dispatchServiceManager;
-
     @Inject
-    public RevisionsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
-        this.eventBus = eventBus;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);
+    public RevisionsPortlet(SelectionModel selectionModel,
+                            EventBus eventBus,
+                            DispatchServiceManager dispatchServiceManager,
+                            ProjectId projectId) {
+        super(selectionModel, projectId);
+        this.presenter = new RevisionsListViewPresenter(getProjectId(),
+                                                        eventBus,
+                                                        new RevisionsListViewImpl(),
+                                                        dispatchServiceManager);
         presenter.reload();
-        setWidget(presenter.getWidget());
-        setTitle("Revisions");
         presenter.reload();
     }
 
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("Revisions");
+        portletUi.setWidget(presenter.getWidget());
+    }
 
-//    @Override
-    protected void onDestroy() {
+    @Override
+    public void dispose() {
+        super.dispose();
         presenter.dispose();
-//        super.onDestroy();
     }
-
-
 }

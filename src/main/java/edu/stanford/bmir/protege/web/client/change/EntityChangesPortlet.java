@@ -3,8 +3,10 @@ package edu.stanford.bmir.protege.web.client.change;
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -20,23 +22,30 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
         tooltip = "Displays a list of project changes for the selected entity.")
 public class EntityChangesPortlet extends AbstractWebProtegePortlet {
 
+    private static final String FORBIDDEN_MESSAGE = "You do not have permission to view changes for this project";
+
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
     private final ChangeListViewPresenter presenter;
 
     @Inject
 	public EntityChangesPortlet(SelectionModel selectionModel,
-                                EventBus eventBus,
                                 ProjectId projectId,
                                 ChangeListViewPresenter presenter) {
-		super(selectionModel, eventBus, projectId);
+		super(selectionModel, projectId);
         this.presenter = presenter;
-        setWidget(presenter.getView().asWidget());
-
-        addProjectEventHandler(ProjectChangedEvent.TYPE, event -> EntityChangesPortlet.this.handleProjectChanged(event));
-        addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
-        setTitle("Changes");
 	}
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
+        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
+        portletUi.setWidget(presenter.getView().asWidget());
+        portletUi.setForbiddenMessage(FORBIDDEN_MESSAGE);
+        portletUi.setViewTitle("Changes");
+        updateDisplayForSelectedEntity();
+    }
 
     private void handleProjectChanged(ProjectChangedEvent event) {
         if(lastRevisionNumber.equals(event.getRevisionNumber())) {
@@ -60,8 +69,8 @@ public class EntityChangesPortlet extends AbstractWebProtegePortlet {
         ProjectId projectId = getProjectId();
 		if (getSelectedEntity().isPresent()) {
 			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
-
         }
+        presenter.handlePermissionsChanged();
 	}
 
 }

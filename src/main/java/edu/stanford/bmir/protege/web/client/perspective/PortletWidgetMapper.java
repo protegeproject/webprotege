@@ -2,16 +2,11 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.CouldNotFindPortletWidget;
-import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
-import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.*;
 import edu.stanford.bmir.protege.web.shared.PortletId;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
 import edu.stanford.protege.widgetmap.client.view.FixedSizeViewHolder;
@@ -22,6 +17,7 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,15 +28,25 @@ import java.util.Map;
  */
 public class PortletWidgetMapper implements WidgetMapper {
 
+    private static final String DROP_ZONE = "drop-zone";
+
     private final Map<TerminalNodeId, ViewHolder> nodeId2ViewHolderMap = new HashMap<>();
 
     private final PortletFactory portletFactory;
 
     private boolean viewsCloseable = true;
 
+    private final Provider<PortletUi> portletUiProvider;
+
+    private final Provider<WebProtegeEventBus> eventBusProvider;
+
     @Inject
-    public PortletWidgetMapper(@Nonnull PortletFactory portletFactory) {
+    public PortletWidgetMapper(@Nonnull PortletFactory portletFactory,
+                               Provider<PortletUi> portletUiProvider,
+                               Provider<WebProtegeEventBus> eventBusProvider) {
         this.portletFactory = portletFactory;
+        this.portletUiProvider = portletUiProvider;
+        this.eventBusProvider = eventBusProvider;
     }
 
 
@@ -87,16 +93,19 @@ public class PortletWidgetMapper implements WidgetMapper {
 
 
     private ViewHolder createViewHolder(final TerminalNodeId nodeId, final WebProtegePortlet portlet) {
+        PortletUi portletUi = portletUiProvider.get();
+        WebProtegeEventBus eventBus = eventBusProvider.get();
+        portlet.start(portletUi, eventBus);
         ViewHolder viewHolder;
         if (portlet instanceof HasFixedPrimaryAxisSize) {
-            viewHolder = new FixedSizeViewHolder(portlet.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portlet).getFixedPrimaryAxisSize());
+            viewHolder = new FixedSizeViewHolder(portletUi.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portlet).getFixedPrimaryAxisSize());
         }
         else {
-            viewHolder = new ViewHolder(portlet, NodeProperties.emptyNodeProperties());
+            viewHolder = new ViewHolder(portletUi, NodeProperties.emptyNodeProperties());
         }
-        portlet.asWidget().setSize("100%", "100%");
-        viewHolder.addStyleName("drop-zone");
+        viewHolder.addStyleName(DROP_ZONE);
         viewHolder.addCloseHandler(event -> {
+            eventBus.dispose();
             portlet.dispose();
             nodeId2ViewHolderMap.remove(nodeId);
         });

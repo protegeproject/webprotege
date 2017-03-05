@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -33,51 +34,30 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
                                               EventBus eventBus,
                                               DispatchServiceManager dispatchServiceManager,
                                               ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+        super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         html = new HTML();
-        setWidget(new ScrollPanel(html));
-        addProjectEventHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
-            @Override
-            public void classFrameChanged(ClassFrameChangedEvent event) {
-                handleEntityChange(event.getEntity());
-            }
-        });
-        addProjectEventHandler(ObjectPropertyFrameChangedEvent.TYPE, new ObjectPropertyFrameChangedEventHandler() {
-            @Override
-            public void objectPropertyFrameChanged(ObjectPropertyFrameChangedEvent event) {
-                handleEntityChange(event.getEntity());
-            }
-        });
-        addProjectEventHandler(DataPropertyFrameChangedEvent.TYPE, new DataPropertyFrameChangedEventHandler() {
-            @Override
-            public void dataPropertyFrameChanged(DataPropertyFrameChangedEvent event) {
-                handleEntityChange(event.getEntity());
-            }
-        });
-        addProjectEventHandler(AnnotationPropertyFrameChangedEvent.TYPE,
-                               new AnnotationPropertyFrameChangedEventHandler() {
+    }
 
-                                   @Override
-                                   public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
-                                       handleEntityChange(event.getEntity());
-                                   }
-                               });
-        addProjectEventHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
-            @Override
-            public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
-                handleEntityChange(event.getEntity());
-            }
-        });
-        addProjectEventHandler(AnnotationPropertyFrameChangedEvent.TYPE,
-                               new AnnotationPropertyFrameChangedEventHandler() {
-
-                                   @Override
-                                   public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
-                                       handleEntityChange(event.getEntity());
-                                   }
-                               });
-        setTitle("OWL description");
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("OWL description");
+        portletUi.setWidget(new ScrollPanel(html));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ClassFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ObjectPropertyFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        DataPropertyFrameChangedEvent.TYPE,
+                                        (DataPropertyFrameChangedEventHandler) event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        AnnotationPropertyFrameChangedEvent.TYPE,
+                                        event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        NamedIndividualFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        AnnotationPropertyFrameChangedEvent.TYPE,
+                                        event -> handleEntityChange(event.getEntity()));
     }
 
     @Override
@@ -90,7 +70,6 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
                                                    html.setHTML(result.getRendering());
                                                }
                                            });
-            setTitle("OWL " + entity.get().getEntityType().getPrintName() + " description");
         }
     }
 

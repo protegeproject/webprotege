@@ -3,11 +3,13 @@ package edu.stanford.bmir.protege.web.client.obo;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -25,10 +27,14 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     private OBOTermDefinitionEditor editor;
 
     @Inject
-    public OBOTermDefinitionPortlet(ProjectId projectId, SelectionModel selectionModel, EventBus eventBus) {
-        super(selectionModel, eventBus, projectId);
+    public OBOTermDefinitionPortlet(ProjectId projectId, SelectionModel selectionModel) {
+        super(selectionModel, projectId);
         editor = new OBOTermDefinitionEditorImpl();
-        setWidget(editor.asWidget());
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(editor.asWidget());
     }
 
     @Override
@@ -43,13 +49,14 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        if(!editor.getValue().isPresent()) {
+        if (!editor.getValue().isPresent()) {
             return;
         }
         getService().setDefinition(getProjectId(), entity, editor.getValue().get(), new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
-                if(caught instanceof NotSignedInException) {
-                    MessageBox.showMessage("Your changes to the term definition have not been saved.  You must be signed in to make changes.");
+                if (caught instanceof NotSignedInException) {
+                    MessageBox.showMessage(
+                            "Your changes to the term definition have not been saved.  You must be signed in to make changes.");
                 }
                 else {
                     MessageBox.showMessage(caught.getMessage());

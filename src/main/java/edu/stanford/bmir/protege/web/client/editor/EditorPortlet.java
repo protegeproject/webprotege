@@ -3,13 +3,19 @@ package edu.stanford.bmir.protege.web.client.editor;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -25,47 +31,45 @@ public class EditorPortlet extends AbstractWebProtegePortlet {
 
     private EditorPresenter editorPresenter;
 
+    private final Widget editorView;
+
+    @Nonnull
+    private java.util.Optional<PortletUi> portletUi;
+
     @Inject
     public EditorPortlet(
             SelectionModel selectionModel,
-            final EventBus eventBus,
             final ProjectId projectId,
             EditorPresenter editorPresenter) {
-        super(selectionModel, eventBus, projectId);
+        super(selectionModel, projectId);
         this.editorPresenter = editorPresenter;
-        setTitle("Nothing selected");
-        final Widget editorView = editorPresenter.getView();
-        setWidget(editorView);
+        editorView = editorPresenter.getView();
     }
 
     @Override
-    public void handleActivated() {
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.portletUi = java.util.Optional.of(portletUi);
+        portletUi.setViewTitle("Nothing selected");
+        portletUi.setWidget(editorView);
         editorPresenter.updatePermissionBasedItems();
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        event -> editorPresenter.updatePermissionBasedItems());
+        eventBus.addApplicationEventHandler(UserLoggedInEvent.TYPE,
+                                            event -> editorPresenter.updatePermissionBasedItems());
+        eventBus.addApplicationEventHandler(UserLoggedOutEvent.TYPE,
+                                            event -> editorPresenter.updatePermissionBasedItems());
         handleAfterSetEntity(getSelectedEntity());
-    }
 
-    @Override
-    public void handlePermissionsChanged() {
-        editorPresenter.updatePermissionBasedItems();
-    }
-
-    @Override
-    protected void handleLogin(UserId userId) {
-        editorPresenter.updatePermissionBasedItems();
-    }
-
-    @Override
-    protected void handleLogout(UserId userId) {
-        editorPresenter.updatePermissionBasedItems();
     }
 
     @Override
     protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
         if(!entity.isPresent()) {
-            setTitle("Nothing selected");
+            portletUi.ifPresent(ui -> ui.setViewTitle("Nothing selected"));
             return;
         }
-        setTitle(entity.get().getEntityType().getPrintName() + " description");
+        portletUi.ifPresent(ui -> ui.setViewTitle(entity.get().getEntityType().getPrintName() + " description"));
         final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
         editorPresenter.setEditorContext(editorContext);
     }

@@ -12,11 +12,13 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -36,6 +38,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  */
 public class ChangeListViewPresenter {
 
+
     private final ChangeListView view;
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -48,10 +51,8 @@ public class ChangeListViewPresenter {
 
     private Optional<ProjectId> projectId = Optional.absent();
 
-
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
-                                   EventBus eventBus,
                                    DispatchServiceManager dispatchServiceManager,
                                    LoggedInUserProjectPermissionChecker permissionChecker) {
         this.view = view;
@@ -101,6 +102,10 @@ public class ChangeListViewPresenter {
                                                       downloadVisible));
     }
 
+    public void handlePermissionsChanged() {
+
+    }
+
     private void fillView(ImmutableList<ProjectChange> changes,
                           SubjectDisplay subjectDisplay,
                           boolean revertChangesVisible,
@@ -113,9 +118,6 @@ public class ChangeListViewPresenter {
                                                                       subjectDisplay,
                                                                       revertChangesVisible,
                                                                       downloadVisible);
-                                            }
-                                            else {
-                                                view.setViewChangesAllowed(false);
                                             }
                                         });
     }

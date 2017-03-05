@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 
@@ -11,9 +10,7 @@ import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
  * some part of a project in the WebProtege user interface.  The displayed content is typically tied to the selection
  * with different content being displayed for different selected entities.
  */
-public interface WebProtegePortlet extends IsWidget, HasDispose, HasViewTitleChangedHandlers, HasViewTitle, HasPortletActions, AcceptsOneWidget {
+public interface WebProtegePortlet extends HasDispose, HasViewTitleChangedHandlers {
 
-    void setToolbarVisible(boolean visible);
-
-    void setTitle(String title);
+    void start(PortletUi portletUi, WebProtegeEventBus eventBus);
 }

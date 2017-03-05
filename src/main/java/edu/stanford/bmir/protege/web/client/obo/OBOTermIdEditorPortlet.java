@@ -3,8 +3,10 @@ package edu.stanford.bmir.protege.web.client.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -27,11 +29,10 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
     private OBOTermIdEditor editor;
 
     @Inject
-    public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public OBOTermIdEditorPortlet(SelectionModel selectionModel, ProjectId projectId) {
+        super(selectionModel, projectId);
 //        setAutoScroll(false);
         editor = new OBOTermIdEditorImpl();
-        setWidget(editor.asWidget());
         getService().getNamespaces(getProjectId(), new AsyncCallback<Set<OBONamespace>>() {
             public void onFailure(Throwable caught) {
                 MessageBox.showMessage(caught.getMessage());
@@ -43,6 +44,10 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
         });
     }
 
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(editor.asWidget());
+    }
 
     @Override
     protected void clearDisplay() {
