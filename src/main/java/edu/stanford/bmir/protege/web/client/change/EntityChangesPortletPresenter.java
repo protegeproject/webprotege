@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.change;
 
-import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -14,6 +15,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
+import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.ChangesByEntity",
@@ -27,12 +31,16 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 
     private final ChangeListViewPresenter presenter;
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     @Inject
 	public EntityChangesPortletPresenter(SelectionModel selectionModel,
+                                         LoggedInUserProjectPermissionChecker permissionChecker,
                                          ProjectId projectId,
                                          ChangeListViewPresenter presenter) {
 		super(selectionModel, projectId);
         this.presenter = presenter;
+        this.permissionChecker = permissionChecker;
 	}
 
     @Override
@@ -64,11 +72,17 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
     }
 
     private void updateDisplayForSelectedEntity() {
-        ProjectId projectId = getProjectId();
-		if (getSelectedEntity().isPresent()) {
-			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
-        }
-        presenter.handlePermissionsChanged();
+        permissionChecker.hasPermission(VIEW_CHANGES, canViewChanges -> {
+            if (canViewChanges) {
+                setForbiddenVisible(false);
+                ProjectId projectId = getProjectId();
+                getSelectedEntity().ifPresent(entity -> presenter.setChangesForEntity(projectId, entity));
+            }
+            else {
+                setForbiddenVisible(true);
+                presenter.clear();
+            }
+        });
 	}
 
 }

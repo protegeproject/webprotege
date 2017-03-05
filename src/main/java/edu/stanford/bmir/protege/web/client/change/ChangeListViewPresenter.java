@@ -102,8 +102,8 @@ public class ChangeListViewPresenter {
                                                       downloadVisible));
     }
 
-    public void handlePermissionsChanged() {
-
+    public void clear() {
+        view.clear();
     }
 
     private void fillView(ImmutableList<ProjectChange> changes,
