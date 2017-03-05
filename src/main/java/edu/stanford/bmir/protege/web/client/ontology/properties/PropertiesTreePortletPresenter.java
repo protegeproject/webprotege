@@ -145,7 +145,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addPortletAction(createAction);
         portletUi.addPortletAction(deleteAction);
         portletUi.setWidget(treePanel.asWidget());

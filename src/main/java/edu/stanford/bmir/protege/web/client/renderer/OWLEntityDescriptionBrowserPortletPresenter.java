@@ -40,7 +40,7 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(new ScrollPanel(html));
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));

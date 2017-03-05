@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -20,6 +21,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private final HandlerRegistration selectionModelHandlerRegistration;
 
+    private Optional<PortletUi> portletUi = Optional.empty();
+
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId) {
         this.selectionModel = checkNotNull(selectionModel);
@@ -35,12 +38,24 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         );
     }
 
+    @Override
+    public final void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.portletUi = Optional.of(portletUi);
+        startPortlet(portletUi, eventBus);
+    }
+
+    public abstract void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus);
+
     public SelectionModel getSelectionModel() {
         return selectionModel;
     }
 
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    public void setViewTitle(String title) {
+        portletUi.ifPresent(ui -> ui.setViewTitle(title));
     }
 
     protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {

@@ -141,6 +141,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
             button.setEnabled(value.isEnabled());
             button.setText(value.getName());
         });
+        setToolbarVisible(true);
     }
 
     @Override

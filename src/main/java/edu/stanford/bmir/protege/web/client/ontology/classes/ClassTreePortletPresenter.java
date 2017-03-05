@@ -131,7 +131,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     @Inject
     public ClassTreePortletPresenter(SelectionModel selectionModel,
                                      WatchPresenter watchPresenter,
-                                     EventBus eventBus,
                                      DispatchServiceManager dispatchServiceManager,
                                      final ProjectId projectId,
                                      LoggedInUserProvider loggedInUserProvider,
@@ -140,22 +139,18 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         this(selectionModel,
              primitiveDataEditorProvider,
              watchPresenter,
-             eventBus,
              dispatchServiceManager,
              loggedInUserProvider,
              projectId,
-             null,
              permissionChecker);
     }
 
     private ClassTreePortletPresenter(SelectionModel selectionModel,
                                       Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                       WatchPresenter watchPresenter,
-                                      EventBus eventBus,
                                       DispatchServiceManager dispatchServiceManager,
                                       LoggedInUserProvider loggedInUserProvider,
                                       final ProjectId projectId,
-                                      final String topClass,
                                       LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
@@ -195,7 +190,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addPortletAction(createClassAction);
         portletUi.addPortletAction(deleteClassAction);
         portletUi.addPortletAction(watchClassAction);

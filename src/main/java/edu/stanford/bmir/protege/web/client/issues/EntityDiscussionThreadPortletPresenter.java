@@ -44,7 +44,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         this.portletUi = Optional.of(portletUi);
         portletUi.setWidget(presenter.getView());
         this.presenter.installActions(portletUi);

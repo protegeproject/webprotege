@@ -33,11 +33,10 @@ public class RevisionsPortletPresenter extends AbstractWebProtegePortletPresente
                                                         new RevisionsListViewImpl(),
                                                         dispatchServiceManager);
         presenter.reload();
-        presenter.reload();
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(presenter.getWidget());
     }
 

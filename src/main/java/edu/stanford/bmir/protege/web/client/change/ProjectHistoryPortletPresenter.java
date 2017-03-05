@@ -59,7 +59,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setViewTitle("Project History");
         portletUi.setWidget(changeListView.asWidget());
         portletUi.addPortletAction(refreshAction);

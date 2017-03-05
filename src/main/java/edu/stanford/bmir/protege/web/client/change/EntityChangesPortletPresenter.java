@@ -36,7 +36,7 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 	}
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(getProjectId(),
                                         ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> updateDisplayForSelectedEntity());
