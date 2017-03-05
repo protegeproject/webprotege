@@ -54,8 +54,12 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         return projectId;
     }
 
-    public void setViewTitle(String title) {
+    protected void setViewTitle(String title) {
         portletUi.ifPresent(ui -> ui.setViewTitle(title));
+    }
+
+    protected void setForbiddenVisible(boolean forbiddenVisible) {
+        portletUi.ifPresent(ui -> ui.setForbiddenVisible(forbiddenVisible));
     }
 
     protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {

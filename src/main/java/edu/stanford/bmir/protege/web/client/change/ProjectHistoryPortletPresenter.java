@@ -60,7 +60,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Project History");
+        portletUi.setForbiddenMessage("You do not have permission to view changes in this project");
         portletUi.setWidget(changeListView.asWidget());
         portletUi.addPortletAction(refreshAction);
         portletUi.setToolbarVisible(true);
@@ -82,9 +82,15 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         refreshAction.setEnabled(false);
         permissionChecker.hasPermission(VIEW_CHANGES,
                                         canViewChanges -> {
-                                            ProjectId projectId = getProjectId();
-                                            presenter.setRevertChangesVisible(canViewChanges);
-                                            presenter.setChangesForProject(projectId);
+                                            if (canViewChanges) {
+                                                ProjectId projectId = getProjectId();
+                                                presenter.setRevertChangesVisible(canViewChanges);
+                                                presenter.setChangesForProject(projectId);
+                                                setForbiddenVisible(false);
+                                            }
+                                            else {
+                                                setForbiddenVisible(true);
+                                            }
                                         });
 
     }
