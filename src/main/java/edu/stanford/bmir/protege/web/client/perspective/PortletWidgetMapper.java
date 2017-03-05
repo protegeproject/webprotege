@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -20,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -70,7 +70,7 @@ public class PortletWidgetMapper implements WidgetMapper {
         GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if (portletClass != null) {
-            Optional<WebProtegePortletPresenter> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
+            Optional<WebProtegePortlet> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
             if (thePortlet.isPresent()) {
                 GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
                 viewHolder = createViewHolder(terminalNode.getNodeId(),
@@ -95,14 +95,16 @@ public class PortletWidgetMapper implements WidgetMapper {
 
 
     private ViewHolder createViewHolder(@Nonnull TerminalNodeId nodeId,
-                                        @Nonnull WebProtegePortletPresenter portlet,
+                                        @Nonnull WebProtegePortlet portlet,
                                         @Nonnull NodeProperties nodeProperties) {
         PortletUi portletUi = portletUiProvider.get();
         WebProtegeEventBus eventBus = eventBusProvider.get();
-        portlet.start(portletUi, eventBus);
+        portletUi.setViewTitle(portlet.getPortletDescriptor().getTitle());
+        WebProtegePortletPresenter portletPresenter = portlet.getPresenter();
+        portletPresenter.start(portletUi, eventBus);
         ViewHolder viewHolder;
-        if (portlet instanceof HasFixedPrimaryAxisSize) {
-            viewHolder = new FixedSizeViewHolder(portletUi.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portlet).getFixedPrimaryAxisSize());
+        if (portletPresenter instanceof HasFixedPrimaryAxisSize) {
+            viewHolder = new FixedSizeViewHolder(portletUi.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portletPresenter).getFixedPrimaryAxisSize());
         }
         else {
             viewHolder = new ViewHolder(portletUi, NodeProperties.emptyNodeProperties());
@@ -110,7 +112,7 @@ public class PortletWidgetMapper implements WidgetMapper {
         viewHolder.addStyleName(DROP_ZONE);
         viewHolder.addCloseHandler(event -> {
             eventBus.dispose();
-            portlet.dispose();
+            portletPresenter.dispose();
             nodeId2ViewHolderMap.remove(nodeId);
         });
         return viewHolder;

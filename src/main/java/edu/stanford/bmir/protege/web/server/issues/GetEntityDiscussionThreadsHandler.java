@@ -52,7 +52,6 @@ public class GetEntityDiscussionThreadsHandler implements ActionHandler<GetEntit
 
     @Override
     public GetEntityDiscussionThreadsResult execute(GetEntityDiscussionThreadsAction action, ExecutionContext executionContext) {
-        System.out.println("Getting threads");
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
         return new GetEntityDiscussionThreadsResult(ImmutableList.copyOf(threads));
     }

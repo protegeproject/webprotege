@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -14,5 +14,5 @@ public interface PortletFactory {
 
     List<PortletDescriptor> getAvailablePortletDescriptors();
 
-    Optional<WebProtegePortletPresenter> createPortlet(PortletId portletId);
+    Optional<WebProtegePortlet> createPortlet(PortletId portletId);
 }

@@ -69,8 +69,6 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 //
 
 
-        System.out.println("Got the issues!");
-
         return new GetIssuesResult(project.getProjectId(), new ArrayList<>());
     }
 }

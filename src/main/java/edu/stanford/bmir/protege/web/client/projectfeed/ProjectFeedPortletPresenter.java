@@ -54,7 +54,6 @@ public class ProjectFeedPortletPresenter extends AbstractWebProtegePortletPresen
 
     @Override
     public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Project feed");
         presenter.start(eventBus);
         portletUi.setWidget(presenter.getView());
         portletUi.setFilterView(filterView);
