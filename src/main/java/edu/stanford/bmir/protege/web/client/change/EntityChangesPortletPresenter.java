@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.base.Optional;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -20,7 +19,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 @Portlet(id = "portlets.ChangesByEntity",
         title = "Entity Changes",
         tooltip = "Displays a list of project changes for the selected entity.")
-public class EntityChangesPortlet extends AbstractWebProtegePortlet {
+public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private static final String FORBIDDEN_MESSAGE = "You do not have permission to view changes for this project";
 
@@ -29,9 +28,9 @@ public class EntityChangesPortlet extends AbstractWebProtegePortlet {
     private final ChangeListViewPresenter presenter;
 
     @Inject
-	public EntityChangesPortlet(SelectionModel selectionModel,
-                                ProjectId projectId,
-                                ChangeListViewPresenter presenter) {
+	public EntityChangesPortletPresenter(SelectionModel selectionModel,
+                                         ProjectId projectId,
+                                         ChangeListViewPresenter presenter) {
 		super(selectionModel, projectId);
         this.presenter = presenter;
 	}

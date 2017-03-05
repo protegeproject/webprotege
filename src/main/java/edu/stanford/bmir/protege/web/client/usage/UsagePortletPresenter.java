@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.usage;
 
 import com.google.common.base.Optional;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -36,7 +35,7 @@ import java.util.Set;
  */
 
 @Portlet(id = "portlets.EntityUsage", title = "Entity Usage", tooltip = "Displays the usage for the selected class, property or individual.")
-public class UsagePortlet extends AbstractWebProtegePortlet {
+public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     public static final FilterId SHOW_DEFINING_AXIOMS = new FilterId("Show defining axioms");
 
@@ -57,10 +56,10 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
     private final FilterView filterView;
 
     @Inject
-    public UsagePortlet(SelectionModel selectionModel,
-                        DispatchServiceManager dispatchServiceManager,
-                        FilterView filterView,
-                        ProjectId projectId) {
+    public UsagePortletPresenter(SelectionModel selectionModel,
+                                 DispatchServiceManager dispatchServiceManager,
+                                 FilterView filterView,
+                                 ProjectId projectId) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();

@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.widgets.tree.DefaultSelectionModel;
@@ -24,7 +23,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -58,7 +57,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 @Portlet(id = "portlets.PropertyHierarchy",
          title = "Property Hierarchy",
          tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
-public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
+public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";
 
@@ -75,10 +74,10 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public PropertiesTreePortlet(SelectionModel selectionModel,
-                                 DispatchServiceManager dispatchServiceManager,
-                                 ProjectId projectId,
-                                 LoggedInUserProjectPermissionChecker permissionChecker) {
+    public PropertiesTreePortletPresenter(SelectionModel selectionModel,
+                                          DispatchServiceManager dispatchServiceManager,
+                                          ProjectId projectId,
+                                          LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

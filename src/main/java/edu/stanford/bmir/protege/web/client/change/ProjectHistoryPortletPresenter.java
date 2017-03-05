@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.change;
 
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -23,7 +22,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 @Portlet(id = "portlets.ProjectHistory",
          title = "Project History",
          tooltip = "Displays a list of all changes that have been made to the project")
-public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
+public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");
 
@@ -40,11 +39,11 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
     private final ChangeListView changeListView;
 
     @Inject
-    public ProjectHistoryPortlet(ChangeListViewPresenter presenter,
-                                 LoggedInUserProjectPermissionChecker permissionChecker,
-                                 FilterView filterView,
-                                 SelectionModel selectionModel,
-                                 ProjectId projectId) {
+    public ProjectHistoryPortletPresenter(ChangeListViewPresenter presenter,
+                                          LoggedInUserProjectPermissionChecker permissionChecker,
+                                          FilterView filterView,
+                                          SelectionModel selectionModel,
+                                          ProjectId projectId) {
         super(selectionModel, projectId);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;

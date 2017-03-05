@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
@@ -25,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJ
  * 5 Oct 2016
  */
 @Portlet(id = "portlets.Comments", title = "Comments", tooltip = "Displays comments for the selected entity")
-public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
+public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Nonnull
     private final DiscussionThreadListPresenter presenter;
@@ -36,10 +34,10 @@ public class EntityDiscussionThreadPortlet extends AbstractWebProtegePortlet {
     private Optional<PortletUi> portletUi = Optional.empty();
 
     @Inject
-    public EntityDiscussionThreadPortlet(SelectionModel selectionModel,
-                                         @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                                         @Nonnull ProjectId projectId,
-                                         @Nonnull DiscussionThreadListPresenter presenter) {
+    public EntityDiscussionThreadPortletPresenter(SelectionModel selectionModel,
+                                                  @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                                  @Nonnull ProjectId projectId,
+                                                  @Nonnull DiscussionThreadListPresenter presenter) {
         super(selectionModel, projectId);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;

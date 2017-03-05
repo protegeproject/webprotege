@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.projectfeed;
 
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -24,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.filter.FilterSetting.ON;
  * Date: 26/03/2013
  */
 @Portlet(id = "portlets.ProjectFeed", title = "Project Feed")
-public class ProjectFeedPortlet extends AbstractWebProtegePortlet {
+public class ProjectFeedPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     public static final FilterId SHOW_MY_ACTIVITY_FILTER = new FilterId("Show my activity");
 
@@ -37,11 +36,11 @@ public class ProjectFeedPortlet extends AbstractWebProtegePortlet {
     private final FilterView filterView;
 
     @Inject
-    public ProjectFeedPortlet(ProjectFeedPresenter presenter,
-                              FilterView filterView,
-                              SelectionModel selectionModel,
-                              ProjectId projectId,
-                              LoggedInUserProvider loggedInUserManager) {
+    public ProjectFeedPortletPresenter(ProjectFeedPresenter presenter,
+                                       FilterView filterView,
+                                       SelectionModel selectionModel,
+                                       ProjectId projectId,
+                                       LoggedInUserProvider loggedInUserManager) {
         super(selectionModel, projectId);
         this.loggedInUserProvider = loggedInUserManager;
         this.presenter = presenter;

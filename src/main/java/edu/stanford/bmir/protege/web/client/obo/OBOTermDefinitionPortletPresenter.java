@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -22,12 +21,12 @@ import javax.inject.Inject;
  * Date: 20/05/2012
  */
 @Portlet(id = "portlets.obo.TermDefinition", title = "OBO Term Definition")
-public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
+public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPresenter {
 
     private OBOTermDefinitionEditor editor;
 
     @Inject
-    public OBOTermDefinitionPortlet(ProjectId projectId, SelectionModel selectionModel) {
+    public OBOTermDefinitionPortletPresenter(ProjectId projectId, SelectionModel selectionModel) {
         super(selectionModel, projectId);
         editor = new OBOTermDefinitionEditorImpl();
     }

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ontology.annotations;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
@@ -10,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotati
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
@@ -18,7 +17,6 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
@@ -33,7 +31,7 @@ import java.util.Set;
  * Date: 05/07/2013
  */
 @Portlet(id = "portlets.OntologyAnnotations", title = "Ontology Annotations")
-public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
+public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final AnnotationsView annotationsView;
 
@@ -44,7 +42,7 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public OntologyAnnotationsPortlet(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
+    public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, projectId);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;

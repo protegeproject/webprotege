@@ -27,7 +27,7 @@ public class TitleHelper {
         this.projectId = projectId;
     }
 
-    public void updateTitle(final Optional<OWLEntity> entity, final WebProtegePortlet portlet) {
+    public void updateTitle(final Optional<OWLEntity> entity, final WebProtegePortletPresenter portlet) {
         if(entity.isPresent()) {
             manager.execute(new GetEntityRenderingAction(projectId, entity.get()), new DispatchServiceCallback<GetEntityRenderingResult>() {
                 @Override

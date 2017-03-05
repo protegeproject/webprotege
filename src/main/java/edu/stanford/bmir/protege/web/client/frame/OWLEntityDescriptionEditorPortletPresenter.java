@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -19,14 +19,14 @@ import java.util.Optional;
 @Portlet(id = "portlets.owl.EntityDescriptionEditor",
         title = "OWL Entity Description Editor",
         tooltip = "Allows the description of the selected entity to be edited in Manchester Syntax.  The complete OWL 2 syntax is supported.")
-public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet {
+public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final ManchesterSyntaxFrameEditorPresenter presenter;
 
     private Optional<PortletUi> portletUi = Optional.empty();
 
     @Inject
-    public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter) {
+    public OWLEntityDescriptionEditorPortletPresenter(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter) {
         super(selectionModel, projectId);
         this.presenter = presenter;
     }

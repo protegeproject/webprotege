@@ -33,7 +33,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
@@ -91,7 +91,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 @Portlet(id = "portlets.ClassHierarchy",
          title = "Class Hierarchy",
          tooltip = "Displays the class hierarchy as a tree.")
-public class ClassTreePortlet extends AbstractWebProtegePortlet {
+public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
@@ -129,14 +129,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
 
     @Inject
-    public ClassTreePortlet(SelectionModel selectionModel,
-                            WatchPresenter watchPresenter,
-                            EventBus eventBus,
-                            DispatchServiceManager dispatchServiceManager,
-                            final ProjectId projectId,
-                            LoggedInUserProvider loggedInUserProvider,
-                            LoggedInUserProjectPermissionChecker permissionChecker,
-                            Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+    public ClassTreePortletPresenter(SelectionModel selectionModel,
+                                     WatchPresenter watchPresenter,
+                                     EventBus eventBus,
+                                     DispatchServiceManager dispatchServiceManager,
+                                     final ProjectId projectId,
+                                     LoggedInUserProvider loggedInUserProvider,
+                                     LoggedInUserProjectPermissionChecker permissionChecker,
+                                     Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         this(selectionModel,
              primitiveDataEditorProvider,
              watchPresenter,
@@ -148,15 +148,15 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
              permissionChecker);
     }
 
-    private ClassTreePortlet(SelectionModel selectionModel,
-                             Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                             WatchPresenter watchPresenter,
-                             EventBus eventBus,
-                             DispatchServiceManager dispatchServiceManager,
-                             LoggedInUserProvider loggedInUserProvider,
-                             final ProjectId projectId,
-                             final String topClass,
-                             LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+    private ClassTreePortletPresenter(SelectionModel selectionModel,
+                                      Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
+                                      WatchPresenter watchPresenter,
+                                      EventBus eventBus,
+                                      DispatchServiceManager dispatchServiceManager,
+                                      LoggedInUserProvider loggedInUserProvider,
+                                      final ProjectId projectId,
+                                      final String topClass,
+                                      LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -993,12 +993,12 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         if (w.iterator().next() instanceof EntityFrameWatch) {
             return "<img src=\"" + BUNDLE.eyeIcon()
                                          .getSafeUri()
-                                         .asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+                                         .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
             return "<img src=\"" + BUNDLE.eyeDownIcon()
                                          .getSafeUri()
-                                         .asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+                                         .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
     }
 

@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.base.Optional;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -14,7 +13,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.inject.Inject;
 
 @Portlet(id = "portlets.IndividualsList", title = "Individuals by Class")
-public class IndividualsListPortlet extends AbstractWebProtegePortlet {
+public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final IndividualsListPresenter presenter;
 
@@ -27,9 +26,9 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
     private Optional<OWLClass> preconfiguredClass = Optional.absent();
 
     @Inject
-    public IndividualsListPortlet(IndividualsListPresenter presenter,
-                                  SelectionModel selectionModel,
-                                  ProjectId projectId) {
+    public IndividualsListPortletPresenter(IndividualsListPresenter presenter,
+                                           SelectionModel selectionModel,
+                                           ProjectId projectId) {
         super(selectionModel, projectId);
         this.presenter = presenter;
     }

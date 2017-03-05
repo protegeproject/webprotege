@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -16,12 +16,12 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2012
  */
-public abstract class AbstractOBOTermPortlet extends AbstractWebProtegePortlet {
+public abstract class AbstractOBOTermPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
 
-    protected AbstractOBOTermPortlet(SelectionModel selectionModel,
-                                     ProjectId projectId) {
+    protected AbstractOBOTermPortletPresenter(SelectionModel selectionModel,
+                                              ProjectId projectId) {
         super(selectionModel, projectId);
     }
 
