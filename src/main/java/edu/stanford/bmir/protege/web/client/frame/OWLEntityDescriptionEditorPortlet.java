@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -21,12 +23,19 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet
 
     private final ManchesterSyntaxFrameEditorPresenter presenter;
 
+    private Optional<PortletUi> portletUi = Optional.empty();
+
     @Inject
     public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter) {
-        super(selectionModel, eventBus, projectId);
+        super(selectionModel, projectId);
         this.presenter = presenter;
-        presenter.attach(this);
-        setWidget(presenter.getView());
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        this.portletUi = Optional.of(portletUi);
+        presenter.start(eventBus);
+        portletUi.setWidget(presenter.getView());
     }
 
     @Override
@@ -34,7 +43,7 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
         if (selectedEntity.isPresent()) {
             presenter.setSubject(selectedEntity.get());
-            setTitle(entity.get().getEntityType().getPrintName() + " Description");
+            portletUi.ifPresent(ui -> ui.setViewTitle(entity.get().getEntityType().getPrintName() + " Description"));
         }
         else {
             presenter.clearSubject();

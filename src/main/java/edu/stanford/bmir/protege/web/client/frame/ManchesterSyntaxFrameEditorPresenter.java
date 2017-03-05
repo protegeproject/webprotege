@@ -94,22 +94,19 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         return editor;
     }
 
-    public void attach(HasEventHandlerManagement management) {
-        editor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<String>> event) {
-                errorCheckTimer.cancel();
-                errorCheckTimer.schedule(500);
-            }
+    public void start(WebProtegeEventBus eventBus) {
+        editor.addValueChangeHandler(event -> {
+            errorCheckTimer.cancel();
+            errorCheckTimer.schedule(500);
         });
         editor.setCreateAsEntityTypeHandler(createAsEntityTypeHandler);
         editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(dispatchServiceManager,
                                                                                        projectId, this, this));
         editor.setApplyChangesHandler(applyChangesActionHandler);
-        management.addProjectEventHandler(UserLoggedInEvent.TYPE, event -> updateState());
-        management.addProjectEventHandler(UserLoggedOutEvent.TYPE, event -> updateState());
-        management.addProjectEventHandler(ON_PERMISSIONS_CHANGED, event -> updateState());
-        management.addProjectEventHandler(ProjectChangedEvent.TYPE, event -> refreshIfPristine());
+        eventBus.addProjectEventHandler(projectId, UserLoggedInEvent.TYPE, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, UserLoggedOutEvent.TYPE, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> refreshIfPristine());
         updateState();
     }
 

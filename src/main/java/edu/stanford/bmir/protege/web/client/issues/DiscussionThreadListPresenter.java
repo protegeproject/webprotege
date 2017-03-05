@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -61,8 +62,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     private final Map<ThreadId, DiscussionThreadPresenter> threadPresenters = new HashMap<>();
 
-    private final HandlerRegistrationManager eventBus;
-
     private Optional<OWLEntity> entity = Optional.empty();
 
 
@@ -70,7 +69,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
             @Nonnull FilterView filterView,
-            @Nonnull HandlerRegistrationManager eventBus,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull ProjectId projectId,
@@ -79,7 +77,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
             @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider) {
         this.view = view;
         this.filterView = filterView;
-        this.eventBus = eventBus;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
@@ -96,10 +93,10 @@ public class DiscussionThreadListPresenter implements HasDispose {
         hasPortletActions.addPortletAction(addCommentAction);
     }
 
-    public void start() {
-        eventBus.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
-        eventBus.registerHandlerToProject(projectId, ON_DISCUSSION_THREAD_CREATED, event -> addThread(event.getThread()));
-        eventBus.registerHandlerToProject(projectId, ON_STATUS_CHANGED, event -> handleThreadStatusChanged(event.getThreadId(), event.getStatus()));
+    public void start(WebProtegeEventBus eventBus) {
+        eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
+        eventBus.addProjectEventHandler(projectId, ON_DISCUSSION_THREAD_CREATED, event -> addThread(event.getThread()));
+        eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, event -> handleThreadStatusChanged(event.getThreadId(), event.getStatus()));
         updateEnabled();
     }
 
@@ -197,7 +194,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     @Override
     public void dispose() {
-        eventBus.removeHandlers();
         stopThreadPresenters();
     }
 }

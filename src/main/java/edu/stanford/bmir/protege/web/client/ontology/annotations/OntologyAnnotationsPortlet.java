@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ontology.annotations;
 
 import com.google.common.base.Optional;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -13,9 +11,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotati
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -44,19 +44,28 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public OntologyAnnotationsPortlet(AnnotationsView annotationsView, SelectionModel selectionModel, EventBus eventBus,  DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, eventBus, projectId);
+    public OntologyAnnotationsPortlet(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
+        super(selectionModel, projectId);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
-        setTitle("Ontology annotations");
-        setWidget(new ScrollPanel(annotationsView.asWidget()));
         annotationsView.addValueChangeHandler(event -> handleOntologyAnnotationsChanged());
-        addProjectEventHandler(OntologyFrameChangedEvent.TYPE, event -> updateView());
-        updateState();
-        updateView();
     }
 
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("Ontology annotations");
+        portletUi.setWidget(new ScrollPanel(annotationsView.asWidget()));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        OntologyFrameChangedEvent.TYPE, event -> updateView());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        event -> updateState());
+        updateState();
+        updateView();
+
+    }
 
     private void updateView() {
         dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<GetOntologyAnnotationsResult>() {
@@ -76,21 +85,6 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
         annotationsView.setEnabled(false);
         permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY_ANNOTATIONS,
                                         canEdit -> annotationsView.setEnabled(canEdit));
-    }
-
-    @Override
-    protected void handleLogin(UserId userId) {
-        updateState();
-    }
-
-    @Override
-    protected void handleLogout(UserId userId) {
-        updateState();
-    }
-
-    @Override
-    public void handlePermissionsChanged() {
-        updateState();
     }
 
     private void handleOntologyAnnotationsChanged() {

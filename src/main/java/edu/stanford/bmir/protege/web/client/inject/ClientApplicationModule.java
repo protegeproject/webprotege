@@ -11,6 +11,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.app.HasClientApplicationProperties;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -346,5 +348,10 @@ public class ClientApplicationModule {
     @Provides
     PaginatorView providePaginatorView(PaginatorViewImpl view) {
         return view;
+    }
+
+    @Provides
+    PortletUi providePortletUi(PortletUiImpl portletUi) {
+        return portletUi;
     }
 }

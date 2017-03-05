@@ -2,11 +2,12 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,8 +21,8 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 @Portlet(id = "portlets.ProjectHistory",
-        title = "Project History",
-        tooltip = "Displays a list of all changes that have been made to the project")
+         title = "Project History",
+         tooltip = "Displays a list of all changes that have been made to the project")
 public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
     public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");
@@ -34,25 +35,39 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
+    private final FilterView filterView;
+
+    private final ChangeListView changeListView;
 
     @Inject
-    public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
-        setTitle("Project History");
+    public ProjectHistoryPortlet(ChangeListViewPresenter presenter,
+                                 LoggedInUserProjectPermissionChecker permissionChecker,
+                                 FilterView filterView,
+                                 SelectionModel selectionModel,
+                                 ProjectId projectId) {
+        super(selectionModel, projectId);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
+        this.filterView = filterView;
         presenter.setDownloadVisible(true);
-        final ChangeListView changeListView = presenter.getView();
-        setWidget(changeListView.asWidget());
-        addPortletAction(refreshAction);
+        changeListView = presenter.getView();
 
-        addProjectEventHandler(ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
-        addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
 
-        FilterView filterView = new FilterViewImpl();
         filterView.addFilter(SHOW_DETAILS_FILTER, FilterSetting.ON);
-        filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue().hasSetting(SHOW_DETAILS_FILTER, FilterSetting.ON)));
-        setFilter(filterView);
+        filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue()
+                                                                                        .hasSetting(SHOW_DETAILS_FILTER,
+                                                                                                    FilterSetting.ON)));
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setViewTitle("Project History");
+        portletUi.setWidget(changeListView.asWidget());
+        portletUi.addPortletAction(refreshAction);
+        portletUi.setToolbarVisible(true);
+        portletUi.setFilterView(filterView);
+        eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
+        eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
         reload();
     }
 

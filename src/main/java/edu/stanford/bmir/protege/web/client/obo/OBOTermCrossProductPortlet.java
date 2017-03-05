@@ -4,11 +4,13 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -29,12 +31,17 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
 
     @Inject
-    public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor,
+                                      SelectionModel selectionModel,
+                                      ProjectId projectId) {
+        super(selectionModel, projectId);
         this.editor = editor;
-        setWidget(editor.asWidget());
     }
 
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(editor.asWidget());
+    }
 
     @Override
     protected void clearDisplay() {
@@ -44,7 +51,7 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        if(!(entity.isOWLClass())) {
+        if (!(entity.isOWLClass())) {
             editor.clearValue();
         }
         else {
@@ -68,17 +75,18 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        if(!(entity.isOWLClass())) {
+        if (!(entity.isOWLClass())) {
             return;
         }
-        if(!editor.getValue().isPresent()) {
+        if (!editor.getValue().isPresent()) {
             return;
         }
         OBOTermCrossProduct crossProduct = editor.getValue().get();
         getService().setCrossProduct(getProjectId(), (OWLClass) entity, crossProduct, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
-                if(caught instanceof NotSignedInException) {
-                    MessageBox.showMessage("You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");
+                if (caught instanceof NotSignedInException) {
+                    MessageBox.showMessage(
+                            "You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");
                 }
                 else {
                     MessageBox.showMessage(caught.getMessage());

@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
@@ -18,23 +17,25 @@ import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
-import edu.stanford.bmir.protege.web.client.portlet.LegacyCompatUtil;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.LegacyCompatUtil;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
@@ -51,11 +52,12 @@ import java.util.List;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
 @Portlet(id = "portlets.PropertyHierarchy",
-        title = "Property Hierarchy",
-        tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
+         title = "Property Hierarchy",
+         tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
 public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";
@@ -73,12 +75,13 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, eventBus, projectId);
+    public PropertiesTreePortlet(SelectionModel selectionModel,
+                                 DispatchServiceManager dispatchServiceManager,
+                                 ProjectId projectId,
+                                 LoggedInUserProjectPermissionChecker permissionChecker) {
+        super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
-
-        setTitle("Properties Tree");
 
         treePanel = new TreePanel();
         treePanel.setAnimate(true);
@@ -101,12 +104,14 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
                     java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                     if (selectedEntity.isPresent()) {
                         String iri = selectedEntity.get().getIRI().toQuotedString();
-                        InputBox.showOkDialog("Property IRI", true, iri, input -> {});
+                        InputBox.showOkDialog("Property IRI", true, iri, input -> {
+                        });
                     }
                 });
                 contextMenu.addItem("Show direct link", event -> {
                     String location = Window.Location.getHref();
-                    InputBox.showOkDialog("Direct link", true, location, input -> {});
+                    InputBox.showOkDialog("Direct link", true, location, input -> {
+                    });
                 });
                 contextMenu.addSeparator();
                 contextMenu.addItem("Refresh tree", event -> onRefresh());
@@ -125,24 +130,6 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         treePanel.setRootNode(root);
         treePanel.setRootVisible(false);
 
-        addPortletAction(createAction);
-        addPortletAction(deleteAction);
-        setWidget(new ScrollPanel(treePanel.asWidget()));
-
-
-        addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));
-
-        addProjectEventHandler(ObjectPropertyHierarchyParentRemovedEvent.TYPE, event -> handleRelationshipRemoved(event));
-
-        addProjectEventHandler(DataPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));
-
-        addProjectEventHandler(AnnotationPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));
-
-        addProjectEventHandler(HierarchyRootAddedEvent.TYPE, event -> handleRootAdded(event));
-
-        addProjectEventHandler(HierarchyRootRemovedEvent.TYPE, event -> handleRootRemoved(event));
-
-        addProjectEventHandler(BrowserTextChangedEvent.TYPE, event -> handleBrowserTextChanged(event));
         DefaultSelectionModel selModel = new DefaultSelectionModel();
         treePanel.setSelectionModel(selModel);
         selModel.addSelectionModelListener(new DefaultSelectionModelListenerAdapter() {
@@ -156,7 +143,45 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
                 }
             }
         });
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.addPortletAction(createAction);
+        portletUi.addPortletAction(deleteAction);
+        portletUi.setWidget(treePanel.asWidget());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ObjectPropertyHierarchyParentAddedEvent.TYPE,
+                                        event -> handleRelationshipAdded(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ObjectPropertyHierarchyParentRemovedEvent.TYPE,
+                                        event -> handleRelationshipRemoved(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        DataPropertyHierarchyParentAddedEvent.TYPE,
+                                        event -> handleRelationshipAdded(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        AnnotationPropertyHierarchyParentAddedEvent.TYPE,
+                                        event -> handleRelationshipAdded(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        HierarchyRootAddedEvent.TYPE, event -> handleRootAdded(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        HierarchyRootRemovedEvent.TYPE, event -> handleRootRemoved(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        BrowserTextChangedEvent.TYPE, event -> handleBrowserTextChanged(event));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ON_PERMISSIONS_CHANGED,
+                                        event -> updateButtonStates());
+
+        portletUi.setViewTitle("Properties tree");
         updateButtonStates();
+
     }
 
     private void onRefresh() {
@@ -339,7 +364,9 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         if (!selectedEntityType.isPresent()) {
             return;
         }
-        WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(), createEntityInfo -> handleCreateProperty(createEntityInfo)));
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(),
+                                                                     createEntityInfo -> handleCreateProperty(
+                                                                             createEntityInfo)));
     }
 
     private void handleCreateProperty(final CreateEntityInfo createEntityInfo) {
@@ -394,21 +421,28 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private void createSubProperties(Optional<OWLAnnotationProperty> parent, CreateEntityInfo createEntityInfo) {
-        CreateAnnotationPropertiesAction action = new CreateAnnotationPropertiesAction(getProjectId(), createEntityInfo.getBrowserTexts(), parent);
+        CreateAnnotationPropertiesAction action = new CreateAnnotationPropertiesAction(getProjectId(),
+                                                                                       createEntityInfo.getBrowserTexts(),
+                                                                                       parent);
         createSubProperties(action);
     }
 
     private void createSubProperties(OWLDataProperty property, CreateEntityInfo createEntityInfo) {
-        CreateDataPropertiesAction action = new CreateDataPropertiesAction(getProjectId(), createEntityInfo.getBrowserTexts(), Optional.of(property));
+        CreateDataPropertiesAction action = new CreateDataPropertiesAction(getProjectId(),
+                                                                           createEntityInfo.getBrowserTexts(),
+                                                                           Optional.of(property));
         createSubProperties(action);
     }
 
     private void createSubProperties(OWLObjectProperty property, CreateEntityInfo createEntityInfo) {
-        CreateObjectPropertiesAction action = new CreateObjectPropertiesAction(getProjectId(), createEntityInfo.getBrowserTexts(), Optional.of(property));
+        CreateObjectPropertiesAction action = new CreateObjectPropertiesAction(getProjectId(),
+                                                                               createEntityInfo.getBrowserTexts(),
+                                                                               Optional.of(property));
         createSubProperties(action);
     }
 
-    private <R extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
+    private <R extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(
+            AbstractCreateEntityInHierarchyAction<R, E> action) {
         dispatchServiceManager.execute(action, new DispatchServiceCallback<R>() {
             @Override
             protected String getErrorMessage(Throwable throwable) {
@@ -463,7 +497,8 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         if (propertyEntity == null) {
             return;
         }
-        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntity, getProjectId()), new DeletePropertyHandler(propertyEntity));
+        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntity, getProjectId()),
+                                       new DeletePropertyHandler(propertyEntity));
     }
 
     private TreeNode getDirectChild(TreeNode parentNode, String childId) {
@@ -508,11 +543,6 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         }
     }
 
-    @Override
-    public void handlePermissionsChanged() {
-        updateButtonStates();
-    }
-
     public void updateButtonStates() {
         createAction.setEnabled(false);
         deleteAction.setEnabled(false);
@@ -540,7 +570,10 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     public void getSubProperties(final String propName, final boolean getSubpropertiesOfSubproperties) {
-        OntologyServiceManager.getInstance().getSubproperties(getProjectId(), propName, new GetSubproperties(propName, getSubpropertiesOfSubproperties));
+        OntologyServiceManager.getInstance()
+                              .getSubproperties(getProjectId(),
+                                                propName,
+                                                new GetSubproperties(propName, getSubpropertiesOfSubproperties));
     }
 
     protected TreeNode createTreeNode(EntityData entityData) {
@@ -560,7 +593,9 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         String text = entityData.getBrowserText();
         int localAnnotationsCount = entityData.getLocalAnnotationsCount();
         if (localAnnotationsCount > 0) {
-            text = text + "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" />" + " " + localAnnotationsCount;
+            text = text + "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon()
+                                                                       .getSafeUri()
+                                                                       .asString() + "\" />" + " " + localAnnotationsCount;
         }
         int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
@@ -669,17 +704,20 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
-        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                node.setText(result.getEntityDataMap().get(entity).getBrowserText());
-            }
-        });
+        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)),
+                                       new DispatchServiceCallback<GetEntityDataResult>() {
+                                           @Override
+                                           public void handleSuccess(GetEntityDataResult result) {
+                                               node.setText(result.getEntityDataMap().get(entity).getBrowserText());
+                                           }
+                                       });
     }
 
     private PropertyEntityData createEntityDataPlaceholder(OWLEntity child) {
         String browserText = "";
-        final PropertyEntityData entityData = new PropertyEntityData(child.getIRI().toString(), browserText, Collections.<EntityData>emptySet());
+        final PropertyEntityData entityData = new PropertyEntityData(child.getIRI().toString(),
+                                                                     browserText,
+                                                                     Collections.<EntityData>emptySet());
         final EntityType<?> entityType = child.getEntityType();
         if (entityType == EntityType.OBJECT_PROPERTY) {
             entityData.setPropertyType(PropertyType.OBJECT);

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
@@ -22,9 +21,8 @@ public abstract class AbstractOBOTermPortlet extends AbstractWebProtegePortlet {
     private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
 
     protected AbstractOBOTermPortlet(SelectionModel selectionModel,
-                                     EventBus eventBus,
                                      ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+        super(selectionModel, projectId);
     }
 
     public OBOTextEditorServiceAsync getService() {
@@ -80,7 +78,7 @@ public abstract class AbstractOBOTermPortlet extends AbstractWebProtegePortlet {
      * method.
      */
     final protected void updateTitle() {
-        setTitle(getTitlePrefix());
+//        setTitle(getTitlePrefix());
     }
 
 }

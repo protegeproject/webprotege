@@ -16,6 +16,4 @@ public interface ChangeListView extends IsWidget {
     void clear();
 
     void setDetailsVisible(boolean showDetails);
-
-    void setViewChangesAllowed(boolean viewChangesAllowed);
 }

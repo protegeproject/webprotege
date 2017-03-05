@@ -2,15 +2,7 @@ package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.Event;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -25,63 +17,35 @@ import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 
-public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, HasEventHandlerManagement {
+public abstract class AbstractWebProtegePortlet implements WebProtegePortlet {
 
     private final SelectionModel selectionModel;
-
-    private final EventBus eventBus;
 
     private final List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
 
     private final ProjectId projectId;
 
-    private final PortletUi portletUi = new PortletUiImpl();
-
     public AbstractWebProtegePortlet(@Nonnull SelectionModel selectionModel,
-                                     @Nonnull EventBus eventBus,
                                      @Nonnull ProjectId projectId) {
         this.selectionModel = checkNotNull(selectionModel);
-        this.eventBus = checkNotNull(eventBus);
         this.projectId = checkNotNull(projectId);
 
-        addApplicationEventHandler(UserLoggedInEvent.TYPE, event -> handleLogin(event.getUserId()));
-
-        addApplicationEventHandler(UserLoggedOutEvent.TYPE, event -> handleLogout(event.getUserId()));
-
-        addProjectEventHandler(ON_PERMISSIONS_CHANGED, event -> handlePermissionsChanged());
-
+        // TODO: Move this out
         HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
-                if (portletUi.asWidget().isAttached()) {
+//                if (portletUi.asWidget().isAttached()) {
                     handleBeforeSetEntity(e.getPreviousSelection());
                     handleAfterSetEntity(e.getLastSelection());
-                }
+//                }
             }
         );
         handlerRegistrations.add(handlerRegistration);
-        asWidget().addAttachHandler(event -> handleActivated());
-    }
-
-    @Override
-    public void setWidget(IsWidget isWidget) {
-        portletUi.setWidget(isWidget);
-    }
-
-    @Override
-    public void setToolbarVisible(boolean visible) {
-        portletUi.setToolbarVisible(visible);
     }
 
     public SelectionModel getSelectionModel() {
         return selectionModel;
     }
-
-    public void handleActivated() {
-        handleAfterSetEntity(selectionModel.getSelection());
-    }
-
 
     public ProjectId getProjectId() {
         return projectId;
@@ -93,38 +57,29 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
     }
 
-    protected void handleLogin(UserId userId) {
-    }
-
-    protected void handleLogout(UserId userId) {
-    }
-
-    public void handlePermissionsChanged() {
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-    /**
-     * Adds an event handler to the main event bus.  When the portlet is destroyed the handler will automatically be
-     * removed.
-     * @param type The type of event to listen for.  Not {@code null}.
-     * @param handler The handler for the event type. Not {@code null}.
-     * @param <T> The event type
-     * @throws NullPointerException if any parameters are {@code null}.
-     */
-    public <T> void addProjectEventHandler(Event.Type<T> type, T handler) {
-        HandlerRegistration reg = eventBus.addHandlerToSource(checkNotNull(type), getProjectId(), checkNotNull(handler));
-        handlerRegistrations.add(reg);
-    }
-
-    public <T> void addApplicationEventHandler(Event.Type<T> type, T handler) {
-        HandlerRegistration reg = eventBus.addHandler(checkNotNull(type), checkNotNull(handler));
-        handlerRegistrations.add(reg);
-    }
+//    /**
+//     * Adds an event handler to the main event bus.  When the portlet is destroyed the handler will automatically be
+//     * removed.
+//     * @param type The type of event to listen for.  Not {@code null}.
+//     * @param handler The handler for the event type. Not {@code null}.
+//     * @param <T> The event type
+//     * @throws NullPointerException if any parameters are {@code null}.
+//     */
+//    public <T> void addProjectEventHandler(Event.Type<T> type, T handler) {
+//        HandlerRegistration reg = eventBus.addHandlerToSource(checkNotNull(type), getProjectId(), checkNotNull(handler));
+//        handlerRegistrations.add(reg);
+//    }
+//
+//    public <T> void addApplicationEventHandler(Event.Type<T> type, T handler) {
+//        HandlerRegistration reg = eventBus.addHandler(checkNotNull(type), checkNotNull(handler));
+//        handlerRegistrations.add(reg);
+//    }
 
     private void removeHandlers() {
         for (HandlerRegistration reg : handlerRegistrations) {
@@ -153,10 +108,9 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
     private HandlerManager handlerManager = new HandlerManager(this);
 
-    public void setTitle(String title) {
-        this.title = title;
-        fireEvent(new ViewTitleChangedEvent(title));
-    }
+//    public void setTitle(String title) {
+//        fireEvent(new ViewTitleChangedEvent(title));
+//    }
 
     @Override
     public com.google.gwt.event.shared.HandlerRegistration addViewTitleChangedHandler(ViewTitleChangedHandler viewTitleChangedHandler) {
@@ -164,28 +118,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
     }
 
     @Override
-    public String getViewTitle() {
-        return title;
-    }
-
-    @Override
-    public void addPortletAction(PortletAction portletAction) {
-        portletUi.addPortletAction(portletAction);
-        portletUi.setToolbarVisible(true);
-    }
-
-    public void setFilter(FilterView filterView) {
-        portletUi.setFilterView(filterView);
-        portletUi.setToolbarVisible(true);
-    }
-
-    @Override
     public void fireEvent(GwtEvent<?> gwtEvent) {
         handlerManager.fireEvent(gwtEvent);
-    }
-
-    @Override
-    public Widget asWidget() {
-        return portletUi.asWidget();
     }
 }

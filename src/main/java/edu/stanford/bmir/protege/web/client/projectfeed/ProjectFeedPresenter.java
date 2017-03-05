@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.projectfeed;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -20,6 +21,8 @@ import java.util.Set;
  */
 public class ProjectFeedPresenter {
 
+    private final ProjectId projectId;
+
     private final ProjectFeedView view;
 
     private final Provider<ProjectChangeEventView> projectChangeEventViewProvider;
@@ -36,11 +39,13 @@ public class ProjectFeedPresenter {
 
 
     @Inject
-    public ProjectFeedPresenter(ProjectFeedView view,
+    public ProjectFeedPresenter(ProjectId projectId,
+                                ProjectFeedView view,
                                 Provider<ProjectChangeEventView> projectChangeEventViewProvider,
                                 Provider<NotePostedEventView> notePostedEventViewProvider,
                                 Provider<UserStartedViewingProjectEventView> userStartedViewingProjectEventViewProvider,
                                 Provider<UserStoppedViewingProjectEventView> userStoppedViewingProjectEventViewProvider) {
+        this.projectId = projectId;
         this.view = view;
         this.projectChangeEventViewProvider = projectChangeEventViewProvider;
         this.notePostedEventViewProvider = notePostedEventViewProvider;
@@ -48,11 +53,11 @@ public class ProjectFeedPresenter {
         this.userStoppedViewingProjectEventViewProvider = userStoppedViewingProjectEventViewProvider;
     }
 
-    public void bind(HasEventHandlerManagement eventHandlerMan) {
-        eventHandlerMan.addProjectEventHandler(ProjectChangedEvent.TYPE, event -> postChangeEvent(event));
-        eventHandlerMan.addProjectEventHandler(NotePostedEvent.TYPE, event -> postNotePostedEvent(event));
-        eventHandlerMan.addProjectEventHandler(UserStartingViewingProjectEvent.TYPE, event -> postUserStartedViewingProjectEvent(event));
-        eventHandlerMan.addProjectEventHandler(UserStoppedViewingProjectEvent.TYPE, event -> postUserStoppedViewingProjectEvent(event));
+    public void start(WebProtegeEventBus eventBus) {
+        eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> postChangeEvent(event));
+        eventBus.addProjectEventHandler(projectId, NotePostedEvent.TYPE, event -> postNotePostedEvent(event));
+        eventBus.addProjectEventHandler(projectId, UserStartingViewingProjectEvent.TYPE, event -> postUserStartedViewingProjectEvent(event));
+        eventBus.addProjectEventHandler(projectId, UserStoppedViewingProjectEvent.TYPE, event -> postUserStoppedViewingProjectEvent(event));
     }
 
     public IsWidget getView() {

@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -26,11 +28,15 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     private OBOTermSynonymListEditor editor;
 
     @Inject
-    public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public OBOTermSynonymsPortlet(SelectionModel selectionModel, ProjectId projectId) {
+        super(selectionModel, projectId);
         editor = new OBOTermSynonymListEditor();
         editor.setEnabled(true);
-        setWidget(editor);
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(editor);
     }
 
     @Override

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.events.RequestRefreshEventHandler;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPresenter;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsView;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.metrics.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
@@ -43,7 +44,7 @@ public class MetricsPresenterTestCase {
     protected MetricsView view;
 
     @Mock
-    protected HasEventHandlerManagement eventManager;
+    protected WebProtegeEventBus eventManager;
 
     @Mock
     protected ImmutableList<MetricValue> metricValues;
@@ -79,10 +80,10 @@ public class MetricsPresenterTestCase {
                 metricsChangedHandler = (MetricsChangedHandler) invocationOnMock.getArguments()[1];
                 return null;
             }
-        }).when(eventManager).addProjectEventHandler(any(MetricsChangedEvent.getType().getClass()), any(MetricsChangedHandler.class));
+        }).when(eventManager).addProjectEventHandler(projectId, any(MetricsChangedEvent.getType().getClass()), any(MetricsChangedHandler.class));
 
         presenter = new MetricsPresenter(projectId, view, dispatchServiceManager);
-        presenter.bind(eventManager);
+        presenter.start();
     }
 
 
@@ -94,7 +95,7 @@ public class MetricsPresenterTestCase {
 
     @Test
     public void shouldGetMetricsOnReload() {
-        presenter.reload();
+        presenter.handleMetricsChanged();
         verify(view).setMetrics(metricValues);
     }
 

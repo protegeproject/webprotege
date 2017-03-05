@@ -1,21 +1,23 @@
 package edu.stanford.bmir.protege.web.client.watches;
 
 import com.google.gwt.user.client.Timer;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
 
@@ -28,8 +30,6 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
-    private final ForbiddenView forbiddenView;
-
     private final Timer refreshTimer = new Timer() {
         @Override
         public void run() {
@@ -37,26 +37,43 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
         }
     };
 
+    private final ChangeListView changeListView;
+
+    private Optional<PortletUi> ui = Optional.empty();
+
     @Inject
     public WatchedEntitiesPortlet(ChangeListViewPresenter presenter,
                                   LoggedInUserProjectPermissionChecker permissionChecker,
-                                  SelectionModel selectionModel, EventBus eventBus,
+                                  SelectionModel selectionModel,
                                   ProjectId projectId,
-                                  LoggedInUserProvider loggedInUserProvider,
-                                  ForbiddenView forbiddenView) {
-        super(selectionModel, eventBus, projectId);
+                                  LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, projectId);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
-        this.forbiddenView = forbiddenView;
-        forbiddenView.setSubMessage("You do not have permission to watch changes in this project");
-        ChangeListView changeListView = presenter.getView();
-        setWidget(changeListView);
+        changeListView = presenter.getView();
+
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        ui = Optional.of(portletUi);
+        portletUi.setWidget(changeListView);
+        portletUi.addPortletAction(new PortletAction("Refresh", (action, event) -> onRefresh()));
+
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        WatchAddedEvent.TYPE, event -> refreshDelayed());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        WatchAddedEvent.TYPE, event -> refreshDelayed());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        event -> onRefresh());
+        portletUi.setForbiddenMessage("You do not have permission to watch changes in this project");
+        portletUi.setViewTitle("Watched Entity Changes");
+
+        // TODO: Check this
+
         onRefresh();
-        addProjectEventHandler(WatchAddedEvent.TYPE, event -> refreshDelayed());
-        addProjectEventHandler(WatchAddedEvent.TYPE, event -> refreshDelayed());
-        asWidget().addAttachHandler(event -> onRefresh());
-        addPortletAction(new PortletAction("Refresh", (action, event) -> onRefresh()));
     }
 
     private void refreshDelayed() {
@@ -64,29 +81,21 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
         refreshTimer.schedule(2000);
     }
 
-    @Override
-    public void handleLogin(UserId userId) {
-        onRefresh();
-    }
-
-    @Override
-    public void handleLogout(UserId userId) {
-        onRefresh();
-    }
-
     private void onRefresh() {
-        if (asWidget().isAttached()) {
-            setTitle("Watched Entity Changes");
+
+        ui.ifPresent(portletUi -> {
             permissionChecker.hasPermission(WATCH_CHANGES,
                                             canWatch -> {
-                                               if(canWatch) {
-                                                   presenter.setChangesForWatches(getProjectId(), loggedInUserProvider.getCurrentUserId());
-                                                    setWidget(presenter.getView());
-                                               }
-                                               else {
-                                                   setWidget(forbiddenView);
-                                               }
+                                                if (canWatch) {
+                                                    presenter.setChangesForWatches(getProjectId(),
+                                                                                   loggedInUserProvider.getCurrentUserId());
+                                                    portletUi.setForbiddenVisible(false);
+                                                }
+                                                else {
+                                                    portletUi.setForbiddenVisible(false);
+                                                }
                                             });
-        }
+        });
+
     }
 }

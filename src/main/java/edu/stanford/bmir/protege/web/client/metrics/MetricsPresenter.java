@@ -27,35 +27,15 @@ public class MetricsPresenter {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
 
-        view.setRequestRefreshEventHandler(new RequestRefreshEventHandler() {
-            @Override
-            public void handleRequestRefresh(RequestRefreshEvent requestRefreshEvent) {
-                processRequestRefresh();
-            }
-        });
+        view.setRequestRefreshEventHandler(requestRefreshEvent -> processRequestRefresh());
     }
 
-    public void reload() {
+    public void start() {
         processRequestRefresh();
     }
 
-    /**
-     * Attaches this presenter to the specified event handler.
-     * @param eventHandler The event handler.
-     */
-    public void bind(HasEventHandlerManagement eventHandler) {
-        eventHandler.addProjectEventHandler(MetricsChangedEvent.getType(), new MetricsChangedHandler() {
-            @Override
-            public void handleMetricsChanged(MetricsChangedEvent event) {
-                processMetricsChangedEvent(event);
-            }
-        });
-    }
-
-    private void processMetricsChangedEvent(MetricsChangedEvent event) {
-        if(event.getProjectId().equals(projectId)) {
-            view.setDirty(true);
-        }
+    public void handleMetricsChanged() {
+        view.setDirty(true);
     }
 
     private void processRequestRefresh() {

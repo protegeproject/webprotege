@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
-    public static final transient Event.Type<WatchAddedHandler> TYPE = new Event.Type<WatchAddedHandler>();
+    public static final transient Event.Type<WatchAddedHandler> TYPE = new Event.Type<>();
 
     private Watch<?> watch;
 

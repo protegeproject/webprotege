@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -24,11 +26,15 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     
 
     @Inject
-    public OBOTermXRefsEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public OBOTermXRefsEditorPortlet(SelectionModel selectionModel, ProjectId projectId) {
+        super(selectionModel, projectId);
         editor = new XRefListEditor();
-        setWidget(editor);
         editor.setEnabled(true);
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(editor);
     }
 
     @Override

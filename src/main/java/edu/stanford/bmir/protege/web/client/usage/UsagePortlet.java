@@ -5,9 +5,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
@@ -53,15 +54,19 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
 
     private Optional<UsageFilter> filter = Optional.absent();
 
+    private final FilterView filterView;
+
     @Inject
-    public UsagePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
-        super(selectionModel, eventBus, projectId);
+    public UsagePortlet(SelectionModel selectionModel,
+                        DispatchServiceManager dispatchServiceManager,
+                        FilterView filterView,
+                        ProjectId projectId) {
+        super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
-        setWidget(usageView.asWidget());
         usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());
 
-        FilterView filterView = new FilterViewImpl();
+        this.filterView = filterView;
 
         filterView.addFilter(SHOW_DEFINING_AXIOMS, FilterSetting.ON);
         filterView.addFilterGroup("Show usage by entities of type");
@@ -74,7 +79,12 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
             filterView.addFilter(new FilterId(axiomTypeGroup.getDisplayName()), FilterSetting.ON);
         }
         filterView.addValueChangeHandler(event -> applyFilter(event.getValue()));
-        setFilter(filterView);
+    }
+
+    @Override
+    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.setWidget(usageView.asWidget());
+        portletUi.setFilterView(filterView);
     }
 
     private void applyFilter(FilterSet filterSet) {
@@ -121,7 +131,6 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
             showUsageForEntity(sel.get());
         }
         else {
-            setTitle("No entity selected");
             usageView.clearData();
         }
     }
@@ -140,7 +149,7 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
                 final Collection<UsageReference> references = result.getUsageReferences();
                 final int visibleReferences = references.size();
                 final int totalReferences = result.getTotalUsageCount();
-                setTitle("Usage (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
+//                setTitle("Usage (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
                 usageView.setData(entity, references);
             }
         });
