@@ -31,9 +31,6 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final Widget editorView;
 
-    @Nonnull
-    private java.util.Optional<PortletUi> portletUi = java.util.Optional.empty();
-
     @Inject
     public EditorPortletPresenter(
             SelectionModel selectionModel,
@@ -45,8 +42,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        this.portletUi = java.util.Optional.of(portletUi);
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setViewTitle("Nothing selected");
         portletUi.setWidget(editorView);
         editorPresenter.updatePermissionBasedItems();
@@ -64,10 +60,10 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
         if(!entity.isPresent()) {
-            portletUi.ifPresent(ui -> ui.setViewTitle("Nothing selected"));
+            setViewTitle("Nothing selected");
             return;
         }
-        portletUi.ifPresent(ui -> ui.setViewTitle(entity.get().getEntityType().getPrintName() + " description"));
+        setViewTitle(entity.get().getEntityType().getPrintName() + " description");
         final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
         editorPresenter.setEditorContext(editorContext);
     }

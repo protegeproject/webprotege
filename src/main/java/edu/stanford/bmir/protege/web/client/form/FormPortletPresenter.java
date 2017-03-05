@@ -28,7 +28,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         formPresenter.start(portletUi);
     }
 

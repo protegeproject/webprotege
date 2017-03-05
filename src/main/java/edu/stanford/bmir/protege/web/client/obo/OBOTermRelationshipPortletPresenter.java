@@ -38,7 +38,7 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(this.editor.getWidget());
     }
 

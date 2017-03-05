@@ -32,7 +32,7 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(editor.asWidget());
     }
 

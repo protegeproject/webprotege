@@ -23,8 +23,6 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
 
     private final ManchesterSyntaxFrameEditorPresenter presenter;
 
-    private Optional<PortletUi> portletUi = Optional.empty();
-
     @Inject
     public OWLEntityDescriptionEditorPortletPresenter(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter) {
         super(selectionModel, projectId);
@@ -32,8 +30,7 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
     }
 
     @Override
-    public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        this.portletUi = Optional.of(portletUi);
+    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         presenter.start(eventBus);
         portletUi.setWidget(presenter.getView());
     }
@@ -43,7 +40,7 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
         if (selectedEntity.isPresent()) {
             presenter.setSubject(selectedEntity.get());
-            portletUi.ifPresent(ui -> ui.setViewTitle(entity.get().getEntityType().getPrintName() + " Description"));
+            setViewTitle(entity.get().getEntityType().getPrintName() + " Description");
         }
         else {
             presenter.clearSubject();
