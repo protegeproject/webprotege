@@ -1,24 +1,20 @@
 package edu.stanford.bmir.protege.web.client.change;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -49,7 +45,7 @@ public class ChangeListViewPresenter {
 
     private boolean downloadVisible = false;
 
-    private Optional<ProjectId> projectId = Optional.absent();
+    private Optional<ProjectId> projectId = Optional.empty();
 
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
@@ -75,7 +71,7 @@ public class ChangeListViewPresenter {
     public void setChangesForProject(ProjectId projectId) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.absent()),
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, com.google.common.base.Optional.absent()),
                                        result -> fillView(result.getChanges(),
                                                           SubjectDisplay.DISPLAY_SUBJECT,
                                                           revertChangesVisible,
@@ -85,7 +81,7 @@ public class ChangeListViewPresenter {
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)),
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, com.google.common.base.Optional.of(entity)),
                                        result -> fillView(result.getChanges(),
                                                           SubjectDisplay.DO_NOT_DISPLAY_SUBJECT,
                                                           revertChangesVisible,
