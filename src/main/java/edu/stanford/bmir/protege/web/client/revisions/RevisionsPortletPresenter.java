@@ -38,7 +38,6 @@ public class RevisionsPortletPresenter extends AbstractWebProtegePortletPresente
 
     @Override
     public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Revisions");
         portletUi.setWidget(presenter.getWidget());
     }
 

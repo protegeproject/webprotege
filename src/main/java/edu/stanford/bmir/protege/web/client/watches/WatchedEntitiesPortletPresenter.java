@@ -69,7 +69,6 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
                                         PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
                                         event -> onRefresh());
         portletUi.setForbiddenMessage("You do not have permission to watch changes in this project");
-        portletUi.setViewTitle("Watched Entity Changes");
 
         // TODO: Check this
 

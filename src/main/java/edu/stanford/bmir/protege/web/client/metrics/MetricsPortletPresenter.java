@@ -33,7 +33,6 @@ public class MetricsPortletPresenter extends AbstractWebProtegePortletPresenter 
 
     @Override
     public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Metrics");
         portletUi.setWidget(view.asWidget());
         eventBus.addProjectEventHandler(getProjectId(),
                                         MetricsChangedEvent.getType(),

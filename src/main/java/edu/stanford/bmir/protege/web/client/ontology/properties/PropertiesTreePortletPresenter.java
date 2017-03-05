@@ -178,7 +178,6 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
                                         ON_PERMISSIONS_CHANGED,
                                         event -> updateButtonStates());
 
-        portletUi.setViewTitle("Properties tree");
         updateButtonStates();
 
     }

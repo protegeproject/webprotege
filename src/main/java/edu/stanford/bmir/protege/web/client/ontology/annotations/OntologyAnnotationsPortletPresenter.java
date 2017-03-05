@@ -52,7 +52,6 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     @Override
     public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Ontology annotations");
         portletUi.setWidget(new ScrollPanel(annotationsView.asWidget()));
 
         eventBus.addProjectEventHandler(getProjectId(),

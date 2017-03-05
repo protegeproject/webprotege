@@ -35,7 +35,6 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
 
     @Override
     public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Individuals by Class");
         presenter.installActions(portletUi);
         presenter.start(portletUi);
     }

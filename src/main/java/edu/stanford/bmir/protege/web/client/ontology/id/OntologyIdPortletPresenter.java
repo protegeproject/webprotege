@@ -35,7 +35,6 @@ public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresent
 
     @Override
     public void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Ontology Id");
         portletUi.setWidget(editor.asWidget());
         updateDisplay();
     }
