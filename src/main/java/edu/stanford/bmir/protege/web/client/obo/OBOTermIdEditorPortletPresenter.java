@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -24,12 +23,12 @@ import java.util.Set;
  * Date: 20/05/2012
  */
 @Portlet(id = "portlets.obo.TermId", title = "OBO Term Id")
-public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
+public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPresenter {
 
     private OBOTermIdEditor editor;
 
     @Inject
-    public OBOTermIdEditorPortlet(SelectionModel selectionModel, ProjectId projectId) {
+    public OBOTermIdEditorPortletPresenter(SelectionModel selectionModel, ProjectId projectId) {
         super(selectionModel, projectId);
 //        setAutoScroll(false);
         editor = new OBOTermIdEditorImpl();

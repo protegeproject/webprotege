@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.common.base.Optional;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -23,12 +22,12 @@ import java.util.List;
  * Date: 20/05/2012
  */
 @Portlet(id = "portlets.obo.TermSynonyms", title = "OBO Term Synonyms")
-public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
+public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPresenter {
 
     private OBOTermSynonymListEditor editor;
 
     @Inject
-    public OBOTermSynonymsPortlet(SelectionModel selectionModel, ProjectId projectId) {
+    public OBOTermSynonymsPortletPresenter(SelectionModel selectionModel, ProjectId projectId) {
         super(selectionModel, projectId);
         editor = new OBOTermSynonymListEditor();
         editor.setEnabled(true);

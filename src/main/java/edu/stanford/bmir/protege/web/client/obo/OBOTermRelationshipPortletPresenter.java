@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -25,14 +24,14 @@ import java.util.*;
  * Date: 21/05/2012
  */
 @Portlet(id = "portlets.obo.TermRelationships", title = "OBO Term Relationships")
-public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
+public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletPresenter {
     
     private final OBOTermRelationshipEditor editor;
 
     private Optional<List<OBORelationship>> pristineValue = Optional.absent();
 
     @Inject
-    public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, SelectionModel selectionModel) {
+    public OBOTermRelationshipPortletPresenter(OBOTermRelationshipEditor editor, ProjectId projectId, SelectionModel selectionModel) {
         super(selectionModel, projectId);
         this.editor = editor;
         this.editor.setEnabled(true);

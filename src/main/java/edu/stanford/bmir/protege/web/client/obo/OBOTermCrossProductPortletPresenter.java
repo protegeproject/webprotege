@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -24,16 +23,16 @@ import javax.inject.Inject;
  * Date: 21/05/2012
  */
 @Portlet(id = "portlets.obo.TermCrossProduct", title = "OBO Term Cross Product")
-public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
+public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletPresenter {
 
     private OBOTermCrossProductEditor editor;
 
     private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
 
     @Inject
-    public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor,
-                                      SelectionModel selectionModel,
-                                      ProjectId projectId) {
+    public OBOTermCrossProductPortletPresenter(OBOTermCrossProductEditor editor,
+                                               SelectionModel selectionModel,
+                                               ProjectId projectId) {
         super(selectionModel, projectId);
         this.editor = editor;
     }

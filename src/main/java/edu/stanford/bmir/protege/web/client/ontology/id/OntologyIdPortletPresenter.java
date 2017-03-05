@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ontology.id;
 
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,14 +19,14 @@ import javax.inject.Inject;
  * Date: 05/07/2013
  */
 @Portlet(id = "portlets.OntologyId", title = "Ontology Id")
-public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasFixedPrimaryAxisSize {
+public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresenter implements HasFixedPrimaryAxisSize {
 
     private final DispatchServiceManager dispatchServiceManager;
 
     private OntologyIdView editor;
 
     @Inject
-    public OntologyIdPortlet(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
+    public OntologyIdPortletPresenter(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();

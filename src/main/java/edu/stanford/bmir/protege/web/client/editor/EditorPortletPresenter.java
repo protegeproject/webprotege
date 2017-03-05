@@ -2,16 +2,14 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -27,17 +25,17 @@ import javax.inject.Inject;
 @Portlet(id = "portlets.EntityEditor",
         title = "Entity Editor",
         tooltip = "Displays a simple property-value oriented description of the selected class, property or individual for viewing and editing.")
-public class EditorPortlet extends AbstractWebProtegePortlet {
+public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private EditorPresenter editorPresenter;
 
     private final Widget editorView;
 
     @Nonnull
-    private java.util.Optional<PortletUi> portletUi;
+    private java.util.Optional<PortletUi> portletUi = java.util.Optional.empty();
 
     @Inject
-    public EditorPortlet(
+    public EditorPortletPresenter(
             SelectionModel selectionModel,
             final ProjectId projectId,
             EditorPresenter editorPresenter) {

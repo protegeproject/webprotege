@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.metrics;
 
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
@@ -14,7 +13,7 @@ import javax.inject.Inject;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/04/2014
  */
-public class MetricsPortlet extends AbstractWebProtegePortlet {
+public class MetricsPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -23,9 +22,9 @@ public class MetricsPortlet extends AbstractWebProtegePortlet {
     private MetricsView view;
 
     @Inject
-    public MetricsPortlet(SelectionModel selectionModel,
-                          DispatchServiceManager dispatchServiceManager,
-                          ProjectId projectId) {
+    public MetricsPortletPresenter(SelectionModel selectionModel,
+                                   DispatchServiceManager dispatchServiceManager,
+                                   ProjectId projectId) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         view = new MetricsViewImpl();

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -23,17 +23,17 @@ import javax.inject.Inject;
  */
 
 @Portlet(id = "portlets.owl.EntityDescriptionBrowser", title = "OWL Entity Description Browser")
-public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortlet {
+public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final HTML html;
 
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel,
-                                              EventBus eventBus,
-                                              DispatchServiceManager dispatchServiceManager,
-                                              ProjectId projectId) {
+    public OWLEntityDescriptionBrowserPortletPresenter(SelectionModel selectionModel,
+                                                       EventBus eventBus,
+                                                       DispatchServiceManager dispatchServiceManager,
+                                                       ProjectId projectId) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         html = new HTML();

@@ -4,7 +4,7 @@ import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
 
 @Portlet(id = "portlets.WatchedEntities", title = "Watched Entities")
-public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
+public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -42,11 +42,11 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
     private Optional<PortletUi> ui = Optional.empty();
 
     @Inject
-    public WatchedEntitiesPortlet(ChangeListViewPresenter presenter,
-                                  LoggedInUserProjectPermissionChecker permissionChecker,
-                                  SelectionModel selectionModel,
-                                  ProjectId projectId,
-                                  LoggedInUserProvider loggedInUserProvider) {
+    public WatchedEntitiesPortletPresenter(ChangeListViewPresenter presenter,
+                                           LoggedInUserProjectPermissionChecker permissionChecker,
+                                           SelectionModel selectionModel,
+                                           ProjectId projectId,
+                                           LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, projectId);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;

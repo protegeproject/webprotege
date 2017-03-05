@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.revisions;
 
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,15 +18,15 @@ import javax.inject.Inject;
  * Date: 07/10/2012
  */
 @Portlet(id = "portlets.Revisions", title = "Project Revisions")
-public class RevisionsPortlet extends AbstractWebProtegePortlet {
+public class RevisionsPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private RevisionsListViewPresenter presenter;
 
     @Inject
-    public RevisionsPortlet(SelectionModel selectionModel,
-                            EventBus eventBus,
-                            DispatchServiceManager dispatchServiceManager,
-                            ProjectId projectId) {
+    public RevisionsPortletPresenter(SelectionModel selectionModel,
+                                     EventBus eventBus,
+                                     DispatchServiceManager dispatchServiceManager,
+                                     ProjectId projectId) {
         super(selectionModel, projectId);
         this.presenter = new RevisionsListViewPresenter(getProjectId(),
                                                         eventBus,

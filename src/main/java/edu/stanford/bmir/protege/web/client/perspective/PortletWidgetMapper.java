@@ -70,10 +70,12 @@ public class PortletWidgetMapper implements WidgetMapper {
         GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if (portletClass != null) {
-            Optional<WebProtegePortlet> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
+            Optional<WebProtegePortletPresenter> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
             if (thePortlet.isPresent()) {
                 GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
-                viewHolder = createViewHolder(terminalNode.getNodeId(), thePortlet.get());
+                viewHolder = createViewHolder(terminalNode.getNodeId(),
+                                              thePortlet.get(),
+                                              terminalNode.getNodeProperties());
             }
             else {
                 CouldNotFindPortletWidget childWidget = new CouldNotFindPortletWidget();
@@ -92,7 +94,9 @@ public class PortletWidgetMapper implements WidgetMapper {
     }
 
 
-    private ViewHolder createViewHolder(final TerminalNodeId nodeId, final WebProtegePortlet portlet) {
+    private ViewHolder createViewHolder(@Nonnull TerminalNodeId nodeId,
+                                        @Nonnull WebProtegePortletPresenter portlet,
+                                        @Nonnull NodeProperties nodeProperties) {
         PortletUi portletUi = portletUiProvider.get();
         WebProtegeEventBus eventBus = eventBusProvider.get();
         portlet.start(portletUi, eventBus);

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -20,13 +19,13 @@ import java.util.List;
  * Date: 22/05/2012
  */
 @Portlet(id = "portlets.obo.TermXRefs", title = "OBO Term XRefs")
-public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
+public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPresenter {
 
     private final XRefListEditor editor;
     
 
     @Inject
-    public OBOTermXRefsEditorPortlet(SelectionModel selectionModel, ProjectId projectId) {
+    public OBOTermXRefsEditorPortletPresenter(SelectionModel selectionModel, ProjectId projectId) {
         super(selectionModel, projectId);
         editor = new XRefListEditor();
         editor.setEnabled(true);

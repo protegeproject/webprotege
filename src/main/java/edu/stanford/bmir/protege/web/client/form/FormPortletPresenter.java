@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,12 +17,12 @@ import java.util.Optional;
  * 30/03/16
  */
 @Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
-public class FormPortlet extends AbstractWebProtegePortlet {
+public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private FormPresenter formPresenter;
 
     @Inject
-    public FormPortlet(SelectionModel selectionModel, ProjectId projectId, FormPresenter formPresenter) {
+    public FormPortletPresenter(SelectionModel selectionModel, ProjectId projectId, FormPresenter formPresenter) {
         super(selectionModel, projectId);
         this.formPresenter = formPresenter;
     }
