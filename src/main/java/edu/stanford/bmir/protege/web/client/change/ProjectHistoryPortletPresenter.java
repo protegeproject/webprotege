@@ -84,7 +84,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
                                         canViewChanges -> {
                                             if (canViewChanges) {
                                                 ProjectId projectId = getProjectId();
-                                                presenter.setRevertChangesVisible(canViewChanges);
+                                                presenter.setRevertChangesVisible(true);
                                                 presenter.setChangesForProject(projectId);
                                                 setForbiddenVisible(false);
                                             }
