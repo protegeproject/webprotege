@@ -50,7 +50,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                         event -> editorPresenter.updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
                                             event -> editorPresenter.updatePermissionBasedItems());
-        eventBus.addApplicationEventHandler(UserLoggedOutEvent.TYPE,
+        eventBus.addApplicationEventHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
         handleAfterSetEntity(getSelectedEntity());
 

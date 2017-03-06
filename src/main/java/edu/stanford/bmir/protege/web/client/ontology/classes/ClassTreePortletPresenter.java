@@ -226,7 +226,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                             updateButtonStates();
                                             onRefresh();
                                         });
-        eventBus.addApplicationEventHandler(UserLoggedOutEvent.TYPE,
+        eventBus.addApplicationEventHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
                                             event -> updateButtonStates());
         eventBus.addApplicationEventHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
                                             event -> updateButtonStates());
