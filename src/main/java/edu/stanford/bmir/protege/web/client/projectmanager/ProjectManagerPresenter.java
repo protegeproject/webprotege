@@ -29,6 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_E
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent.ON_PROJECT_MOVED_FROM_TRASH;
 import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent.ON_PROJECT_MOVED_TO_TRASH;
+import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 import static java.util.Arrays.asList;
 
 /**
@@ -93,7 +94,7 @@ public class ProjectManagerPresenter implements Presenter {
         eventBus.addHandler(ON_USER_LOGGED_OUT, this::handleUserLoggedLoggedOut);
         eventBus.addHandler(ON_PROJECT_MOVED_TO_TRASH, this::handleProjectMovedToTrash);
         eventBus.addHandler(ON_PROJECT_MOVED_FROM_TRASH, this::handleProjectMovedFromTrash);
-        eventBus.addHandler(ProjectSettingsChangedEvent.TYPE, event -> reloadFromServer());
+        eventBus.addHandler(ON_PROJECT_SETTINGS_CHANGED, event -> reloadFromServer());
 
         projectManagerView.setCreateProjectRequestHandler(createProjectRequestHandler);
         projectManagerView.setUploadProjectRequestHandler(uploadProjectRequestHandler);

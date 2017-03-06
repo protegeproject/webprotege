@@ -12,10 +12,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectSettingsChangedEvent extends WebProtegeEvent<ProjectSettingsChangedHandler> {
 
-    public static final transient Event.Type<ProjectSettingsChangedHandler> TYPE = new Event.Type<>();
+    public static final transient Event.Type<ProjectSettingsChangedHandler> ON_PROJECT_SETTINGS_CHANGED = new Event.Type<>();
 
     public static Event.Type<ProjectSettingsChangedHandler> getType() {
-        return TYPE;
+        return ON_PROJECT_SETTINGS_CHANGED;
     }
 
     private ProjectSettings projectSettings;
@@ -40,7 +40,7 @@ public class ProjectSettingsChangedEvent extends WebProtegeEvent<ProjectSettings
 
     @Override
     public Event.Type<ProjectSettingsChangedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_PROJECT_SETTINGS_CHANGED;
     }
 
     @Override
