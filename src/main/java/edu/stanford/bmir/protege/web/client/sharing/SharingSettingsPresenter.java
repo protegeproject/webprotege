@@ -1,20 +1,21 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
-import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.assistedinject.Assisted;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
 
@@ -39,7 +40,7 @@ public class SharingSettingsPresenter {
 
     private final PermissionScreener permissionScreener;
 
-    private Optional<Place> nextPlace = Optional.absent();
+    private Optional<Place> nextPlace = Optional.empty();
 
 
 

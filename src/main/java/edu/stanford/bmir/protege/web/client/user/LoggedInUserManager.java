@@ -106,14 +106,11 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         if(userId.isGuest()) {
             return;
         }
-        dispatchServiceManager.execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
-            @Override
-            public void handleSuccess(LogOutUserResult logOutUserResult) {
-                replaceUserAndBroadcastChanges(new UserInSession(
-                        UserDetails.getGuestUserDetails(),
-                        Collections.emptySet()
-                ));
-            }
+        dispatchServiceManager.execute(new LogOutUserAction(), logOutUserResult -> {
+            replaceUserAndBroadcastChanges(new UserInSession(
+                    UserDetails.getGuestUserDetails(),
+                    Collections.emptySet()
+            ));
         });
     }
 

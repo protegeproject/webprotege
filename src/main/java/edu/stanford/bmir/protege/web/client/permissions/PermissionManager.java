@@ -61,6 +61,7 @@ public class PermissionManager implements HasDispose {
      * current project on the event bus.
      */
     public void firePermissionsChanged() {
+        GWT.log("[PermissionManager] Firing permissions changed");
         permittedActionCache.clear();
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         final Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();

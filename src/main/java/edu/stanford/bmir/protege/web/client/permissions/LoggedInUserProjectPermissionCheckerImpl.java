@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -27,7 +28,9 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     private final PermissionManager permissionManager;
 
     @Inject
-    public LoggedInUserProjectPermissionCheckerImpl(LoggedInUserProvider loggedInUserProvider, ActiveProjectManager activeProjectManager, PermissionManager permissionManager) {
+    public LoggedInUserProjectPermissionCheckerImpl(@Nonnull LoggedInUserProvider loggedInUserProvider,
+                                                    @Nonnull ActiveProjectManager activeProjectManager,
+                                                    @Nonnull PermissionManager permissionManager) {
         this.loggedInUserProvider = loggedInUserProvider;
         this.activeProjectManager = activeProjectManager;
         this.permissionManager = permissionManager;
@@ -37,11 +40,12 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
     public void hasPermission(@Nonnull ActionId actionId,
                               @Nonnull DispatchServiceCallback<Boolean> callback) {
         Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        if(!projectId.isPresent()) {
+        if (!projectId.isPresent()) {
             callback.onSuccess(false);
             return;
         }
         UserId userId = loggedInUserProvider.getCurrentUserId();
+        GWT.log("[LoggedInUserProjectPermissionCheckerImpl] Checking permissions for: " + userId + " on " + projectId.get());
         permissionManager.hasPermissionForProject(userId, actionId, projectId.get(), callback);
     }
 

@@ -61,7 +61,7 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
         document.append(CREATED_AT, object.getCreatedAt());
         document.append(CREATED_BY, object.getCreatedBy().getUserName());
         document.append(MODIFIED_AT, object.getLastModifiedAt());
-        document.append(MODIFIED_BY, object.getLastModifiedBy());
+        document.append(MODIFIED_BY, object.getLastModifiedBy().getUserName());
         return document;
     }
 
