@@ -22,6 +22,6 @@ public class ProjectListActivity extends AbstractActivity {
     }
 
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        presenter.start(panel);
+        presenter.start(panel, eventBus);
     }
 }

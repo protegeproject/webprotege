@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.topbar;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingButtonPresenter;
@@ -16,7 +17,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 16/02/16
  */
-public class TopBarPresenter implements HasDispose {
+public class TopBarPresenter implements HasDispose, Presenter {
 
     private final TopBarView view;
 
@@ -31,12 +32,12 @@ public class TopBarPresenter implements HasDispose {
     private final SharingButtonPresenter sharingButtonPresenter;
 
     @Inject
-    public TopBarPresenter(TopBarView view,
-                           GoToHomePresenter goToHomePresenter,
-                           ProjectMenuPresenter projectMenuPresenter,
-                           SharingButtonPresenter sharingButtonPresenter,
-                           LoggedInUserPresenter loggedInUserPresenter,
-                           HelpPresenter helpPresenter) {
+    public TopBarPresenter(@Nonnull TopBarView view,
+                           @Nonnull GoToHomePresenter goToHomePresenter,
+                           @Nonnull ProjectMenuPresenter projectMenuPresenter,
+                           @Nonnull SharingButtonPresenter sharingButtonPresenter,
+                           @Nonnull LoggedInUserPresenter loggedInUserPresenter,
+                           @Nonnull HelpPresenter helpPresenter) {
         this.view = view;
         this.projectMenuPresenter = projectMenuPresenter;
         this.goToHomePresenter = goToHomePresenter;
@@ -54,10 +55,10 @@ public class TopBarPresenter implements HasDispose {
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus) {
         container.setWidget(view);
-        goToHomePresenter.start(view.getGoToHomeWidgetContainer());
-        projectMenuPresenter.start(view.getProjectMenuContainer());
-        loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer());
-        helpPresenter.start(view.getHelpWidgetContainer());
+        goToHomePresenter.start(view.getGoToHomeWidgetContainer(), eventBus);
+        projectMenuPresenter.start(view.getProjectMenuContainer(), eventBus);
+        loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer(), eventBus);
+        helpPresenter.start(view.getHelpWidgetContainer(), eventBus);
         sharingButtonPresenter.start(view.getSharingSettingsContainer(), eventBus);
     }
 

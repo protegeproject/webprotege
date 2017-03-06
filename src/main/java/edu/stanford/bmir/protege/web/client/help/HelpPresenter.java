@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.help;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -10,7 +13,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 16/02/16
  */
-public class HelpPresenter implements HasDispose {
+public class HelpPresenter implements HasDispose, Presenter {
 
     private final HelpView helpView;
 
@@ -19,7 +22,7 @@ public class HelpPresenter implements HasDispose {
         this.helpView = helpView;
     }
 
-    public void start(AcceptsOneWidget container) {
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(helpView);
     }
 

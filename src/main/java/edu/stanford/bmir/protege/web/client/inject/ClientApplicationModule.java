@@ -354,4 +354,14 @@ public class ClientApplicationModule {
     PortletUi providePortletUi(PortletUiImpl portletUi) {
         return portletUi;
     }
+
+    @Provides
+    CreateProjectRequestHandler provideCreateProjectRequestHandler(CreateProjectRequestHandlerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    UploadProjectRequestHandler provideUploadProjectRequestHandler(UploadProjectRequestHandlerImpl impl) {
+        return impl;
+    }
 }
