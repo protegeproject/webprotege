@@ -36,7 +36,6 @@
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
-    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
 
     <script>
         <%
