@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -49,7 +48,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         eventBus.addProjectEventHandler(getProjectId(),
                                         PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
                                         event -> editorPresenter.updatePermissionBasedItems());
-        eventBus.addApplicationEventHandler(UserLoggedInEvent.TYPE,
+        eventBus.addApplicationEventHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
                                             event -> editorPresenter.updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(UserLoggedOutEvent.TYPE,
                                             event -> editorPresenter.updatePermissionBasedItems());

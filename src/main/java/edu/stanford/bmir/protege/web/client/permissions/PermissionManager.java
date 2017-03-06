@@ -52,7 +52,7 @@ public class PermissionManager implements HasDispose {
         this.dispatchServiceManager = dispatchServiceManager;
         this.activeProjectManager = activeProjectManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        loggedInHandler = eventBus.addHandler(UserLoggedInEvent.TYPE, event -> firePermissionsChanged());
+        loggedInHandler = eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> firePermissionsChanged());
         loggedOutHandler = eventBus.addHandler(UserLoggedOutEvent.TYPE, event -> firePermissionsChanged());
     }
 

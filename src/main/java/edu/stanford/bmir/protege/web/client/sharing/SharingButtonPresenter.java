@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
@@ -65,7 +64,7 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
                                     event -> updateButtonState(container));
         eventBus.addHandler(UserLoggedOutEvent.TYPE,
                             event -> updateButtonState(container));
-        eventBus.addHandler(UserLoggedInEvent.TYPE,
+        eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
                             event -> updateButtonState(container));
         updateButtonState(container);
     }

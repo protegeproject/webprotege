@@ -2,12 +2,9 @@ package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -40,7 +37,7 @@ public class LoggedInUserPresenter implements HasDispose, Presenter {
     }
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        eventBus.addHandler(UserLoggedInEvent.TYPE, event -> updateButton());
+        eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updateButton());
         eventBus.addHandler(UserLoggedOutEvent.TYPE, event -> updateButton());
         updateButton();
         container.setWidget(view);

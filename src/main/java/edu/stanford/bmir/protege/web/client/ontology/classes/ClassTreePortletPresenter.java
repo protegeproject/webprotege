@@ -8,7 +8,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.data.Tree;
@@ -27,7 +26,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
@@ -50,7 +48,6 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -231,7 +228,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                         });
         eventBus.addApplicationEventHandler(UserLoggedOutEvent.TYPE,
                                             event -> updateButtonStates());
-        eventBus.addApplicationEventHandler(UserLoggedInEvent.TYPE,
+        eventBus.addApplicationEventHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
                                             event -> updateButtonStates());
         updateButtonStates();
     }

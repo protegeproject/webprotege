@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 public class UserLoggedInEvent extends WebProtegeEvent<UserLoggedInHandler> {
 
 
-    public transient static final Event.Type<UserLoggedInHandler> TYPE = new Event.Type<UserLoggedInHandler>();
+    public transient static final Event.Type<UserLoggedInHandler> ON_USER_LOGGED_IN = new Event.Type<UserLoggedInHandler>();
 
     private UserId userId;
 
@@ -31,7 +31,7 @@ public class UserLoggedInEvent extends WebProtegeEvent<UserLoggedInHandler> {
 
     @Override
     public Event.Type<UserLoggedInHandler> getAssociatedType() {
-        return TYPE;
+        return ON_USER_LOGGED_IN;
     }
 
     @Override

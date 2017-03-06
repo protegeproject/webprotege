@@ -80,7 +80,7 @@ public class EditorPresenter implements HasDispose {
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
 
         handlerRegistrationManager.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updatePermissionBasedItems());
-        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, event -> updatePermissionBasedItems());
+        handlerRegistrationManager.registerHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updatePermissionBasedItems());
         handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, event -> updatePermissionBasedItems());
     }
 
