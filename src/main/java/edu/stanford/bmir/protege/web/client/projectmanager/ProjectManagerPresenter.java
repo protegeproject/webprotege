@@ -8,14 +8,12 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.project.UploadProjectDialogController;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 
@@ -87,7 +85,7 @@ public class ProjectManagerPresenter implements Presenter {
                       @Nonnull EventBus eventBus) {
         GWT.log("[ProjectManagerPresenter] Starting presenter");
         eventBus.addHandler(ProjectCreatedEvent.TYPE, this::handleProjectCreated);
-        eventBus.addHandler(UserLoggedInEvent.TYPE, this::handleUserLoggedLoggedIn);
+        eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, this::handleUserLoggedLoggedIn);
         eventBus.addHandler(UserLoggedOutEvent.TYPE, this::handleUserLoggedLoggedOut);
         eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, this::handleProjectMovedToTrash);
         eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, this::handleProjectMovedFromTrash);

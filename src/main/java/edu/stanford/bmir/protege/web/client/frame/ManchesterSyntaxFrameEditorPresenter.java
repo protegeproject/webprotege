@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.frame;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -103,7 +101,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(dispatchServiceManager,
                                                                                        projectId, this, this));
         editor.setApplyChangesHandler(applyChangesActionHandler);
-        eventBus.addProjectEventHandler(projectId, UserLoggedInEvent.TYPE, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updateState());
         eventBus.addProjectEventHandler(projectId, UserLoggedOutEvent.TYPE, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> refreshIfPristine());
