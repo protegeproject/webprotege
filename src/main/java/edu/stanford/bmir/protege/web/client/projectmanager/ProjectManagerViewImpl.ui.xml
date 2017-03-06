@@ -106,7 +106,7 @@
                 </g:HTMLPanel>
 
             </g:HTMLPanel>
-            <projectlist:ProjectListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>
+            <projectlist:AvailableProjectsListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

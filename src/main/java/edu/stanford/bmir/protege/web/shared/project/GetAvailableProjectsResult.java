@@ -15,18 +15,18 @@ import java.util.List;
  */
 public class GetAvailableProjectsResult implements Result {
 
-    private List<ProjectDetails> details;
+    private List<AvailableProject> details;
 
     @GwtSerializationConstructor
     private GetAvailableProjectsResult() {
     }
 
-    public GetAvailableProjectsResult(List<ProjectDetails> details) {
+    public GetAvailableProjectsResult(List<AvailableProject> details) {
         this.details = new ArrayList<>(details);
     }
 
 
-    public List<ProjectDetails> getDetails() {
+    public List<AvailableProject> getDetails() {
         return Collections.unmodifiableList(details);
     }
 }

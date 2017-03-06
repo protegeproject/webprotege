@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.projectlist;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -13,11 +14,11 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 01/04/2013
  */
-public interface ProjectListView extends IsWidget, HasSelectionHandlers<ProjectId> {
+public interface AvailableProjectsListView extends IsWidget, HasSelectionHandlers<ProjectId> {
 
-    void setListData(List<ProjectDetails> projectDetails);
+    void setListData(List<AvailableProject> projectDetails);
 
-    void addListData(ProjectDetails projectDetails);
+    void addListData(AvailableProject projectDetails);
 
     void setSelectedProject(ProjectId project);
 }

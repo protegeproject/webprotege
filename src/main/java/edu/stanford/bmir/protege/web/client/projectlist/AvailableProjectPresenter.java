@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectInNewWindo
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.projectmanager.TrashManagerRequestHandler;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -24,13 +24,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 19/02/16
  */
 @AutoFactory
-public class ProjectDetailsPresenter {
+public class AvailableProjectPresenter {
 
     @Nonnull
-    private final ProjectDetailsView view;
+    private final AvailableProjectView view;
 
     @Nonnull
-    private final ProjectDetails details;
+    private final AvailableProject project;
 
     @Nonnull
     private final TrashManagerRequestHandler trashManagerRequestHandler;
@@ -44,17 +44,15 @@ public class ProjectDetailsPresenter {
     @Nonnull
     private LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler;
 
-
-
     @Inject
-    public ProjectDetailsPresenter(@Nonnull ProjectDetails details,
-                                   @Provided @Nonnull ProjectDetailsView view,
-                                   @Provided @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
-                                   @Provided @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
-                                   @Provided @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
-                                   @Provided @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
+    public AvailableProjectPresenter(@Nonnull AvailableProject project,
+                                     @Provided @Nonnull AvailableProjectView view,
+                                     @Provided @Nonnull LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler,
+                                     @Provided @Nonnull TrashManagerRequestHandler trashManagerRequestHandler,
+                                     @Provided @Nonnull LoadProjectRequestHandler loadProjectRequestHandler,
+                                     @Provided @Nonnull DownloadProjectRequestHandler downloadProjectRequestHandler) {
         this.view = checkNotNull(view);
-        this.details = checkNotNull(details);
+        this.project = checkNotNull(project);
         this.loadProjectInNewWindowRequestHandler = checkNotNull(loadProjectInNewWindowRequestHandler);
         this.trashManagerRequestHandler = checkNotNull(trashManagerRequestHandler);
         this.loadProjectRequestHandler = checkNotNull(loadProjectRequestHandler);
@@ -62,9 +60,9 @@ public class ProjectDetailsPresenter {
     }
 
     public void start() {
-        view.setProject(details.getProjectId(), details.getDisplayName());
-        view.setProjectOwner(details.getOwner());
-        long modifiedAtTs = details.getLastModifiedAt();
+        view.setProject(project.getProjectId(), project.getDisplayName());
+        view.setProjectOwner(project.getOwner());
+        long modifiedAtTs = project.getLastModifiedAt();
         String modifiedAt;
         if(modifiedAtTs != 0) {
             modifiedAt = TimeUtil.getTimeRendering(modifiedAtTs);
@@ -73,21 +71,22 @@ public class ProjectDetailsPresenter {
             modifiedAt = "";
         }
         view.setModifiedAt(modifiedAt);
-        view.setDescription(details.getDescription());
-        view.setInTrash(details.isInTrash());
+        view.setDescription(project.getDescription());
+        view.setInTrash(project.isInTrash());
         view.setLoadProjectRequestHandler(loadProjectRequestHandler);
         addActions();
     }
 
     public ProjectId getProjectId() {
-        return details.getProjectId();
+        return project.getProjectId();
     }
 
     public UserId getOwner() {
-        return details.getOwner();
+        return project.getOwner();
     }
 
-    public ProjectDetailsView getView() {
+    @Nonnull
+    public AvailableProjectView getView() {
         return view;
     }
 
@@ -102,7 +101,7 @@ public class ProjectDetailsPresenter {
         view.addAction(new AbstractUiAction("Open") {
             @Override
             public void execute(ClickEvent e) {
-                loadProjectRequestHandler.handleProjectLoadRequest(details.getProjectId());
+                loadProjectRequestHandler.handleProjectLoadRequest(project.getProjectId());
             }
         });
     }
@@ -111,7 +110,7 @@ public class ProjectDetailsPresenter {
         view.addAction(new AbstractUiAction("Open in new window") {
             @Override
             public void execute(ClickEvent e) {
-                loadProjectInNewWindowRequestHandler.handleLoadProjectInNewWindow(details.getProjectId());
+                loadProjectInNewWindowRequestHandler.handleLoadProjectInNewWindow(project.getProjectId());
             }
         });
     }
@@ -120,32 +119,34 @@ public class ProjectDetailsPresenter {
         AbstractUiAction downloadAction = new AbstractUiAction("Download") {
             @Override
             public void execute(ClickEvent e) {
-                downloadProjectRequestHandler.handleProjectDownloadRequest(details.getProjectId());
+                downloadProjectRequestHandler.handleProjectDownloadRequest(project.getProjectId());
             }
         };
-        downloadAction.setEnabled(false);
+        downloadAction.setEnabled(project.isDownloadable());
         view.addAction(downloadAction);
     }
 
     private void addTrashAction() {
         String trashActionLabel;
-        if(details.isInTrash()) {
+        if(project.isInTrash()) {
             trashActionLabel = "Remove from trash";
         }
         else {
             trashActionLabel = "Move to trash";
         }
-        view.addAction(new AbstractUiAction(trashActionLabel) {
+        AbstractUiAction trashAction = new AbstractUiAction(trashActionLabel) {
             @Override
             public void execute(ClickEvent e) {
-                if (details.isInTrash()) {
-                    trashManagerRequestHandler.handleRemoveProjectFromTrash(details.getProjectId());
+                if (project.isInTrash()) {
+                    trashManagerRequestHandler.handleRemoveProjectFromTrash(project.getProjectId());
                 }
                 else {
-                    trashManagerRequestHandler.handleMoveProjectToTrash(details.getProjectId());
+                    trashManagerRequestHandler.handleMoveProjectToTrash(project.getProjectId());
                 }
             }
-        });
+        };
+        view.addAction(trashAction);
+        trashAction.setEnabled(project.isTrashable());
     }
 
 

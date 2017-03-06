@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.access;
 
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
@@ -137,6 +138,13 @@ public class AccessManagerMongoDbImpl implements AccessManager {
         Query<RoleAssignment> query = withUserOrAnyUserAndTarget(subject, resource)
                 .field(ACTION_CLOSURE).equal(actionId.getId());
         return query.count() > 0;
+    }
+
+    @Override
+    public boolean hasPermission(@Nonnull Subject subject,
+                                 @Nonnull Resource resource,
+                                 @Nonnull BuiltInAction builtInAction) {
+        return hasPermission(subject, resource, builtInAction.getActionId());
     }
 
     @Override

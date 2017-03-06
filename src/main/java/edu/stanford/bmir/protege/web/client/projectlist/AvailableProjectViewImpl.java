@@ -28,13 +28,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
-public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsView {
+public class AvailableProjectViewImpl extends Composite implements AvailableProjectView {
 
-    interface ProjectDetailsImplUiBinder extends UiBinder<HTMLPanel, ProjectDetailsViewImpl> {
+    interface AvailableProjectViewImplUiBinder extends UiBinder<HTMLPanel, AvailableProjectViewImpl> {
 
     }
 
-    private static ProjectDetailsImplUiBinder ourUiBinder = GWT.create(ProjectDetailsImplUiBinder.class);
+    private static AvailableProjectViewImplUiBinder ourUiBinder = GWT.create(AvailableProjectViewImplUiBinder.class);
 
     @UiField
     Label displayNameField;
@@ -56,7 +56,7 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     private final List<UIAction> actions = new ArrayList<>();
 
     @Inject
-    public ProjectDetailsViewImpl() {
+    public AvailableProjectViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 

@@ -66,7 +66,7 @@ public class FileDownloadServlet extends HttpServlet {
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if (!accessManager.hasPermission(Subject.forUser(userId),
                                          new ProjectResource(downloadParameters.getProjectId()),
-                                         BuiltInAction.DOWNLOAD_PROJECT.getActionId())) {
+                                         BuiltInAction.DOWNLOAD_PROJECT)) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
