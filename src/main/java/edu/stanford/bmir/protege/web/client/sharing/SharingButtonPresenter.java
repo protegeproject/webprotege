@@ -30,7 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
  */
 public class SharingButtonPresenter implements HasDispose {
 
-    public static final Messages MESSAGES = GWT.create(Messages.class);
+    private static final Messages MESSAGES = GWT.create(Messages.class);
 
     private final ProjectId projectId;
 
@@ -41,9 +41,9 @@ public class SharingButtonPresenter implements HasDispose {
     private final Button button;
 
     @Inject
-    public SharingButtonPresenter(ProjectId projectId,
-                                  PlaceController placeController,
-                                  LoggedInUserProjectPermissionChecker permissionChecker) {
+    public SharingButtonPresenter(@Nonnull ProjectId projectId,
+                                  @Nonnull PlaceController placeController,
+                                  @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.projectId = projectId;
         this.placeController = placeController;
         this.permissionChecker = permissionChecker;
