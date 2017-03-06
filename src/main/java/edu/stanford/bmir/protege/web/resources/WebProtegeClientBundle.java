@@ -22,7 +22,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("protege-blender.png")
     ImageResource protegeBlender();
 
-    @Source("protege-blender-monochrome.png")
+    @Source("../../../../../../../webapp/img/protege-blender-monochrome.png")
     ImageResource protegeBlenderGrayScale();
 
     @Source("about.html")
