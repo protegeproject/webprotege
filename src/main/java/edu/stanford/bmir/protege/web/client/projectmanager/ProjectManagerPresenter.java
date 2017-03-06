@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -24,6 +23,7 @@ import java.util.*;
 
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
+import static edu.stanford.bmir.protege.web.client.projectmanager.ProjectCreatedEvent.ON_PROJECT_CREATED;
 import static edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerViewFilter.*;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
@@ -89,7 +89,7 @@ public class ProjectManagerPresenter implements Presenter {
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus) {
         GWT.log("[ProjectManagerPresenter] Starting presenter");
-        eventBus.addHandler(ProjectCreatedEvent.TYPE, this::handleProjectCreated);
+        eventBus.addHandler(ON_PROJECT_CREATED, this::handleProjectCreated);
         eventBus.addHandler(ON_USER_LOGGED_IN, this::handleUserLoggedLoggedIn);
         eventBus.addHandler(ON_USER_LOGGED_OUT, this::handleUserLoggedLoggedOut);
         eventBus.addHandler(ON_PROJECT_MOVED_TO_TRASH, this::handleProjectMovedToTrash);

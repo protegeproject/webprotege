@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class ProjectCreatedEvent extends Event<ProjectCreatedHandler> implements HasProjectId {
 
-    public static final Type<ProjectCreatedHandler> TYPE = new Type<ProjectCreatedHandler>();
+    public static final Type<ProjectCreatedHandler> ON_PROJECT_CREATED = new Type<>();
 
     private ProjectDetails projectDetails;
 
@@ -35,7 +35,7 @@ public class ProjectCreatedEvent extends Event<ProjectCreatedHandler> implements
 
     @Override
     public Type<ProjectCreatedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_PROJECT_CREATED;
     }
 
     @Override
