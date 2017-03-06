@@ -9,7 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -24,24 +24,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/10/2013
  */
-public class ProjectListViewImpl extends Composite implements ProjectListView {
+public class AvailableProjectsListViewImpl extends Composite implements AvailableProjectsListView {
 
-    private final List<ProjectDetailsPresenter> entries = new ArrayList<>();
+    private final List<AvailableProjectPresenter> entries = new ArrayList<>();
 
-    interface ProjectListViewUIImplUiBinder extends UiBinder<HTMLPanel, ProjectListViewImpl> {
+    interface AvailableProjectsListViewUIImplUiBinder extends UiBinder<HTMLPanel, AvailableProjectsListViewImpl> {
 
     }
 
-    private static ProjectListViewUIImplUiBinder ourUiBinder = GWT.create(ProjectListViewUIImplUiBinder.class);
+    private static AvailableProjectsListViewUIImplUiBinder ourUiBinder = GWT.create(AvailableProjectsListViewUIImplUiBinder.class);
 
-    private final ProjectDetailsPresenterFactory presenterFactory;
+    private final AvailableProjectPresenterFactory presenterFactory;
 
 
     @UiField
     protected FlowPanel itemContainer;
 
     @Inject
-    public ProjectListViewImpl(ProjectDetailsPresenterFactory presenterFactory) {
+    public AvailableProjectsListViewImpl(AvailableProjectPresenterFactory presenterFactory) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         this.presenterFactory = presenterFactory;
@@ -57,11 +57,11 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     }
 
     @Override
-    public void setListData(List<ProjectDetails> projectDetails) {
+    public void setListData(List<AvailableProject> availableProjects) {
         itemContainer.clear();
         entries.clear();
-        for(final ProjectDetails details : projectDetails) {
-            ProjectDetailsPresenter itemPresenter = presenterFactory.create(details);
+        for(final AvailableProject project : availableProjects) {
+            AvailableProjectPresenter itemPresenter = presenterFactory.create(project);
             itemPresenter.start();
             entries.add(itemPresenter);
             itemContainer.add(itemPresenter.getView());
@@ -69,8 +69,8 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     }
 
     @Override
-    public void addListData(ProjectDetails details) {
-        ProjectDetailsPresenter itemPresenter = presenterFactory.create(details);
+    public void addListData(AvailableProject details) {
+        AvailableProjectPresenter itemPresenter = presenterFactory.create(details);
         itemPresenter.start();
         itemContainer.insert(itemPresenter.getView(), 0);
         entries.add(0, itemPresenter);

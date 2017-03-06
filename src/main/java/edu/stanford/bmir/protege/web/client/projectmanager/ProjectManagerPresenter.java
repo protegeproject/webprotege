@@ -12,8 +12,8 @@ import edu.stanford.bmir.protege.web.client.project.UploadProjectDialogControlle
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 
@@ -39,11 +39,11 @@ public class ProjectManagerPresenter {
 
     private final ProjectManagerView projectManagerView;
 
-    private final Map<ProjectManagerViewFilter, ProjectDetailsFilter> viewCat2Filter = new HashMap<>();
+    private final Map<ProjectManagerViewFilter, AvailableProjectFilter> viewCat2Filter = new HashMap<>();
 
-    private ProjectDetailsFilter currentFilter = new ProjectDetailsOrFilter(Collections.emptyList());
+    private AvailableProjectFilter currentFilter = new AvailableProjectOrFilter(Collections.emptyList());
 
-    private ProjectDetailsCache projectDetailsCache = new ProjectDetailsCache();
+    private AvailableProjectsCache availableProjectsCache = new AvailableProjectsCache();
 
     @Inject
     public ProjectManagerPresenter(final EventBus eventBus,
@@ -56,13 +56,13 @@ public class ProjectManagerPresenter {
         this.loggedInUserManager = loggedInUserManager;
 
         viewCat2Filter.put(ProjectManagerViewFilter.OWNED_BY_ME,
-                           projectDetails -> !projectDetails.isInTrash() && projectDetails.getOwner().equals(loggedInUserManager.getCurrentUserId()));
+                           p -> !p.getProjectDetails().isInTrash() && p.getProjectDetails().getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
         viewCat2Filter.put(ProjectManagerViewFilter.SHARED_WITH_ME,
-                           projectDetails -> !projectDetails.isInTrash() && !projectDetails.getOwner().equals(loggedInUserManager.getCurrentUserId()));
+                           projectDetails -> !projectDetails.getProjectDetails().isInTrash() && !projectDetails.getProjectDetails().getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
         viewCat2Filter.put(ProjectManagerViewFilter.TRASH,
-                           projectDetails -> projectDetails.isInTrash() && projectDetails.getOwner().equals(loggedInUserManager.getCurrentUserId()));
+                           projectDetails -> projectDetails.getProjectDetails().isInTrash() && projectDetails.getProjectDetails().getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
         projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager,
                                                                                               loggedInUserManager));
@@ -71,8 +71,8 @@ public class ProjectManagerPresenter {
         projectManagerView.setViewFilterChangedHandler(() -> applyFilters());
 
         eventBus.addHandler(ProjectCreatedEvent.TYPE, event -> {
-            projectDetailsCache.add(event.getProjectDetails());
-            projectManagerView.addProjectData(event.getProjectDetails());
+            availableProjectsCache.add(new AvailableProject(event.getProjectDetails(), true, true));
+            projectManagerView.addAvailableProject(new AvailableProject(event.getProjectDetails(), true, true));
             projectManagerView.setSelectedProject(event.getProjectId());
         });
 
@@ -87,13 +87,13 @@ public class ProjectManagerPresenter {
         });
 
         eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, event -> {
-            if(projectDetailsCache.setInTrash(event.getProjectId(), true)) {
+            if(availableProjectsCache.setInTrash(event.getProjectId(), true)) {
                 reloadFromClientCache();
             }
         });
 
         eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, event -> {
-            if(projectDetailsCache.setInTrash(event.getProjectId(), false)) {
+            if(availableProjectsCache.setInTrash(event.getProjectId(), false)) {
                 reloadFromClientCache();
             }
         });
@@ -113,12 +113,12 @@ public class ProjectManagerPresenter {
 
     private void applyFilters() {
         List<ProjectManagerViewFilter> selectedFilters = projectManagerView.getViewFilters();
-        List<ProjectDetailsFilter> filterList = new ArrayList<>();
+        List<AvailableProjectFilter> filterList = new ArrayList<>();
         for(ProjectManagerViewFilter filter : selectedFilters) {
-            ProjectDetailsFilter detailsFilter = viewCat2Filter.get(filter);
+            AvailableProjectFilter detailsFilter = viewCat2Filter.get(filter);
             filterList.add(detailsFilter);
         }
-        currentFilter = new ProjectDetailsOrFilter(filterList);
+        currentFilter = new AvailableProjectOrFilter(filterList);
         reloadFromClientCache();
     }
 
@@ -134,7 +134,7 @@ public class ProjectManagerPresenter {
     private void reloadFromServer(final Optional<ProjectId> selectId) {
         GetAvailableProjectsAction action = new GetAvailableProjectsAction();
         dispatchServiceManager.execute(action, result -> {
-            projectDetailsCache.setProjectDetails(result.getDetails());
+            availableProjectsCache.setAvailableProjects(result.getDetails());
             applyFilters();
             if (selectId.isPresent()) {
                 projectManagerView.setSelectedProject(selectId.get());
@@ -147,13 +147,13 @@ public class ProjectManagerPresenter {
     }
 
     private void displayProjectDetails() {
-        List<ProjectDetails> entries = Lists.newArrayList();
-        for(ProjectDetails pd : projectDetailsCache.getProjectDetailsList()) {
+        List<AvailableProject> entries = Lists.newArrayList();
+        for(AvailableProject pd : availableProjectsCache.getAvailableProjectsList()) {
             if (currentFilter.isIncluded(pd)) {
                 entries.add(pd);
             }
         }
-        projectManagerView.setProjectListData(entries);
+        projectManagerView.setAvailableProjects(entries);
     }
 
     private void handleUserChange() {

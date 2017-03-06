@@ -11,8 +11,6 @@ import com.google.gwt.user.cellview.client.DataGrid;
  */
 public interface ProjectListResources extends DataGrid.Resources {
 
-    public static final ProjectListResources INSTANCE = GWT.create(ProjectListResources.class);
-
 
     @Override
     @Source({DataGrid.Style.DEFAULT_CSS, "WebProtegeDataGrid.css"})

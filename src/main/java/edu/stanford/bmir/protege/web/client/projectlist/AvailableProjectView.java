@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
-public interface ProjectDetailsView extends IsWidget {
+public interface AvailableProjectView extends IsWidget {
 
     void setProject(ProjectId project, String projectName);
 

@@ -8,8 +8,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.projectlist.ProjectListViewImpl;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectsListViewImpl;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     private static ProjectListViewImplBinder ourUiBinder = GWT.create(ProjectListViewImplBinder.class);
 
     @UiField(provided = true)
-    protected ProjectListViewImpl projectListView;
+    protected AvailableProjectsListViewImpl projectListView;
 
     @UiField
     protected Button createProjectButton;
@@ -61,7 +61,7 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     private ViewFilterChangedHandler viewFilterChangedHandler = () -> {};
 
     @Inject
-    public ProjectManagerViewImpl(ProjectListViewImpl projectListView) {
+    public ProjectManagerViewImpl(AvailableProjectsListViewImpl projectListView) {
         this.projectListView = projectListView;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
@@ -154,12 +154,12 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     }
 
     @Override
-    public void setProjectListData(List<ProjectDetails> data) {
+    public void setAvailableProjects(List<AvailableProject> data) {
         projectListView.setListData(data);
     }
 
     @Override
-    public void addProjectData(ProjectDetails details) {
+    public void addAvailableProject(AvailableProject details) {
         projectListView.addListData(details);
     }
 

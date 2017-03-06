@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.access;
 
 
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 
 import javax.annotation.Nonnull;
@@ -67,6 +68,18 @@ public interface AccessManager {
     boolean hasPermission(@Nonnull Subject subject,
                           @Nonnull Resource resource,
                           @Nonnull ActionId actionId);
+
+    /**
+     * Tests to see if the specified subject has permission to execute the specified action on the specified resource.
+     * @param subject The subject.
+     * @param resource The resource on which the action should be executed.
+     * @param builtInAction The action to be executed.
+     * @return {@code true} if the subject has permission to execute the specified action on the specified resource,
+     * otherwise {@code false}.
+     */
+    boolean hasPermission(@Nonnull Subject subject,
+                          @Nonnull Resource resource,
+                          @Nonnull BuiltInAction builtInAction);
 
     Collection<Subject> getSubjectsWithAccessToResource(Resource resource);
 

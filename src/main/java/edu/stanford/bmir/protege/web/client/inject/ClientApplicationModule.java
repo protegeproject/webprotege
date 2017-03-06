@@ -47,8 +47,8 @@ import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
 import edu.stanford.bmir.protege.web.client.perspective.CreateFreshPerspectiveRequestHandler;
-import edu.stanford.bmir.protege.web.client.projectlist.ProjectDetailsView;
-import edu.stanford.bmir.protege.web.client.projectlist.ProjectDetailsViewImpl;
+import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
+import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.projectmanager.*;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.app.ApplicationView;
@@ -222,7 +222,7 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    ProjectDetailsView projectDetailsView(ProjectDetailsViewImpl impl) {
+    AvailableProjectView projectDetailsView(AvailableProjectViewImpl impl) {
         return impl;
     }
 

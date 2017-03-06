@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.projectmanager;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -18,9 +19,9 @@ public interface ProjectManagerView extends HasCreateProjectRequestHandler, HasU
 
     void setSelectedProject(ProjectId projectId);
 
-    void setProjectListData(List<ProjectDetails> data);
+    void setAvailableProjects(List<AvailableProject> data);
 
-    void addProjectData(ProjectDetails details);
+    void addAvailableProject(AvailableProject availableProject);
 
     void setCreateProjectEnabled(boolean enabled);
 
