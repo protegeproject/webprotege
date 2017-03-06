@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.topbar;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingButtonPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -43,17 +45,28 @@ public class TopBarPresenter implements HasDispose {
         this.helpPresenter = helpPresenter;
     }
 
-    public void start(AcceptsOneWidget container) {
+    /**
+     * Starts the {@link TopBarPresenter}
+     * @param container The container for the associated view.
+     * @param eventBus An event bus.  The event bus will be reset when the presenter is stopped.
+     *                 It is therefore unnecessary for users to remove handlers.
+     */
+    public void start(@Nonnull AcceptsOneWidget container,
+                      @Nonnull EventBus eventBus) {
         container.setWidget(view);
         goToHomePresenter.start(view.getGoToHomeWidgetContainer());
         projectMenuPresenter.start(view.getProjectMenuContainer());
         loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer());
         helpPresenter.start(view.getHelpWidgetContainer());
-        sharingButtonPresenter.start(view.getSharingSettingsContainer());
+        sharingButtonPresenter.start(view.getSharingSettingsContainer(), eventBus);
     }
 
     @Override
     public void dispose() {
-
+        goToHomePresenter.dispose();
+        loggedInUserPresenter.dispose();
+        sharingButtonPresenter.dispose();
+        projectMenuPresenter.dispose();
+        helpPresenter.dispose();
     }
 }

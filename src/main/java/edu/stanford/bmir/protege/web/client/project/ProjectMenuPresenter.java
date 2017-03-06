@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_A
  * Stanford Center for Biomedical Informatics Research
  * 01/03/16
  */
-public class ProjectMenuPresenter {
+public class ProjectMenuPresenter implements HasDispose {
 
     private final ProjectMenuView view;
 
@@ -74,6 +75,10 @@ public class ProjectMenuPresenter {
                                         canUploadAndMerge -> uploadAndMerge.setVisible(canUploadAndMerge));
         permissionChecker.hasPermission(EDIT_NEW_ENTITY_SETTINGS,
                                         canEdit -> editNewEntitySettings.setVisible(canEdit));
+    }
+
+    public void dispose() {
+
     }
 
     private void displayButton(AcceptsOneWidget container) {
