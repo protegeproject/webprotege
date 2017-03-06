@@ -102,7 +102,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                                                                                        projectId, this, this));
         editor.setApplyChangesHandler(applyChangesActionHandler);
         eventBus.addProjectEventHandler(projectId, UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updateState());
-        eventBus.addProjectEventHandler(projectId, UserLoggedOutEvent.TYPE, event -> updateState());
+        eventBus.addProjectEventHandler(projectId, UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateState());
         eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> refreshIfPristine());
         updateState();

@@ -62,7 +62,7 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
         eventBus.addHandlerToSource(ON_PERMISSIONS_CHANGED,
                                     projectId,
                                     event -> updateButtonState(container));
-        eventBus.addHandler(UserLoggedOutEvent.TYPE,
+        eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
                             event -> updateButtonState(container));
         eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
                             event -> updateButtonState(container));

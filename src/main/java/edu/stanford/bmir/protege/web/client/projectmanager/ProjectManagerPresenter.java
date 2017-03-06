@@ -86,7 +86,7 @@ public class ProjectManagerPresenter implements Presenter {
         GWT.log("[ProjectManagerPresenter] Starting presenter");
         eventBus.addHandler(ProjectCreatedEvent.TYPE, this::handleProjectCreated);
         eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, this::handleUserLoggedLoggedIn);
-        eventBus.addHandler(UserLoggedOutEvent.TYPE, this::handleUserLoggedLoggedOut);
+        eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, this::handleUserLoggedLoggedOut);
         eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, this::handleProjectMovedToTrash);
         eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, this::handleProjectMovedFromTrash);
         eventBus.addHandler(ProjectSettingsChangedEvent.TYPE, event -> reloadFromServer());

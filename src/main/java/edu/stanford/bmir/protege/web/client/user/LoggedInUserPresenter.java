@@ -38,7 +38,7 @@ public class LoggedInUserPresenter implements HasDispose, Presenter {
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updateButton());
-        eventBus.addHandler(UserLoggedOutEvent.TYPE, event -> updateButton());
+        eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> updateButton());
         updateButton();
         container.setWidget(view);
     }

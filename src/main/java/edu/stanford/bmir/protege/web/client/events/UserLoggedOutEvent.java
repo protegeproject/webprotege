@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class UserLoggedOutEvent extends WebProtegeEvent<UserLoggedOutHandler> {
 
-    public static final transient Event.Type<UserLoggedOutHandler> TYPE = new Event.Type<UserLoggedOutHandler>();
+    public static final transient Event.Type<UserLoggedOutHandler> ON_USER_LOGGED_OUT = new Event.Type<>();
 
     private UserId userId;
 
@@ -30,7 +30,7 @@ public class UserLoggedOutEvent extends WebProtegeEvent<UserLoggedOutHandler> {
 
     @Override
     public Event.Type<UserLoggedOutHandler> getAssociatedType() {
-        return TYPE;
+        return ON_USER_LOGGED_OUT;
     }
 
     @Override
