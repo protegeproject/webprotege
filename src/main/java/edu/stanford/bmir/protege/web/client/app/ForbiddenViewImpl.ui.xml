@@ -50,6 +50,5 @@
             <g:Label addStyleNames="{style.errorMessageLabel}" text="{msg.forbidden}"/>
             <g:Label ui:field="subMessage" addStyleNames="{style.subMessageLabel}"/>
         </g:HTMLPanel>
-
     </g:HTMLPanel>
 </ui:UiBinder>
