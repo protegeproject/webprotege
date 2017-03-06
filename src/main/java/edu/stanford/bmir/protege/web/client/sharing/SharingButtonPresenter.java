@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -51,7 +52,13 @@ public class SharingButtonPresenter implements HasDispose {
         button.asWidget().addStyleName(BUNDLE.buttons().topBarButton());
     }
 
-    public void start(final AcceptsOneWidget container, EventBus eventBus) {
+    /**
+     * Starts this presenter.
+     * @param container The container for the view associated with the presenter.
+     * @param eventBus An {@link EventBus}.  Any handlers added will automatically be removed.
+     */
+    public void start(@Nonnull AcceptsOneWidget container,
+                      @Nonnull EventBus eventBus) {
         eventBus.addHandlerToSource(ON_PERMISSIONS_CHANGED,
                                     projectId,
                                     event -> updateButtonState(container));
