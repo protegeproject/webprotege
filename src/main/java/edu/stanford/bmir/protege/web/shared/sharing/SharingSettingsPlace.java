@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
-import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -18,7 +18,7 @@ public class SharingSettingsPlace extends Place implements HasProjectId {
 
     private final ProjectId projectId;
 
-    private Optional<Place> continueTo = Optional.absent();
+    private Optional<Place> continueTo = Optional.empty();
 
     public SharingSettingsPlace(ProjectId projectId) {
         this.projectId = projectId;

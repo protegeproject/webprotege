@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge

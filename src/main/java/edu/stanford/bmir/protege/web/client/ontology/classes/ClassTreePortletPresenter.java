@@ -28,6 +28,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -227,6 +229,10 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                             updateButtonStates();
                                             onRefresh();
                                         });
+        eventBus.addApplicationEventHandler(UserLoggedOutEvent.TYPE,
+                                            event -> updateButtonStates());
+        eventBus.addApplicationEventHandler(UserLoggedInEvent.TYPE,
+                                            event -> updateButtonStates());
         updateButtonStates();
     }
 
@@ -528,10 +534,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         }
     }
 
-    protected void onClassCreated(final OWLClass freshClass, final List<OWLClass> superClasses) {
-
-    }
-
     private enum CreateClassesMode {
 
         CREATE_SUBCLASSES,
@@ -557,29 +559,26 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             return;
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.CLASS,
-                                                                     new CreateEntityDialogController.CreateEntityHandler() {
-                                                                         @Override
-                                                                         public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
-                                                                             final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
-                                                                             if (!superCls.isPresent()) {
-                                                                                 return;
-                                                                             }
-                                                                             final Set<String> browserTexts = new HashSet<String>(
-                                                                                     createEntityInfo.getBrowserTexts());
-                                                                             if (browserTexts.size() > 1) {
-                                                                                 dispatchServiceManager.execute(new CreateClassesAction(
-                                                                                                                        getProjectId(),
-                                                                                                                        superCls.get(),
-                                                                                                                        browserTexts),
-                                                                                                                getCreateClassesActionAsyncHandler());
-                                                                             }
-                                                                             else {
-                                                                                 dispatchServiceManager.execute(new CreateClassAction(
-                                                                                                                        getProjectId(),
-                                                                                                                        browserTexts.iterator().next(),
-                                                                                                                        superCls.get()),
-                                                                                                                getCreateClassAsyncHandler());
-                                                                             }
+                                                                     createEntityInfo -> {
+                                                                         final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
+                                                                         if (!superCls.isPresent()) {
+                                                                             return;
+                                                                         }
+                                                                         final Set<String> browserTexts = new HashSet<String>(
+                                                                                 createEntityInfo.getBrowserTexts());
+                                                                         if (browserTexts.size() > 1) {
+                                                                             dispatchServiceManager.execute(new CreateClassesAction(
+                                                                                                                    getProjectId(),
+                                                                                                                    superCls.get(),
+                                                                                                                    browserTexts),
+                                                                                                            getCreateClassesActionAsyncHandler());
+                                                                         }
+                                                                         else {
+                                                                             dispatchServiceManager.execute(new CreateClassAction(
+                                                                                                                    getProjectId(),
+                                                                                                                    browserTexts.iterator().next(),
+                                                                                                                    superCls.get()),
+                                                                                                            getCreateClassAsyncHandler());
                                                                          }
                                                                      }));
     }
@@ -1076,7 +1075,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                         canCreateClass -> createClassAction.setEnabled(canCreateClass));
         permissionChecker.hasPermission(DELETE_CLASS,
                                         canDeleteClass -> deleteClassAction.setEnabled(canDeleteClass));
-        permissionChecker.hasPermission(BuiltInAction.WATCH_CHANGES,
+        permissionChecker.hasPermission(WATCH_CHANGES,
                                         canWatchChanges -> watchClassAction.setEnabled(canWatchChanges));
     }
 
@@ -1151,19 +1150,18 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         @Override
         public void handleSuccess(final CreateClassResult result) {
-            onClassCreated(result.getObject(), result.getSuperClasses());
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(),
                                                                      result.getBrowserTextMap()
                                                                            .getBrowserText(result.getObject())
                                                                            .or(""),
-                                                                     Collections.<EntityData>emptyList(),
+                                                                     Collections.emptyList(),
                                                                      0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
             if (pathToRoot.isEmpty()) {
                 return;
             }
             onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()),
-                            Arrays.<EntityData>asList(subClassData),
+                            Arrays.asList(subClassData),
                             false);
             selectPathInTree(pathToRoot);
         }

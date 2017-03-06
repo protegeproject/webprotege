@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
 
@@ -34,12 +36,16 @@ public class SharingButtonPresenter {
 
     private final Button button;
 
+    private final EventBus eventBus;
+
     @Inject
     public SharingButtonPresenter(ProjectId projectId,
                                   PlaceController placeController,
+                                  EventBus eventBus,
                                   LoggedInUserProjectPermissionChecker permissionChecker) {
         this.projectId = projectId;
         this.placeController = placeController;
+        this.eventBus = eventBus;
         this.permissionChecker = permissionChecker;
         button = new Button(MESSAGES.share(), new ClickHandler() {
             @Override

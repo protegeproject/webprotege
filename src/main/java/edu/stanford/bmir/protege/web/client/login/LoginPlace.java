@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.login;
 
-import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -14,7 +15,7 @@ public class LoginPlace extends Place {
     private Optional<Place> continueTo;
 
     public LoginPlace() {
-        continueTo = Optional.absent();
+        continueTo = Optional.empty();
     }
 
     public LoginPlace(Place continueTo) {

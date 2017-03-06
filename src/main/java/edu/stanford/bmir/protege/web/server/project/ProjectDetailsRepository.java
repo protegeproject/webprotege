@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.model.UpdateOptions;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mongodb.client.model.Filters.eq;
 import static edu.stanford.bmir.protege.web.server.project.ProjectDetailsConverter.*;
 
 /**
