@@ -8,10 +8,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -41,6 +43,9 @@ public class AvailableProjectViewImpl extends Composite implements AvailableProj
 
     @UiField
     Label ownerField;
+
+    @UiField
+    SimplePanel ownerIconField;
 
     @UiField
     Label modifiedAtField;
@@ -88,6 +93,7 @@ public class AvailableProjectViewImpl extends Composite implements AvailableProj
     @Override
     public void setProjectOwner(UserId userId) {
         ownerField.setText(userId.getUserName());
+        ownerIconField.setWidget(UserIcon.get(userId));
     }
 
     @Override

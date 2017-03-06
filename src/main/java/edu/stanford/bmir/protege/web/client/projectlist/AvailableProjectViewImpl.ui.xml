@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.library.popupmenu">
+             xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.library.popupmenu"
+             xmlns:user="urn:import:edu.stanford.bmir.protege.web.client.user">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
@@ -26,6 +27,15 @@
             flex-grow: 0;
             padding: 5px;
         }
+        .ownerField {
+            display: inline-block;
+            align-items: baseline;
+        }
+        .ownerIconField {
+            display: inline-block;
+            align-items: baseline;
+            padding-right: 5px;
+        }
         .modifiedAtCol {
             width: 200px;
             flex-grow: 0;
@@ -44,7 +54,10 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Label ui:field="displayNameField" addStyleNames="{style.displayNameCol}" title="Click to open"/>
         <!--<g:Label ui:field="descriptionField" addStyleNames="{style.descriptionCol}"/>-->
-        <g:Label ui:field="ownerField" addStyleNames="{style.ownerCol}"/>
+        <g:HTMLPanel addStyleNames="{style.ownerCol}">
+            <g:SimplePanel ui:field="ownerIconField" addStyleNames="{style.ownerIconField}"/>
+            <g:Label ui:field="ownerField" addStyleNames="{style.ownerField}"/>
+        </g:HTMLPanel>
         <g:Label ui:field="modifiedAtField" addStyleNames="{style.modifiedAtCol}"/>
         <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.menuButtonCol}"/>
     </g:HTMLPanel>
