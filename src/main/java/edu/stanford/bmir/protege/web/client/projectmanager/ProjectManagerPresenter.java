@@ -1,28 +1,33 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.project.UploadProjectDialogController;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerViewFilter.*;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
+import static java.util.Arrays.asList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -31,13 +36,19 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_P
  * Date: 09/04/2013
  */
 @Singleton
-public class ProjectManagerPresenter {
+public class ProjectManagerPresenter implements Presenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserManager loggedInUserManager;
 
     private final ProjectManagerView projectManagerView;
+
+    private final LoggedInUserPresenter loggedInUserPresenter;
+
+    private final CreateProjectRequestHandler createProjectRequestHandler;
+
+    private final UploadProjectRequestHandler uploadProjectRequestHandler;
 
     private final Map<ProjectManagerViewFilter, AvailableProjectFilter> viewCat2Filter = new HashMap<>();
 
@@ -46,69 +57,79 @@ public class ProjectManagerPresenter {
     private AvailableProjectsCache availableProjectsCache = new AvailableProjectsCache();
 
     @Inject
-    public ProjectManagerPresenter(final EventBus eventBus,
-                                   final ProjectManagerView projectManagerView,
-                                   final DispatchServiceManager dispatchServiceManager,
-                                   final LoggedInUserManager loggedInUserManager,
-                                   final LoggedInUserPresenter loggedInUserPresenter) {
+    public ProjectManagerPresenter(@Nonnull ProjectManagerView projectManagerView,
+                                   @Nonnull DispatchServiceManager dispatchServiceManager,
+                                   @Nonnull LoggedInUserManager loggedInUserManager,
+                                   @Nonnull LoggedInUserPresenter loggedInUserPresenter,
+                                   @Nonnull CreateProjectRequestHandler createProjectRequestHandler,
+                                   @Nonnull UploadProjectRequestHandler uploadProjectRequestHandler) {
         this.projectManagerView = projectManagerView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserManager = loggedInUserManager;
+        this.loggedInUserPresenter = loggedInUserPresenter;
+        this.createProjectRequestHandler = createProjectRequestHandler;
+        this.uploadProjectRequestHandler = uploadProjectRequestHandler;
 
-        viewCat2Filter.put(ProjectManagerViewFilter.OWNED_BY_ME,
-                           p -> !p.getProjectDetails().isInTrash() && p.getProjectDetails().getOwner().equals(loggedInUserManager.getCurrentUserId()));
+        viewCat2Filter.put(OWNED_BY_ME,
+                           p -> !p.isInTrash() && p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
-        viewCat2Filter.put(ProjectManagerViewFilter.SHARED_WITH_ME,
-                           projectDetails -> !projectDetails.getProjectDetails().isInTrash() && !projectDetails.getProjectDetails().getOwner().equals(loggedInUserManager.getCurrentUserId()));
+        viewCat2Filter.put(SHARED_WITH_ME,
+                           p -> !p.isInTrash() && !p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
-        viewCat2Filter.put(ProjectManagerViewFilter.TRASH,
-                           projectDetails -> projectDetails.getProjectDetails().isInTrash() && projectDetails.getProjectDetails().getOwner().equals(loggedInUserManager.getCurrentUserId()));
-
-        projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager,
-                                                                                              loggedInUserManager));
-        projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(() -> new UploadProjectDialogController(eventBus, dispatchServiceManager, loggedInUserManager)));
+        viewCat2Filter.put(TRASH,
+                           p -> p.isInTrash() && p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
         projectManagerView.setViewFilterChangedHandler(() -> applyFilters());
+        projectManagerView.setViewFilters(asList(OWNED_BY_ME, SHARED_WITH_ME));
+    }
 
-        eventBus.addHandler(ProjectCreatedEvent.TYPE, event -> {
-            availableProjectsCache.add(new AvailableProject(event.getProjectDetails(), true, true));
-            projectManagerView.addAvailableProject(new AvailableProject(event.getProjectDetails(), true, true));
-            projectManagerView.setSelectedProject(event.getProjectId());
-        });
+    public void start(@Nonnull AcceptsOneWidget container,
+                      @Nonnull EventBus eventBus) {
+        GWT.log("[ProjectManagerPresenter] Starting presenter");
+        eventBus.addHandler(ProjectCreatedEvent.TYPE, this::handleProjectCreated);
+        eventBus.addHandler(UserLoggedInEvent.TYPE, this::handleUserLoggedLoggedIn);
+        eventBus.addHandler(UserLoggedOutEvent.TYPE, this::handleUserLoggedLoggedOut);
+        eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, this::handleProjectMovedToTrash);
+        eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, this::handleProjectMovedFromTrash);
+        eventBus.addHandler(ProjectSettingsChangedEvent.TYPE, event -> reloadFromServer());
 
-        eventBus.addHandler(UserLoggedInEvent.TYPE, event -> {
-            handleUserChange();
-            reloadFromServer();
-        });
+        projectManagerView.setCreateProjectRequestHandler(createProjectRequestHandler);
+        projectManagerView.setUploadProjectRequestHandler(uploadProjectRequestHandler);
 
-        eventBus.addHandler(UserLoggedOutEvent.TYPE, event -> {
-            handleUserChange();
-            reloadFromServer();
-        });
+        loggedInUserPresenter.start(projectManagerView.getLoggedInUserButton(), eventBus);
+        container.setWidget(projectManagerView);
+        updateView();
+    }
 
-        eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, event -> {
-            if(availableProjectsCache.setInTrash(event.getProjectId(), true)) {
-                reloadFromClientCache();
-            }
-        });
+    private void handleProjectMovedFromTrash(ProjectMovedFromTrashEvent event) {
+        if (availableProjectsCache.setInTrash(event.getProjectId(), false)) {
+            reloadFromClientCache();
+        }
+    }
 
-        eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, event -> {
-            if(availableProjectsCache.setInTrash(event.getProjectId(), false)) {
-                reloadFromClientCache();
-            }
-        });
+    private void handleProjectMovedToTrash(ProjectMovedToTrashEvent event) {
+        if(availableProjectsCache.setInTrash(event.getProjectId(), true)) {
+            reloadFromClientCache();
+        }
+    }
 
-        eventBus.addHandler(ProjectSettingsChangedEvent.getType(), event -> reloadFromServer());
+    private void handleProjectCreated(ProjectCreatedEvent event) {
+        AvailableProject availableProject = new AvailableProject(event.getProjectDetails(), true, true);
+        insertAndSelectAvailableProject(availableProject, event.getProjectId());
+    }
 
-        projectManagerView.setViewFilters(
-                Arrays.asList(ProjectManagerViewFilter.OWNED_BY_ME, ProjectManagerViewFilter.SHARED_WITH_ME)
-        );
+    private void handleUserLoggedLoggedIn(UserLoggedInEvent event) {
+        updateView();
+    }
 
-        handleUserChange();
-        reloadFromServer();
+    private void handleUserLoggedLoggedOut(UserLoggedOutEvent event) {
+        updateView();
+    }
 
-        loggedInUserPresenter.start(projectManagerView.getLoggedInUserButton());
-
+    private void insertAndSelectAvailableProject(AvailableProject availableProject, ProjectId projectId) {
+        availableProjectsCache.add(availableProject);
+        projectManagerView.addAvailableProject(availableProject);
+        projectManagerView.setSelectedProject(projectId);
     }
 
     private void applyFilters() {
@@ -126,12 +147,15 @@ public class ProjectManagerPresenter {
         return projectManagerView;
     }
 
-
-    private void reloadFromServer() {
-        reloadFromServer(Optional.<ProjectId>absent());
+    private void reloadFromClientCache() {
+        displayProjectDetails();
     }
 
-    private void reloadFromServer(final Optional<ProjectId> selectId) {
+    private void reloadFromServer() {
+        reloadFromServer(Optional.empty());
+    }
+
+    private void reloadFromServer(Optional<ProjectId> selectId) {
         GetAvailableProjectsAction action = new GetAvailableProjectsAction();
         dispatchServiceManager.execute(action, result -> {
             availableProjectsCache.setAvailableProjects(result.getDetails());
@@ -140,10 +164,6 @@ public class ProjectManagerPresenter {
                 projectManagerView.setSelectedProject(selectId.get());
             }
         });
-    }
-
-    private void reloadFromClientCache() {
-        displayProjectDetails();
     }
 
     private void displayProjectDetails() {
@@ -156,14 +176,12 @@ public class ProjectManagerPresenter {
         projectManagerView.setAvailableProjects(entries);
     }
 
-    private void handleUserChange() {
+    private void updateView() {
         projectManagerView.setCreateProjectEnabled(loggedInUserManager.isAllowedApplicationAction(CREATE_EMPTY_PROJECT));
         projectManagerView.setUploadProjectEnabled(loggedInUserManager.isAllowedApplicationAction(UPLOAD_PROJECT));
         reloadFromServer();
     }
 
 
-    public void start(AcceptsOneWidget container) {
-        container.setWidget(projectManagerView);
-    }
+
 }

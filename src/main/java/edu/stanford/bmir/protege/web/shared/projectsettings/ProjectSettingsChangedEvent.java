@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectSettingsChangedEvent extends WebProtegeEvent<ProjectSettingsChangedHandler> {
 
-    private static final transient Event.Type<ProjectSettingsChangedHandler> TYPE = new Event.Type<ProjectSettingsChangedHandler>();
+    public static final transient Event.Type<ProjectSettingsChangedHandler> TYPE = new Event.Type<>();
 
     public static Event.Type<ProjectSettingsChangedHandler> getType() {
         return TYPE;

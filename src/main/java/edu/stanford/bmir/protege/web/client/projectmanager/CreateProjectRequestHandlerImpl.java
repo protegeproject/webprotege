@@ -33,16 +33,6 @@ public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHand
 
     @Override
     public void handleCreateProjectRequest() {
-        // Code splitting
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
-            }
-
-            @Override
-            public void onSuccess() {
-                WebProtegeDialog.showDialog(new NewProjectDialogController(eventBus, dispatchServiceManager, loggedInUserProvider));
-            }
-        });
+        WebProtegeDialog.showDialog(new NewProjectDialogController(eventBus, dispatchServiceManager, loggedInUserProvider));
     }
 }

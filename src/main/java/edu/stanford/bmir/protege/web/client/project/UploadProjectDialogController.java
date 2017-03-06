@@ -21,6 +21,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredExce
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -41,6 +43,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    @Inject
     public UploadProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         super(TITLE);
         this.eventBus = eventBus;

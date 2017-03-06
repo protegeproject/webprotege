@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -28,7 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
  * Stanford Center for Biomedical Informatics Research
  * 13/03/16
  */
-public class SharingButtonPresenter implements HasDispose {
+public class SharingButtonPresenter implements HasDispose, Presenter {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
