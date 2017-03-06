@@ -3,13 +3,14 @@ package edu.stanford.bmir.protege.web.client.user;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 
 /**
  * Matthew Horridge
@@ -37,13 +38,13 @@ public class LoggedInUserPresenter implements HasDispose, Presenter {
     }
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updateButton());
-        eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> updateButton());
-        updateButton();
+        eventBus.addHandler(ON_USER_LOGGED_IN, event -> updateView());
+        eventBus.addHandler(ON_USER_LOGGED_OUT, event -> updateView());
+        updateView();
         container.setWidget(view);
     }
 
-    private void updateButton() {
+    private void updateView() {
         UserId user = loggedInUserProvider.getCurrentUserId();
         view.setLoggedInUserName(user.getUserName());
     }
