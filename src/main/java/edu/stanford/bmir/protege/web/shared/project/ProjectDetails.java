@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -76,6 +77,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * Gets the {@link ProjectId} of the project that these details describe.
      * @return The {@link ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
@@ -84,6 +86,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * Gets the human readable name for the project.
      * @return The human readable name.  Not {@code null}.
      */
+    @Nonnull
     public String getDisplayName() {
         return displayName;
     }
@@ -92,6 +95,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * Gets the {@link UserId} that identifies the owner of the project.
      * @return The {@link UserId} for the project described by these details.  Not {@code null}.
      */
+    @Nonnull
     public UserId getOwner() {
         return owner;
     }
@@ -100,6 +104,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * Gets the description of the project described by these details.
      * @return The description as a string.  Not {@code null}.  May be empty.
      */
+    @Nonnull
     public String getDescription() {
         return description;
     }
@@ -116,6 +121,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
         return createdAt;
     }
 
+    @Nonnull
     public UserId getCreatedBy() {
         return createdBy;
     }
@@ -124,6 +130,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
         return lastModifiedAt;
     }
 
+    @Nonnull
     public UserId getLastModifiedBy() {
         return lastModifiedBy;
     }

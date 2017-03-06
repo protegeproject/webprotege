@@ -17,6 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 6 Mar 2017
+ *
+ * Represents information about a project that is available (viewable) for a given user.
  */
 public class AvailableProject implements IsSerializable, Comparable<AvailableProject>, HasProjectId {
 
@@ -47,53 +49,111 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
         this.trashable = trashable;
     }
 
+    /**
+     * Gets the {@link ProjectId}
+     * @return The {@link ProjectId}
+     */
     @Override
+    @Nonnull
     public ProjectId getProjectId() {
         return projectDetails.getProjectId();
     }
 
+
+    /**
+     * Gets the display name of the project.
+     * @return A string representing the display name.
+     */
+    @Nonnull
+    public String getDisplayName() {
+        return projectDetails.getDisplayName();
+    }
+
+
+    /**
+     * Gets the owner of the project.
+     * @return The owner of the project represented by a {@link UserId}.
+     */
+    @Nonnull
     public UserId getOwner() {
         return projectDetails.getOwner();
     }
 
+    /**
+     * Gets the project description.
+     * @return A possibly empty string representing the project description.
+     */
+    @Nonnull
     public String getDescription() {
         return projectDetails.getDescription();
     }
 
+    /**
+     * Determines whether this project is in the trash or not.
+     * @return true if the project is in the trash, otherwise false.
+     */
     public boolean isInTrash() {
         return projectDetails.isInTrash();
     }
 
+    /**
+     * Gets the timestamp of when the project was created.
+     * @return A long representing the timestamp.
+     */
     public long getCreatedAt() {
         return projectDetails.getCreatedAt();
     }
 
+    /**
+     * Get the user who created the project.
+     * @return A {@link UserId} representing the user who created the project.
+     */
+    @Nonnull
     public UserId getCreatedBy() {
         return projectDetails.getCreatedBy();
     }
 
+    /**
+     * Gets the timestamp of when the project was last modified.
+     * @return A long representing a timestamp.
+     */
     public long getLastModifiedAt() {
         return projectDetails.getLastModifiedAt();
     }
 
+    /**
+     * Get the id of the user who last modified the project.
+     * @return A {@link UserId} identifying the user who last modified the project.
+     */
+    @Nonnull
     public UserId getLastModifiedBy() {
         return projectDetails.getLastModifiedBy();
     }
 
+    /**
+     * Gets all of the project details as a ProjectDetails object.
+     * @return The details as a {@link ProjectDetails} object.
+     */
+    @Nonnull
     public ProjectDetails getProjectDetails() {
         return projectDetails;
     }
 
+    /**
+     * Determines if this project is downloadable (by the current user).
+     * @return true if the project is downloadable, otherwise false.
+     */
     public boolean isDownloadable() {
         return downloadable;
     }
 
+
+    /**
+     * Determines if this project is trashable (by the current user).
+     * @return true if the project is trashable, otherwise false.
+     */
     public boolean isTrashable() {
         return trashable;
-    }
-
-    public String getDisplayName() {
-        return projectDetails.getDisplayName();
     }
 
     @Override
