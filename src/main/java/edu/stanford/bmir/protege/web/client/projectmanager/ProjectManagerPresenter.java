@@ -22,9 +22,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerViewFilter.*;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent.ON_PROJECT_MOVED_TO_TRASH;
 import static java.util.Arrays.asList;
 
 /**
@@ -85,9 +88,9 @@ public class ProjectManagerPresenter implements Presenter {
                       @Nonnull EventBus eventBus) {
         GWT.log("[ProjectManagerPresenter] Starting presenter");
         eventBus.addHandler(ProjectCreatedEvent.TYPE, this::handleProjectCreated);
-        eventBus.addHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, this::handleUserLoggedLoggedIn);
-        eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, this::handleUserLoggedLoggedOut);
-        eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, this::handleProjectMovedToTrash);
+        eventBus.addHandler(ON_USER_LOGGED_IN, this::handleUserLoggedLoggedIn);
+        eventBus.addHandler(ON_USER_LOGGED_OUT, this::handleUserLoggedLoggedOut);
+        eventBus.addHandler(ON_PROJECT_MOVED_TO_TRASH, this::handleProjectMovedToTrash);
         eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, this::handleProjectMovedFromTrash);
         eventBus.addHandler(ProjectSettingsChangedEvent.TYPE, event -> reloadFromServer());
 

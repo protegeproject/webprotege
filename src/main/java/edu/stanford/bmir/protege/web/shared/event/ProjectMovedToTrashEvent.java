@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class ProjectMovedToTrashEvent extends WebProtegeEvent<ProjectMovedToTrashHandler> implements HasProjectId {
 
-    public static final transient Event.Type<ProjectMovedToTrashHandler> TYPE = new Event.Type<ProjectMovedToTrashHandler>();
+    public static final transient Event.Type<ProjectMovedToTrashHandler> ON_PROJECT_MOVED_TO_TRASH = new Event.Type<>();
 
     private ProjectId projectId;
 
@@ -29,7 +29,7 @@ public class ProjectMovedToTrashEvent extends WebProtegeEvent<ProjectMovedToTras
 
     @Override
     public Event.Type<ProjectMovedToTrashHandler> getAssociatedType() {
-        return TYPE;
+        return ON_PROJECT_MOVED_TO_TRASH;
     }
 
     @Override
