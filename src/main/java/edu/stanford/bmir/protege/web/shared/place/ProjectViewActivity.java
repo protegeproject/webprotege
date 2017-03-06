@@ -30,7 +30,7 @@ public class ProjectViewActivity extends AbstractActivity {
 
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        projectPresenter.start(panel, place);
+        projectPresenter.start(panel, eventBus, place);
     }
 
     @Override

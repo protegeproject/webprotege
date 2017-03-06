@@ -64,10 +64,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         view.setAddViewHandler(perspectiveId -> eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId)));
     }
 
-    public void start(AcceptsOneWidget container, final ProjectViewPlace place) {
+    public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
         GWT.log("[PerspectiveSwitcherPresenter] start with place: " + place);
-        checkNotNull(container);
-        checkNotNull(place);
         container.setWidget(view);
         perspectiveLinkManager.getLinkedPerspectives(perspectiveIds -> {
             setLinkedPerspectives(perspectiveIds);

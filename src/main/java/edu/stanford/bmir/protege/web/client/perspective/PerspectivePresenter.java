@@ -87,7 +87,7 @@ public class PerspectivePresenter implements HasDispose {
         eventBus.addHandler(AddViewToPerspectiveEvent.getType(), perspectiveId -> addViewToPerspective(perspectiveId));
     }
 
-    public void start(AcceptsOneWidget container, ProjectViewPlace place) {
+    public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
         GWT.log("[PerspectivePresenter] Starting at place " + place);
         container.setWidget(perspectiveView);
         displayPerspective(place.getPerspectiveId());
