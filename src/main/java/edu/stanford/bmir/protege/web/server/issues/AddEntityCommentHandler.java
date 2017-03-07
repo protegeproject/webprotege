@@ -31,20 +31,16 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
 
     private final EntityDiscussionThreadRepository repository;
 
-    private final UserDetailsManager userDetailsManager;
-
-    private final SendMail sendMail;
+    private final MentionedUsersEmailer mentionedUsersEmailer;
 
     @Inject
     public AddEntityCommentHandler(@Nonnull ProjectManager projectManager,
                                    @Nonnull AccessManager accessManager,
                                    @Nonnull EntityDiscussionThreadRepository repository,
-                                   @Nonnull UserDetailsManager userDetailsManager,
-                                   @Nonnull SendMail sendMail) {
+                                   @Nonnull MentionedUsersEmailer mentionedUsersEmailer) {
         super(projectManager, accessManager);
         this.repository = checkNotNull(repository);
-        this.userDetailsManager = checkNotNull(userDetailsManager);
-        this.sendMail = checkNotNull(sendMail);
+        this.mentionedUsersEmailer = checkNotNull(mentionedUsersEmailer);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
         postCommentPostedEvent(project, threadId, comment);
 
         UserId commentingUser = executionContext.getUserId();
-        sendEmailsToMentionedUsers(rawComment, renderedComment, commentingUser);
+        mentionedUsersEmailer.sendEmailsToMentionedUsers(rawComment, renderedComment, commentingUser);
         return new AddEntityCommentResult(action.getProjectId(), threadId, comment, renderedComment);
 
     }
@@ -102,41 +98,4 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
         project.getEventManager().postEvent(event);
     }
 
-    /**
-     * Sets out emails to users that have been mentioned in a posted comment.
-     * @param rawComment The raw comment.
-     * @param renderedComment The rendered comment.
-     * @param commentingUser The user that made the comment.
-     */
-    private void sendEmailsToMentionedUsers(@Nonnull String rawComment,
-                                            @Nonnull String renderedComment,
-                                            @Nonnull UserId commentingUser) {
-        MentionParser mentionParser = new MentionParser();
-        List<ParsedMention> mentionList = mentionParser.parseMentions(rawComment);
-        mentionList.forEach(m -> m.getParsedMention().getMentionedUserId().ifPresent(u -> {
-            sendEmailToMentionedUser(u, renderedComment, commentingUser);
-        }));
-    }
-
-    /**
-     * Send an email to a user that was mentioned in the comment.
-     * @param mentionedUser The user that was mentioned in the comment.  The email will be sent to this user.
-     * @param commentRendering The rendering of the comment.
-     * @param commentingUser The user that made the comment.
-     */
-    private void sendEmailToMentionedUser(@Nonnull UserId mentionedUser,
-                                          @Nonnull String commentRendering,
-                                          @Nonnull UserId commentingUser) {
-        userDetailsManager.getUserDetails(mentionedUser).ifPresent(userDetails -> {
-            userDetails.getEmailAddress().ifPresent(emailAddress -> {
-                String text = formatEmailMessage(commentRendering, commentingUser);
-                sendMail.sendMail(emailAddress, commentingUser.getUserName() + " has mentioned you in a comment", text);
-            });
-        });
-    }
-
-    private String formatEmailMessage(String commentRendering, UserId commentingUser) {
-        return commentingUser.getUserName() + " has mentioned you in a comment:\n\n"
-                            + commentRendering + "\n\n\n";
-    }
 }

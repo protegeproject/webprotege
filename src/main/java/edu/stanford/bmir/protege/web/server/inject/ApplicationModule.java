@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreIm
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
+import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -93,4 +94,5 @@ public class ApplicationModule {
     public OWLEntityProvider provideOWLProvider(@Application OWLDataFactory dataFactory) {
         return dataFactory;
     }
+
 }
