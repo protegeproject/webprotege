@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
  * Bio-Medical Informatics Research Group<br>
  * Date: 29/08/2012
  */
+@Deprecated
 public interface MalformedNoteHandler {
 
     void handleMalformedNote(NoteId noteId, OWLOntology notesOntology, MalformedNoteException e);

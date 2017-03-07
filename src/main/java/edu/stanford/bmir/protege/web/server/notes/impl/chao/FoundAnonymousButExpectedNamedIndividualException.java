@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
  * Bio-Medical Informatics Research Group<br>
  * Date: 29/08/2012
  */
+@Deprecated
 public class FoundAnonymousButExpectedNamedIndividualException extends MalformedNoteException {
 
     private OWLObjectProperty property;

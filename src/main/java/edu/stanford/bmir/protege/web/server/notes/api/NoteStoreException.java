@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.notes.Note;
  * Bio-Medical Informatics Research Group<br>
  * Date: 29/08/2012
  */
+@Deprecated
 public class NoteStoreException extends RuntimeException {
 
     private Note note;

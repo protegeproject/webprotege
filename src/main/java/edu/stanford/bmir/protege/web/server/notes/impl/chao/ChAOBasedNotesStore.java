@@ -18,6 +18,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/08/2012
  */
+@Deprecated
 public class ChAOBasedNotesStore { // implements MutableNoteStore {
 
 

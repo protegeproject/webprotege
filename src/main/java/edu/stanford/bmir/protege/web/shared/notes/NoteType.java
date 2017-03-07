@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.IRI;
  *
  * </p>
  */
+@Deprecated
 public enum NoteType {
 
 

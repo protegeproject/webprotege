@@ -23,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * </p>
  */
 @Immutable
+@Deprecated
 public final class Note implements IsSerializable {
 
     private NoteHeader header;
@@ -154,6 +155,7 @@ public final class Note implements IsSerializable {
 
 
 
+    @Deprecated
     public static class Builder {
 
         private NoteId noteId;

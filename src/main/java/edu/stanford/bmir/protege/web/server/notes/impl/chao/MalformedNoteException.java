@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.notes.NoteId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 29/08/2012
  */
+@Deprecated
 public abstract class MalformedNoteException extends RuntimeException {
 
     private NoteId noteId;

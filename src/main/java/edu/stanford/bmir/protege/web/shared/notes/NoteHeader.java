@@ -14,6 +14,7 @@ import java.io.Serializable;
  * Date: 15/03/2013
  *
  */
+@Deprecated
 @Immutable
 public final class NoteHeader implements Serializable, Comparable<NoteHeader> {
 

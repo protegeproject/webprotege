@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     NoteId objects are immutable.
  * </p>
  */
+@Deprecated
 public final class NoteId implements HasLexicalForm, Serializable, IsSerializable {
 
     private String lexicalForm;

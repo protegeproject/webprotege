@@ -14,6 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/03/2013
  */
+@Deprecated
 public final class DiscussionThread implements Serializable {
 
     /**

@@ -6,6 +6,7 @@ package edu.stanford.bmir.protege.web.shared.notes;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/04/2013
  */
+@Deprecated
 public enum NoteStatus {
 
     OPEN("unresolved"),
