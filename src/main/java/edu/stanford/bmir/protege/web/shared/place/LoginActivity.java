@@ -26,8 +26,7 @@ public class LoginActivity extends AbstractActivity {
     }
 
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        presenter.start();
-        panel.setWidget(presenter.getView());
+        presenter.start(panel, eventBus);
     }
 
     @Override

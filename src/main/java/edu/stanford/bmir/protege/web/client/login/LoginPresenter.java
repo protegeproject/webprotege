@@ -4,6 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -31,7 +34,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_U
  * 12/02/16
  */
 @Singleton
-public class LoginPresenter {
+public class LoginPresenter implements Presenter {
 
     private final LoginView view;
 
@@ -64,20 +67,17 @@ public class LoginPresenter {
         view.setSignUpForAccountHandler(this::handleSignUpForAccout);
     }
 
-    public LoginView getView() {
-        return view;
+    @Override
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        view.clearView();
+        view.hideErrorMessages();
+        boolean canCreateUser = loggedInUserManager.isAllowedApplicationAction(CREATE_USER);
+        view.setSignUpForAccountVisible(canCreateUser);
+        container.setWidget(view);
     }
 
     public void setNextPlace(Place nextPlace) {
         this.nextPlace = Optional.of(nextPlace);
-    }
-
-    public void start() {
-        view.clearView();
-        view.hideErrorMessages();
-        boolean canCreateUser = loggedInUserManager.isAllowedApplicationAction(CREATE_USER);
-        GWT.log("Can create user: " + canCreateUser);
-        view.setSignUpForAccountVisible(canCreateUser);
     }
 
     private void handleSignUpForAccout() {
