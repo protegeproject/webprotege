@@ -34,15 +34,19 @@ public class CommentPostedEvent extends ProjectEvent<CommentPostedHandler> imple
     @Nullable
     private OWLEntityData entity;
 
+    private int commentCountForEntity;
+
     public CommentPostedEvent(@Nonnull ProjectId projectId,
                               @Nonnull ThreadId threadId,
                               @Nonnull Comment comment,
-                              @Nonnull Optional<OWLEntityData> entity) {
+                              @Nonnull Optional<OWLEntityData> entity,
+                              int commentCountForEntity) {
         super(projectId);
         this.projectId = checkNotNull(projectId);
         this.threadId = checkNotNull(threadId);
         this.comment = checkNotNull(comment);
         this.entity = checkNotNull(entity).orElse(null);
+        this.commentCountForEntity = commentCountForEntity;
     }
 
     @GwtSerializationConstructor
@@ -74,5 +78,9 @@ public class CommentPostedEvent extends ProjectEvent<CommentPostedHandler> imple
 
     public Optional<OWLEntityData> getEntity() {
         return Optional.ofNullable(entity);
+    }
+
+    public int getCommentCountForEntity() {
+        return commentCountForEntity;
     }
 }

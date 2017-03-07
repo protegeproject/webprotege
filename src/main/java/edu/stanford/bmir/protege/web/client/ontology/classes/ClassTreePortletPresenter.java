@@ -26,8 +26,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -53,10 +51,11 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.EntityNotesChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -75,8 +74,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
+import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
@@ -202,9 +205,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                         event -> onEntityBrowserTextChanged(event));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        EntityNotesChangedEvent.TYPE, event -> onNotesChanged(event));
-
-        eventBus.addProjectEventHandler(getProjectId(),
                                         WatchAddedEvent.TYPE, event -> onWatchAdded(event));
 
         eventBus.addProjectEventHandler(getProjectId(),
@@ -226,10 +226,13 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                             updateButtonStates();
                                             onRefresh();
                                         });
-        eventBus.addApplicationEventHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
+        eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> updateButtonStates());
-        eventBus.addApplicationEventHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
+        eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
                                             event -> updateButtonStates());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ON_COMMENT_POSTED,
+                                        this::onCommentPosted);
         updateButtonStates();
     }
 
@@ -284,19 +287,21 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     }
 
-    private void onNotesChanged(EntityNotesChangedEvent event) {
-        GWT.log("[ClassTreePortlet] Notes Changed: " + event);
-        String name = event.getEntity().getIRI().toString();
-        TreeNode node = findTreeNode(name);
-        if (node != null) {
-            final Object userObject = node.getUserObject();
-            if (userObject instanceof EntityData) {
-                EntityData subclassEntityData = (EntityData) userObject;
-                subclassEntityData.setLocalAnnotationsCount(event.getTotalNotesCount());
-                String nodeText = createNodeRenderText(node);
-                node.setText(nodeText);
+    private void onCommentPosted(CommentPostedEvent event) {
+        GWT.log("[ClassTreePortlet] Comment posted: " + event);
+        event.getEntity().ifPresent(entity -> {
+            String name = entity.getEntity().getIRI().toString();
+            TreeNode node = findTreeNode(name);
+            if (node != null) {
+                final Object userObject = node.getUserObject();
+                if (userObject instanceof EntityData) {
+                    EntityData subclassEntityData = (EntityData) userObject;
+                    subclassEntityData.setLocalAnnotationsCount(event.getCommentCountForEntity());
+                    String nodeText = createNodeRenderText(node);
+                    node.setText(nodeText);
+                }
             }
-        }
+        });
     }
 
     private void onWatchAdded(WatchAddedEvent event) {

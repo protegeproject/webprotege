@@ -9,8 +9,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.EntityNotesChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -60,7 +58,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     private final OWLDataFactory dataFactory;
 
-    private final HasPostEvents<ProjectEvent<?>> eventManager;
 
     private final BrowserTextProvider browserTextProvider;
 
@@ -80,7 +77,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         this.logger = logger;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
-        this.eventManager = eventManager;
         this.browserTextProvider = browserTextProvider;
         this.notesOntologyDocument = notesOntologyDocument;
 
@@ -251,8 +247,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             AnnotatableThing target = getAnnotatableThingForObjectId(inReplyToId);
             Note note = addNoteToTarget(target, replyContent, author, timestamp);
             OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or("Entity"));
-            eventManager.postEvent(new NotePostedEvent(projectId, Optional.of(entityData), new NoteDetails(note.getHeader(), replyContent)));
-            eventManager.postEvent(new EntityNotesChangedEvent(projectId, targetEntity, getIndirectNotesCount(targetEntity)));
             return note;
         }
         catch (NotesException e) {
@@ -274,9 +268,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             AnnotatableThing target = getAnnotatableThing(targetEntity);
             Note note = addNoteToTarget(target, noteContent, author, timestamp);
             OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or(""));
-            final NotePostedEvent evt = new NotePostedEvent(projectId, Optional.of(entityData), new NoteDetails(note.getHeader(), note.getContent()));
-            eventManager.postEvent(evt);
-            eventManager.postEvent(new EntityNotesChangedEvent(projectId, targetEntity, getIndirectNotesCount(targetEntity)));
             return note;
         }
         catch (NotesException e) {

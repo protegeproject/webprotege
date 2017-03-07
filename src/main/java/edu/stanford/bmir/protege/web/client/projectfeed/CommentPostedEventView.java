@@ -10,14 +10,10 @@ import edu.stanford.bmir.protege.web.client.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

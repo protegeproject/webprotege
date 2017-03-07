@@ -47,6 +47,13 @@ public class EntityDiscussionThreadRepository {
                         .asList();
     }
 
+    public int getCommentsCount(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+        return findThreads(projectId, entity).stream()
+                .map(thread -> thread.getComments().size())
+                .reduce((left, right) -> left + right)
+                .orElse(0);
+    }
+
     public void saveThread(EntityDiscussionThread thread) {
         datastore.save(thread);
     }

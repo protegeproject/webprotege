@@ -3,20 +3,15 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.*;
-import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
-import edu.stanford.bmir.protege.web.shared.issues.mention.ParsedMention;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -81,21 +76,26 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
 
     /**
      * Post a {@link CommentPostedEvent} to the project event bus.
-     * @param project The project.
+     *
+     * @param project  The project.
      * @param threadId The thread that the comment was added to.
-     * @param comment The comment that was added.
+     * @param comment  The comment that was added.
      */
     private void postCommentPostedEvent(@Nonnull Project project,
                                         @Nonnull ThreadId threadId,
                                         @Nonnull Comment comment) {
-        Optional<OWLEntityData> entity = repository.getThread(threadId)
-                                                   .map(thread -> thread.getEntity())
-                                                   .map(e -> project.getRenderingManager().getRendering(e));
-        CommentPostedEvent event = new CommentPostedEvent(project.getProjectId(),
-                                                          threadId,
-                                                          comment,
-                                                          entity);
-        project.getEventManager().postEvent(event);
+        Optional<EntityDiscussionThread> thread = repository.getThread(threadId);
+        thread.ifPresent(t -> {
+            OWLEntityData entityData = project.getRenderingManager().getRendering(t.getEntity());
+            int commentCount = repository.getCommentsCount(project.getProjectId(), t.getEntity());
+            CommentPostedEvent event = new CommentPostedEvent(project.getProjectId(),
+                                                              threadId,
+                                                              comment,
+                                                              Optional.of(entityData),
+                                                              commentCount);
+            project.getEventManager().postEvent(event);
+
+        });
     }
 
 }
