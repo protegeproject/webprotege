@@ -52,7 +52,7 @@ public class TimeUtil {
         }
 
         if(isYesterday(timestamp, referenceTimestamp)) {
-            return getYesterdayRendering();
+            return getYesterdayRendering(timestamp);
         }
 
         if(isLessThanOneMonthAgo(timestamp, referenceTimestamp)) {
@@ -229,21 +229,22 @@ public class TimeUtil {
     private static String getNMinutesAgoRendering(long timestamp, long referenceTimestamp) {
         int mins = (int) ((referenceTimestamp - timestamp) / ONE_MINUTE);
         if(mins == 1) {
-            return "one minute ago";
+            return "One minute ago";
         }
         else {
             return mins + " minutes ago";
         }
     }
 
-    private static String getYesterdayRendering() {
-        return "yesterday";
+    private static String getYesterdayRendering(long timestamp) {
+        Date date = new Date(timestamp);
+        return "Yesterday at " + date.getHours() + ":" + date.getMinutes();
     }
 
     private static String getNHoursAgoRendering(long timestamp, long referenceTimestamp) {
         int hours = (int) ((referenceTimestamp - timestamp) / ONE_HOUR);
         if(hours == 1) {
-            return "one hour ago";
+            return "One hour ago";
         }
         else {
             return hours + " hours ago";
@@ -253,7 +254,7 @@ public class TimeUtil {
     private static String getNDaysAgoRendering(long timestamp, long referenceTimestamp) {
         int days = getDaysBetween(timestamp, referenceTimestamp);
         if(days == 1) {
-            return "one day ago";
+            return "One day ago";
         }
         else {
             return days + " days ago";

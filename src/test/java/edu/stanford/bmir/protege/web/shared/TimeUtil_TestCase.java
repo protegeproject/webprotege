@@ -1,9 +1,16 @@
 package edu.stanford.bmir.protege.web.shared;
 
+import com.google.gwt.i18n.shared.DateTimeFormat;
+import org.apache.log4j.helpers.DateTimeDateFormat;
 import org.junit.Test;
 
+import java.util.Date;
+import java.util.regex.Pattern;
+
+import static com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat.TIME_SHORT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 /**
  * Matthew Horridge
@@ -41,7 +48,7 @@ public class TimeUtil_TestCase {
     public void shouldReturnOneMinuteAgo() {
         long t1 = t0 + ONE_MINUTE;
         String rendering = TimeUtil.getTimeRendering(t0, t1);
-        assertThat(rendering, is("one minute ago"));
+        assertThat(rendering, is("One minute ago"));
     }
 
     @Test
@@ -55,7 +62,7 @@ public class TimeUtil_TestCase {
     public void shouldReturnYesterday() {
         long t1 = t0 + ONE_DAY;
         String rendering = TimeUtil.getTimeRendering(t0, t1);
-        assertThat(rendering, is("yesterday"));
+        assertThat(rendering, startsWith("Yesterday at "));
     }
 
     @Test
@@ -100,6 +107,4 @@ public class TimeUtil_TestCase {
         String rendering = TimeUtil.getTimeRendering(THU_SEPTEMBER_THIRTIETH_2011);
         assertThat(rendering, is("30th September 2011"));
     }
-
-
 }
