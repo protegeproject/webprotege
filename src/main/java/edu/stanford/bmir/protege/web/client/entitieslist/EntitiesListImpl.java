@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeCellListResources;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -36,33 +37,39 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 public class EntitiesListImpl<E extends OWLEntityData> extends Composite implements EntitiesList<E> {
 
     public static final OWLEntityVisitorEx<String> CSS_CLASS_NAME_VISITOR = new OWLEntityVisitorEx<String>() {
+        @Nonnull
         @Override
-        public String visit(OWLClass cls) {
+        public String visit(@Nonnull OWLClass cls) {
             return BUNDLE.style().classIconInset();
         }
 
+        @Nonnull
         @Override
-        public String visit(OWLObjectProperty property) {
+        public String visit(@Nonnull OWLObjectProperty property) {
             return BUNDLE.style().objectPropertyIconInset();
         }
 
+        @Nonnull
         @Override
-        public String visit(OWLDataProperty property) {
+        public String visit(@Nonnull OWLDataProperty property) {
             return BUNDLE.style().dataPropertyIconInset();
         }
 
+        @Nonnull
         @Override
-        public String visit(OWLNamedIndividual individual) {
+        public String visit(@Nonnull OWLNamedIndividual individual) {
             return BUNDLE.style().individualIconInset();
         }
 
+        @Nonnull
         @Override
-        public String visit(OWLDatatype datatype) {
+        public String visit(@Nonnull OWLDatatype datatype) {
             return BUNDLE.style().datatypeIconInset();
         }
 
+        @Nonnull
         @Override
-        public String visit(OWLAnnotationProperty property) {
+        public String visit(@Nonnull OWLAnnotationProperty property) {
             return BUNDLE.style().annotationPropertyIconInset();
         }
     };
@@ -87,18 +94,8 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
         cellList.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.BOUND_TO_SELECTION);
         final SingleSelectionModel<E> selectionModel = new SingleSelectionModel<E>(keyProvider);
         cellList.setSelectionModel(selectionModel);
-        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-            @Override
-            public void onSelectionChange(SelectionChangeEvent event) {
-                SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject());
-            }
-        });
-        cellList.addDomHandler(new MouseUpHandler() {
-            @Override
-            public void onMouseUp(MouseUpEvent mouseUpEvent) {
-                SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject());
-            }
-        }, MouseUpEvent.getType());
+        selectionModel.addSelectionChangeHandler(event -> SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject()));
+        cellList.addDomHandler(mouseUpEvent -> SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject()), MouseUpEvent.getType());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
