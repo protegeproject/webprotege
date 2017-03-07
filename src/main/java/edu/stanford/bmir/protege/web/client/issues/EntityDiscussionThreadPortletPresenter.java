@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENTS;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
  * Matthew Horridge
@@ -52,7 +53,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         presenter.start(eventBus);
         updatePresenter(getSelectedEntity());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        ON_PERMISSIONS_CHANGED,
                                         this::handlePemissionsChange);
         portletUi.setForbiddenMessage("You do not have permission to view comments in this project");
     }

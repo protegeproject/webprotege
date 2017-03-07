@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,11 @@ public class MentionParser {
             // Global and Multiple
             "gm");
     // @formatter:on
+
+
+    @Inject
+    public MentionParser() {
+    }
 
     /**
      * Parses a list of Mentions from the given text.

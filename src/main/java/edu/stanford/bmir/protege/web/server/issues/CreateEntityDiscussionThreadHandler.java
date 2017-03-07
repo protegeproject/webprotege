@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 
 /**
@@ -26,12 +28,17 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
+    @Nonnull
+    private final MentionedUsersEmailer mentionedUsersEmailer;
+
     @Inject
     public CreateEntityDiscussionThreadHandler(@Nonnull ProjectManager projectManager,
                                                @Nonnull AccessManager accessManager,
-                                               @Nonnull EntityDiscussionThreadRepository repository) {
+                                               @Nonnull EntityDiscussionThreadRepository repository,
+                                               @Nonnull MentionedUsersEmailer mentionedUsersEmailer) {
         super(projectManager, accessManager);
-        this.repository = repository;
+        this.repository = checkNotNull(repository);
+        this.mentionedUsersEmailer = checkNotNull(mentionedUsersEmailer);
     }
 
     @Override
@@ -49,15 +56,16 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     protected CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
                                                          Project project,
                                                          ExecutionContext executionContext) {
+        String rawComment = action.getComment();
         CommentRenderer commentRenderer = new CommentRenderer();
-        String renderedComment = commentRenderer.renderComment(action.getComment());
-
+        String renderedComment = commentRenderer.renderComment(rawComment);
+        UserId commentingUser = executionContext.getUserId();
         Comment comment = new Comment(
                 CommentId.create(),
-                executionContext.getUserId(),
+                commentingUser,
                 System.currentTimeMillis(),
                 Optional.empty(),
-                action.getComment(),
+                rawComment,
                 renderedComment);
         EntityDiscussionThread thread = new EntityDiscussionThread(ThreadId.create(),
                                                                    action.getProjectId(),
@@ -66,6 +74,9 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                                                                    ImmutableList.of(comment));
         repository.saveThread(thread);
         project.getEventManager().postEvent(new DiscussionThreadCreatedEvent(thread));
+
+        mentionedUsersEmailer.sendEmailsToMentionedUsers(rawComment, renderedComment, commentingUser);
+
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
         return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));
     }
