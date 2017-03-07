@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.client.topbar;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingButtonPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -17,9 +19,11 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 16/02/16
  */
-public class TopBarPresenter implements HasDispose, Presenter {
+public class TopBarPresenter implements HasDispose {
 
     private final TopBarView view;
+
+    private final ActiveProjectManager activeProjectManager;
 
     private final GoToHomePresenter goToHomePresenter;
 
@@ -31,14 +35,18 @@ public class TopBarPresenter implements HasDispose, Presenter {
 
     private final SharingButtonPresenter sharingButtonPresenter;
 
+
+
     @Inject
     public TopBarPresenter(@Nonnull TopBarView view,
+                           @Nonnull ActiveProjectManager projectDetailsProvider,
                            @Nonnull GoToHomePresenter goToHomePresenter,
                            @Nonnull ProjectMenuPresenter projectMenuPresenter,
                            @Nonnull SharingButtonPresenter sharingButtonPresenter,
                            @Nonnull LoggedInUserPresenter loggedInUserPresenter,
                            @Nonnull HelpPresenter helpPresenter) {
         this.view = view;
+        this.activeProjectManager = projectDetailsProvider;
         this.projectMenuPresenter = projectMenuPresenter;
         this.goToHomePresenter = goToHomePresenter;
         this.sharingButtonPresenter = sharingButtonPresenter;
@@ -53,13 +61,18 @@ public class TopBarPresenter implements HasDispose, Presenter {
      *                 It is therefore unnecessary for users to remove handlers.
      */
     public void start(@Nonnull AcceptsOneWidget container,
-                      @Nonnull EventBus eventBus) {
+                      @Nonnull EventBus eventBus,
+                      @Nonnull ProjectViewPlace place) {
         container.setWidget(view);
         goToHomePresenter.start(view.getGoToHomeWidgetContainer(), eventBus);
         projectMenuPresenter.start(view.getProjectMenuContainer(), eventBus);
         loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer(), eventBus);
         helpPresenter.start(view.getHelpWidgetContainer(), eventBus);
         sharingButtonPresenter.start(view.getSharingSettingsContainer(), eventBus);
+        activeProjectManager.getActiveProjectDetails(projectDetails -> {
+            String displayName = projectDetails.map(ProjectDetails::getDisplayName).orElse("");
+            view.setProjectTitle(displayName);
+        });
     }
 
     @Override

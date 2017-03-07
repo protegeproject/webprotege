@@ -90,7 +90,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                                 @Nonnull ProjectViewPlace place) {
         dispatchServiceManager.execute(new LoadProjectAction(projectId),
                                        result -> container.setWidget(view));
-        topBarPresenter.start(view.getTopBarContainer(), eventBus);
+        topBarPresenter.start(view.getTopBarContainer(), eventBus, place);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
         eventPollingManager.start();

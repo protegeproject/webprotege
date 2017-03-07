@@ -3,11 +3,9 @@ package edu.stanford.bmir.protege.web.client.topbar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -43,9 +41,22 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     @UiField
     protected AcceptsOneWidget helpContainer;
 
+    @UiField
+    protected HasText projectTitle;
+
     @Override
     public AcceptsOneWidget getGoToHomeWidgetContainer() {
         return homeContainer;
+    }
+
+    @Override
+    public void setProjectTitle(@Nonnull String projectTitle) {
+        this.projectTitle.setText(projectTitle);
+    }
+
+    @Override
+    public void clearProjectTitle() {
+        this.projectTitle.setText("");
     }
 
     @Override
