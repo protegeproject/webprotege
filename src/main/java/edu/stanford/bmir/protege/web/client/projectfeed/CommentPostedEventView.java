@@ -11,11 +11,15 @@ import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.Comment;
+import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -24,13 +28,13 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
-public class NotePostedEventView extends Composite implements ProjectFeedItemDisplay {
+public class CommentPostedEventView extends Composite implements ProjectFeedItemDisplay {
 
-    interface NotePostedEventPanelUiBinder extends UiBinder<HTMLPanel, NotePostedEventView> {
+    interface CommentPostedEventPanelUiBinder extends UiBinder<HTMLPanel, CommentPostedEventView> {
 
     }
 
-    private static NotePostedEventPanelUiBinder ourUiBinder = GWT.create(NotePostedEventPanelUiBinder.class);
+    private static CommentPostedEventPanelUiBinder ourUiBinder = GWT.create(CommentPostedEventPanelUiBinder.class);
 
     @UiField
     protected SimplePanel userIconHolder;
@@ -48,18 +52,19 @@ public class NotePostedEventView extends Composite implements ProjectFeedItemDis
     protected HTML bodyLabel;
 
     @Inject
-    public NotePostedEventView(SelectionModel selectionModel) {
+    public CommentPostedEventView(@Nonnull SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         entityLabel.setSelectionModel(selectionModel);
     }
 
 
-    public void setValue(NotePostedEvent event) {
-        final NoteHeader noteHeader = event.getNoteDetails().getNoteHeader();
-        userNameLabel.setText(noteHeader.getAuthor().getUserName());
-        userIconHolder.setWidget(UserIcon.get(noteHeader.getAuthor()));
-        final Optional<OWLEntityData> targetAsEntityData = event.getTargetAsEntityData();
+    public void setValue(CommentPostedEvent event) {
+        Comment comment = event.getComment();
+        UserId createdBy = comment.getCreatedBy();
+        userNameLabel.setText(createdBy.getUserName());
+        userIconHolder.setWidget(UserIcon.get(createdBy));
+        final java.util.Optional<OWLEntityData> targetAsEntityData = event.getEntity();
         if(targetAsEntityData.isPresent()) {
             entityLabel.setEntity(targetAsEntityData.get());
             entityLabel.setVisible(true);
@@ -67,14 +72,9 @@ public class NotePostedEventView extends Composite implements ProjectFeedItemDis
         else {
             entityLabel.setVisible(false);
         }
-        timeLabel.setBaseTime(noteHeader.getTimestamp());
+        timeLabel.setBaseTime(comment.getCreatedAt());
         final SafeHtmlBuilder builder = new SafeHtmlBuilder();
-        final NoteContent noteContent = event.getNoteDetails().getNoteContent();
-        final Optional<String> subject = noteContent.getSubject();
-        if (subject.isPresent()) {
-            builder.appendHtmlConstant("<span style=\"font-weight: bold; padding-right: 4px;\">" + subject.or("") + ":</span>");
-        }
-        bodyLabel.setHTML(builder.appendHtmlConstant(noteContent.getBody().or("")).toSafeHtml());
+        bodyLabel.setHTML(builder.appendHtmlConstant(comment.getRenderedBody()).toSafeHtml());
     }
 
     @Override

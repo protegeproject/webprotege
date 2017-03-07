@@ -1,3 +1,6 @@
+<%@ page import="edu.stanford.bmir.protege.web.server.access.AccessManager" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.access.ApplicationResource" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientApplicationPropertiesEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
@@ -6,18 +9,15 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.access.ActionId" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
 <%@ page import="java.io.IOException" %>
-<%@ page import="java.util.Optional" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.access.AccessManager" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.access.ActionId" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.access.ApplicationResource" %>
 <%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Optional" %>
+<%@ page import="java.util.Set" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -108,10 +108,10 @@
             UserDetailsManager userDetailsManager = getWebProtegeComponent().getUserDetailsManager();
             Optional<String> email = userDetailsManager.getEmail(userId);
             if(email.isPresent()) {
-                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.of(email.get()));
+                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.of(email.get()));
             }
             else {
-                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.<String>absent());
+                userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.<String>empty());
             }
         }
         Set<ActionId> allowedApplicationActions = new HashSet<>(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));

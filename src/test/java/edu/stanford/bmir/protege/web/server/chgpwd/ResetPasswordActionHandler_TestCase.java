@@ -94,7 +94,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldReturnInvalidEmailAddressIfUserEmailAddressDoesNotExist() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(com.google.common.base.Optional.<String>absent());
+        when(userDetails.getEmailAddress()).thenReturn(Optional.<String>empty());
         ResetPasswordResult result = handler.execute(action, context);
         assertThat(result.getResultCode(), is(ResetPasswordResultCode.INVALID_EMAIL_ADDRESS));
     }
@@ -103,7 +103,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldReturnInvalidEmailAddressIfUserEmailAddressDoesEqualSuppliedEmailAddress() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(com.google.common.base.Optional.of("other.address"));
+        when(userDetails.getEmailAddress()).thenReturn(Optional.of("other.address"));
         ResetPasswordResult result = handler.execute(action, context);
         assertThat(result.getResultCode(), is(ResetPasswordResultCode.INVALID_EMAIL_ADDRESS));
     }
@@ -112,7 +112,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldReturnSuccessIfEmailAddressComparesEqualIgnoreCase() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(com.google.common.base.Optional.of(EMAIL_ADDRESS));
+        when(userDetails.getEmailAddress()).thenReturn(Optional.of(EMAIL_ADDRESS));
         ResetPasswordResult result = handler.execute(action, context);
         assertThat(result.getResultCode(), is(ResetPasswordResultCode.SUCCESS));
     }
@@ -121,7 +121,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldSendEmailOnSuccess() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(com.google.common.base.Optional.of(EMAIL_ADDRESS));
+        when(userDetails.getEmailAddress()).thenReturn(Optional.of(EMAIL_ADDRESS));
         handler.execute(action, context);
         ArgumentCaptor<UserId> userIdCaptor = ArgumentCaptor.forClass(UserId.class);
         ArgumentCaptor<String> emailCaptor = ArgumentCaptor.forClass(String.class);
@@ -135,7 +135,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldReturnErrorOnException() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(com.google.common.base.Optional.of(EMAIL_ADDRESS));
+        when(userDetails.getEmailAddress()).thenReturn(Optional.of(EMAIL_ADDRESS));
         doThrow(new RuntimeException()).when(authenticationManager).setDigestedPassword(
                 any(UserId.class),
                 any(SaltedPasswordDigest.class),
@@ -148,7 +148,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldNotSendEmailOnException() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(com.google.common.base.Optional.of(EMAIL_ADDRESS));
+        when(userDetails.getEmailAddress()).thenReturn(Optional.of(EMAIL_ADDRESS));
         doThrow(new RuntimeException()).when(authenticationManager).setDigestedPassword(
                 any(UserId.class),
                 any(SaltedPasswordDigest.class),

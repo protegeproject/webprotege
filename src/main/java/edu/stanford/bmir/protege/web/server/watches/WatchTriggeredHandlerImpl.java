@@ -80,7 +80,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                 directLinkBuilder.append("#ProjectViewPlace:");
                 directLinkBuilder.append(placeToken);
                 message += "\n" + directLinkBuilder.toString();
-                mailManager.sendMail(userDetails.getEmailAddress().or("Not specified"), emailSubject, message);
+                mailManager.sendMail(userDetails.getEmailAddress().orElse("Not specified"), emailSubject, message);
                 System.out.println(message);
             }
         });

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -275,6 +276,10 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
             Collections.sort(entitiesList);
             return entitiesList.get(0);
         }
+    }
+
+    public OWLEntityData getRendering(OWLEntity entity) {
+        return DataFactory.getOWLEntityData(entity, getShortForm(entity));
     }
 
     public OWLClassData getRendering(OWLClass cls) {

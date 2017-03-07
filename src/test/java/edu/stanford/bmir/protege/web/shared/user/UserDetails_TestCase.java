@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
-import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -101,7 +102,8 @@ public class UserDetails_TestCase {
 
     @Test
     public void shouldBeEqualToGuestUser() {
-        assertThat(UserDetails.getGuestUserDetails(), is(new UserDetails(UserId.getGuest(), "Guest", Optional.<String>absent())));
+        assertThat(UserDetails.getGuestUserDetails(), is(new UserDetails(UserId.getGuest(), "Guest",
+                                                                         Optional.<String>empty())));
     }
 
 }

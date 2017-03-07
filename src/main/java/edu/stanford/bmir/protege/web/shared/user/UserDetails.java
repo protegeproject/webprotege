@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +39,7 @@ public class UserDetails implements Serializable {
      * @param emailAddress The email address of the user.  Not {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.
      */
-    public UserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
+    public UserDetails(UserId userId, String displayName, java.util.Optional<String> emailAddress) {
         this.userId = checkNotNull(userId);
         this.displayName = checkNotNull(displayName);
         if(emailAddress.isPresent()) {
@@ -63,12 +63,12 @@ public class UserDetails implements Serializable {
         return new UserDetails(userId, displayName, Optional.of(emailAddress));
     }
 
-    public static UserDetails getUserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
+    public static UserDetails getUserDetails(UserId userId, String displayName, java.util.Optional<String> emailAddress) {
         return new UserDetails(userId, displayName, emailAddress);
     }
 
     public static UserDetails getGuestUserDetails() {
-        return new UserDetails(UserId.getGuest(), GUEST_DISPLAY_NAME, Optional.<String>absent());
+        return new UserDetails(UserId.getGuest(), GUEST_DISPLAY_NAME, Optional.empty());
     }
 
 
@@ -92,8 +92,8 @@ public class UserDetails implements Serializable {
      * Gets the email address for the user.
      * @return The {@link EmailAddress}.  Not {@code null}.
      */
-    public Optional<String> getEmailAddress() {
-        return Optional.fromNullable(emailAddress);
+    public java.util.Optional<String> getEmailAddress() {
+        return Optional.ofNullable(emailAddress);
     }
 
 
@@ -119,7 +119,7 @@ public class UserDetails implements Serializable {
         return Objects.toStringHelper("UserDetails")
                 .addValue(userId)
                 .add("displayName", displayName)
-                .add("emailAddress", Optional.fromNullable(emailAddress).or(""))
+                .add("emailAddress", Optional.ofNullable(emailAddress).orElse(""))
                 .toString();
     }
 }

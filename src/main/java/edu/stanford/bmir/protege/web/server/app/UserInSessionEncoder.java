@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.app;
 
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.app.UserInSessionEncoding;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
 import javax.json.Json;
@@ -25,7 +24,7 @@ public class UserInSessionEncoder implements ClientObjectEncoder<UserInSession> 
         return Json.createObjectBuilder()
                    .add(USER_NAME, userDetails.getUserId().getUserName())
                    .add(DISPLAY_NAME, userDetails.getDisplayName())
-                   .add(USER_EMAIL, userDetails.getEmailAddress().or(""))
+                   .add(USER_EMAIL, userDetails.getEmailAddress().orElse(""))
                    .add(APPLICATION_ACTIONS, actionArray)
                 .build();
     }
