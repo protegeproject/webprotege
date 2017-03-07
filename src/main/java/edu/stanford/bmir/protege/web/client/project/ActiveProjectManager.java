@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
@@ -18,5 +20,8 @@ public interface ActiveProjectManager {
      */
     @Nonnull
     Optional<ProjectId> getActiveProjectId();
+
+
+    void getActiveProjectDetails(Consumer<Optional<ProjectDetails>> projectDetailsConsumer);
 
 }

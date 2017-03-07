@@ -7,13 +7,23 @@
             padding-top: 1px;
             background: #f0f0f0;
             height: 24px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
-        .rightPanel {
-            float: right;
+        .leftItem {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+        .middlePadding {
+            flex-grow: 1;
+        }
+        .rightItem {
+            flex-grow: 0;
+            flex-shrink: 0;
         }
         .inline {
             display: inline-block;
-            vertical-align: middle;
         }
         .logo {
             width: 20px;
@@ -21,18 +31,29 @@
             display: inline;
             padding-left: 1px;
         }
+        .splitter {
+            width: 1px;
+            background: #c8c8c8;
+            align-self: stretch;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .projectTitle {
+            font-weight: 400;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{style.inline}">
-            <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo} {style.inline}"/>
-            <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}"/>
-            <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}"/>
-        </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{style.rightPanel}">
-            <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}"/>
-            <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}"/>
-            <g:SimplePanel ui:field="helpContainer" addStyleNames="{style.inline}"/>
-        </g:HTMLPanel>
+            <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo} {style.leftItem} {style.inline}"/>
+            <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
+            <g:HTMLPanel addStyleNames="{style.splitter}  {style.leftItem}"/>
+            <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {style.projectTitle}"/>
+            <g:HTMLPanel addStyleNames="{style.inline} {style.middlePadding}"/>
+            <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+            <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+            <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+            <g:SimplePanel ui:field="helpContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
