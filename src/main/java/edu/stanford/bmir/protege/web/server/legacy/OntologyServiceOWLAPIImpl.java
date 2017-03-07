@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProv
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.legacy.MoveClassChangeFactory;
 import edu.stanford.bmir.protege.web.server.legacy.OWLOntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -60,12 +61,17 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     @Nonnull
     private final ProjectManager projectManager;
 
+    @Nonnull
+    private final EntityDiscussionThreadRepository entityDiscussionThreadRepository;
+
     @Inject
     public OntologyServiceOWLAPIImpl(
             @Nonnull WebProtegeLogger logger,
-            @Nonnull ProjectManager projectManager) {
+            @Nonnull ProjectManager projectManager,
+            @Nonnull EntityDiscussionThreadRepository discussionThreadRepository) {
         super(logger);
         this.projectManager = projectManager;
+        this.entityDiscussionThreadRepository = discussionThreadRepository;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,9 +222,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 String name = subclass.getIRI().toString();
                 SubclassEntityData data = new SubclassEntityData(name, browserText, new HashSet<EntityData>(0), subClassSubClassesCount);
                 data.setDeprecated(deprecated);
-//                int directNotesCount = project.getNotesManager().getIndirectNotesCount(subclass);
-//                int indirectNotesCount = project.getNotesManager().getIndirectNotesCount(cls);
-//                data.setLocalAnnotationsCount(directNotesCount);
+                int commentsCount = entityDiscussionThreadRepository.getCommentsCount(project.getProjectId(), subclass);
+                data.setLocalAnnotationsCount(commentsCount);
             Set<Watch<?>> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
             if(!directWatches.isEmpty()) {
                 data.setWatches(directWatches);

@@ -6,8 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,17 +70,25 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                 Optional.empty(),
                 rawComment,
                 renderedComment);
+        OWLEntity entity = action.getEntity();
         EntityDiscussionThread thread = new EntityDiscussionThread(ThreadId.create(),
                                                                    action.getProjectId(),
-                                                                   action.getEntity(),
+                                                                   entity,
                                                                    Status.OPEN,
                                                                    ImmutableList.of(comment));
         repository.saveThread(thread);
         project.getEventManager().postEvent(new DiscussionThreadCreatedEvent(thread));
-
+        ProjectId projectId = project.getProjectId();
+        int commentCount = repository.getCommentsCount(projectId, entity);
+        Optional<OWLEntityData> rendering = Optional.of(project.getRenderingManager().getRendering(entity));
+        project.getEventManager().postEvent(new CommentPostedEvent(projectId,
+                                                                   thread.getId(),
+                                                                   comment,
+                                                                   rendering,
+                                                                   commentCount));
         mentionedUsersEmailer.sendEmailsToMentionedUsers(rawComment, renderedComment, commentingUser);
 
-        List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
+        List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), entity);
         return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));
     }
 }
