@@ -1,15 +1,14 @@
 package edu.stanford.bmir.protege.web.client.signup;
 
-import com.google.common.base.Optional;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationServiceProvider;
@@ -18,14 +17,16 @@ import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
-public class SignUpPresenter {
+public class SignUpPresenter implements Presenter {
 
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -34,31 +35,23 @@ public class SignUpPresenter {
 
     private final PlaceController placeController;
 
-    private Optional<Place> continueTo = Optional.absent();
+    private Optional<Place> continueTo = Optional.empty();
 
-    private Optional<Place> backTo = Optional.absent();
+    private Optional<Place> backTo = Optional.empty();
 
     @Inject
-    public SignUpPresenter(DispatchServiceManager dispatchServiceManager, SignUpView view, PlaceController placeController) {
+    public SignUpPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
+                           @Nonnull SignUpView view,
+                           @Nonnull PlaceController placeController) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.view = view;
         this.placeController = placeController;
-        view.setCancelHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                handleCancel();
-            }
-        });
-
-        view.setSignUpHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                handleSignUp();
-            }
-        });
+        view.setCancelHandler(event -> handleCancel());
+        view.setSignUpHandler(event -> handleSignUp());
     }
 
-    public void start(AcceptsOneWidget container) {
+    @Override
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         view.clear();
         container.setWidget(view);
     }
