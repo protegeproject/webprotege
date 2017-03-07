@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
  * Bio-Medical Informatics Research Group<br>
  * Date: 29/08/2012
  */
+@Deprecated
 public class FoundZeroButExpectedOneDataPropertyValueException extends MalformedNoteException {
 
     private OWLDataProperty dataProperty;

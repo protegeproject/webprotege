@@ -15,6 +15,7 @@ import java.util.List;
  *     Represents data parsed from a CHAO ontology.
  * </p>
  */
+@Deprecated
 public class CHAONoteData implements Comparable<CHAONoteData> {
 
     private String author;

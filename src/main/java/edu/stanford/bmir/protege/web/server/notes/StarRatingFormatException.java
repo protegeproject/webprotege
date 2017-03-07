@@ -10,6 +10,7 @@ package edu.stanford.bmir.protege.web.server.notes;
  *     a StarRating is not formatted in a syntactically valid way.
  * </p>
  */
+@Deprecated
 public class StarRatingFormatException extends RuntimeException {
 
     private String specifiedString;

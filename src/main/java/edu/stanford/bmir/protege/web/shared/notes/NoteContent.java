@@ -19,6 +19,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  *     NoteContent objects are immutable.
  * </p>
  */
+@Deprecated
 public final class NoteContent implements Serializable {
 
 

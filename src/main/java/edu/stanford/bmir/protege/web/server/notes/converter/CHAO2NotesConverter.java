@@ -34,6 +34,7 @@ package edu.stanford.bmir.protege.web.server.notes.converter;
  * Caveats:  For ChAO ontologies exported from WebProtege, the prefix p: may actually (in some cases) bind to
  * a different base.
  */
+@Deprecated
 public class CHAO2NotesConverter {
 
 //

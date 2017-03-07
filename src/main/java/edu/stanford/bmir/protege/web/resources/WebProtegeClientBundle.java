@@ -11,7 +11,7 @@ import com.google.gwt.resources.client.*;
  */
 public interface WebProtegeClientBundle extends ClientBundle {
 
-    public static final WebProtegeClientBundle BUNDLE = GWT.create(WebProtegeClientBundle.class);
+    WebProtegeClientBundle BUNDLE = GWT.create(WebProtegeClientBundle.class);
 
     @Source("protege-logo.png")
     ImageResource webProtegeLogo();
@@ -22,7 +22,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("protege-blender.png")
     ImageResource protegeBlender();
 
-    @Source("../../../../../../../webapp/img/protege-blender-monochrome.png")
+    @Source("protege-blender-monochrome.png")
     ImageResource protegeBlenderGrayScale();
 
     @Source("about.html")

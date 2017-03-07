@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.IRI;
  * Bio-Medical Informatics Research Group<br>
  * Date: 29/08/2012
  */
+@Deprecated
 public enum ChAOVocabulary {
 
     ANNOTATES("annotates"),

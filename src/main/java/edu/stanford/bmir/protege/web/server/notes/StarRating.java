@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
  *     an {@link IRI} for it.
  * </p>
  */
+@Deprecated
 public enum StarRating {
 
     ZERO_STAR("ZeroStar"),
