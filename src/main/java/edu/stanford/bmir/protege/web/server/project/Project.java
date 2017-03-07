@@ -410,11 +410,11 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
             // We coin fresh entities for places where tmp: is the scheme - the name for the entity comes from
             // the fragment
-            final Map<IRI, IRI> iriRenameMap = new HashMap<IRI, IRI>();
+            final Map<IRI, IRI> iriRenameMap = new HashMap<>();
 
             final ChangeSetEntityCrudSession session = getEntityCrudKitHandler().createChangeSetSession();
-            Set<OWLOntologyChange> changesToRename = new HashSet<OWLOntologyChange>();
-            List<OWLOntologyChange> freshEntityChanges = new ArrayList<OWLOntologyChange>();
+            Set<OWLOntologyChange> changesToRename = new HashSet<>();
+            List<OWLOntologyChange> freshEntityChanges = new ArrayList<>();
             for (OWLOntologyChange change : changes) {
                 for (OWLEntity entity : change.getSignature()) {
                     if (DataFactory.isFreshEntity(entity)) {
@@ -425,19 +425,19 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                         }
                         else if (entity.isOWLObjectProperty() || entity.isOWLDataProperty() || entity.isOWLAnnotationProperty()) {
                             if (!accessManager.hasPermission(subject, projectResource, CREATE_PROPERTY.getActionId())) {
-                                throw new RuntimeException("You do not have permission to create new properties");
+                                throw new PermissionDeniedException("You do not have permission to create new properties");
                             }
                         }
                         else if (entity.isOWLNamedIndividual()) {
                             if (!accessManager.hasPermission(subject,
                                                              projectResource,
                                                              CREATE_INDIVIDUAL.getActionId())) {
-                                throw new RuntimeException("You do not have permission to create new individuals");
+                                throw new PermissionDeniedException("You do not have permission to create new individuals");
                             }
                         }
                         else if (entity.isOWLDatatype()) {
                             if (!accessManager.hasPermission(subject, projectResource, CREATE_DATATYPE.getActionId())) {
-                                throw new RuntimeException("You do not have permission to create new datatypes");
+                                throw new PermissionDeniedException("You do not have permission to create new datatypes");
                             }
                         }
                         changesToRename.add(change);
