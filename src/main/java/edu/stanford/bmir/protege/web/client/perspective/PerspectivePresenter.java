@@ -7,12 +7,12 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -54,7 +54,7 @@ public class PerspectivePresenter implements HasDispose {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
-    private Optional<PerspectiveId> currentPerspective = Optional.absent();
+    private java.util.Optional<PerspectiveId> currentPerspective = java.util.Optional.empty();
 
 
     @Inject
@@ -64,7 +64,6 @@ public class PerspectivePresenter implements HasDispose {
                                 ProjectId projectId,
                                 DispatchServiceManager dispatchServiceManager,
                                 PerspectiveFactory perspectiveFactory,
-                                EventBus eventBus,
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
                                 PortletChooserPresenter portletChooserPresenter) {
         this.perspectiveView = perspectiveView;
@@ -75,6 +74,10 @@ public class PerspectivePresenter implements HasDispose {
         this.perspectiveFactory = perspectiveFactory;
         this.emptyPerspectivePresenterFactory = emptyPerspectivePresenterFactory;
         this.portletChooserPresenter = portletChooserPresenter;
+    }
+
+    public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
+        GWT.log("[PerspectivePresenter] Starting at place " + place);
 
         eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
             if(event.getNewPlace() instanceof ProjectViewPlace) {
@@ -85,12 +88,12 @@ public class PerspectivePresenter implements HasDispose {
         eventBus.addHandler(ResetPerspectiveEvent.getType(), event -> resetPerspective(event.getPerspectiveId()));
 
         eventBus.addHandler(AddViewToPerspectiveEvent.getType(), perspectiveId -> addViewToPerspective(perspectiveId));
-    }
 
-    public void start(AcceptsOneWidget container, EventBus eventBus, ProjectViewPlace place) {
-        GWT.log("[PerspectivePresenter] Starting at place " + place);
+
         container.setWidget(perspectiveView);
         displayPerspective(place.getPerspectiveId());
+
+
     }
 
     private void resetPerspective(PerspectiveId perspectiveId) {
@@ -102,10 +105,10 @@ public class PerspectivePresenter implements HasDispose {
         }
         Node originalRootNode = originalRootNodeMap.get(perspectiveId);
         if(originalRootNode == null) {
-            perspective.setRootNode(Optional.<Node>absent());
+            perspective.setRootNode(Optional.absent());
         }
         else {
-            perspective.setRootNode(Optional.<Node>of(originalRootNode.duplicate()));
+            perspective.setRootNode(Optional.of(originalRootNode.duplicate()));
         }
     }
 
@@ -118,11 +121,11 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {
-        if(currentPerspective.equals(Optional.of(perspectiveId))) {
+        if(currentPerspective.equals(java.util.Optional.of(perspectiveId))) {
             return;
         }
         GWT.log("[PerspectivePresenter] Display Perspective: " + perspectiveId);
-        currentPerspective = Optional.of(perspectiveId);
+        currentPerspective = java.util.Optional.of(perspectiveId);
         retrieveAndSetPerspective(perspectiveId);
     }
 
@@ -130,7 +133,7 @@ public class PerspectivePresenter implements HasDispose {
         Perspective perspective = perspectiveCache.remove(perspectiveId);
         if(perspective != null) {
             perspective.dispose();
-            if(currentPerspective.equals(Optional.of(perspective.getPerspectiveId()))) {
+            if(currentPerspective.equals(java.util.Optional.of(perspective.getPerspectiveId()))) {
                 perspectiveView.setWidget(new Label("Nothing Here"));
             }
         }

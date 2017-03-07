@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -24,6 +25,9 @@ public class ProjectPresenterFactory {
     private final ProjectView view;
 
     @Nonnull
+    private final BusyView busyView;
+
+    @Nonnull
     private final EventPollingManager eventPollingManager;
 
     @Nonnull
@@ -46,6 +50,7 @@ public class ProjectPresenterFactory {
 
     @Inject
     public ProjectPresenterFactory(@Nonnull ProjectView view,
+                                   @Nonnull BusyView busyView,
                                    @Nonnull EventPollingManager eventPollingManager,
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
                                    @Nonnull LoggedInUserProvider loggedInUserProvider,
@@ -54,6 +59,7 @@ public class ProjectPresenterFactory {
                                    @Nonnull PerspectivePresenter perspectivePersenter,
                                    @Nonnull PermissionScreener permissionScreener) {
         this.view = view;
+        this.busyView = busyView;
         this.eventPollingManager = eventPollingManager;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -66,6 +72,8 @@ public class ProjectPresenterFactory {
     public ProjectPresenter createProjectPresenter(ProjectId projectId) {
         return new ProjectPresenter(projectId,
                                     view,
+                                    busyView,
+                                    dispatchServiceManager,
                                     eventPollingManager,
                                     topBarPresenter,
                                     perspectiveSwitcherPresenter,
