@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.client.projectfeed;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+import edu.stanford.bmir.protege.web.shared.issues.CommentId;
+import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -12,6 +13,8 @@ import javax.inject.Provider;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,13 +30,13 @@ public class ProjectFeedPresenter {
 
     private final Provider<ProjectChangeEventView> projectChangeEventViewProvider;
 
-    private final Provider<NotePostedEventView> notePostedEventViewProvider;
+    private final Provider<CommentPostedEventView> notePostedEventViewProvider;
 
     private final Provider<UserStartedViewingProjectEventView> userStartedViewingProjectEventViewProvider;
 
     private final Provider<UserStoppedViewingProjectEventView> userStoppedViewingProjectEventViewProvider;
 
-    private final Set<NoteId> noteIds = new HashSet<>();
+    private final Set<CommentId> commentIds = new HashSet<>();
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
@@ -42,7 +45,7 @@ public class ProjectFeedPresenter {
     public ProjectFeedPresenter(ProjectId projectId,
                                 ProjectFeedView view,
                                 Provider<ProjectChangeEventView> projectChangeEventViewProvider,
-                                Provider<NotePostedEventView> notePostedEventViewProvider,
+                                Provider<CommentPostedEventView> notePostedEventViewProvider,
                                 Provider<UserStartedViewingProjectEventView> userStartedViewingProjectEventViewProvider,
                                 Provider<UserStoppedViewingProjectEventView> userStoppedViewingProjectEventViewProvider) {
         this.projectId = projectId;
@@ -55,7 +58,7 @@ public class ProjectFeedPresenter {
 
     public void start(WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(projectId, ProjectChangedEvent.TYPE, event -> postChangeEvent(event));
-        eventBus.addProjectEventHandler(projectId, NotePostedEvent.TYPE, event -> postNotePostedEvent(event));
+        eventBus.addProjectEventHandler(projectId, ON_COMMENT_POSTED, event -> postNotePostedEvent(event));
         eventBus.addProjectEventHandler(projectId, UserStartingViewingProjectEvent.TYPE, event -> postUserStartedViewingProjectEvent(event));
         eventBus.addProjectEventHandler(projectId, UserStoppedViewingProjectEvent.TYPE, event -> postUserStoppedViewingProjectEvent(event));
     }
@@ -85,13 +88,13 @@ public class ProjectFeedPresenter {
         view.insertWidgetIntoFeed(eventView);
     }
 
-    public void postNotePostedEvent(NotePostedEvent event) {
-        final NoteId noteId = event.getNoteDetails().getNoteHeader().getNoteId();
-        if(noteIds.contains(noteId)) {
+    public void postNotePostedEvent(CommentPostedEvent event) {
+        final CommentId noteId = event.getComment().getId();
+        if(commentIds.contains(noteId)) {
             return;
         }
-        noteIds.add(noteId);
-        final NotePostedEventView eventView = notePostedEventViewProvider.get();
+        commentIds.add(noteId);
+        final CommentPostedEventView eventView = notePostedEventViewProvider.get();
         eventView.setValue(event);
         view.insertWidgetIntoFeed(eventView);
     }

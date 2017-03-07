@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.app;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONObject;
@@ -11,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import java.util.Optional;
 import java.util.Set;
 
 

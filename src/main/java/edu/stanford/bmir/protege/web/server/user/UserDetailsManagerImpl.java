@@ -34,7 +34,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(emailAddress.getEmailAddress().isEmpty()) {
             return Optional.empty();
         }
-        java.util.Optional<UserRecord> record = repository.findOneByEmailAddress(emailAddress.getEmailAddress());
+        Optional<UserRecord> record = repository.findOneByEmailAddress(emailAddress.getEmailAddress());
         if(!record.isPresent()) {
             return Optional.empty();
         }
@@ -46,11 +46,12 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return Optional.of(UserDetails.getGuestUserDetails());
         }
-        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        Optional<UserRecord> record = repository.findOne(userId);
         if(!record.isPresent()) {
             return Optional.empty();
         }
-        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.fromNullable(record.get().getEmailAddress())));
+        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(),
+                                                      Optional.ofNullable(record.get().getEmailAddress())));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return Optional.empty();
         }
-        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        Optional<UserRecord> record = repository.findOne(userId);
         if(record == null) {
             return Optional.empty();
         }
@@ -76,11 +77,11 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return;
         }
-        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        Optional<UserRecord> record = repository.findOne(userId);
         if(!record.isPresent()) {
             return;
         }
-        java.util.Optional<UserRecord> recordByEmail = repository.findOneByEmailAddress(email);
+        Optional<UserRecord> recordByEmail = repository.findOneByEmailAddress(email);
         if(!record.equals(recordByEmail)) {
             // TODO: Log failure
             return;
@@ -100,11 +101,11 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 
     @Override
     public Optional<UserId> getUserByUserIdOrEmail(String userNameOrEmail) {
-        java.util.Optional<UserRecord> byUserId = repository.findOne(UserId.getUserId(userNameOrEmail));
+        Optional<UserRecord> byUserId = repository.findOne(UserId.getUserId(userNameOrEmail));
         if(byUserId.isPresent()) {
             return Optional.of(byUserId.get().getUserId());
         }
-        java.util.Optional<UserRecord> byEmail = repository.findOneByEmailAddress(userNameOrEmail);
+        Optional<UserRecord> byEmail = repository.findOneByEmailAddress(userNameOrEmail);
         if(byEmail.isPresent()) {
             return Optional.of(byEmail.get().getUserId());
         }

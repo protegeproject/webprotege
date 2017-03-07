@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -13,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.io.InputStream;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
