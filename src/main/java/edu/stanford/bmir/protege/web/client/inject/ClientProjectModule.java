@@ -19,6 +19,8 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
@@ -163,5 +165,10 @@ public class ClientProjectModule {
     @ProjectSingleton
     PortletFactory providePortletFactory(PortletFactoryGenerated portletFactoryGenerated) {
         return portletFactoryGenerated;
+    }
+
+    @Provides
+    BusyView provideBusyView(BusyViewImpl impl) {
+        return impl;
     }
 }

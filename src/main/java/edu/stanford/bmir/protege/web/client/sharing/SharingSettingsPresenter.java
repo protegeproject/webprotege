@@ -2,17 +2,20 @@ package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.inject.assistedinject.Assisted;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Optional;
@@ -24,17 +27,17 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHA
  * Stanford Center for Biomedical Informatics Research
  * 01/03/16
  */
-public class SharingSettingsPresenter {
+public class SharingSettingsPresenter implements Presenter {
 
     private final ProjectId projectId;
 
     private final SharingSettingsView view;
 
+    private final BusyView busyView;
+
     private final PlaceController placeController;
 
     private final DispatchServiceManager dispatchServiceManager;
-
-    private final LoggedInUserProvider loggedInUserProvider;
 
     private final PermissionManager permissionManager;
 
@@ -42,16 +45,20 @@ public class SharingSettingsPresenter {
 
     private Optional<Place> nextPlace = Optional.empty();
 
-
-
     @Inject
-    public SharingSettingsPresenter(@Assisted ProjectId projectId, SharingSettingsView view, PlaceController placeController, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, PermissionManager permissionManager, PermissionScreener permissionScreener) {
+    public SharingSettingsPresenter(@Nonnull ProjectId projectId,
+                                    @Nonnull SharingSettingsView view,
+                                    @Nonnull BusyView busyView,
+                                    @Nonnull PlaceController placeController,
+                                    @Nonnull DispatchServiceManager dispatchServiceManager,
+                                    @Nonnull PermissionManager permissionManager,
+                                    @Nonnull PermissionScreener permissionScreener) {
         this.projectId = projectId;
         this.view = view;
+        this.busyView = busyView;
         this.placeController = placeController;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionManager = permissionManager;
-        this.loggedInUserProvider = loggedInUserProvider;
         this.permissionScreener = permissionScreener;
     }
 
@@ -59,7 +66,11 @@ public class SharingSettingsPresenter {
         return nextPlace;
     }
 
-    public void start(final AcceptsOneWidget container) {
+    @Override
+    public void start(@Nonnull AcceptsOneWidget container,
+                      @Nonnull EventBus eventBus) {
+        busyView.setMessage("Loading sharing settings");
+        container.setWidget(busyView);
         permissionScreener.checkPermission(
                 EDIT_SHARING_SETTINGS.getActionId(),
                 container, () -> displaySharingSettings(container));
@@ -68,17 +79,15 @@ public class SharingSettingsPresenter {
 
 
     private void displaySharingSettings(AcceptsOneWidget container) {
-        view.setApplyChangesHandler(() -> applyChangesAndGoToNextPlace());
-        view.setCancelHandler(() -> cancelChangesAndGoToNextPlace());
-        dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), new DispatchServiceCallback<GetProjectSharingSettingsResult>() {
-            @Override
-            public void handleSuccess(GetProjectSharingSettingsResult result) {
-                ProjectSharingSettings settings = result.getProjectSharingSettings();
-                view.setLinkSharingPermission(settings.getLinkSharingPermission());
-                view.setSharingSettings(settings.getSharingSettings());
-            }
+        dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), result -> {
+            ProjectSharingSettings settings = result.getProjectSharingSettings();
+            view.setApplyChangesHandler(() -> applyChangesAndGoToNextPlace());
+            view.setCancelHandler(() -> cancelChangesAndGoToNextPlace());
+            view.setLinkSharingPermission(settings.getLinkSharingPermission());
+            view.setSharingSettings(settings.getSharingSettings());
+            container.setWidget(view);
         });
-        container.setWidget(view);
+
     }
 
 

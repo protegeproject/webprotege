@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
-import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -144,7 +144,7 @@ public class PerspectivePresenter implements HasDispose {
             perspectiveView.setWidget(p);
             return;
         }
-        perspectiveView.setWidget(new BusyView());
+        perspectiveView.setWidget(new BusyViewImpl());
         GWT.log("[PerspectivePresenter] Loading perspective for project " + projectId);
         UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, userId, perspectiveId),

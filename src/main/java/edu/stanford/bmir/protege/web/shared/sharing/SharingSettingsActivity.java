@@ -6,6 +6,8 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,7 +22,8 @@ public class SharingSettingsActivity extends AbstractActivity {
 
     private final SharingSettingsPlace place;
 
-    public SharingSettingsActivity(SharingSettingsPresenter presenter, SharingSettingsPlace place) {
+    public SharingSettingsActivity(@Nonnull SharingSettingsPresenter presenter,
+                                   @Nonnull SharingSettingsPlace place) {
         this.presenter = checkNotNull(presenter);
         this.place = checkNotNull(place);
     }
@@ -28,7 +31,7 @@ public class SharingSettingsActivity extends AbstractActivity {
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
         presenter.setNextPlace(place.getContinueTo());
-        presenter.start(panel);
+        presenter.start(panel, eventBus);
     }
 
     @Override
