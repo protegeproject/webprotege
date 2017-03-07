@@ -20,6 +20,6 @@ public class SignUpActivity extends AbstractActivity {
 
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        signUpPresenter.start(panel);
+        signUpPresenter.start(panel, eventBus);
     }
 }
