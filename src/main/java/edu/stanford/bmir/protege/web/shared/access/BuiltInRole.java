@@ -56,12 +56,12 @@ public enum BuiltInRole {
 
 
     PROJECT_VIEWER(VIEW_PROJECT,
-                   VIEW_OBJECT_COMMENTS,
+                   VIEW_OBJECT_COMMENT,
+                   EDIT_OWN_OBJECT_COMMENT,
                    ADD_OR_REMOVE_VIEW,
                    ADD_OR_REMOVE_PERSPECTIVE,
                    VIEW_CHANGES,
-                   WATCH_CHANGES,
-                   VIEW_OBJECT_COMMENTS),
+                   WATCH_CHANGES),
 
     OBJECT_COMMENTER(PROJECT_VIEWER,
                      CREATE_OBJECT_COMMENT,

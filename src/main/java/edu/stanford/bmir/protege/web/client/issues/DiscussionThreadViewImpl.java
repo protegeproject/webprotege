@@ -73,12 +73,12 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
         this.statusLabel.setVisible(true);
         this.status = checkNotNull(status);
         if(status == Status.OPEN) {
-            statusLabel.setText(messages.discussionThreadResolve());
+            statusLabel.setText(messages.discussionThread_Resolve());
             statusLabel.addStyleName(clientBundle.style().discussionThreadStatusOpen());
             statusLabel.removeStyleName(clientBundle.style().discussionThreadStatusClosed());
         }
         else {
-            statusLabel.setText(messages.discussionThreadReopen());
+            statusLabel.setText(messages.discussionThread_Reopen());
             statusLabel.addStyleName(clientBundle.style().discussionThreadStatusClosed());
             statusLabel.removeStyleName(clientBundle.style().discussionThreadStatusOpen());
         }

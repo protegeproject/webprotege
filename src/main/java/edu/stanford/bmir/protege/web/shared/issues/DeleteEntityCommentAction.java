@@ -19,6 +19,10 @@ public class DeleteEntityCommentAction implements Action<DeleteEntityCommentResu
 
     private CommentId commentId;
 
+    public static DeleteEntityCommentAction deleteComment(@Nonnull CommentId commentId) {
+        return new DeleteEntityCommentAction(commentId);
+    }
+
     public DeleteEntityCommentAction(@Nonnull CommentId commentId) {
         this.commentId = checkNotNull(commentId);
     }

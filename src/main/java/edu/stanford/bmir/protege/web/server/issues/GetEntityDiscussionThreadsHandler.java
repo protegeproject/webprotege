@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENTS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJECT_COMMENT;
 
 /**
  * Matthew Horridge
@@ -47,7 +47,7 @@ public class GetEntityDiscussionThreadsHandler implements ActionHandler<GetEntit
         return new ProjectPermissionValidator(accessManager,
                                               action.getProjectId(),
                                               requestContext.getUserId(),
-                                              VIEW_OBJECT_COMMENTS.getActionId());
+                                              VIEW_OBJECT_COMMENT.getActionId());
     }
 
     @Override

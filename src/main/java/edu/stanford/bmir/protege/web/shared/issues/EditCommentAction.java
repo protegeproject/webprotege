@@ -24,6 +24,13 @@ public class EditCommentAction implements Action<EditCommentResult>, HasProjectI
 
     private String body;
 
+    public static EditCommentAction editComment(@Nonnull ProjectId projectId,
+                                                @Nonnull ThreadId threadId,
+                                                @Nonnull CommentId commentId,
+                                                @Nonnull String body) {
+        return new EditCommentAction(projectId, threadId, commentId, body);
+    }
+
     public EditCommentAction(@Nonnull ProjectId projectId,
                              @Nonnull ThreadId threadId,
                              @Nonnull CommentId commentId,

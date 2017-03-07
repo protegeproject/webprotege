@@ -77,7 +77,7 @@ public enum BuiltInAction {
     CLOSE_ANY_ISSUE,
 
 
-    VIEW_OBJECT_COMMENTS,
+    VIEW_OBJECT_COMMENT,
 
     CREATE_OBJECT_COMMENT,
 
