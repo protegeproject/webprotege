@@ -31,19 +31,6 @@ public class LoadProjectRequestHandlerImpl implements LoadProjectRequestHandler 
 
     @Override
     public void handleProjectLoadRequest(ProjectId projectId) {
-        ProgressMonitor.get().showProgressMonitor("Loading project", "Please wait");
-        dispatchServiceManager.execute(new LoadProjectAction(projectId),
-                                       new DispatchServiceCallback<LoadProjectResult>() {
-                                           @Override
-                                           public void handleSuccess(LoadProjectResult loadProjectResult) {
-                                               placeController.goTo(ProjectViewPlace.builder(projectId, new PerspectiveId("Classes")).build());
-                                           }
-
-                                           @Override
-                                           public void handleFinally() {
-                                               ProgressMonitor.get().hideProgressMonitor();
-                                           }
-                                       });
-
+        placeController.goTo(ProjectViewPlace.builder(projectId, new PerspectiveId("Classes")).build());
     }
 }

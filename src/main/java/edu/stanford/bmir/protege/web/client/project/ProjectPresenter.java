@@ -4,15 +4,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,10 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final ProjectView view;
 
+    private final BusyView busyView;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
     private final TopBarPresenter topBarPresenter;
 
     private final PerspectiveSwitcherPresenter linkBarPresenter;
@@ -46,6 +51,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     @Inject
     public ProjectPresenter(ProjectId projectId,
                             ProjectView view,
+                            BusyView busyView,
+                            DispatchServiceManager dispatchServiceManager,
                             EventPollingManager eventPollingManager,
                             TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
@@ -53,6 +60,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             PermissionScreener permissionScreener) {
         this.projectId = projectId;
         this.view = view;
+        this.busyView = busyView;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.eventPollingManager = eventPollingManager;
         this.permissionScreener = permissionScreener;
         this.topBarPresenter = topBarPresenter;
@@ -69,6 +78,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                       @Nonnull EventBus eventBus,
                       @Nonnull ProjectViewPlace place) {
         GWT.log("[ProjectPresenter] Starting project presenter " + eventBus.getClass().getName());
+        busyView.setMessage("Loading project.  Please wait.");
+        container.setWidget(busyView);
         permissionScreener.checkPermission(VIEW_PROJECT.getActionId(),
                                            container,
                                            () -> displayProject(container, eventBus, place));
@@ -77,7 +88,8 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
     private void displayProject(@Nonnull AcceptsOneWidget container,
                                 @Nonnull EventBus eventBus,
                                 @Nonnull ProjectViewPlace place) {
-        container.setWidget(view);
+        dispatchServiceManager.execute(new LoadProjectAction(projectId),
+                                       result -> container.setWidget(view));
         topBarPresenter.start(view.getTopBarContainer(), eventBus);
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), eventBus, place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), eventBus, place);
