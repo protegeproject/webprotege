@@ -32,9 +32,9 @@ public class AddEntityCommentAction implements Action<AddEntityCommentResult>, H
         this.comment = checkNotNull(comment);
     }
 
-    public static AddEntityCommentAction addEntityComment(@Nonnull ProjectId projectId,
-                                                          @Nonnull ThreadId threadId,
-                                                          @Nonnull String comment) {
+    public static AddEntityCommentAction addComment(@Nonnull ProjectId projectId,
+                                                    @Nonnull ThreadId threadId,
+                                                    @Nonnull String comment) {
         return new AddEntityCommentAction(projectId, threadId, comment);
     }
 

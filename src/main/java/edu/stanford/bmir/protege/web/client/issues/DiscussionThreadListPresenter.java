@@ -1,16 +1,10 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import edu.stanford.bmir.protege.web.client.Messages;
+import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.filter.FilterId;
-import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -31,17 +25,13 @@ import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThr
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
+ *
+ * A presenter that presents discussion threads for a given displayedEntity.
  */
 public class DiscussionThreadListPresenter implements HasDispose {
 
-
-    public static final FilterId DISPLAY_RESOLVED_THREADS = new FilterId("Display resolved threads");
-
     @Nonnull
     private final DiscussionThreadListView view;
-
-    @Nonnull
-    private final FilterView filterView;
 
     @Nonnull
     private final DispatchServiceManager dispatch;
@@ -50,58 +40,130 @@ public class DiscussionThreadListPresenter implements HasDispose {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Nonnull
-    private final PortletAction addCommentAction;
-
-    @Nonnull
     private final ProjectId projectId;
 
     @Nonnull
     private final Provider<CommentEditorDialog> commentEditorDialogProvider;
 
+    @Nonnull
     private final Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider;
 
+    @Nonnull
     private final Map<ThreadId, DiscussionThreadPresenter> threadPresenters = new HashMap<>();
 
-    private Optional<OWLEntity> entity = Optional.empty();
+    private boolean displayResolvedThreads = false;
 
+    private Optional<OWLEntity> displayedEntity = Optional.empty();
+
+    private final List<EntityDiscussionThread> displayedThreads = new ArrayList<>();
 
     @Inject
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
-            @Nonnull FilterView filterView,
             @Nonnull DispatchServiceManager dispatch,
             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
             @Nonnull ProjectId projectId,
             @Nonnull Provider<CommentEditorDialog> commentEditorDialogProvider,
-            @Nonnull Messages messages,
             @Nonnull Provider<DiscussionThreadPresenter> discussionThreadPresenterProvider) {
         this.view = view;
-        this.filterView = filterView;
         this.dispatch = dispatch;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
         this.commentEditorDialogProvider = commentEditorDialogProvider;
-        this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
-                                                  (action, event) -> handleCreateThread());
         this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
-        filterView.addFilter(DISPLAY_RESOLVED_THREADS, FilterSetting.OFF);
-        filterView.addValueChangeHandler(event -> refresh());
-
-    }
-
-    public void installActions(HasPortletActions hasPortletActions) {
-        hasPortletActions.addPortletAction(addCommentAction);
     }
 
     public void start(WebProtegeEventBus eventBus) {
         eventBus.addProjectEventHandler(projectId, ON_PERMISSIONS_CHANGED, event -> updateEnabled());
-        eventBus.addProjectEventHandler(projectId, ON_DISCUSSION_THREAD_CREATED, event -> addThread(event.getThread()));
+        eventBus.addProjectEventHandler(projectId, ON_DISCUSSION_THREAD_CREATED, this::handleDiscussionThreadCreated);
         eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, event -> handleThreadStatusChanged(event.getThreadId(), event.getStatus()));
         updateEnabled();
     }
 
+    private void handleDiscussionThreadCreated(DiscussionThreadCreatedEvent event) {
+        if (displayedEntity.equals(Optional.of(event.getThread().getEntity()))) {
+            addThread(event.getThread());
+        }
+    }
+
+    /**
+     * Gets the view that displays the discussion threads.
+     * @return The view.
+     */
+    @Nonnull
+    public IsWidget getView() {
+        return view;
+    }
+
+    /**
+     * Sets the {@link OWLEntity} that discussion threads should be displayed for.  If the displayedEntity
+     * is different to the current displayedEntity then the view will be reloaded.
+     * @param entity The displayedEntity.
+     */
+    public void setEntity(@Nonnull OWLEntity entity) {
+        if (!this.displayedEntity.equals(Optional.of(entity))) {
+            this.displayedEntity = Optional.of(entity);
+            reload();
+        }
+    }
+
+    /**
+     * Clears the view so that it is empty.
+     */
+    public void clear() {
+        view.clear();
+    }
+
+    /**
+     * Force reload the view content.  This will get the latest discussion threads for the current
+     * displayedEntity.
+     */
+    public void reload() {
+        view.clear();
+        displayedEntity.ifPresent(e -> {
+            dispatch.execute(
+                    getDiscussionThreads(projectId, e),
+                    result -> displayThreads(result.getThreads())
+            );
+        });
+    }
+
+    /**
+     * Specifies whether threads that have been resolved should be displayed.
+     * @param displayResolvedThreads If true then resolved threads will be displayed.  If
+     *                               false then resolved threads will be hidden.
+     */
+    public void setDisplayResolvedThreads(boolean displayResolvedThreads) {
+        if (this.displayResolvedThreads != displayResolvedThreads) {
+            this.displayResolvedThreads = displayResolvedThreads;
+            refresh();
+        }
+    }
+
+    /**
+     * Determines whether resolved threads will be displayed.
+     * @return A boolean indicating whether resolved threads will be displayed.  By default this is
+     * false.
+     */
+    public boolean isDisplayResolvedThreads() {
+        return displayResolvedThreads;
+    }
+
+    /**
+     * Prompts the user to create a new comment that will be used to start a new discussion thread.
+     */
+    public void createThread() {
+        displayedEntity.ifPresent(targetEntity -> {
+            CommentEditorDialog dlg = commentEditorDialogProvider.get();
+            dlg.show((body) -> dispatch.execute(
+                    createEntityDiscussionThread(projectId, targetEntity, body),
+                    result -> displayThreads(result.getThreads())
+            ));
+        });
+    }
+
     private void handleThreadStatusChanged(ThreadId threadId, Status status) {
-        if(isDisplayClosedThreads()) {
+        if(isDisplayResolvedThreads()) {
             return;
         }
         DiscussionThreadPresenter threadPresenter = threadPresenters.get(threadId);
@@ -112,47 +174,29 @@ public class DiscussionThreadListPresenter implements HasDispose {
         }
     }
 
-    public void setEntity(@Nonnull OWLEntity entity) {
-        this.entity = Optional.of(entity);
-        dispatch.execute(
-                getDiscussionThreads(projectId, entity),
-                result -> displayThreads(result.getThreads())
-        );
-    }
-
-    private void refresh() {
-        this.entity.ifPresent(e -> setEntity(e));
-    }
-
-
-    public void clear() {
-        view.clear();
-    }
-
-    @Nonnull
-    public DiscussionThreadListView getView() {
-        return view;
-    }
-
-    @Nonnull
-    public FilterView getFilterView() {
-        return filterView;
-    }
 
     private void updateEnabled() {
         view.setEnabled(false);
-        addCommentAction.setEnabled(false);
-        permissionChecker.hasPermission(CREATE_OBJECT_COMMENT, hasPermission -> {
-            view.setEnabled(hasPermission);
-            addCommentAction.setEnabled(hasPermission);
-        });
+        permissionChecker.hasPermission(CREATE_OBJECT_COMMENT, view::setEnabled);
     }
 
+    /**
+     * Clears the view and refills it based on current client data
+     */
+    private void refresh() {
+        redisplayThreads();
+    }
 
     private void displayThreads(List<EntityDiscussionThread> threads) {
+        this.displayedThreads.clear();
+        this.displayedThreads.addAll(threads);
+        redisplayThreads();
+    }
+
+    private void redisplayThreads() {
         view.clear();
         stopThreadPresenters();
-        for (EntityDiscussionThread thread : threads) {
+        for (EntityDiscussionThread thread : displayedThreads) {
             addThread(thread);
         }
     }
@@ -161,7 +205,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
         if(threadPresenters.containsKey(thread.getId())) {
             return;
         }
-        if(thread.getStatus() == Status.CLOSED && !isDisplayClosedThreads()) {
+        if(thread.getStatus() == Status.CLOSED && !isDisplayResolvedThreads()) {
             return;
         }
         DiscussionThreadPresenter presenter = discussionThreadPresenterProvider.get();
@@ -170,21 +214,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
         presenter.setDiscussionThread(thread);
         DiscussionThreadView threadView = presenter.getView();
         view.addDiscussionThreadView(threadView);
-    }
-
-    private boolean isDisplayClosedThreads() {
-        return filterView.getFilterSet()
-                         .getFilterSetting(DISPLAY_RESOLVED_THREADS, FilterSetting.OFF) == FilterSetting.ON;
-    }
-
-    public void handleCreateThread() {
-        entity.ifPresent(targetEntity -> {
-            CommentEditorDialog dlg = commentEditorDialogProvider.get();
-            dlg.show((body) -> dispatch.execute(
-                    createEntityDiscussionThread(projectId, targetEntity, body),
-                    result -> displayThreads(result.getThreads())
-            ));
-        });
     }
 
     private void stopThreadPresenters() {
