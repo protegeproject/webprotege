@@ -11,6 +11,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.app.HasClientApplicationProperties;
+import edu.stanford.bmir.protege.web.client.issues.CommentEditorViewImpl;
+import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
+import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
@@ -362,6 +365,11 @@ public class ClientApplicationModule {
 
     @Provides
     UploadProjectRequestHandler provideUploadProjectRequestHandler(UploadProjectRequestHandlerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CommentedEntitiesView provideCommentedEntitiesView(CommentedEntitiesViewImpl impl) {
         return impl;
     }
 }

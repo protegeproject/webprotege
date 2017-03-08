@@ -512,4 +512,9 @@ public class ActionHandlersModule {
         return handler;
     }
 
+    @Provides(type = SET)
+    public ActionHandler provideGetCommentedEntitiesActionHandler(GetCommentedEntitiesActionHandler handler) {
+        return handler;
+    }
+
 }

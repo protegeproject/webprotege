@@ -1,0 +1,26 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+    <ui:style>
+        .outer {
+            display: flex;
+            flex-direction: column;
+        }
+        .entitiesList {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .bottomBar {
+            flex-grow: 0;
+            flex-shrink: 0;
+            background: #f0f0f0;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.outer}">
+        <entitieslist:EntitiesListImpl ui:field="entityList" addStyleNames="{style.entitiesList}"/>
+        <g:HTMLPanel addStyleNames="{style.bottomBar}">
+            <pagination:PaginatorView ui:field="paginator"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

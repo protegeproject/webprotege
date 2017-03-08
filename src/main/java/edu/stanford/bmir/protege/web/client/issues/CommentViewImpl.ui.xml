@@ -5,6 +5,8 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
+        @external .user-mention;
+
         .main {
             display: block;
             border-bottom: 1px solid #f0f0f0;
@@ -41,7 +43,13 @@
         .body ol li {
             list-style-type: decimal;
         }
-
+        .body em {
+            font-weight: 500;
+        }
+        .body .user-mention {
+            font-weight: 500;
+            color: #434b5d;
+        }
         .links:hover {
             color: #648dbe !important;
         }

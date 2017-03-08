@@ -12,10 +12,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
+import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
-import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import javax.inject.Inject;
@@ -157,7 +157,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     }
 
     @Override
-    public void setPageNumberChangedHandler(PaginatorPresenter.PageNumberChangedHandler handler) {
+    public void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler) {
         paginatorPresenter.setPageNumberChangedHandler(handler);
     }
 }

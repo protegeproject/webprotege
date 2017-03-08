@@ -116,7 +116,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
     public void addAll(Collection<E> entities) {
         List<E> existing = listDataProvider.getList();
         List<E> sortedList = new ArrayList<E>(entities);
-        Collections.sort(sortedList);
+        Collections.sort(sortedList, (o1, o2) -> o1.getBrowserText().compareToIgnoreCase(o2.getBrowserText()));
         existing.addAll(0, sortedList);
         cellList.setPageSize(existing.size());
     }

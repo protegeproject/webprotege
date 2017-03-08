@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.pagination;
 
-import com.google.gwt.core.client.GWT;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
@@ -14,17 +12,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PaginatorPresenter {
 
-    public interface PageNumberChangedHandler {
-        void handlePageNumberChanged(int pageNumber);
-    }
-
     private final PaginatorView view;
 
     private int pageNumber = 1;
 
     private int pageCount = 1;
 
-    private PageNumberChangedHandler pageNumberChangedHandler = (pageNumber) -> {};
+    private HasPagination.PageNumberChangedHandler pageNumberChangedHandler = (pageNumber) -> {};
 
     @Inject
     public PaginatorPresenter(@Nonnull PaginatorView view) {
@@ -36,7 +30,7 @@ public class PaginatorPresenter {
         setPageNumber(1);
     }
 
-    public void setPageNumberChangedHandler(@Nonnull PageNumberChangedHandler pageNumberChangedHandler) {
+    public void setPageNumberChangedHandler(@Nonnull HasPagination.PageNumberChangedHandler pageNumberChangedHandler) {
         this.pageNumberChangedHandler = checkNotNull(pageNumberChangedHandler);
     }
 

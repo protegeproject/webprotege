@@ -29,9 +29,9 @@ public class CommentRenderer {
             rendering.append(commentBody.substring(currentPos, startIndex));
             Mention mention = pm.getParsedMention();
             if(mention.getMentionedUserId().isPresent()) {
-                rendering.append("*");
+                rendering.append("<span class=\"user-mention\">");
                 rendering.append(mention.getMentionedUserId().get().getUserName());
-                rendering.append("*");
+                rendering.append("</span>");
             }
             else {
                 rendering.append(commentBody.substring(startIndex, endIndex));

@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -49,9 +51,9 @@ public class EntityDiscussionThreadRepository {
 
     public int getCommentsCount(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
         return findThreads(projectId, entity).stream()
-                .map(thread -> thread.getComments().size())
-                .reduce((left, right) -> left + right)
-                .orElse(0);
+                                             .map(thread -> thread.getComments().size())
+                                             .reduce((left, right) -> left + right)
+                                             .orElse(0);
     }
 
     public void saveThread(EntityDiscussionThread thread) {
@@ -102,10 +104,19 @@ public class EntityDiscussionThreadRepository {
 
     public boolean deleteComment(CommentId commentId) {
         Query<EntityDiscussionThread> query = datastore.createQuery(EntityDiscussionThread.class)
-                .field(COMMENTS_ID_PATH).equal(commentId);
+                                                       .field(COMMENTS_ID_PATH).equal(commentId);
         UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
                 .removeAll("comments", new BasicDBObject("id", commentId.getId()));
         UpdateResults updateResults = datastore.updateFirst(query, update);
         return updateResults.getUpdatedCount() == 1;
+    }
+
+    public List<OWLEntity> getCommentedEntities(ProjectId projectId) {
+        return datastore.createQuery(EntityDiscussionThread.class)
+                        .field("projectId").equal(projectId)
+                        .asList().stream()
+                        .map(EntityDiscussionThread::getEntity)
+                        .distinct()
+                        .collect(toList());
     }
 }

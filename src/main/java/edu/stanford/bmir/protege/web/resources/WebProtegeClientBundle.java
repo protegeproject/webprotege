@@ -188,7 +188,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("language-codes.txt")
     TextResource languageCodes();
 
-    public static interface WebProtegeCss extends CssResource {
+    interface WebProtegeCss extends CssResource {
 
         String entityIcon();
 
@@ -275,7 +275,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String discussionThreadStatusClosed();
     }
 
-    public static interface WebProtegeButtons extends CssResource {
+    interface WebProtegeButtons extends CssResource {
 
         @ClassName("btn-med")
         String btnMed();
@@ -325,7 +325,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String topBarButton();
     }
 
-    public static interface WebProtegeDialog extends CssResource {
+    interface WebProtegeDialog extends CssResource {
 
         String dialog();
 
@@ -351,7 +351,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String gwtLabel();
     }
 
-    public static interface WebProtegeMenu extends CssResource {
+    interface WebProtegeMenu extends CssResource {
 
         String popupMenu();
 
