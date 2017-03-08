@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
+import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
@@ -50,5 +50,5 @@ public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndivi
 
     int getPageNumber();
 
-    void setPageNumberChangedHandler(PaginatorPresenter.PageNumberChangedHandler handler);
+    void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
 }
