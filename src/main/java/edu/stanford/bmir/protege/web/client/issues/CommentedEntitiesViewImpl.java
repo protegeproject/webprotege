@@ -194,8 +194,7 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
             StringBuilder sb = new StringBuilder();
             String cssClassName = value.getEntityData().accept(CSS_CLASS_NAME_VISITOR, "empty-icon-inset" );
             sb.append("<div style='" +
-                              "border-bottom: 1px solid #f0f0f0;" +
-                              "padding: 3px;" +
+                              "border-bottom: 1px solid #f0f0f0; padding-bottom: 5px;" +
                               " align: middle;'>" );
 
             sb.append("<div class=\"" )
@@ -207,7 +206,7 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
 
             sb.append("<div style='display: flex; align-items: baseline;'>" );
 
-            sb.append("<div style='flex-grow: 1; padding-left:10px;'>" );
+            sb.append("<div style='flex-grow: 1; padding-left:10px; color: #757575;'>" );
             sb.append("Updated " );
             sb.append(TimeUtil.getTimeRendering(value.getLastModified()));
             sb.append("<br>by ");
