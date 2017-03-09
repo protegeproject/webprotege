@@ -1,0 +1,71 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field='value' type="edu.stanford.bmir.protege.web.client.issues.CommentedEntityDataRendering"/>
+
+    <ui:style>
+        .main {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 2px 2px 5px;
+            vertical-align: middle;
+            background-position: 0 6px;
+        }
+
+        .mainInner {
+        }
+
+        .detailsContainer {
+            display: flex;
+            align-items: baseline;
+            line-height: normal;
+        }
+
+        .modifiedDetails {
+            flex-grow: 1;
+            padding-left: 10px;
+            color: #757575;
+        }
+
+        .entityName {
+            font-weight: 500;
+            line-height: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            flex-grow: 0;
+            flex-shrink: 0;
+            min-width: 60px;
+            border-radius: 3px;
+            color: white;
+            font-size: 10px;
+            padding: 4px;
+            margin: 2px;
+            text-align: center;
+            line-height: normal;
+        }
+    </ui:style>
+
+    <div class="{style.main}">
+        <div class="{wp.style.classIconInset} {style.mainInner}">
+            <span class="{style.entityName}"><ui:text from="{value.entityBrowserText}"/></span>
+            <div class="{style.detailsContainer}">
+                <div class="{wp.style.commentIconInset}" style="display: inline-block; background-position: 10px 3px;">
+                    <ui:text from="{value.commentCount}"/>
+                </div>
+                <div class="{style.modifiedDetails}">
+                    <div>
+                        Last comment <ui:text from="{value.modifiedAt}"/>
+                    </div>
+                    <div>
+                        by <ui:text from="{value.modifiedBy}"/>
+                    </div>
+                </div>
+                <div class="{style.badge}" style="background: {value.statusColor};">
+                    <ui:text from="{value.status}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ui:UiBinder>

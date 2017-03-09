@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 
+import static com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.BOUND_TO_SELECTION;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
@@ -97,14 +98,14 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
         paginator = paginatorPresenter.getView();
         this.paginatorPresenter = paginatorPresenter;
 
-        CommentedEntityDataKeyProvider keyProvider = new CommentedEntityDataKeyProvider();
-        list = new CellList<>(new CommentedEntityCellData(),
+        ProvidesKey<CommentedEntityData> keyProvider = item -> item.getEntityData().getEntity();
+        list = new CellList<>(new CommentedEntityDataRenderer(),
                               WebProtegeCellListResources.INSTANCE,
                               keyProvider);
         final SingleSelectionModel<CommentedEntityData> selectionModel = new SingleSelectionModel<>(keyProvider);
         list.setSelectionModel(selectionModel);
         listDataProvider.addDataDisplay(list);
-        list.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+        list.setKeyboardSelectionPolicy(BOUND_TO_SELECTION);
 
         initWidget(ourUiBinder.createAndBindUi(this));
         selectionModel.addSelectionChangeHandler(event -> {
@@ -185,74 +186,5 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
     @Override
     public void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler) {
         paginatorPresenter.setPageNumberChangedHandler(handler);
-    }
-
-    private class CommentedEntityCellData extends AbstractCell<CommentedEntityData> {
-
-        @Override
-        public void render(Context context, CommentedEntityData value, SafeHtmlBuilder safeHtmlBuilder) {
-            StringBuilder sb = new StringBuilder();
-            String cssClassName = value.getEntityData().accept(CSS_CLASS_NAME_VISITOR, "empty-icon-inset" );
-            sb.append("<div style='" +
-                              "border-bottom: 1px solid #f0f0f0; padding-bottom: 5px;" +
-                              " align: middle;'>" );
-
-            sb.append("<div class=\"" )
-              .append(cssClassName)
-              .append("\" style='line-height: 20px; padding 4px;'>" );
-            sb.append("<span style='font-weight: 500;'>");
-            sb.append(value.getEntityData().getBrowserText());
-            sb.append("</span>");
-
-            sb.append("<div style='display: flex; align-items: baseline;'>" );
-
-            sb.append("<div style='flex-grow: 1; padding-left:10px; color: #757575;'>" );
-            sb.append("Updated " );
-            sb.append(TimeUtil.getTimeRendering(value.getLastModified()));
-            sb.append("<br>by ");
-            sb.append(value.getLastModifiedBy().getUserName());
-            sb.append("</div>" );
-
-            String statusBadgeStyle =
-                    "display: inline-block;" +
-                            " flex-grow: 0;" +
-                            " flex-shrink: 0;" +
-                            "    min-width: 60px;" +
-                            "    border-radius: 3px;" +
-                            "    color: white;" +
-                            "    font-size: 10px;" +
-                            "    padding: 4px;" +
-                            "    margin: 2px;" +
-                            "    text-align: center;" +
-                            "    line-height: normal;";
-
-            if (value.getOpenThreadCount() > 0) {
-                sb.append("<div style='" )
-                  .append(statusBadgeStyle)
-                  .append("    background: #909;'>" )
-                  .append(value.getOpenThreadCount()).append(" unresolved</div>" );
-            }
-            else {
-                sb.append("<div style='" )
-                  .append(statusBadgeStyle)
-                  .append(" background: #090;'>" )
-                  .append(value.getTotalThreadCount()).append(" resolved</div>" );
-            }
-
-
-            sb.append("</div>" );
-            sb.append("</div>" );
-
-            sb.append("</div>" );
-            safeHtmlBuilder.appendHtmlConstant(sb.toString());
-        }
-    }
-
-    private class CommentedEntityDataKeyProvider implements ProvidesKey<CommentedEntityData> {
-
-        @Override
-        public Object getKey(CommentedEntityData item) {
-            return item.getEntityData().getEntity();
-        }
     }
 }
