@@ -58,7 +58,7 @@ class CommentedEntityDataRendering {
             return RESOLVED_COLOR;
         }
     }
-    
+
     @Nonnull
     public String commentCount() {
         return Integer.toString(data.getTotalCommentCount());
