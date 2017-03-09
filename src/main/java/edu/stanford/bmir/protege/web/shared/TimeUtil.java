@@ -238,7 +238,17 @@ public class TimeUtil {
 
     private static String getYesterdayRendering(long timestamp) {
         Date date = new Date(timestamp);
-        return "Yesterday at " + date.getHours() + ":" + date.getMinutes();
+        int hours = date.getHours();
+        String hoursFormat = Integer.toString(hours);
+        int minutes = date.getMinutes();
+        String minutesFormat;
+        if(minutes < 10) {
+            minutesFormat = "0" + minutes;
+        }
+        else {
+            minutesFormat = Integer.toString(minutes);
+        }
+        return "Yesterday at " + hoursFormat + ":" + minutesFormat;
     }
 
     private static String getNHoursAgoRendering(long timestamp, long referenceTimestamp) {
