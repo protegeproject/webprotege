@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
+import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
@@ -15,15 +16,15 @@ import java.util.List;
  */
 public interface CommentedEntitiesView extends IsWidget, HasPagination {
 
-    void setEntities(@Nonnull List<OWLEntityData> entities);
+    void setEntities(@Nonnull List<CommentedEntityData> entities);
 
     void clear();
 
-    void addEntity(@Nonnull OWLEntityData entity);
+    void addEntity(@Nonnull CommentedEntityData entity);
 
-    void removeEntity(@Nonnull OWLEntityData entity);
+    void removeEntity(@Nonnull CommentedEntityData entity);
 
-    void setSelectionHandler(@Nonnull SelectionHandler<OWLEntityData> selectionHandler);
+    void setSelectionHandler(@Nonnull SelectionHandler<CommentedEntityData> selectionHandler);
 
     void setPageCount(int pageCount);
 

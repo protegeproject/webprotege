@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
@@ -15,10 +16,14 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.collect.ImmutableSet.of;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.CLOSED;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.OPEN;
 import static edu.stanford.bmir.protege.web.shared.pagination.PageRequest.requestPageWithSize;
+import static java.util.Collections.sort;
 
 /**
  * Matthew Horridge
@@ -55,8 +60,8 @@ public class CommentedEntitiesPresenter {
         reload();
     }
 
-    private void handleEntitySelected(SelectionEvent<OWLEntityData> event) {
-        selectionModel.setSelection(event.getSelectedItem().getEntity());
+    private void handleEntitySelected(SelectionEvent<CommentedEntityData> event) {
+        selectionModel.setSelection(event.getSelectedItem().getEntityData().getEntity());
     }
 
     private void reload() {
@@ -65,10 +70,12 @@ public class CommentedEntitiesPresenter {
                                                                       of(OPEN, CLOSED),
                                                                       requestPageWithSize(view.getPageNumber(), PAGE_SIZE)),
                                        result -> {
-                                           Page<OWLEntityData> entities = result.getEntities();
+                                           Page<CommentedEntityData> entities = result.getEntities();
                                            view.setPageCount(entities.getPageCount());
                                            view.setPageNumber(entities.getPageNumber());
-                                           view.setEntities(entities.getPageElements());
+                                           List<CommentedEntityData> pageElements = entities.getPageElements();
+                                           sort(pageElements);
+                                           view.setEntities(pageElements);
                                        });
     }
 }

@@ -111,12 +111,9 @@ public class EntityDiscussionThreadRepository {
         return updateResults.getUpdatedCount() == 1;
     }
 
-    public List<OWLEntity> getCommentedEntities(ProjectId projectId) {
+    public List<EntityDiscussionThread> getThreadsInProject(ProjectId projectId) {
         return datastore.createQuery(EntityDiscussionThread.class)
                         .field("projectId").equal(projectId)
-                        .asList().stream()
-                        .map(EntityDiscussionThread::getEntity)
-                        .distinct()
-                        .collect(toList());
+                        .asList();
     }
 }
