@@ -24,6 +24,8 @@ public interface CommentedEntitiesView extends IsWidget, HasPagination {
 
     void removeEntity(@Nonnull CommentedEntityData entity);
 
+    void refresh();
+
     void setSelectionHandler(@Nonnull SelectionHandler<CommentedEntityData> selectionHandler);
 
     void setPageCount(int pageCount);

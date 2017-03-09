@@ -6,24 +6,30 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.issues.Status;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.collect.ImmutableSet.of;
+import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
+import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.CLOSED;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.OPEN;
 import static edu.stanford.bmir.protege.web.shared.pagination.PageRequest.requestPageWithSize;
 import static java.util.Collections.sort;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -42,6 +48,8 @@ public class CommentedEntitiesPresenter {
 
     private final SelectionModel selectionModel;
 
+    private final Set<OWLEntity> currentEntites = new HashSet<>();
+
     @Inject
     public CommentedEntitiesPresenter(@Nonnull ProjectId projectId,
                                       @Nonnull CommentedEntitiesView view,
@@ -58,6 +66,27 @@ public class CommentedEntitiesPresenter {
         view.setSelectionHandler(this::handleEntitySelected);
         view.setPageNumberChangedHandler(pageNumber -> reload());
         reload();
+        eventBus.addProjectEventHandler(projectId, BrowserTextChangedEvent.TYPE, this::handleBrowserTextChanged);
+        eventBus.addProjectEventHandler(projectId, ON_COMMENT_POSTED, this::handleCommentPosted);
+        eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, this::handleStatusChanged);
+    }
+
+    private void handleBrowserTextChanged(BrowserTextChangedEvent event) {
+        if(currentEntites.contains(event.getEntity())) {
+            reload();
+        }
+    }
+
+    private void handleCommentPosted(CommentPostedEvent event) {
+        event.getEntity().ifPresent(entityData -> {
+            if(currentEntites.contains(entityData.getEntity())) {
+                reload();
+            }
+        });
+    }
+
+    private void handleStatusChanged(DiscussionThreadStatusChangedEvent event) {
+        reload();
     }
 
     private void handleEntitySelected(SelectionEvent<CommentedEntityData> event) {
@@ -65,6 +94,7 @@ public class CommentedEntitiesPresenter {
     }
 
     private void reload() {
+        GWT.log("[CommentedEntitiesPresenter] Reloading list data");
         dispatchServiceManager.execute(new GetCommentedEntitiesAction(projectId,
                                                                       "",
                                                                       of(OPEN, CLOSED),
@@ -76,6 +106,10 @@ public class CommentedEntitiesPresenter {
                                            List<CommentedEntityData> pageElements = entities.getPageElements();
                                            sort(pageElements);
                                            view.setEntities(pageElements);
+                                           currentEntites.clear();
+                                           currentEntites.addAll(entities.getPageElements().stream()
+                                                                         .map(c -> c.getEntityData().getEntity())
+                                                                         .collect(toList()));
                                        });
     }
 }
