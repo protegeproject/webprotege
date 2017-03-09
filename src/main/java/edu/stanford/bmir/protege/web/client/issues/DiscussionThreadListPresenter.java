@@ -119,7 +119,6 @@ public class DiscussionThreadListPresenter implements HasDispose {
      * displayedEntity.
      */
     public void reload() {
-        view.clear();
         displayedEntity.ifPresent(e -> {
             dispatch.execute(
                     getDiscussionThreads(projectId, e),
