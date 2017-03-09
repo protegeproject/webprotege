@@ -273,6 +273,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String discussionThreadStatusOpen();
 
         String discussionThreadStatusClosed();
+
+        String commentIconInset();
     }
 
     interface WebProtegeButtons extends CssResource {

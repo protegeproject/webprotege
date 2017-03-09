@@ -9,6 +9,7 @@
 @url individualIconUrl svgIndividualIcon;
 @url literalIconUrl svgLiteralIcon;
 @url numberIconUrl svgNumberIcon;
+@url commentIconUrl svgCommentSmallFilledIcon;
 
 .webProtegeLaf {
 
@@ -160,6 +161,15 @@
     background-image: datatypeIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+
+.commentIconInset {
+    background-image: commentIconUrl;
+    background-repeat: no-repeat;
+    background-position: 0 0;
     width: auto;
     height: auto;
     padding-left: 22px !important;
