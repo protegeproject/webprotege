@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,14 +16,14 @@ public class GetCommentedEntitiesResult implements Result {
 
     private ProjectId projectId;
 
-    private Page<OWLEntityData> entities;
+    private Page<CommentedEntityData> entities;
 
     @GwtSerializationConstructor
     private GetCommentedEntitiesResult() {
     }
 
     public GetCommentedEntitiesResult(ProjectId projectId,
-                                      Page<OWLEntityData> entities) {
+                                      Page<CommentedEntityData> entities) {
         this.projectId = projectId;
         this.entities = entities;
     }
@@ -31,7 +32,7 @@ public class GetCommentedEntitiesResult implements Result {
         return projectId;
     }
 
-    public Page<OWLEntityData> getEntities() {
+    public Page<CommentedEntityData> getEntities() {
         return entities;
     }
 }

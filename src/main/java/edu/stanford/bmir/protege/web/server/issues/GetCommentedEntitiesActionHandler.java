@@ -6,17 +6,25 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.issues.Comment;
+import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesResult;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static edu.stanford.bmir.protege.web.shared.issues.Status.OPEN;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -47,14 +55,40 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
                                                  Project project,
                                                  ExecutionContext executionContext) {
         PageRequest request = action.getPageRequest();
-        List<OWLEntity> commentedEntities = repository.getCommentedEntities(action.getProjectId());
-        List<OWLEntityData> entityData = commentedEntities.stream()
-                         .map(entity -> project.getRenderingManager().getRendering(entity))
-                         .sorted()
-//                         .skip((request.getPageNumber() - 1) * request.getPageSize())
-//                         .limit(request.getPageSize())
-                         .collect(toList());
-        Pager<OWLEntityData> pager = Pager.getPagerForPageSize(entityData, request.getPageSize());
+        List<EntityDiscussionThread> allThreads = repository.getThreadsInProject(action.getProjectId());
+
+
+        Map<OWLEntity, List<EntityDiscussionThread>> commentsByEntity = allThreads.stream()
+                                                                                  .collect(groupingBy(
+                                                                                          EntityDiscussionThread::getEntity));
+
+        List<CommentedEntityData> result = new ArrayList<>();
+        commentsByEntity.forEach((entity, threads) -> {
+            int totalThreadCount = threads.size();
+            int openThreadCount = (int) threads.stream()
+                                               .filter(thread -> thread.getStatus().isOpen())
+                                               .count();
+            List<Comment> entityComments = threads.stream()
+                                                  .flatMap(thread -> thread.getComments()
+                                                                           .stream())
+                                                  .collect(toList());
+            Comment lastComment = entityComments.stream()
+                                                .max(comparing(c -> c.getUpdatedAt().orElse(c.getCreatedAt()))).get();
+
+            List<UserId> participants = entityComments.stream()
+                                                      .map(Comment::getCreatedBy)
+                                                      .collect(toList());
+            result.add(new CommentedEntityData(
+                    project.getRenderingManager().getRendering(entity),
+                    totalThreadCount,
+                    openThreadCount,
+                    entityComments.size(),
+                    lastComment.getUpdatedAt().orElse(lastComment.getCreatedAt()),
+                    lastComment.getCreatedBy(),
+                    participants
+            ));
+        });
+        Pager<CommentedEntityData> pager = Pager.getPagerForPageSize(result, request.getPageSize());
         return new GetCommentedEntitiesResult(action.getProjectId(), pager.getPage(request.getPageNumber()));
     }
 }
