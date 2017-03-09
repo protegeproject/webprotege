@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHandler> {
 
-    public transient static final Event.Type<BrowserTextChangedHandler> TYPE = new Event.Type<BrowserTextChangedHandler>();
+    public transient static final Event.Type<BrowserTextChangedHandler> ON_BROWSER_TEXT_CHANGED = new Event.Type<>();
 
 
     private OWLEntity entity;
@@ -41,7 +41,7 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
 
     @Override
     public Event.Type<BrowserTextChangedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_BROWSER_TEXT_CHANGED;
     }
 
     @Override

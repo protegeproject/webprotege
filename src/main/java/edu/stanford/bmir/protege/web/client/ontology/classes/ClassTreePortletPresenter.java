@@ -55,7 +55,6 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -79,7 +78,6 @@ import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
-import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
@@ -201,7 +199,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             createRoot(root, portletUi);
         });
         eventBus.addProjectEventHandler(getProjectId(),
-                                        BrowserTextChangedEvent.TYPE,
+                                        BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED,
                                         event -> onEntityBrowserTextChanged(event));
 
         eventBus.addProjectEventHandler(getProjectId(),

@@ -5,7 +5,6 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -17,12 +16,12 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.ImmutableSet.of;
+import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.CLOSED;
@@ -66,7 +65,7 @@ public class CommentedEntitiesPresenter {
         view.setSelectionHandler(this::handleEntitySelected);
         view.setPageNumberChangedHandler(pageNumber -> reload());
         reload();
-        eventBus.addProjectEventHandler(projectId, BrowserTextChangedEvent.TYPE, this::handleBrowserTextChanged);
+        eventBus.addProjectEventHandler(projectId, ON_BROWSER_TEXT_CHANGED, this::handleBrowserTextChanged);
         eventBus.addProjectEventHandler(projectId, ON_COMMENT_POSTED, this::handleCommentPosted);
         eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, this::handleStatusChanged);
     }
