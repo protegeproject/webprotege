@@ -149,6 +149,11 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
     }
 
     @Override
+    public void refresh() {
+        list.redraw();
+    }
+
+    @Override
     public void addEntity(@Nonnull CommentedEntityData entity) {
         listDataProvider.getList().add(0, entity);
         list.setPageSize(listDataProvider.getList().size());
@@ -195,14 +200,24 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
 
             sb.append("<div class=\"" )
               .append(cssClassName)
-              .append("\" style='line-height: 20px; display: inline-block; padding 4px;'>" );
+              .append("\" style='line-height: 20px; padding 4px;'>" );
             sb.append("<span style='font-weight: 500;'>");
             sb.append(value.getEntityData().getBrowserText());
             sb.append("</span>");
-            sb.append("<div>" );
+
+            sb.append("<div style='display: flex; align-items: baseline;'>" );
+
+            sb.append("<div style='flex-grow: 1; padding-left:10px;'>" );
+            sb.append("Updated " );
+            sb.append(TimeUtil.getTimeRendering(value.getLastModified()));
+            sb.append("<br>by ");
+            sb.append(value.getLastModifiedBy().getUserName());
+            sb.append("</div>" );
 
             String statusBadgeStyle =
                     "display: inline-block;" +
+                            " flex-grow: 0;" +
+                            " flex-shrink: 0;" +
                             "    min-width: 60px;" +
                             "    border-radius: 3px;" +
                             "    color: white;" +
@@ -224,10 +239,7 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
                   .append(" background: #090;'>" )
                   .append(value.getTotalThreadCount()).append(" resolved</div>" );
             }
-            sb.append("<div style='display: inline-block; padding-left:10px;'>" );
-            sb.append("Updated: " );
-            sb.append(TimeUtil.getTimeRendering(value.getLastModified()));
-            sb.append("</div>" );
+
 
             sb.append("</div>" );
             sb.append("</div>" );
