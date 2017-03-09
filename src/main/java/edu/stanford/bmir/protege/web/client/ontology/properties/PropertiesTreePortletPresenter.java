@@ -172,7 +172,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
                                         HierarchyRootRemovedEvent.TYPE, event -> handleRootRemoved(event));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        BrowserTextChangedEvent.TYPE, event -> handleBrowserTextChanged(event));
+                                        BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED, event -> handleBrowserTextChanged(event));
 
         eventBus.addProjectEventHandler(getProjectId(),
                                         ON_PERMISSIONS_CHANGED,
