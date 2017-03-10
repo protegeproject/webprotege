@@ -119,13 +119,15 @@ public class MailManager implements SendMail {
             Optional<String> fromAddress = getPropertyValue(MAIL_SMTP_FROM);
             if (fromAddress.isPresent()) {
                 Optional<InternetAddress> fromInternetAddress = toInternetAddress(fromAddress.get());
-                if(fromInternetAddress.isPresent()) {
+                if (fromInternetAddress.isPresent()) {
                     msg.setFrom(fromInternetAddress.get());
                 }
             }
-            Address [] recipients = checkNotNull(recipientEmailAddresses).stream()
-                                                 .map(MailManager::toInternetAddress)
-                                                 .toArray(Address[]::new);
+            Address[] recipients = checkNotNull(recipientEmailAddresses).stream()
+                                                                        .map(MailManager::toInternetAddress)
+                                                                        .filter(Optional::isPresent)
+                                                                        .map(Optional::get)
+                                                                        .toArray(Address[]::new);
 
             msg.setRecipients(Message.RecipientType.TO, recipients);
             msg.setSubject(checkNotNull(subject));
@@ -156,7 +158,7 @@ public class MailManager implements SendMail {
         try {
             return Optional.of(new InternetAddress(address));
         } catch (AddressException e) {
-            logger.warn("Cannot send email to address: {} (Cause {})", address, e.getMessage());
+            logger.warn("Cannot send email to address: {} (Cause {})" , address, e.getMessage());
             return Optional.empty();
         }
     }
