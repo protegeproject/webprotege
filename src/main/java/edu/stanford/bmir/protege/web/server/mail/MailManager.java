@@ -1,17 +1,19 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.inject.MailProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +38,8 @@ public class MailManager implements SendMail {
     public static final String UTF_8 = "utf-8";
 
     public static final String DEFAULT_FROM_VALUE_PREFIX = "no-reply@";
+
+    private static final Logger logger = Logger.getLogger(MailManager.class.getName());
 
     private final Properties properties;
 
@@ -80,7 +84,9 @@ public class MailManager implements SendMail {
      * @param text The content of the email.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public void sendMail(final String recipientEmailAddress, final String subject, final String text) {
+    public void sendMail(@Nonnull final String recipientEmailAddress,
+                         @Nonnull final String subject,
+                         @Nonnull final String text) {
         sendMail(recipientEmailAddress, subject, text, messagingExceptionHandler);
     }
 
@@ -92,11 +98,11 @@ public class MailManager implements SendMail {
      * @param exceptionHandler An exception handler for handling {@link MessagingException}s.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public void sendMail(final String recipientEmailAddress, final String subject, final String text, MessagingExceptionHandler exceptionHandler) {
+    public void sendMail(@Nonnull final String recipientEmailAddress,
+                         @Nonnull final String subject,
+                         @Nonnull final String text,
+                         @Nonnull MessagingExceptionHandler exceptionHandler) {
         try {
-            checkNotNull(recipientEmailAddress);
-            checkNotNull(subject);
-            checkNotNull(text);
             final Session session = createMailSession();
             MimeMessage msg = new MimeMessage(session);
             Optional<String> fromAddress = getPropertyValue(MAIL_SMTP_FROM);
@@ -104,15 +110,24 @@ public class MailManager implements SendMail {
                 InternetAddress fromInternetAddress = new InternetAddress(fromAddress.get());
                 msg.setFrom(fromInternetAddress);
             }
-            msg.setRecipients(Message.RecipientType.TO, recipientEmailAddress);
-            msg.setSubject(subject);
-            msg.setText(text, UTF_8);
-            msg.setHeader("Content-Type", String.format("text/plain; charset=\"%s\"", UTF_8));
+            msg.setRecipients(Message.RecipientType.TO, checkNotNull(recipientEmailAddress));
+            msg.setSubject(checkNotNull(subject));
+            msg.setText(checkNotNull(text), UTF_8);
+            msg.setHeader("Content-Type", String.format("text/html; charset=\"%s\"", UTF_8));
             msg.setHeader("Content-Transfer-Encoding", "quoted-printable");
             InternetAddress from = getFromAddress();
             msg.setFrom(from);
             Transport.send(msg);
+            logger.info(String.format("Sent email to %s with subject \"%s\" (mail.smtp.host: %s, mail.smtp.port: %s, mail.smtp.auth: %s, mail.smtp.from: %s)",
+                                      recipientEmailAddress,
+                                      subject,
+                                      session.getProperty("mail.smtp.host"),
+                                      session.getProperty("mail.smtp.port"),
+                                      session.getProperty("mail.smtp.auth"),
+                                      session.getProperty("mail.smtp.from"))
+            );
         } catch (MessagingException e) {
+            logger.info("There was a problem sending mail: " + e.getMessage());
             exceptionHandler.handleMessagingException(e);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
@@ -191,8 +206,7 @@ public class MailManager implements SendMail {
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      */
     private Optional<String> getPropertyValue(String propertyName) {
-        checkNotNull(propertyName);
-        return Optional.fromNullable(properties.getProperty(propertyName));
+        return Optional.ofNullable(properties.getProperty(checkNotNull(propertyName)));
     }
 
     /**
@@ -203,14 +217,12 @@ public class MailManager implements SendMail {
      * @throws NullPointerException if any parameters are {@code null}.
      */
     private String getPropertyValue(String propertyName, String defaultValue) {
-        checkNotNull(propertyName);
-        checkNotNull(defaultValue);
-        String value = properties.getProperty(propertyName);
+        String value = properties.getProperty(checkNotNull(propertyName));
         if(value != null) {
             return value;
         }
         else {
-            return defaultValue;
+            return checkNotNull(defaultValue);
         }
     }
 }

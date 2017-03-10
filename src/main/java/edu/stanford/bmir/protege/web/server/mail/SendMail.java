@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -14,7 +16,9 @@ public interface SendMail {
      * @param text The content of the email.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    void sendMail(String recipientEmailAddress, String subject, String text);
+    void sendMail(@Nonnull String recipientEmailAddress,
+                  @Nonnull String subject,
+                  @Nonnull String text);
 
     /**
      * Sends an email to the specified recipient.  The email will have the specified subject and specified content.
@@ -24,5 +28,8 @@ public interface SendMail {
      * @param exceptionHandler An exception handler for handling {@link javax.mail.MessagingException}s.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    void sendMail(String recipientEmailAddress, String subject, String text, MessagingExceptionHandler exceptionHandler);
+    void sendMail(@Nonnull String recipientEmailAddress,
+                  @Nonnull String subject,
+                  @Nonnull String text,
+                  @Nonnull MessagingExceptionHandler exceptionHandler);
 }
