@@ -12,12 +12,15 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.IllegalFormatException;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -169,7 +172,7 @@ public class DefaultLogger implements WebProtegeLogger {
         try {
             Optional<String> emailAddress = emailAddressProvider.get();
             if (emailAddress.isPresent()) {
-                sendMail.sendMail(emailAddress.get(), SUBJECT, message);
+                sendMail.sendMail(singletonList(emailAddress.get()), SUBJECT, message);
             }
         }
         catch (Throwable e) {

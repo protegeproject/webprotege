@@ -16,10 +16,13 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Matthew Horridge
@@ -67,9 +70,17 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                 UserDetails userDetails = userDetailsOptional.get();
                 final String displayName = "watched project";
                 final String emailSubject = String.format("Changes made in %s by %s", displayName, userDetails.getDisplayName());
-                String message = "\nChanges were made to " + entity.getEntityType().getName() + " " + browserTextProvider.getOWLEntityBrowserText(entity) + " " + entity.getIRI().toQuotedString();
-                message = message + (" on " + new Date() + "\n\n");
-                message = message + "You can view this " + entity.getEntityType().getName() + " at the link below:";
+                final StringBuilder messageBuilder = new StringBuilder();
+                messageBuilder.append("\nChanges were made to " )
+                  .append(entity.getEntityType().getName())
+                  .append(" " )
+                  .append(browserTextProvider.getOWLEntityBrowserText(entity))
+                  .append(" " )
+                  .append(entity.getIRI().toQuotedString());
+                messageBuilder.append(" on " ).append(new Date()).append("\n\n" );
+                messageBuilder.append("You can view this " )
+                  .append(entity.getEntityType().getName())
+                  .append(" at the link below:" );
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
                 directLinkBuilder.append(applicationHost);
@@ -79,9 +90,8 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                 String placeToken = tokenizer.getToken(place);
                 directLinkBuilder.append("#ProjectViewPlace:");
                 directLinkBuilder.append(placeToken);
-                message += "\n" + directLinkBuilder.toString();
-                mailManager.sendMail(userDetails.getEmailAddress().orElse("Not specified"), emailSubject, message);
-                System.out.println(message);
+                messageBuilder.append("\n" ).append(directLinkBuilder.toString());
+                userDetails.getEmailAddress().ifPresent(address -> mailManager.sendMail(singletonList(address), emailSubject, messageBuilder.toString()));
             }
         });
     }
