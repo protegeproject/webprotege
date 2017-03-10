@@ -37,7 +37,7 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
 
     private Properties getProperties() {
-        Properties mailProperties = new Properties();
+        Properties mailProperties = new Properties(System.getProperties());
         String fileName = MAIL_PROPERTIES_FILE_NAME;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
