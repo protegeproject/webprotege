@@ -26,16 +26,16 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
 
     private final EntityDiscussionThreadRepository repository;
 
-    private final MentionedUsersEmailer mentionedUsersEmailer;
+    private final CommentNotificationsEmailer notificationsEmailer;
 
     @Inject
     public AddEntityCommentHandler(@Nonnull ProjectManager projectManager,
                                    @Nonnull AccessManager accessManager,
                                    @Nonnull EntityDiscussionThreadRepository repository,
-                                   @Nonnull MentionedUsersEmailer mentionedUsersEmailer) {
+                                   @Nonnull CommentNotificationsEmailer notificationsEmailer) {
         super(projectManager, accessManager);
         this.repository = checkNotNull(repository);
-        this.mentionedUsersEmailer = checkNotNull(mentionedUsersEmailer);
+        this.notificationsEmailer = checkNotNull(notificationsEmailer);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
     }
 
     @Override
-    protected AddEntityCommentResult execute(AddEntityCommentAction action,
-                                             Project project,
-                                             ExecutionContext executionContext) {
+    protected AddEntityCommentResult execute(@Nonnull AddEntityCommentAction action,
+                                             @Nonnull Project project,
+                                             @Nonnull ExecutionContext executionContext) {
         UserId createdBy = executionContext.getUserId();
         long createdAt = System.currentTimeMillis();
         CommentRenderer r = new CommentRenderer();
@@ -66,9 +66,12 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
         ThreadId threadId = action.getThreadId();
         repository.addCommentToThread(threadId, comment);
         postCommentPostedEvent(project, threadId, comment);
-
-        UserId commentingUser = executionContext.getUserId();
-        mentionedUsersEmailer.sendEmailsToMentionedUsers(rawComment, renderedComment, commentingUser);
+        repository.getThread(threadId);
+        repository.getThread(threadId).ifPresent(thread -> {
+            notificationsEmailer.sendCommentPostedNotification(project.getProjectId(),
+                                                               thread,
+                                                               comment);
+        });
         return new AddEntityCommentResult(action.getProjectId(), threadId, comment, renderedComment);
 
     }

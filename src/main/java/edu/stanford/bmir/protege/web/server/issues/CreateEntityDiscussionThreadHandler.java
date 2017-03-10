@@ -32,16 +32,16 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     private final EntityDiscussionThreadRepository repository;
 
     @Nonnull
-    private final MentionedUsersEmailer mentionedUsersEmailer;
+    private final CommentNotificationsEmailer notificationsEmailer;
 
     @Inject
     public CreateEntityDiscussionThreadHandler(@Nonnull ProjectManager projectManager,
                                                @Nonnull AccessManager accessManager,
                                                @Nonnull EntityDiscussionThreadRepository repository,
-                                               @Nonnull MentionedUsersEmailer mentionedUsersEmailer) {
+                                               @Nonnull CommentNotificationsEmailer notificationsEmailer) {
         super(projectManager, accessManager);
         this.repository = checkNotNull(repository);
-        this.mentionedUsersEmailer = checkNotNull(mentionedUsersEmailer);
+        this.notificationsEmailer = checkNotNull(notificationsEmailer);
     }
 
     @Override
@@ -86,7 +86,9 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                                                                    comment,
                                                                    rendering,
                                                                    commentCount));
-        mentionedUsersEmailer.sendEmailsToMentionedUsers(rawComment, renderedComment, commentingUser);
+        notificationsEmailer.sendCommentPostedNotification(projectId,
+                                                           thread,
+                                                           comment);
 
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), entity);
         return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));

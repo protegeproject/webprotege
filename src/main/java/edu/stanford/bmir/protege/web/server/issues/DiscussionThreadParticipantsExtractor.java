@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
