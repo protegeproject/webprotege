@@ -5,6 +5,9 @@ import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+import java.util.Collections;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
@@ -31,7 +34,7 @@ public class ResetPasswordMailer {
     }
 
     public void sendEmail(final UserId userId, final String emailAddress, final String pwd) {
-        mailManager.sendMail(emailAddress, SUBJECT, String.format(BODY_TEMPLATE, userId.getUserName(), pwd), e -> {
+        mailManager.sendMail(singletonList(emailAddress), SUBJECT, String.format(BODY_TEMPLATE, userId.getUserName(), pwd), e -> {
             logger.info("A password reset email could not be sent to user % at %s.  The password was reset to %s.",
                     userId.getUserName(),
                     emailAddress,

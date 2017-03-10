@@ -11,9 +11,11 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -47,7 +49,7 @@ public class MailManagerTestCase {
         Properties mailProperties = new Properties();
         MessagingExceptionHandler messagingExceptionHandler = mock(MessagingExceptionHandler.class);
         MailManager mailManager = new MailManager(APP_NAME, HOST_NAME, mailProperties, messagingExceptionHandler);
-        mailManager.sendMail(TO, SUBJECT, BODY, messagingExceptionHandler);
+        mailManager.sendMail(singletonList(TO), SUBJECT, BODY, messagingExceptionHandler);
         List<Message> messageList = Mailbox.get(TO);
         message = messageList.get(0);
     }
