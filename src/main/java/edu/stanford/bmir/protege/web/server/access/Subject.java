@@ -43,6 +43,8 @@ public abstract class Subject {
     @Nonnull
     public abstract Optional<String> getUserName();
 
+    public abstract Optional<UserId> getUserId();
+
 
     public static Subject forAnySignedInUser() {
         return AnySignedInUser.INSTANCE;
@@ -78,6 +80,11 @@ public abstract class Subject {
         @Nonnull
         @Override
         public Optional<String> getUserName() {
+            return Optional.empty();
+        }
+
+        @Override
+        public Optional<UserId> getUserId() {
             return Optional.empty();
         }
 
@@ -119,6 +126,11 @@ public abstract class Subject {
         @Override
         public Optional<String> getUserName() {
             return Optional.of(userId.getUserName());
+        }
+
+        @Override
+        public Optional<UserId> getUserId() {
+            return Optional.of(userId);
         }
 
         @Override
