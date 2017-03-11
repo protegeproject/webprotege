@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import com.google.common.base.Optional;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -23,19 +24,38 @@ public class WebProtegePropertiesModule {
 
     @Provides
     @ApplicationName
-    public String provideApplicationName(ApplicationNameProvider provider) {
-        return provider.get();
+    public String provideApplicationName(WebProtegeProperties properties) {
+        return properties.getApplicationName();
+    }
+
+    @Provides
+    public ApplicationScheme provideApplicationScheme(WebProtegeProperties properties) {
+        return properties.getApplicationScheme();
     }
 
     @Provides
     @ApplicationHost
-    public String provideApplicationHost(ApplicationHostProvider provider) {
-        return provider.get();
+    public String provideApplicationHost(WebProtegeProperties properties) {
+        return properties.getApplicationHost();
+    }
+
+
+    @Provides
+    @ApplicationPort
+    public Optional<Integer> provideApplicationPort(WebProtegeProperties properties) {
+        return properties.getApplicationPort();
+    }
+
+    @Provides
+    @ApplicationPath
+    public String provideApplicationPath(WebProtegeProperties properties) {
+        return properties.getApplicationPath().orElse("");
     }
 
     @Provides
     @AdminEmail
-    public Optional<String> provideAdminEmail(AdminEmailProvider provider) {
-        return provider.get();
+    public Optional<String> provideAdminEmail(WebProtegeProperties properties) {
+        return properties.getAdministratorEmail();
     }
+
 }

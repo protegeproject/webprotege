@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.SerializationException;
 import edu.stanford.bmir.protege.web.server.inject.AdminEmail;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
@@ -12,10 +11,7 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.IllegalFormatException;
+import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,7 +51,7 @@ public class DefaultLogger implements WebProtegeLogger {
 
     @Override
     public void severe(Throwable t, UserId userId) {
-        String message = formatMessage(t, Optional.of(userId), Optional.<HttpServletRequest>absent());
+        String message = formatMessage(t, Optional.of(userId), Optional.empty());
         logSevereMessage(message, isMailableException(t));
     }
 
@@ -67,7 +63,7 @@ public class DefaultLogger implements WebProtegeLogger {
 
     @Override
     public void severe(Throwable t) {
-        String message = formatMessage(t, Optional.<UserId>absent(), Optional.<HttpServletRequest>absent());
+        String message = formatMessage(t, Optional.empty(), Optional.empty());
         logSevereMessage(message, isMailableException(t));
     }
 

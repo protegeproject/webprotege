@@ -116,13 +116,6 @@ public class MailManager implements SendMail {
         try {
             final Session session = createMailSession();
             MimeMessage msg = new MimeMessage(session);
-            Optional<String> fromAddress = getPropertyValue(MAIL_SMTP_FROM);
-            if (fromAddress.isPresent()) {
-                Optional<InternetAddress> fromInternetAddress = toInternetAddress(fromAddress.get());
-                if (fromInternetAddress.isPresent()) {
-                    msg.setFrom(fromInternetAddress.get());
-                }
-            }
             Address[] recipients = checkNotNull(recipientEmailAddresses).stream()
                                                                         .map(MailManager::toInternetAddress)
                                                                         .filter(Optional::isPresent)
@@ -150,7 +143,7 @@ public class MailManager implements SendMail {
             logger.info("There was a problem sending mail: " + e.getMessage());
             exceptionHandler.handleMessagingException(e);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            logger.info("There was a problem sending mail: " + e.getMessage());
         }
     }
 
@@ -226,7 +219,7 @@ public class MailManager implements SendMail {
             return value;
         }
         else {
-            return propertyName.getDefaultValue().or(defaultValue);
+            return propertyName.getDefaultValue().orElse(defaultValue);
         }
     }
 

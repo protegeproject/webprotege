@@ -1,13 +1,15 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,7 +26,6 @@ public class WebProtegeProperties implements Serializable {
     private ImmutableMap<WebProtegePropertyName, Optional<String>> propertyValueMap;
 
     public static final String WEB_PROTEGE_PROPERTIES_FILE_NAME = "webprotege.properties";
-
 
     /**
      * Initialises WebProtegeProperties with property values from a {@link java.util.Properties} object.
@@ -81,7 +82,7 @@ public class WebProtegeProperties implements Serializable {
      *         does not have a value and {@code defaultValue} is specified as {@code null}.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      */
-    private Optional<String> getOptionalString(WebProtegePropertyName propertyName) {
+    private java.util.Optional<String> getOptionalString(WebProtegePropertyName propertyName) {
         return propertyValueMap.get(checkNotNull(propertyName));
     }
 
@@ -112,22 +113,53 @@ public class WebProtegeProperties implements Serializable {
         return new File(dataDirectory);
     }
 
-    public String getApplicationHostName() {
+
+    public ApplicationScheme getApplicationScheme() {
+        String value = getRequiredString(APPLICATION_SCHEME);
+        if(value.equals("http")) {
+            return ApplicationScheme.HTTP;
+        }
+        else if (value.equals("https")) {
+            return ApplicationScheme.HTTPS;
+        }
+        else {
+            throw new RuntimeException("Invalid value for application.scheme (expected either http or https");
+        }
+    }
+
+    public String getApplicationHost() {
         return getRequiredString(APPLICATION_HOST);
     }
+
+    public Optional<Integer> getApplicationPort() {
+        try {
+            return getOptionalString(APPLICATION_PORT).map(Integer::parseInt);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid format for application.port (expected an int)");
+        }
+    }
+
+    @Nonnull
+    public Optional<String> getApplicationPath() {
+        return getOptionalString(APPLICATION_PATH);
+    }
+
 
     public  boolean isOpenIdAuthenticationEnabled() {
         return "true".equals(getRequiredString(OPEN_ID_ENABLED));
     }
 
+    @Nonnull
     public  Optional<String> getAdministratorEmail() {
         return getOptionalString(ADMIN_EMAIL);
     }
-    
+
+    @Nonnull
     public Optional<String> getDBPort() {
         return getOptionalString(MONGO_DB_PORT);
     }
 
+    @Nonnull
     public Optional<String> getDBHost() {
         return getOptionalString(MONGO_DB_HOST);
     }

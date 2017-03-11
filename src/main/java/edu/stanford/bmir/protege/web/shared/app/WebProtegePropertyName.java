@@ -7,8 +7,10 @@ package edu.stanford.bmir.protege.web.shared.app;
  * Date: 19/07/2013
  */
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.WebProtegePropertiesDocumentation;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +38,12 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The host name that WebProtégé runs on", example = "webprotege.stanford.edu")
     APPLICATION_HOST("application.host", ClientVisibility.VISIBLE),
 
+    @WebProtegePropertiesDocumentation(description = "Specifies the port used to access WebProtégé as an int", example = "443")
+    APPLICATION_PORT("application.port", PropertyValue.absentByDefault(), ClientVisibility.VISIBLE),
+
+    @WebProtegePropertiesDocumentation(description = "Specifies the path used to access WebProtégé.  Must start with a /.", example = "/webprotege")
+    APPLICATION_PATH("application.path", PropertyValue.absentByDefault(), ClientVisibility.VISIBLE),
+
     @WebProtegePropertiesDocumentation(description = "The directory where WebProtégé data is stored", example = "/src/webprotege")
     DATA_DIRECTORY("data.directory", ClientVisibility.HIDDEN),
 
@@ -45,11 +53,8 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
     MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017), ClientVisibility.HIDDEN),
 
-    @WebProtegePropertiesDocumentation(description = "Specifies whether WebProtégé uses https rather than http as a protocol", example = "false")
-    HTTPS_ENABLED("https.enabled", PropertyValue.ofBoolean(false), ClientVisibility.VISIBLE),
-
-    @WebProtegePropertiesDocumentation(description = "Specifies the port used for https communication", example = "443")
-    HTTPS_PORT("https.port", PropertyValue.ofInteger(443), ClientVisibility.VISIBLE),
+    @WebProtegePropertiesDocumentation(description = "Specifies the scheme used to access WebProtégé", example = "http or https")
+    APPLICATION_SCHEME("application.scheme", PropertyValue.ofString("http"), ClientVisibility.VISIBLE),
 
     @WebProtegePropertiesDocumentation(description = "The email address of the WebProtégé administrator", example = "john.doe@stanford.edu")
     ADMIN_EMAIL("admin.email", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
@@ -92,7 +97,7 @@ public enum WebProtegePropertyName {
         }
 
         public Optional<String> toOptional() {
-            return Optional.fromNullable(value);
+            return Optional.ofNullable(value);
         }
     }
 
@@ -116,14 +121,15 @@ public enum WebProtegePropertyName {
 
     private Optionality optionality;
 
-    private Optional<String> defaultValue;
+    @Nullable
+    private String defaultValue;
 
     private ClientVisibility clientVisibility;
 
 
     private WebProtegePropertyName(String propertyName, ClientVisibility clientVisibility) {
         this.propertyName = checkNotNull(propertyName);
-        defaultValue = Optional.absent();
+        defaultValue = null;
         this.optionality = Optionality.VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES;
         this.clientVisibility = clientVisibility;
 
@@ -131,7 +137,7 @@ public enum WebProtegePropertyName {
 
     private WebProtegePropertyName(String propertyName, PropertyValue defaultValue, ClientVisibility clientVisibility) {
         this.propertyName = checkNotNull(propertyName);
-        this.defaultValue = defaultValue.toOptional();
+        this.defaultValue = defaultValue.toOptional().orElse(null);
         optionality = Optionality.HAS_DEFAULT_VALUE;
         this.clientVisibility = clientVisibility;
 
@@ -142,7 +148,7 @@ public enum WebProtegePropertyName {
     }
 
     public Optional<String> getDefaultValue() {
-        return defaultValue;
+        return Optional.ofNullable(defaultValue);
     }
 
     public boolean hasDefaultValue() {
