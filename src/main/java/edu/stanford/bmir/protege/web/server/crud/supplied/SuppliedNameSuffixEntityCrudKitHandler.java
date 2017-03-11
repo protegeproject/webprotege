@@ -120,6 +120,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             EntityShortForm shortForm,
             EntityCrudContext context,
             OntologyChangeList.Builder<E> changeListBuilder) {
+        // TODO: This requires that we update comments on this entity
         OWLEntityRenamer renamer = new OWLEntityRenamer(context.getTargetOntology().getOWLOntologyManager(),
                                                         context.getTargetOntology().getImportsClosure());
         List<OWLOntologyChange> changeList = renamer.changeIRI(entity,
