@@ -4,7 +4,9 @@ import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationPath;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationPort;
 import edu.stanford.bmir.protege.web.server.perspective.EntityTypePerspectiveMapper;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlaceTokenizer;
@@ -16,6 +18,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,9 +29,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PlaceUrl {
 
-    private static final PerspectiveId DEFAULT_PERSPECTIVE = new PerspectiveId("Classes");
+    private final ApplicationScheme applicationScheme;
 
     private final String applicationHost;
+
+    private final Optional<Integer> applicationPort;
 
     private final String applicationPath;
 
@@ -36,12 +41,29 @@ public class PlaceUrl {
 
     private final EntityTypePerspectiveMapper mapper;
 
+    /**
+     * Construct a {@link PlaceUrl} object that provides URLs for places for a given application host,
+     * path, and name.
+     * @param applicationScheme The scheme for the application.
+     * @param applicationHost The application host.  For example, webprotege.stanford.edu.
+     * @param applicationPort The application port.  May be empty for the default port.
+     * @param applicationPath The application path.  May be empty.  If not empty the path must be an absolute
+     *                        path, i.e. it must start with a '/' character.
+     * @param applicationName The name of the application e.g. WebProtege
+     * @param mapper An {@link EntityTypePerspectiveMapper} that will be used to retrieve the perspective id that
+     *               should be shown for a given entity type.  For example for OWLClass entities the "Classes"
+     *               perspective might be shown.
+     */
     @Inject
-    public PlaceUrl(@Nonnull @ApplicationHost String applicationHost,
+    public PlaceUrl(@Nonnull ApplicationScheme applicationScheme,
+                    @Nonnull @ApplicationHost String applicationHost,
+                    @Nonnull @ApplicationPort Optional<Integer> applicationPort,
                     @Nonnull @ApplicationPath String applicationPath,
                     @Nonnull @ApplicationName String applicationName,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
+        this.applicationScheme = checkNotNull(applicationScheme);
         this.applicationHost = checkNotNull(applicationHost);
+        this.applicationPort = checkNotNull(applicationPort);
         this.applicationPath = checkNotNull(applicationPath);
         this.applicationName = checkNotNull(applicationName);
         this.mapper = checkNotNull(mapper);
@@ -73,7 +95,7 @@ public class PlaceUrl {
      */
     @Nonnull
     public String getProjectUrl(@Nonnull ProjectId projectId) {
-        ProjectViewPlace place = new ProjectViewPlace(projectId, DEFAULT_PERSPECTIVE, ItemSelection.empty());
+        ProjectViewPlace place = new ProjectViewPlace(projectId, mapper.getDefaultPerspectiveId(), ItemSelection.empty());
         String projectPlaceFragment = getProjectPlaceFragment(place);
         return createUrl(projectPlaceFragment);
     }
@@ -104,7 +126,15 @@ public class PlaceUrl {
 
     private String createUrl(@Nullable String fragment) {
         try {
-            return new URI("http" , applicationHost, applicationPath, fragment).toString();
+            final URI uri;
+            String scheme = applicationScheme.toString().toLowerCase();
+            if(applicationPort.isPresent()) {
+                uri = new URI(scheme, null, applicationHost, applicationPort.get(), applicationPath, null, fragment);
+            }
+            else {
+                uri = new URI(scheme, applicationHost, applicationPath, fragment);
+            }
+            return uri.toString();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
