@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.MustacheFactory;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
+import edu.stanford.bmir.protege.web.server.issues.CommentNotificationTemplate;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveDataCopier;
@@ -53,4 +57,28 @@ public class FileSystemConfigurationModule {
     public TempFileFactory provideTempFileFactory(TempFileFactoryImpl impl) {
         return impl;
     }
+
+    @Provides
+    @TemplatesDirectory
+    public File provideTemplatesDirectory(TemplatesDirectoryProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    @CommentNotificationTemplate
+    public File provideCommentsNotificationTemplateFile(CommentNotificationTemplateProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    @CommentNotificationTemplate
+    public FileContentsCache providesCommentNotificationTemplate(@CommentNotificationTemplate File templateFile) {
+        return new FileContentsCache(templateFile);
+    }
+
+    @Provides
+    public MustacheFactory providesMustacheFactory() {
+        return new DefaultMustacheFactory();
+    }
 }
+

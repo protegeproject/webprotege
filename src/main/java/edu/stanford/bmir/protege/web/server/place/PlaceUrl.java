@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.inject.ApplicationPath;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationPort;
 import edu.stanford.bmir.protege.web.server.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -43,7 +42,7 @@ public class PlaceUrl {
 
     /**
      * Construct a {@link PlaceUrl} object that provides URLs for places for a given application host,
-     * path, and name.
+     * path, port and name.
      * @param applicationScheme The scheme for the application.
      * @param applicationHost The application host.  For example, webprotege.stanford.edu.
      * @param applicationPort The application port.  May be empty for the default port.

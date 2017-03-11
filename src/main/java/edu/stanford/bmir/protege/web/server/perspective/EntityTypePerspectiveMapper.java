@@ -28,6 +28,15 @@ public class EntityTypePerspectiveMapper {
     }
 
     /**
+     * Gets the default {@link PerspectiveId}, which is used for the empty selection.
+     * @return The default {@link PerspectiveId}.
+     */
+    @Nonnull
+    public PerspectiveId getDefaultPerspectiveId() {
+        return CLASSES_PERSPECTIVE;
+    }
+
+    /**
      * Gets the default {@link PerspectiveId} for a given {@link EntityType}.
      * @param entityType The {@link EntityType}.
      * @return The default {@link PerspectiveId} for the specified entity type.

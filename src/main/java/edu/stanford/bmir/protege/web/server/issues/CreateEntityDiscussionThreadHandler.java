@@ -32,13 +32,13 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     private final EntityDiscussionThreadRepository repository;
 
     @Nonnull
-    private final CommentNotificationsEmailer notificationsEmailer;
+    private final CommentNotificationEmailer notificationsEmailer;
 
     @Inject
     public CreateEntityDiscussionThreadHandler(@Nonnull ProjectManager projectManager,
                                                @Nonnull AccessManager accessManager,
                                                @Nonnull EntityDiscussionThreadRepository repository,
-                                               @Nonnull CommentNotificationsEmailer notificationsEmailer) {
+                                               @Nonnull CommentNotificationEmailer notificationsEmailer) {
         super(projectManager, accessManager);
         this.repository = checkNotNull(repository);
         this.notificationsEmailer = checkNotNull(notificationsEmailer);

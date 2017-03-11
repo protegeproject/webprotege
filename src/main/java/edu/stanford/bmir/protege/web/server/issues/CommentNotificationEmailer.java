@@ -4,13 +4,11 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -30,7 +28,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 9 Mar 2017
  */
-public class CommentNotificationsEmailer {
+public class CommentNotificationEmailer {
 
     private final ProjectDetailsManager projectDetailsManager;
 
@@ -42,22 +40,21 @@ public class CommentNotificationsEmailer {
 
     private final DiscussionThreadParticipantsExtractor participantsExtractor;
 
-    @ApplicationName
-    private final String applicationName;
+    private final CommentNotificationEmailGenerator emailGenerator;
 
     @Inject
-    public CommentNotificationsEmailer(ProjectDetailsManager projectDetailsManager,
-                                       UserDetailsManager userDetailsManager,
-                                       AccessManager accessManager,
-                                       SendMail sendMail,
-                                       DiscussionThreadParticipantsExtractor participantsExtractor,
-                                       @ApplicationName String applicationName) {
+    public CommentNotificationEmailer(@Nonnull ProjectDetailsManager projectDetailsManager,
+                                      @Nonnull UserDetailsManager userDetailsManager,
+                                      @Nonnull AccessManager accessManager,
+                                      @Nonnull DiscussionThreadParticipantsExtractor participantsExtractor,
+                                      @Nonnull CommentNotificationEmailGenerator emailGenerator,
+                                      @Nonnull SendMail sendMail) {
         this.projectDetailsManager = projectDetailsManager;
         this.userDetailsManager = userDetailsManager;
         this.accessManager = accessManager;
         this.sendMail = sendMail;
         this.participantsExtractor = participantsExtractor;
-        this.applicationName = applicationName;
+        this.emailGenerator = emailGenerator;
     }
 
     public void sendCommentPostedNotification(@Nonnull ProjectId projectId,
@@ -117,16 +114,8 @@ public class CommentNotificationsEmailer {
     private String formatMessage(@Nonnull ProjectId projectId,
                                  @Nonnull EntityDiscussionThread thread,
                                  @Nonnull Comment postedComment) {
-        return String.format("%s posted a comment in %s\n\n" +
-                                     "%s\n\n" +
-//                                     "<a href=\"%s\">View in %s</a>" +
-                                     "You are receiving this notification because you are a participant in the mentioned project.\n",
-                             postedComment.getCreatedBy().getUserName(),
-                             projectDetailsManager.getProjectDetails(projectId).getDisplayName(),
-                             postedComment.getRenderedBody(),
-                             thread.getEntity().getIRI(),
-                             applicationName
-                             );
+        String projectName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
+        return emailGenerator.generateEmailBody(projectName, thread, postedComment);
     }
 
 }
