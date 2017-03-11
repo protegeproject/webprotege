@@ -64,29 +64,31 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
 
         List<CommentedEntityData> result = new ArrayList<>();
         commentsByEntity.forEach((entity, threads) -> {
-            int totalThreadCount = threads.size();
-            int openThreadCount = (int) threads.stream()
-                                               .filter(thread -> thread.getStatus().isOpen())
-                                               .count();
-            List<Comment> entityComments = threads.stream()
-                                                  .flatMap(thread -> thread.getComments()
-                                                                           .stream())
-                                                  .collect(toList());
-            Comment lastComment = entityComments.stream()
-                                                .max(comparing(c -> c.getUpdatedAt().orElse(c.getCreatedAt()))).get();
-
-            List<UserId> participants = entityComments.stream()
-                                                      .map(Comment::getCreatedBy)
+            if (project.getRootOntology().containsEntityInSignature(entity)) {
+                int totalThreadCount = threads.size();
+                int openThreadCount = (int) threads.stream()
+                                                   .filter(thread -> thread.getStatus().isOpen())
+                                                   .count();
+                List<Comment> entityComments = threads.stream()
+                                                      .flatMap(thread -> thread.getComments()
+                                                                               .stream())
                                                       .collect(toList());
-            result.add(new CommentedEntityData(
-                    project.getRenderingManager().getRendering(entity),
-                    totalThreadCount,
-                    openThreadCount,
-                    entityComments.size(),
-                    lastComment.getUpdatedAt().orElse(lastComment.getCreatedAt()),
-                    lastComment.getCreatedBy(),
-                    participants
-            ));
+                Comment lastComment = entityComments.stream()
+                                                    .max(comparing(c -> c.getUpdatedAt().orElse(c.getCreatedAt()))).get();
+
+                List<UserId> participants = entityComments.stream()
+                                                          .map(Comment::getCreatedBy)
+                                                          .collect(toList());
+                result.add(new CommentedEntityData(
+                        project.getRenderingManager().getRendering(entity),
+                        totalThreadCount,
+                        openThreadCount,
+                        entityComments.size(),
+                        lastComment.getUpdatedAt().orElse(lastComment.getCreatedAt()),
+                        lastComment.getCreatedBy(),
+                        participants
+                ));
+            }
         });
         Pager<CommentedEntityData> pager = Pager.getPagerForPageSize(result, request.getPageSize());
         return new GetCommentedEntitiesResult(action.getProjectId(), pager.getPage(request.getPageNumber()));
