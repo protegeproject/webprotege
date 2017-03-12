@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.projectmanager;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.user.client.rpc.core.java.util.*;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
@@ -20,6 +22,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
@@ -32,6 +36,9 @@ import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEven
 import static edu.stanford.bmir.protege.web.shared.project.AvailableProject.UNKNOWN;
 import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.reverseOrder;
 
 /**
  * Author: Matthew Horridge<br>
@@ -60,6 +67,8 @@ public class ProjectManagerPresenter implements Presenter {
 
     private AvailableProjectsCache availableProjectsCache = new AvailableProjectsCache();
 
+    private Comparator<AvailableProject> sortingComparator = getLastOpenedSortingComparator();
+
     @Inject
     public ProjectManagerPresenter(@Nonnull ProjectManagerView projectManagerView,
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
@@ -83,8 +92,9 @@ public class ProjectManagerPresenter implements Presenter {
         viewCat2Filter.put(TRASH,
                            p -> p.isInTrash() && p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
 
-        projectManagerView.setViewFilterChangedHandler(() -> applyFilters());
+        projectManagerView.setViewFilterChangedHandler(this::applyFilters);
         projectManagerView.setViewFilters(asList(OWNED_BY_ME, SHARED_WITH_ME));
+        projectManagerView.setSortByKeyChangeHandler(this::handleSortByKeyChanged);
     }
 
     public void start(@Nonnull AcceptsOneWidget container,
@@ -130,6 +140,43 @@ public class ProjectManagerPresenter implements Presenter {
         updateView();
     }
 
+
+    private void handleSortByKeyChanged(ChangeEvent event) {
+        String sortByKey = projectManagerView.getSortByKey();
+        AvailableProjectSortingKey key = AvailableProjectSortingKey.valueOf(sortByKey);
+        switch (key) {
+            case PROJECT_NAME:
+                sortingComparator = getProjectNameComparator();
+                break;
+            case LAST_OPENED:
+                sortingComparator = getLastOpenedSortingComparator();
+                break;
+            case LAST_MODIFIED:
+                sortingComparator = getLastModifiedComparator();
+                break;
+            case OWNER:
+                sortingComparator = getOwnerComparator();
+                break;
+        }
+        reloadFromClientCache();
+    }
+
+    private static Comparator<AvailableProject> getOwnerComparator() {
+        return comparing(AvailableProject::getOwner).thenComparing(naturalOrder());
+    }
+
+    private static Comparator<AvailableProject> getLastModifiedComparator() {
+        return comparing(AvailableProject::getLastModifiedAt, reverseOrder()).thenComparing(naturalOrder());
+    }
+
+    private static Comparator<AvailableProject> getProjectNameComparator() {
+        return comparing(AvailableProject::getDisplayName).thenComparing(naturalOrder());
+    }
+
+    private static Comparator<AvailableProject> getLastOpenedSortingComparator() {
+        return comparing(AvailableProject::getLastOpenedAt, reverseOrder()).thenComparing(naturalOrder());
+    }
+
     private void insertAndSelectAvailableProject(AvailableProject availableProject, ProjectId projectId) {
         availableProjectsCache.add(availableProject);
         projectManagerView.addAvailableProject(availableProject);
@@ -172,7 +219,9 @@ public class ProjectManagerPresenter implements Presenter {
 
     private void displayProjectDetails() {
         List<AvailableProject> entries = Lists.newArrayList();
-        for(AvailableProject pd : availableProjectsCache.getAvailableProjectsList()) {
+        List<AvailableProject> availableProjectsList = availableProjectsCache.getAvailableProjectsList();
+        availableProjectsList.sort(sortingComparator);
+        for(AvailableProject pd : availableProjectsList) {
             if (currentFilter.isIncluded(pd)) {
                 entries.add(pd);
             }

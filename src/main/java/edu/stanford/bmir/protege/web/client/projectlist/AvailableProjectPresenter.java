@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.project.AvailableProject.UNKNOWN;
 
 /**
  * Matthew Horridge
@@ -62,9 +63,18 @@ public class AvailableProjectPresenter {
     public void start() {
         view.setProject(project.getProjectId(), project.getDisplayName());
         view.setProjectOwner(project.getOwner());
+        String lastOpenedAt;
+        if(project.getLastOpenedAt() != UNKNOWN) {
+            lastOpenedAt = TimeUtil.getTimeRendering(project.getLastOpenedAt());
+        }
+        else {
+            lastOpenedAt = "";
+        }
+        view.setLastOpenedAt(lastOpenedAt);
+
         long modifiedAtTs = project.getLastModifiedAt();
         String modifiedAt;
-        if(modifiedAtTs != 0) {
+        if(modifiedAtTs != UNKNOWN) {
             modifiedAt = TimeUtil.getTimeRendering(modifiedAtTs);
         }
         else {

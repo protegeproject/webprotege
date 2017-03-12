@@ -9,8 +9,12 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Comparator;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
 
 /**
  * Matthew Horridge
@@ -30,6 +34,8 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
     private boolean trashable;
 
     private long lastOpened;
+
+    private static transient Comparator<AvailableProject> comparator = comparing(AvailableProject::getProjectDetails);
 
     @GwtSerializationConstructor
     private AvailableProject() {
@@ -166,7 +172,7 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
      * Gets the timestamp of when the project was last opened by the current user.
      * @return The timestamp.  A value of 0 or a negative value indicated unknown.
      */
-    public long getLastOpened() {
+    public long getLastOpenedAt() {
         return lastOpened;
     }
 
@@ -203,6 +209,6 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
 
     @Override
     public int compareTo(AvailableProject o) {
-        return this.projectDetails.compareTo(o.getProjectDetails());
+        return comparator.compare(this, o);
     }
 }

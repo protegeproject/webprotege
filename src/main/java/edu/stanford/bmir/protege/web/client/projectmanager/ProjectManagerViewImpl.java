@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -51,6 +52,9 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @UiField
     protected CheckBox inTrashCheckBox;
 
+    @UiField
+    protected ListBox sortByListBox;
+
 
     private CreateProjectRequestHandler createProjectRequestHandler = () -> {};
 
@@ -89,6 +93,19 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @Override
     public void setUploadProjectEnabled(boolean enabled) {
         uploadProjectButton.setEnabled(enabled);
+    }
+
+    @Override
+    public String getSortByKey() {
+        return sortByListBox.getSelectedValue();
+    }
+
+    private HandlerRegistration changeHandlerRegistration = () -> {};
+
+    @Override
+    public void setSortByKeyChangeHandler(ChangeHandler changeHandler) {
+        changeHandlerRegistration.removeHandler();
+        changeHandlerRegistration = sortByListBox.addChangeHandler(changeHandler);
     }
 
     @Override

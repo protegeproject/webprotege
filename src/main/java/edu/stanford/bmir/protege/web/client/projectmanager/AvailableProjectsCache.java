@@ -31,9 +31,7 @@ public class AvailableProjectsCache {
     }
 
     public List<AvailableProject> getAvailableProjectsList() {
-        List<AvailableProject> result = Lists.newArrayList(cache.values());
-        Collections.sort(result);
-        return result;
+        return Lists.newArrayList(cache.values());
     }
 
     public Optional<AvailableProject> getProjectDetails(ProjectId projectId) {
@@ -51,7 +49,7 @@ public class AvailableProjectsCache {
         }
         ProjectDetails replacementDetails = availableProject.getProjectDetails().builder().setInTrash(inTrash).build();
         cache.put(projectId, new AvailableProject(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable(),
-                                                  availableProject.getLastOpened()));
+                                                  availableProject.getLastOpenedAt()));
         return true;
     }
 

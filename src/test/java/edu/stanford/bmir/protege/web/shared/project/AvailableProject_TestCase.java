@@ -78,7 +78,7 @@ public class AvailableProject_TestCase {
 
     @Test
     public void shouldReturnSupplied_lastOpened() {
-        assertThat(availableProject.getLastOpened(), is(this.lastOpenedTimestamp));
+        assertThat(availableProject.getLastOpenedAt(), is(this.lastOpenedTimestamp));
     }
 
     @Test
