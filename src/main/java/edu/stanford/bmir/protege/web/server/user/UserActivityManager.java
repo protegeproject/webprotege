@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
+import edu.stanford.bmir.protege.web.server.inject.Application;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.server.project.RecentProjectRecord;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -10,6 +11,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 12 Mar 2017
  */
+@Application
 public class UserActivityManager implements Repository {
 
     private final Datastore datastore;
@@ -37,10 +40,16 @@ public class UserActivityManager implements Repository {
     }
 
     public void save(UserActivityRecord record) {
+        if(record.getUserId().isGuest()) {
+            return;
+        }
         datastore.save(record);
     }
 
     public Optional<UserActivityRecord> getUserActivityRecord(UserId userId) {
+        if(userId.isGuest()) {
+            return Optional.empty();
+        }
         UserActivityRecord record = datastore.get(UserActivityRecord.class, userId);
         return Optional.ofNullable(record);
     }
@@ -54,6 +63,9 @@ public class UserActivityManager implements Repository {
     }
 
     public void setLastLogin(@Nonnull UserId userId, long lastLogin) {
+        if(userId.isGuest()) {
+            return;
+        }
         getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
@@ -62,6 +74,9 @@ public class UserActivityManager implements Repository {
     }
 
     public void setLastLogout(@Nonnull UserId userId, long lastLogout) {
+        if(userId.isGuest()) {
+            return;
+        }
         getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
@@ -70,6 +85,9 @@ public class UserActivityManager implements Repository {
     }
 
     public void addRecentProject(@Nonnull UserId userId, @Nonnull ProjectId projectId, long timestamp) {
+        if(userId.isGuest()) {
+            return;
+        }
         UserActivityRecord record = getByUserId(userId);
         List<RecentProjectRecord> recentProjects = record.getRecentProjects().stream()
                                                          .filter(recentProject -> !recentProject.getProjectId()
