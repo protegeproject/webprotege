@@ -12,6 +12,9 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -45,7 +48,7 @@ public class UserActivityRecord {
                               long lastLogin,
                               long lastLogout,
                               @Nonnull List<RecentProjectRecord> recentProjects) {
-        this.userId = userId;
+        this.userId = checkNotNull(userId);
         this.lastLogin = lastLogin;
         this.lastLogout = lastLogout;
         this.recentProjects = ImmutableList.copyOf(recentProjects);
@@ -91,5 +94,16 @@ public class UserActivityRecord {
                 && this.lastLogin == other.lastLogin
                 && this.lastLogout == other.lastLogout
                 && this.recentProjects.equals(other.recentProjects);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("UserActivityRecord" )
+                .addValue(userId)
+                .add("lastLogin", lastLogin)
+                .add("lastLogout", lastLogout)
+                .add("recentProjects", recentProjects)
+                .toString();
     }
 }
