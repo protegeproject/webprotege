@@ -30,6 +30,11 @@ public class UserActivityRecord {
 
     public static final String LAST_LOGOUT = "lastLogout";
 
+    /**
+     * A constant for an unknown timestamp
+     */
+    public static final long UNKNOWN = 0;
+
     @Id
     @Nonnull
     @Property(USER_ID)
@@ -44,6 +49,13 @@ public class UserActivityRecord {
     @Nonnull
     private final List<RecentProjectRecord> recentProjects;
 
+    /**
+     * Creates a {@link UserActivityRecord}
+     * @param userId The {@link UserId} of the user that the record pertains to.
+     * @param lastLogin The time of last login (may be 0 to indicate unknown).
+     * @param lastLogout The time of last logout (may be 0 to indicate unknown)
+     * @param recentProjects A list of recent projects.
+     */
     public UserActivityRecord(@Nonnull UserId userId,
                               long lastLogin,
                               long lastLogout,
@@ -54,23 +66,46 @@ public class UserActivityRecord {
         this.recentProjects = ImmutableList.copyOf(recentProjects);
     }
 
-    public static UserActivityRecord get(UserId userId) {
-        return new UserActivityRecord(userId, 0, 0, Collections.emptyList());
+    /**
+     * A factory method for creating a {@link UserActivityRecord} for a specific user with
+     * default timestamps and an empty recent project list.
+     * @param userId The userId.
+     * @return The {@link UserActivityRecord}.
+     */
+    @Nonnull
+    public static UserActivityRecord get(@Nonnull UserId userId) {
+        return new UserActivityRecord(userId, UNKNOWN, UNKNOWN, Collections.emptyList());
     }
 
+    /**
+     * Gets the {@link UserId} that this record pertains to.
+     * @return The {@link UserId}
+     */
     @Nonnull
     public UserId getUserId() {
         return userId;
     }
 
+    /**
+     * Gets the timestamp of the last login.
+     * @return The timestamp.
+     */
     public long getLastLogin() {
         return lastLogin;
     }
 
+    /**
+     * Gets the timestamp of the last logout.
+     * @return The timestamp
+     */
     public long getLastLogout() {
         return lastLogout;
     }
 
+    /**
+     * Gets a list of recent projects.
+     * @return A list of recent projects.  Possibly empty.
+     */
     @Nonnull
     public List<RecentProjectRecord> getRecentProjects() {
         return ImmutableList.copyOf(recentProjects);
