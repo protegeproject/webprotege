@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.*;
  * 12 Mar 2017
  */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
-public class UserActivityRecordRepository_IT {
+public class UserActivityManager_IT {
 
     public static final long LAST_LOGIN = 33L;
 
@@ -42,7 +42,7 @@ public class UserActivityRecordRepository_IT {
 
     private MongoClient mongoClient;
 
-    private UserActivityRecordRepository repository;
+    private UserActivityManager repository;
 
     private UserId userId = UserId.getUserId("John Smith" );
 
@@ -60,7 +60,7 @@ public class UserActivityRecordRepository_IT {
         mongoClient = createMongoClient();
         Morphia morphia = createMorphia();
         datastore = morphia.createDatastore(mongoClient, getTestDbName());
-        repository = new UserActivityRecordRepository(datastore);
+        repository = new UserActivityManager(datastore);
     }
 
     @After
@@ -78,33 +78,30 @@ public class UserActivityRecordRepository_IT {
     @Test
     public void shouldFindUserActivityRecord() {
         repository.save(record);
-        assertThat(repository.findByUserId(userId), is(Optional.of(record)));
+        assertThat(repository.getUserActivityRecord(userId), is(Optional.of(record)));
     }
 
     @Test
     public void shouldSetLastLogin() {
         long lastLogin = NEW_LAST_LOGIN;
-        repository.save(record);
         repository.setLastLogin(userId, lastLogin);
-        Optional<UserActivityRecord> record = repository.findByUserId(userId);
+        Optional<UserActivityRecord> record = repository.getUserActivityRecord(userId);
         assertThat(record.get().getLastLogin(), is(lastLogin));
     }
 
     @Test
     public void shouldSetLastLogout() {
         long lastLogOut = NEW_LAST_LOGOUT;
-        repository.save(record);
         repository.setLastLogout(userId, lastLogOut);
-        Optional<UserActivityRecord> record = repository.findByUserId(userId);
+        Optional<UserActivityRecord> record = repository.getUserActivityRecord(userId);
         assertThat(record.get().getLastLogout(), is(lastLogOut));
     }
 
     @Test
     public void shouldAddRecentProject() {
         long timestamp = RECENT_PROJECT_TIMESTAMP;
-        repository.save(record);
         repository.addRecentProject(userId, projectId, timestamp);
-        Optional<UserActivityRecord> record = repository.findByUserId(userId);
+        Optional<UserActivityRecord> record = repository.getUserActivityRecord(userId);
         assertThat(record.get().getRecentProjects(), contains(new RecentProjectRecord(projectId,
                                                                                      timestamp)));
     }
