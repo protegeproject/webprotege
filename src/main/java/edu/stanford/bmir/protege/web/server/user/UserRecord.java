@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -18,16 +20,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class UserRecord {
 
+    @Nonnull
     private final UserId userId;
 
+    @Nonnull
     private final String realName;
 
+    @Nonnull
     private final String emailAddress;
 
+    @Nonnull
     private final String avatarUrl;
 
+    @Nonnull
     private final Salt salt;
 
+    @Nonnull
     private final SaltedPasswordDigest saltedPasswordDigest;
 
     /**
@@ -38,11 +46,12 @@ public class UserRecord {
      * @param salt The salt for the user.  Not {@code null}.
      * @param saltedPasswordDigest The salted password digest for the user. Not {@code null}.
      */
-    public UserRecord(UserId userId,
-                      String realName,
-                      String emailAddress,
-                      String avatarUrl,
-                      Salt salt, SaltedPasswordDigest saltedPasswordDigest) {
+    public UserRecord(@Nonnull UserId userId,
+                      @Nonnull String realName,
+                      @Nonnull String emailAddress,
+                      @Nonnull String avatarUrl,
+                      @Nonnull Salt salt,
+                      @Nonnull SaltedPasswordDigest saltedPasswordDigest) {
         this.userId = checkNotNull(userId);
         this.realName = checkNotNull(realName);
         this.emailAddress = checkNotNull(emailAddress);
@@ -55,10 +64,12 @@ public class UserRecord {
      * Gets the user Id.
      * @return The user Id.  Not {@code null}.
      */
+    @Nonnull
     public UserId getUserId() {
         return userId;
     }
 
+    @Nonnull
     public String getRealName() {
         return realName;
     }
@@ -67,6 +78,7 @@ public class UserRecord {
      * Gets the email address.
      * @return The email address.  May be empty to indicate no specified address.  Not {@code null}.
      */
+    @Nonnull
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -75,6 +87,7 @@ public class UserRecord {
      * Gets the avatar Url.
      * @return The avatar Url.  May be empty to indicate no specified Url.  Not {@code null}.
      */
+    @Nonnull
     public String getAvatarUrl() {
         return avatarUrl;
     }
@@ -83,6 +96,7 @@ public class UserRecord {
      * Gets the salt for this user.
      * @return The salt.  Not {@code null}.
      */
+    @Nonnull
     public Salt getSalt() {
         return salt;
     }
@@ -91,6 +105,7 @@ public class UserRecord {
      * Gets the salted password digest.
      * @return The salted password digest.  Not {@code null}.
      */
+    @Nonnull
     public SaltedPasswordDigest getSaltedPasswordDigest() {
         return saltedPasswordDigest;
     }
