@@ -68,6 +68,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void setViewTitle(String title) {
         this.viewTitle = checkNotNull(title);
+        fireEvent(new ViewTitleChangedEvent(title));
     }
 
     @Override
