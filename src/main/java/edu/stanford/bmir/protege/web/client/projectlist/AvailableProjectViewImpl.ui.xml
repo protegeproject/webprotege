@@ -58,6 +58,7 @@
             <g:SimplePanel ui:field="ownerIconField" addStyleNames="{style.ownerIconField}"/>
             <g:Label ui:field="ownerField" addStyleNames="{style.ownerField}"/>
         </g:HTMLPanel>
+        <g:Label ui:field="lastOpenedAtField" addStyleNames="{style.modifiedAtCol}"/>
         <g:Label ui:field="modifiedAtField" addStyleNames="{style.modifiedAtCol}"/>
         <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.menuButtonCol}"/>
     </g:HTMLPanel>

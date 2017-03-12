@@ -4,6 +4,7 @@
              xmlns:projectlist="urn:import:edu.stanford.bmir.protege.web.client.projectlist">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:import field="edu.stanford.bmir.protege.web.client.projectmanager.AvailableProjectSortingKey.*"/>
     <ui:style>
         .main {
             display: flex;
@@ -104,7 +105,12 @@
                     </g:HTMLPanel>
 
                 </g:HTMLPanel>
-
+                <g:ListBox ui:field="sortByListBox">
+                    <g:item value="LAST_OPENED">Sort by Last Opened</g:item>
+                    <g:item value="LAST_MODIFIED">Sort by Last Modified</g:item>
+                    <g:item value="PROJECT_NAME">Sort by Project Name</g:item>
+                    <g:item value="OWNER">Sort by Owner</g:item>
+                </g:ListBox>
             </g:HTMLPanel>
             <projectlist:AvailableProjectsListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>
         </g:HTMLPanel>

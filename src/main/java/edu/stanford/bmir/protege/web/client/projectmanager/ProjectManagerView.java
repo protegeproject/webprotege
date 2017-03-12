@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -29,6 +30,10 @@ public interface ProjectManagerView extends HasCreateProjectRequestHandler, HasU
     void setViewFilters(List<ProjectManagerViewFilter> viewFilters);
 
     List<ProjectManagerViewFilter> getViewFilters();
+
+    String getSortByKey();
+
+    void setSortByKeyChangeHandler(ChangeHandler changedHandler);
 
     AcceptsOneWidget getLoggedInUserButton();
 }

@@ -51,6 +51,9 @@ public class AvailableProjectViewImpl extends Composite implements AvailableProj
     Label modifiedAtField;
 
     @UiField
+    Label lastOpenedAtField;
+
+    @UiField
     MenuButton menuButton;
 
     private ProjectId projectId;
@@ -103,6 +106,11 @@ public class AvailableProjectViewImpl extends Composite implements AvailableProj
     @Override
     public void setModifiedAt(String modifiedAt) {
         modifiedAtField.setText(modifiedAt);
+    }
+
+    @Override
+    public void setLastOpenedAt(String lastOpenedAt) {
+        lastOpenedAtField.setText(lastOpenedAt);
     }
 
     @Override

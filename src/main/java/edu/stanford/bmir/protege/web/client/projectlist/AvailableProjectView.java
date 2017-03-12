@@ -19,6 +19,8 @@ public interface AvailableProjectView extends IsWidget {
 
     void setModifiedAt(String modifiedAt);
 
+    void setLastOpenedAt(String lastOpenedAt);
+
     void setDescription(String description);
 
     void addAction(UIAction uiAction);

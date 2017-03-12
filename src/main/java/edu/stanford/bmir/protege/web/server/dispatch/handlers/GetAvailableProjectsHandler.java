@@ -19,10 +19,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DOWNLOAD_PROJECT;
@@ -72,18 +69,16 @@ public class GetAvailableProjectsHandler implements ActionHandler<GetAvailablePr
                   .forEach(recent -> lastOpenedMap.put(recent.getProjectId(), recent.getTimestamp()));
         });
         List<AvailableProject> availableProjects = projectPermissionsManager.getReadableProjects(userId).stream()
-               .sorted()
                .map(details -> {
-                   Subject user = forUser(executionContext.getUserId());
+                   Subject user = forUser(userId);
                    ProjectResource projectResource = new ProjectResource(details.getProjectId());
-                   boolean downloadable = accessManager.hasPermission( user, projectResource, DOWNLOAD_PROJECT);
-                   boolean trashable = details.getOwner().equals(executionContext.getUserId())
+                   boolean downloadable = accessManager.hasPermission(user, projectResource, DOWNLOAD_PROJECT);
+                   boolean trashable = details.getOwner().equals(userId)
                            || accessManager.hasPermission(user, projectResource, MOVE_ANY_PROJECT_TO_TRASH);
                    long lastOpened = lastOpenedMap.getOrDefault(details.getProjectId(), 0L);
                    return new AvailableProject(details, downloadable, trashable, lastOpened);
                })
                .collect(toList());
-
         return new GetAvailableProjectsResult(availableProjects);
     }
 }

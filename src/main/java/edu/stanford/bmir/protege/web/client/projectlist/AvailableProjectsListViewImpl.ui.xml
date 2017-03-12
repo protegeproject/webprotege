@@ -37,6 +37,12 @@
             padding: 5px;
             align-items: baseline;
         }
+        .openedAtCol {
+            width: 200px;
+            flex-grow: 0;
+            padding: 5px;
+            align-items: baseline;
+        }
         .modifiedAtCol {
             width: 200px;
             flex-grow: 0;
@@ -63,6 +69,7 @@
         <g:HTMLPanel addStyleNames="{style.header}">
             <g:Label addStyleNames="{style.displayNameCol}" text="{msg.projectName}"/>
             <g:Label addStyleNames="{style.ownerCol}" text="{msg.owner}"/>
+            <g:Label addStyleNames="{style.openedAtCol}" text="{msg.lastOpened}"/>
             <g:Label addStyleNames="{style.modifiedAtCol}" text="{msg.lastModified}"/>
             <g:Label addStyleNames="{style.menuButtonCol}"/>
         </g:HTMLPanel>
