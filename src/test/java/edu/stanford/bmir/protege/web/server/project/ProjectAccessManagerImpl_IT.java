@@ -1,15 +1,11 @@
 
 package edu.stanford.bmir.protege.web.server.project;
 
-import com.google.common.collect.ImmutableList;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
-import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
-import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
@@ -17,17 +13,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
-import org.semanticweb.owlapi.model.OWLClass;
-
-import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.getTestDbName;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class ProjectAccessManagerImpl_IT {
 
@@ -45,12 +36,10 @@ public class ProjectAccessManagerImpl_IT {
 
     private MongoClient mongoClient;
 
-    private MongoDatabase database;
-
     @Before
     public void setUp() throws Exception {
         mongoClient = MongoTestUtils.createMongoClient();
-        database = mongoClient.getDatabase(getTestDbName());
+        MongoDatabase database = mongoClient.getDatabase(getTestDbName());
         manager = new ProjectAccessManagerImpl(database);
     }
 
