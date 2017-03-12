@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -66,9 +67,12 @@ public class PerformLoginActionHandler_TestCase {
     @Mock
     private WebProtegeSession webProtegeSession;
 
+    @Mock
+    private UserActivityManager activityManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new PerformLoginActionHandler(sessionManager, authenticationManager, responseChecker, logger);
+        handler = new PerformLoginActionHandler(activityManager, sessionManager, authenticationManager, responseChecker, logger);
         when(action.getUserId()).thenReturn(userId);
         when(action.getChapSessionId()).thenReturn(chapSessionId);
         when(action.getChapResponse()).thenReturn(chapResponse);

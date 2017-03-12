@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12 Mar 2017
  */
-@Entity(noClassnameStored = true)
+@Entity(noClassnameStored = true, value = "UserActivity")
 public class UserActivityRecord {
 
 
@@ -25,8 +26,6 @@ public class UserActivityRecord {
     public static final String LAST_LOGIN = "lastLogin";
 
     public static final String LAST_LOGOUT = "lastLogout";
-
-    public static final String RECENT_PROJECTS = "recentProjects";
 
     @Id
     @Nonnull
@@ -50,6 +49,10 @@ public class UserActivityRecord {
         this.lastLogin = lastLogin;
         this.lastLogout = lastLogout;
         this.recentProjects = ImmutableList.copyOf(recentProjects);
+    }
+
+    public static UserActivityRecord get(UserId userId) {
+        return new UserActivityRecord(userId, 0, 0, Collections.emptyList());
     }
 
     @Nonnull

@@ -9,6 +9,7 @@ import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +21,12 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 12 Mar 2017
  */
-public class UserActivityRecordRepository implements Repository {
-
-    public static final int MAX_SIZE = 100;
+public class UserActivityManager implements Repository {
 
     private final Datastore datastore;
 
-    public UserActivityRecordRepository(Datastore datastore) {
+    @Inject
+    public UserActivityManager(Datastore datastore) {
         this.datastore = datastore;
     }
 
@@ -40,12 +40,21 @@ public class UserActivityRecordRepository implements Repository {
         datastore.save(record);
     }
 
-    public Optional<UserActivityRecord> findByUserId(UserId userId) {
+    public Optional<UserActivityRecord> getUserActivityRecord(UserId userId) {
         UserActivityRecord record = datastore.get(UserActivityRecord.class, userId);
         return Optional.ofNullable(record);
     }
 
+    private UserActivityRecord getByUserId(UserId userId) {
+        UserActivityRecord record = datastore.get(UserActivityRecord.class, userId);
+        if (record == null) {
+            datastore.save(record = UserActivityRecord.get(userId));
+        }
+        return record;
+    }
+
     public void setLastLogin(@Nonnull UserId userId, long lastLogin) {
+        getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
                                                                    .set(LAST_LOGIN, lastLogin);
@@ -53,6 +62,7 @@ public class UserActivityRecordRepository implements Repository {
     }
 
     public void setLastLogout(@Nonnull UserId userId, long lastLogout) {
+        getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
                                                                    .set(LAST_LOGOUT, lastLogout);
@@ -60,22 +70,20 @@ public class UserActivityRecordRepository implements Repository {
     }
 
     public void addRecentProject(@Nonnull UserId userId, @Nonnull ProjectId projectId, long timestamp) {
-        findByUserId(userId)
-                .ifPresent(record -> {
-                    List<RecentProjectRecord> recentProjects = record.getRecentProjects().stream()
-                                                                     .filter(recentProject -> !recentProject.getProjectId()
-                                                                                                     .equals(projectId))
-                                                                     .sorted()
-                                                                     .collect(toList());
-                    recentProjects.add(0, new RecentProjectRecord(projectId, timestamp));
-                    UserActivityRecord replacement = new UserActivityRecord(
-                            record.getUserId(),
-                            record.getLastLogin(),
-                            record.getLastLogout(),
-                            recentProjects
-                    );
-                    save(replacement);
-                });
+        UserActivityRecord record = getByUserId(userId);
+        List<RecentProjectRecord> recentProjects = record.getRecentProjects().stream()
+                                                         .filter(recentProject -> !recentProject.getProjectId()
+                                                                                                .equals(projectId))
+                                                         .sorted()
+                                                         .collect(toList());
+        recentProjects.add(0, new RecentProjectRecord(projectId, timestamp));
+        UserActivityRecord replacement = new UserActivityRecord(
+                record.getUserId(),
+                record.getLastLogin(),
+                record.getLastLogout(),
+                recentProjects
+        );
+        save(replacement);
     }
 
 
