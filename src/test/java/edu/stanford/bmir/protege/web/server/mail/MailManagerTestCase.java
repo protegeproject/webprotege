@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.mail;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.junit.Before;
 import org.junit.Test;
-//import org.jvnet.mock_javamail.Mailbox;
 import org.mockito.Mock;
 
 import javax.mail.Address;
@@ -11,15 +10,12 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
 
-import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Mockito.mock;
+
+//import org.jvnet.mock_javamail.Mailbox;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/05/2014

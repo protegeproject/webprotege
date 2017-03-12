@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
-import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -17,9 +15,7 @@ import javax.servlet.http.HttpSessionEvent;
 
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Matthew Horridge

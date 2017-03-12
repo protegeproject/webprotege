@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.client.inject;
 
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import dagger.Component;
+import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.app.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryModuleGenerated;
-import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 

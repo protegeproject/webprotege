@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 
 import javax.annotation.Nonnull;

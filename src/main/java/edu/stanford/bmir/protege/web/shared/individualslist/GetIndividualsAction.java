@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;

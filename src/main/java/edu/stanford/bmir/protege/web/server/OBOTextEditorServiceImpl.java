@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.project.Project;
@@ -11,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.obolibrary.oboformat.parser.OBOFormatConstants;

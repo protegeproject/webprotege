@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static edu.stanford.bmir.protege.web.shared.issues.Status.OPEN;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;

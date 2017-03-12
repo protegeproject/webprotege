@@ -2,13 +2,8 @@ package edu.stanford.bmir.protege.web.client.metrics;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.events.RequestRefreshEvent;
-import edu.stanford.bmir.protege.web.client.events.RequestRefreshEventHandler;
-import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
-import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**

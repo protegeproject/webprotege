@@ -1,8 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.app;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
@@ -11,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

@@ -5,7 +5,10 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
+import edu.stanford.bmir.protege.web.shared.issues.Status;
+import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -15,11 +18,11 @@ import javax.inject.Provider;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.*;
+import static edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction.getDiscussionThreads;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
  * Matthew Horridge

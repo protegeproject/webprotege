@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.ProjectResource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -14,7 +12,6 @@ import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsRes
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;

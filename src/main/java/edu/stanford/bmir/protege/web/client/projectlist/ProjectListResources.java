@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.projectlist;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.DataGrid;
 
 /**

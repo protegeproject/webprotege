@@ -5,10 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
-import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
 
 import javax.inject.Inject;
 

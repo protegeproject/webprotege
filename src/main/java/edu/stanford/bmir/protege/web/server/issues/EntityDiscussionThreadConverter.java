@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
-import com.google.common.collect.ImmutableList;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
 import edu.stanford.bmir.protege.web.server.persistence.OWLEntityConverter;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.Status;
 import edu.stanford.bmir.protege.web.shared.issues.ThreadId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
@@ -16,10 +14,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge

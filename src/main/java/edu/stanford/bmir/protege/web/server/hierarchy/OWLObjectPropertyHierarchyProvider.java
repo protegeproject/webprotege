@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;

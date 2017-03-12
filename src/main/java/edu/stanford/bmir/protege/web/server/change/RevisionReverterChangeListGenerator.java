@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.legacy;
 
 import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 

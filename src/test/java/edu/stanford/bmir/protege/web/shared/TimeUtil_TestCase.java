@@ -1,13 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import com.google.gwt.i18n.shared.DateTimeFormat;
-import org.apache.log4j.helpers.DateTimeDateFormat;
 import org.junit.Test;
 
-import java.util.Date;
-import java.util.regex.Pattern;
-
-import static com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat.TIME_SHORT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;

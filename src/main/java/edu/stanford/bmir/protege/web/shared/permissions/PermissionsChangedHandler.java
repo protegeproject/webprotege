@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
 import com.google.gwt.event.shared.EventHandler;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 
 /**
  * Author: Matthew Horridge<br>

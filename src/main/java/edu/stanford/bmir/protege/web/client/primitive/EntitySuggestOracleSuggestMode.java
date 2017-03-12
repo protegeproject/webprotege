@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 
-
 import javax.inject.Qualifier;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
  * Author: Matthew Horridge<br>

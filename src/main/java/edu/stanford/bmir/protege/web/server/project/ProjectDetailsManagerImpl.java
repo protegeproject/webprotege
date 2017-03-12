@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import com.googlecode.gwt.crypto.util.Sys;
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

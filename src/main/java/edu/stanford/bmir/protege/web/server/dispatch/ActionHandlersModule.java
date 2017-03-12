@@ -28,6 +28,7 @@ import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdItemsActionHandl
 import edu.stanford.bmir.protege.web.server.itemlist.GetUserIdCompletionsActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.GetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
@@ -40,7 +41,6 @@ import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandle
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetHeadRevisionNumberActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetRevisionSummariesActionHandler;

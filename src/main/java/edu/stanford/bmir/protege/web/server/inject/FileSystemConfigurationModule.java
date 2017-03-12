@@ -6,11 +6,11 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
 import edu.stanford.bmir.protege.web.server.issues.CommentNotificationTemplate;
-import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatcher;
-import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
-import edu.stanford.bmir.protege.web.server.perspective.PerspectiveDataCopier;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
+import edu.stanford.bmir.protege.web.server.perspective.PerspectiveDataCopier;
+import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatcher;
+import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.selection;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

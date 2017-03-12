@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHa
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;

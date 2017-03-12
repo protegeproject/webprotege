@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.issues;
 
-import java.util.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -10,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class Comment_TestCase {

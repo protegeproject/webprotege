@@ -13,12 +13,11 @@ import org.mongodb.morphia.Morphia;
 import java.util.Optional;
 import java.util.UUID;
 
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMongoClient;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMorphia;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.getTestDbName;
+import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.*;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Matthew Horridge

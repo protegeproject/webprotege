@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import java.util.Collections;
 
 import static java.util.Collections.singletonList;
 

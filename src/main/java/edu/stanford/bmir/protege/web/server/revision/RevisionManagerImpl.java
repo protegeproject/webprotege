@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;

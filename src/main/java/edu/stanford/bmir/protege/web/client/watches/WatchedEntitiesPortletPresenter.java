@@ -16,7 +16,6 @@ import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;

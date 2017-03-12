@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import javax.inject.Provider;
 import edu.stanford.bmir.protege.web.shared.auth.ChallengeMessage;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Random;
 
 /**

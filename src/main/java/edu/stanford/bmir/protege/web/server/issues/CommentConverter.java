@@ -8,7 +8,6 @@ import org.bson.Document;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.print.Doc;
 import java.util.Optional;
 
 /**

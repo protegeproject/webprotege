@@ -19,7 +19,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;

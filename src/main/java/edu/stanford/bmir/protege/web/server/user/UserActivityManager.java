@@ -11,7 +11,6 @@ import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
 

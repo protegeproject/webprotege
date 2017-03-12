@@ -24,9 +24,7 @@ import java.io.IOException;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.CAN_MANAGE;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.LAYOUT_EDITOR;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.PROJECT_DOWNLOADER;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 

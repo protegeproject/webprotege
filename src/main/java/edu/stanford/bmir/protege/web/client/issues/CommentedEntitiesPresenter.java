@@ -7,7 +7,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -15,7 +17,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

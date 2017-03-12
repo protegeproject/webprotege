@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.AnnotationPropertyComparatorImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.IRIIndexProvider;
+import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;

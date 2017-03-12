@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
