@@ -8,4 +8,5 @@ package edu.stanford.bmir.protege.web.client.progress;
 public interface HasBusy {
 
     void setBusy(boolean busy);
+
 }

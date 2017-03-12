@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -93,12 +94,12 @@ public class EditorPresenter implements HasDispose {
     }
 
 
-    public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext) {
+    public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext, HasBusy hasBusy) {
         if (lastEditorState.isPresent()) {
             unbindPrevious(lastEditorState.get());
         }
         if (editorContext.isPresent()) {
-            bindNext(editorContext.get());
+            bindNext(editorContext.get(), hasBusy);
         }
         else {
             editorHolder.setWidget(NOTHING_SELECTED_WIDGET);
@@ -155,31 +156,26 @@ public class EditorPresenter implements HasDispose {
         });
     }
 
-    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void bindNext(final C editorCtx) {
+    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void bindNext(final C editorCtx, HasBusy hasBusy) {
         counter++;
         final Optional<EditorManager<C, O, A, R>> selectedMan = contextMapper.getEditorManager(editorCtx);
         if (selectedMan.isPresent()) {
             final EditorManager<C, O, A, R> editorManager = selectedMan.get();
             A action = editorManager.createAction(editorCtx);
             updatePermissionBasedItems();
-            dispatchServiceManager.execute(action, new DispatchServiceCallback<R>() {
-
-                private int executionCounter = counter;
-
-                @Override
-                public void handleSuccess(R result) {
-                    if (executionCounter != counter) {
-                        return;
-                    }
-                    final O value = editorManager.extractObject(result);
-                    final EditorView<O> editorView = editorManager.getView(editorCtx);
-                    editorView.setValue(value);
-                    valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
-                    final Widget editorWidget = editorView.asWidget();
-                    editorHolder.setWidget(editorWidget);
-                    setEditorState((O) value, editorCtx, editorManager);
-                    updatePermissionBasedItems();
+            int executionCounter = counter;
+            dispatchServiceManager.execute(action, hasBusy, result -> {
+                if (executionCounter != counter) {
+                    return;
                 }
+                final O value = editorManager.extractObject(result);
+                final EditorView<O> editorView = editorManager.getView(editorCtx);
+                editorView.setValue(value);
+                valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
+                final Widget editorWidget = editorView.asWidget();
+                editorHolder.setWidget(editorWidget);
+                setEditorState((O) value, editorCtx, editorManager);
+                updatePermissionBasedItems();
             });
         }
         else {

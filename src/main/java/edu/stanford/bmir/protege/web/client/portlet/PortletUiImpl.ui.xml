@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:portlet="urn:import:edu.stanford.bmir.protege.web.client.portlet"
-             xmlns:filter="urn:import:edu.stanford.bmir.protege.web.client.filter">
+             xmlns:filter="urn:import:edu.stanford.bmir.protege.web.client.filter"
+             xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
@@ -39,5 +40,6 @@
             <filter:FilterButtonImpl ui:field="filterButton" addStyleNames="{style.menuButton}" visible="false"/>
         </g:FlowPanel>
         <portlet:PortletContentHolder ui:field="contentHolder" addStyleNames="{style.contentHolder}"/>
+        <progress:BusyViewImpl ui:field="busyView" visible="false"/>
     </g:HTMLPanel>
 </ui:UiBinder>
