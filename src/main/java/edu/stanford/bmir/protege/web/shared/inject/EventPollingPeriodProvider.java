@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.events;
+package edu.stanford.bmir.protege.web.shared.inject;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

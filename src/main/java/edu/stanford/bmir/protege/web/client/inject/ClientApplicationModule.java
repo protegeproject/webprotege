@@ -11,7 +11,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.app.HasClientApplicationProperties;
-import edu.stanford.bmir.protege.web.client.issues.CommentEditorViewImpl;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -25,8 +24,6 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
-import edu.stanford.bmir.protege.web.client.events.EventPollingPeriod;
-import edu.stanford.bmir.protege.web.client.events.EventPollingPeriodProvider;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
@@ -314,13 +311,6 @@ public class ClientApplicationModule {
     @Provides
     ForbiddenView provideForbiddenView(ForbiddenViewImpl view) {
         return view;
-    }
-
-
-    @Provides
-    @EventPollingPeriod
-    int provideEventPollingPeriod(EventPollingPeriodProvider provider) {
-        return provider.get();
     }
 
     @Provides
