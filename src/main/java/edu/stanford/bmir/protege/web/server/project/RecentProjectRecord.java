@@ -14,6 +14,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 12 Mar 2017
+ *
+ * A {@link ProjectId} and timestamp pair.
  */
 public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
 
@@ -33,16 +35,29 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
                                                                .thenComparing(r -> r.getProjectId().getId());
 
 
+    /**
+     * Constructs a {@link RecentProjectRecord} with the specified id and timestamp.
+     * @param projectId The project id.
+     * @param timestamp The timestamp.
+     */
     public RecentProjectRecord(@Nonnull ProjectId projectId, long timestamp) {
         this.projectId = checkNotNull(projectId);
         this.timestamp = timestamp;
     }
 
+    /**
+     * Gets the project id.
+     * @return The project id.
+     */
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    /**
+     * Gets the timestamp.
+     * @return The timestamp.
+     */
     public long getTimestamp() {
         return timestamp;
     }
@@ -74,6 +89,12 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
                 .toString();
     }
 
+    /**
+     * Compare this {@link RecentProjectRecord} with another one.  Comparison is done
+     * by timestamp in reverse order and then by project id.
+     * @param o The other object.
+     * @return The comparison value.
+     */
     @Override
     public int compareTo(@Nonnull RecentProjectRecord o) {
         return comparator.compare(this, o);
