@@ -20,7 +20,6 @@ import java.util.*;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toMap;
 
 /**

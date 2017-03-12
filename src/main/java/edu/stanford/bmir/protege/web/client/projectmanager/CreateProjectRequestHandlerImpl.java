@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.project.NewProjectDialogController;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 
 import javax.inject.Inject;
 

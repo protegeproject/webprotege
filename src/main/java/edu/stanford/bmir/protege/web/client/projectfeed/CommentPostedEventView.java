@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.projectfeed;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;

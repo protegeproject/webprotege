@@ -2,11 +2,8 @@ package edu.stanford.bmir.protege.web.server.access;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInRole;
 
 import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Matthew Horridge

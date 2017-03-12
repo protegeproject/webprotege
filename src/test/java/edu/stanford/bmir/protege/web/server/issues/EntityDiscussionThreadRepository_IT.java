@@ -17,7 +17,6 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -1,20 +1,16 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
-import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
 import edu.stanford.bmir.protege.web.shared.issues.mention.ParsedMention;
 import edu.stanford.bmir.protege.web.shared.issues.mention.UserIdMention;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

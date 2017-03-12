@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;

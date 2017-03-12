@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

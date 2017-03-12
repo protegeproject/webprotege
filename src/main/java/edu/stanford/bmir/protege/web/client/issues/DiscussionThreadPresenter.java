@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.issues.*;
@@ -19,13 +19,13 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox.showYesNoConfirmBox;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction.deleteComment;
-import static edu.stanford.bmir.protege.web.shared.issues.EditCommentAction.editComment;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.AddEntityCommentAction.addComment;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentUpdatedEvent.ON_COMMENT_UPDATED;
+import static edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction.deleteComment;
+import static edu.stanford.bmir.protege.web.shared.issues.EditCommentAction.editComment;
 import static edu.stanford.bmir.protege.web.shared.issues.SetDiscussionThreadStatusAction.setDiscussionThreadStatus;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
  * Matthew Horridge

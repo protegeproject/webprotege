@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;
-
 import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

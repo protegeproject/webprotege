@@ -16,8 +16,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

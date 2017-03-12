@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import org.bson.Document;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 

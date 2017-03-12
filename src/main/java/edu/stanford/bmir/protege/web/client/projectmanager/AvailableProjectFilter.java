@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
 /**
  * Author: Matthew Horridge<br>

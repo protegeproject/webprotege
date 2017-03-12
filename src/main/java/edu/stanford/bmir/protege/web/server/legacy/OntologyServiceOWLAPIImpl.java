@@ -8,8 +8,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHiera
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
-import edu.stanford.bmir.protege.web.server.legacy.MoveClassChangeFactory;
-import edu.stanford.bmir.protege.web.server.legacy.OWLOntologyChangeFactory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;

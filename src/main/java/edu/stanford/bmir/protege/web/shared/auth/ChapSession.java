@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;

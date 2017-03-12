@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInRole;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;

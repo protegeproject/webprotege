@@ -7,11 +7,12 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
-import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
+import edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction;
+import edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;

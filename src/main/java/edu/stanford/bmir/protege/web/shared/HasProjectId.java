@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.shared;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import javax.annotation.Nonnull;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

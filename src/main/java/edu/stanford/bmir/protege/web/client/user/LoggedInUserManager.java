@@ -14,13 +14,11 @@ import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
-import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;

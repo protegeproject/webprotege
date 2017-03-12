@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.util.ShortFormProvider;

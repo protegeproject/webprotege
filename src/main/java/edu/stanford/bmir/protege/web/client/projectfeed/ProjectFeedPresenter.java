@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.client.projectfeed;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEvent;
+import edu.stanford.bmir.protege.web.shared.event.UserStoppedViewingProjectEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.CommentId;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

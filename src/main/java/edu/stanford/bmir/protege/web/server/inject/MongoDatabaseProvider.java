@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import javax.inject.Provider;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

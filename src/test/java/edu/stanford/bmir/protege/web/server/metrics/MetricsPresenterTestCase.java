@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.client.events.RequestRefreshEvent;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEventHandler;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPresenter;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsView;
-import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.metrics.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

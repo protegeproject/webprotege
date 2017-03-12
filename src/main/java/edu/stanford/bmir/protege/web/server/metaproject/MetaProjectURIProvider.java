@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import javax.inject.Provider;
-
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.File;
 import java.net.URI;
 
