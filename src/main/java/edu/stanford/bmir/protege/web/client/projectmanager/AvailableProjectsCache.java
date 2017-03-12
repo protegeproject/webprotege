@@ -50,7 +50,8 @@ public class AvailableProjectsCache {
             return false;
         }
         ProjectDetails replacementDetails = availableProject.getProjectDetails().builder().setInTrash(inTrash).build();
-        cache.put(projectId, new AvailableProject(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable()));
+        cache.put(projectId, new AvailableProject(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable(),
+                                                  availableProject.getLastOpened()));
         return true;
     }
 

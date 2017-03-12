@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,11 +21,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AvailableProject implements IsSerializable, Comparable<AvailableProject>, HasProjectId {
 
+    public static final long UNKNOWN = 0;
+
     private ProjectDetails projectDetails;
 
     private boolean downloadable;
 
     private boolean trashable;
+
+    private long lastOpened;
 
     @GwtSerializationConstructor
     private AvailableProject() {
@@ -37,14 +42,17 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
      * @param downloadable A flag indicating whether the project is downloadable by the current
      *                     user (in the current session).
      * @param trashable A flag indicating whether the project can be moved to the trash by
-     *                  the current user.
+     * @param lastOpenedTimestamp A time stamp of when the project was last opened by the current
+     *                            user.  A zero or negative value indicates unknown.
      */
     public AvailableProject(@Nonnull ProjectDetails projectDetails,
                             boolean downloadable,
-                            boolean trashable) {
+                            boolean trashable,
+                            long lastOpenedTimestamp) {
         this.projectDetails = checkNotNull(projectDetails);
         this.downloadable = downloadable;
         this.trashable = trashable;
+        this.lastOpened = lastOpenedTimestamp;
     }
 
     /**
@@ -154,9 +162,17 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
         return trashable;
     }
 
+    /**
+     * Gets the timestamp of when the project was last opened by the current user.
+     * @return The timestamp.  A value of 0 or a negative value indicated unknown.
+     */
+    public long getLastOpened() {
+        return lastOpened;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectDetails, downloadable, trashable);
+        return Objects.hashCode(projectDetails, downloadable, trashable, lastOpened);
     }
 
     @Override
@@ -170,7 +186,8 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
         AvailableProject other = (AvailableProject) obj;
         return this.projectDetails.equals(other.projectDetails)
                 && this.downloadable == other.downloadable
-                && this.trashable == other.trashable;
+                && this.trashable == other.trashable
+                && this.lastOpened == other.lastOpened;
     }
 
 
@@ -180,6 +197,7 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
                 .addValue(projectDetails)
                 .add("downloadable", downloadable)
                 .add("trashable", trashable)
+                .add("lastOpened", lastOpened)
                 .toString();
     }
 
