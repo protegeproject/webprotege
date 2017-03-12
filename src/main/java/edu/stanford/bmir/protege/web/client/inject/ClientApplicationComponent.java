@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryModuleGenerated;
 import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
+import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 
 import javax.inject.Singleton;
 
@@ -18,6 +19,7 @@ import javax.inject.Singleton;
 @Component(
         modules = {
                 ClientApplicationModule.class,
+                SharedApplicationModule.class,
                 PortletFactoryModuleGenerated.class})
 @Singleton
 public interface ClientApplicationComponent {

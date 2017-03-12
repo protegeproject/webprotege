@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Component;
 import edu.stanford.bmir.protege.web.server.WebProtegeConfigurationChecker;
+import edu.stanford.bmir.protege.web.server.WebProtegeSessionListener;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessModule;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
@@ -13,6 +14,7 @@ import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mail.MailModule;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectModule;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 
 import javax.inject.Singleton;
 
@@ -23,6 +25,7 @@ import javax.inject.Singleton;
  */
 @Component(modules = {
         ApplicationModule.class,
+        SharedApplicationModule.class,
         WebProtegePropertiesModule.class,
         FileSystemConfigurationModule.class,
         ConfigurationTasksModule.class,
@@ -32,14 +35,17 @@ import javax.inject.Singleton;
         AuthenticationModule.class,
         AccessModule.class,
         DbModule.class,
-        RepositoryModule.class
+        RepositoryModule.class,
 })
 @Singleton
+@Application
 public interface ApplicationComponent {
 
     WebProtegeProperties getWebProtegeProperties();
 
     WebProtegeConfigurationChecker getWebProtegeConfigurationChecker();
+
+    WebProtegeSessionListener getSessionListener();
 
     UserDetailsManager getUserDetailsManager();
 
@@ -48,4 +54,5 @@ public interface ApplicationComponent {
     ServletComponent getServletComponent();
 
     AccessManager getAccessManager();
+
 }

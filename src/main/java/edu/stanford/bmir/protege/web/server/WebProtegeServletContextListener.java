@@ -42,6 +42,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("FileUploadServlet", servletComponent.getFileUploadServlet())
                           .addMapping("/webprotege/submitfile");
 
+            servletContext.addListener(applicationComponent.getSessionListener());
 
             applicationComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
 
