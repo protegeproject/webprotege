@@ -86,6 +86,7 @@ public class DispatchServiceManager {
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
 
+
     public <A extends Action<R>, R extends Result> void execute(A action, final Consumer<R> successConsumer) {
         execute(action, new DispatchServiceCallback<R>() {
             @Override

@@ -64,7 +64,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         setViewTitle(entity.get().getEntityType().getPrintName() + " description");
         final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
-        editorPresenter.setEditorContext(editorContext);
+        editorPresenter.setEditorContext(editorContext, this);
     }
 
     public static Optional<OWLEntityContext> getEditorContext(java.util.Optional<OWLEntity> sel, ProjectId projectId) {

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.filter.FilterButtonImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
@@ -45,6 +46,9 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     @UiField
     protected FilterButtonImpl filterButton;
+
+    @UiField
+    protected BusyView busyView;
 
     @Nonnull
     private final ForbiddenView forbiddenView;
@@ -91,6 +95,11 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public void setToolbarVisible(boolean visible) {
         toolbar.setVisible(visible);
         this.toolbarVisible = visible;
+    }
+
+    @Override
+    public void setBusy(boolean busy) {
+        busyView.setVisible(busy);
     }
 
     @Override
