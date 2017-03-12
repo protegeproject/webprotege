@@ -56,7 +56,9 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
 
     @Override
     public void setUserInSession(UserId userId) {
-        setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, checkNotNull(userId));
+        if (!userId.isGuest()) {
+            setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, checkNotNull(userId));
+        }
     }
 
     @Override
