@@ -29,6 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_E
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent.ON_PROJECT_MOVED_FROM_TRASH;
 import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent.ON_PROJECT_MOVED_TO_TRASH;
+import static edu.stanford.bmir.protege.web.shared.project.AvailableProject.UNKNOWN;
 import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 import static java.util.Arrays.asList;
 
@@ -117,7 +118,7 @@ public class ProjectManagerPresenter implements Presenter {
     }
 
     private void handleProjectCreated(ProjectCreatedEvent event) {
-        AvailableProject availableProject = new AvailableProject(event.getProjectDetails(), true, true);
+        AvailableProject availableProject = new AvailableProject(event.getProjectDetails(), true, true, UNKNOWN);
         insertAndSelectAvailableProject(availableProject, event.getProjectId());
     }
 
