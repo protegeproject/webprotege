@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
+
+import java.util.Optional;
 
 
 /**

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -13,9 +12,11 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -40,7 +41,7 @@ public class RevisionManagerImpl implements RevisionManager {
     private final RevisionStore revisionStore;
 
     @Inject
-    public RevisionManagerImpl(RevisionStore revisionStore) {
+    public RevisionManagerImpl(@Nonnull RevisionStore revisionStore) {
         this.revisionStore = checkNotNull(revisionStore);
     }
 
@@ -130,7 +131,7 @@ public class RevisionManagerImpl implements RevisionManager {
     public Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
         Optional<Revision> revision = revisionStore.getRevision(revisionNumber);
         if(!revision.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(getRevisionSummaryFromRevision(revision.get()));

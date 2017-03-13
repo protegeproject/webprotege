@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Interner;
@@ -10,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.binaryowl.BinaryOWLChangeLogHandler;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
@@ -21,6 +19,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -29,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -45,16 +45,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RevisionStoreImpl implements RevisionStore {
 
-    private ExecutorService changeSerializationExucutor = Executors.newSingleThreadExecutor();
-
+    private final ExecutorService changeSerializationExucutor = Executors.newSingleThreadExecutor();
 
     private ImmutableList<Revision> revisions = ImmutableList.of();
 
-    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private Lock readLock = readWriteLock.readLock();
+    private final Lock readLock = readWriteLock.readLock();
 
-    private Lock writeLock = readWriteLock.writeLock();
+    private final Lock writeLock = readWriteLock.writeLock();
 
 
     private final ProjectId projectId;
@@ -66,30 +65,32 @@ public class RevisionStoreImpl implements RevisionStore {
     private final WebProtegeLogger logger;
 
     @Inject
-    public RevisionStoreImpl(ProjectId projectId,
-                             OWLDataFactory dataFactory,
-                             @ChangeHistoryFile File changeHistoryFile,
-                             WebProtegeLogger logger) {
+    public RevisionStoreImpl(@Nonnull ProjectId projectId,
+                             @Nonnull OWLDataFactory dataFactory,
+                             @Nonnull @ChangeHistoryFile File changeHistoryFile,
+                             @Nonnull WebProtegeLogger logger) {
         this.projectId = checkNotNull(projectId);
         this.dataFactory = checkNotNull(dataFactory);
         this.changeHistoryFile = checkNotNull(changeHistoryFile);
         this.logger = checkNotNull(logger);
     }
 
+    @Nonnull
     @Override
-    public Optional<Revision> getRevision(RevisionNumber revisionNumber) {
+    public Optional<Revision> getRevision(@Nonnull RevisionNumber revisionNumber) {
         if(revisions.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         int index = getRevisionIndexForRevision(revisionNumber);
         if(index == -1) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(revisions.get(index));
         }
     }
 
+    @Nonnull
     @Override
     public RevisionNumber getCurrentRevisionNumber() {
         try {
@@ -104,6 +105,7 @@ public class RevisionStoreImpl implements RevisionStore {
 
     }
 
+    @Nonnull
     @Override
     public ImmutableList<Revision> getRevisions() {
         try {
@@ -115,7 +117,7 @@ public class RevisionStoreImpl implements RevisionStore {
     }
 
     @Override
-    public void addRevision(Revision revision) {
+    public void addRevision(@Nonnull Revision revision) {
         checkNotNull(revision);
         try {
             writeLock.lock();
@@ -151,24 +153,22 @@ public class RevisionStoreImpl implements RevisionStore {
                 final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(changeHistoryFile));
                 final Interner<OWLAxiom> axiomInterner = Interners.newStrongInterner();
                 final Interner<String> metadataInterner = Interners.newStrongInterner();
-                changeLog.readChanges(inputStream, dataFactory, new BinaryOWLChangeLogHandler() {
-                    public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
+                changeLog.readChanges(inputStream, dataFactory, (list, skipSetting, l) -> {
 
-                        BinaryOWLMetadata metadata = list.getMetadata();
-                        String userName = metadataInterner.intern(metadata.getStringAttribute(RevisionSerializationVocabulary.USERNAME_METADATA_ATTRIBUTE.getVocabularyName(), ""));
-                        Long revisionNumberValue = metadata.getLongAttribute(RevisionSerializationVocabulary.REVISION_META_DATA_ATTRIBUTE.getVocabularyName(), 0l);
-                        RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(revisionNumberValue);
+                    BinaryOWLMetadata metadata = list.getMetadata();
+                    String userName = metadataInterner.intern(metadata.getStringAttribute(RevisionSerializationVocabulary.USERNAME_METADATA_ATTRIBUTE.getVocabularyName(), ""));
+                    Long revisionNumberValue = metadata.getLongAttribute(RevisionSerializationVocabulary.REVISION_META_DATA_ATTRIBUTE.getVocabularyName(), 0l);
+                    RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(revisionNumberValue);
 
-                        String description = metadataInterner.intern(metadata.getStringAttribute(RevisionSerializationVocabulary.DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), ""));
+                    String description = metadataInterner.intern(metadata.getStringAttribute(RevisionSerializationVocabulary.DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), ""));
 
 //                        RevisionType type = RevisionType.valueOf(metadata.getStringAttribute(RevisionSerializationVocabulary.REVISION_TYPE_META_DATA_ATTRIBUTE.getVocabularyName(), RevisionType.EDIT.name()));
 
-                        final UserId userId = UserId.getUserId(userName);
-                        final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner);
+                    final UserId userId = UserId.getUserId(userName);
+                    final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner);
 
-                        Revision revision = new Revision(userId, revisionNumber, ImmutableList.copyOf(changeRecords), list.getTimestamp(), description);
-                        revisionsBuilder.add(revision);
-                    }
+                    Revision revision = new Revision(userId, revisionNumber, ImmutableList.copyOf(changeRecords), list.getTimestamp(), description);
+                    revisionsBuilder.add(revision);
                 }, SkipSetting.SKIP_NONE);
                 inputStream.close();
                 stopwatch.stop();
@@ -210,23 +210,6 @@ public class RevisionStoreImpl implements RevisionStore {
             readLock.unlock();
         }
     }
-
-
-//    /**
-//     * Gets an axiom interner that will ensure the same copies of axioms that are used between project ontologies
-//     * and the change manager.
-//     *
-//     * @return The interner.  This should be disposed of as soon as possible.
-//     */
-//    private Interner<OWLAxiom> getAxiomInterner() {
-//        final Interner<OWLAxiom> axiomInterner = Interners.newStrongInterner();
-//        for (AxiomType<?> axiomType : AxiomType.AXIOM_TYPES) {
-//            for (OWLAxiom ax : rootOntology.getAxioms(axiomType)) {
-//                axiomInterner.intern(ax);
-//            }
-//        }
-//        return axiomInterner;
-//    }
 
     private List<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list, final Interner<OWLAxiom> axiomInterner) {
         List<OWLOntologyChangeRecord> result = new ArrayList<>();
@@ -282,26 +265,6 @@ public class RevisionStoreImpl implements RevisionStore {
         }
         return result;
     }
-
-//    private void logChangesInternal(UserId userId, List<? extends OWLOntologyChange> changes, String desc, RevisionType revisionType, boolean immediately) {
-//        writeLock.lock();
-//        try {
-//            // Requires a read lock -
-//            RevisionNumber revisionNumber = getCurrentRevision().getNextRevisionNumber();
-//            long timestamp = System.currentTimeMillis();
-//            final String highlevelDescription = desc != null ? desc : "";
-//            List<OWLOntologyChangeRecord> records = new ArrayList<>(changes.size());
-//            for (OWLOntologyChange change : changes) {
-//                records.add(change.getChangeRecord());
-//            }
-//            final Revision revision = new Revision(userId, revisionNumber, new OWLOntologyChangeRecordList(records), timestamp, highlevelDescription);
-//            addRevision(revision);
-//
-//            persistChanges(timestamp, revisionNumber, revisionType, userId, changes, highlevelDescription, immediately);
-//        } finally {
-//            writeLock.unlock();
-//        }
-//    }
 
     private void persistChanges(Revision revision) {
         try {
