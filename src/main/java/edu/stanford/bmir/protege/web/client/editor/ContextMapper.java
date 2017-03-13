@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -36,6 +36,6 @@ public class ContextMapper {
                 return Optional.of(man);
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }
