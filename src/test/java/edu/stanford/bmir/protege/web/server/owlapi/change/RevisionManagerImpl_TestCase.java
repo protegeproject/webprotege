@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -27,7 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RevisionManagerImpl_TestCase {
 
     public static final String HIGHLEVEL_DESC = "HIGHLEVEL_DESC";
@@ -55,7 +56,7 @@ public class RevisionManagerImpl_TestCase {
     public void setUp() throws Exception {
         manager = new RevisionManagerImpl(revisionStore);
         when(revisionStore.getCurrentRevisionNumber()).thenReturn(revisionNumber);
-        when(revisionStore.getRevision(revisionNumber)).thenReturn(Optional.of(revision));
+        when(revisionStore.getRevision(revisionNumber)).thenReturn(java.util.Optional.of(revision));
         when(revisionStore.getRevisions()).thenReturn(ImmutableList.of(revision));
         when(revisionNumber.getNextRevisionNumber()).thenReturn(nextRevisionNumber);
         when(revision.getUserId()).thenReturn(userId);
@@ -66,7 +67,7 @@ public class RevisionManagerImpl_TestCase {
         when(revision.getRevisionNumber()).thenReturn(revisionNumber);
     }
 
-    @Test(expected = java.lang.NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_revisionStore_IsNull() {
         new RevisionManagerImpl(null);
     }
@@ -88,34 +89,34 @@ public class RevisionManagerImpl_TestCase {
 
     @Test
     public void should_getRevisionSummary() {
-        Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
+        java.util.Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
         assertThat(summary.isPresent(), is(true));
     }
 
     @Test
     public void should_getRevisionSummaryWithCorrectUserId() {
-        Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
+        java.util.Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
         RevisionSummary revisionSummary = summary.get();
         assertThat(revisionSummary.getUserId(), is(userId));
     }
 
     @Test
     public void should_getRevisionSummaryWithCorrectRevisionNumber() {
-        Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
+        java.util.Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
         RevisionSummary revisionSummary = summary.get();
         assertThat(revisionSummary.getRevisionNumber(), is(revisionNumber));
     }
 
     @Test
     public void should_getRevisionSummaryWithCorrectChangeCount() {
-        Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
+        java.util.Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
         RevisionSummary revisionSummary = summary.get();
         assertThat(revisionSummary.getChangeCount(), is(1));
     }
 
     @Test
     public void should_getRevisionSummaryWithCorrectTimestamp() {
-        Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
+        java.util.Optional<RevisionSummary> summary = manager.getRevisionSummary(revisionNumber);
         RevisionSummary revisionSummary = summary.get();
         assertThat(revisionSummary.getTimestamp(), is(TIME_STAMP));
     }

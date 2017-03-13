@@ -217,7 +217,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     }
 
     @Override
-    public Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
+    public java.util.Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
         return changeManager.getRevisionSummary(revisionNumber);
     }
 
@@ -341,8 +341,8 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
      * @param changeDescription A description of the changes. Not {@code null}.
      * @return A {@link ChangeApplicationResult} that describes the changes which took place an any renaminings.
      * @throws NullPointerException if any parameters are {@code null}.
-     * @deprecated Use {@link #applyChanges(edu.stanford.bmir.protege.web.shared.user.UserId,
-     * edu.stanford.bmir.protege.web.server.change.ChangeListGenerator, ChangeDescriptionGenerator)}
+     * @deprecated Use {@link #applyChanges(UserId,
+     * ChangeListGenerator, ChangeDescriptionGenerator)}
      */
     @Deprecated
     public ChangeApplicationResult<?> applyChanges(UserId userId,
@@ -363,7 +363,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
      *                                   necessary where the changes depend on the structure/state of the ontology.  This method guarantees that no third
      *                                   party
      *                                   ontology changes will take place between the {@link ChangeListGenerator#generateChanges(Project,
-     *                                   edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext)}
+     *                                   ChangeGenerationContext)}
      *                                   method being called and the changes being applied.
      * @param changeDescriptionGenerator A generator that describes the changes that took place.
      * @return A {@link ChangeApplicationResult} that describes the changes which took place an any renaminings.

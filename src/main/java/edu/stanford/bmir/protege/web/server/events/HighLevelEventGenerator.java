@@ -151,7 +151,7 @@ public class HighLevelEventGenerator implements EventTranslator {
             Optional<String> browserText = browserTextProvider.getOWLEntityBrowserText(entity);
             changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.or("")));
         }
-        Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
+        java.util.Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
         if (revisionSummary.isPresent()) {
             ProjectEvent<?> event = new ProjectChangedEvent(projectId, revisionSummary.get(), changedEntitiesData);
             projectEventList.add(event);
