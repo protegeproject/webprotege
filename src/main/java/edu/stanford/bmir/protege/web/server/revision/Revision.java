@@ -85,7 +85,7 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
                 .addValue(userId)
                 .add("timestamp", timestamp)
                 .add("description", highLevelDescription)
-                .addValue(changes)
+                .add("changes", changes.size())
                 .toString();
     }
 
