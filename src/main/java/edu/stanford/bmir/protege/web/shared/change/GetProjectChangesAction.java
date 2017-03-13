@@ -1,13 +1,16 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import static com.google.common.base.Objects.toStringHelper;
+import javax.annotation.Nullable;
+
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -19,7 +22,8 @@ public class GetProjectChangesAction implements Action<GetProjectChangesResult>,
 
     private ProjectId projectId;
 
-    private Optional<OWLEntity> subject;
+    @Nullable
+    private OWLEntity subject;
 
     /**
      * For serialization purposes only
@@ -29,15 +33,15 @@ public class GetProjectChangesAction implements Action<GetProjectChangesResult>,
 
     public GetProjectChangesAction(ProjectId projectId, Optional<OWLEntity> subject) {
         this.projectId = checkNotNull(projectId);
-        this.subject = checkNotNull(subject);
+        this.subject = checkNotNull(subject).orElse(null);
     }
 
     public ProjectId getProjectId() {
         return projectId;
     }
 
-    public Optional<OWLEntity> getSubject() {
-        return subject;
+    public java.util.Optional<OWLEntity> getSubject() {
+        return Optional.ofNullable(subject);
     }
 
     @Override
@@ -55,13 +59,13 @@ public class GetProjectChangesAction implements Action<GetProjectChangesResult>,
         }
         GetProjectChangesAction other = (GetProjectChangesAction) obj;
         return this.projectId.equals(other.projectId)
-                && this.subject.equals(other.subject);
+                && java.util.Objects.equals(this.subject, other.subject);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("GetProjectChangesAction")
+        return MoreObjects.toStringHelper("GetProjectChangesAction")
                 .addValue(projectId)
                 .addValue(subject)
                 .toString();

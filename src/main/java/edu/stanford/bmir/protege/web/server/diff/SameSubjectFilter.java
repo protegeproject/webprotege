@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.diff;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -26,6 +28,7 @@ public class SameSubjectFilter implements Filter<OWLOntologyChangeRecord> {
     @Override
     public boolean isIncluded(final OWLOntologyChangeRecord object) {
         return object.getData().accept(new OWLOntologyChangeDataVisitor<Boolean, RuntimeException>() {
+            @Nonnull
             @Override
             public Boolean visit(AddAxiomData data) throws RuntimeException {
                 return provider.getSubject(data.getAxiom()).equals(subject);
@@ -69,6 +72,10 @@ public class SameSubjectFilter implements Filter<OWLOntologyChangeRecord> {
     }
 
     private Boolean isSameAsSubject(OWLOntologyID ontologyID) {
-        return !ontologyID.isAnonymous() && Optional.of(ontologyID.getOntologyIRI()).equals(subject);
+        if(ontologyID.isAnonymous()) {
+            return false;
+        }
+        IRI ontologyIRI = ontologyID.getOntologyIRI().get();
+        return !ontologyID.isAnonymous() && Optional.of(ontologyIRI).equals(subject);
     }
 }

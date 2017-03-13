@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.axiom;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Optional.*;
 
 
 /**
@@ -47,7 +48,7 @@ public class AxiomIRISubjectProvider {
         private Optional<IRI> wrapIterable(Iterable<? extends OWLObject> iterable) {
             Iterator<? extends OWLObject> iterator = iterable.iterator();
             if(!iterator.hasNext()) {
-                return Optional.absent();
+                return empty();
             }
             Optional<IRI> previous = wrap(iterator.next());
             while(iterator.hasNext()) {
@@ -81,13 +82,13 @@ public class AxiomIRISubjectProvider {
 
         private static Optional<IRI> wrap(OWLObject object) {
             if(object instanceof HasIRI) {
-                return Optional.of(((HasIRI) object).getIRI());
+                return of(((HasIRI) object).getIRI());
             }
             else if(object instanceof IRI) {
-                return Optional.of((IRI) object);
+                return of((IRI) object);
             }
             else {
-                return Optional.absent();
+                return empty();
             }
         }
 
