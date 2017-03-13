@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -23,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,7 +66,7 @@ public class ProjectChangesManager {
         this.annotationComparator = annotationComparator;
     }
 
-    public ImmutableList<ProjectChange> getProjectChanges(Optional<OWLEntity> subject) {
+    public ImmutableList<ProjectChange> getProjectChanges(java.util.Optional<OWLEntity> subject) {
         ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
         for (Revision revision : changeManager.getRevisions()) {
             getProjectChangesForRevision(revision, subject, changes);
@@ -78,23 +76,16 @@ public class ProjectChangesManager {
 
     public ImmutableList<ProjectChange> getProjectChangesForSubjectInRevision(OWLEntity subject, Revision revision) {
         ImmutableList.Builder<ProjectChange> resultBuilder = ImmutableList.builder();
-        getProjectChangesForRevision(revision, Optional.of(subject), resultBuilder);
+        getProjectChangesForRevision(revision, java.util.Optional.of(subject), resultBuilder);
         return resultBuilder.build();
     }
 
-    private void getProjectChangesForRevision(Revision revision, Optional<OWLEntity> subject, ImmutableList.Builder<ProjectChange> changesBuilder) {
+    private void getProjectChangesForRevision(Revision revision, java.util.Optional<OWLEntity> subject, ImmutableList.Builder<ProjectChange> changesBuilder) {
         if (!subject.isPresent() || entitiesByRevisionCache.containsEntity(revision, subject.get())) {
 
             final Filter<OWLOntologyChangeRecord> filter;
             if(subject.isPresent()) {
-                filter = new SameSubjectFilter(
-                        new AxiomIRISubjectProvider(IRI::compareTo), subject.transform(new Function<OWLEntity, IRI>() {
-                    @Nullable
-                    @Override
-                    public IRI apply(OWLEntity entity) {
-                        return entity.getIRI();
-                    }
-                }));
+                filter = new SameSubjectFilter(new AxiomIRISubjectProvider(IRI::compareTo), subject.map(OWLEntity::getIRI));
             }
             else {
                 filter = object -> true;
@@ -124,7 +115,7 @@ public class ProjectChangesManager {
                     revision.getTimestamp(),
                     revision.getHighLevelDescription(),
                     axiomDiffElements.size(),
-                    pager.<DiffElement<String, SafeHtml>>getPage(1));
+                    pager.getPage(1));
             changesBuilder.add(projectChange);
         }
     }
@@ -142,19 +133,16 @@ public class ProjectChangesManager {
 
     private void sortDiff(List<DiffElement<String, OWLOntologyChangeRecord>> diffElements) {
         final Comparator<OWLOntologyChangeRecord> changeRecordComparator = new ChangeRecordComparator(axiomComparator, annotationComparator);
-        Collections.sort(diffElements, new Comparator<DiffElement<String, OWLOntologyChangeRecord>>() {
-            @Override
-            public int compare(DiffElement<String, OWLOntologyChangeRecord> o1, DiffElement<String, OWLOntologyChangeRecord> o2) {
-                int diff = changeRecordComparator.compare(o1.getLineElement(), o2.getLineElement());
-                if (diff != 0) {
-                    return diff;
-                }
-                int opDiff = o1.getDiffOperation().compareTo(o2.getDiffOperation());
-                if (opDiff != 0) {
-                    return opDiff;
-                }
-                return o1.getSourceDocument().compareTo(o2.getSourceDocument());
+        Collections.sort(diffElements, (o1, o2) -> {
+            int diff = changeRecordComparator.compare(o1.getLineElement(), o2.getLineElement());
+            if (diff != 0) {
+                return diff;
             }
+            int opDiff = o1.getDiffOperation().compareTo(o2.getDiffOperation());
+            if (opDiff != 0) {
+                return opDiff;
+            }
+            return o1.getSourceDocument().compareTo(o2.getSourceDocument());
         });
     }
 }

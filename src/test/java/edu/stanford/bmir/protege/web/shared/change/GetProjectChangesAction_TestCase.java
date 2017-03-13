@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,11 +8,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
 
 /**
  * Matthew Horridge
@@ -31,8 +33,7 @@ public class GetProjectChangesAction_TestCase {
     @Mock
     private ProjectId projectId;
 
-    @Mock
-    private Optional<OWLEntity> subject;
+    private Optional<OWLEntity> subject = Optional.of(mock(OWLEntity.class));
 
 
     @Before

@@ -50,7 +50,8 @@ public class ChangeListViewPresenter {
 
     private Optional<ProjectId> projectId = Optional.empty();
 
-    private HasBusy hasBusy = busy -> {};
+    private HasBusy hasBusy = busy -> {
+    };
 
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
@@ -80,7 +81,7 @@ public class ChangeListViewPresenter {
     public void setChangesForProject(ProjectId projectId) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, com.google.common.base.Optional.absent()),
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.empty()),
                                        hasBusy,
                                        result -> fillView(result.getChanges(),
                                                           SubjectDisplay.DISPLAY_SUBJECT,
@@ -91,7 +92,7 @@ public class ChangeListViewPresenter {
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
         this.projectId = Optional.of(projectId);
         view.clear();
-        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, com.google.common.base.Optional.of(entity)),
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)),
                                        hasBusy,
                                        result -> fillView(result.getChanges(),
                                                           SubjectDisplay.DO_NOT_DISPLAY_SUBJECT,
@@ -104,9 +105,9 @@ public class ChangeListViewPresenter {
         view.clear();
         dispatchServiceManager.execute(new GetWatchedEntityChangesAction(projectId, userId),
                                        result -> fillView(result.getChanges(),
-                                                      SubjectDisplay.DISPLAY_SUBJECT,
-                                                      revertChangesVisible,
-                                                      downloadVisible));
+                                                          SubjectDisplay.DISPLAY_SUBJECT,
+                                                          revertChangesVisible,
+                                                          downloadVisible));
     }
 
     public void clear() {
@@ -120,7 +121,7 @@ public class ChangeListViewPresenter {
         view.clear();
         permissionChecker.hasPermission(VIEW_CHANGES,
                                         viewChanges -> {
-                                            if(viewChanges) {
+                                            if (viewChanges) {
                                                 insertChangesIntoView(changes,
                                                                       subjectDisplay,
                                                                       revertChangesVisible,
@@ -133,7 +134,7 @@ public class ChangeListViewPresenter {
                                        SubjectDisplay subjectDisplay,
                                        boolean revertChangesVisible, boolean downloadVisible) {
         List<ProjectChange> projectChanges = new ArrayList<>(changes);
-        Collections.sort(projectChanges, Ordering.compound(Arrays.asList(
+        Collections.sort(projectChanges, Ordering.compound(Collections.singletonList(
                 Ordering.from(new ProjectChangeTimestampComparator()).reverse())));
         long previousTimeStamp = 0;
         for (final ProjectChange projectChange : projectChanges) {
@@ -141,24 +142,25 @@ public class ChangeListViewPresenter {
             if (!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
                 previousTimeStamp = changeTimeStamp;
                 Date date = new Date(changeTimeStamp);
-                view.addSeparator("\u25C9   Changes on " + DateTimeFormat.getFormat("EEE, d MMM yyyy").format(date));
+                view.addSeparator("\u25C9   Changes on " + DateTimeFormat.getFormat("EEE, d MMM yyyy" ).format(date));
             }
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();
             if (subjectDisplay == SubjectDisplay.DISPLAY_SUBJECT) {
                 List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
-                Collections.sort(subjects, (o1, o2) -> o1.compareToIgnoreCase(o2));
+                Collections.sort(subjects, OWLEntityData::compareToIgnoreCase);
                 view.setSubjects(subjects);
             }
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());
             view.setHighLevelDescription(projectChange.getSummary());
             view.setRevertRevisionVisible(false);
-            if(revertChangesVisible) {
+            if (revertChangesVisible) {
                 permissionChecker.hasPermission(REVERT_CHANGES,
-                                                canRevertChanges -> view.setRevertRevisionVisible(canRevertChanges));
+                                                view::setRevertRevisionVisible);
             }
-            view.setRevertRevisionHandler(revisionNumber -> ChangeListViewPresenter.this.handleRevertRevision(projectChange));
+            view.setRevertRevisionHandler(revisionNumber -> ChangeListViewPresenter.this.handleRevertRevision(
+                    projectChange));
             view.setDownloadRevisionHandler(revisionNumber -> {
                 ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
                         projectId.get(),
@@ -185,8 +187,8 @@ public class ChangeListViewPresenter {
     private void startRevertChangesWorkflow(final ProjectChange projectChange) {
         String subMessage = "Are you sure that you want to revert the changes in Revision "
                 + projectChange.getRevisionNumber()
-                                                                                                           .getValue() + "?";
-        MessageBox.showYesNoConfirmBox("Revert changes?",
+                               .getValue() + "?";
+        MessageBox.showYesNoConfirmBox("Revert changes?" ,
                                        subMessage,
                                        () -> revertChanges(projectChange));
     }
@@ -201,7 +203,7 @@ public class ChangeListViewPresenter {
                                        new DispatchServiceCallback<RevertRevisionResult>() {
                                            @Override
                                            public void handleSuccess(RevertRevisionResult revertRevisionResult) {
-                                               MessageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted");
+                                               MessageBox.showMessage("Changes in revision " + revisionNumber.getValue() + " have been reverted" );
                                            }
                                        });
     }
