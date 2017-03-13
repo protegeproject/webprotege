@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.diff;
 
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -52,19 +53,6 @@ public class DiffElement<S, E> implements Serializable, IsSerializable {
         return lineElement;
     }
 
-//    @Override
-//    public int compareTo(DiffElement<S, E> o) {
-//        int elementDiff = this.lineElement.compareTo(o.lineElement);
-//        if(elementDiff != 0) {
-//            return elementDiff;
-//        }
-//        int operationDiff = this.diffOperation.compareTo(o.diffOperation);
-//        if(operationDiff != 0) {
-//            return operationDiff;
-//        }
-//        return this.sourceDocument.compareTo(o.sourceDocument);
-//    }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(diffOperation, sourceDocument, lineElement);
@@ -86,10 +74,10 @@ public class DiffElement<S, E> implements Serializable, IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("DiffElement")
-                .addValue(diffOperation)
-                .add("sourceDocument", sourceDocument)
-                .add("lineElement", lineElement)
-                .toString();
+        return MoreObjects.toStringHelper("DiffElement")
+                          .addValue(diffOperation)
+                          .add("sourceDocument", sourceDocument)
+                          .add("lineElement", lineElement)
+                          .toString();
     }
 }
