@@ -22,8 +22,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
@@ -69,6 +71,9 @@ public class EditorPresenter implements HasDispose {
         }
     };
 
+
+    private HasBusy hasBusy = busy -> {};
+
     @Inject
     public EditorPresenter(ProjectId projectId,
                            EventBus eventBus,
@@ -94,12 +99,16 @@ public class EditorPresenter implements HasDispose {
     }
 
 
-    public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext, HasBusy hasBusy) {
+    public void setHasBusy(@Nonnull HasBusy hasBusy) {
+        this.hasBusy = checkNotNull(hasBusy);
+    }
+
+    public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext) {
         if (lastEditorState.isPresent()) {
             unbindPrevious(lastEditorState.get());
         }
         if (editorContext.isPresent()) {
-            bindNext(editorContext.get(), hasBusy);
+            bindNext(editorContext.get());
         }
         else {
             editorHolder.setWidget(NOTHING_SELECTED_WIDGET);
@@ -156,7 +165,7 @@ public class EditorPresenter implements HasDispose {
         });
     }
 
-    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void bindNext(final C editorCtx, HasBusy hasBusy) {
+    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void bindNext(final C editorCtx) {
         counter++;
         final Optional<EditorManager<C, O, A, R>> selectedMan = contextMapper.getEditorManager(editorCtx);
         if (selectedMan.isPresent()) {

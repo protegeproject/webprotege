@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,7 +14,10 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -45,6 +49,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         portletUi.setViewTitle("Nothing selected");
         portletUi.setWidget(editorView);
         editorPresenter.updatePermissionBasedItems();
+        editorPresenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(),
                                         PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
                                         event -> editorPresenter.updatePermissionBasedItems());
@@ -53,7 +58,6 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         eventBus.addApplicationEventHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
         handleAfterSetEntity(getSelectedEntity());
-
     }
 
     @Override
@@ -64,7 +68,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
         setViewTitle(entity.get().getEntityType().getPrintName() + " description");
         final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
-        editorPresenter.setEditorContext(editorContext, this);
+        editorPresenter.setEditorContext(editorContext);
     }
 
     public static Optional<OWLEntityContext> getEditorContext(java.util.Optional<OWLEntity> sel, ProjectId projectId) {
