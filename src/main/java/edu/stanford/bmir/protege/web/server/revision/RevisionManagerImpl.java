@@ -14,7 +14,6 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -22,6 +21,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -45,12 +45,13 @@ public class RevisionManagerImpl implements RevisionManager {
         this.revisionStore = checkNotNull(revisionStore);
     }
 
+    @Nonnull
     @Override
-    public Revision addRevision(UserId userId, List<? extends OWLOntologyChangeRecord> changes, String desc) {
+    public Revision addRevision(@Nonnull UserId userId, @Nonnull List<? extends OWLOntologyChangeRecord> changes, @Nonnull String desc) {
         try {
             writeLock.lock();
             long timestamp = System.currentTimeMillis();
-            RevisionNumber revisionNumber = getCurrentRevision().getNextRevisionNumber();
+            RevisionNumber revisionNumber = revisionStore.getCurrentRevisionNumber().getNextRevisionNumber();
             final String highlevelDescription = desc != null ? desc : "";
             final Revision revision = new Revision(
                     userId,
@@ -67,13 +68,15 @@ public class RevisionManagerImpl implements RevisionManager {
 
 
 
+    @Nonnull
     @Override
     public RevisionNumber getCurrentRevision() {
         return revisionStore.getCurrentRevisionNumber();
     }
 
+    @Nonnull
     @Override
-    public OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision) {
+    public OWLOntologyManager getOntologyManagerForRevision(@Nonnull RevisionNumber revision) {
          try {
             OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
             final OWLOntologyID singletonOntologyId = new OWLOntologyID();
@@ -111,6 +114,7 @@ public class RevisionManagerImpl implements RevisionManager {
         }
     }
 
+    @Nonnull
     @Override
     public List<Revision> getRevisions() {
         return revisionStore.getRevisions();
@@ -122,35 +126,40 @@ public class RevisionManagerImpl implements RevisionManager {
      * @return The revision that has the specified revision number, or absent if the revision with the specfied
      * revision number does not exist.
      */
+    @Nonnull
     @Override
-    public Optional<Revision> getRevision(RevisionNumber revisionNumber) {
+    public Optional<Revision> getRevision(@Nonnull RevisionNumber revisionNumber) {
         return revisionStore.getRevision(revisionNumber);
     }
 
+    @Nonnull
     @Override
-    public Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
+    public Optional<RevisionSummary> getRevisionSummary(@Nonnull RevisionNumber revisionNumber) {
         Optional<Revision> revision = revisionStore.getRevision(revisionNumber);
         if(!revision.isPresent()) {
             return Optional.empty();
         }
         else {
-            return Optional.of(getRevisionSummaryFromRevision(revision.get()));
+            return Optional.of(toRevisionSummary(revision.get()));
         }
 
     }
 
 
+    @Nonnull
     @Override
     public List<RevisionSummary> getRevisionSummaries() {
-        List<RevisionSummary> result = new ArrayList<>();
-        for(Revision revision : revisionStore.getRevisions()) {
-            result.add(getRevisionSummaryFromRevision(revision));
-        }
-        return result;
+        return revisionStore.getRevisions().stream()
+                .map(RevisionManagerImpl::toRevisionSummary)
+                .collect(toList());
     }
 
-    private RevisionSummary getRevisionSummaryFromRevision(Revision revision) {
-        return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getSize(), revision.getHighLevelDescription());
+    private static RevisionSummary toRevisionSummary(Revision revision) {
+        return new RevisionSummary(revision.getRevisionNumber(),
+                                   revision.getUserId(),
+                                   revision.getTimestamp(),
+                                   revision.getSize(),
+                                   revision.getHighLevelDescription());
     }
 
 }

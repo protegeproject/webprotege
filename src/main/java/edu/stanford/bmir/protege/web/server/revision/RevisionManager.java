@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public interface RevisionManager extends HasGetRevisionSummary {
      * there are no revisions in this manager.
      * @return The current revision number.  Not {@code null}.
      */
+    @Nonnull
     RevisionNumber getCurrentRevision();
 
 
@@ -31,7 +33,8 @@ public interface RevisionManager extends HasGetRevisionSummary {
      * @return The Revision that has the specified revision number.  An absent value will be returned if this manager
      * does not contain a revision that has the specified revision number.
      */
-    Optional<Revision> getRevision(RevisionNumber revisionNumber);
+    @Nonnull
+    Optional<Revision> getRevision(@Nonnull RevisionNumber revisionNumber);
 
     /**
      * Gets a revision summary of the specified revision.
@@ -39,8 +42,9 @@ public interface RevisionManager extends HasGetRevisionSummary {
      * @return A revision summary of the specified revision.  An absent value will be returned if there is no
      * revision with the specified revision number.
      */
+    @Nonnull
     @Override
-    Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber);
+    Optional<RevisionSummary> getRevisionSummary(@Nonnull RevisionNumber revisionNumber);
 
 
     /**
@@ -48,11 +52,13 @@ public interface RevisionManager extends HasGetRevisionSummary {
      * @return The list of revisions.  Modifications to the returned list will not affect the revisions contained
      * within this manager.
      */
+    @Nonnull
     List<Revision> getRevisions();
 
+    @Nonnull
+    OWLOntologyManager getOntologyManagerForRevision(@Nonnull RevisionNumber revision);
 
-    OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision);
-
+    @Nonnull
     List<RevisionSummary> getRevisionSummaries();
 
 
@@ -63,6 +69,9 @@ public interface RevisionManager extends HasGetRevisionSummary {
      * @param changes The changes contained in the revision.  Not {@code null}.
      * @param desc A description of the revision.  Not {@code null}.
      */
-    Revision addRevision(UserId userId, List<? extends OWLOntologyChangeRecord> changes, String desc);
+    @Nonnull
+    Revision addRevision(@Nonnull UserId userId,
+                         @Nonnull List<? extends OWLOntologyChangeRecord> changes,
+                         @Nonnull String desc);
 
 }
