@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
@@ -25,6 +24,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
@@ -39,8 +40,6 @@ public class EditorPresenter implements HasDispose {
 
     private static final Label NOTHING_SELECTED_WIDGET = new Label("Nothing selected");
 
-    private static final Label LOADING_INDICATOR_WIDGET = new Label("Loading...");
-
     private static final int VALUE_CHANGED_COMMIT_DELAY_MS = 2000;
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -52,7 +51,7 @@ public class EditorPresenter implements HasDispose {
 
     private final SimplePanel editorHolder = new SimplePanel();
 
-    private Optional<EditorState<?, ?, ?, ?>> lastEditorState = Optional.absent();
+    private Optional<EditorState<?, ?, ?, ?>> lastEditorState = Optional.empty();
 
     private HandlerRegistration valueChangedReg;
 
@@ -116,7 +115,7 @@ public class EditorPresenter implements HasDispose {
     }
 
     private void clearEditorState() {
-        lastEditorState = Optional.absent();
+        lastEditorState = Optional.empty();
     }
 
     private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void setEditorState(O pristineObject, C editorContext, EditorManager<C, O, A, R> editorManager) {
@@ -207,8 +206,7 @@ public class EditorPresenter implements HasDispose {
         if (editorHolder.getWidget() instanceof HasEnabled) {
             final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
             hasEnabled.setEnabled(false);
-            permissionChecker.hasPermission(EDIT_ONTOLOGY,
-                                            canEdit -> hasEnabled.setEnabled(canEdit));
+            permissionChecker.hasPermission(EDIT_ONTOLOGY, hasEnabled::setEnabled);
         }
     }
 
@@ -240,7 +238,7 @@ public class EditorPresenter implements HasDispose {
         }
 
         public Optional<O> getEditedValue() {
-            return editorManager.getView(editorContext).getValue();
+            return editorManager.getView(editorContext).getEditorValue();
         }
     }
 

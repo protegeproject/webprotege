@@ -19,4 +19,15 @@ public interface ValueEditor<O> extends HasDirty, HasValueChangeHandlers<Optiona
     void clearValue();
 
     Optional<O> getValue();
+
+    default java.util.Optional<O> getEditorValue() {
+        Optional<O> v = getValue();
+        if(v.isPresent()) {
+            return java.util.Optional.of(v.get());
+        }
+        else {
+            return java.util.Optional.empty();
+        }
+    }
+
 }

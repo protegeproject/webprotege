@@ -1,23 +1,21 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
+import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -51,17 +49,17 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         editorPresenter.updatePermissionBasedItems();
         editorPresenter.setHasBusy(portletUi);
         eventBus.addProjectEventHandler(getProjectId(),
-                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                                        ON_PERMISSIONS_CHANGED,
                                         event -> editorPresenter.updatePermissionBasedItems());
-        eventBus.addApplicationEventHandler(UserLoggedInEvent.ON_USER_LOGGED_IN,
+        eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
                                             event -> editorPresenter.updatePermissionBasedItems());
-        eventBus.addApplicationEventHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT,
+        eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
         handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
-    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         if(!entity.isPresent()) {
             setViewTitle("Nothing selected");
             return;
@@ -71,9 +69,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         editorPresenter.setEditorContext(editorContext);
     }
 
-    public static Optional<OWLEntityContext> getEditorContext(java.util.Optional<OWLEntity> sel, ProjectId projectId) {
+    public static Optional<OWLEntityContext> getEditorContext(Optional<OWLEntity> sel, ProjectId projectId) {
         if(!sel.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(new OWLEntityContext(projectId, sel.get()));
     }
