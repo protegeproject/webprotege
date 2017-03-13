@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -169,7 +168,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     public Optional<String> getOWLEntityBrowserText(OWLEntity entity) {
         String shortForm = shortFormProvider.getShortForm(entity);
         if(shortForm == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(shortForm);

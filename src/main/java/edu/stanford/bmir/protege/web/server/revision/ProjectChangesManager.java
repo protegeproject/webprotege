@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -23,10 +22,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Matthew Horridge
@@ -66,7 +62,7 @@ public class ProjectChangesManager {
         this.annotationComparator = annotationComparator;
     }
 
-    public ImmutableList<ProjectChange> getProjectChanges(java.util.Optional<OWLEntity> subject) {
+    public ImmutableList<ProjectChange> getProjectChanges(Optional<OWLEntity> subject) {
         ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
         for (Revision revision : changeManager.getRevisions()) {
             getProjectChangesForRevision(revision, subject, changes);
@@ -76,11 +72,11 @@ public class ProjectChangesManager {
 
     public ImmutableList<ProjectChange> getProjectChangesForSubjectInRevision(OWLEntity subject, Revision revision) {
         ImmutableList.Builder<ProjectChange> resultBuilder = ImmutableList.builder();
-        getProjectChangesForRevision(revision, java.util.Optional.of(subject), resultBuilder);
+        getProjectChangesForRevision(revision, Optional.of(subject), resultBuilder);
         return resultBuilder.build();
     }
 
-    private void getProjectChangesForRevision(Revision revision, java.util.Optional<OWLEntity> subject, ImmutableList.Builder<ProjectChange> changesBuilder) {
+    private void getProjectChangesForRevision(Revision revision, Optional<OWLEntity> subject, ImmutableList.Builder<ProjectChange> changesBuilder) {
         if (!subject.isPresent() || entitiesByRevisionCache.containsEntity(revision, subject.get())) {
 
             final Filter<OWLOntologyChangeRecord> filter;
@@ -102,7 +98,9 @@ public class ProjectChangesManager {
                 sortDiff(axiomDiffElements);
                 for(OWLEntity entity : entitiesByRevisionCache.getEntities(revision)) {
                     Optional<String> rendering = browserTextProvider.getOWLEntityBrowserText(entity);
-                    OWLEntityData entityData = DataFactory.getOWLEntityData(entity, rendering.or(entity.getIRI().toString()));
+                    OWLEntityData entityData = DataFactory.getOWLEntityData(entity,
+                                                                            rendering.orElse(entity.getIRI()
+                                                                                                   .toString()));
                     subjectsBuilder.add(entityData);
                 }
             }

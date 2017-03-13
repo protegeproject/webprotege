@@ -44,7 +44,7 @@ public class BrowserTextMapTestCase {
         signature.add(clsA);
 
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
-        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.of("A"));
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(java.util.Optional.of("A"));
 
         BrowserTextMap map = new BrowserTextMap(signature, browserTextProvider);
         Optional<String> value = map.getBrowserText(clsA);
@@ -62,7 +62,7 @@ public class BrowserTextMapTestCase {
         signature.add(clsA);
 
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
-        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.of("A"));
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(java.util.Optional.of("A"));
 
         BrowserTextMap map = new BrowserTextMap(signature, browserTextProvider);
 
@@ -77,7 +77,7 @@ public class BrowserTextMapTestCase {
         signature.add(clsA);
 
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
-        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.of("A"));
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(java.util.Optional.of("A"));
 
         BrowserTextMap mapA = new BrowserTextMap(signature, browserTextProvider);
         BrowserTextMap mapB = new BrowserTextMap(signature, browserTextProvider);
@@ -93,7 +93,7 @@ public class BrowserTextMapTestCase {
         signature.add(clsA);
 
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
-        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.of("A"));
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(java.util.Optional.of("A"));
 
         BrowserTextMap mapA = new BrowserTextMap(signature, browserTextProvider);
         BrowserTextMap mapB = new BrowserTextMap(signature, browserTextProvider);
@@ -105,7 +105,7 @@ public class BrowserTextMapTestCase {
     public void buildProcessesNestedSignature() {
         OWLClass clsA = mockOWLClass();
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
-        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.of("A"));
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(java.util.Optional.of("A"));
         BrowserTextMap map = BrowserTextMap.build(browserTextProvider, Collections.singleton(clsA));
         Optional<String> value = map.getBrowserText(clsA);
         assertEquals(true, value.isPresent());
@@ -116,7 +116,7 @@ public class BrowserTextMapTestCase {
     public void buildProcessesDirectSignature() {
         OWLClass clsA = mockOWLClass();
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
-        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.of("A"));
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(java.util.Optional.of("A"));
         BrowserTextMap map = BrowserTextMap.build(browserTextProvider, clsA);
         Optional<String> value = map.getBrowserText(clsA);
         assertEquals(true, value.isPresent());

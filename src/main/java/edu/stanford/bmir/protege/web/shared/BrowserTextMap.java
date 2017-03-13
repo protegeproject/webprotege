@@ -36,7 +36,7 @@ public class BrowserTextMap implements IsSerializable {
         checkNotNull(browserTextProvider);
         for(OWLObject object : signature) {
             for (OWLEntity entity : object.getSignature()) {
-                Optional<String> value = browserTextProvider.getOWLEntityBrowserText(entity);
+                java.util.Optional<String> value = browserTextProvider.getOWLEntityBrowserText(entity);
                 if(value.isPresent()) {
                     map.put(entity, value.get());
                 }
@@ -99,9 +99,9 @@ public class BrowserTextMap implements IsSerializable {
      * Adds the signature of the specified object to the specified builder.
      * @param builder The builder to add the signature to.
      * @param o The object whose signature will be extracted and added to the builder.  If the object is an {@link OWLObject}
-     * then its signature is obtained by casting it to an {@link OWLObject} and calling {@link org.semanticweb.owlapi.model.OWLObject#getSignature()},
+     * then its signature is obtained by casting it to an {@link OWLObject} and calling {@link OWLObject#getSignature()},
      * if the object is an instance of {@link HasSignature} then its signature is obtained by casting it to {@link HasSignature}
-     * and calling {@link edu.stanford.bmir.protege.web.shared.HasSignature#getSignature()}, finally, if the object is
+     * and calling {@link HasSignature#getSignature()}, finally, if the object is
      * a collection then each object in the collection is processed recursively with this method.
      */
     private static void build(Builder builder, Object o) {
@@ -148,7 +148,7 @@ public class BrowserTextMap implements IsSerializable {
         public BrowserTextMap build(BrowserTextProvider browserTextProvider) {
             BrowserTextMap map = new BrowserTextMap();
             for(OWLEntity entity : signature) {
-                Optional<String> bt = browserTextProvider.getOWLEntityBrowserText(entity);
+                java.util.Optional<String> bt = browserTextProvider.getOWLEntityBrowserText(entity);
                 if(bt.isPresent()) {
                     map.map.put(entity, bt.get());
                 }

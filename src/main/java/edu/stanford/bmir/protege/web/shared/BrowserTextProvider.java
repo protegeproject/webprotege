@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,5 +13,4 @@ import org.semanticweb.owlapi.model.OWLEntity;
 public interface BrowserTextProvider {
 
     Optional<String> getOWLEntityBrowserText(OWLEntity entity);
-
 }
