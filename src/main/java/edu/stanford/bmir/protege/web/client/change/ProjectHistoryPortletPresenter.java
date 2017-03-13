@@ -65,7 +65,8 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.addPortletAction(refreshAction);
         portletUi.setToolbarVisible(true);
         portletUi.setFilterView(filterView);
-        eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
+        presenter.setHasBusy(portletUi);
+        eventBus.addProjectEventHandler(getProjectId(), ProjectChangedEvent.TYPE, this::handleProjectChanged);
         eventBus.addApplicationEventHandler(ON_PERMISSIONS_CHANGED, event -> reload());
         reload();
     }

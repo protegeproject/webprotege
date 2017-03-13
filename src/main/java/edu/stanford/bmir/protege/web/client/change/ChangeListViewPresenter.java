@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -21,9 +22,11 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REVERT_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 
@@ -47,6 +50,8 @@ public class ChangeListViewPresenter {
 
     private Optional<ProjectId> projectId = Optional.empty();
 
+    private HasBusy hasBusy = busy -> {};
+
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
                                    DispatchServiceManager dispatchServiceManager,
@@ -68,10 +73,15 @@ public class ChangeListViewPresenter {
         return view;
     }
 
+    public void setHasBusy(@Nonnull HasBusy hasBusy) {
+        this.hasBusy = checkNotNull(hasBusy);
+    }
+
     public void setChangesForProject(ProjectId projectId) {
         this.projectId = Optional.of(projectId);
         view.clear();
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, com.google.common.base.Optional.absent()),
+                                       hasBusy,
                                        result -> fillView(result.getChanges(),
                                                           SubjectDisplay.DISPLAY_SUBJECT,
                                                           revertChangesVisible,
@@ -82,6 +92,7 @@ public class ChangeListViewPresenter {
         this.projectId = Optional.of(projectId);
         view.clear();
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, com.google.common.base.Optional.of(entity)),
+                                       hasBusy,
                                        result -> fillView(result.getChanges(),
                                                           SubjectDisplay.DO_NOT_DISPLAY_SUBJECT,
                                                           revertChangesVisible,
