@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.shared.revision;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -28,13 +30,15 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
     private String description;
     
 
-    /**
-     * Default constructor for serialization purposes only.
-     */
+    @GwtSerializationConstructor
     private RevisionSummary() {
     }
 
-    public RevisionSummary(RevisionNumber revisionNumber, UserId userId, long timestamp, int changeCount, String description) {
+    public RevisionSummary(@Nonnull RevisionNumber revisionNumber,
+                           @Nonnull UserId userId,
+                           long timestamp,
+                           int changeCount,
+                           @Nonnull String description) {
         this.revisionNumber = checkNotNull(revisionNumber);
         this.userId = checkNotNull(userId);
         this.timestamp = timestamp;
@@ -42,10 +46,12 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
         this.description = checkNotNull(description);
     }
 
+    @Nonnull
     public RevisionNumber getRevisionNumber() {
         return revisionNumber;
     }
 
+    @Nonnull
     public UserId getUserId() {
         return userId;
     }
@@ -58,6 +64,7 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
         return changeCount;
     }
 
+    @Nonnull
     public String getDescription() {
         return description;
     }
@@ -85,7 +92,7 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
      * @param o The other revision to compare to.  Not <code>null</code>.
      * @return See {@link Comparable#compareTo(Object)}.
      */
-    public int compareTo(RevisionSummary o) {
+    public int compareTo(@Nonnull RevisionSummary o) {
         int revNumDiff =  this.revisionNumber.compareTo(o.revisionNumber);
         if(revNumDiff != 0) {
             return revNumDiff;
