@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
@@ -14,10 +13,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -149,9 +145,9 @@ public class HighLevelEventGenerator implements EventTranslator {
         Set<OWLEntityData> changedEntitiesData = new HashSet<>();
         for (OWLEntity entity : changedEntities) {
             Optional<String> browserText = browserTextProvider.getOWLEntityBrowserText(entity);
-            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.or("")));
+            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.orElse("" )));
         }
-        java.util.Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
+        Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
         if (revisionSummary.isPresent()) {
             ProjectEvent<?> event = new ProjectChangedEvent(projectId, revisionSummary.get(), changedEntitiesData);
             projectEventList.add(event);

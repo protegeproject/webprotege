@@ -11,11 +11,11 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.protege.notesapi.NotesException;
-import org.protege.notesapi.notes.AnnotatableThing;
-import org.protege.notesapi.notes.Annotation;
+import org.protege.notesapi.notes.*;
 import org.protege.notesapi.notes.impl.DefaultComment;
 import org.protege.notesapi.oc.impl.DefaultOntologyComponent;
 import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
@@ -246,7 +246,9 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         try {
             AnnotatableThing target = getAnnotatableThingForObjectId(inReplyToId);
             Note note = addNoteToTarget(target, replyContent, author, timestamp);
-            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or("Entity"));
+            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity,
+                                                                    browserTextProvider.getOWLEntityBrowserText(
+                                                                            targetEntity).orElse("Entity" ));
             return note;
         }
         catch (NotesException e) {
@@ -267,7 +269,9 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             checkNotNull(author);
             AnnotatableThing target = getAnnotatableThing(targetEntity);
             Note note = addNoteToTarget(target, noteContent, author, timestamp);
-            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or(""));
+            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity,
+                                                                    browserTextProvider.getOWLEntityBrowserText(
+                                                                            targetEntity).orElse("" ));
             return note;
         }
         catch (NotesException e) {
