@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 
 /**
@@ -33,6 +34,7 @@ public class ChangeRecordComparator implements Comparator<OWLOntologyChangeRecor
         this.axiomComparator = axiomComparator;
         this.annotationComparator = annotationComparator;
         changeDataTypeVisitor = new OWLOntologyChangeDataVisitor<Integer, RuntimeException>() {
+            @Nonnull
             @Override
             public Integer visit(AddAxiomData data) throws RuntimeException {
                 return AXIOM_CHANGE;

@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -50,7 +51,7 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
     }
 
     public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
-        return new Revision(UserId.getGuest(), revision, ImmutableList.<OWLOntologyChangeRecord>of(), 0l, "");
+        return new Revision(UserId.getGuest(), revision, ImmutableList.of(), 0l, "");
     }
 
     public long getTimestamp() {
@@ -65,7 +66,7 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return revisionNumber;
     }
 
-    public int compareTo(Revision o) {
+    public int compareTo(@Nonnull Revision o) {
         return this.revisionNumber.compareTo(o.revisionNumber);
     }
 
