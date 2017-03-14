@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -12,20 +10,20 @@ import java.util.Optional;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 13/04/16
+ * 13 Mar 2017
  */
-public class SubClassOfChangeMatcher implements ChangeMatcher {
+public class SubClassOfEditChangeMatcher implements ChangeMatcher {
 
     private final OWLObjectStringFormatter formatter;
 
     @Inject
-    public SubClassOfChangeMatcher(OWLObjectStringFormatter formatter) {
+    public SubClassOfEditChangeMatcher(OWLObjectStringFormatter formatter) {
         this.formatter = formatter;
     }
 
     @Override
     public Optional<String> getDescription(ChangeApplicationResult<?> result) {
-        if(result.getChangeList().size() != 2) {
+        if (result.getChangeList().size() != 2) {
             return Optional.empty();
         }
         OWLOntologyChange change0 = result.getChangeList().get(0);
@@ -36,15 +34,26 @@ public class SubClassOfChangeMatcher implements ChangeMatcher {
         }
         OWLSubClassOfAxiom addAx = edit.getAddAxiom().get();
         OWLSubClassOfAxiom remAx = edit.getRemoveAxiom().get();
-        if(!addAx.getSubClass().equals(remAx.getSubClass())) {
+        PropertyFillerExtractor extractorAdd = new PropertyFillerExtractor(addAx.getSuperClass());
+        PropertyFillerExtractor extractorRem = new PropertyFillerExtractor(remAx.getSuperClass());
+        if (!extractorAdd.isPropertyAndFillerExtracted() || !extractorRem.isPropertyAndFillerExtracted()) {
             return Optional.empty();
         }
-        if(addAx.getSuperClass().isAnonymous()) {
+        OWLProperty addedProp = extractorAdd.getProperty().get();
+        OWLProperty removedProp = extractorRem.getProperty().get();
+        if (!addedProp.equals(removedProp)) {
             return Optional.empty();
         }
-        if(remAx.getSuperClass().isAnonymous()) {
+        OWLObject addedFiller = extractorAdd.getFiller().get();
+        OWLObject removedFiller = extractorRem.getFiller().get();
+        if (addedFiller.equals(removedFiller)) {
             return Optional.empty();
         }
-        return formatter.format("Moved class %s from %s to %s", addAx.getSubClass(), remAx.getSuperClass(), addAx.getSuperClass());
+        return formatter.format("Changed the value of %s from %s to %s on %s" ,
+                                addedProp,
+                                removedFiller,
+                                addedFiller,
+                                addAx.getSubClass());
+
     }
 }

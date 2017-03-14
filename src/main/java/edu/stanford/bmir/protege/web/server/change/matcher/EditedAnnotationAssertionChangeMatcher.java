@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import org.semanticweb.owlapi.model.*;
@@ -13,16 +14,13 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 16/03/16
  */
-public class EditedAnnotationAssertion implements ChangeMatcher {
+public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
 
-    private WebProtegeShortFormProvider webProtegeShortFormProvider;
-
-    private WebProtegeIRIShortFormProvider iriShortFormProvider;
+    private OWLObjectStringFormatter formatter;
 
     @Inject
-    public EditedAnnotationAssertion(WebProtegeShortFormProvider webProtegeShortFormProvider, WebProtegeIRIShortFormProvider iriShortFormProvider) {
-        this.webProtegeShortFormProvider = webProtegeShortFormProvider;
-        this.iriShortFormProvider = iriShortFormProvider;
+    public EditedAnnotationAssertionChangeMatcher(OWLObjectStringFormatter formatter) {
+        this.formatter = formatter;
     }
 
     @Override
@@ -40,10 +38,9 @@ public class EditedAnnotationAssertion implements ChangeMatcher {
         OWLAnnotationAssertionAxiom removed = edit.getRemoveAxiom().get();
         OWLAnnotationAssertionAxiom added = edit.getAddAxiom().get();
         if (!removed.getProperty().equals(added.getProperty())) {
-            return Optional.of(String.format("Changed annotation property from %s to %s",
-                    webProtegeShortFormProvider.getShortForm(removed.getProperty()),
-                    webProtegeShortFormProvider.getShortForm(added.getProperty())
-            ));
+            return formatter.format("Changed annotation property from %s to %s",
+                                    removed.getProperty(),
+                                    added.getProperty());
         }
         else {
             OWLAnnotationValue removeValue = removed.getValue();
@@ -54,27 +51,24 @@ public class EditedAnnotationAssertion implements ChangeMatcher {
                     OWLLiteral removedLiteral = (OWLLiteral) removeValue;
                     if (addedLiteral.getLiteral().equals(removedLiteral.getLiteral())) {
                         if (addedLiteral.getLang().isEmpty()) {
-                            return Optional.of(String.format("Removed language tag '%s' from %s on %s",
+                            return formatter.format("Removed language tag '%s' from %s on %s",
                                     removedLiteral.getLang(),
-                                    webProtegeShortFormProvider.getShortForm(added.getProperty()),
-                                    iriShortFormProvider.getShortForm((IRI) removed.getSubject())
-                            ));
+                                    added.getProperty(),
+                                    removed.getSubject());
                         }
                         else {
                             if (removedLiteral.getLang().isEmpty()) {
-                                return Optional.of(String.format("Added language tag '%s' to %s on %s",
+                                return formatter.format("Added language tag '%s' to %s on %s",
                                         addedLiteral.getLang(),
-                                        webProtegeShortFormProvider.getShortForm(added.getProperty()),
-                                        iriShortFormProvider.getShortForm((IRI) removed.getSubject())
-                                ));
+                                        added.getProperty(),
+                                        removed.getSubject());
                             }
                             else {
-                                return Optional.of(String.format("Changed language tag (from '%s' to '%s') in %s to %s",
+                                return formatter.format("Changed language tag (from '%s' to '%s') in %s to %s",
                                         removedLiteral.getLang(),
                                         addedLiteral.getLang(),
-                                        webProtegeShortFormProvider.getShortForm(added.getProperty()),
-                                        iriShortFormProvider.getShortForm((IRI) removed.getSubject())
-                                ));
+                                        added.getProperty(),
+                                        removed.getSubject());
                             }
                         }
                     }
@@ -93,18 +87,8 @@ public class EditedAnnotationAssertion implements ChangeMatcher {
     }
 
     private Optional<String> getValueChangedDescription(OWLAnnotationAssertionAxiom added) {
-        return Optional.of(String.format("Edited %s on %s",
-                webProtegeShortFormProvider.getShortForm(added.getProperty()),
-                render(added.getSubject())
-        ));
-    }
-
-    private String render(OWLAnnotationSubject subject) {
-        if (subject instanceof IRI) {
-            return iriShortFormProvider.getShortForm((IRI) subject);
-        }
-        else {
-            return subject.toString();
-        }
+        return formatter.format("Edited %s annotation on %s",
+                added.getProperty(),
+                added.getSubject());
     }
 }
