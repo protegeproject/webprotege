@@ -32,11 +32,11 @@ public class OWLObjectStringFormatter {
         render.setShortFormProvider(shortFormProvider);
     }
 
-    public Optional<String> format(String format, OWLObject... objects) {
+    public Optional<String> format(String format, Object... objects) {
         return Optional.of(formatString(format, objects));
     }
 
-    public String formatString(String format, OWLObject... objects) {
+    public String formatString(String format, Object... objects) {
         String [] formattedObjects = new String[objects.length];
         for(int i = 0; i < objects.length; i++) {
             formattedObjects[i] = renderObject(objects[i]);
@@ -44,7 +44,10 @@ public class OWLObjectStringFormatter {
         return String.format(format, formattedObjects);
     }
 
-    private String renderObject(OWLObject object) {
+    private String renderObject(Object object) {
+        if(!(object instanceof OWLObject)) {
+            return object.toString();
+        }
         if(object instanceof OWLEntity) {
             return shortFormProvider.getShortForm((OWLEntity) object);
         }
@@ -52,7 +55,7 @@ public class OWLObjectStringFormatter {
             return iriShortFormProvider.getShortForm((IRI) object);
         }
         else {
-            return render.render(object);
+            return render.render((OWLObject) object);
         }
     }
 

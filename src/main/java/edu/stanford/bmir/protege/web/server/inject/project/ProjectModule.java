@@ -149,20 +149,22 @@ public class ProjectModule {
             AnnotationAssertionChangeMatcher annotationAssertionChangeMatcher,
             PropertyDomainAxiomChangeMatcher propertyDomainAxiomChangeMatcher,
             PropertyRangeAxiomChangeMatcher propertyRangeAxiomChangeMatcher,
-            EditedAnnotationAssertion editedAnnotationAssertion,
+            EditedAnnotationAssertionChangeMatcher editedAnnotationAssertionChangeMatcher,
             FunctionalDataPropertyAxiomChangeMatcher functionalDataPropertyAxiomChangeMatcher,
             ClassAssertionAxiomMatcher classAssertionAxiomMatcher,
             SubClassOfAxiomMatcher subClassOfAxiomMatcher,
-            SubClassOfChangeMatcher subClassOfChangeMatcher) {
+            SubClassOfChangeMatcher subClassOfChangeMatcher,
+            SubClassOfEditChangeMatcher subClassOfEditChangeMatcher) {
         return ImmutableSet.of(
                 annotationAssertionChangeMatcher,
                 propertyDomainAxiomChangeMatcher,
                 propertyRangeAxiomChangeMatcher,
-                editedAnnotationAssertion,
+                editedAnnotationAssertionChangeMatcher,
                 functionalDataPropertyAxiomChangeMatcher,
                 classAssertionAxiomMatcher,
                 subClassOfAxiomMatcher,
-                subClassOfChangeMatcher
+                subClassOfChangeMatcher,
+                subClassOfEditChangeMatcher
         );
     }
 

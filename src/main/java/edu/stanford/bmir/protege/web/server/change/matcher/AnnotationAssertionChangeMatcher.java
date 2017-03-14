@@ -18,18 +18,18 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
     private final OWLObjectStringFormatter formatter;
 
     @Inject
-    public AnnotationAssertionChangeMatcher(OWLObjectRenderer renderer, OWLObjectStringFormatter formatter) {
+    public AnnotationAssertionChangeMatcher(OWLObjectStringFormatter formatter) {
         super(new TypeToken<OWLAnnotationAssertionAxiom>(){});
         this.formatter = formatter;
     }
 
     @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom) {
-        return formatter.format("Added %s to %s", axiom.getProperty(), axiom.getSubject());
+        return formatter.format("Added %s annotation to %s", axiom.getProperty(), axiom.getSubject());
     }
 
     @Override
     protected Optional<String> getDescriptionForRemoveAxiomChange(OWLAnnotationAssertionAxiom axiom) {
-        return formatter.format("Remove %s from %s", axiom.getProperty(), axiom.getSubject());
+        return formatter.format("Removed %s annotation from %s", axiom.getProperty(), axiom.getSubject());
     }
 }

@@ -29,7 +29,10 @@ public class PropertyFillerExtractor {
     public Optional<OWLObject> getFiller() {
         return classExpression.accept(FILLER_EXTRACTOR);
     }
-    
+
+    public boolean isPropertyAndFillerExtracted() {
+        return getProperty().isPresent() && getFiller().isPresent();
+    }
     
     private static class PropertyExtactor implements OWLClassExpressionVisitorEx<Optional<OWLProperty>> {
 
@@ -77,7 +80,12 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLObjectHasValue ce) {
-            return Optional.empty();
+            if (!ce.getProperty().isAnonymous()) {
+                return Optional.of(ce.getProperty().asOWLObjectProperty());
+            }
+            else {
+                return Optional.empty();
+            }
         }
 
         @Nonnull
