@@ -171,9 +171,7 @@ public class ChangeListViewPresenter {
             view.setDownloadRevisionVisible(downloadVisible);
             Page<DiffElement<String, SafeHtml>> page = projectChange.getDiff();
             List<DiffElement<String, SafeHtml>> pageElements = page.getPageElements();
-            if (page.getPageCount() == 1) {
-                view.setDiff(pageElements);
-            }
+            view.setDiff(pageElements, (int) page.getTotalElements());
             view.setChangeCount(projectChange.getChangeCount());
             view.setTimestamp(changeTimeStamp);
             this.view.addChangeDetailsView(view);
