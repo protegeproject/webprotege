@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class DiffElementRenderer<S extends Serializable> {
 
     private HasHtmlBrowserText renderer;
+
     private OWLOntologyChangeDataVisitor<SafeHtml, RuntimeException> visitor;
 
     public DiffElementRenderer(HasHtmlBrowserText ren) {

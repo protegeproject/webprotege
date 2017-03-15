@@ -147,9 +147,9 @@ public class ChangeListViewPresenter {
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();
             if (subjectDisplay == SubjectDisplay.DISPLAY_SUBJECT) {
-                List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
-                Collections.sort(subjects, OWLEntityData::compareToIgnoreCase);
-                view.setSubjects(subjects);
+//                List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
+//                Collections.sort(subjects, OWLEntityData::compareToIgnoreCase);
+//                view.setSubjects(subjects);
             }
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());

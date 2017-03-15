@@ -52,33 +52,28 @@ public class ProjectChange_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        projectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, changeCount, diff);
-        otherProjectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, changeCount, diff);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_Subjects_IsNull() {
-        new ProjectChange(null, revisionNumber, userId, timestamp, summary, changeCount, diff);
+        projectChange = new ProjectChange(revisionNumber, userId, timestamp, summary, changeCount, diff);
+        otherProjectChange = new ProjectChange(revisionNumber, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_RevisionNumber_IsNull() {
-        new ProjectChange(subjects, null, userId, timestamp, summary, changeCount, diff);
+        new ProjectChange(null, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_UserId_IsNull() {
-        new ProjectChange(subjects, revisionNumber, null, timestamp, summary, changeCount, diff);
+        new ProjectChange(revisionNumber, null, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Summary_IsNull() {
-        new ProjectChange(subjects, revisionNumber, userId, timestamp, null, changeCount, diff);
+        new ProjectChange(revisionNumber, userId, timestamp, null, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Diff_IsNull() {
-        new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, changeCount, null);
+        new ProjectChange(revisionNumber, userId, timestamp, summary, changeCount, null);
     }
 
     @Test
@@ -125,9 +120,5 @@ public class ProjectChange_TestCase {
     @Test
     public void shouldReturnSupplied_Diff() {
         assertThat(projectChange.getDiff(), is(diff));
-    }
-    @Test
-    public void shouldReturnSupplied_Subjects() {
-        assertThat(projectChange.getSubjects(), is(subjects));
     }
 }

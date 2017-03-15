@@ -14,9 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 29/01/15
- */
-
-/**
+ *
  * Represents a line in a diff.
  * @param <S> The type of source document.
  * @param <E> The type of lineElement contained within each line in the diff.
