@@ -38,9 +38,10 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
         OWLAnnotationAssertionAxiom removed = edit.getRemoveAxiom().get();
         OWLAnnotationAssertionAxiom added = edit.getAddAxiom().get();
         if (!removed.getProperty().equals(added.getProperty())) {
-            return formatter.format("Changed annotation property from %s to %s",
+            return formatter.format("Changed annotation property from %s to %s on %s",
                                     removed.getProperty(),
-                                    added.getProperty());
+                                    added.getProperty(),
+                                    added.getSubject());
         }
         else {
             OWLAnnotationValue removeValue = removed.getValue();
