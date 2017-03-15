@@ -27,6 +27,6 @@ public class OWLObjectRendererImpl implements OWLObjectRenderer {
 
     @Override
     public String render(OWLObject object) {
-        return renderingManager.getHTMLBrowserText(object);
+        return renderingManager.getBrowserText(object);
     }
 }

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -25,6 +27,7 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Author: Matthew Horridge<br>
@@ -55,6 +58,10 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
     private final WebProtegeLogger logger;
 
+    private final ManchesterSyntaxObjectRenderer renderer;
+
+    private final OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
+
     @Inject
     public RenderingManager(@RootOntology OWLOntology rootOnt,
                             OWLDataFactory dataFactory,
@@ -69,6 +76,12 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         this.shortFormProvider = shortFormProvider;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.logger = logger;
+        this.renderer = new ManchesterSyntaxObjectRenderer(
+                getShortFormProvider(),
+                new EntityIRICheckerImpl(rootOntology),
+                LiteralStyle.BRACKETED,
+                new DefaultHttpLinkRenderer(),
+                new MarkdownLiteralRenderer());
 
         ImmutableMap.Builder<IRI, OWLEntity> builtInEntities = ImmutableMap.builder();
 
@@ -99,6 +112,8 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         this.deprecatedEntityChecker = deprecatedChecker;
 
         this.highlightEntityChecker = highlightedEntityChecker;
+
+        owlObjectRenderer.setShortFormProvider(shortFormProvider);
     }
 
     /**
@@ -198,13 +213,12 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
      * @return The browser text for the object.
      */
     public String getBrowserText(OWLObject object) {
-        OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
-        if (object instanceof OWLEntity || object instanceof IRI) {
-            owlObjectRenderer.setShortFormProvider(shortFormProvider);
-        }
-        else {
-            owlObjectRenderer.setShortFormProvider(new EscapingShortFormProvider(shortFormProvider));
-        }
+//        if (object instanceof OWLEntity || object instanceof IRI) {
+//            owlObjectRenderer.setShortFormProvider(shortFormProvider);
+//        }
+//        else {
+//            owlObjectRenderer.setShortFormProvider(new EscapingShortFormProvider(shortFormProvider));
+//        }
         return owlObjectRenderer.render(object);
     }
 
@@ -242,12 +256,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     }
 
     public String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
-        ManchesterSyntaxObjectRenderer renderer = new ManchesterSyntaxObjectRenderer(
-                getShortFormProvider(),
-                new EntityIRICheckerImpl(rootOntology),
-                LiteralStyle.BRACKETED,
-                new DefaultHttpLinkRenderer(),
-                new MarkdownLiteralRenderer());
         return renderer.render(object, highlightChecker, deprecatedEntityChecker);
     }
 
