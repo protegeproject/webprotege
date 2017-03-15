@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.axiom;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.object.OWLObjectSelector;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -89,198 +91,237 @@ public class AxiomSubjectProvider {
             return Optional.of(object);
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSubClassOfAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSubClassOfAxiom axiom) {
             return wrap(axiom.getSubClass());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLNegativeObjectPropertyAssertionAxiom axiom) {
             return wrap(axiom.getSubject());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLAsymmetricObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLAsymmetricObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLReflexiveObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLReflexiveObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDisjointClassesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDisjointClassesAxiom axiom) {
             return classExpressionSelector.selectOne(axiom.getClassExpressions());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDataPropertyDomainAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDataPropertyDomainAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLObjectPropertyDomainAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLObjectPropertyDomainAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLEquivalentObjectPropertiesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLEquivalentObjectPropertiesAxiom axiom) {
             return objectPropertyExpressionSelector.selectOne(axiom.getProperties());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLNegativeDataPropertyAssertionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLNegativeDataPropertyAssertionAxiom axiom) {
             return wrap(axiom.getSubject());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDifferentIndividualsAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
             return individualSelector.selectOne(axiom.getIndividuals());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDisjointDataPropertiesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
             return dataPropertyExpressionSelector.selectOne(axiom.getProperties());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDisjointObjectPropertiesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
             return objectPropertyExpressionSelector.selectOne(axiom.getProperties());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLObjectPropertyRangeAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLObjectPropertyRangeAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLObjectPropertyAssertionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
             return wrap(axiom.getSubject());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLFunctionalObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLFunctionalObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSubObjectPropertyOfAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSubObjectPropertyOfAxiom axiom) {
             return wrap(axiom.getSubProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDisjointUnionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDisjointUnionAxiom axiom) {
             return wrap(axiom.getOWLClass());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDeclarationAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDeclarationAxiom axiom) {
             return wrap(axiom.getEntity());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLAnnotationAssertionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLAnnotationAssertionAxiom axiom) {
             return wrap(axiom.getSubject());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSymmetricObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSymmetricObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDataPropertyRangeAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDataPropertyRangeAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLFunctionalDataPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLFunctionalDataPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLEquivalentDataPropertiesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
             return dataPropertyExpressionSelector.selectOne(axiom.getProperties());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLClassAssertionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLClassAssertionAxiom axiom) {
             return wrap(axiom.getIndividual());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLEquivalentClassesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
             return classExpressionSelector.selectOne(axiom.getClassExpressions());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDataPropertyAssertionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDataPropertyAssertionAxiom axiom) {
             return wrap(axiom.getSubject());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLTransitiveObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLTransitiveObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSubDataPropertyOfAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSubDataPropertyOfAxiom axiom) {
             return wrap(axiom.getSubProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSameIndividualAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSameIndividualAxiom axiom) {
             return individualSelector.selectOne(axiom.getIndividuals());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSubPropertyChainOfAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSubPropertyChainOfAxiom axiom) {
             return wrap(axiom.getSuperProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLInverseObjectPropertiesAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLInverseObjectPropertiesAxiom axiom) {
             return wrap(axiom.getFirstProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLHasKeyAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLHasKeyAxiom axiom) {
             return wrap(axiom.getClassExpression());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLDatatypeDefinitionAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLDatatypeDefinitionAxiom axiom) {
             return wrap(axiom.getDatatype());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(SWRLRule axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull SWRLRule axiom) {
             return atomSelector.selectOne(axiom.getHead());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLSubAnnotationPropertyOfAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLSubAnnotationPropertyOfAxiom axiom) {
             return wrap(axiom.getSubProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLAnnotationPropertyDomainAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLAnnotationPropertyDomainAxiom axiom) {
             return wrap(axiom.getProperty());
         }
 
+        @Nonnull
         @Override
-        public Optional<? extends OWLObject> visit(OWLAnnotationPropertyRangeAxiom axiom) {
+        public Optional<? extends OWLObject> visit(@Nonnull OWLAnnotationPropertyRangeAxiom axiom) {
             return wrap(axiom.getProperty());
         }
     }

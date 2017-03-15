@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.object;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -25,7 +25,7 @@ public abstract class OWLEntitySelector<T extends OWLObject, E extends OWLEntity
 
     @Override
     public Optional<T> selectOne(Iterable<T> objects) {
-        Optional<E> result = Optional.absent();
+        Optional<E> result = Optional.empty();
         for (OWLObject obj : objects) {
             if (obj instanceof OWLEntity) {
                 OWLEntity entity = (OWLEntity) obj;
@@ -47,7 +47,7 @@ public abstract class OWLEntitySelector<T extends OWLObject, E extends OWLEntity
             return Optional.of(toType(result.get()));
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
