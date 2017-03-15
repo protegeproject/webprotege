@@ -6,23 +6,22 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
-import edu.stanford.bmir.protege.web.server.diff.SameSubjectFilter;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.pagination.Pager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
-import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import org.semanticweb.owlapi.change.AxiomChangeData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Matthew Horridge
@@ -37,9 +36,7 @@ public class ProjectChangesManager {
 
     private final OWLOntology rootOntology;
 
-    private final BrowserTextProvider browserTextProvider;
-
-    private final HasHtmlBrowserText hmlBrowserTextProvider;
+    private final RenderingManager browserTextProvider;
 
     private final Comparator<OWLAxiom> axiomComparator;
 
@@ -49,15 +46,13 @@ public class ProjectChangesManager {
     public ProjectChangesManager(RevisionManager changeManager,
                                  EntitiesByRevisionCache entitiesByRevisionCache,
                                  @RootOntology OWLOntology rootOntology,
-                                 BrowserTextProvider browserTextProvider,
-                                 HasHtmlBrowserText hmlBrowserTextProvider,
+                                 RenderingManager browserTextProvider,
                                  Comparator<OWLAxiom> axiomComparator,
                                  Comparator<? super OWLAnnotation> annotationComparator) {
         this.changeManager = changeManager;
         this.entitiesByRevisionCache = entitiesByRevisionCache;
         this.rootOntology = rootOntology;
         this.browserTextProvider = browserTextProvider;
-        this.hmlBrowserTextProvider = hmlBrowserTextProvider;
         this.axiomComparator = axiomComparator;
         this.annotationComparator = annotationComparator;
     }
@@ -82,36 +77,63 @@ public class ProjectChangesManager {
         if (subject.isPresent() && !entitiesByRevisionCache.containsEntity(revision, subject.get())) {
             return;
         }
-        
-        final Filter<OWLOntologyChangeRecord> filter;
+
+        AxiomIRISubjectProvider subjectProvider = new AxiomIRISubjectProvider(IRI::compareTo);
+        Map<Optional<IRI>, List<OWLOntologyChangeRecord>> recordsBySubject = revision.getChanges().stream()
+                                                                  .collect(Collectors.groupingBy(rec -> {
+                                                                      OWLOntologyChangeData data = rec.getData();
+                                                                      if (data instanceof AxiomChangeData) {
+                                                                          OWLAxiom axiom = ((AxiomChangeData) data).getAxiom();
+                                                                          return subjectProvider.getSubject(axiom);
+                                                                      }
+                                                                      else {
+                                                                          return Optional.empty();
+                                                                      }
+                                                                  }));
+        List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
+
+        ImmutableSet.Builder<OWLEntityData> subjectsBuilder = ImmutableSet.builder();
+        final int totalChanges;
         if (subject.isPresent()) {
-            filter = new SameSubjectFilter(new AxiomIRISubjectProvider(IRI::compareTo), subject.map(OWLEntity::getIRI));
+            List<OWLOntologyChangeRecord> records = recordsBySubject.get(subject.map(OWLEntity::getIRI));
+            totalChanges = records.size();
+            limitedRecords.addAll(records);
+            subjectsBuilder.add(browserTextProvider.getRendering(subject.get()));
         }
         else {
-            filter = object -> true;
+            totalChanges = revision.getSize();
+            for(Map.Entry<Optional<IRI>, List<OWLOntologyChangeRecord>> entry : recordsBySubject.entrySet()) {
+                limitedRecords.addAll(entry.getValue());
+                if(limitedRecords.size() >= 200) {
+                    break;
+                }
+            }
         }
 
+        System.out.println("Limited records to " + limitedRecords.size());
         Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(
-                filter, new WebProtegeOntologyIRIShortFormProvider(rootOntology)
+                new WebProtegeOntologyIRIShortFormProvider(rootOntology)
         );
 
         List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(
-                revision,
-                Integer.MAX_VALUE);
-        ImmutableSet.Builder<OWLEntityData> subjectsBuilder = ImmutableSet.builder();
-
-        if (axiomDiffElements.size() < 200) {
+                limitedRecords);
             sortDiff(axiomDiffElements);
-            for (OWLEntity entity : entitiesByRevisionCache.getEntities(revision)) {
-                Optional<String> rendering = browserTextProvider.getOWLEntityBrowserText(entity);
-                OWLEntityData entityData = DataFactory.getOWLEntityData(entity,
-                                                                        rendering.orElse(entity.getIRI()
-                                                                                               .toString()));
-                subjectsBuilder.add(entityData);
-            }
-        }
-        List<DiffElement<String, SafeHtml>> diffElements = getDiffElements(axiomDiffElements);
-        Pager<DiffElement<String, SafeHtml>> pager = Pager.getPagerForPageSize(diffElements, 150);
+//            for (OWLEntity entity : entitiesByRevisionCache.getEntities(revision)) {
+//                Optional<String> rendering = browserTextProvider.getOWLEntityBrowserText(entity);
+//                OWLEntityData entityData = DataFactory.getOWLEntityData(entity,
+//                                                                        rendering.orElse(entity.getIRI()
+//                                                                                               .toString()));
+//                subjectsBuilder.add(entityData);
+//            }
+        List<DiffElement<String, SafeHtml>> renderedDiffElements = getDiffElements(axiomDiffElements);
+        int pageElements = renderedDiffElements.size();
+        int pageCount = totalChanges / pageElements + (totalChanges % pageElements);
+        Page<DiffElement<String, SafeHtml>> page = new Page<>(
+                1,
+                pageCount,
+                renderedDiffElements,
+                totalChanges
+        );
         ProjectChange projectChange = new ProjectChange(
                 subjectsBuilder.build(),
                 revision.getRevisionNumber(),
@@ -119,14 +141,14 @@ public class ProjectChangesManager {
                 revision.getTimestamp(),
                 revision.getHighLevelDescription(),
                 axiomDiffElements.size(),
-                pager.getPage(1));
+                page);
         changesBuilder.add(projectChange);
     }
 
     private List<DiffElement<String, SafeHtml>> getDiffElements(List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements) {
 
         List<DiffElement<String, SafeHtml>> diffElements = new ArrayList<>();
-        DiffElementRenderer<String> renderer = new DiffElementRenderer<>(hmlBrowserTextProvider);
+        DiffElementRenderer<String> renderer = new DiffElementRenderer<>(browserTextProvider);
         for (DiffElement<String, OWLOntologyChangeRecord> axiomDiffElement : axiomDiffElements) {
             diffElements.add(renderer.render(axiomDiffElement));
         }
