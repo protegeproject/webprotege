@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class DataFactory {
 
     public static final String FRESH_ENTITY_SCHEME = "wptmp";
 
-    private static OWLDataFactory dataFactory = new OWLDataFactoryImpl();
+    private static OWLDataFactory dataFactory = new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
 
     public static OWLDataFactory get() {
         return dataFactory;
