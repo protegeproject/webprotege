@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
  */
 public class ProjectChangesManager {
 
+    public static final int DEFAULT_CHANGE_LIMIT = 50;
+
     private final RevisionManager changeManager;
 
     private final EntitiesByRevisionCache entitiesByRevisionCache;
@@ -104,13 +106,12 @@ public class ProjectChangesManager {
             totalChanges = revision.getSize();
             for(Map.Entry<Optional<IRI>, List<OWLOntologyChangeRecord>> entry : recordsBySubject.entrySet()) {
                 limitedRecords.addAll(entry.getValue());
-                if(limitedRecords.size() >= 200) {
+                if(limitedRecords.size() >= DEFAULT_CHANGE_LIMIT) {
                     break;
                 }
             }
         }
 
-        System.out.println("Limited records to " + limitedRecords.size());
         Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(
                 new WebProtegeOntologyIRIShortFormProvider(rootOntology)
         );
@@ -140,7 +141,7 @@ public class ProjectChangesManager {
                 revision.getUserId(),
                 revision.getTimestamp(),
                 revision.getHighLevelDescription(),
-                axiomDiffElements.size(),
+                totalChanges,
                 page);
         changesBuilder.add(projectChange);
     }

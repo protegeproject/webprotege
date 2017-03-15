@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.change;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -11,8 +10,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
-import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffView;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
@@ -24,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,7 +43,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     private boolean revertRevisionVisible = false;
 
-    private Optional<RevisionNumber> revision = Optional.absent();
+    private Optional<RevisionNumber> revision = Optional.empty();
 
     interface ChangeDetailsViewImplUiBinder extends UiBinder<HTMLPanel, ChangeDetailsViewImpl> {
     }
@@ -85,15 +83,10 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     @UiField
     protected Label tooManyChangesMessage;
 
+    @UiField
+    protected Label hiddenChangesCount;
 
-//    @UiField
-//    protected Button revertButton;
-
-    private RevertRevisionHandler revertRevisionHandler = new RevertRevisionHandler() {
-        @Override
-        public void handleRevertRevision(RevisionNumber revisionNumber) {
-        }
-    };
+    private RevertRevisionHandler revertRevisionHandler = revisionNumber -> {};
 
     @UiHandler("revisionField")
     protected void showRevisionMenu(ClickEvent event) {
@@ -197,19 +190,20 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     }
 
     @Override
-    public void setDiff(List<DiffElement<String, SafeHtml>> diff) {
-        diffView.setDiff(diff, new DiffLineElementRenderer<SafeHtml>() {
-            @Override
-            public SafeHtml getRendering(SafeHtml lineElement) {
-                return lineElement;
-            }
-        }, new DiffSourceDocumentRenderer<String>() {
-            @Override
-            public SafeHtml renderSourceDocument(String document) {
-                return new SafeHtmlBuilder().appendHtmlConstant(document).toSafeHtml();
-            }
-        });
-        tooManyChangesMessage.setVisible(false);
+    public void setDiff(List<DiffElement<String, SafeHtml>> diff, int totalChanges) {
+        diffView.setDiff(diff,
+                         lineElement -> lineElement,
+                         document -> new SafeHtmlBuilder().appendHtmlConstant(document).toSafeHtml());
+        if (diff.size() < totalChanges) {
+            tooManyChangesMessage.setText("Showing " + diff.size() + " of " + totalChanges + " changes");
+            tooManyChangesMessage.setVisible(true);
+            hiddenChangesCount.setText("Plus " + (totalChanges - diff.size()) + " more changes not shown here");
+            hiddenChangesCount.setVisible(true);
+        }
+        else {
+            tooManyChangesMessage.setVisible(false);
+            hiddenChangesCount.setVisible(false);
+        }
     }
 
     @Override

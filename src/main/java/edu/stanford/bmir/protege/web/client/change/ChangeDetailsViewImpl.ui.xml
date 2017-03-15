@@ -123,19 +123,13 @@
                 <g:InlineLabel ui:field="changeCountField"/>
                 changes
                 <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
-                <!--<g:Button ui:field="revertButton" title="Revert changes in this revision"-->
-                          <!--addStyleNames="{style.revertButton}">-->
-                    <!--<span class="glyphicon glyphicon-backward"/>-->
-                <!--</g:Button>-->
             </div>
             <div class="{style.subjectsField}">
                 <g:InlineHTML ui:field="subjectsField"/>
             </div>
-
+            <g:Label ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
             <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
-            <g:Label
-                    text="There are too many changes to show here.  If you would like to view them, please download this revision."
-                    ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
+            <g:Label ui:field="hiddenChangesCount" addStyleNames="{style.tooManyChangesMessage}"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>
