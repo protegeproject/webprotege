@@ -72,6 +72,7 @@ public class ChangeRecordComparator implements Comparator<OWLOntologyChangeRecor
 
         };
         changeTypeVisitor = new OWLOntologyChangeDataVisitor<Integer, RuntimeException>() {
+            @Nonnull
             @Override
             public Integer visit(AddAxiomData data) throws RuntimeException {
                 return 1;
