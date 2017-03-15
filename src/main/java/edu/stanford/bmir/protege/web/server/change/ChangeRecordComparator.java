@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Comparator;
 
 /**
@@ -30,7 +31,15 @@ public class ChangeRecordComparator implements Comparator<OWLOntologyChangeRecor
     private final OWLOntologyChangeDataVisitor<Integer, RuntimeException> changeTypeVisitor;
 
 
-    public ChangeRecordComparator(Comparator<OWLAxiom> axiomComparator, Comparator<? super OWLAnnotation> annotationComparator) {
+    /**
+     * Creates a change record comparator that uses the specified comparators to compare axioms an ontology
+     * annotations within the records that it compares.
+     * @param axiomComparator The axiom comparator.
+     * @param annotationComparator The annotation comparator.
+     */
+    @Inject
+    public ChangeRecordComparator(@Nonnull Comparator<OWLAxiom> axiomComparator,
+                                  @Nonnull Comparator<? super OWLAnnotation> annotationComparator) {
         this.axiomComparator = axiomComparator;
         this.annotationComparator = annotationComparator;
         changeDataTypeVisitor = new OWLOntologyChangeDataVisitor<Integer, RuntimeException>() {
