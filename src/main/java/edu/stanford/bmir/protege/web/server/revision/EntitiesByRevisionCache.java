@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,9 @@ public class EntitiesByRevisionCache {
     private final Map<Revision, ImmutableSet<OWLEntity>> entity2Revisions = new HashMap<>();
 
     @Inject
-    public EntitiesByRevisionCache(AxiomSubjectProvider axiomSubjectProvider, HasContainsEntityInSignature hasContainsEntityInSignature, OWLDataFactory dataFactory) {
+    public EntitiesByRevisionCache(@Nonnull AxiomSubjectProvider axiomSubjectProvider,
+                                   @Nonnull HasContainsEntityInSignature hasContainsEntityInSignature,
+                                   @Nonnull OWLDataFactory dataFactory) {
         this.axiomSubjectProvider = axiomSubjectProvider;
         this.hasContainsEntityInSignature = hasContainsEntityInSignature;
         this.dataFactory = dataFactory;

@@ -66,8 +66,8 @@ public class RevisionStoreImpl implements RevisionStore {
 
     @Inject
     public RevisionStoreImpl(@Nonnull ProjectId projectId,
-                             @Nonnull OWLDataFactory dataFactory,
                              @Nonnull @ChangeHistoryFile File changeHistoryFile,
+                             @Nonnull OWLDataFactory dataFactory,
                              @Nonnull WebProtegeLogger logger) {
         this.projectId = checkNotNull(projectId);
         this.dataFactory = checkNotNull(dataFactory);
