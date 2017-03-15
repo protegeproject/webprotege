@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.diff.DiffView;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.library.timelabel.ElapsedTimeLabel;
+import edu.stanford.bmir.protege.web.client.ui.NumberFormatter;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 
 /**
  * Matthew Horridge
@@ -195,9 +197,10 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
                          lineElement -> lineElement,
                          document -> new SafeHtmlBuilder().appendHtmlConstant(document).toSafeHtml());
         if (diff.size() < totalChanges) {
-            tooManyChangesMessage.setText("Showing " + diff.size() + " of " + totalChanges + " changes");
+            tooManyChangesMessage.setText("Showing " + format(diff.size()) + " of " + format(totalChanges) + " changes");
             tooManyChangesMessage.setVisible(true);
-            hiddenChangesCount.setText("Plus " + (totalChanges - diff.size()) + " more changes not shown here");
+            int hiddenChanges = totalChanges - diff.size();
+            hiddenChangesCount.setText("Plus " + format(hiddenChanges) + " more changes not shown here");
             hiddenChangesCount.setVisible(true);
         }
         else {

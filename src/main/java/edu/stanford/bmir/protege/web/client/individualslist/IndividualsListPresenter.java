@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.ui.NumberFormatter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_INDIVIDUAL;
 
@@ -47,8 +49,6 @@ public class IndividualsListPresenter {
     private static final int SEARCH_DELAY = 700;
 
     private static final int PAGE_SIZE = 500;
-
-    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getFormat("#,##0;(#,##0)");
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -146,11 +146,10 @@ public class IndividualsListPresenter {
             suffix = " instances";
         }
         if(displayedIndividuals == totalIndividuals) {
-            view.setStatusMessage(NUMBER_FORMAT.format(displayedIndividuals) + suffix);
+            view.setStatusMessage(format(displayedIndividuals) + suffix);
         }
         else {
-            view.setStatusMessage(NUMBER_FORMAT.format(displayedIndividuals) + " of " + NUMBER_FORMAT.format(
-                    totalIndividuals) + suffix);
+            view.setStatusMessage(format(displayedIndividuals) + " of " + format(totalIndividuals) + suffix);
         }
     }
 
