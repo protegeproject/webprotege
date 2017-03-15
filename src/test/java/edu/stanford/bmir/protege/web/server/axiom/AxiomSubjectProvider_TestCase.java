@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
 import edu.stanford.bmir.protege.web.shared.object.OWLObjectSelector;
 import org.hamcrest.Matcher;
@@ -15,6 +14,7 @@ import org.mockito.stubbing.Answer;
 import org.semanticweb.owlapi.model.*;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -94,11 +94,11 @@ public class AxiomSubjectProvider_TestCase {
                 atomSelector
         );
 
-        when(classExpressionSelector.selectOne(classExpressionsSet)).thenReturn(Optional.of(classExpression));
-        when(objectPropertyExpressionSelector.selectOne(objectPropertyExpressionSet)).thenReturn(Optional.of(objectPropertyExpression));
-        when(dataPropertyExpressionSelector.selectOne(dataPropertyExpressionSet)).thenReturn(Optional.of(dataPropertyExpression));
-        when(individualSelector.selectOne(individualSet)).thenReturn(Optional.of(individual));
-        when(atomSelector.selectOne(atomSet)).thenReturn(Optional.of(atom));
+        when(classExpressionSelector.selectOne(classExpressionsSet)).thenReturn(java.util.Optional.of(classExpression));
+        when(objectPropertyExpressionSelector.selectOne(objectPropertyExpressionSet)).thenReturn(java.util.Optional.of(objectPropertyExpression));
+        when(dataPropertyExpressionSelector.selectOne(dataPropertyExpressionSet)).thenReturn(java.util.Optional.of(dataPropertyExpression));
+        when(individualSelector.selectOne(individualSet)).thenReturn(java.util.Optional.of(individual));
+        when(atomSelector.selectOne(atomSet)).thenReturn(java.util.Optional.of(atom));
     }
 
     /**
@@ -127,10 +127,10 @@ public class AxiomSubjectProvider_TestCase {
     }
 
     private Matcher<Optional<? extends OWLObject>> isOptionalOf(OWLObject obj) {
-        return Matchers.<Optional<? extends OWLObject>>is(Optional.of(obj));
+        return Matchers.is(java.util.Optional.of(obj));
     }
 
-    private Optional<? extends OWLObject> subjectOf(OWLAxiom axiom) {
+    private java.util.Optional<? extends OWLObject> subjectOf(OWLAxiom axiom) {
         return subjectProvider.getSubject(axiom);
     }
 

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.axiom;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.inject.Inject;
 import java.util.Comparator;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.object;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.SWRLAtom;
 
 import javax.inject.Inject;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -23,7 +23,7 @@ public class SWRLAtomSelector implements OWLObjectSelector<SWRLAtom> {
 
     @Override
     public Optional<SWRLAtom> selectOne(Iterable<SWRLAtom> objects) {
-        Optional<SWRLAtom> result = Optional.absent();
+        Optional<SWRLAtom> result = Optional.empty();
         for(SWRLAtom atom : objects) {
             if(result.isPresent()) {
                 if(swrlObjectComparator.compare(atom, result.get()) < 0) {
