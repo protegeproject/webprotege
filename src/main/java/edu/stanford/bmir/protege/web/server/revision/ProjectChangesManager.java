@@ -41,23 +41,19 @@ public class ProjectChangesManager {
 
     private final RenderingManager browserTextProvider;
 
-    private final Comparator<OWLAxiom> axiomComparator;
-
-    private final Comparator<? super OWLAnnotation> annotationComparator;
+    private final Comparator<OWLOntologyChangeRecord> changeRecordComparator;
 
     @Inject
     public ProjectChangesManager(RevisionManager changeManager,
                                  EntitiesByRevisionCache entitiesByRevisionCache,
                                  @RootOntology OWLOntology rootOntology,
                                  RenderingManager browserTextProvider,
-                                 Comparator<OWLAxiom> axiomComparator,
-                                 Comparator<? super OWLAnnotation> annotationComparator) {
+                                 Comparator<OWLOntologyChangeRecord> changeRecordComparator) {
         this.changeManager = changeManager;
         this.entitiesByRevisionCache = entitiesByRevisionCache;
         this.rootOntology = rootOntology;
         this.browserTextProvider = browserTextProvider;
-        this.axiomComparator = axiomComparator;
-        this.annotationComparator = annotationComparator;
+        this.changeRecordComparator = changeRecordComparator;
     }
 
     public ImmutableList<ProjectChange> getProjectChanges(Optional<OWLEntity> subject) {
@@ -159,8 +155,6 @@ public class ProjectChangesManager {
 
 
     private void sortDiff(List<DiffElement<String, OWLOntologyChangeRecord>> diffElements) {
-        final Comparator<OWLOntologyChangeRecord> changeRecordComparator = new ChangeRecordComparator(axiomComparator,
-                                                                                                      annotationComparator);
         Comparator<DiffElement<String, OWLOntologyChangeRecord>> c =
                 Comparator
                         .comparing((Function<DiffElement<String, OWLOntologyChangeRecord>, OWLOntologyChangeRecord>)
