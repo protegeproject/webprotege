@@ -21,6 +21,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -80,20 +81,11 @@ public class ProjectChangesManager {
             return;
         }
 
-        AxiomIRISubjectProvider subjectProvider = new AxiomIRISubjectProvider(IRI::compareTo);
-        Map<Optional<IRI>, List<OWLOntologyChangeRecord>> recordsBySubject = revision.getChanges().stream()
-                                                                  .collect(Collectors.groupingBy(rec -> {
-                                                                      OWLOntologyChangeData data = rec.getData();
-                                                                      if (data instanceof AxiomChangeData) {
-                                                                          OWLAxiom axiom = ((AxiomChangeData) data).getAxiom();
-                                                                          return subjectProvider.getSubject(axiom);
-                                                                      }
-                                                                      else {
-                                                                          return Optional.empty();
-                                                                      }
-                                                                  }));
-        List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
+        Map<Optional<IRI>, List<OWLOntologyChangeRecord>> recordsBySubject =
+                revision.getChanges().stream()
+                        .collect(Collectors.groupingBy(rec -> getAxiom(rec)));
 
+        List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
         ImmutableSet.Builder<OWLEntityData> subjectsBuilder = ImmutableSet.builder();
         final int totalChanges;
         if (subject.isPresent()) {
@@ -104,9 +96,9 @@ public class ProjectChangesManager {
         }
         else {
             totalChanges = revision.getSize();
-            for(Map.Entry<Optional<IRI>, List<OWLOntologyChangeRecord>> entry : recordsBySubject.entrySet()) {
+            for (Map.Entry<Optional<IRI>, List<OWLOntologyChangeRecord>> entry : recordsBySubject.entrySet()) {
                 limitedRecords.addAll(entry.getValue());
-                if(limitedRecords.size() >= DEFAULT_CHANGE_LIMIT) {
+                if (limitedRecords.size() >= DEFAULT_CHANGE_LIMIT) {
                     break;
                 }
             }
@@ -118,15 +110,8 @@ public class ProjectChangesManager {
 
         List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(
                 limitedRecords);
-            sortDiff(axiomDiffElements);
-//            for (OWLEntity entity : entitiesByRevisionCache.getEntities(revision)) {
-//                Optional<String> rendering = browserTextProvider.getOWLEntityBrowserText(entity);
-//                OWLEntityData entityData = DataFactory.getOWLEntityData(entity,
-//                                                                        rendering.orElse(entity.getIRI()
-//                                                                                               .toString()));
-//                subjectsBuilder.add(entityData);
-//            }
-        List<DiffElement<String, SafeHtml>> renderedDiffElements = getDiffElements(axiomDiffElements);
+        sortDiff(axiomDiffElements);
+        List<DiffElement<String, SafeHtml>> renderedDiffElements = renderDiffElements(axiomDiffElements);
         int pageElements = renderedDiffElements.size();
         int pageCount = totalChanges / pageElements + (totalChanges % pageElements);
         Page<DiffElement<String, SafeHtml>> page = new Page<>(
@@ -146,7 +131,23 @@ public class ProjectChangesManager {
         changesBuilder.add(projectChange);
     }
 
-    private List<DiffElement<String, SafeHtml>> getDiffElements(List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements) {
+    private static Optional<IRI> getAxiom(OWLOntologyChangeRecord rec) {
+        OWLOntologyChangeData data = rec.getData();
+        if (data instanceof AxiomChangeData) {
+            OWLAxiom axiom = ((AxiomChangeData) data).getAxiom();
+            return getSubject(axiom);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<IRI> getSubject(OWLAxiom axiom) {
+        AxiomIRISubjectProvider subjectProvider = new AxiomIRISubjectProvider(IRI::compareTo);
+        return subjectProvider.getSubject(axiom);
+    }
+
+    private List<DiffElement<String, SafeHtml>> renderDiffElements(List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements) {
 
         List<DiffElement<String, SafeHtml>> diffElements = new ArrayList<>();
         DiffElementRenderer<String> renderer = new DiffElementRenderer<>(browserTextProvider);
@@ -160,16 +161,12 @@ public class ProjectChangesManager {
     private void sortDiff(List<DiffElement<String, OWLOntologyChangeRecord>> diffElements) {
         final Comparator<OWLOntologyChangeRecord> changeRecordComparator = new ChangeRecordComparator(axiomComparator,
                                                                                                       annotationComparator);
-        Collections.sort(diffElements, (o1, o2) -> {
-            int diff = changeRecordComparator.compare(o1.getLineElement(), o2.getLineElement());
-            if (diff != 0) {
-                return diff;
-            }
-            int opDiff = o1.getDiffOperation().compareTo(o2.getDiffOperation());
-            if (opDiff != 0) {
-                return opDiff;
-            }
-            return o1.getSourceDocument().compareTo(o2.getSourceDocument());
-        });
+        Comparator<DiffElement<String, OWLOntologyChangeRecord>> c =
+                Comparator
+                        .comparing((Function<DiffElement<String, OWLOntologyChangeRecord>, OWLOntologyChangeRecord>)
+                                           DiffElement::getLineElement, changeRecordComparator)
+                        .thenComparing(DiffElement::getDiffOperation)
+                        .thenComparing(DiffElement::getSourceDocument);
+        diffElements.sort(c);
     }
 }
