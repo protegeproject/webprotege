@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
+import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
@@ -44,6 +45,7 @@ import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
@@ -454,6 +456,11 @@ public class ProjectModule {
     @Provides
     Comparator<? super SWRLAtom> providesSWRLAtomComparator(OWLObjectComparatorImpl impl) {
         return impl;
+    }
+
+    @Provides
+    Comparator<OWLOntologyChangeRecord> providesOWLOntologyChangeRecordComparator(ChangeRecordComparator comparator) {
+        return comparator;
     }
 
     @Provides

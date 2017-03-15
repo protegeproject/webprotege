@@ -80,6 +80,10 @@ public class ProjectChangesManager {
         final int totalChanges;
         if (subject.isPresent()) {
             List<OWLOntologyChangeRecord> records = recordsBySubject.get(subject.map(OWLEntity::getIRI));
+            if(records ==  null) {
+                // Nothing in this revision that changes the subject
+                return;
+            }
             totalChanges = records.size();
             limitedRecords.addAll(records);
         }
