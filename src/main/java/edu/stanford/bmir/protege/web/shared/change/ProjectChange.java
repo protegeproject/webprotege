@@ -22,8 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectChange implements IsSerializable, Serializable {
 
-    private ImmutableSet<OWLEntityData> subjects;
-
     private RevisionNumber revisionNumber;
 
     private UserId author;
@@ -42,8 +40,7 @@ public class ProjectChange implements IsSerializable, Serializable {
     private ProjectChange() {
     }
 
-    public ProjectChange(ImmutableSet<OWLEntityData> subjects, RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
-        this.subjects = checkNotNull(subjects);
+    public ProjectChange(RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
         this.revisionNumber = checkNotNull(revisionNumber);
         this.author = checkNotNull(author);
         this.timestamp = checkNotNull(timestamp);
@@ -54,10 +51,6 @@ public class ProjectChange implements IsSerializable, Serializable {
 
     public int getChangeCount() {
         return changeCount;
-    }
-
-    public ImmutableSet<OWLEntityData> getSubjects() {
-        return subjects;
     }
 
     public RevisionNumber getRevisionNumber() {

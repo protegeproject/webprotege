@@ -1,24 +1,21 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.function.Function;
@@ -33,32 +30,32 @@ public class ProjectChangesManager {
 
     public static final int DEFAULT_CHANGE_LIMIT = 50;
 
-    private final RevisionManager changeManager;
+    private final RevisionManager revisionManager;
 
     private final EntitiesByRevisionCache entitiesByRevisionCache;
-
-    private final OWLOntology rootOntology;
 
     private final RenderingManager browserTextProvider;
 
     private final Comparator<OWLOntologyChangeRecord> changeRecordComparator;
 
+    private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+
     @Inject
-    public ProjectChangesManager(RevisionManager changeManager,
-                                 EntitiesByRevisionCache entitiesByRevisionCache,
-                                 @RootOntology OWLOntology rootOntology,
-                                 RenderingManager browserTextProvider,
-                                 Comparator<OWLOntologyChangeRecord> changeRecordComparator) {
-        this.changeManager = changeManager;
+    public ProjectChangesManager(@Nonnull RevisionManager revisionManager,
+                                 @Nonnull EntitiesByRevisionCache entitiesByRevisionCache,
+                                 @Nonnull RenderingManager browserTextProvider,
+                                 @Nonnull Comparator<OWLOntologyChangeRecord> changeRecordComparator,
+                                 @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider) {
+        this.revisionManager = revisionManager;
         this.entitiesByRevisionCache = entitiesByRevisionCache;
-        this.rootOntology = rootOntology;
+        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.browserTextProvider = browserTextProvider;
         this.changeRecordComparator = changeRecordComparator;
     }
 
     public ImmutableList<ProjectChange> getProjectChanges(Optional<OWLEntity> subject) {
         ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
-        for (Revision revision : changeManager.getRevisions()) {
+        for (Revision revision : revisionManager.getRevisions()) {
             getProjectChangesForRevision(revision, subject, changes);
         }
         return changes.build();
@@ -77,18 +74,14 @@ public class ProjectChangesManager {
             return;
         }
 
-        Map<Optional<IRI>, List<OWLOntologyChangeRecord>> recordsBySubject =
-                revision.getChanges().stream()
-                        .collect(Collectors.groupingBy(rec -> getAxiom(rec)));
+        Map<Optional<IRI>, List<OWLOntologyChangeRecord>> recordsBySubject = getChangeRecordsBySubject(revision);
 
         List<OWLOntologyChangeRecord> limitedRecords = new ArrayList<>();
-        ImmutableSet.Builder<OWLEntityData> subjectsBuilder = ImmutableSet.builder();
         final int totalChanges;
         if (subject.isPresent()) {
             List<OWLOntologyChangeRecord> records = recordsBySubject.get(subject.map(OWLEntity::getIRI));
             totalChanges = records.size();
             limitedRecords.addAll(records);
-            subjectsBuilder.add(browserTextProvider.getRendering(subject.get()));
         }
         else {
             totalChanges = revision.getSize();
@@ -100,9 +93,7 @@ public class ProjectChangesManager {
             }
         }
 
-        Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(
-                new WebProtegeOntologyIRIShortFormProvider(rootOntology)
-        );
+        Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(ontologyIRIShortFormProvider);
 
         List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(
                 limitedRecords);
@@ -117,7 +108,6 @@ public class ProjectChangesManager {
                 totalChanges
         );
         ProjectChange projectChange = new ProjectChange(
-                subjectsBuilder.build(),
                 revision.getRevisionNumber(),
                 revision.getUserId(),
                 revision.getTimestamp(),
@@ -125,6 +115,11 @@ public class ProjectChangesManager {
                 totalChanges,
                 page);
         changesBuilder.add(projectChange);
+    }
+
+    private static Map<Optional<IRI>, List<OWLOntologyChangeRecord>> getChangeRecordsBySubject(Revision revision) {
+        return revision.getChanges().stream()
+                .collect(Collectors.groupingBy(ProjectChangesManager::getAxiom));
     }
 
     private static Optional<IRI> getAxiom(OWLOntologyChangeRecord rec) {
