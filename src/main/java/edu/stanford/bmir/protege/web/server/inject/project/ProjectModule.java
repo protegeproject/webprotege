@@ -154,7 +154,10 @@ public class ProjectModule {
             ClassAssertionAxiomMatcher classAssertionAxiomMatcher,
             SubClassOfAxiomMatcher subClassOfAxiomMatcher,
             SubClassOfChangeMatcher subClassOfChangeMatcher,
-            SubClassOfEditChangeMatcher subClassOfEditChangeMatcher) {
+            SubClassOfEditChangeMatcher subClassOfEditChangeMatcher,
+            SubClassOfWithFreshEntitiesMatcher subClassOfWithFreshEntitiesMatcher,
+            PropertyAssertionAxiomMatcher propertyAssertionAxiomMatcher,
+            SameIndividualAxiomChangeMatcher sameIndividualAxiomChangeMatcher) {
         return ImmutableSet.of(
                 annotationAssertionChangeMatcher,
                 propertyDomainAxiomChangeMatcher,
@@ -164,7 +167,10 @@ public class ProjectModule {
                 classAssertionAxiomMatcher,
                 subClassOfAxiomMatcher,
                 subClassOfChangeMatcher,
-                subClassOfEditChangeMatcher
+                subClassOfEditChangeMatcher,
+                subClassOfWithFreshEntitiesMatcher,
+                propertyAssertionAxiomMatcher,
+                sameIndividualAxiomChangeMatcher
         );
     }
 

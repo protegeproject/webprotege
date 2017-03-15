@@ -34,9 +34,11 @@ public class SubClassOfEditChangeMatcher implements ChangeMatcher {
         }
         OWLSubClassOfAxiom addAx = edit.getAddAxiom().get();
         OWLSubClassOfAxiom remAx = edit.getRemoveAxiom().get();
-        PropertyFillerExtractor extractorAdd = new PropertyFillerExtractor(addAx.getSuperClass());
-        PropertyFillerExtractor extractorRem = new PropertyFillerExtractor(remAx.getSuperClass());
-        if (!extractorAdd.isPropertyAndFillerExtracted() || !extractorRem.isPropertyAndFillerExtracted()) {
+        PropertyFiller extractorAdd = new PropertyFiller(addAx.getSubClass(),
+                                                         addAx.getSuperClass());
+        PropertyFiller extractorRem = new PropertyFiller(remAx.getSubClass(),
+                                                         remAx.getSuperClass());
+        if (!extractorAdd.isPropertyAndFillerPresent() || !extractorRem.isPropertyAndFillerPresent()) {
             return Optional.empty();
         }
         OWLProperty addedProp = extractorAdd.getProperty().get();

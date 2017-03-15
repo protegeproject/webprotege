@@ -10,7 +10,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 13 Mar 2017
  */
-public class PropertyFillerExtractor {
+public class PropertyFiller {
 
     private static final PropertyExtactor PROPERTY_EXTACTOR = new PropertyExtactor();
 
@@ -18,19 +18,30 @@ public class PropertyFillerExtractor {
 
     private final OWLClassExpression classExpression;
 
-    public PropertyFillerExtractor(OWLClassExpression classExpression) {
+    private final OWLClassExpression subClass;
+
+    public PropertyFiller(@Nonnull OWLClassExpression subClass,
+                          @Nonnull OWLClassExpression classExpression) {
         this.classExpression = classExpression;
+        this.subClass = subClass;
     }
 
+    @Nonnull
+    public OWLClassExpression getSubClass() {
+        return subClass;
+    }
+
+    @Nonnull
     public Optional<OWLProperty> getProperty() {
         return classExpression.accept(PROPERTY_EXTACTOR);
     }
 
+    @Nonnull
     public Optional<OWLObject> getFiller() {
         return classExpression.accept(FILLER_EXTRACTOR);
     }
 
-    public boolean isPropertyAndFillerExtracted() {
+    public boolean isPropertyAndFillerPresent() {
         return getProperty().isPresent() && getFiller().isPresent();
     }
     
@@ -91,7 +102,7 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLObjectMinCardinality ce) {
-            if (!ce.getProperty().isAnonymous()) {
+            if (!ce.getProperty().isAnonymous() && ce.getCardinality() == 1) {
                 return Optional.of(ce.getProperty().asOWLObjectProperty());
             }
             else {
@@ -102,34 +113,19 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLObjectExactCardinality ce) {
-            if (!ce.getProperty().isAnonymous()) {
-                return Optional.of(ce.getProperty().asOWLObjectProperty());
-            }
-            else {
-                return Optional.empty();
-            }
+            return Optional.empty();
         }
 
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLObjectMaxCardinality ce) {
-            if (!ce.getProperty().isAnonymous()) {
-                return Optional.of(ce.getProperty().asOWLObjectProperty());
-            }
-            else {
-                return Optional.empty();
-            }
+            return Optional.empty();
         }
 
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLObjectHasSelf ce) {
-            if (!ce.getProperty().isAnonymous()) {
-                return Optional.of(ce.getProperty().asOWLObjectProperty());
-            }
-            else {
-                return Optional.empty();
-            }
+            return Optional.empty();
         }
 
         @Nonnull
@@ -152,12 +148,7 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLDataAllValuesFrom ce) {
-            if (!ce.getProperty().isAnonymous()) {
-                return Optional.of(ce.getProperty().asOWLDataProperty());
-            }
-            else {
-                return Optional.empty();
-            }
+            return Optional.empty();
         }
 
         @Nonnull
@@ -174,7 +165,7 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLDataMinCardinality ce) {
-            if (!ce.getProperty().isAnonymous()) {
+            if (!ce.getProperty().isAnonymous() && ce.getCardinality() == 1) {
                 return Optional.of(ce.getProperty().asOWLDataProperty());
             }
             else {
@@ -185,23 +176,13 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLDataExactCardinality ce) {
-            if (!ce.getProperty().isAnonymous()) {
-                return Optional.of(ce.getProperty().asOWLDataProperty());
-            }
-            else {
-                return Optional.empty();
-            }
+            return Optional.empty();
         }
 
         @Nonnull
         @Override
         public Optional<OWLProperty> visit(@Nonnull OWLDataMaxCardinality ce) {
-            if (!ce.getProperty().isAnonymous()) {
-                return Optional.of(ce.getProperty().asOWLDataProperty());
-            }
-            else {
-                return Optional.empty();
-            }
+            return Optional.empty();
         }
     }
     
@@ -240,7 +221,7 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLObjectAllValuesFrom ce) {
-            return Optional.of(ce.getFiller());
+            return Optional.empty();
         }
 
         @Nonnull
@@ -252,19 +233,24 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLObjectMinCardinality ce) {
-            return Optional.of(ce.getFiller());
+            if (ce.getCardinality() == 1) {
+                return Optional.of(ce.getFiller());
+            }
+            else {
+                return Optional.empty();
+            }
         }
 
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLObjectExactCardinality ce) {
-            return Optional.of(ce.getFiller());
+            return Optional.empty();
         }
 
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLObjectMaxCardinality ce) {
-            return Optional.of(ce.getFiller());
+            return Optional.empty();
         }
 
         @Nonnull
@@ -288,7 +274,7 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLDataAllValuesFrom ce) {
-            return Optional.of(ce.getFiller());
+            return Optional.empty();
         }
 
         @Nonnull
@@ -300,19 +286,24 @@ public class PropertyFillerExtractor {
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLDataMinCardinality ce) {
-            return Optional.of(ce.getFiller());
+            if (ce.getCardinality() == 1) {
+                return Optional.of(ce.getFiller());
+            }
+            else {
+                return Optional.empty();
+            }
         }
 
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLDataExactCardinality ce) {
-            return Optional.of(ce.getFiller());
+            return Optional.empty();
         }
 
         @Nonnull
         @Override
         public Optional<OWLObject> visit(@Nonnull OWLDataMaxCardinality ce) {
-            return Optional.of(ce.getFiller());
+            return Optional.empty();
         }
     }
 }

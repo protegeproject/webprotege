@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import com.google.common.reflect.TypeToken;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import org.semanticweb.owlapi.model.ClassExpressionType;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
@@ -27,11 +26,12 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
 
     @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLSubClassOfAxiom axiom) {
-        PropertyFillerExtractor propertyFillerExtractor = new PropertyFillerExtractor(axiom.getSuperClass());
-        Optional<OWLProperty> property = propertyFillerExtractor.getProperty();
-        Optional<OWLObject> filler = propertyFillerExtractor.getFiller();
+        PropertyFiller propertyFiller = new PropertyFiller(axiom.getSubClass(),
+                                                           axiom.getSuperClass());
+        Optional<OWLProperty> property = propertyFiller.getProperty();
+        Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Added %s %s to %s", property.get(), filler.get(), axiom.getSubClass());
+            return formatter.format("Added property value (%s %s) to %s", property.get(), filler.get(), axiom.getSubClass());
         }
         else {
             return formatter.format("Made %s a subclass of %s", axiom.getSubClass(), axiom.getSuperClass());
@@ -40,11 +40,12 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
 
     @Override
     protected Optional<String> getDescriptionForRemoveAxiomChange(OWLSubClassOfAxiom axiom) {
-        PropertyFillerExtractor propertyFillerExtractor = new PropertyFillerExtractor(axiom.getSuperClass());
-        Optional<OWLProperty> property = propertyFillerExtractor.getProperty();
-        Optional<OWLObject> filler = propertyFillerExtractor.getFiller();
+        PropertyFiller propertyFiller = new PropertyFiller(axiom.getSuperClass(),
+                                                           axiom.getSuperClass());
+        Optional<OWLProperty> property = propertyFiller.getProperty();
+        Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Removed %s %s from %s", property.get(), filler.get(), axiom.getSubClass());
+            return formatter.format("Removed property value (%s %s) from %s", property.get(), filler.get(), axiom.getSubClass());
         }
         else {
             return formatter.format("Removed %s as a subclass of %s" , axiom.getSubClass(), axiom.getSuperClass());

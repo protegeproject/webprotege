@@ -25,11 +25,17 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
 
     @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom) {
-        return formatter.format("Added %s annotation to %s", axiom.getProperty(), axiom.getSubject());
+        return formatter.format("Added annotation (%s  %s) to %s",
+                                axiom.getProperty(),
+                                axiom.getValue(),
+                                axiom.getSubject());
     }
 
     @Override
     protected Optional<String> getDescriptionForRemoveAxiomChange(OWLAnnotationAssertionAxiom axiom) {
-        return formatter.format("Removed %s annotation from %s", axiom.getProperty(), axiom.getSubject());
+        return formatter.format("Removed annotation (%s  %s) from %s",
+                                axiom.getProperty(),
+                                axiom.getValue(),
+                                axiom.getSubject());
     }
 }

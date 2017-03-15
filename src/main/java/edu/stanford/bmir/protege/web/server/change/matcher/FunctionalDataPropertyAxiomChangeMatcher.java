@@ -24,7 +24,7 @@ public class FunctionalDataPropertyAxiomChangeMatcher extends AbstractAxiomMatch
 
     @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLFunctionalDataPropertyAxiom axiom) {
-        return formatter.format("Made %s functional", axiom.getProperty());
+        return formatter.format("Made property %s functional", axiom.getProperty());
     }
 
     @Override
