@@ -33,10 +33,7 @@ import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandl
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.GetProjectPermissionsActionHandler;
-import edu.stanford.bmir.protege.web.server.perspective.GetPerspectiveLayoutActionHandler;
-import edu.stanford.bmir.protege.web.server.perspective.GetPerspectivesActionHandler;
-import edu.stanford.bmir.protege.web.server.perspective.SetPerspectiveLayoutActionHandler;
-import edu.stanford.bmir.protege.web.server.perspective.SetPerspectivesActionHandler;
+import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
@@ -514,6 +511,11 @@ public class ActionHandlersModule {
 
     @Provides(type = SET)
     public ActionHandler provideGetCommentedEntitiesActionHandler(GetCommentedEntitiesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ActionHandler provideResetPerspectiveLayoutActionHandler(ResetPerspectiveLayoutActionHandler handler) {
         return handler;
     }
 

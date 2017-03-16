@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -19,6 +18,8 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -42,7 +43,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         WidgetMapPanelManager panelManager = new WidgetMapPanelManager(rootWidget, widgetMapper);
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
         initWidget(widgetMapPanel);
-        rootNode = Optional.absent();
+        rootNode = Optional.empty();
     }
 
     @Override

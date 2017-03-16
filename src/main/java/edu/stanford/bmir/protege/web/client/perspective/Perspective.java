@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -8,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.perspective.HasPerspectiveId;
 import edu.stanford.protege.widgetmap.client.HasRootNode;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.Node;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
