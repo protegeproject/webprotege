@@ -55,8 +55,6 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
-import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
@@ -88,9 +86,9 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
-@Portlet(id = "portlets.ClassHierarchy",
-         title = "Class Hierarchy",
-         tooltip = "Displays the class hierarchy as a tree.")
+@Portlet(id = "portlets.ClassHierarchy" ,
+         title = "Class Hierarchy" ,
+         tooltip = "Displays the class hierarchy as a tree." )
 public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
@@ -168,21 +166,21 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                 public void onContextMenu(final Node node, EventObject e) {
                     treePanel.getSelectionModel().select((TreeNode) node);
                     PopupMenu contextMenu = new PopupMenu();
-                    contextMenu.addItem("Show IRI", event -> {
+                    contextMenu.addItem("Show IRI" , event -> {
                         java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                         if (selectedEntity.isPresent()) {
                             String iri = selectedEntity.get().getIRI().toQuotedString();
-                            InputBox.showOkDialog("Class IRI", true, iri, input -> {
+                            InputBox.showOkDialog("Class IRI" , true, iri, input -> {
                             });
                         }
                     });
-                    contextMenu.addItem("Show direct link", event -> {
+                    contextMenu.addItem("Show direct link" , event -> {
                         String location = Window.Location.getHref();
-                        InputBox.showOkDialog("Direct link", true, location, input -> {
+                        InputBox.showOkDialog("Direct link" , true, location, input -> {
                         });
                     });
                     contextMenu.addSeparator();
-                    contextMenu.addItem("Refresh tree", event -> onRefresh());
+                    contextMenu.addItem("Refresh tree" , event -> onRefresh());
                     contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
                 }
             };
@@ -195,7 +193,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         portletUi.addPortletAction(deleteClassAction);
         portletUi.addPortletAction(watchClassAction);
         Scheduler.get().scheduleDeferred(() -> {
-            EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
+            EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing" );
             createRoot(root, portletUi);
         });
         eventBus.addProjectEventHandler(getProjectId(),
@@ -391,25 +389,16 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         }
     }
 
+
     private void transmitSelectionFromTree() {
         if (inRemove) {
-            GWT.log("[ClassTreePortlet] In Remove.  Not updating selection.");
+            GWT.log("[ClassTreePortlet] In Remove.  Not updating selection." );
             return;
         }
-        Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
+        java.util.Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
         if (selectedClassDataFromTree.isPresent()) {
             getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
         }
-        dispatchServiceManager.execute(new GetIssuesAction(getProjectId()),
-                                       new DispatchServiceCallback<GetIssuesResult>() {
-                                           @Override
-                                           public void handleSuccess(GetIssuesResult result) {
-//                MessageBox.showMessage(result.getIssues().get(0).toString());
-                                               result.getIssues().stream()
-                                                     .limit(1)
-                                                     .forEach(i -> MessageBox.showMessage("Issue", i.toString()));
-                                           }
-                                       });
     }
 
     protected void addDragAndDropSupport() {
@@ -423,7 +412,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                             final TreeNode dropNode,
                                             final DropNodeCallback dropNodeCallback) {
                 final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(
-                        dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
+                        dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?" );
                 if (success) {
                     moveClass((EntityData) dropNode.getUserObject(),
                               (EntityData) dropNode.getParentNode().getUserObject(),
@@ -560,7 +549,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.CLASS,
                                                                      createEntityInfo -> {
-                                                                         final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
+                                                                         final java.util.Optional<OWLClass> superCls = getSelectedTreeNodeClass();
                                                                          if (!superCls.isPresent()) {
                                                                              return;
                                                                          }
@@ -584,11 +573,11 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void createSubClassesByImportingCSVDocument() {
-        final Optional<OWLClass> selCls = getSelectedTreeNodeClass();
+        final java.util.Optional<OWLClass> selCls = getSelectedTreeNodeClass();
         if (!selCls.isPresent()) {
             return;
         }
-        UploadFileDialogController controller = new UploadFileDialogController("Upload CSV",
+        UploadFileDialogController controller = new UploadFileDialogController("Upload CSV" ,
                                                                                new UploadFileResultHandler() {
                                                                                    @Override
                                                                                    public void handleFileUploaded(final DocumentId fileDocumentId) {
@@ -610,7 +599,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                                                                        ProgressMonitor.get()
                                                                                                       .hideProgressMonitor();
                                                                                        MessageBox.showAlert(
-                                                                                               "Error uploading CSV file",
+                                                                                               "Error uploading CSV file" ,
                                                                                                errorMessage);
                                                                                    }
                                                                                });
@@ -634,7 +623,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                         if (!existingClasses.contains(createdCls)) {
                             final SubclassEntityData entityData = new SubclassEntityData(createdCls.getIRI().toString(),
                                                                                          result.getBrowserText(
-                                                                                                 createdCls).or(""),
+                                                                                                 createdCls).or("" ),
                                                                                          Collections.<EntityData>emptySet(),
                                                                                          0);
                             entityData.setValueType(ValueType.Cls);
@@ -654,7 +643,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     protected void onDeleteCls() {
-        final Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
+        final java.util.Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
         if (!currentSelection.isPresent()) {
             showClassNotSelectedMessage();
             return;
@@ -663,13 +652,13 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         final OWLClassData theClassData = currentSelection.get();
         final String displayName = theClassData.getBrowserText();
         String subMessage = "Are you sure you want to delete class \"" + displayName + "\"?";
-        MessageBox.showYesNoConfirmBox("Delete class?",
+        MessageBox.showYesNoConfirmBox("Delete class?" ,
                                        subMessage,
                                        () -> deleteCls(theClassData.getEntity()));
     }
 
     private void showClassNotSelectedMessage() {
-        MessageBox.showAlert("No class selected", "Please select a class.");
+        MessageBox.showAlert("No class selected" , "Please select a class." );
     }
 
     private void deleteCls(final OWLClass cls) {
@@ -677,7 +666,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     protected void editWatches() {
-        final Optional<OWLClass> sel = getSelectedTreeNodeClass();
+        final java.util.Optional<OWLClass> sel = getSelectedTreeNodeClass();
         if (!sel.isPresent()) {
             return;
         }
@@ -722,12 +711,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     public boolean isSubclassesLoaded(final TreeNode node) {
-        final String val = node.getAttribute("subclassesLoaded");
-        return val != null && val.equals("true");
+        final String val = node.getAttribute("subclassesLoaded" );
+        return val != null && val.equals("true" );
     }
 
     public void setSubclassesLoaded(final TreeNode node, final boolean loaded) {
-        node.setAttribute("subclassesLoaded", loaded ? "true" : "false");
+        node.setAttribute("subclassesLoaded" , loaded ? "true" : "false" );
     }
 
     protected void moveClass(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
@@ -786,30 +775,30 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
      *
      * @return The selected class, or {@code null} if there is not selection.
      */
-    private Optional<OWLClass> getSelectedTreeNodeClass() {
-        Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
+    private java.util.Optional<OWLClass> getSelectedTreeNodeClass() {
+        java.util.Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
         if (currentSelection.isPresent()) {
-            return Optional.of(currentSelection.get().getEntity());
+            return java.util.Optional.of(currentSelection.get().getEntity());
         }
         else {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
     }
 
-    private Optional<OWLClassData> getSelectedTreeNodeClassData() {
+    private java.util.Optional<OWLClassData> getSelectedTreeNodeClassData() {
         List<EntityData> sel = getSelectedTreeNodeEntityData();
         if (sel == null) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         if (sel.isEmpty()) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         EntityData firstSel = sel.get(0);
         Optional<OWLClass> cls = toOWLClass(firstSel);
         if (!cls.isPresent()) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
-        return Optional.of(new OWLClassData(cls.get(), firstSel.getBrowserText()));
+        return java.util.Optional.of(new OWLClassData(cls.get(), firstSel.getBrowserText()));
     }
 
     public List<EntityData> getSelectedTreeNodeEntityData() {
@@ -1002,12 +991,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private void createRoot(EntityData rootEnitity, AcceptsOneWidget contentHolder) {
         if (rootEnitity == null) {
-            rootEnitity = new EntityData("Root", "Root node is not defined");
+            rootEnitity = new EntityData("Root" , "Root node is not defined" );
         }
         treePanel = createTreePanel();
         final TreeNode root = createTreeNode(rootEnitity);
         treePanel.setRootNode(root);
-        treePanel.setSize("100%", "100%");
+        treePanel.setSize("100%" , "100%" );
         ScrollPanel sp = new ScrollPanel(treePanel);
         contentHolder.setWidget(sp);
         createSelectionListener();
@@ -1153,7 +1142,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(),
                                                                      result.getBrowserTextMap()
                                                                            .getBrowserText(result.getObject())
-                                                                           .or(""),
+                                                                           .or("" ),
                                                                      Collections.emptyList(),
                                                                      0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
@@ -1185,7 +1174,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         @Override
         public void onFailure(final Throwable caught) {
-            MessageBox.showErrorMessage("Class not moved", caught);
+            MessageBox.showErrorMessage("Class not moved" , caught);
             // TODO: refresh oldParent and newParent
         }
 
@@ -1204,7 +1193,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                     warningMsg += "&nbsp;&nbsp;&nbsp;&nbsp;" + p.getBrowserText() + "<BR>";
                 }
                 warningMsg += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...";
-                MessageBox.showAlert("Cycles introduced during class move", "Class moved successfully.<BR>" +
+                MessageBox.showAlert("Cycles introduced during class move" , "Class moved successfully.<BR>" +
                         "<BR>" +
                         warningMsg);
             }
