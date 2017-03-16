@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Optional;
 import com.google.common.io.Files;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -11,10 +10,12 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.server.node.JsonNodeSerializer;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -33,9 +34,21 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
         this.logger = logger;
     }
 
+    @Nonnull
     @Override
-    public PerspectiveLayout getPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveId perspectiveId) {
+    public PerspectiveLayout getPerspectiveLayout(@Nonnull ProjectId projectId, @Nonnull UserId userId, @Nonnull PerspectiveId perspectiveId) {
         File layoutFile = getPerspectiveFile(projectId, userId, perspectiveId);
+        return getPerspectiveLayoutFromFile(perspectiveId, layoutFile);
+    }
+
+    @Nonnull
+    @Override
+    public PerspectiveLayout getPerspectiveLayout(@Nonnull ProjectId projectId, @Nonnull PerspectiveId perspectiveId) {
+        File layoutFile = getPerspectiveFile(projectId, perspectiveId);
+        return getPerspectiveLayoutFromFile(perspectiveId, layoutFile);
+    }
+
+    private PerspectiveLayout getPerspectiveLayoutFromFile(PerspectiveId perspectiveId, File layoutFile) {
         try {
             if(layoutFile.exists()) {
                 String serialization = Files.toString(layoutFile, Charset.forName("utf-8"));
@@ -43,11 +56,11 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
                 return new PerspectiveLayout(perspectiveId, Optional.of(node));
             }
             else {
-                return new PerspectiveLayout(perspectiveId, Optional.absent());
+                return new PerspectiveLayout(perspectiveId, Optional.empty());
             }
 
         } catch (IOException e) {
-            return new PerspectiveLayout(perspectiveId, Optional.absent());
+            return new PerspectiveLayout(perspectiveId, Optional.empty());
         }
     }
 
@@ -56,6 +69,10 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
         if(userFile.exists()) {
             return userFile;
         }
+        return getPerspectiveFile(projectId, perspectiveId);
+    }
+
+    private File getPerspectiveFile(ProjectId projectId, PerspectiveId perspectiveId) {
         File projectFile = perspectiveFileManager.getDefaultPerspectiveLayoutForProject(projectId, perspectiveId);
         if(projectFile.exists()) {
             return projectFile;
@@ -64,7 +81,7 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
     }
 
     @Override
-    public void setPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveLayout layout) {
+    public void setPerspectiveLayout(@Nonnull ProjectId projectId, @Nonnull UserId userId, @Nonnull PerspectiveLayout layout) {
         File file = perspectiveFileManager.getPerspectiveLayoutForUser(projectId, layout.getPerspectiveId(), userId);
         if(layout.getRootNode().isPresent()) {
             try {
@@ -82,8 +99,10 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
     }
 
     @Override
-    public void clearPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveId perspectiveId) {
-        File file = getPerspectiveFile(projectId, userId, perspectiveId);
-        file.delete();
+    public void clearPerspectiveLayout(@Nonnull ProjectId projectId, @Nonnull UserId userId, @Nonnull PerspectiveId perspectiveId) {
+        File file = perspectiveFileManager.getPerspectiveLayoutForUser(projectId, perspectiveId, userId);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

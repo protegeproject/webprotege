@@ -1,13 +1,14 @@
 
 package edu.stanford.bmir.protege.web.shared.perspective;
 
-import com.google.common.base.Optional;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
