@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
+import javax.annotation.Nonnull;
+import java.util.function.Consumer;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -23,25 +26,70 @@ public class MessageBox {
     private static final String DEFAULT_SUB_MESSAGE = "";
 
 
-
-    public static void showMessage(String mainMessage) {
+    /**
+     * Shows a {@link MessageBox} that displays a single message.
+     * The message box will have a "message" icon.
+     * @param mainMessage The message to be displayed.
+     */
+    public static void showMessage(@Nonnull String mainMessage) {
         showMessage(mainMessage, DEFAULT_SUB_MESSAGE);
     }
 
-//    public static void showPlainMessage(String mainMessage, String subMessage) {
-//        showMessageBox(MessageStyle.PLAIN, mainMessage, subMessage);
-//    }
-
-    public static void showMessage(String mainMessage, String subMessage) {
-        showMessageBox(MessageStyle.MESSAGE, mainMessage, subMessage);
+    /**
+     * Shows a {@link MessageBox} that displays a main message (like a title) along with a sub-message.
+     * The message box will have a "message" icon.
+     * @param mainMessage The main message.
+     * @param subMessage The sub-message.
+     */
+    public static void showMessage(@Nonnull String mainMessage,
+                                   @Nonnull String subMessage) {
+        showMessageBox(MessageStyle.MESSAGE, mainMessage, subMessage, () -> {});
     }
 
-    public static void showAlert(String mainMessage) {
+    /**
+     * Shows a {@link MessageBox} that displays a main message (like a title) along with a sub-message.
+     * The message box will have a "message" icon.
+     * @param mainMessage The main message.
+     * @param subMessage The sub-message.
+     * @param closedCallback A callback that will be run when the user dismisses the message box.
+     */
+    public static void showMessage(@Nonnull String mainMessage,
+                                   @Nonnull String subMessage,
+                                   @Nonnull Runnable closedCallback) {
+        showMessageBox(MessageStyle.MESSAGE, mainMessage, subMessage, closedCallback);
+    }
+
+    /**
+     * Shows a {@link MessageBox} that displays a single message.
+     * The message box will have an "alert" icon.
+     * @param mainMessage The message to be displayed.
+     */
+    public static void showAlert(@Nonnull String mainMessage) {
         showAlert(mainMessage, "");
     }
 
-    public static void showAlert(String mainMessage, String subMessage) {
-        showMessageBox(MessageStyle.ALERT, mainMessage, subMessage);
+    /**
+     * Shows a {@link MessageBox} that displays a main message (like a title) along with a sub-message.
+     * The message box will have an "alert" icon.
+     * @param mainMessage The main message.
+     * @param subMessage The sub-message.
+     */
+    public static void showAlert(@Nonnull String mainMessage,
+                                 @Nonnull String subMessage) {
+        showMessageBox(MessageStyle.ALERT, mainMessage, subMessage, () -> {});
+    }
+
+    /**
+     * Shows a {@link MessageBox} that displays a main message (like a title) along with a sub-message.
+     * The message box will have an "alert" icon.
+     * @param mainMessage The main message.
+     * @param subMessage The sub-message.
+     * @param closedCallback A callback that will be run when the user dismisses the message box.
+     */
+    public static void showAlert(@Nonnull String mainMessage,
+                                 @Nonnull String subMessage,
+                                 @Nonnull Runnable closedCallback) {
+        showMessageBox(MessageStyle.ALERT, mainMessage, subMessage, closedCallback);
     }
 
     public static void showErrorMessage(String mainMessage, Throwable throwable) {
@@ -142,7 +190,7 @@ public class MessageBox {
     }
 
 
-    private static void showMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage) {
+    private static void showMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage, Runnable callback) {
         final MessageBoxView messageBoxView = createMessageBox(messageStyle, mainMessage, subMessage);
         final WebProtegeOKDialogController<Void> controller = new WebProtegeOKDialogController<Void>(DLG_TITLE) {
             @Override
@@ -162,6 +210,7 @@ public class MessageBox {
         };
         final WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
+        dlg.addCloseHandler(event -> callback.run());
         scheduleCentering(dlg);
     }
 
