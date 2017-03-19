@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.gwt.place.shared.PlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.place.AdminPlace;
 
 /**
@@ -8,7 +7,19 @@ import edu.stanford.bmir.protege.web.shared.place.AdminPlace;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class AdminPlaceTokenizer implements PlaceTokenizer<AdminPlace> {
+public class AdminPlaceTokenizer implements WebProtegePlaceTokenizer<AdminPlace> {
+
+    public static final String ADMIN = "admin";
+
+    @Override
+    public boolean matches(String token) {
+        return ADMIN.equals(token);
+    }
+
+    @Override
+    public Class<AdminPlace> getPlaceClass() {
+        return AdminPlace.class;
+    }
 
     @Override
     public AdminPlace getPlace(String token) {
@@ -17,6 +28,6 @@ public class AdminPlaceTokenizer implements PlaceTokenizer<AdminPlace> {
 
     @Override
     public String getToken(AdminPlace place) {
-        return "/admin";
+        return ADMIN;
     }
 }

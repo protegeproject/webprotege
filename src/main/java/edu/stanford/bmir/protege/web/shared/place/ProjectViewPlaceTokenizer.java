@@ -20,9 +20,25 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
-public class ProjectViewPlaceTokenizer implements PlaceTokenizer<ProjectViewPlace> {
+public class ProjectViewPlaceTokenizer implements WebProtegePlaceTokenizer<ProjectViewPlace> {
 
-    private static RegExp regExp = RegExp.compile("/projects/(.{36})/edit/([^\\?]*)(\\?selection=(.*))?");
+    private static final String PROJECTS = "projects/";
+
+    private static final String EDIT = "/edit/";
+
+    private static final String SELECTION = "?selection=";
+
+    private static RegExp regExp = RegExp.compile(PROJECTS + "(.{36})" + EDIT + "([^\\?]*)(\\" + SELECTION + "(.*))?" );
+
+    @Override
+    public boolean matches(String token) {
+        return regExp.test(token);
+    }
+
+    @Override
+    public Class<ProjectViewPlace> getPlaceClass() {
+        return ProjectViewPlace.class;
+    }
 
     public ProjectViewPlace getPlace(String token) {
         GWT.log("[ProjectViewPlaceTokenizer] Parsing: " + token);
@@ -59,9 +75,9 @@ public class ProjectViewPlaceTokenizer implements PlaceTokenizer<ProjectViewPlac
 
     public String getToken(ProjectViewPlace place) {
         StringBuilder sb = new StringBuilder();
-        sb.append("/projects/");
+        sb.append(PROJECTS);
         sb.append(place.getProjectId().getId());
-        sb.append("/edit/");
+        sb.append(EDIT);
         sb.append(place.getPerspectiveId().getId());
 
         List<ItemToken> itemTokens = Lists.newArrayList();
@@ -71,7 +87,7 @@ public class ProjectViewPlaceTokenizer implements PlaceTokenizer<ProjectViewPlac
         }
         if (!itemTokens.isEmpty()) {
             String rendering = new ItemTokenizer().renderTokens(itemTokens);
-            sb.append("?selection=");
+            sb.append(SELECTION);
             sb.append(rendering);
         }
 

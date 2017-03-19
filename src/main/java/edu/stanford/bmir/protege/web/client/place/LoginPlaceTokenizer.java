@@ -9,7 +9,19 @@ import edu.stanford.bmir.protege.web.client.login.LoginPlace;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
-public class LoginPlaceTokenizer implements PlaceTokenizer<LoginPlace> {
+public class LoginPlaceTokenizer implements WebProtegePlaceTokenizer<LoginPlace> {
+
+    private static final String LOGIN = "login";
+
+    @Override
+    public boolean matches(String token) {
+        return LOGIN.equals(token);
+    }
+
+    @Override
+    public Class<LoginPlace> getPlaceClass() {
+        return LoginPlace.class;
+    }
 
     public LoginPlace getPlace(String token) {
         GWT.log("[LoginPlaceTokenizer] getPlace Token: " + token);
@@ -17,6 +29,7 @@ public class LoginPlaceTokenizer implements PlaceTokenizer<LoginPlace> {
     }
 
     public String getToken(LoginPlace place) {
-        return "/login";
+        return LOGIN;
     }
+
 }

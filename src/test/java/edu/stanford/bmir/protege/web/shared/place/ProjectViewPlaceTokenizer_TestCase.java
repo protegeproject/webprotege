@@ -1,7 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
+import edu.stanford.bmir.protege.web.client.place.Item;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.junit.Before;
+import org.junit.Test;
 import org.semanticweb.owlapi.model.IRI;
+
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Matthew Horridge
@@ -12,31 +20,33 @@ public class ProjectViewPlaceTokenizer_TestCase {
 
     private final ProjectId projectId = ProjectId.get("aaaabbbb-cccc-dddd-eeee-ffffffffffffffff");
 
-    private final TabName tabName = new TabName("MyTab");
-
     private final IRI entityIri = IRI.create("http://stuff.com#A");
 
-//    @Test
-//    public void shouldTokenizeProjectViewPlace() {
-//        String token = "projectId="+projectId.getId()+"&tab="+ tabName.getTabName()+"&entity=Class("+entityIri.toQuotedString()+")";
-//        ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
-//        ProjectViewPlace place = tokenizer.getPlace(token);
-//        assertThat(place.getProjectId(), is(projectId));
-//        assertThat(place.getTabId(), is(Optional.of(tabName)));
-//        assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
+    private ProjectViewPlaceTokenizer tokenizer;
+
+    private String token = "projects/" + projectId + "/edit/MyPerspective?selection=Class(<" + entityIri.toString() + ">)";
+
+//    @Before
+//    public void setUp() throws Exception {
+//        tokenizer = new ProjectViewPlaceTokenizer();
 //    }
 //
-//
 //    @Test
-//    public void shouldTokenizeIgnoringVarNameCaseProjectViewPlace() {
-//        String token = "ProjectId="+projectId.getId()+"&Tab="+ tabName.getTabName()+"&Entity=Class("+entityIri.toQuotedString()+")";
-//        ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
+//    public void shouldGetPlaceWithProjectId() {
 //        ProjectViewPlace place = tokenizer.getPlace(token);
 //        assertThat(place.getProjectId(), is(projectId));
-//        assertThat(place.getTabId(), is(Optional.of(tabName)));
-//        assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
 //    }
-
-
-
+//
+//    @Test
+//    public void shouldGetPlaceWithPerspectiveId() {
+//        ProjectViewPlace place = tokenizer.getPlace(token);
+//        assertThat(place.getPerspectiveId().getId(), is("MyPerspective"));
+//    }
+//
+//    @Test
+//    public void shouldGetPlaceWithSelection() {
+//        ProjectViewPlace place = tokenizer.getPlace(token);
+//        Optional<Item<?>> firstItem = place.getItemSelection().getFirst();
+//        assertThat(firstItem.isPresent(), is(true));
+//    }
 }
