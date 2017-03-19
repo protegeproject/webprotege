@@ -49,8 +49,6 @@ import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
-import edu.stanford.bmir.protege.web.shared.app.ClientApplicationPropertiesProvider;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 
@@ -118,18 +116,6 @@ public class ClientApplicationModule {
     @Singleton
     ActivityManager provideActivityManager(WebProtegeActivityManager manager) {
         return manager;
-    }
-
-    @Provides
-    @Singleton
-    HasClientApplicationProperties provideHasClientApplicationProperties(ClientApplicationProperties properties) {
-        return properties;
-    }
-
-    @Provides
-    @Singleton
-    ClientApplicationProperties provideClientApplicationProperties(ClientApplicationPropertiesProvider provider) {
-        return provider.get();
     }
 
     @Provides

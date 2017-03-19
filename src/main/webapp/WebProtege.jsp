@@ -1,7 +1,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.access.AccessManager" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.access.ApplicationResource" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.ClientApplicationPropertiesEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.WebProtegeProperties" %>
@@ -10,7 +9,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.access.ActionId" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
@@ -36,12 +34,6 @@
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
-
-    <script>
-        <%
-            writeClientApplicationProperties(out);
-        %>
-    </script>
 
     <script>
         <%
@@ -79,21 +71,13 @@
     }
 
     private void writeApplicationName(JspWriter out) throws IOException {
-        WebProtegeProperties webProtegeProperties = getWebProtegeProperties();
-        out.print(webProtegeProperties.getApplicationName());
+        ApplicationComponent component = getWebProtegeComponent();
+        out.print(component.getApplicationNameProvider().getApplicationName());
     }
 
     private AccessManager getAccessManager() {
         ApplicationComponent component = getWebProtegeComponent();
         return component.getAccessManager();
-    }
-
-    private void writeClientApplicationProperties(JspWriter out) throws IOException {
-        WebProtegeProperties webProtegeProperties = getWebProtegeProperties();
-        ClientApplicationProperties props = webProtegeProperties.getClientApplicationProperties();
-        ClientObjectWriter.get(
-                "clientApplicationProperties",
-                new ClientApplicationPropertiesEncoder()).writeVariableDeclaration(props, out);
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {

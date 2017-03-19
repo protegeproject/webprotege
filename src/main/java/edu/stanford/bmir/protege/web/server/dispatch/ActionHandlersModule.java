@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.admin.GetAdminSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.admin.SetAdminSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
@@ -63,12 +62,6 @@ import static dagger.Provides.Type.SET;
  */
 @Module
 public class ActionHandlersModule {
-
-    @Provides(type = SET)
-    public ActionHandler provideGetClientApplicationPropertiesActionHandler(
-            GetClientApplicationPropertiesActionHandler handler) {
-        return handler;
-    }
 
     @Provides(type = SET)
     public ActionHandler provideGetAvailableProjectsHandler(GetAvailableProjectsHandler handler) {

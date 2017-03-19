@@ -4,7 +4,6 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.app.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
-import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 
 /**
  * Matthew Horridge
@@ -37,10 +36,6 @@ public class WebProtegeClientInjector {
 
     public WebProtegeInitializer getWebProtegeInitializer() {
         return getInjector().getWebProtegeInitializer();
-    }
-
-    public ClientApplicationProperties getClientApplicationProperties() {
-        return getInjector().getClientApplicationProperties();
     }
 
     public WebProtegeActivityManager getActivityManager() {
