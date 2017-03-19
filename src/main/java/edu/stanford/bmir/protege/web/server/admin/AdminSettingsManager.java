@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.server.admin;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
-import edu.stanford.bmir.protege.web.server.inject.Application;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInRole;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
@@ -47,7 +45,7 @@ import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PR
  * 17 Mar 2017
  */
 @Singleton
-@Application
+@ApplicationSingleton
 public class AdminSettingsManager {
 
     private final AccessManager accessManager;

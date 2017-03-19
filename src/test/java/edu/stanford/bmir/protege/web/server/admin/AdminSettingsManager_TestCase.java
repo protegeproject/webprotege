@@ -2,21 +2,14 @@ package edu.stanford.bmir.protege.web.server.admin;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.inject.Application;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
-import edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting;
-import edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;

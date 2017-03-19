@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import edu.stanford.bmir.protege.web.server.inject.Application;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.server.project.RecentProjectRecord;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 12 Mar 2017
  */
-@Application
+@ApplicationSingleton
 public class UserActivityManager implements Repository {
 
     private final Datastore datastore;

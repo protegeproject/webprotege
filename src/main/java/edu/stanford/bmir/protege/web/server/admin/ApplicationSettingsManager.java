@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.admin;
 
-import edu.stanford.bmir.protege.web.server.inject.Application;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.server.app.DefaultApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-@Application
+@ApplicationSingleton
 public class ApplicationSettingsManager implements Repository {
 
     private final Datastore datastore;

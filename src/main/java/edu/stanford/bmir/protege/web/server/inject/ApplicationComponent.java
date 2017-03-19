@@ -38,7 +38,7 @@ import javax.inject.Singleton;
         RepositoryModule.class,
 })
 @Singleton
-@Application
+@ApplicationSingleton
 public interface ApplicationComponent {
 
     WebProtegeProperties getWebProtegeProperties();
