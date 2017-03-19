@@ -59,21 +59,15 @@ public class FileSystemConfigurationModule {
     }
 
     @Provides
-    @TemplatesDirectory
-    public File provideTemplatesDirectory(TemplatesDirectoryProvider provider) {
-        return provider.get();
+    @CommentNotificationTemplate
+    public FileContentsCache providesCommentNotificationTemplate(@CommentNotificationTemplate OverridableFile provider) {
+        return new FileContentsCache(provider::getTemplateFile);
     }
 
     @Provides
     @CommentNotificationTemplate
-    public File provideCommentsNotificationTemplateFile(CommentNotificationTemplateProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @CommentNotificationTemplate
-    public FileContentsCache providesCommentNotificationTemplate(@CommentNotificationTemplate File templateFile) {
-        return new FileContentsCache(templateFile);
+    public OverridableFile provideCommentNotificationTemplateFile(OverridableFileFactory factory) {
+        return factory.getOverridableFile("templates/comment-notification.html");
     }
 
     @Provides
