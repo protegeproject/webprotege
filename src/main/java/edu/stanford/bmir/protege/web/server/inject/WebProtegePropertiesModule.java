@@ -21,41 +21,4 @@ public class WebProtegePropertiesModule {
     public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
         return povider.get();
     }
-
-    @Provides
-    @ApplicationName
-    public String provideApplicationName(WebProtegeProperties properties) {
-        return properties.getApplicationName();
-    }
-
-    @Provides
-    public ApplicationScheme provideApplicationScheme(WebProtegeProperties properties) {
-        return properties.getApplicationScheme();
-    }
-
-    @Provides
-    @ApplicationHost
-    public String provideApplicationHost(WebProtegeProperties properties) {
-        return properties.getApplicationHost();
-    }
-
-
-    @Provides
-    @ApplicationPort
-    public Optional<Integer> provideApplicationPort(WebProtegeProperties properties) {
-        return properties.getApplicationPort();
-    }
-
-    @Provides
-    @ApplicationPath
-    public String provideApplicationPath(WebProtegeProperties properties) {
-        return properties.getApplicationPath().orElse("");
-    }
-
-    @Provides
-    @AdminEmail
-    public Optional<String> provideAdminEmail(WebProtegeProperties properties) {
-        return properties.getAdministratorEmail();
-    }
-
 }

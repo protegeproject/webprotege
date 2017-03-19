@@ -104,54 +104,9 @@ public class WebProtegeProperties implements Serializable {
     ////
 
 
-    public String getApplicationName() {
-        return getRequiredString(APPLICATION_NAME);
-    }
-
     public File getDataDirectory() {
         String dataDirectory = getRequiredString(DATA_DIRECTORY);
         return new File(dataDirectory);
-    }
-
-
-    public ApplicationScheme getApplicationScheme() {
-        String value = getRequiredString(APPLICATION_SCHEME);
-        if(value.equals("http")) {
-            return ApplicationScheme.HTTP;
-        }
-        else if (value.equals("https")) {
-            return ApplicationScheme.HTTPS;
-        }
-        else {
-            throw new RuntimeException("Invalid value for application.scheme (expected either http or https");
-        }
-    }
-
-    public String getApplicationHost() {
-        return getRequiredString(APPLICATION_HOST);
-    }
-
-    public Optional<Integer> getApplicationPort() {
-        try {
-            return getOptionalString(APPLICATION_PORT).map(Integer::parseInt);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Invalid format for application.port (expected an int)");
-        }
-    }
-
-    @Nonnull
-    public Optional<String> getApplicationPath() {
-        return getOptionalString(APPLICATION_PATH);
-    }
-
-
-    public  boolean isOpenIdAuthenticationEnabled() {
-        return "true".equals(getRequiredString(OPEN_ID_ENABLED));
-    }
-
-    @Nonnull
-    public  Optional<String> getAdministratorEmail() {
-        return getOptionalString(ADMIN_EMAIL);
     }
 
     @Nonnull
@@ -162,13 +117,6 @@ public class WebProtegeProperties implements Serializable {
     @Nonnull
     public Optional<String> getDBHost() {
         return getOptionalString(MONGO_DB_HOST);
-    }
-
-
-
-
-    public  int getAccountInvitationExpirationPeriodInDays() {
-        return Integer.MAX_VALUE;
     }
 
     /**

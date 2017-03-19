@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.gwt.user.client.rpc.SerializationException;
-import edu.stanford.bmir.protege.web.server.inject.AdminEmail;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -35,14 +34,11 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private Logger logger;
 
-    private Provider<Optional<String>> emailAddressProvider;
-
     private SendMail sendMail;
 
     @Inject
-    public DefaultLogger(@AdminEmail Provider<Optional<String>> emailAddressProvider, SendMail sendMail) {
+    public DefaultLogger(SendMail sendMail) {
         this.logger = Logger.getLogger(LOG_NAME);
-        this.emailAddressProvider = emailAddressProvider;
         this.sendMail = sendMail;
         if (logger.getUseParentHandlers()) {
             this.logger.setUseParentHandlers(false);
@@ -71,9 +67,6 @@ public class DefaultLogger implements WebProtegeLogger {
     }
 
     private void logSevereMessage(String message, boolean sendMail) {
-        if (sendMail) {
-            emailMessage(message);
-        }
         writeToLog(message, Level.SEVERE);
     }
 
@@ -164,19 +157,6 @@ public class DefaultLogger implements WebProtegeLogger {
             formattedMessage = "Illegally formatted log message: " + message + ". " + e.getMessage();
         }
         return formattedMessage;
-    }
-
-
-    private void emailMessage(String message) {
-        try {
-            Optional<String> emailAddress = emailAddressProvider.get();
-            if (emailAddress.isPresent()) {
-                sendMail.sendMail(singletonList(emailAddress.get()), SUBJECT, message);
-            }
-        }
-        catch (Throwable e) {
-            info("Problem sending mail %s", e.getMessage());
-        }
     }
 
     private void writeToLog(String message, Level level) {

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.place;
 
+import edu.stanford.bmir.protege.web.server.app.*;
 import edu.stanford.bmir.protege.web.server.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
@@ -52,15 +53,38 @@ public class PlaceUrl_TestCase {
     @Mock
     private EntityTypePerspectiveMapper typeMapper;
 
+    @Mock
+    private ApplicationHostProvider hostProvider;
+
+    @Mock
+    private ApplicationPortProvider portProvider;
+
+    @Mock
+    private ApplicationPathProvider pathProvider;
+
+    @Mock
+    private ApplicationNameProvider appNameProvider;
+
+    @Mock
+    private ApplicationSchemeProvider schemeProvider;
+
     @Before
     public void setUp() throws Exception {
         when(typeMapper.getPerspectiveId(Matchers.any())).thenReturn(new PerspectiveId("TheClassPerspective"));
         when(typeMapper.getDefaultPerspectiveId()).thenReturn(new PerspectiveId("TheDefaultPerspective"));
-        placeUrl = new PlaceUrl(ApplicationScheme.HTTPS,
-                                THE_APPLICATION_HOST,
-                                Optional.empty(),
-                                THE_APPLICATION_PATH,
-                                THE_APPLICATION_NAME, typeMapper);
+
+        when(hostProvider.getApplicationHost()).thenReturn(THE_APPLICATION_HOST);
+        when(portProvider.getApplicationPort()).thenReturn(Optional.empty());
+        when(pathProvider.getApplicationPath()).thenReturn(THE_APPLICATION_PATH);
+        when(appNameProvider.getApplicationName()).thenReturn(THE_APPLICATION_NAME);
+        when(schemeProvider.getApplicationScheme()).thenReturn(ApplicationScheme.HTTPS);
+
+        placeUrl = new PlaceUrl(schemeProvider,
+                                hostProvider,
+                                portProvider,
+                                pathProvider,
+                                appNameProvider,
+                                typeMapper);
     }
 
     @Test

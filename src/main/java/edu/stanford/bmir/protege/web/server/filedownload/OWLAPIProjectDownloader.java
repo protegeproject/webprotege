@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -45,7 +45,7 @@ public class OWLAPIProjectDownloader {
     private final Project project;
 
     @Nonnull
-    private final String applicationName;
+    private final ApplicationNameProvider applicationNameProvider;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
@@ -58,12 +58,12 @@ public class OWLAPIProjectDownloader {
                                    @Nonnull Project project,
                                    @Nonnull RevisionNumber revision,
                                    @Nonnull DownloadFormat format,
-                                   @ApplicationName String applicationName) {
+                                   @Nonnull ApplicationNameProvider applicationNameProvider) {
         this.project = project;
         this.revision = revision;
         this.format = format;
         this.fileName = fileName;
-        this.applicationName = checkNotNull(applicationName);
+        this.applicationNameProvider = checkNotNull(applicationNameProvider);
     }
     
     public void writeProject(HttpServletResponse response, OutputStream outputStream) throws IOException {
@@ -121,14 +121,9 @@ public class OWLAPIProjectDownloader {
         }
         else {
             // An error - no flipping ontology!
-            throw new RuntimeException("The ontology could not be downloaded from " + applicationName + ".  Please contact the administrator.");
+            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameProvider.getApplicationName() + ".  Please contact the administrator.");
         }
     }
-
-//    private OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision) {
-//        RevisionManager changeManager = project.getChangeManager();
-//        return changeManager.getOntologyManagerForRevision(revision);
-//    }
 
     private void saveImportsClosureToStream(
             String projectDisplayName,
