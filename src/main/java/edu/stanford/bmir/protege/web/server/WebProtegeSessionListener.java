@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.inject.Application;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12 Mar 2017
  */
-@Application
+@ApplicationSingleton
 public class WebProtegeSessionListener implements HttpSessionListener {
 
     private final UserActivityManager userActivityManager;

@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.server.inject.Application;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.admin.*;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
@@ -33,7 +33,7 @@ import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PR
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-@Application
+@ApplicationSingleton
 public class AdminPresenter implements Presenter {
 
     public static final RegExp HOST_REGEXP = RegExp.compile("^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\\.?$");

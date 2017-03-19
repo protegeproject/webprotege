@@ -84,15 +84,15 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    @Application
+    @ApplicationSingleton
     public OWLDataFactory provideOWLDataFactory() {
         return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
     }
 
     @Provides
     @Singleton
-    @Application
-    public OWLEntityProvider provideOWLProvider(@Application OWLDataFactory dataFactory) {
+    @ApplicationSingleton
+    public OWLEntityProvider provideOWLProvider(@ApplicationSingleton OWLDataFactory dataFactory) {
         return dataFactory;
     }
 
