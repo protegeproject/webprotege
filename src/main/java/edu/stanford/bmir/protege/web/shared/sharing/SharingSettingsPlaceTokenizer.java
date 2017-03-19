@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
-import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 
@@ -11,9 +11,23 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Stanford Center for Biomedical Informatics Research
  * 13/03/16
  */
-public class SharingSettingsPlaceTokenizer implements PlaceTokenizer<SharingSettingsPlace> {
+public class SharingSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<SharingSettingsPlace> {
 
-    private final RegExp pattern = RegExp.compile("/projects/(" + ProjectId.UUID_PATTERN + ")/sharing");
+    private static final String PROJECTS = "projects/";
+
+    private static final String SHARING = "/sharing";
+
+    private static final RegExp pattern = RegExp.compile(PROJECTS + "(" + ProjectId.UUID_PATTERN + ")" + SHARING);
+
+    @Override
+    public boolean matches(String token) {
+        return pattern.test(token);
+    }
+
+    @Override
+    public Class<SharingSettingsPlace> getPlaceClass() {
+        return SharingSettingsPlace.class;
+    }
 
     @Override
     public SharingSettingsPlace getPlace(String token) {
@@ -28,6 +42,6 @@ public class SharingSettingsPlaceTokenizer implements PlaceTokenizer<SharingSett
 
     @Override
     public String getToken(SharingSettingsPlace place) {
-        return "/projects/" + place.getProjectId().getId() + "/sharing";
+        return PROJECTS + place.getProjectId().getId() + SHARING;
     }
 }
