@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.project;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
-import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;

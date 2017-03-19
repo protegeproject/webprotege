@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import edu.stanford.bmir.protege.web.MockingUtils;
-import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
+import edu.stanford.bmir.protege.web.server.project.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
