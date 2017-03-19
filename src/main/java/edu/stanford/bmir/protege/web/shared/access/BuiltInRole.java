@@ -20,7 +20,7 @@ public enum BuiltInRole {
 
     PROJECT_UPLOADER(UPLOAD_PROJECT),
 
-    ACCOUNT_CREATOR(CREATE_USER),
+    ACCOUNT_CREATOR(CREATE_ACCOUNT),
 
     USER_ADMIN(VIEW_ANY_USER_DETAILS,
                DELETE_ANY_USER,
@@ -28,7 +28,8 @@ public enum BuiltInRole {
 
     SYSTEM_ADMIN(USER_ADMIN,
                  MOVE_ANY_PROJECT_TO_TRASH,
-                 SUBSTITUTE_USER),
+                 SUBSTITUTE_USER,
+                 EDIT_ADMIN_SETTINGS),
 
 
     // Project Roles

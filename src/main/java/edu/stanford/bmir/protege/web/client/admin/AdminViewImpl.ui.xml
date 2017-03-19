@@ -1,0 +1,70 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:import field="edu.stanford.bmir.protege.web.client.admin.SchemeValue.*"/>
+    <ui:style>
+        .main {
+            overflow: auto;
+        }
+        .divider {
+            margin-top: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        .checkBox {
+            display: block;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
+            <g:Label text="Appearance" addStyleNames="{wp.dialog.title}"/>
+            <g:Label text="Application name"/>
+            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
+            <g:Label text="Application logo Url"/>
+            <text:PlaceholderTextBox ui:field="applicationLogoField" placeholder="Application Logo Url"/>
+            <g:HTMLPanel addStyleNames="{style.divider}"/>
+            <g:Label text="Administrator Details" addStyleNames="{wp.dialog.title}"/>
+            <g:Label text="Admin email address"/>
+            <text:PlaceholderTextBox ui:field="adminEmailAddressField" placeholder="Admin email address"/>
+            <g:HTMLPanel addStyleNames="{style.divider}"/>
+            <g:Label text="Application URL" addStyleNames="{wp.dialog.title}"/>
+            <g:HTMLPanel addStyleNames="{wp.dialog.group}">
+                <g:Label text="Scheme"/>
+                <g:ListBox ui:field="applicationSchemeField">
+                    <g:item value="HTTPS">https</g:item>
+                    <g:item value="HTTP">http</g:item>
+                </g:ListBox>
+                <g:Label text="Host"/>
+                <text:PlaceholderTextBox ui:field="applicationHostField" placeholder="e.g. webprotege.stanford.edu"/>
+                <g:Label text="Path"/>
+                <text:PlaceholderTextBox ui:field="applicationPathField"
+                                         placeholder="e.g. /webprotege (leave blank for no path)"/>
+                <g:Label text="Port"/>
+                <text:PlaceholderTextBox ui:field="applicationPortField"
+                                         placeholder="e.g. 443 (leave blank for default port)"/>
+            </g:HTMLPanel>
+
+
+            <g:HTMLPanel addStyleNames="{style.divider}"/>
+
+            <g:CheckBox ui:field="accountCreationEnabledCheckBox" text="Account creation enabled" addStyleNames="{style.checkBox}"/>
+            <g:CheckBox ui:field="projectCreationEnabledCheckBox" text="Project creation enabled" addStyleNames="{style.checkBox}"/>
+            <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled" addStyleNames="{style.checkBox}"/>
+            <g:CheckBox ui:field="emailNotificationsEnabledCheckBox" text="Email notifications enabled" addStyleNames="{style.checkBox}"/>
+
+            <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
+                <g:Button ui:field="cancelButton" text="Cancel"
+                          addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
+                <g:Button ui:field="applyButton" text="Apply"
+                          addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
+            </g:HTMLPanel>
+
+        </g:HTMLPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder>
