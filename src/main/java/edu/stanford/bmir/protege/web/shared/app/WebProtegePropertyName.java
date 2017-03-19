@@ -23,48 +23,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * In general the property names listed here should correspond to the property names specified in the
  * webprotege.properties file with the dots replaced by underscores and the name coverted to upper case.  For
  * example, data.directory becomes DATA_DIRECTORY.
- *
- * Finally, some of the property values will not be visible to clients (in the browser).  This information is encoded
- * by the {@link ClientVisibility} flag.
  */
 public enum WebProtegePropertyName {
 
-    @WebProtegePropertiesDocumentation(description = "The name of the WebProtégé application that appears in the browser title bar", example = "WebProtege")
-    APPLICATION_NAME("application.name", PropertyValue.ofString("WebProt\u00E9g\u00E9"), ClientVisibility.VISIBLE),
-
     @WebProtegePropertiesDocumentation(description = "The version of the WebProtégé application", example = "2.5.0")
-    APPLICATION_VERSION("application.version", ClientVisibility.VISIBLE),
-
-    @WebProtegePropertiesDocumentation(description = "The host name that WebProtégé runs on", example = "webprotege.stanford.edu")
-    APPLICATION_HOST("application.host", ClientVisibility.VISIBLE),
-
-    @WebProtegePropertiesDocumentation(description = "Specifies the port used to access WebProtégé as an int", example = "443")
-    APPLICATION_PORT("application.port", PropertyValue.absentByDefault(), ClientVisibility.VISIBLE),
-
-    @WebProtegePropertiesDocumentation(description = "Specifies the path used to access WebProtégé.  Must start with a /.", example = "/webprotege")
-    APPLICATION_PATH("application.path", PropertyValue.absentByDefault(), ClientVisibility.VISIBLE),
+    APPLICATION_VERSION("application.version"),
 
     @WebProtegePropertiesDocumentation(description = "The directory where WebProtégé data is stored", example = "/src/webprotege")
-    DATA_DIRECTORY("data.directory", ClientVisibility.HIDDEN),
+    DATA_DIRECTORY("data.directory"),
 
     @WebProtegePropertiesDocumentation(description = "The host name of the mongodb server", example = "localhost")
-    MONGO_DB_HOST("mongodb.host", PropertyValue.ofString("localhost"), ClientVisibility.HIDDEN),
+    MONGO_DB_HOST("mongodb.host", PropertyValue.ofString("localhost")),
 
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
-    MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017), ClientVisibility.HIDDEN),
-
-    @WebProtegePropertiesDocumentation(description = "Specifies the scheme used to access WebProtégé", example = "http or https")
-    APPLICATION_SCHEME("application.scheme", PropertyValue.ofString("http"), ClientVisibility.VISIBLE),
-
-    @WebProtegePropertiesDocumentation(description = "The email address of the WebProtégé administrator", example = "john.doe@stanford.edu")
-    ADMIN_EMAIL("admin.email", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
-
-    @WebProtegePropertiesDocumentation(description = "Specifies whether or not WebProtégé should support authentication with Open Id", example = "false")
-    OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE),
-
-    @WebProtegePropertiesDocumentation(description = "Specifies whether or not users should be allowed to sign up for accounts", example = "false")
-    USER_ACCOUNT_CREATION_ENABLED("user.account.creation.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
-
+    MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017));
 
     private static class PropertyValue {
 
@@ -102,14 +74,14 @@ public enum WebProtegePropertyName {
     }
 
 
-    public static enum Optionality {
+    public enum Optionality {
 
         HAS_DEFAULT_VALUE,
 
         VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES
     }
 
-    public static enum ClientVisibility {
+    public enum ClientVisibility {
 
         VISIBLE,
 
@@ -124,22 +96,18 @@ public enum WebProtegePropertyName {
     @Nullable
     private String defaultValue;
 
-    private ClientVisibility clientVisibility;
 
-
-    private WebProtegePropertyName(String propertyName, ClientVisibility clientVisibility) {
+    WebProtegePropertyName(String propertyName) {
         this.propertyName = checkNotNull(propertyName);
         defaultValue = null;
         this.optionality = Optionality.VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES;
-        this.clientVisibility = clientVisibility;
 
     }
 
-    private WebProtegePropertyName(String propertyName, PropertyValue defaultValue, ClientVisibility clientVisibility) {
+    WebProtegePropertyName(String propertyName, PropertyValue defaultValue) {
         this.propertyName = checkNotNull(propertyName);
         this.defaultValue = defaultValue.toOptional().orElse(null);
         optionality = Optionality.HAS_DEFAULT_VALUE;
-        this.clientVisibility = clientVisibility;
 
     }
 
@@ -153,9 +121,5 @@ public enum WebProtegePropertyName {
 
     public boolean hasDefaultValue() {
         return optionality == Optionality.HAS_DEFAULT_VALUE;
-    }
-
-    public boolean isClientProperty() {
-        return clientVisibility == ClientVisibility.VISIBLE;
     }
 }
