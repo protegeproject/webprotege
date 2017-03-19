@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import edu.stanford.bmir.protege.web.client.admin.AdminPresenter;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
@@ -42,6 +43,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final Provider<SignUpPresenter> signUpPresenterProvider;
 
+    private final AdminPresenter adminPresenter;
+
     private final LoggedInUserProvider loggedInUserProvider;
 
     private final PlaceController placeController;
@@ -56,12 +59,14 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                                     Provider<ProjectManagerPresenter> projectListPresenterProvider,
                                     Provider<LoginPresenter> loginPresenterProvider,
                                     Provider<SignUpPresenter> signUpPresenterProvider,
+                                    AdminPresenter adminPresenter,
                                     PlaceController placeController) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectListPresenterProvider = projectListPresenterProvider;
         this.signUpPresenterProvider = signUpPresenterProvider;
         this.loginPresenterProvider = loginPresenterProvider;
+        this.adminPresenter = adminPresenter;
         this.placeController = placeController;
     }
 
@@ -73,6 +78,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             presenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
             return new LoginActivity(presenter);
+        }
+        if(place instanceof AdminPlace) {
+            return new AdminActivity(adminPresenter);
         }
         if(place instanceof LoginPlace) {
             LoginPresenter presenter = loginPresenterProvider.get();

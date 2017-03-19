@@ -10,7 +10,7 @@ import com.google.common.base.CaseFormat;
 public enum BuiltInAction {
 
 
-    CREATE_USER,
+    CREATE_ACCOUNT,
 
     CREATE_EMPTY_PROJECT,
 
@@ -25,6 +25,8 @@ public enum BuiltInAction {
     MOVE_ANY_PROJECT_TO_TRASH,
 
     SUBSTITUTE_USER,
+
+    EDIT_ADMIN_SETTINGS,
 
 
     VIEW_PROJECT,

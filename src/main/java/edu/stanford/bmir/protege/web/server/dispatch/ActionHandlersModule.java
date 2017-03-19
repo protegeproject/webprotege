@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.admin.GetAdminSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.admin.SetAdminSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
@@ -50,6 +52,7 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.admin.SetAdminSettingsAction;
 
 import static dagger.Provides.Type.SET;
 
@@ -519,4 +522,13 @@ public class ActionHandlersModule {
         return handler;
     }
 
+    @Provides(type = SET)
+    public ActionHandler provideGetSystemSettingsActionHandler(GetAdminSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ActionHandler provideSetAdminSettingsActionHandler(SetAdminSettingsActionHandler handler) {
+        return handler;
+    }
 }

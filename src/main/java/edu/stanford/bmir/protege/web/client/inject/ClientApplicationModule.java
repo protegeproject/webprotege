@@ -11,6 +11,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.admin.AdminView;
+import edu.stanford.bmir.protege.web.client.admin.AdminViewImpl;
 import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
@@ -353,6 +355,11 @@ public class ClientApplicationModule {
 
     @Provides
     CommentedEntitiesView provideCommentedEntitiesView(CommentedEntitiesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AdminView provideAdminView(AdminViewImpl impl) {
         return impl;
     }
 }

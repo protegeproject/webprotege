@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_USER;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_ACCOUNT;
 
 /**
  * Matthew Horridge
@@ -70,7 +70,7 @@ public class LoginPresenter implements Presenter {
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         view.clearView();
         view.hideErrorMessages();
-        boolean canCreateUser = loggedInUserManager.isAllowedApplicationAction(CREATE_USER);
+        boolean canCreateUser = loggedInUserManager.isAllowedApplicationAction(CREATE_ACCOUNT);
         view.setSignUpForAccountVisible(canCreateUser);
         container.setWidget(view);
     }
