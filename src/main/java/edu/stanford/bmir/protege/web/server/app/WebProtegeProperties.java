@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.app;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
-import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.annotation.Nonnull;
@@ -17,7 +15,7 @@ import static edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName.*;
 
 /**
  * Accessor methods for the webprotege.properties property values.  The set of properties is read-only.  This is
- * a server side class.  Client properties may be obtained using the {@link #getClientApplicationProperties()} method.
+ * a server side class.
  * @author Tania Tudorache <tudorache@stanford.edu>
  * @author Matthew Horridge
  */
@@ -118,24 +116,4 @@ public class WebProtegeProperties implements Serializable {
     public Optional<String> getDBHost() {
         return getOptionalString(MONGO_DB_HOST);
     }
-
-    /**
-     * Gets the application properties that are visible to the client.  This is a subset of the application properties
-     * that are visible to the server.
-     * @return The client visible application properties.  Not {@code null}.
-     */
-    public ClientApplicationProperties getClientApplicationProperties() {
-        ClientApplicationProperties.Builder builder = new ClientApplicationProperties.Builder();
-        for (WebProtegePropertyName propertyName : propertyValueMap.keySet()) {
-            if (propertyName.isClientProperty()) {
-                Optional<String> value = propertyValueMap.get(propertyName);
-                if (value.isPresent()) {
-                    builder.setPropertyValue(propertyName, value.get());
-                }
-            }
-        }
-        return builder.build();
-    }
-
-
 }

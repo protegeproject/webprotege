@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.app.ApplicationView;
-import edu.stanford.bmir.protege.web.client.app.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.app.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
@@ -58,14 +57,6 @@ public class WebProtege implements EntryPoint {
         ApplicationView applicationView = applicationPresenter.getApplicationView();
 
         RootLayoutPanel.get().add(applicationView);
-
-
-        HasClientApplicationProperties properties = WebProtegeClientInjector.get().getClientApplicationProperties();
-        final Optional<String> appName = properties.getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
-        if (appName.isPresent()) {
-            Window.setTitle(appName.get());
-        }
-
 
         WebProtegeActivityManager activityManager =  WebProtegeClientInjector.get().getActivityManager();
         activityManager.setDisplay(applicationView);

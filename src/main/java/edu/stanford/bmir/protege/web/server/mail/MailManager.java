@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.mail;
 import edu.stanford.bmir.protege.web.server.app.ApplicationHostProvider;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.inject.*;
-import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,16 +211,6 @@ public class MailManager implements SendMail {
         final String defaultPersonalName = applicationNameProvider.getApplicationName();
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
         return new InternetAddress(from, personalName, UTF_8);
-    }
-
-    private String getPropertyValue(WebProtegePropertyName propertyName, String defaultValue) {
-        String value = properties.getProperty(propertyName.getPropertyName());
-        if (value != null) {
-            return value;
-        }
-        else {
-            return propertyName.getDefaultValue().orElse(defaultValue);
-        }
     }
 
     /**
