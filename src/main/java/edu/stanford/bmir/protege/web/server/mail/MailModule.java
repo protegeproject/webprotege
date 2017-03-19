@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.mail;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.inject.MailProperties;
 
 import javax.inject.Singleton;
@@ -22,15 +20,6 @@ public class MailModule {
     @Singleton
     public Properties provideMailProperties(MailPropertiesProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @Singleton
-    public MailManager provideMailManager(@ApplicationName String appName,
-                                          @ApplicationHost String appHost,
-                                          @MailProperties Properties properties,
-                                          MessagingExceptionHandler exceptionHandler) {
-        return new MailManager(appName, appHost, properties, exceptionHandler);
     }
 
     @Provides

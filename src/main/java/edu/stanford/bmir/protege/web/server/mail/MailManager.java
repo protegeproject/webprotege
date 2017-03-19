@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
-import edu.stanford.bmir.protege.web.server.inject.MailProperties;
+import edu.stanford.bmir.protege.web.server.app.ApplicationHostProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.inject.*;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/11/2013
  */
+@ApplicationSingleton
 public class MailManager implements SendMail {
 
     public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
@@ -53,9 +54,9 @@ public class MailManager implements SendMail {
 
     private final MessagingExceptionHandler messagingExceptionHandler;
 
-    private final String applicationName;
+    private final ApplicationNameProvider applicationNameProvider;
 
-    private final String applicationHost;
+    private final ApplicationHostProvider applicationHostProvider;
 
 
     /**
@@ -65,8 +66,8 @@ public class MailManager implements SendMail {
      * for more information.    Note
      * modification of values in the {@link Properties} object will not modify mail settings after construction.
      *
-     * @param applicationName           The name of the application (e.g. WebProtege).  Not {@code null}.
-     * @param applicationHost           The host name that the application is running on (e.g. webprotege.stanford.edu).
+     * @param applicationNameProvider           The name of the application (e.g. WebProtege).  Not {@code null}.
+     * @param applicationHostProvider           The host name that the application is running on (e.g. webprotege.stanford.edu).
      *                                  Not {@code null}.
      * @param properties                The mail properties.  Not {@code null}. These are the same properties as specified in the
      *                                  Java mail spec.  Note that an additional property "mail.smtp.from.personalName" can be
@@ -76,12 +77,12 @@ public class MailManager implements SendMail {
      * @throws NullPointerException if any parameters are {@code null}.
      */
     @Inject
-    public MailManager(@ApplicationName String applicationName,
-                       @ApplicationHost String applicationHost,
-                       @MailProperties Properties properties,
-                       MessagingExceptionHandler messagingExceptionHandler) {
-        this.applicationName = checkNotNull(applicationName);
-        this.applicationHost = checkNotNull(applicationHost);
+    public MailManager(@Nonnull ApplicationNameProvider applicationNameProvider,
+                       @Nonnull ApplicationHostProvider applicationHostProvider,
+                       @Nonnull @MailProperties Properties properties,
+                       @Nonnull MessagingExceptionHandler messagingExceptionHandler) {
+        this.applicationNameProvider = checkNotNull(applicationNameProvider);
+        this.applicationHostProvider = checkNotNull(applicationHostProvider);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
     }
@@ -206,9 +207,9 @@ public class MailManager implements SendMail {
      * @throws UnsupportedEncodingException
      */
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
-        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHost;
+        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHostProvider.getApplicationHost();
         String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
-        final String defaultPersonalName = getPropertyValue(WebProtegePropertyName.APPLICATION_NAME, applicationName);
+        final String defaultPersonalName = applicationNameProvider.getApplicationName();
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
         return new InternetAddress(from, personalName, UTF_8);
     }

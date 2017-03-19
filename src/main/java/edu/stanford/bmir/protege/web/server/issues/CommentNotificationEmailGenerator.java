@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
@@ -41,19 +41,19 @@ public class CommentNotificationEmailGenerator {
 
     private final PlaceUrl placeUrl;
 
-    private final String applicationName;
+    private final ApplicationNameProvider applicationNameProvider;
 
     @Inject
     public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationTemplate FileContentsCache templateFile,
                                              @Nonnull TemplateEngine templateEngine,
-                                             @Nonnull @ApplicationName String applicationName,
+                                             @Nonnull ApplicationNameProvider applicationNameProvider,
                                              @Nonnull PlaceUrl placeUrl,
                                              @Nonnull WebProtegeLogger webProtegeLogger) {
         this.templateEngine = templateEngine;
         this.templateFile = templateFile;
         this.webProtegeLogger = webProtegeLogger;
         this.placeUrl = placeUrl;
-        this.applicationName = applicationName;
+        this.applicationNameProvider = applicationNameProvider;
     }
 
     @Nonnull
@@ -62,7 +62,7 @@ public class CommentNotificationEmailGenerator {
                            @Nonnull Comment comment) {
         try {
             Map<String, Object> objects = new HashMap<>();
-            objects.put(APPLICATION_NAME, applicationName);
+            objects.put(APPLICATION_NAME, applicationNameProvider.getApplicationName());
             objects.put(PROJECT_DISPLAY_NAME, projectDisplayName);
             objects.put(PROJECT_URL, placeUrl.getProjectUrl(thread.getProjectId()));
             objects.put(ENTITY_URL, placeUrl.getEntityUrl(thread.getProjectId(), thread.getEntity()));
