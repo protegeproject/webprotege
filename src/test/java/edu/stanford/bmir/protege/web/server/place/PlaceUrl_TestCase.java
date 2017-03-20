@@ -57,7 +57,7 @@ public class PlaceUrl_TestCase {
     private ApplicationHostSupplier hostProvider;
 
     @Mock
-    private ApplicationPortProvider portProvider;
+    private ApplicationPortSupplier portProvider;
 
     @Mock
     private ApplicationPathSupplier pathProvider;

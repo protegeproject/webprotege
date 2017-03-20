@@ -13,12 +13,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationPortProvider {
+public class ApplicationPortSupplier {
 
     private final ApplicationSettingsManager manager;
 
     @Inject
-    public ApplicationPortProvider(@Nonnull ApplicationSettingsManager manager) {
+    public ApplicationPortSupplier(@Nonnull ApplicationSettingsManager manager) {
         this.manager = checkNotNull(manager);
     }
 
