@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
@@ -32,20 +32,20 @@ public class ResetPasswordMailer {
 
     private final PlaceUrl placeUrl;
 
-    private final ApplicationNameProvider applicationNameProvider;
+    private final ApplicationNameSupplier applicationNameSupplier;
 
     @Inject
     public ResetPasswordMailer(MailManager mailManager,
                                TemplateEngine templateEngine,
                                @PasswordResetEmailTemplate FileContents templateFile,
                                PlaceUrl placeUrl,
-                               ApplicationNameProvider applicationNameProvider,
+                               ApplicationNameSupplier applicationNameSupplier,
                                WebProtegeLogger logger) {
         this.mailManager = mailManager;
         this.templateEngine = templateEngine;
         this.templateFile = templateFile;
         this.placeUrl = placeUrl;
-        this.applicationNameProvider = applicationNameProvider;
+        this.applicationNameSupplier = applicationNameSupplier;
         this.logger = logger;
     }
 
@@ -53,7 +53,7 @@ public class ResetPasswordMailer {
         try {
             Map<String, Object> objects =
                     TemplateObjectsBuilder.builder()
-                                          .withApplicationName(applicationNameProvider.getApplicationName())
+                                          .withApplicationName(applicationNameSupplier.getApplicationName())
                                           .withApplicationUrl(placeUrl.getApplicationUrl())
                                           .withUserId(userId)
                                           .with("pwd" , pwd)

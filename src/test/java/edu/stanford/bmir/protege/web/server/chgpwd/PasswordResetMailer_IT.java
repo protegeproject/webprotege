@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import com.github.mustachejava.DefaultMustacheFactory;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.inject.OverridableFile;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -62,7 +62,7 @@ public class PasswordResetMailer_IT {
     private final String theNewPassword = "TheNewPassword";
 
     @Mock
-    private ApplicationNameProvider appNameProvider;
+    private ApplicationNameSupplier appNameProvider;
 
     @Before
     public void setUp() throws Exception {

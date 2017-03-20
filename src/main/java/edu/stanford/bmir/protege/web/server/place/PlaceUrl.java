@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.place;
 import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.server.app.*;
 import edu.stanford.bmir.protege.web.server.perspective.EntityTypePerspectiveMapper;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -32,7 +31,7 @@ public class PlaceUrl {
 
     private final ApplicationPathProvider applicationPathProvider;
 
-    private final ApplicationNameProvider applicationNameProvider;
+    private final ApplicationNameSupplier applicationNameSupplier;
 
     private final EntityTypePerspectiveMapper mapper;
 
@@ -43,7 +42,7 @@ public class PlaceUrl {
      * @param applicationHostProvider A provider for the application host.
      * @param applicationPortProvider A provider for the application port.
      * @param applicationPathProvider A provider for the application path.
-     * @param applicationNameProvider A provider for the application name.
+     * @param applicationNameSupplier A provider for the application name.
      * @param mapper An {@link EntityTypePerspectiveMapper} that will be used to retrieve the perspective id that
      *               should be shown for a given entity type.  For example for OWLClass entities the "Classes"
      *               perspective might be shown.
@@ -53,13 +52,13 @@ public class PlaceUrl {
                     @Nonnull ApplicationHostProvider applicationHostProvider,
                     @Nonnull ApplicationPortProvider applicationPortProvider,
                     @Nonnull ApplicationPathProvider applicationPathProvider,
-                    @Nonnull ApplicationNameProvider applicationNameProvider,
+                    @Nonnull ApplicationNameSupplier applicationNameSupplier,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
         this.applicationSchemeProvider = checkNotNull(applicationSchemeProvider);
         this.applicationHostProvider = checkNotNull(applicationHostProvider);
         this.applicationPortProvider = checkNotNull(applicationPortProvider);
         this.applicationPathProvider = checkNotNull(applicationPathProvider);
-        this.applicationNameProvider = checkNotNull(applicationNameProvider);
+        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.mapper = checkNotNull(mapper);
     }
 
@@ -79,7 +78,7 @@ public class PlaceUrl {
      */
     @Nonnull
     public String getApplicationAnchor() {
-        return String.format("<a href=\"%s\">%s</a>", applicationNameProvider, getApplicationUrl());
+        return String.format("<a href=\"%s\">%s</a>", applicationNameSupplier, getApplicationUrl());
     }
 
     /**
