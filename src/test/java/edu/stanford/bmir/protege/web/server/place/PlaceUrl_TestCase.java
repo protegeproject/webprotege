@@ -60,7 +60,7 @@ public class PlaceUrl_TestCase {
     private ApplicationPortProvider portProvider;
 
     @Mock
-    private ApplicationPathProvider pathProvider;
+    private ApplicationPathSupplier pathProvider;
 
     @Mock
     private ApplicationNameSupplier appNameProvider;

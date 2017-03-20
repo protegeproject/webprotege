@@ -29,7 +29,7 @@ public class PlaceUrl {
 
     private final ApplicationPortProvider applicationPortProvider;
 
-    private final ApplicationPathProvider applicationPathProvider;
+    private final ApplicationPathSupplier applicationPathSupplier;
 
     private final ApplicationNameSupplier applicationNameSupplier;
 
@@ -41,7 +41,7 @@ public class PlaceUrl {
      * @param applicationSchemeProvider The scheme for the application.
      * @param applicationHostSupplier A provider for the application host.
      * @param applicationPortProvider A provider for the application port.
-     * @param applicationPathProvider A provider for the application path.
+     * @param applicationPathSupplier A provider for the application path.
      * @param applicationNameSupplier A provider for the application name.
      * @param mapper An {@link EntityTypePerspectiveMapper} that will be used to retrieve the perspective id that
      *               should be shown for a given entity type.  For example for OWLClass entities the "Classes"
@@ -51,13 +51,13 @@ public class PlaceUrl {
     public PlaceUrl(@Nonnull ApplicationSchemeProvider applicationSchemeProvider,
                     @Nonnull ApplicationHostSupplier applicationHostSupplier,
                     @Nonnull ApplicationPortProvider applicationPortProvider,
-                    @Nonnull ApplicationPathProvider applicationPathProvider,
+                    @Nonnull ApplicationPathSupplier applicationPathSupplier,
                     @Nonnull ApplicationNameSupplier applicationNameSupplier,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
         this.applicationSchemeProvider = checkNotNull(applicationSchemeProvider);
         this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
         this.applicationPortProvider = checkNotNull(applicationPortProvider);
-        this.applicationPathProvider = checkNotNull(applicationPathProvider);
+        this.applicationPathSupplier = checkNotNull(applicationPathSupplier);
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.mapper = checkNotNull(mapper);
     }
@@ -126,14 +126,14 @@ public class PlaceUrl {
                               null,
                               applicationHostSupplier.get(),
                               applicationPortProvider.getApplicationPort().get(),
-                              applicationPathProvider.getApplicationPath(),
+                              applicationPathSupplier.getApplicationPath(),
                               null,
                               fragment);
             }
             else {
                 uri = new URI(scheme,
                               applicationHostSupplier.get(),
-                              applicationPathProvider.getApplicationPath(),
+                              applicationPathSupplier.getApplicationPath(),
                               fragment);
             }
             return uri.toString();
