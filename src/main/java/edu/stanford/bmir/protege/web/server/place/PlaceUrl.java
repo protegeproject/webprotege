@@ -27,7 +27,7 @@ public class PlaceUrl {
 
     private final ApplicationHostSupplier applicationHostSupplier;
 
-    private final ApplicationPortProvider applicationPortProvider;
+    private final ApplicationPortSupplier applicationPortSupplier;
 
     private final ApplicationPathSupplier applicationPathSupplier;
 
@@ -40,7 +40,7 @@ public class PlaceUrl {
      * path, port and name.
      * @param applicationSchemeProvider The scheme for the application.
      * @param applicationHostSupplier A provider for the application host.
-     * @param applicationPortProvider A provider for the application port.
+     * @param applicationPortSupplier A provider for the application port.
      * @param applicationPathSupplier A provider for the application path.
      * @param applicationNameSupplier A provider for the application name.
      * @param mapper An {@link EntityTypePerspectiveMapper} that will be used to retrieve the perspective id that
@@ -50,13 +50,13 @@ public class PlaceUrl {
     @Inject
     public PlaceUrl(@Nonnull ApplicationSchemeProvider applicationSchemeProvider,
                     @Nonnull ApplicationHostSupplier applicationHostSupplier,
-                    @Nonnull ApplicationPortProvider applicationPortProvider,
+                    @Nonnull ApplicationPortSupplier applicationPortSupplier,
                     @Nonnull ApplicationPathSupplier applicationPathSupplier,
                     @Nonnull ApplicationNameSupplier applicationNameSupplier,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
         this.applicationSchemeProvider = checkNotNull(applicationSchemeProvider);
         this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
-        this.applicationPortProvider = checkNotNull(applicationPortProvider);
+        this.applicationPortSupplier = checkNotNull(applicationPortSupplier);
         this.applicationPathSupplier = checkNotNull(applicationPathSupplier);
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.mapper = checkNotNull(mapper);
@@ -121,11 +121,11 @@ public class PlaceUrl {
         try {
             final URI uri;
             String scheme = applicationSchemeProvider.getApplicationScheme().name().toLowerCase();
-            if(applicationPortProvider.getApplicationPort().isPresent()) {
+            if(applicationPortSupplier.getApplicationPort().isPresent()) {
                 uri = new URI(scheme,
                               null,
                               applicationHostSupplier.get(),
-                              applicationPortProvider.getApplicationPort().get(),
+                              applicationPortSupplier.getApplicationPort().get(),
                               applicationPathSupplier.get(),
                               null,
                               fragment);
