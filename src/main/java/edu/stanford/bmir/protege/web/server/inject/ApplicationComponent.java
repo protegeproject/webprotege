@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
-import edu.stanford.bmir.protege.web.server.mail.MailModule;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 
@@ -27,7 +26,6 @@ import javax.inject.Singleton;
         SharedApplicationModule.class,
         FileSystemConfigurationModule.class,
         ConfigurationTasksModule.class,
-        MailModule.class,
         ActionHandlersModule.class,
         AuthenticationModule.class,
         AccessModule.class,

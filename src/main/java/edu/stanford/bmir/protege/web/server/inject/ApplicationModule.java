@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryI
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
@@ -28,6 +29,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import javax.inject.Singleton;
 import java.util.Collections;
+import java.util.Properties;
 
 /**
  * Matthew Horridge
@@ -149,6 +151,23 @@ public class ApplicationModule {
     @Singleton
     public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
         return povider.get();
+    }
+
+    @Provides
+    @MailProperties
+    @Singleton
+    public Properties provideMailProperties(MailPropertiesProvider provider) {
+        return provider.get();
+    }
+
+    @Provides
+    public SendMail provideSendMail(MailManager manager) {
+        return manager;
+    }
+
+    @Provides
+    public MessagingExceptionHandler provideMessagingExceptionHandler(MessagingExceptionHandlerImpl handler) {
+        return handler;
     }
 
 }
