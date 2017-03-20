@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
@@ -142,6 +143,12 @@ public class ApplicationModule {
     @Singleton
     public UserActivityManager provideUserActivityManager(UserActivityManagerProvider provider) {
         return provider.get();
+    }
+
+    @Provides
+    @Singleton
+    public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
+        return povider.get();
     }
 
 }
