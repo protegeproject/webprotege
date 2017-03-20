@@ -67,7 +67,7 @@ public class PasswordResetMailer_IT {
     @Before
     public void setUp() throws Exception {
         when(placeUrl.getApplicationUrl()).thenReturn(applicationUrl);
-        when(appNameProvider.getApplicationName()).thenReturn(theAppName);
+        when(appNameProvider.get()).thenReturn(theAppName);
         OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"), logger);
         FileContents templateFile = new FileContents(overridableFile);
         TemplateEngine templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
