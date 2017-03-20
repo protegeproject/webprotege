@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,42 +24,42 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PlaceUrl {
 
-    private final ApplicationSchemeSupplier applicationSchemeSupplier;
+    private final ApplicationSchemeSupplier schemeSupplier;
 
-    private final ApplicationHostSupplier applicationHostSupplier;
+    private final ApplicationHostSupplier hostSupplier;
 
-    private final ApplicationPortSupplier applicationPortSupplier;
+    private final ApplicationPortSupplier portSupplier;
 
-    private final ApplicationPathSupplier applicationPathSupplier;
+    private final ApplicationPathSupplier pathSupplier;
 
-    private final ApplicationNameSupplier applicationNameSupplier;
+    private final ApplicationNameSupplier nameSupplier;
 
     private final EntityTypePerspectiveMapper mapper;
 
     /**
-     * Construct a {@link PlaceUrl} object that provides URLs for places for a given application host,
-     * path, port and name.
-     * @param applicationSchemeSupplier The scheme for the application.
-     * @param applicationHostSupplier A provider for the application host.
-     * @param applicationPortSupplier A provider for the application port.
-     * @param applicationPathSupplier A provider for the application path.
-     * @param applicationNameSupplier A provider for the application name.
+     * Construct a {@link PlaceUrl} object that provides URLs for places for a given application hostSupplier,
+     * pathSupplier, portSupplier and nameSupplier.
+     * @param schemeSupplier The schemeSupplier for the application.
+     * @param hostSupplier A provider for the application hostSupplier.
+     * @param portSupplier A provider for the application portSupplier.
+     * @param pathSupplier A provider for the application pathSupplier.
+     * @param nameSupplier A provider for the application nameSupplier.
      * @param mapper An {@link EntityTypePerspectiveMapper} that will be used to retrieve the perspective id that
      *               should be shown for a given entity type.  For example for OWLClass entities the "Classes"
      *               perspective might be shown.
      */
     @Inject
-    public PlaceUrl(@Nonnull ApplicationSchemeSupplier applicationSchemeSupplier,
-                    @Nonnull ApplicationHostSupplier applicationHostSupplier,
-                    @Nonnull ApplicationPortSupplier applicationPortSupplier,
-                    @Nonnull ApplicationPathSupplier applicationPathSupplier,
-                    @Nonnull ApplicationNameSupplier applicationNameSupplier,
+    public PlaceUrl(@Nonnull ApplicationSchemeSupplier schemeSupplier,
+                    @Nonnull ApplicationHostSupplier hostSupplier,
+                    @Nonnull ApplicationPortSupplier portSupplier,
+                    @Nonnull ApplicationPathSupplier pathSupplier,
+                    @Nonnull ApplicationNameSupplier nameSupplier,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
-        this.applicationSchemeSupplier = checkNotNull(applicationSchemeSupplier);
-        this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
-        this.applicationPortSupplier = checkNotNull(applicationPortSupplier);
-        this.applicationPathSupplier = checkNotNull(applicationPathSupplier);
-        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
+        this.schemeSupplier = checkNotNull(schemeSupplier);
+        this.hostSupplier = checkNotNull(hostSupplier);
+        this.portSupplier = checkNotNull(portSupplier);
+        this.pathSupplier = checkNotNull(pathSupplier);
+        this.nameSupplier = checkNotNull(nameSupplier);
         this.mapper = checkNotNull(mapper);
     }
 
@@ -72,13 +73,13 @@ public class PlaceUrl {
     }
 
     /**
-     * Gets the application anchor.  This is the name of the WebProtege application surrounded by
+     * Gets the application anchor.  This is the nameSupplier of the WebProtege application surrounded by
      * anchor tags whose href is the value provided by {@link #getApplicationUrl()}.
      * @return A string representing the Url.
      */
     @Nonnull
     public String getApplicationAnchor() {
-        return String.format("<a href=\"%s\">%s</a>", applicationNameSupplier, getApplicationUrl());
+        return String.format("<a href=\"%s\">%s</a>", nameSupplier, getApplicationUrl());
     }
 
     /**
@@ -120,20 +121,21 @@ public class PlaceUrl {
     private String createUrl(@Nullable String fragment) {
         try {
             final URI uri;
-            String scheme = applicationSchemeSupplier.get().name().toLowerCase();
-            if(applicationPortSupplier.get().isPresent()) {
+            String scheme = this.schemeSupplier.get().name().toLowerCase();
+            Optional<Integer> thePort = portSupplier.get();
+            if(thePort.isPresent()) {
                 uri = new URI(scheme,
                               null,
-                              applicationHostSupplier.get(),
-                              applicationPortSupplier.get().get(),
-                              applicationPathSupplier.get(),
+                              hostSupplier.get(),
+                              thePort.get(),
+                              pathSupplier.get(),
                               null,
                               fragment);
             }
             else {
                 uri = new URI(scheme,
-                              applicationHostSupplier.get(),
-                              applicationPathSupplier.get(),
+                              hostSupplier.get(),
+                              pathSupplier.get(),
                               fragment);
             }
             return uri.toString();

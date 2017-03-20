@@ -16,7 +16,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{wp.style.webProtegeLaf} {wp.style.formMain}">
-        <frame:PrimitiveDataEditorImpl ui:field="genusField" placeholder="Enter genus (class) name"
+        <frame:PrimitiveDataEditorImpl ui:field="genusField" placeholder="Enter genus (class) nameSupplier"
                                        addStyleNames="{style.cross-product-editor}"
                                        classesAllowed="true"/>
         <obo:OBOTermRelationshipEditor ui:field="relationshipsField"

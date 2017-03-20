@@ -90,10 +90,10 @@ Building WebProtege for Deployment on your Servers
 
 The above steps build WebProtege for local testing on your machine (localhost).  For deployment to another machine for
 production use you should active the ```deployment``` profile.  To do this include ```-Pdeployment``` as an argument.
-You MUST also include a value for the property ```application.host```, which is the domain name where you will deploy
+You MUST also include a value for the property ```application.hostSupplier```, which is the domain nameSupplier where you will deploy
 WebProtege.  If you do not include this property value the build will fail with an error message.  For example,
 
-    mvn -Pdeployment -Dapplication.host=mycompany.com package
+    mvn -Pdeployment -Dapplication.hostSupplier=mycompany.com package
 
 Configuration
 -------------

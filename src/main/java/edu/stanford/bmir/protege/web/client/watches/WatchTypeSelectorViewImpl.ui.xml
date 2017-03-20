@@ -10,8 +10,8 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:RadioButton name="watchType" ui:field="none" text="None" addStyleNames="{style.radioButton}"/>
-        <g:RadioButton name="watchType" ui:field="entity" text="Entity" addStyleNames="{style.radioButton}"/>
-        <g:RadioButton name="watchType" ui:field="branch" text="Branch" addStyleNames="{style.radioButton}"/>
+        <g:RadioButton nameSupplier="watchType" ui:field="none" text="None" addStyleNames="{style.radioButton}"/>
+        <g:RadioButton nameSupplier="watchType" ui:field="entity" text="Entity" addStyleNames="{style.radioButton}"/>
+        <g:RadioButton nameSupplier="watchType" ui:field="branch" text="Branch" addStyleNames="{style.radioButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

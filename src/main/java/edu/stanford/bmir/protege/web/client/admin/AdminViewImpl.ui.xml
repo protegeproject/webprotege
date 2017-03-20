@@ -23,8 +23,8 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
             <g:Label text="Appearance" addStyleNames="{wp.dialog.title}"/>
-            <g:Label text="Application name"/>
-            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
+            <g:Label text="Application nameSupplier"/>
+            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application nameSupplier"/>
             <g:Label text="Application logo Url"/>
             <text:PlaceholderTextBox ui:field="applicationLogoField" placeholder="Application Logo Url"/>
             <g:HTMLPanel addStyleNames="{style.divider}"/>
@@ -43,10 +43,10 @@
                 <text:PlaceholderTextBox ui:field="applicationHostField" placeholder="e.g. webprotege.stanford.edu"/>
                 <g:Label text="Path"/>
                 <text:PlaceholderTextBox ui:field="applicationPathField"
-                                         placeholder="e.g. /webprotege (leave blank for no path)"/>
+                                         placeholder="e.g. /webprotege (leave blank for no pathSupplier)"/>
                 <g:Label text="Port"/>
                 <text:PlaceholderTextBox ui:field="applicationPortField"
-                                         placeholder="e.g. 443 (leave blank for default port)"/>
+                                         placeholder="e.g. 443 (leave blank for default portSupplier)"/>
             </g:HTMLPanel>
 
 

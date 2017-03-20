@@ -35,7 +35,7 @@
 
 	(height 476)
 	(is_hidden FALSE)
-	(name ":INSTANCE-ANNOTATION")
+	(nameSupplier ":INSTANCE-ANNOTATION")
 	(property_list [KB_386249_Instance_33])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
 	(width 603)
@@ -54,7 +54,7 @@
 
 ([KB_386249_Instance_0] of  Property_List
 
-	(name "class widget properties")
+	(nameSupplier "class widget properties")
 	(properties
 		[KB_386249_Instance_1]
 		[KB_386249_Instance_2]
@@ -71,7 +71,7 @@
 
 	(height 120)
 	(label "Constraints")
-	(name ":SLOT-CONSTRAINTS")
+	(nameSupplier ":SLOT-CONSTRAINTS")
 	(property_list [metaproject_ProjectKB_Instance_10059])
 	(widget_class_name "edu.stanford.smi.protege.widget.ConstraintsWidget")
 	(width 200)
@@ -80,17 +80,17 @@
 
 ([KB_386249_Instance_10] of  Property_List
 
-	(name "layout properties")
+	(nameSupplier "layout properties")
 	(properties [KB_386249_Instance_11]))
 
 ([KB_386249_Instance_11] of  String
 
-	(name "vertical_stretcher")
+	(nameSupplier "vertical_stretcher")
 	(string_value ":DIRECT-TEMPLATE-SLOTS"))
 
 ([KB_386249_Instance_12] of  Property_List
 
-	(name "slot widget properties")
+	(nameSupplier "slot widget properties")
 	(properties
 		[KB_386249_Instance_13]
 		[KB_386249_Instance_14]
@@ -114,7 +114,7 @@
 
 	(height 60)
 	(label "Cardinality")
-	(name ":SLOT-MINIMUM-CARDINALITY")
+	(nameSupplier ":SLOT-MINIMUM-CARDINALITY")
 	(property_list [metaproject_ProjectKB_Instance_10076])
 	(widget_class_name "edu.stanford.smi.protege.widget.MinimumCardinalityWidget")
 	(width 200)
@@ -124,7 +124,7 @@
 ([KB_386249_Instance_14] of  Widget
 
 	(height 35)
-	(name ":SLOT-MAXIMUM-CARDINALITY")
+	(nameSupplier ":SLOT-MAXIMUM-CARDINALITY")
 	(property_list [metaproject_ProjectKB_Instance_10077])
 	(widget_class_name "edu.stanford.smi.protege.widget.MaximumCardinalityWidget")
 	(width 200)
@@ -133,17 +133,17 @@
 
 ([KB_386249_Instance_15] of  Widget
 
-	(name ":SLOT-CONSTRAINTS"))
+	(nameSupplier ":SLOT-CONSTRAINTS"))
 
 ([KB_386249_Instance_16] of  Widget
 
-	(name ":DIRECT-TYPE"))
+	(nameSupplier ":DIRECT-TYPE"))
 
 ([KB_386249_Instance_17] of  Widget
 
 	(height 95)
 	(label "Domain")
-	(name ":DIRECT-DOMAIN")
+	(nameSupplier ":DIRECT-DOMAIN")
 	(property_list [metaproject_ProjectKB_Instance_10069])
 	(widget_class_name "edu.stanford.smi.protege.widget.DirectDomainWidget")
 	(width 200)
@@ -154,7 +154,7 @@
 
 	(height 90)
 	(label "Template Values")
-	(name ":SLOT-VALUES")
+	(nameSupplier ":SLOT-VALUES")
 	(property_list [metaproject_ProjectKB_Instance_10070])
 	(widget_class_name "edu.stanford.smi.protege.widget.SlotValuesWidget")
 	(width 200)
@@ -163,21 +163,21 @@
 
 ([KB_386249_Instance_19] of  Widget
 
-	(name ":DIRECT-SUPERSLOTS"))
+	(nameSupplier ":DIRECT-SUPERSLOTS"))
 
 ([KB_386249_Instance_2] of  Widget
 
-	(name ":DIRECT-INSTANCES"))
+	(nameSupplier ":DIRECT-INSTANCES"))
 
 ([KB_386249_Instance_20] of  Widget
 
-	(name ":DIRECT-SUBSLOTS"))
+	(nameSupplier ":DIRECT-SUBSLOTS"))
 
 ([KB_386249_Instance_21] of  Widget
 
 	(height 90)
 	(label "Default")
-	(name ":SLOT-DEFAULTS")
+	(nameSupplier ":SLOT-DEFAULTS")
 	(property_list [metaproject_ProjectKB_Instance_10071])
 	(widget_class_name "edu.stanford.smi.protege.widget.DefaultValuesWidget")
 	(width 200)
@@ -188,7 +188,7 @@
 
 	(height 120)
 	(label "Documentation")
-	(name ":DOCUMENTATION")
+	(nameSupplier ":DOCUMENTATION")
 	(property_list [metaproject_ProjectKB_Instance_10072])
 	(widget_class_name "edu.stanford.smi.protege.widget.DocumentationWidget")
 	(width 200)
@@ -199,7 +199,7 @@
 
 	(height 60)
 	(label "Maximum")
-	(name ":SLOT-NUMERIC-MAXIMUM")
+	(nameSupplier ":SLOT-NUMERIC-MAXIMUM")
 	(property_list [metaproject_ProjectKB_Instance_10073])
 	(widget_class_name "edu.stanford.smi.protege.widget.NumericMaximumWidget")
 	(width 100)
@@ -210,7 +210,7 @@
 
 	(height 60)
 	(label "Minimum")
-	(name ":SLOT-NUMERIC-MINIMUM")
+	(nameSupplier ":SLOT-NUMERIC-MINIMUM")
 	(property_list [metaproject_ProjectKB_Instance_10074])
 	(widget_class_name "edu.stanford.smi.protege.widget.NumericMinimumWidget")
 	(width 100)
@@ -219,13 +219,13 @@
 
 ([KB_386249_Instance_25] of  Widget
 
-	(name ":ASSOCIATED-FACET"))
+	(nameSupplier ":ASSOCIATED-FACET"))
 
 ([KB_386249_Instance_26] of  Widget
 
 	(height 60)
 	(label "Name")
-	(name ":NAME")
+	(nameSupplier ":NAME")
 	(property_list [metaproject_ProjectKB_Instance_10075])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceNameWidget")
 	(width 200)
@@ -236,7 +236,7 @@
 
 	(height 60)
 	(label "Inverse Slot")
-	(name ":SLOT-INVERSE")
+	(nameSupplier ":SLOT-INVERSE")
 	(property_list [metaproject_ProjectKB_Instance_10078])
 	(widget_class_name "edu.stanford.smi.protege.widget.InverseSlotWidget")
 	(width 200)
@@ -247,7 +247,7 @@
 
 	(height 155)
 	(label "Value Type")
-	(name ":SLOT-VALUE-TYPE")
+	(nameSupplier ":SLOT-VALUE-TYPE")
 	(property_list [metaproject_ProjectKB_Instance_10079])
 	(widget_class_name "edu.stanford.smi.protege.widget.ValueTypeWidget")
 	(width 200)
@@ -256,7 +256,7 @@
 
 ([KB_386249_Instance_29] of  Property_List
 
-	(name "facet widget properties")
+	(nameSupplier "facet widget properties")
 	(properties
 		[KB_386249_Instance_30]
 		[KB_386249_Instance_31]
@@ -264,13 +264,13 @@
 
 ([KB_386249_Instance_3] of  Widget
 
-	(name ":DIRECT-SUBCLASSES"))
+	(nameSupplier ":DIRECT-SUBCLASSES"))
 
 ([KB_386249_Instance_30] of  Widget
 
 	(height 60)
 	(label "Name")
-	(name ":NAME")
+	(nameSupplier ":NAME")
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceNameWidget")
 	(width 200)
 	(x 0)
@@ -280,7 +280,7 @@
 
 	(height 120)
 	(label "Documentation")
-	(name ":DOCUMENTATION")
+	(nameSupplier ":DOCUMENTATION")
 	(widget_class_name "edu.stanford.smi.protege.widget.DocumentationWidget")
 	(width 200)
 	(x 200)
@@ -290,7 +290,7 @@
 
 	(height 60)
 	(label "Associated Slot")
-	(name ":ASSOCIATED-SLOT")
+	(nameSupplier ":ASSOCIATED-SLOT")
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
 	(width 200)
 	(x 0)
@@ -306,21 +306,21 @@
 
 ([KB_386249_Instance_34] of  Widget
 
-	(name ":ANNOTATED-INSTANCE"))
+	(nameSupplier ":ANNOTATED-INSTANCE"))
 
 ([KB_386249_Instance_35] of  Widget
 
-	(name ":CREATOR"))
+	(nameSupplier ":CREATOR"))
 
 ([KB_386249_Instance_36] of  Widget
 
-	(name ":CREATION-TIMESTAMP"))
+	(nameSupplier ":CREATION-TIMESTAMP"))
 
 ([KB_386249_Instance_37] of  Widget
 
 	(height 100)
 	(is_hidden FALSE)
-	(name ":ANNOTATION-TEXT")
+	(nameSupplier ":ANNOTATION-TEXT")
 	(widget_class_name "edu.stanford.smi.protege.widget.YellowStickyWidget")
 	(width 200)
 	(x 0)
@@ -339,7 +339,7 @@
 	(height 60)
 	(is_hidden FALSE)
 	(label "Name")
-	(name ":PAL-NAME")
+	(nameSupplier ":PAL-NAME")
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 275)
 	(x 0)
@@ -347,14 +347,14 @@
 
 ([KB_386249_Instance_4] of  Widget
 
-	(name ":DIRECT-SUPERCLASSES"))
+	(nameSupplier ":DIRECT-SUPERCLASSES"))
 
 ([KB_386249_Instance_40] of  Widget
 
 	(height 180)
 	(is_hidden FALSE)
 	(label "Range")
-	(name ":PAL-RANGE")
+	(nameSupplier ":PAL-RANGE")
 	(widget_class_name "edu.stanford.smi.protegex.widget.pal.constraint.PalRangeWidget")
 	(width 250)
 	(x 275)
@@ -365,7 +365,7 @@
 	(height 180)
 	(is_hidden FALSE)
 	(label "Description")
-	(name ":PAL-DESCRIPTION")
+	(nameSupplier ":PAL-DESCRIPTION")
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 250)
 	(x 275)
@@ -376,7 +376,7 @@
 	(height 300)
 	(is_hidden FALSE)
 	(label "Statement")
-	(name ":PAL-STATEMENT")
+	(nameSupplier ":PAL-STATEMENT")
 	(widget_class_name "edu.stanford.smi.protegex.widget.pal.constraint.PalConstraintWidget")
 	(width 275)
 	(x 0)
@@ -386,7 +386,7 @@
 
 	(height 120)
 	(label "Documentation")
-	(name ":DOCUMENTATION")
+	(nameSupplier ":DOCUMENTATION")
 	(property_list [metaproject_ProjectKB_Instance_10062])
 	(widget_class_name "edu.stanford.smi.protege.widget.DocumentationWidget")
 	(width 200)
@@ -397,7 +397,7 @@
 
 	(height 60)
 	(label "Name")
-	(name ":NAME")
+	(nameSupplier ":NAME")
 	(property_list [metaproject_ProjectKB_Instance_10063])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceNameWidget")
 	(width 200)
@@ -408,7 +408,7 @@
 
 	(height 60)
 	(label "Role")
-	(name ":ROLE")
+	(nameSupplier ":ROLE")
 	(property_list [metaproject_ProjectKB_Instance_10067])
 	(widget_class_name "edu.stanford.smi.protege.widget.RoleWidget")
 	(width 200)
@@ -417,13 +417,13 @@
 
 ([KB_386249_Instance_8] of  Widget
 
-	(name ":DIRECT-TYPE"))
+	(nameSupplier ":DIRECT-TYPE"))
 
 ([KB_386249_Instance_9] of  Widget
 
 	(height 150)
 	(label "Template Slots")
-	(name ":DIRECT-TEMPLATE-SLOTS")
+	(nameSupplier ":DIRECT-TEMPLATE-SLOTS")
 	(property_list [metaproject_ProjectKB_Instance_10064])
 	(widget_class_name "edu.stanford.smi.protege.widget.TemplateSlotsWidget")
 	(width 600)
@@ -440,7 +440,7 @@
 
 	(height 0)
 	(is_hidden FALSE)
-	(name "salt")
+	(nameSupplier "salt")
 	(property_list [metaproject_ProjectKB_Class10007])
 	(width 0)
 	(x 0)
@@ -452,14 +452,14 @@
 ([metaproject_ProjectKB_Class10015] of  Widget
 
 	(is_hidden FALSE)
-	(name "Server")
+	(nameSupplier "Server")
 	(property_list [metaproject_ProjectKB_Class50521])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
 ([metaproject_ProjectKB_Class10028] of  Widget
 
 	(is_hidden FALSE)
-	(name "PolicyControlledObject")
+	(nameSupplier "PolicyControlledObject")
 	(property_list [metaproject_ProjectKB_Class10039])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
@@ -476,7 +476,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "name")
+	(nameSupplier "nameSupplier")
 	(property_list [metaproject_ProjectKB_Class10041])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 510)
@@ -490,7 +490,7 @@
 
 	(height 120)
 	(is_hidden FALSE)
-	(name "description")
+	(nameSupplier "description")
 	(property_list [metaproject_ProjectKB_Class10055])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 510)
@@ -502,14 +502,14 @@
 
 ([metaproject_ProjectKB_Class10056] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([metaproject_ProjectKB_Class10057] of  Widget
 
 	(height 210)
 	(is_hidden FALSE)
 	(label "Allowed Group Operations (Policies)")
-	(name "allowedGroupOperation")
+	(nameSupplier "allowedGroupOperation")
 	(property_list [metaproject_ProjectKB_Class10058])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -558,193 +558,193 @@
 
 ([metaproject_ProjectKB_Class10059] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class10060] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedGroup")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class10061] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedGroup"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class10062] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class10063] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedOperation")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class10064] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedOperation"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class10065] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class10066] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class10067] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class10068] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class10069] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class10070] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class10071] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class10072] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class10073] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class10074] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class10075] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class10076] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class10077] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class10078] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class10079] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class10080] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class10081] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class10082] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class10083] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class10084] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class10085] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class10086] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class10087] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class10088] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class10089] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class10090] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class10091] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class10222] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class10223]
 		[metaproject_ProjectKB_Class10224]))
 
 ([metaproject_ProjectKB_Class10223] of  String
 
-	(name "allowedOperation")
+	(nameSupplier "allowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class10224] of  String
 
-	(name "allowedGroup")
+	(nameSupplier "allowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class10225] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class10226] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class11] of  Widget
@@ -768,19 +768,19 @@
 ([metaproject_ProjectKB_Class16] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
+	(nameSupplier "ButtonDisplayed-View References to Value"))
 
 ([metaproject_ProjectKB_Class2] of  Property_List
 )
 
 ([metaproject_ProjectKB_Class20004] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class20005] of  Boolean
 
 	(boolean_value FALSE)
-	(name "readOnly_configured"))
+	(nameSupplier "readOnly_configured"))
 
 ([metaproject_ProjectKB_Class3] of  Widget
 
@@ -1026,7 +1026,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "inTrash")
+	(nameSupplier "inTrash")
 	(property_list [metaproject_ProjectKB_Class30070])
 	(widget_class_name "edu.stanford.smi.protege.widget.CheckBoxWidget")
 	(width 200)
@@ -1040,7 +1040,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "lastAccess")
+	(nameSupplier "lastAccess")
 	(property_list [metaproject_ProjectKB_Class30082])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 200)
@@ -1054,7 +1054,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "lastLogin")
+	(nameSupplier "lastLogin")
 	(property_list [metaproject_ProjectKB_Class30084])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 200)
@@ -1071,7 +1071,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "email")
+	(nameSupplier "email")
 	(property_list [metaproject_ProjectKB_Class40007])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 200)
@@ -1092,7 +1092,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50017])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 450)
@@ -1144,7 +1144,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Additional Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50021])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 200)
@@ -1193,166 +1193,166 @@
 
 ([metaproject_ProjectKB_Class50024] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50026] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50027] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50028] of  Integer
 
 	(integer_value 187)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50030] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50031] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50032] of  Integer
 
 	(integer_value 187)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50034] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50037] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50038] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50039] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50040] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50041] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50042] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50043] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50044] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50045] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50046] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50047] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50048] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50049] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50050] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50051] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50052] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50053] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50054] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50055] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50056] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50057] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50058] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50059] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50060] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50061] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50097] of  Widget
@@ -1360,7 +1360,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Additional Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50098])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -1410,7 +1410,7 @@
 ([metaproject_ProjectKB_Class50101] of  Widget
 
 	(is_hidden FALSE)
-	(name "PropertyValue")
+	(nameSupplier "PropertyValue")
 	(property_list [metaproject_ProjectKB_Class50102])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
@@ -1423,13 +1423,13 @@
 
 ([metaproject_ProjectKB_Class50103] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([metaproject_ProjectKB_Class50104] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(property_list [metaproject_ProjectKB_Class50105])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 200)
@@ -1443,7 +1443,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(property_list [metaproject_ProjectKB_Class50107])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 200)
@@ -1455,330 +1455,330 @@
 
 ([metaproject_ProjectKB_Class50108] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50110] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50111] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50112] of  Integer
 
 	(integer_value 186)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50114] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50115] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50116] of  Integer
 
 	(integer_value 185)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50118] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50121] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50122] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50123] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50124] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50125] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50126] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50127] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50128] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50129] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50130] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50131] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50132] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50133] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50134] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50135] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50136] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50137] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50138] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50139] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50140] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50141] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50142] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50143] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50144] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50145] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50214] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50216] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50217] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50218] of  Integer
 
 	(integer_value 182)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50220] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50221] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50222] of  Integer
 
 	(integer_value 181)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50224] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50227] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50228] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50229] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50230] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50231] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50232] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50233] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50234] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50235] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50236] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50237] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50238] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50239] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50240] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50241] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50242] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50243] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50244] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50245] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50246] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50247] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50248] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50249] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50250] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50251] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50308] of  Property_List
@@ -1795,7 +1795,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "name")
+	(nameSupplier "nameSupplier")
 	(property_list [metaproject_ProjectKB_Class50310])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 190)
@@ -1809,7 +1809,7 @@
 
 	(height 270)
 	(is_hidden FALSE)
-	(name "description")
+	(nameSupplier "description")
 	(property_list [metaproject_ProjectKB_Class50312])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 190)
@@ -1821,14 +1821,14 @@
 
 ([metaproject_ProjectKB_Class50313] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([metaproject_ProjectKB_Class50314] of  Widget
 
 	(height 120)
 	(is_hidden FALSE)
 	(label "Allowed Group Operations (Policies)")
-	(name "allowedGroupOperation")
+	(nameSupplier "allowedGroupOperation")
 	(property_list [metaproject_ProjectKB_Class50315])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -1877,193 +1877,193 @@
 
 ([metaproject_ProjectKB_Class50316] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50317] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedGroup")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50318] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedGroup"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class50319] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class50320] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedOperation")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50321] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedOperation"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class50322] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class50323] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50324] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50325] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50326] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50327] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50328] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50329] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50330] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50331] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50332] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50333] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50334] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50335] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50336] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50337] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50338] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50339] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50340] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50341] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50342] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50343] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50344] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50345] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50346] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50347] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50348] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50349] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50350]
 		[metaproject_ProjectKB_Class50351]))
 
 ([metaproject_ProjectKB_Class50350] of  String
 
-	(name "allowedOperation")
+	(nameSupplier "allowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50351] of  String
 
-	(name "allowedGroup")
+	(nameSupplier "allowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50352] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50353] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50354] of  Widget
@@ -2071,7 +2071,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Additional Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50355])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -2120,173 +2120,173 @@
 
 ([metaproject_ProjectKB_Class50356] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50357] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50358] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50359] of  Integer
 
 	(integer_value 186)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50360] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50361] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50362] of  Integer
 
 	(integer_value 185)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50363] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50364] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50365] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50366] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50367] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50368] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50369] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50370] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50371] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50372] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50373] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50374] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50375] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50376] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50377] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50378] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50379] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50380] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50381] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50382] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50383] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50384] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50385] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50386] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50387] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50388] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50394] of  Widget
 
 	(height 210)
 	(is_hidden FALSE)
-	(name "member")
+	(nameSupplier "member")
 	(property_list [metaproject_ProjectKB_Class50395])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
 	(width 200)
@@ -2302,12 +2302,12 @@
 ([metaproject_ProjectKB_Class50396] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
+	(nameSupplier "ButtonDisplayed-View References to Value"))
 
 ([metaproject_ProjectKB_Class50397] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
+	(nameSupplier "ButtonDisplayed-Delete Instance"))
 
 ([metaproject_ProjectKB_Class50421] of  Property_List
 
@@ -2326,7 +2326,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "name")
+	(nameSupplier "nameSupplier")
 	(property_list [metaproject_ProjectKB_Class50423])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 280)
@@ -2340,7 +2340,7 @@
 
 	(height 120)
 	(is_hidden FALSE)
-	(name "description")
+	(nameSupplier "description")
 	(property_list [metaproject_ProjectKB_Class50425])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 510)
@@ -2352,14 +2352,14 @@
 
 ([metaproject_ProjectKB_Class50426] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([metaproject_ProjectKB_Class50427] of  Widget
 
 	(height 210)
 	(is_hidden FALSE)
 	(label "Allowed Group Operations (Policies)")
-	(name "allowedGroupOperation")
+	(nameSupplier "allowedGroupOperation")
 	(property_list [metaproject_ProjectKB_Class50428])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -2408,193 +2408,193 @@
 
 ([metaproject_ProjectKB_Class50429] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50430] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedGroup")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50431] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedGroup"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class50432] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class50433] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedOperation")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50434] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedOperation"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class50435] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class50436] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50437] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50438] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50439] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50440] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50441] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50442] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50443] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50444] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50445] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50446] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50447] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50448] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50449] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50450] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50451] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50452] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50453] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50454] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50455] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50456] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50457] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50458] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50459] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50460] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50461] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50462] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50463]
 		[metaproject_ProjectKB_Class50464]))
 
 ([metaproject_ProjectKB_Class50463] of  String
 
-	(name "allowedOperation")
+	(nameSupplier "allowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50464] of  String
 
-	(name "allowedGroup")
+	(nameSupplier "allowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50465] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50466] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50467] of  Widget
@@ -2602,7 +2602,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Additional Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50468])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -2651,173 +2651,173 @@
 
 ([metaproject_ProjectKB_Class50469] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50470] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50471] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50472] of  Integer
 
 	(integer_value 182)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50473] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50474] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50475] of  Integer
 
 	(integer_value 181)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50476] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50477] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50478] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50479] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50480] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50481] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50482] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50483] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50484] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50485] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50486] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50487] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50488] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50489] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50490] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50491] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50492] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50493] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50494] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50495] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50496] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50497] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50498] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50499] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50500] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50501] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50507] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "owner")
+	(nameSupplier "owner")
 	(property_list [metaproject_ProjectKB_Class50508])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
 	(width 200)
@@ -2833,18 +2833,18 @@
 ([metaproject_ProjectKB_Class50509] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
+	(nameSupplier "ButtonDisplayed-View References to Value"))
 
 ([metaproject_ProjectKB_Class50510] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
+	(nameSupplier "ButtonDisplayed-Delete Instance"))
 
 ([metaproject_ProjectKB_Class50511] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "annotationProject")
+	(nameSupplier "annotationProject")
 	(property_list [metaproject_ProjectKB_Class50512])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
 	(width 510)
@@ -2860,18 +2860,18 @@
 ([metaproject_ProjectKB_Class50513] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
+	(nameSupplier "ButtonDisplayed-View References to Value"))
 
 ([metaproject_ProjectKB_Class50514] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
+	(nameSupplier "ButtonDisplayed-Delete Instance"))
 
 ([metaproject_ProjectKB_Class50515] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "location")
+	(nameSupplier "location")
 	(property_list [metaproject_ProjectKB_Class50516])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 510)
@@ -2895,7 +2895,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "name")
+	(nameSupplier "nameSupplier")
 	(property_list [metaproject_ProjectKB_Class50523])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 510)
@@ -2909,7 +2909,7 @@
 
 	(height 120)
 	(is_hidden FALSE)
-	(name "description")
+	(nameSupplier "description")
 	(property_list [metaproject_ProjectKB_Class50525])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 510)
@@ -2921,14 +2921,14 @@
 
 ([metaproject_ProjectKB_Class50526] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([metaproject_ProjectKB_Class50527] of  Widget
 
 	(height 210)
 	(is_hidden FALSE)
 	(label "Allowed Group Operations (Policies)")
-	(name "allowedGroupOperation")
+	(nameSupplier "allowedGroupOperation")
 	(property_list [metaproject_ProjectKB_Class50528])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -2977,193 +2977,193 @@
 
 ([metaproject_ProjectKB_Class50529] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50530] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedGroup")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50531] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedGroup"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class50532] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedGroup"))
 
 ([metaproject_ProjectKB_Class50533] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORallowedOperation")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORallowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50534] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORallowedOperation"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class50535] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORallowedOperation"))
 
 ([metaproject_ProjectKB_Class50536] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50537] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50538] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50539] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50540] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50541] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50542] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50543] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50544] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50545] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50546] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50547] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50548] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50549] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50550] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50551] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50552] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50553] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50554] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50555] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50556] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50557] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50558] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50559] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50560] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50561] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50562] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50563]
 		[metaproject_ProjectKB_Class50564]))
 
 ([metaproject_ProjectKB_Class50563] of  String
 
-	(name "allowedOperation")
+	(nameSupplier "allowedOperation")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50564] of  String
 
-	(name "allowedGroup")
+	(nameSupplier "allowedGroup")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50565] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "allowedGroup"))
 
 ([metaproject_ProjectKB_Class50566] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "allowedOperation"))
 
 ([metaproject_ProjectKB_Class50567] of  Widget
@@ -3171,7 +3171,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Additional Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50568])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 510)
@@ -3220,173 +3220,173 @@
 
 ([metaproject_ProjectKB_Class50569] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50570] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50571] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50572] of  Integer
 
 	(integer_value 182)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50573] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50574] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50575] of  Integer
 
 	(integer_value 181)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50576] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50577] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50578] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50579] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50580] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50581] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50582] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50583] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50584] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50585] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50586] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50587] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50588] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50589] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50590] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50591] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50592] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50593] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50594] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50595] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50596] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50597] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50598] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50599] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50600] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50601] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50607] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "hostName")
+	(nameSupplier "hostName")
 	(property_list [metaproject_ProjectKB_Class50608])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 510)
@@ -3398,164 +3398,164 @@
 
 ([metaproject_ProjectKB_Class50736] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50737]
 		[metaproject_ProjectKB_Class50738]))
 
 ([metaproject_ProjectKB_Class50737] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50738] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50739] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50740] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50756] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50757]
 		[metaproject_ProjectKB_Class50758]))
 
 ([metaproject_ProjectKB_Class50757] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50758] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50759] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50760] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50776] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50777]
 		[metaproject_ProjectKB_Class50778]))
 
 ([metaproject_ProjectKB_Class50777] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50778] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50779] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50780] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50809] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50810]
 		[metaproject_ProjectKB_Class50811]))
 
 ([metaproject_ProjectKB_Class50810] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50811] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50812] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50813] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50829] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50830]
 		[metaproject_ProjectKB_Class50831]))
 
 ([metaproject_ProjectKB_Class50830] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50831] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50832] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50833] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50849] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class50850]
 		[metaproject_ProjectKB_Class50851]))
 
 ([metaproject_ProjectKB_Class50850] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50851] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50852] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class50853] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class50916] of  Widget
@@ -3563,7 +3563,7 @@
 	(height 120)
 	(is_hidden FALSE)
 	(label "Additional Properties")
-	(name "properties")
+	(nameSupplier "properties")
 	(property_list [metaproject_ProjectKB_Class50917])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceTableWidget")
 	(width 200)
@@ -3612,193 +3612,193 @@
 
 ([metaproject_ProjectKB_Class50920] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([metaproject_ProjectKB_Class50922] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyName")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyName")
+	(string_value "nameSupplier"))
 
 ([metaproject_ProjectKB_Class50923] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyName"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50924] of  Integer
 
 	(integer_value 182)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyName"))
 
 ([metaproject_ProjectKB_Class50926] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORpropertyValue")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORpropertyValue")
 	(string_value "value"))
 
 ([metaproject_ProjectKB_Class50927] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORpropertyValue"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50928] of  Integer
 
 	(integer_value 181)
-	(name ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORpropertyValue"))
 
 ([metaproject_ProjectKB_Class50930] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([metaproject_ProjectKB_Class50933] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([metaproject_ProjectKB_Class50934] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([metaproject_ProjectKB_Class50935] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([metaproject_ProjectKB_Class50936] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([metaproject_ProjectKB_Class50937] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([metaproject_ProjectKB_Class50938] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([metaproject_ProjectKB_Class50939] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([metaproject_ProjectKB_Class50940] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([metaproject_ProjectKB_Class50941] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([metaproject_ProjectKB_Class50942] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50943] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50944] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50945] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50946] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([metaproject_ProjectKB_Class50947] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([metaproject_ProjectKB_Class50948] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([metaproject_ProjectKB_Class50949] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50950] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class50951] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([metaproject_ProjectKB_Class50952] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([metaproject_ProjectKB_Class50953] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([metaproject_ProjectKB_Class50954] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([metaproject_ProjectKB_Class50955] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([metaproject_ProjectKB_Class50956] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([metaproject_ProjectKB_Class50957] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([metaproject_ProjectKB_Class51008] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[metaproject_ProjectKB_Class51009]
 		[metaproject_ProjectKB_Class51010]))
 
 ([metaproject_ProjectKB_Class51009] of  String
 
-	(name "propertyName")
+	(nameSupplier "propertyName")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class51010] of  String
 
-	(name "propertyValue")
+	(nameSupplier "propertyValue")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class51011] of  String
 
-	(name ":Visible:Slot:Index0")
+	(nameSupplier ":Visible:Slot:Index0")
 	(string_value "propertyName"))
 
 ([metaproject_ProjectKB_Class51012] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "propertyValue"))
 
 ([metaproject_ProjectKB_Class6] of  Property_List
@@ -3813,12 +3813,12 @@
 ([metaproject_ProjectKB_Instance_10060] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
+	(nameSupplier "ButtonDisplayed-View References to Value"))
 
 ([metaproject_ProjectKB_Instance_10061] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
+	(nameSupplier "ButtonDisplayed-Delete Instance"))
 
 ([metaproject_ProjectKB_Instance_10062] of  Property_List
 )
@@ -3835,19 +3835,19 @@
 ([metaproject_ProjectKB_Instance_10065] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Move up"))
+	(nameSupplier "ButtonDisplayed-Move up"))
 
 ([metaproject_ProjectKB_Instance_10066] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Move down"))
+	(nameSupplier "ButtonDisplayed-Move down"))
 
 ([metaproject_ProjectKB_Instance_10067] of  Property_List
 )
 
 ([metaproject_ProjectKB_Instance_10068] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([metaproject_ProjectKB_Instance_10069] of  Property_List
 )
@@ -3885,7 +3885,7 @@
 ([metaproject_ProjectKB_Instance_10080] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value"))
+	(nameSupplier "ButtonDisplayed-View References to Value"))
 
 ([metaproject_ProjectKB_Instance_20047] of  Widget
 
@@ -3917,7 +3917,7 @@
 ([nci_metaproject_ProjectKB_Instance_10082] of  Widget
 
 	(is_hidden FALSE)
-	(name "GroupOperation")
+	(nameSupplier "GroupOperation")
 	(property_list [nci_metaproject_ProjectKB_Instance_10083])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
@@ -3931,14 +3931,14 @@
 
 ([nci_metaproject_ProjectKB_Instance_10084] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([nci_metaproject_ProjectKB_Instance_10085] of  Widget
 
 	(height 110)
 	(is_hidden FALSE)
 	(label "AllowedGroup")
-	(name "allowedGroup")
+	(nameSupplier "allowedGroup")
 	(property_list [nci_metaproject_ProjectKB_Instance_10086])
 	(widget_class_name "edu.stanford.smi.protegex.widget.instancetable.InstanceRowWidget")
 	(width 200)
@@ -3989,7 +3989,7 @@
 
 	(height 350)
 	(is_hidden FALSE)
-	(name "allowedOperation")
+	(nameSupplier "allowedOperation")
 	(property_list [nci_metaproject_ProjectKB_Instance_10090])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
 	(width 200)
@@ -4006,207 +4006,207 @@
 ([nci_metaproject_ProjectKB_Instance_10091] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value  "))
+	(nameSupplier "ButtonDisplayed-View References to Value  "))
 
 ([nci_metaproject_ProjectKB_Instance_10092] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
+	(nameSupplier "ButtonDisplayed-Delete Instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10182] of  String
 
-	(name "SearchTab_Query")
+	(nameSupplier "SearchTab_Query")
 	(string_value "Query Name: GroupOfUser\nMatch All:true\nLength: 1\nGroup	member	contains	Instance: | 	1	\n\n"))
 
 ([nci_metaproject_ProjectKB_Instance_10191] of  String
 
-	(name "tooltip_text"))
+	(nameSupplier "tooltip_text"))
 
 ([nci_metaproject_ProjectKB_Instance_10193] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORname")
-	(string_value "name"))
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORname")
+	(string_value "nameSupplier"))
 
 ([nci_metaproject_ProjectKB_Instance_10194] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORname"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORname"))
 
 ([nci_metaproject_ProjectKB_Instance_10195] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORname"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORname"))
 
 ([nci_metaproject_ProjectKB_Instance_10197] of  String
 
-	(name ":COLUMN:NAME:DESCRIPTORmember")
+	(nameSupplier ":COLUMN:NAME:DESCRIPTORmember")
 	(string_value "member"))
 
 ([nci_metaproject_ProjectKB_Instance_10198] of  Integer
 
 	(integer_value -16777216)
-	(name ":COLOR:RGB:DESCRIPTORmember"))
+	(nameSupplier ":COLOR:RGB:DESCRIPTORmember"))
 
 ([nci_metaproject_ProjectKB_Instance_10199] of  Integer
 
 	(integer_value 20)
-	(name ":PREFERRED:SIZE:DESCRIPTORmember"))
+	(nameSupplier ":PREFERRED:SIZE:DESCRIPTORmember"))
 
 ([nci_metaproject_ProjectKB_Instance_10201] of  Integer
 
 	(integer_value 2)
-	(name ":Number:Of:Visible:Slots"))
+	(nameSupplier ":Number:Of:Visible:Slots"))
 
 ([nci_metaproject_ProjectKB_Instance_10204] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Automatically:Select:Insertions"))
+	(nameSupplier ":Automatically:Select:Insertions"))
 
 ([nci_metaproject_ProjectKB_Instance_10205] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Create:Form:For:New:Instances"))
+	(nameSupplier ":Create:Form:For:New:Instances"))
 
 ([nci_metaproject_ProjectKB_Instance_10206] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":HighLight:Selected:Row"))
+	(nameSupplier ":HighLight:Selected:Row"))
 
 ([nci_metaproject_ProjectKB_Instance_10207] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Edit:In:Place"))
+	(nameSupplier ":Edit:In:Place"))
 
 ([nci_metaproject_ProjectKB_Instance_10208] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Use:Dialog:To:Select:Instances"))
+	(nameSupplier ":Use:Dialog:To:Select:Instances"))
 
 ([nci_metaproject_ProjectKB_Instance_10209] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Use:Dialog:To:Select:Classes"))
+	(nameSupplier ":Use:Dialog:To:Select:Classes"))
 
 ([nci_metaproject_ProjectKB_Instance_10210] of  String
 
-	(name ":Dialog:Title:For:Selecting:Instances")
+	(nameSupplier ":Dialog:Title:For:Selecting:Instances")
 	(string_value "Select an instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10211] of  String
 
-	(name ":Dialog:Title:For:Selecting:Classes")
+	(nameSupplier ":Dialog:Title:For:Selecting:Classes")
 	(string_value "Select a class"))
 
 ([nci_metaproject_ProjectKB_Instance_10212] of  Integer
 
 	(integer_value 1)
-	(name ":Prototype:Depth"))
+	(nameSupplier ":Prototype:Depth"))
 
 ([nci_metaproject_ProjectKB_Instance_10213] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Create:Instance:Button"))
+	(nameSupplier ":Display:Create:Instance:Button"))
 
 ([nci_metaproject_ProjectKB_Instance_10214] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Add:Instance:Button"))
+	(nameSupplier ":Display:Add:Instance:Button"))
 
 ([nci_metaproject_ProjectKB_Instance_10215] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:View:Instance:Button"))
+	(nameSupplier ":Display:View:Instance:Button"))
 
 ([nci_metaproject_ProjectKB_Instance_10216] of  Boolean
 
 	(boolean_value TRUE)
-	(name ":Display:Remove:Instance:Button"))
+	(nameSupplier ":Display:Remove:Instance:Button"))
 
 ([nci_metaproject_ProjectKB_Instance_10217] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Delete:Instance:Button"))
+	(nameSupplier ":Display:Delete:Instance:Button"))
 
 ([nci_metaproject_ProjectKB_Instance_10218] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Prototype:Button"))
+	(nameSupplier ":Display:Prototype:Button"))
 
 ([nci_metaproject_ProjectKB_Instance_10219] of  Boolean
 
 	(boolean_value FALSE)
-	(name ":Display:Move:Instance:Buttons"))
+	(nameSupplier ":Display:Move:Instance:Buttons"))
 
 ([nci_metaproject_ProjectKB_Instance_10220] of  String
 
-	(name ":Create:Instance:Button:Tooltip")
+	(nameSupplier ":Create:Instance:Button:Tooltip")
 	(string_value "Create a new instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10221] of  String
 
-	(name ":Add:Instance:Button:Tooltip")
+	(nameSupplier ":Add:Instance:Button:Tooltip")
 	(string_value "Select an already existing instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10222] of  String
 
-	(name ":View:Instance:Button:Tooltip")
+	(nameSupplier ":View:Instance:Button:Tooltip")
 	(string_value "View the selected instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10223] of  String
 
-	(name ":Remove:Instance:Button:Tooltip")
+	(nameSupplier ":Remove:Instance:Button:Tooltip")
 	(string_value "Remove the selected instance(s)"))
 
 ([nci_metaproject_ProjectKB_Instance_10224] of  String
 
-	(name ":Delete:Instance:Button:Tooltip")
+	(nameSupplier ":Delete:Instance:Button:Tooltip")
 	(string_value "Delete the selected instance(s) from the knowledge base"))
 
 ([nci_metaproject_ProjectKB_Instance_10225] of  String
 
-	(name ":Prototype:Button:Tooltip")
+	(nameSupplier ":Prototype:Button:Tooltip")
 	(string_value "Create a new instance which is a duplicate of the selected instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10226] of  String
 
-	(name ":Move:Instance:Buttons:Tooltip")
+	(nameSupplier ":Move:Instance:Buttons:Tooltip")
 	(string_value "Move the selected instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10227] of  String
 
-	(name ":Create:Instance:Dialog:Title")
+	(nameSupplier ":Create:Instance:Dialog:Title")
 	(string_value "Create a new instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10228] of  String
 
-	(name ":Add:Instance:Dialog:Title")
+	(nameSupplier ":Add:Instance:Dialog:Title")
 	(string_value "Select an already existing instance"))
 
 ([nci_metaproject_ProjectKB_Instance_10239] of  Property_List
 
-	(name ":Visible:Slot:List")
+	(nameSupplier ":Visible:Slot:List")
 	(properties
 		[nci_metaproject_ProjectKB_Instance_10240]
 		[nci_metaproject_ProjectKB_Instance_10241]))
 
 ([nci_metaproject_ProjectKB_Instance_10240] of  String
 
-	(name "name")
-	(string_value "name"))
+	(nameSupplier "nameSupplier")
+	(string_value "nameSupplier"))
 
 ([nci_metaproject_ProjectKB_Instance_10241] of  String
 
-	(name "member")
+	(nameSupplier "member")
 	(string_value "member"))
 
 ([nci_metaproject_ProjectKB_Instance_10242] of  String
 
-	(name ":Visible:Slot:Index0")
-	(string_value "name"))
+	(nameSupplier ":Visible:Slot:Index0")
+	(string_value "nameSupplier"))
 
 ([nci_metaproject_ProjectKB_Instance_10243] of  String
 
-	(name ":Visible:Slot:Index1")
+	(nameSupplier ":Visible:Slot:Index1")
 	(string_value "member"))
 
 ([nci_metaproject_ProjectKB_Instance_20] of  Widget
@@ -4218,7 +4218,7 @@
 ([nci_metaproject_ProjectKB_Instance_20157] of  Widget
 
 	(is_hidden FALSE)
-	(name "Operation")
+	(nameSupplier "Operation")
 	(property_list [nci_metaproject_ProjectKB_Instance_20158])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
@@ -4232,13 +4232,13 @@
 
 ([nci_metaproject_ProjectKB_Instance_20159] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([nci_metaproject_ProjectKB_Instance_20160] of  Widget
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "name")
+	(nameSupplier "nameSupplier")
 	(property_list [nci_metaproject_ProjectKB_Instance_20161])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 200)
@@ -4252,7 +4252,7 @@
 
 	(height 120)
 	(is_hidden FALSE)
-	(name "description")
+	(nameSupplier "description")
 	(property_list [nci_metaproject_ProjectKB_Instance_20167])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 200)
@@ -4305,62 +4305,62 @@
 ([nci_metaproject_ProjectKB_Instance_52] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-View References to Value  "))
+	(nameSupplier "ButtonDisplayed-View References to Value  "))
 
 ([nci_metaproject_ProjectKB_Instance_53] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Instance"))
+	(nameSupplier "ButtonDisplayed-Delete Instance"))
 
 ([NullUserNameMetaproject_ProjectKB_Class19] of  String
 
-	(name ":INSTANCE-ANNOTATION")
+	(nameSupplier ":INSTANCE-ANNOTATION")
 	(string_value "%3AANNOTATION-TEXT"))
 
 ([NullUserNameMetaproject_ProjectKB_Class20] of  String
 
-	(name "Group")
-	(string_value "name"))
+	(nameSupplier "Group")
+	(string_value "nameSupplier"))
 
 ([NullUserNameMetaproject_ProjectKB_Class21] of  String
 
-	(name "GroupOperation")
+	(nameSupplier "GroupOperation")
 	(string_value "allowedGroup{+can+}allowedOperation"))
 
 ([NullUserNameMetaproject_ProjectKB_Class22] of  String
 
-	(name "Operation")
-	(string_value "name"))
+	(nameSupplier "Operation")
+	(string_value "nameSupplier"))
 
 ([NullUserNameMetaproject_ProjectKB_Class23] of  String
 
-	(name ":PAL-CONSTRAINT")
+	(nameSupplier ":PAL-CONSTRAINT")
 	(string_value "%3APAL-NAME"))
 
 ([NullUserNameMetaproject_ProjectKB_Class24] of  String
 
-	(name ":META-CLASS")
+	(nameSupplier ":META-CLASS")
 	(string_value "%3ANAME"))
 
 ([NullUserNameMetaproject_ProjectKB_Class25] of  String
 
-	(name "User")
-	(string_value "name"))
+	(nameSupplier "User")
+	(string_value "nameSupplier"))
 
 ([NullUserNameMetaproject_ProjectKB_Class26] of  String
 
-	(name "Project")
-	(string_value "name"))
+	(nameSupplier "Project")
+	(string_value "nameSupplier"))
 
 ([NullUserNameMetaproject_ProjectKB_Class27] of  String
 
-	(name "PropertyValue")
+	(nameSupplier "PropertyValue")
 	(string_value "propertyName{+%3D+}propertyValue"))
 
 ([NullUserNameMetaproject_ProjectKB_Class28] of  String
 
-	(name "Server")
-	(string_value "name"))
+	(nameSupplier "Server")
+	(string_value "nameSupplier"))
 
 ([NullUserNameMetaproject_ProjectKB_Class29] of  Map_Entry
 
@@ -4396,7 +4396,7 @@
 
 	(height 476)
 	(is_hidden FALSE)
-	(name ":PAL-CONSTRAINT")
+	(nameSupplier ":PAL-CONSTRAINT")
 	(property_list [KB_386249_Instance_38])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
 	(width 603)
@@ -4478,7 +4478,7 @@
 
 ([ProjectKB_0036_00000] of  String
 
-	(name "factory_class_name")
+	(nameSupplier "factory_class_name")
 	(string_value "edu.stanford.smi.protege.storage.clips.ClipsKnowledgeBaseFactory"))
 
 ([ProjectKB_0036_00001] of  Widget
@@ -4534,48 +4534,48 @@
 
 ([ProjectKB_0036_00040] of  String
 
-	(name "classes_file_name")
+	(nameSupplier "classes_file_name")
 	(string_value "NullUserNameMetaProject.pont"))
 
 ([ProjectKB_0036_00041] of  String
 
-	(name "instances_file_name")
+	(nameSupplier "instances_file_name")
 	(string_value "NullUserNameMetaProject.pins"))
 
 ([projects_ProjectKB_00042] of  Integer
 
 	(integer_value 250)
-	(name "ClsesTab.left_right"))
+	(nameSupplier "ClsesTab.left_right"))
 
 ([projects_ProjectKB_00043] of  Integer
 
 	(integer_value 400)
-	(name "ClsesTab.left.top_bottom"))
+	(nameSupplier "ClsesTab.left.top_bottom"))
 
 ([projects_ProjectKB_00044] of  Integer
 
 	(integer_value 250)
-	(name "SlotsTab.left_right"))
+	(nameSupplier "SlotsTab.left_right"))
 
 ([projects_ProjectKB_00045] of  Integer
 
 	(integer_value 400)
-	(name "SlotTab.left.top_bottom"))
+	(nameSupplier "SlotTab.left.top_bottom"))
 
 ([projects_ProjectKB_00046] of  Integer
 
 	(integer_value 250)
-	(name "FormsTab.left_right"))
+	(nameSupplier "FormsTab.left_right"))
 
 ([projects_ProjectKB_00047] of  Integer
 
 	(integer_value 193)
-	(name "InstancesTab.left_right"))
+	(nameSupplier "InstancesTab.left_right"))
 
 ([projects_ProjectKB_00048] of  Integer
 
 	(integer_value 200)
-	(name "InstancesTab.right.left_right"))
+	(nameSupplier "InstancesTab.right.left_right"))
 
 ([projects_ProjectKB_00052] of  Map
 
@@ -4588,7 +4588,7 @@
 
 	(height 823)
 	(is_hidden FALSE)
-	(name "User")
+	(nameSupplier "User")
 	(property_list [projects_ProjectKB_00054])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
 	(width 906)
@@ -4614,7 +4614,7 @@
 	(height 60)
 	(is_hidden FALSE)
 	(label "Enocoded password")
-	(name "password")
+	(nameSupplier "password")
 	(property_list [projects_ProjectKB_00086])
 	(widget_class_name "edu.stanford.smi.protege.widget.DigestedPasswordWidget")
 	(width 400)
@@ -4631,7 +4631,7 @@
 
 	(height 110)
 	(is_hidden FALSE)
-	(name "group")
+	(nameSupplier "group")
 	(property_list [projects_ProjectKB_00088])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
 	(width 250)
@@ -4655,7 +4655,7 @@
 
 	(height 120)
 	(is_hidden FALSE)
-	(name "description")
+	(nameSupplier "description")
 	(property_list [projects_ProjectKB_00096])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
 	(width 400)
@@ -4669,7 +4669,7 @@
 
 	(height 60)
 	(is_hidden FALSE)
-	(name "name")
+	(nameSupplier "nameSupplier")
 	(property_list [projects_ProjectKB_00098])
 	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
 	(width 250)
@@ -4681,43 +4681,43 @@
 
 ([projects_ProjectKB_00099] of  Property_List
 
-	(name "layout properties"))
+	(nameSupplier "layout properties"))
 
 ([projects_ProjectKB_00100] of  Boolean
 
 	(boolean_value TRUE)
-	(name "ButtonDisplayed-View Selected Instances"))
+	(nameSupplier "ButtonDisplayed-View Selected Instances"))
 
 ([projects_ProjectKB_00101] of  Boolean
 
 	(boolean_value TRUE)
-	(name "ButtonDisplayed-Create Instance"))
+	(nameSupplier "ButtonDisplayed-Create Instance"))
 
 ([projects_ProjectKB_00102] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-References"))
+	(nameSupplier "ButtonDisplayed-References"))
 
 ([projects_ProjectKB_00103] of  Boolean
 
 	(boolean_value TRUE)
-	(name "ButtonDisplayed-Add"))
+	(nameSupplier "ButtonDisplayed-Add"))
 
 ([projects_ProjectKB_00104] of  Boolean
 
 	(boolean_value TRUE)
-	(name "ButtonDisplayed-Remove"))
+	(nameSupplier "ButtonDisplayed-Remove"))
 
 ([projects_ProjectKB_00105] of  Boolean
 
 	(boolean_value FALSE)
-	(name "ButtonDisplayed-Delete Selected Instances"))
+	(nameSupplier "ButtonDisplayed-Delete Selected Instances"))
 
 ([projects_ProjectKB_00106] of  Widget
 
 	(height 823)
 	(is_hidden FALSE)
-	(name "Project")
+	(nameSupplier "Project")
 	(property_list [metaproject_ProjectKB_Class50421])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
 	(width 906)
@@ -4728,7 +4728,7 @@
 
 	(height 823)
 	(is_hidden FALSE)
-	(name "Group")
+	(nameSupplier "Group")
 	(property_list [metaproject_ProjectKB_Class50308])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
 	(width 906)
@@ -4751,18 +4751,18 @@
 
 ([STANDARD_CLASS_FORM_WIDGET] of  Widget
 
-	(name ":STANDARD-CLASS")
+	(nameSupplier ":STANDARD-CLASS")
 	(property_list [KB_386249_Instance_0])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
 ([STANDARD_FACET_FORM_WIDGET] of  Widget
 
-	(name ":STANDARD-FACET")
+	(nameSupplier ":STANDARD-FACET")
 	(property_list [KB_386249_Instance_29])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
 
 ([STANDARD_SLOT_FORM_WIDGET] of  Widget
 
-	(name ":STANDARD-SLOT")
+	(nameSupplier ":STANDARD-SLOT")
 	(property_list [KB_386249_Instance_12])
 	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))

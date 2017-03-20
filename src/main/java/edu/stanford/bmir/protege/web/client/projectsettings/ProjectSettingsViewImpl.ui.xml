@@ -5,7 +5,7 @@
 
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Display name" addStyleNames="{wp.style.dlgLabel}"/>
+            <g:Label text="Display nameSupplier" addStyleNames="{wp.style.dlgLabel}"/>
             <g:TextBox ui:field="displayNameField" visibleLength="60"/>
         </div>
         <div class="{wp.style.formGroup}">

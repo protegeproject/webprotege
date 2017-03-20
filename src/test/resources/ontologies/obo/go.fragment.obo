@@ -30,7 +30,7 @@ property_value: propformat-version "1.2" xsd:string
 
 [Term]
 id: GO:0000001
-name: mitochondrion inheritance
+nameSupplier: mitochondrion inheritance
 namespace: biological_process
 def: "The distribution of mitochondria, including the mitochondrial genome, into daughter cells after mitosis or meiosis, mediated by interactions between mitochondria and the cytoskeleton." [GOC:mcc, PMID:10873824, PMID:11389764]
 synonym: "mitochondrial inheritance" EXACT []
@@ -39,7 +39,7 @@ is_a: GO:0048311 ! mitochondrion distribution
 
 [Term]
 id: GO:0000002
-name: mitochondrial genome maintenance
+nameSupplier: mitochondrial genome maintenance
 namespace: biological_process
 def: "The maintenance of the structure and integrity of the mitochondrial genome; includes replication and segregation of the mitochondrial chromosome." [GOC:ai, GOC:vw]
 is_a: GO:0007005 ! mitochondrion organization

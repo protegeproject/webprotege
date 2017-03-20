@@ -9,7 +9,7 @@
         }
 
 
-        .user-name {
+        .user-nameSupplier {
             font-weight: bold;
             color: #648dbe;
         }
@@ -29,7 +29,7 @@
                     <div>
                         <div>
                             <div>
-                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-name}"/>
+                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-nameSupplier}"/>
                                 stopped viewing this project
                             </div>
                         </div>

@@ -464,16 +464,16 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <!--<annotationProcessorPaths>-->
-                        <!--<path>-->
+                        <!--<pathSupplier>-->
                             <!--<groupId>com.google.auto.factory</groupId>-->
                             <!--<artifactId>auto-factory</artifactId>-->
                             <!--<version>1.0-beta3</version>-->
-                        <!--</path>-->
-                        <!--<path>-->
+                        <!--</pathSupplier>-->
+                        <!--<pathSupplier>-->
                             <!--<groupId>com.google.dagger</groupId>-->
                             <!--<artifactId>dagger-compiler</artifactId>-->
                             <!--<version>2.4</version>-->
-                        <!--</path>-->
+                        <!--</pathSupplier>-->
                     <!--</annotationProcessorPaths>-->
                 </configuration>
             </plugin>
