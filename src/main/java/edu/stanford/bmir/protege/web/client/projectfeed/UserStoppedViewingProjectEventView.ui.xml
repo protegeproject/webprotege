@@ -29,7 +29,7 @@
                     <div>
                         <div>
                             <div>
-                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-nameSupplier}"/>
+                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-name}"/>
                                 stopped viewing this project
                             </div>
                         </div>

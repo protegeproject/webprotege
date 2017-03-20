@@ -38,7 +38,7 @@
             </colgroup>
             <tr>
                 <td>
-                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content} {style.nameSupplier-field}"/>
+                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content} {style.name-field}"/>
                 </td>
                 <td>
                     <text:PlaceholderTextBox ui:field="databaseIdField" placeholder="DB Id" addStyleNames="{style.cell-content} {style.id-field}"/>
