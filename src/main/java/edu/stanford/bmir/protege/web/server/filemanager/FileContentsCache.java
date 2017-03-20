@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * the contents is called, the fileProvider is checked to ensure that the latest contents are returned.  Contents
  * are cached in memory.
  */
-public class FileContentsCache {
+public class FileContentsCache implements HasGetFile {
 
     private Provider<File> fileProvider;
 
