@@ -62,7 +62,7 @@ public class PasswordResetMailer_IT {
     public void setUp() throws Exception {
         when(placeUrl.getApplicationUrl()).thenReturn(applicationUrl);
         OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"), logger);
-        FileContents templateFile = new FileContents(() -> overridableFile.getTemplateFile());
+        FileContents templateFile = new FileContents(overridableFile);
         TemplateEngine templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         ResetPasswordMailer mailer = new ResetPasswordMailer(mailManager,
                                                              templateEngine,
