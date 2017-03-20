@@ -208,7 +208,7 @@ public class MailManager implements SendMail {
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
         final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHostProvider.getApplicationHost();
         String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
-        final String defaultPersonalName = applicationNameSupplier.getApplicationName();
+        final String defaultPersonalName = applicationNameSupplier.get();
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
         return new InternetAddress(from, personalName, UTF_8);
     }

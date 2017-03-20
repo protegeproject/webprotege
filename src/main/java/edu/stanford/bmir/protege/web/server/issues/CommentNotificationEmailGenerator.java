@@ -67,7 +67,7 @@ public class CommentNotificationEmailGenerator {
 
             ImmutableMap<String, Object> objects =
                     TemplateObjectsBuilder.builder()
-                                          .withApplicationName(applicationNameSupplier.getApplicationName())
+                                          .withApplicationName(applicationNameSupplier.get())
                                           .withProjectDisplayName(projectDisplayName)
                                           .withProjectUrl(projectUrl)
                                           .with(ENTITY_URL, entityUrl)

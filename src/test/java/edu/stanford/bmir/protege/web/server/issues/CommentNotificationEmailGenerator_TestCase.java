@@ -77,7 +77,7 @@ public class CommentNotificationEmailGenerator_TestCase {
         when(file.getName()).thenReturn(THE_FILE_NAME);
         when(comment.getCreatedBy()).thenReturn(creator);
         when(creator.getUserName()).thenReturn(USER_NAME);
-        when(applicationNameSupplier.getApplicationName()).thenReturn("webprotege.stanford.edu");
+        when(applicationNameSupplier.get()).thenReturn("webprotege.stanford.edu");
         templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         generator = new CommentNotificationEmailGenerator(templateFile,
                                                           templateEngine,

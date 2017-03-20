@@ -53,7 +53,7 @@ public class ResetPasswordMailer {
         try {
             Map<String, Object> objects =
                     TemplateObjectsBuilder.builder()
-                                          .withApplicationName(applicationNameSupplier.getApplicationName())
+                                          .withApplicationName(applicationNameSupplier.get())
                                           .withApplicationUrl(placeUrl.getApplicationUrl())
                                           .withUserId(userId)
                                           .with("pwd" , pwd)

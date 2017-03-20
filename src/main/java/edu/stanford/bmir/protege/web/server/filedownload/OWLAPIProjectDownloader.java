@@ -121,7 +121,7 @@ public class OWLAPIProjectDownloader {
         }
         else {
             // An error - no flipping ontology!
-            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.getApplicationName() + ".  Please contact the administrator.");
+            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.get() + ".  Please contact the administrator.");
         }
     }
 

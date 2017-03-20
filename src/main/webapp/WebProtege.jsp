@@ -72,7 +72,7 @@
 
     private void writeApplicationName(JspWriter out) throws IOException {
         ApplicationComponent component = getWebProtegeComponent();
-        out.print(component.getApplicationNameProvider().getApplicationName());
+        out.print(component.getApplicationNameProvider().get());
     }
 
     private AccessManager getAccessManager() {
