@@ -9,6 +9,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 10 Mar 2017
  */
-public class OverridableFile {
+public class OverridableFile implements Supplier<File> {
 
     private final WebProtegeLogger logger;
 
@@ -38,7 +39,7 @@ public class OverridableFile {
     }
 
     @Nonnull
-    public synchronized File getTemplateFile() {
+    public synchronized File get() {
         File overridingFile = new File(dataDirectory, relativePathName);
         if (overridingFile.exists()) {
             logger.info("Providing %s file from overriden file (%s)" ,

@@ -61,8 +61,8 @@ public class FileSystemConfigurationModule {
 
     @Provides
     @CommentNotificationTemplate
-    public FileContents providesCommentNotificationTemplate(@CommentNotificationTemplate OverridableFile provider) {
-        return new FileContents(provider::getTemplateFile);
+    public FileContents providesCommentNotificationTemplate(@CommentNotificationTemplate OverridableFile file) {
+        return new FileContents(file);
     }
 
     @Provides
@@ -78,8 +78,8 @@ public class FileSystemConfigurationModule {
 
     @Provides
     @PasswordResetEmailTemplate
-    public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile overridableFile) {
-        return new FileContents(overridableFile::getTemplateFile);
+    public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile file) {
+        return new FileContents(file);
     }
 
     @Provides
