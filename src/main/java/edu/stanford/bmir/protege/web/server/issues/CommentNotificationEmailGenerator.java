@@ -1,17 +1,17 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
-import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
+import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Matthew Horridge
@@ -58,21 +58,27 @@ public class CommentNotificationEmailGenerator {
 
     @Nonnull
     public String generateEmailBody(@Nonnull String projectDisplayName,
-                           @Nonnull EntityDiscussionThread thread,
-                           @Nonnull Comment comment) {
+                                    @Nonnull EntityDiscussionThread thread,
+                                    @Nonnull Comment comment) {
         try {
-            Map<String, Object> objects = new HashMap<>();
-            objects.put(APPLICATION_NAME, applicationNameProvider.getApplicationName());
-            objects.put(PROJECT_DISPLAY_NAME, projectDisplayName);
-            objects.put(PROJECT_URL, placeUrl.getProjectUrl(thread.getProjectId()));
-            objects.put(ENTITY_URL, placeUrl.getEntityUrl(thread.getProjectId(), thread.getEntity()));
-            objects.put(THREAD, thread);
-            objects.put(COMMENT, comment);
+            String entityUrl = placeUrl.getEntityUrl(thread.getProjectId(),
+                                                     thread.getEntity());
+            String projectUrl = placeUrl.getProjectUrl(thread.getProjectId());
+
+            ImmutableMap<String, Object> objects =
+                    TemplateObjectsBuilder.builder()
+                                          .withApplicationName(applicationNameProvider.getApplicationName())
+                                          .withProjectDisplayName(projectDisplayName)
+                                          .withProjectUrl(projectUrl)
+                                          .with(ENTITY_URL, entityUrl)
+                                          .with(THREAD, thread)
+                                          .with(COMMENT, comment)
+                                          .build();
             String template = templateFile.getContents();
             return templateEngine.populateTemplate(template, objects);
         } catch (Exception e) {
             webProtegeLogger.severe(e);
-            return String.format("Invalid template file: %s (Cause: %s)",
+            return String.format("Invalid template file: %s (Cause: %s)" ,
                                  templateFile.getFile().getName(),
                                  e.getMessage());
         }

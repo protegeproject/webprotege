@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
@@ -61,12 +62,16 @@ public class ResetPasswordMailer_TestCase {
     @Mock
     private PlaceUrl placeUrl;
 
+    @Mock
+    private ApplicationNameProvider appNameProvider;
+
+
     @Captor
     private ArgumentCaptor<Map<String, Object>> objectMapCaptor;
 
     @Before
     public void setUp() throws Exception {
-        mailer = new ResetPasswordMailer(mailManager, templateEngine, templateFile, placeUrl, logger);
+        mailer = new ResetPasswordMailer(mailManager, templateEngine, templateFile, placeUrl, appNameProvider, logger);
         when(userId.getUserName()).thenReturn(THE_USER_NAME);
         when(placeUrl.getApplicationUrl()).thenReturn(THE_APPLICATION_URL);
         when(templateEngine.populateTemplate(anyString(), anyMap())).thenReturn(THE_POPULATED_TEMPLATE);
