@@ -74,7 +74,7 @@ public class PlaceUrl_TestCase {
         when(typeMapper.getDefaultPerspectiveId()).thenReturn(new PerspectiveId("TheDefaultPerspective"));
 
         when(hostProvider.get()).thenReturn(THE_APPLICATION_HOST);
-        when(portProvider.getApplicationPort()).thenReturn(Optional.empty());
+        when(portProvider.get()).thenReturn(Optional.empty());
         when(pathProvider.get()).thenReturn(THE_APPLICATION_PATH);
         when(appNameProvider.get()).thenReturn(THE_APPLICATION_NAME);
         when(schemeProvider.getApplicationScheme()).thenReturn(ApplicationScheme.HTTPS);
