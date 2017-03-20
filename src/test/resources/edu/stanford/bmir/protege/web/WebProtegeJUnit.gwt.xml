@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
     <!-- Inherit our applications main module.                      -->
-    <inherits name="com.google.gwt.resources.Resources"/>
-    <inherits name="edu.stanford.bmir.protege.web.WebProtege"/>
+    <inherits nameSupplier="com.google.gwt.resources.Resources"/>
+    <inherits nameSupplier="edu.stanford.bmir.protege.web.WebProtege"/>
 
-    <source path="client"/>
-    <source path="shared"/>
+    <source pathSupplier="client"/>
+    <source pathSupplier="shared"/>
 
 
 </module>

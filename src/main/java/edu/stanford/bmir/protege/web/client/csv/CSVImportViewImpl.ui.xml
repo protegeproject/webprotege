@@ -54,7 +54,7 @@
 
             <tr valign="top">
                 <td>
-                    <dlg:WebProtegeDialogLabel text="Display name column"/>
+                    <dlg:WebProtegeDialogLabel text="Display nameSupplier column"/>
                 </td>
                 <td>
                     <g:ListBox visibleItemCount="1" ui:field="displayNameField" width="200px"/>

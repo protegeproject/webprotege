@@ -202,7 +202,7 @@
 ;+		(cardinality 0 1)
 		(create-accessor read-write)))
 
-(defclass Project "This class represents the class of all projects.  When the server reads this ontology, it examines each instance of this class and attempts to load the project associated with that instance.  The only two fields that the server examines are the location, which represents the location of the project file in the file system (relative paths  are allowed) and the name, which represents the string thhat is shown to the user so the user  can choose a project to edit."
+(defclass Project "This class represents the class of all projects.  When the server reads this ontology, it examines each instance of this class and attempts to load the project associated with that instance.  The only two fields that the server examines are the location, which represents the location of the project file in the file system (relative paths  are allowed) and the nameSupplier, which represents the string thhat is shown to the user so the user  can choose a project to edit."
 	(is-a PolicyControlledObject)
 	(role concrete)
 	(single-slot owner

@@ -42,8 +42,6 @@ import javax.inject.Singleton;
 @ApplicationSingleton
 public interface ApplicationComponent {
 
-    WebProtegeProperties getWebProtegeProperties();
-
     WebProtegeConfigurationChecker getWebProtegeConfigurationChecker();
 
     WebProtegeSessionListener getSessionListener();

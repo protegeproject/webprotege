@@ -3,7 +3,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.access.Subject" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.app.WebProtegeProperties" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.inject.ApplicationComponent" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
@@ -13,7 +12,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
 <%@ page import="java.io.IOException" %>
-<%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Optional" %>
 <%@ page import="java.util.Set" %>
 <!DOCTYPE html>
@@ -27,7 +25,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="<%= request.getLocale() %>">
 
-    <meta name="gwt:property" content="locale=<%= request.getLocale() %>">
+    <meta nameSupplier="gwt:property" content="locale=<%= request.getLocale() %>">
 
     <title><%writeApplicationName(out);%></title>
 
@@ -63,11 +61,6 @@
     private ApplicationComponent getWebProtegeComponent() {
         ServletContext context = getServletConfig().getServletContext();
         return (ApplicationComponent) context.getAttribute(ApplicationComponent.class.getName());
-    }
-
-    private WebProtegeProperties getWebProtegeProperties() {
-        ApplicationComponent component = getWebProtegeComponent();
-        return component.getWebProtegeProperties();
     }
 
     private void writeApplicationName(JspWriter out) throws IOException {

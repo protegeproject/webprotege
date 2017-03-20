@@ -21,7 +21,7 @@
         <div style="height: 10px;"/>
 
         <g:Label text="Classes" addStyleNames="{wp.style.formLabel}"/>
-        <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="Enter a class name"/>
+        <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="Enter a class nameSupplier"/>
 
         <div style="height: 15px;"/>
 

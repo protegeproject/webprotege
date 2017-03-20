@@ -12,7 +12,7 @@
             width: 100%;
         }
 
-        .name-field {
+        .nameSupplier-field {
             display: inline-block;
             width: 100%;
         }
@@ -38,7 +38,7 @@
             </colgroup>
             <tr>
                 <td>
-                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content} {style.name-field}"/>
+                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content} {style.nameSupplier-field}"/>
                 </td>
                 <td>
                     <text:PlaceholderTextBox ui:field="databaseIdField" placeholder="DB Id" addStyleNames="{style.cell-content} {style.id-field}"/>
