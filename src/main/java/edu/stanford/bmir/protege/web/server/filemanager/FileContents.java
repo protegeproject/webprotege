@@ -43,15 +43,18 @@ public class FileContents implements HasGetFile {
     /**
      * Gets the contents of the specified file as a string.
      * @return The contents as a string.
-     * @throws IOException An exception if there was a problem reading the file.
      */
     @Nonnull
-    public synchronized String getContents() throws IOException {
-        File file = getFile();
-        if (file.lastModified() > lastTimestamp) {
-            cachedTemplate = Files.toString(file, Charsets.UTF_8);
-            lastTimestamp = file.lastModified();
+    public synchronized String getContents() {
+        try {
+            File file = getFile();
+            if (file.lastModified() > lastTimestamp) {
+                cachedTemplate = Files.toString(file, Charsets.UTF_8);
+                lastTimestamp = file.lastModified();
+            }
+            return cachedTemplate;
+        } catch (IOException e) {
+            return "Could not read file: " + e.getMessage();
         }
-        return cachedTemplate;
     }
 }
