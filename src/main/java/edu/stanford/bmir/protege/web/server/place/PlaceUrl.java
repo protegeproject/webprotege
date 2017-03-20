@@ -124,7 +124,7 @@ public class PlaceUrl {
             if(applicationPortProvider.getApplicationPort().isPresent()) {
                 uri = new URI(scheme,
                               null,
-                              applicationHostSupplier.getApplicationHost(),
+                              applicationHostSupplier.get(),
                               applicationPortProvider.getApplicationPort().get(),
                               applicationPathProvider.getApplicationPath(),
                               null,
@@ -132,7 +132,7 @@ public class PlaceUrl {
             }
             else {
                 uri = new URI(scheme,
-                              applicationHostSupplier.getApplicationHost(),
+                              applicationHostSupplier.get(),
                               applicationPathProvider.getApplicationPath(),
                               fragment);
             }
