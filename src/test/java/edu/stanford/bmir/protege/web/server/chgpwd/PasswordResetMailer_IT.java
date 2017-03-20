@@ -50,7 +50,7 @@ public class PasswordResetMailer_IT {
     @Captor
     private ArgumentCaptor<String> bodyCaptor;
 
-    private static final String TEMPLATE_PATH = "templates/password-reset-template.html";
+    private static final String TEMPLATE_PATH = "templates/password-reset-email-template.html";
 
     private final UserId userId = UserId.getUserId("John Smith" );
 
