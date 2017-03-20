@@ -11,12 +11,12 @@
 	<!-- Filters -->
 
 	<filter>
-		<filter-nameSupplier>WebProtegeWebAppFilter</filter-nameSupplier>
+		<filter-name>WebProtegeWebAppFilter</filter-name>
 		<filter-class>edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter</filter-class>
 	</filter>
 
 	<filter-mapping>
-		<filter-nameSupplier>WebProtegeWebAppFilter</filter-nameSupplier>
+		<filter-name>WebProtegeWebAppFilter</filter-name>
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
 
@@ -49,9 +49,9 @@
 	<!-- Security constraints -->
 	
 	<security-constraint>
-		<display-nameSupplier>excluded</display-nameSupplier>
+		<display-name>excluded</display-name>
 		<web-resource-collection>
-			<web-resource-nameSupplier>No Access</web-resource-nameSupplier>
+			<web-resource-name>No Access</web-resource-name>
 			<url-pattern>/protege.properties</url-pattern>
 		</web-resource-collection>
 		<auth-constraint />

@@ -8,41 +8,41 @@
   
 <module rename-to="webprotege">
 
-    <source pathSupplier="client"/>
-    <source pathSupplier="shared"/>
-    <source pathSupplier="resources"/>
+    <source path="client"/>
+    <source path="shared"/>
+    <source path="resources"/>
 
 
-    <inherits nameSupplier='com.google.gwt.junit.JUnit'/>
+    <inherits name='com.google.gwt.junit.JUnit'/>
 
-    <inherits nameSupplier="com.google.gwt.user.User"/>
-    <inherits nameSupplier="com.google.gwt.resources.Resources" />
-    <inherits nameSupplier="com.google.gwt.place.Place"/>
-    <inherits nameSupplier="com.google.common.cache.Cache"/>
-    <inherits nameSupplier="com.google.common.collect.Collect"/>
-    <inherits nameSupplier="com.google.common.base.Base"/>
-    <inherits nameSupplier="com.google.gwt.http.HTTP"/>
-    <inherits nameSupplier="com.google.gwt.json.JSON"/>
-    <inherits nameSupplier="com.google.common.io.Io"/>
-    <inherits nameSupplier="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name="com.google.gwt.resources.Resources" />
+    <inherits name="com.google.gwt.place.Place"/>
+    <inherits name="com.google.common.cache.Cache"/>
+    <inherits name="com.google.common.collect.Collect"/>
+    <inherits name="com.google.common.base.Base"/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name="com.google.gwt.json.JSON"/>
+    <inherits name="com.google.common.io.Io"/>
+    <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
-    <inherits nameSupplier="com.google.gwt.logging.Logging"/>
+    <inherits name="com.google.gwt.logging.Logging"/>
 
-	<inherits nameSupplier='com.googlecode.gwt.crypto.Crypto'/>
+	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
 
-    <inherits nameSupplier="org.semanticweb.owlapi.gwt.owlapi"/>
+    <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
-	<inherits nameSupplier='com.gwtext.GwtExt' />
+	<inherits name='com.gwtext.GwtExt' />
 
-    <inherits nameSupplier="edu.stanford.protege.widgetmap.widgetmap"/>
-    <inherits nameSupplier="com.google.gwt.activity.Activity"/>
-    <inherits nameSupplier="com.google.gwt.i18n.I18N"/>
+    <inherits name="edu.stanford.protege.widgetmap.widgetmap"/>
+    <inherits name="com.google.gwt.activity.Activity"/>
+    <inherits name="com.google.gwt.i18n.I18N"/>
 
-    <inherits nameSupplier="dagger.Dagger"/>
+    <inherits name="dagger.Dagger"/>
 
-    <extend-property nameSupplier="locale" values="de" />
+    <extend-property name="locale" values="de" />
 
-    <extend-configuration-property nameSupplier="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
+    <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 
