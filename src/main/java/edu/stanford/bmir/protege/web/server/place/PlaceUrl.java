@@ -25,7 +25,7 @@ public class PlaceUrl {
 
     private final ApplicationSchemeProvider applicationSchemeProvider;
 
-    private final ApplicationHostProvider applicationHostProvider;
+    private final ApplicationHostSupplier applicationHostSupplier;
 
     private final ApplicationPortProvider applicationPortProvider;
 
@@ -39,7 +39,7 @@ public class PlaceUrl {
      * Construct a {@link PlaceUrl} object that provides URLs for places for a given application host,
      * path, port and name.
      * @param applicationSchemeProvider The scheme for the application.
-     * @param applicationHostProvider A provider for the application host.
+     * @param applicationHostSupplier A provider for the application host.
      * @param applicationPortProvider A provider for the application port.
      * @param applicationPathProvider A provider for the application path.
      * @param applicationNameSupplier A provider for the application name.
@@ -49,13 +49,13 @@ public class PlaceUrl {
      */
     @Inject
     public PlaceUrl(@Nonnull ApplicationSchemeProvider applicationSchemeProvider,
-                    @Nonnull ApplicationHostProvider applicationHostProvider,
+                    @Nonnull ApplicationHostSupplier applicationHostSupplier,
                     @Nonnull ApplicationPortProvider applicationPortProvider,
                     @Nonnull ApplicationPathProvider applicationPathProvider,
                     @Nonnull ApplicationNameSupplier applicationNameSupplier,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
         this.applicationSchemeProvider = checkNotNull(applicationSchemeProvider);
-        this.applicationHostProvider = checkNotNull(applicationHostProvider);
+        this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
         this.applicationPortProvider = checkNotNull(applicationPortProvider);
         this.applicationPathProvider = checkNotNull(applicationPathProvider);
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
@@ -124,7 +124,7 @@ public class PlaceUrl {
             if(applicationPortProvider.getApplicationPort().isPresent()) {
                 uri = new URI(scheme,
                               null,
-                              applicationHostProvider.getApplicationHost(),
+                              applicationHostSupplier.getApplicationHost(),
                               applicationPortProvider.getApplicationPort().get(),
                               applicationPathProvider.getApplicationPath(),
                               null,
@@ -132,7 +132,7 @@ public class PlaceUrl {
             }
             else {
                 uri = new URI(scheme,
-                              applicationHostProvider.getApplicationHost(),
+                              applicationHostSupplier.getApplicationHost(),
                               applicationPathProvider.getApplicationPath(),
                               fragment);
             }

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import edu.stanford.bmir.protege.web.server.app.ApplicationHostProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationHostSupplier;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.inject.*;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class MailManager implements SendMail {
 
     private final ApplicationNameSupplier applicationNameSupplier;
 
-    private final ApplicationHostProvider applicationHostProvider;
+    private final ApplicationHostSupplier applicationHostSupplier;
 
 
     /**
@@ -66,7 +66,7 @@ public class MailManager implements SendMail {
      * modification of values in the {@link Properties} object will not modify mail settings after construction.
      *
      * @param applicationNameSupplier           The name of the application (e.g. WebProtege).  Not {@code null}.
-     * @param applicationHostProvider           The host name that the application is running on (e.g. webprotege.stanford.edu).
+     * @param applicationHostSupplier           The host name that the application is running on (e.g. webprotege.stanford.edu).
      *                                  Not {@code null}.
      * @param properties                The mail properties.  Not {@code null}. These are the same properties as specified in the
      *                                  Java mail spec.  Note that an additional property "mail.smtp.from.personalName" can be
@@ -77,11 +77,11 @@ public class MailManager implements SendMail {
      */
     @Inject
     public MailManager(@Nonnull ApplicationNameSupplier applicationNameSupplier,
-                       @Nonnull ApplicationHostProvider applicationHostProvider,
+                       @Nonnull ApplicationHostSupplier applicationHostSupplier,
                        @Nonnull @MailProperties Properties properties,
                        @Nonnull MessagingExceptionHandler messagingExceptionHandler) {
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
-        this.applicationHostProvider = checkNotNull(applicationHostProvider);
+        this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
     }
@@ -206,7 +206,7 @@ public class MailManager implements SendMail {
      * @throws UnsupportedEncodingException
      */
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
-        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHostProvider.getApplicationHost();
+        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHostSupplier.getApplicationHost();
         String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
         final String defaultPersonalName = applicationNameSupplier.get();
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
