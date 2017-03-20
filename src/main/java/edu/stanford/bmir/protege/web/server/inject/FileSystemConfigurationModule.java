@@ -60,6 +60,11 @@ public class FileSystemConfigurationModule {
     }
 
     @Provides
+    public MustacheFactory providesMustacheFactory() {
+        return new DefaultMustacheFactory();
+    }
+
+    @Provides
     @CommentNotificationEmailTemplate
     public OverridableFile provideCommentNotificationTemplateFile(OverridableFileFactory factory) {
         return factory.getOverridableFile("templates/comment-notification.html");
@@ -69,11 +74,6 @@ public class FileSystemConfigurationModule {
     @CommentNotificationEmailTemplate
     public FileContents providesCommentNotificationTemplate(@CommentNotificationEmailTemplate OverridableFile file) {
         return new FileContents(file);
-    }
-
-    @Provides
-    public MustacheFactory providesMustacheFactory() {
-        return new DefaultMustacheFactory();
     }
 
     @Provides
