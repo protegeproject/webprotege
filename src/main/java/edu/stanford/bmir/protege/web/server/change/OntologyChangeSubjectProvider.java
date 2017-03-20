@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.shared.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;

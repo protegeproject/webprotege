@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.IdUtil;
+import edu.stanford.bmir.protege.web.server.util.IdUtil;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
