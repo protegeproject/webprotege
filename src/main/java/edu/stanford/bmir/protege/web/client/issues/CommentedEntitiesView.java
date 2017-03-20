@@ -4,6 +4,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
+import edu.stanford.bmir.protege.web.shared.issues.SortingKey;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -24,6 +25,10 @@ public interface CommentedEntitiesView extends IsWidget, HasPagination {
     void removeEntity(@Nonnull CommentedEntityData entity);
 
     void refresh();
+
+    SortingKey getSelectedSortingKey();
+
+    void setSortingKeyChangedHandler(Runnable sortingKeyChangedHandler);
 
     void setSelectionHandler(@Nonnull SelectionHandler<CommentedEntityData> selectionHandler);
 
