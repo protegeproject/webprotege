@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.app;
 
 import edu.stanford.bmir.protege.web.server.admin.AdminSettingsManager;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -9,12 +10,12 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationHostProvider {
+public class ApplicationHostSupplier {
 
     private final AdminSettingsManager adminSettingsManager;
 
     @Inject
-    public ApplicationHostProvider(AdminSettingsManager adminSettingsManager) {
+    public ApplicationHostSupplier(@Nonnull AdminSettingsManager adminSettingsManager) {
         this.adminSettingsManager = adminSettingsManager;
     }
 

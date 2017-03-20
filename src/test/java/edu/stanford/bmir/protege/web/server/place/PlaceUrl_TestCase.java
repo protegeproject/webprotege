@@ -54,7 +54,7 @@ public class PlaceUrl_TestCase {
     private EntityTypePerspectiveMapper typeMapper;
 
     @Mock
-    private ApplicationHostProvider hostProvider;
+    private ApplicationHostSupplier hostProvider;
 
     @Mock
     private ApplicationPortProvider portProvider;

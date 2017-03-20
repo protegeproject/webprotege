@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.stanford.bmir.protege.web.client.place.ItemSelection;
-import edu.stanford.bmir.protege.web.server.app.ApplicationHostProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationHostSupplier;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
@@ -37,7 +37,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
 
     private final BrowserTextProvider browserTextProvider;
 
-    private final ApplicationHostProvider applicationHostProvider;
+    private final ApplicationHostSupplier applicationHostSupplier;
 
     private final SendMail mailManager;
 
@@ -47,12 +47,12 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
     @Inject
     public WatchTriggeredHandlerImpl(ProjectId projectId,
                                      BrowserTextProvider browserTextProvider,
-                                     ApplicationHostProvider applicationHostProvider,
+                                     ApplicationHostSupplier applicationHostSupplier,
                                      SendMail mailManager,
                                      UserDetailsManager userDetailsManager) {
         this.projectId = projectId;
         this.browserTextProvider = browserTextProvider;
-        this.applicationHostProvider = applicationHostProvider;
+        this.applicationHostSupplier = applicationHostSupplier;
         this.mailManager = mailManager;
         this.userDetailsManager = userDetailsManager;
     }
@@ -82,7 +82,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                   .append(" at the link below:" );
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
-                directLinkBuilder.append(applicationHostProvider.getApplicationHost());
+                directLinkBuilder.append(applicationHostSupplier.getApplicationHost());
                 ItemSelection selection = ItemSelection.builder().addEntity(entity).build();
                 ProjectViewPlace place = new ProjectViewPlace(projectId, new PerspectiveId("Classes"), selection);
                 ProjectViewPlaceTokenizer tokenizer = new ProjectViewPlaceTokenizer();
