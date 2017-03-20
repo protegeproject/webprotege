@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
@@ -68,7 +68,7 @@ public class CommentNotificationEmailGenerator_TestCase {
     private PlaceUrl placeUrl;
 
     @Mock
-    private ApplicationNameProvider applicationNameProvider;
+    private ApplicationNameSupplier applicationNameSupplier;
 
     @Before
     public void setUp() throws Exception {
@@ -77,11 +77,11 @@ public class CommentNotificationEmailGenerator_TestCase {
         when(file.getName()).thenReturn(THE_FILE_NAME);
         when(comment.getCreatedBy()).thenReturn(creator);
         when(creator.getUserName()).thenReturn(USER_NAME);
-        when(applicationNameProvider.getApplicationName()).thenReturn("webprotege.stanford.edu");
+        when(applicationNameSupplier.getApplicationName()).thenReturn("webprotege.stanford.edu");
         templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         generator = new CommentNotificationEmailGenerator(templateFile,
                                                           templateEngine,
-                                                          applicationNameProvider,
+                                                          applicationNameSupplier,
                                                           placeUrl, logger
         );
     }

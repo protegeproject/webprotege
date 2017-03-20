@@ -63,7 +63,7 @@ public class PlaceUrl_TestCase {
     private ApplicationPathProvider pathProvider;
 
     @Mock
-    private ApplicationNameProvider appNameProvider;
+    private ApplicationNameSupplier appNameProvider;
 
     @Mock
     private ApplicationSchemeProvider schemeProvider;

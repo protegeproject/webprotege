@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
@@ -45,18 +45,18 @@ public class FileDownloadServlet extends HttpServlet {
     private final ProjectDetailsManager projectDetailsManager;
 
     @Nonnull
-    private final ApplicationNameProvider applicationNameProvider;
+    private final ApplicationNameSupplier applicationNameSupplier;
 
     @Inject
     public FileDownloadServlet(
             @Nonnull ProjectManager projectManager,
             @Nonnull ProjectDetailsManager projectDetailsManager,
             @Nonnull AccessManager accessManager,
-            @Nonnull ApplicationNameProvider applicationNameProvider) {
+            @Nonnull ApplicationNameSupplier applicationNameSupplier) {
         this.projectManager = projectManager;
         this.projectDetailsManager = projectDetailsManager;
         this.accessManager = accessManager;
-        this.applicationNameProvider = applicationNameProvider;
+        this.applicationNameSupplier = applicationNameSupplier;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FileDownloadServlet extends HttpServlet {
                                                                              project,
                                                                              revisionNumber,
                                                                              format,
-                                                                             applicationNameProvider);
+                                                                             applicationNameSupplier);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();

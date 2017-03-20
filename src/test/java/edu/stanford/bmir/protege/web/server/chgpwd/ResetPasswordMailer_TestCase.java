@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
@@ -63,7 +63,7 @@ public class ResetPasswordMailer_TestCase {
     private PlaceUrl placeUrl;
 
     @Mock
-    private ApplicationNameProvider appNameProvider;
+    private ApplicationNameSupplier appNameProvider;
 
 
     @Captor

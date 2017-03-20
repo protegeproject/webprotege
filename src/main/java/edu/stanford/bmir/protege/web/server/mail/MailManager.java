@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import edu.stanford.bmir.protege.web.server.app.ApplicationHostProvider;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.inject.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class MailManager implements SendMail {
 
     private final MessagingExceptionHandler messagingExceptionHandler;
 
-    private final ApplicationNameProvider applicationNameProvider;
+    private final ApplicationNameSupplier applicationNameSupplier;
 
     private final ApplicationHostProvider applicationHostProvider;
 
@@ -65,7 +65,7 @@ public class MailManager implements SendMail {
      * for more information.    Note
      * modification of values in the {@link Properties} object will not modify mail settings after construction.
      *
-     * @param applicationNameProvider           The name of the application (e.g. WebProtege).  Not {@code null}.
+     * @param applicationNameSupplier           The name of the application (e.g. WebProtege).  Not {@code null}.
      * @param applicationHostProvider           The host name that the application is running on (e.g. webprotege.stanford.edu).
      *                                  Not {@code null}.
      * @param properties                The mail properties.  Not {@code null}. These are the same properties as specified in the
@@ -76,11 +76,11 @@ public class MailManager implements SendMail {
      * @throws NullPointerException if any parameters are {@code null}.
      */
     @Inject
-    public MailManager(@Nonnull ApplicationNameProvider applicationNameProvider,
+    public MailManager(@Nonnull ApplicationNameSupplier applicationNameSupplier,
                        @Nonnull ApplicationHostProvider applicationHostProvider,
                        @Nonnull @MailProperties Properties properties,
                        @Nonnull MessagingExceptionHandler messagingExceptionHandler) {
-        this.applicationNameProvider = checkNotNull(applicationNameProvider);
+        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.applicationHostProvider = checkNotNull(applicationHostProvider);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
@@ -208,7 +208,7 @@ public class MailManager implements SendMail {
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
         final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHostProvider.getApplicationHost();
         String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
-        final String defaultPersonalName = applicationNameProvider.getApplicationName();
+        final String defaultPersonalName = applicationNameSupplier.getApplicationName();
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
         return new InternetAddress(from, personalName, UTF_8);
     }

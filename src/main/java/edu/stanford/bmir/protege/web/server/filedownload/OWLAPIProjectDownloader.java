@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -45,7 +45,7 @@ public class OWLAPIProjectDownloader {
     private final Project project;
 
     @Nonnull
-    private final ApplicationNameProvider applicationNameProvider;
+    private final ApplicationNameSupplier applicationNameSupplier;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
@@ -58,12 +58,12 @@ public class OWLAPIProjectDownloader {
                                    @Nonnull Project project,
                                    @Nonnull RevisionNumber revision,
                                    @Nonnull DownloadFormat format,
-                                   @Nonnull ApplicationNameProvider applicationNameProvider) {
+                                   @Nonnull ApplicationNameSupplier applicationNameSupplier) {
         this.project = project;
         this.revision = revision;
         this.format = format;
         this.fileName = fileName;
-        this.applicationNameProvider = checkNotNull(applicationNameProvider);
+        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
     }
     
     public void writeProject(HttpServletResponse response, OutputStream outputStream) throws IOException {
@@ -121,7 +121,7 @@ public class OWLAPIProjectDownloader {
         }
         else {
             // An error - no flipping ontology!
-            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameProvider.getApplicationName() + ".  Please contact the administrator.");
+            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.getApplicationName() + ".  Please contact the administrator.");
         }
     }
 

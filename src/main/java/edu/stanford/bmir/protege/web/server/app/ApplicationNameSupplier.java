@@ -12,12 +12,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationNameProvider {
+public class ApplicationNameSupplier {
 
     private final ApplicationSettingsManager manager;
 
     @Inject
-    public ApplicationNameProvider(@Nonnull ApplicationSettingsManager manager) {
+    public ApplicationNameSupplier(@Nonnull ApplicationSettingsManager manager) {
         this.manager = checkNotNull(manager);
     }
 

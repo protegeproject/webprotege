@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
@@ -41,19 +41,19 @@ public class CommentNotificationEmailGenerator {
 
     private final PlaceUrl placeUrl;
 
-    private final ApplicationNameProvider applicationNameProvider;
+    private final ApplicationNameSupplier applicationNameSupplier;
 
     @Inject
     public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationEmailTemplate FileContents templateFile,
                                              @Nonnull TemplateEngine templateEngine,
-                                             @Nonnull ApplicationNameProvider applicationNameProvider,
+                                             @Nonnull ApplicationNameSupplier applicationNameSupplier,
                                              @Nonnull PlaceUrl placeUrl,
                                              @Nonnull WebProtegeLogger webProtegeLogger) {
         this.templateEngine = templateEngine;
         this.templateFile = templateFile;
         this.webProtegeLogger = webProtegeLogger;
         this.placeUrl = placeUrl;
-        this.applicationNameProvider = applicationNameProvider;
+        this.applicationNameSupplier = applicationNameSupplier;
     }
 
     @Nonnull
@@ -67,7 +67,7 @@ public class CommentNotificationEmailGenerator {
 
             ImmutableMap<String, Object> objects =
                     TemplateObjectsBuilder.builder()
-                                          .withApplicationName(applicationNameProvider.getApplicationName())
+                                          .withApplicationName(applicationNameSupplier.getApplicationName())
                                           .withProjectDisplayName(projectDisplayName)
                                           .withProjectUrl(projectUrl)
                                           .with(ENTITY_URL, entityUrl)
