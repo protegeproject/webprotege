@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.app;
 
 import edu.stanford.bmir.protege.web.server.init.ConfigurationTask;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;

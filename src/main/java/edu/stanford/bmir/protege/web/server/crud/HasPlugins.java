@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.crud;
 
 import java.util.List;
 

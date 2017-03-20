@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import com.beust.jcommander.internal.Lists;
-import edu.stanford.bmir.protege.web.server.HasPlugins;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;

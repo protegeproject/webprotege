@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import edu.stanford.bmir.protege.web.server.IdUtil;
+import edu.stanford.bmir.protege.web.server.util.IdUtil;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocument;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;

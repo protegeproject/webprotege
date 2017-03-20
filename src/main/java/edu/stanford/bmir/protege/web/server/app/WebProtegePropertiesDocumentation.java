@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.app;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
