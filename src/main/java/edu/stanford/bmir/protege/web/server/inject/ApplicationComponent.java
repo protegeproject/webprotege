@@ -4,7 +4,6 @@ import dagger.Component;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeConfigurationChecker;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeSessionListener;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.AccessModule;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationModule;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlersModule;
@@ -28,7 +27,6 @@ import javax.inject.Singleton;
         ConfigurationTasksModule.class,
         ActionHandlersModule.class,
         AuthenticationModule.class,
-        AccessModule.class,
         DbModule.class
 })
 @Singleton

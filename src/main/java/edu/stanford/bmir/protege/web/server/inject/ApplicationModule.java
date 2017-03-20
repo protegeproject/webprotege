@@ -3,6 +3,10 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.AccessManagerMongoDbImpl;
+import edu.stanford.bmir.protege.web.server.access.RoleOracle;
+import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
@@ -178,5 +182,17 @@ public class ApplicationModule {
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
             MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
         return new ProjectEntityCrudKitSettingsRepository(database, converter);
+    }
+
+    @Provides
+    @Singleton
+    public AccessManager provideAccessManager(AccessManagerMongoDbImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public RoleOracle provideRoleOracle() {
+        return RoleOracleImpl.get();
     }
 }
