@@ -4,13 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.issues.SortingKey;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -20,7 +18,10 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.of;
+import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byEntity;
+import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byLastModified;
 import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
@@ -51,11 +52,7 @@ public class CommentedEntitiesPresenter {
 
     private final List<CommentedEntityData> pageElements = new ArrayList<>();
 
-    private final Comparator<CommentedEntityData> entityComparator = Comparator.naturalOrder();
-
-    private final Comparator<CommentedEntityData> lastModifiedComparator =
-            Comparator.comparing(CommentedEntityData::getLastModified, Comparator.reverseOrder())
-                      .thenComparing(Comparator.naturalOrder());
+    private HasBusy hasBusy = busy -> {};
 
     @Inject
     public CommentedEntitiesPresenter(@Nonnull ProjectId projectId,
@@ -66,6 +63,10 @@ public class CommentedEntitiesPresenter {
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.selectionModel = selectionModel;
+    }
+
+    public void setHasBusy(@Nonnull HasBusy hasBusy) {
+        this.hasBusy = checkNotNull(hasBusy);
     }
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
@@ -106,24 +107,22 @@ public class CommentedEntitiesPresenter {
         dispatchServiceManager.execute(new GetCommentedEntitiesAction(projectId,
                                                                       "",
                                                                       of(OPEN, CLOSED),
+                                                                      view.getSelectedSortingKey(),
                                                                       requestPageWithSize(view.getPageNumber(), PAGE_SIZE)),
-                                       result -> {
-                                           Page<CommentedEntityData> entities = result.getEntities();
-                                           view.setPageCount(entities.getPageCount());
-                                           view.setPageNumber(entities.getPageNumber());
-                                           pageElements.clear();
-                                           pageElements.addAll(entities.getPageElements());
-                                           if(view.getSelectedSortingKey() == SortingKey.SORT_BY_ENTITY) {
-                                               pageElements.sort(entityComparator);
-                                           }
-                                           else {
-                                               pageElements.sort(lastModifiedComparator);
-                                           }
-                                           view.setEntities(pageElements);
-                                           currentEntites.clear();
-                                           currentEntites.addAll(entities.getPageElements().stream()
-                                                                         .map(c -> c.getEntityData().getEntity())
-                                                                         .collect(toList()));
-                                       });
+                                       hasBusy,
+                                       this::fillList);
+    }
+
+    private void fillList(GetCommentedEntitiesResult result) {
+        Page<CommentedEntityData> entities = result.getEntities();
+        view.setPageCount(entities.getPageCount());
+        view.setPageNumber(entities.getPageNumber());
+        pageElements.clear();
+        pageElements.addAll(entities.getPageElements());
+        view.setEntities(pageElements);
+        currentEntites.clear();
+        currentEntites.addAll(entities.getPageElements().stream()
+                                      .map(c -> c.getEntityData().getEntity())
+                                      .collect(toList()));
     }
 }

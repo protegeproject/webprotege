@@ -18,6 +18,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CommentedEntityData implements IsSerializable, Comparable<CommentedEntityData> {
 
+    public static final transient Comparator<CommentedEntityData> byEntity = Comparator.naturalOrder();
+
+    public static final transient Comparator<CommentedEntityData> byLastModified =
+            Comparator.comparing(CommentedEntityData::getLastModified, Comparator.reverseOrder())
+                      .thenComparing(Comparator.naturalOrder());
+
+
     private OWLEntityData entityData;
 
     private int totalThreadCount;
