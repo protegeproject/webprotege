@@ -333,12 +333,12 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
-                    return Collections.<OWLAxiom>singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
+                    return Collections.singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
                 }
 
                 @Override
                 public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
-                    return Collections.<OWLAxiom>singleton(df.getOWLObjectPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue()));
+                    return Collections.singleton(df.getOWLObjectPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue()));
                 }
             });
         }
@@ -379,12 +379,12 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
-                    return Collections.<OWLAxiom>singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
+                    return Collections.singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
                 }
 
                 @Override
                 public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
-                    return Collections.<OWLAxiom>singleton(df.getOWLDataPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue()));
+                    return Collections.singleton(df.getOWLDataPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue()));
                 }
             });
         }
@@ -392,7 +392,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         @Override
         public Set<OWLAxiom> visit(PropertyAnnotationValue propertyValue) {
             OWLDataFactory df = DataFactory.get();
-            return Collections.<OWLAxiom>singleton(df.getOWLAnnotationAssertionAxiom(propertyValue.getProperty(), subject.getIRI(), propertyValue.getValue()));
+            return Collections.singleton(df.getOWLAnnotationAssertionAxiom(propertyValue.getProperty(), subject.getIRI(), propertyValue.getValue()));
         }
     }
 }

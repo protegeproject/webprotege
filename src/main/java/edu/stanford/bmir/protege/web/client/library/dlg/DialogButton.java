@@ -21,7 +21,7 @@ public enum DialogButton {
     
     private String buttonName;
 
-    private DialogButton(String buttonName) {
+    DialogButton(String buttonName) {
         this.buttonName = buttonName;
     }
 

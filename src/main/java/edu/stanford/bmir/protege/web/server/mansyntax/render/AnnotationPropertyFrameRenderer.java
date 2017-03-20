@@ -12,7 +12,7 @@ public class AnnotationPropertyFrameRenderer implements FrameRenderer<OWLAnnotat
 
     @Override
     public List<FrameSectionRenderer<OWLAnnotationProperty, ?, ?>> getSectionRenderers() {
-        return Lists.<FrameSectionRenderer<OWLAnnotationProperty, ?, ?>>newArrayList(
+        return Lists.newArrayList(
                 new AnnotationsSectionRenderer<OWLAnnotationProperty>(),
                 new AnnotationPropertySubPropertyOfSectionRenderer(),
                 new AnnotationPropertyDomainSectionRenderer(),

@@ -14,11 +14,11 @@ import java.util.Optional;
  */
 public interface SharingSettingsView extends IsWidget {
 
-    public static interface ApplyChangesHandler {
+    interface ApplyChangesHandler {
         void handleApplyChanges();
     }
 
-    public static interface CancelHandler {
+    interface CancelHandler {
         void handleCancel();
     }
 

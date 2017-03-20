@@ -24,7 +24,7 @@ public class NamedIndividualFactsSectionRenderer extends AbstractOWLAxiomItemSec
     @Override
     public Set<OWLPropertyAssertionAxiom<?, ?>> getAxiomsInOntology(OWLNamedIndividual subject,
                                                                     OWLOntology ontology) {
-        return Sets.<OWLPropertyAssertionAxiom<?, ?>>union(
+        return Sets.union(
                 ontology.getObjectPropertyAssertionAxioms(subject),
                 ontology.getDataPropertyAssertionAxioms(subject)
         );

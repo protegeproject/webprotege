@@ -43,7 +43,7 @@ public abstract class EntityFrameChangedEvent<E extends OWLEntity, H extends Eve
      */
     @Override
     public Set<OWLEntity> getSignature() {
-        return Collections.<OWLEntity>singleton(entity);
+        return Collections.singleton(entity);
     }
 
     @Override

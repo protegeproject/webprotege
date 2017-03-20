@@ -48,7 +48,7 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
     }
 
 
-    public static interface CreateEntityHandler {
+    public interface CreateEntityHandler {
 
         void handleCreateEntity(CreateEntityInfo createEntityInfo);
     }

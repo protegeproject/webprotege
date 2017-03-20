@@ -22,7 +22,7 @@ public interface HasPostEvents<E extends WebProtegeEvent<?>> {
      * @return The tag after posting the events.
      * @throws NullPointerException if {@code event} is {@code null}.
      */
-    public EventTag postEvent(E event);
+    EventTag postEvent(E event);
 
     /**
      * Posts a list of events to this event manager.
@@ -30,5 +30,5 @@ public interface HasPostEvents<E extends WebProtegeEvent<?>> {
      * @return The tag after posting the events.
      * @throws NullPointerException if {@code events} is {@code null}.
      */
-    public EventTag postEvents(List<E> events);
+    EventTag postEvents(List<E> events);
 }

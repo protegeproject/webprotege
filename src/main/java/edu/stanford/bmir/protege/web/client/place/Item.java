@@ -62,7 +62,7 @@ public abstract class Item<T> {
     }
 
 
-    public static interface Handler<V> {
+    public interface Handler<V> {
         void handleItemObject(Item<V> object);
     }
 

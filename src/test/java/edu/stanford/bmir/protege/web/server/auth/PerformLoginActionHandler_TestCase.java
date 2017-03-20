@@ -85,7 +85,7 @@ public class PerformLoginActionHandler_TestCase {
 
     @Test
     public void shouldFailOnTimeOut() {
-        when(sessionManager.retrieveChallengeMessage(chapSessionId)).thenReturn(Optional.<ChapSession>absent());
+        when(sessionManager.retrieveChallengeMessage(chapSessionId)).thenReturn(Optional.absent());
         PerformLoginResult result = handler.execute(action, executionContext);
         assertThat(result.getResponse(), is(AuthenticationResponse.FAIL));
     }

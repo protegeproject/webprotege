@@ -21,7 +21,7 @@ public enum OBOTermSynonymScope implements Serializable {
     
     private String displayText;
 
-    private OBOTermSynonymScope(String displayText) {
+    OBOTermSynonymScope(String displayText) {
         this.displayText = displayText;
     }
 

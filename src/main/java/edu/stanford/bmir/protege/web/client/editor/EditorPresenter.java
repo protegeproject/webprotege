@@ -182,7 +182,7 @@ public class EditorPresenter implements HasDispose {
                 valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
                 final Widget editorWidget = editorView.asWidget();
                 editorHolder.setWidget(editorWidget);
-                setEditorState((O) value, editorCtx, editorManager);
+                setEditorState(value, editorCtx, editorManager);
                 updatePermissionBasedItems();
             });
         }

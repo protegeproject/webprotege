@@ -345,14 +345,14 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
      */
     private Optional<EntityType<?>> getSelectedEntityType() {
         if (isAnnotationPropertiesRootSelected()) {
-            return Optional.<EntityType<?>>of(EntityType.ANNOTATION_PROPERTY);
+            return Optional.of(EntityType.ANNOTATION_PROPERTY);
         }
         java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
         if (!selectedEntity.isPresent()) {
             return Optional.absent();
         }
         else {
-            return Optional.<EntityType<?>>of(selectedEntity.get().getEntityType());
+            return Optional.of(selectedEntity.get().getEntityType());
         }
     }
 
@@ -373,13 +373,13 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         if (!sel.isPresent()) {
             // Temp hack
             if (isAnnotationPropertiesRootSelected()) {
-                createSubProperties(Optional.<OWLAnnotationProperty>absent(), createEntityInfo);
+                createSubProperties(Optional.absent(), createEntityInfo);
             }
             return;
         }
 
         if (isAnnotationPropertiesRootSelected()) {
-            createSubProperties(Optional.<OWLAnnotationProperty>absent(), createEntityInfo);
+            createSubProperties(Optional.absent(), createEntityInfo);
             return;
         }
 
@@ -702,7 +702,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
-        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)),
+        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.of(entity)),
                                        new DispatchServiceCallback<GetEntityDataResult>() {
                                            @Override
                                            public void handleSuccess(GetEntityDataResult result) {
@@ -715,7 +715,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         String browserText = "";
         final PropertyEntityData entityData = new PropertyEntityData(child.getIRI().toString(),
                                                                      browserText,
-                                                                     Collections.<EntityData>emptySet());
+                                                                     Collections.emptySet());
         final EntityType<?> entityType = child.getEntityType();
         if (entityType == EntityType.OBJECT_PROPERTY) {
             entityData.setPropertyType(PropertyType.OBJECT);

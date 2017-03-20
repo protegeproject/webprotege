@@ -25,14 +25,14 @@ public class GwtTest_DataFactory extends GWTTestCase {
     }
 
     public void test_shouldParseInteger() {
-        OWLLiteral literal = DataFactory.parseLiteral("3", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("3", Optional.absent());
         assertEquals(literal.getLiteral(), "3");
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_INTEGER.getIRI());
         finishTest();
     }
 
     public void test_shouldParseUntrimmedInteger() {
-        OWLLiteral literal = DataFactory.parseLiteral(" 3 ", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral(" 3 ", Optional.absent());
         assertEquals(literal.getLiteral(), "3");
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_INTEGER.getIRI());
         finishTest();
@@ -46,21 +46,21 @@ public class GwtTest_DataFactory extends GWTTestCase {
     }
 
     public void test_shouldParseAtSymbolAsPartOfString() {
-        OWLLiteral literal = DataFactory.parseLiteral("m@m", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("m@m", Optional.absent());
         assertEquals(literal.getLiteral(), "m@m");
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_STRING.getIRI());
         finishTest();
     }
 
     public void test_shouldParseDecimal() {
-        OWLLiteral literal = DataFactory.parseLiteral("3.3", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("3.3", Optional.absent());
         assertEquals("3.3", literal.getLiteral());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DECIMAL.getIRI());
         finishTest();
     }
 
     public void test_shouldParseUntrimmedDecimal() {
-        OWLLiteral literal = DataFactory.parseLiteral(" 3.3 ", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral(" 3.3 ", Optional.absent());
         assertEquals("3.3", literal.getLiteral());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DECIMAL.getIRI());
         finishTest();
@@ -74,7 +74,7 @@ public class GwtTest_DataFactory extends GWTTestCase {
     }
 
     public void test_shouldParseFloat() {
-        OWLLiteral literal = DataFactory.parseLiteral("3.3f", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("3.3f", Optional.absent());
         // The OWL API strips off the f, apparently
         assertEquals("3.3", literal.getLiteral());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_FLOAT.getIRI());
@@ -82,7 +82,7 @@ public class GwtTest_DataFactory extends GWTTestCase {
     }
 
     public void test_shouldParseUntrimmedFloat() {
-        OWLLiteral literal = DataFactory.parseLiteral(" 3.3f ", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral(" 3.3f ", Optional.absent());
         // The OWL API strips off the f, apparently
         assertEquals("3.3", literal.getLiteral());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_FLOAT.getIRI());
@@ -97,19 +97,19 @@ public class GwtTest_DataFactory extends GWTTestCase {
     }
 
     public void test_shouldParseYYYYMMDDAsDateTime() {
-        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30", Optional.absent());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
         finishTest();
     }
 
     public void test_shouldParseYYYYMMDDTHHColonMMAsDateTime() {
-        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30T12:15:00", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30T12:15:00", Optional.absent());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
         finishTest();
     }
 
     public void test_shouldParseYYYYMMDDSpaceHHColonMMAsDateTime() {
-        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30 12:15:00", Optional.<String>absent());
+        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30 12:15:00", Optional.absent());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
         finishTest();
     }

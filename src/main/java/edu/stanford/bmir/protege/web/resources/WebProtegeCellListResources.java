@@ -11,7 +11,7 @@ import com.google.gwt.user.cellview.client.CellList;
  */
 public interface WebProtegeCellListResources extends CellList.Resources {
 
-    public static WebProtegeCellListResources INSTANCE = GWT.create(WebProtegeCellListResources.class);
+    WebProtegeCellListResources INSTANCE = GWT.create(WebProtegeCellListResources.class);
 
     @Override
     @Source("webprotege-cell-list.css")

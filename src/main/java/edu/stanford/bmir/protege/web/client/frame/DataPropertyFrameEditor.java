@@ -139,7 +139,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         final DataPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
             public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
@@ -152,7 +152,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
                 domains.setValue(primitiveDatas);
             }
         });
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
             public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();

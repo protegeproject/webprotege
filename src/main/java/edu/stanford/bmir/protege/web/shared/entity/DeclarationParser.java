@@ -60,7 +60,7 @@ public class DeclarationParser {
         if(iriString.endsWith(">")) {
             iriString = iriString.substring(0, iriString.length() - 1);
         }
-        return Optional.<OWLEntity>of(
+        return Optional.of(
                 dataFactory.getOWLEntity(entityType, IRI.create(iriString))
         );
     }

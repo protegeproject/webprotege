@@ -7,11 +7,11 @@ package edu.stanford.bmir.protege.web.shared.app;
  */
 public interface UserInSessionEncoding {
 
-    public static String USER_NAME = "userName";
+    String USER_NAME = "userName";
 
-    public static String DISPLAY_NAME = "displayName";
+    String DISPLAY_NAME = "displayName";
 
-    public static String USER_EMAIL = "userEmail";
+    String USER_EMAIL = "userEmail";
 
-    public static String APPLICATION_ACTIONS = "applicationActions";
+    String APPLICATION_ACTIONS = "applicationActions";
 }

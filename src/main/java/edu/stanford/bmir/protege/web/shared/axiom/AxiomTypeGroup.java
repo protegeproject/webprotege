@@ -95,7 +95,7 @@ public enum AxiomTypeGroup {
 
     private final List<AxiomType<?>> axiomTypes;
 
-    private AxiomTypeGroup(String displayName, OWLRDFVocabulary vocabulary, AxiomType<?>... axiomTypes) {
+    AxiomTypeGroup(String displayName, OWLRDFVocabulary vocabulary, AxiomType<?>... axiomTypes) {
         this.displayName = displayName;
         this.owlrdfVocabulary = Optional.of(vocabulary);
         this.axiomTypes = wrapArray(axiomTypes);
@@ -105,7 +105,7 @@ public enum AxiomTypeGroup {
         return Collections.unmodifiableList(new ArrayList<AxiomType<?>>(Arrays.asList(axiomTypes)));
     }
 
-    private AxiomTypeGroup(String displayName, AxiomType... axiomTypes) {
+    AxiomTypeGroup(String displayName, AxiomType... axiomTypes) {
         this.displayName = displayName;
         this.owlrdfVocabulary = Optional.absent();
         this.axiomTypes = wrapArray(axiomTypes);

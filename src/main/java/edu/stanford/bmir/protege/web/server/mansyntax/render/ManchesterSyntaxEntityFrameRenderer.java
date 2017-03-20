@@ -261,7 +261,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
         if (!annotations.isEmpty()) {
             annotationsTagRenderer.renderOpeningTag(builder);
             if (nestedAnnotationStyle != NestedAnnotationStyle.COMPACT) {
-                renderSectionHeader(ManchesterOWLSyntax.ANNOTATIONS, builder, Optional.<OWLOntology>absent());
+                renderSectionHeader(ManchesterOWLSyntax.ANNOTATIONS, builder, Optional.absent());
             }
             annotationsBlockTagRenderer.renderOpeningTag(builder);
             for(OWLAnnotation annotation : annotations) {
@@ -345,7 +345,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
 
 
 
-    private static interface ElementTagRenderer {
+    private interface ElementTagRenderer {
         void renderOpeningTag(StringBuilder stringBuilder);
         void renderClosingTag(StringBuilder stringBuilder);
     }

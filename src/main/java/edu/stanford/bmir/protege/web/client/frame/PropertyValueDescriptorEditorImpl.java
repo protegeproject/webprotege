@@ -182,7 +182,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     @Override
     public void setValue(PropertyValueDescriptor propertyValue) {
         this.currentValue = Optional.of(propertyValue);
-        valueField.setPrimitiveDataPlaceholder(Optional.<OWLPrimitiveData>absent());
+        valueField.setPrimitiveDataPlaceholder(Optional.absent());
         if(propertyValue.getState() == PropertyValueState.ASSERTED) {
             propertyField.setValue(propertyValue.getProperty());
             valueField.setValue(propertyValue.getValue());

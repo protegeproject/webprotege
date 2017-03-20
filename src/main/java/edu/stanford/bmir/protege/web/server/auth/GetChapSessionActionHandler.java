@@ -54,12 +54,12 @@ public class GetChapSessionActionHandler implements ActionHandler<GetChapSession
         UserId userId = action.getUserId();
         if(userId.isGuest()) {
             logger.info("Attempt at authenticating guest user");
-            return new GetChapSessionResult(Optional.<ChapSession>absent());
+            return new GetChapSessionResult(Optional.absent());
         }
         Optional<Salt> salt = authenticationManager.getSalt(userId);
         if(!salt.isPresent()) {
             logger.info("Attempt to authenticate non-existing user: %s", userId);
-            return new GetChapSessionResult(Optional.<ChapSession>absent());
+            return new GetChapSessionResult(Optional.absent());
         }
         ChapSession challengeMessage = chapSessionManager.getSession(salt.get());
         return new GetChapSessionResult(Optional.of(challengeMessage));

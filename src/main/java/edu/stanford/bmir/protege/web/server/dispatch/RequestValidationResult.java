@@ -18,7 +18,7 @@ public class RequestValidationResult {
     private Optional<Exception> exception;
 
     protected RequestValidationResult() {
-        this(ValidationResult.VALID, Optional.<Exception>absent());
+        this(ValidationResult.VALID, Optional.absent());
     }
 
     protected RequestValidationResult(String exceptionMessage) {

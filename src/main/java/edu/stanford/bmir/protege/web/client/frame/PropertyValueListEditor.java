@@ -121,7 +121,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
             valueRendering = new IRIData((IRI) propertyValue.getValue());
         }
         if(propRendering.isPresent()) {
-            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Collections.<OWLAxiom>emptySet()));
+            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Collections.emptySet()));
         }
         else {
             return Optional.absent();

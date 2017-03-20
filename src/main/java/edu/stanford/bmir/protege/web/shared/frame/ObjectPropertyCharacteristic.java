@@ -40,7 +40,7 @@ public enum ObjectPropertyCharacteristic {
     }
 
     public <A extends OWLAxiom> A createAxiom(OWLObjectPropertyExpression property, OWLDataFactory dataFactory) {
-        return createAxiom(property, Collections.<OWLAnnotation>emptySet(), dataFactory);
+        return createAxiom(property, Collections.emptySet(), dataFactory);
     }
 
     @SuppressWarnings("unchecked")

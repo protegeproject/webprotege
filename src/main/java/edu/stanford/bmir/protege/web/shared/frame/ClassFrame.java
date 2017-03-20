@@ -176,7 +176,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
         private final Set<PropertyValue> propertyValues = new LinkedHashSet<PropertyValue>();
 
         public Builder(OWLClass subject) {
-            this(subject, Collections.<OWLClass>emptySet(), Collections.<PropertyValue>emptySet());
+            this(subject, Collections.emptySet(), Collections.emptySet());
         }
 
         public Builder(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues) {

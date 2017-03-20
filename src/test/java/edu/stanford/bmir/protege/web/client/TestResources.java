@@ -11,9 +11,9 @@ import com.google.gwt.resources.client.TextResource;
  */
 public interface TestResources extends ClientBundle {
 
-    public static final TestResources INSTANCE = GWT.create(TestResources.class);
+    TestResources INSTANCE = GWT.create(TestResources.class);
 
     @ClientBundle.Source("GwtTest_UserInSession.json")
-    public TextResource userInSessionJson();
+    TextResource userInSessionJson();
 
 }

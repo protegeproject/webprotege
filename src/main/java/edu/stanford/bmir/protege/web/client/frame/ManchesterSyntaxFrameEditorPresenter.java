@@ -196,7 +196,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     }
 
     private void applyChangesWithoutCommitMessage() {
-        applyChanges(Optional.<String>absent(), false);
+        applyChanges(Optional.absent(), false);
     }
 
     private void applyChangesWithCommitMessage(String input) {

@@ -57,7 +57,7 @@ public class EmailAddressEditorImpl extends Composite implements EmailAddressEdi
 
     @Override
     public Optional<Focusable> getInitialFocusable() {
-        return Optional.<Focusable>of(emailAddressField);
+        return Optional.of(emailAddressField);
     }
 
     @Override

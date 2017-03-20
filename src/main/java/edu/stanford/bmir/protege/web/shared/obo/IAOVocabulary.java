@@ -13,7 +13,7 @@ public enum IAOVocabulary {
 
     private String suffix;
 
-    private IAOVocabulary(String suffix) {
+    IAOVocabulary(String suffix) {
         this.suffix = suffix;
     }
 

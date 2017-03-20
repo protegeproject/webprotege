@@ -80,7 +80,7 @@ public class GetChapSessionActionHandler_TestCase {
 
     @Test
     public void shouldReturnAbsentIfSaltIsAbsent() {
-        when(authenticationManager.getSalt(userId)).thenReturn(Optional.<Salt>absent());
+        when(authenticationManager.getSalt(userId)).thenReturn(Optional.absent());
         GetChapSessionResult result = handler.execute(action, mock(ExecutionContext.class));
         assertThat(result.getChapSession(), is(Optional.<ChapSession>absent()));
     }

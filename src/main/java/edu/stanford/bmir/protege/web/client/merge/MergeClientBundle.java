@@ -11,12 +11,12 @@ import com.google.gwt.resources.client.CssResource;
  */
 public interface MergeClientBundle extends ClientBundle {
 
-    public static final MergeClientBundle BUNDLE = GWT.create(MergeClientBundle.class);
+    MergeClientBundle BUNDLE = GWT.create(MergeClientBundle.class);
 
     @Source("merge.css")
     MergeCss style();
 
-    public static interface MergeCss extends CssResource {
+    interface MergeCss extends CssResource {
 
         String add();
 

@@ -35,13 +35,13 @@ public class OBOSuffixSettingsTestCase {
 
     @Test
     public void differentObjectsWithEqualConstructorArgumentsAreEqualAndHaveSameHashCode() {
-        OBOIdSuffixSettings settingsA = new OBOIdSuffixSettings(Collections.<UserIdRange>emptyList());
-        OBOIdSuffixSettings settingsB = new OBOIdSuffixSettings(Collections.<UserIdRange>emptyList());
+        OBOIdSuffixSettings settingsA = new OBOIdSuffixSettings(Collections.emptyList());
+        OBOIdSuffixSettings settingsB = new OBOIdSuffixSettings(Collections.emptyList());
         assertEquals(settingsA, settingsB);
         assertEquals(settingsA.hashCode(), settingsB.hashCode());
 
-        OBOIdSuffixSettings settingsAA = new OBOIdSuffixSettings(7, Collections.<UserIdRange>emptyList());
-        OBOIdSuffixSettings settingsBB = new OBOIdSuffixSettings(7, Collections.<UserIdRange>emptyList());
+        OBOIdSuffixSettings settingsAA = new OBOIdSuffixSettings(7, Collections.emptyList());
+        OBOIdSuffixSettings settingsBB = new OBOIdSuffixSettings(7, Collections.emptyList());
         assertEquals(settingsAA, settingsBB);
         assertEquals(settingsAA.hashCode(), settingsBB.hashCode());
     }

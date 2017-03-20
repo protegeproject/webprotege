@@ -94,13 +94,13 @@ public class WatchPresenter {
     private Optional<EntityBasedWatch> getWatchFromType(final WatchType type, final OWLEntity entity) {
         switch (type) {
             case NONE:
-                return Optional.<EntityBasedWatch>absent();
+                return Optional.absent();
             case ENTITY:
-                return Optional.<EntityBasedWatch>of(new EntityFrameWatch(entity));
+                return Optional.of(new EntityFrameWatch(entity));
             case BRANCH:
-                return Optional.<EntityBasedWatch>of(new HierarchyBranchWatch(entity));
+                return Optional.of(new HierarchyBranchWatch(entity));
             default:
-                return Optional.<EntityBasedWatch>absent();
+                return Optional.absent();
         }
     }
 }

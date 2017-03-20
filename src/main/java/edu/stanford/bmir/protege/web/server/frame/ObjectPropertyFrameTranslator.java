@@ -72,7 +72,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
             }
 
         }
-        return new ObjectPropertyFrame(subject, propertyValues, domains, ranges, Collections.<OWLObjectProperty>emptySet(), characteristics);
+        return new ObjectPropertyFrame(subject, propertyValues, domains, ranges, Collections.emptySet(), characteristics);
     }
 
     @Override

@@ -94,7 +94,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
             }
         }
 
-        return Optional.<FormDataValue>of(new FormDataList(selected));
+        return Optional.of(new FormDataList(selected));
     }
 
     @Override

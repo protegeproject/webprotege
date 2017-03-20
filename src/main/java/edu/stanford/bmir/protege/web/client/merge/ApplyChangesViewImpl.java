@@ -80,6 +80,6 @@ public class ApplyChangesViewImpl extends Composite implements ApplyChangesView,
 
     @Override
     public Optional<Focusable> getInitialFocusable() {
-        return Optional.<Focusable>of(commitMessageField);
+        return Optional.of(commitMessageField);
     }
 }

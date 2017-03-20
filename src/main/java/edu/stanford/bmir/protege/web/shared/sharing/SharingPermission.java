@@ -28,5 +28,5 @@ public enum SharingPermission implements Serializable {
     /**
      * A user can manage a project
      */
-    MANAGE;
+    MANAGE
 }

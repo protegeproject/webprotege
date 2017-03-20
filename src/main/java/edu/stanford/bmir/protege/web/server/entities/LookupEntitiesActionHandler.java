@@ -94,7 +94,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                             public Optional<OWLEntityData> visit(OWLClass cls) {
                                 if(entityLookupRequest.isSearchType(EntityType.CLASS)) {
                                     String browserText = rm.getBrowserText(cls);
-                                    return Optional.<OWLEntityData>of(new OWLClassData(cls, browserText));
+                                    return Optional.of(new OWLClassData(cls, browserText));
                                 }
                                 else {
                                     return Optional.absent();
@@ -104,7 +104,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                             public Optional<OWLEntityData> visit(OWLObjectProperty property) {
                                 if(entityLookupRequest.isSearchType(EntityType.OBJECT_PROPERTY)) {
                                     String browserText = rm.getBrowserText(property);
-                                    return Optional.<OWLEntityData>of(new OWLObjectPropertyData(property, browserText));
+                                    return Optional.of(new OWLObjectPropertyData(property, browserText));
                                 }
                                 else {
                                     return Optional.absent();
@@ -114,7 +114,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                             public Optional<OWLEntityData> visit(OWLDataProperty property) {
                                 if(entityLookupRequest.isSearchType(EntityType.DATA_PROPERTY)) {
                                     String browserText = rm.getBrowserText(property);
-                                    return Optional.<OWLEntityData>of(new OWLDataPropertyData(property, browserText));
+                                    return Optional.of(new OWLDataPropertyData(property, browserText));
                                 }
                                 else {
                                     return Optional.absent();
@@ -124,7 +124,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                             public Optional<OWLEntityData> visit(OWLNamedIndividual individual) {
                                 if(entityLookupRequest.isSearchType(EntityType.NAMED_INDIVIDUAL)) {
                                     String browserText = rm.getBrowserText(individual);
-                                    return Optional.<OWLEntityData>of(new OWLNamedIndividualData(individual, browserText));
+                                    return Optional.of(new OWLNamedIndividualData(individual, browserText));
                                 }
                                 else {
                                     return Optional.absent();
@@ -134,7 +134,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                             public Optional<OWLEntityData> visit(OWLDatatype datatype) {
                                 if(entityLookupRequest.isSearchType(EntityType.DATATYPE)) {
                                     String browserText = rm.getBrowserText(datatype);
-                                    return Optional.<OWLEntityData>of(new OWLDatatypeData(datatype, browserText));
+                                    return Optional.of(new OWLDatatypeData(datatype, browserText));
                                 }
                                 else {
                                     return Optional.absent();
@@ -144,7 +144,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                             public Optional<OWLEntityData> visit(OWLAnnotationProperty property) {
                                 if(entityLookupRequest.isSearchType(EntityType.ANNOTATION_PROPERTY)) {
                                     String browserText = rm.getBrowserText(property);
-                                    return Optional.<OWLEntityData>of(new OWLAnnotationPropertyData(property, browserText));
+                                    return Optional.of(new OWLAnnotationPropertyData(property, browserText));
                                 }
                                 else {
                                     return Optional.absent();

@@ -160,7 +160,7 @@ public class EntityData implements Serializable {
 
     public void addWatch(Watch<?> watch) {
         if(watches == null) {
-            setWatches(Collections.<Watch<?>>singleton(watch));
+            setWatches(Collections.singleton(watch));
         }
         else {
             watches.add(watch);

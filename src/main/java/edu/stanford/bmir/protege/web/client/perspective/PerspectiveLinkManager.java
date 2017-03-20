@@ -16,7 +16,7 @@ import java.util.List;
 public interface PerspectiveLinkManager {
 
 
-    public static interface Callback {
+    interface Callback {
         void handlePerspectives(List<PerspectiveId> perspectiveIds);
     }
 

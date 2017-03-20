@@ -15,7 +15,7 @@ import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
  */
 public interface ClassFrameEditorPresenter extends ValueEditor<LabelledFrame<ClassFrame>>, HasEnabled, HasEditable, HasWidgets {
 
-    public Widget getWidget();
+    Widget getWidget();
 
     boolean isDirty();
 

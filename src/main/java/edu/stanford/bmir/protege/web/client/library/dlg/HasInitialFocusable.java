@@ -11,5 +11,5 @@ import com.google.gwt.user.client.ui.Focusable;
  */
 public interface HasInitialFocusable {
 
-    public Optional<Focusable> getInitialFocusable();
+    Optional<Focusable> getInitialFocusable();
 }

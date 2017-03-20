@@ -166,7 +166,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
     @Override
     public void clearData() {
-        dataGrid.setRowData(Collections.<UsageReference>emptyList());
+        dataGrid.setRowData(Collections.emptyList());
     }
 
     @Override

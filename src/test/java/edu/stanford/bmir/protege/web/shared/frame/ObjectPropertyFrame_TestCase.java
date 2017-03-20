@@ -219,7 +219,7 @@ public class ObjectPropertyFrame_TestCase {
         when(annotationValue.getProperty()).thenReturn(annotationProperty);
         OWLAnnotationValue value = mock(OWLAnnotationValue.class);
         when(annotationValue.getValue()).thenReturn(value);
-        when(value.getSignature()).thenReturn(Collections.<OWLEntity>emptySet());
+        when(value.getSignature()).thenReturn(Collections.emptySet());
         assertThat(objectPropertyFrame.getSignature(), containsInAnyOrder(
                 subject,
                 annotationProperty,

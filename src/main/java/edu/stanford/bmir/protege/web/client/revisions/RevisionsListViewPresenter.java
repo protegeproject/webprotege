@@ -70,7 +70,7 @@ public class RevisionsListViewPresenter implements HasDispose {
 
             @Override
             public void handleErrorFinally(Throwable throwable) {
-                setListData(Collections.<RevisionSummary>emptyList());
+                setListData(Collections.emptyList());
             }
 
             @Override

@@ -29,7 +29,7 @@ public enum DownloadFormat {
 
     private DownloadFormatExtension extension;
 
-    private DownloadFormat(OWLDocumentFormat DocumentFormat, String mimeType, DownloadFormatExtension extension) {
+    DownloadFormat(OWLDocumentFormat DocumentFormat, String mimeType, DownloadFormatExtension extension) {
         this.DocumentFormat = DocumentFormat;
         this.mimeType = mimeType;
         this.extension = extension;

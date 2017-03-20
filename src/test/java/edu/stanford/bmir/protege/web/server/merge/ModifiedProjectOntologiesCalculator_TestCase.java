@@ -51,9 +51,9 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
 
     @Test
     public void shouldNotPerformDiffForDifferentOntologyIRIs() {
-        OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.a")), Optional.<IRI>absent());
+        OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.a")), Optional.absent());
         when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
-        OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.b")), Optional.<IRI>absent());
+        OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.b")), Optional.absent());
         when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
         assertThat(calculator.getModifiedOntologyDiffs(), is(empty()));
     }
@@ -61,7 +61,7 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
     @Test
     public void shouldPerformDiffForSameOntologyIRIs() {
         IRI commonIRI = IRI.create("http://ontology.iri");
-        OWLOntologyID commonOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.<IRI>absent());
+        OWLOntologyID commonOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.absent());
         when(projectOntology.getOntologyID()).thenReturn(commonOntologyId);
         when(externalOntology.getOntologyID()).thenReturn(commonOntologyId);
 

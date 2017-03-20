@@ -52,7 +52,7 @@ public class EntitySuggestOracle extends SuggestOracle {
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
         if(entityTypes.isEmpty()) {
-            callback.onSuggestionsReady(request, new Response(Collections.<Suggestion>emptyList()));
+            callback.onSuggestionsReady(request, new Response(Collections.emptyList()));
             return;
         }
         dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new DispatchServiceCallback<LookupEntitiesResult>() {

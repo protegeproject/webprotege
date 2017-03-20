@@ -41,10 +41,7 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof SuppliedNameSuffixSettings)) {
-            return false;
-        }
-        return true;
+        return obj instanceof SuppliedNameSuffixSettings;
     }
 
     @Override

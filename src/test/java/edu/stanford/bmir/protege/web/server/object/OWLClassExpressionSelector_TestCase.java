@@ -50,7 +50,7 @@ public class OWLClassExpressionSelector_TestCase {
 
     @Test
     public void shouldNotSelectAnythingForEmptyList() {
-        assertThat(selector.selectOne(Collections.<OWLClassExpression>emptyList()),
+        assertThat(selector.selectOne(Collections.emptyList()),
                 is(Optional.<OWLClassExpression>absent()));
     }
 

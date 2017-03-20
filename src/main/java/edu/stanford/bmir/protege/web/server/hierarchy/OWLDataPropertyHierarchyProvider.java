@@ -30,7 +30,7 @@ public class OWLDataPropertyHierarchyProvider extends AbstractOWLPropertyHierarc
         Set<OWLDataProperty> result = new HashSet<OWLDataProperty>();
         for (OWLOntologyChange change : changes) {
             if (change.isAxiomChange()) {
-                for (OWLEntity entity : ((OWLAxiomChange) change).getSignature()) {
+                for (OWLEntity entity : change.getSignature()) {
                     if (entity.isOWLDataProperty()) {
                         result.add(entity.asOWLDataProperty());
                     }

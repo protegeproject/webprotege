@@ -23,10 +23,7 @@ public class ProjectListPlace extends Place {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof ProjectListPlace)) {
-            return false;
-        }
-        return true;
+        return obj instanceof ProjectListPlace;
     }
 
 

@@ -39,7 +39,7 @@ public class FormDataObject extends FormDataValue {
 
     @Override
     public List<FormDataValue> asList() {
-        return Arrays.<FormDataValue>asList(this);
+        return Arrays.asList(this);
     }
 
     @Override

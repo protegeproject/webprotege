@@ -18,7 +18,7 @@ public class SignUpPlace extends Place {
     }
 
     public SignUpPlace(Place continueTo) {
-        this.continueTo = Optional.<Place>of(continueTo);
+        this.continueTo = Optional.of(continueTo);
     }
 
     public Optional<Place> getContinueTo() {

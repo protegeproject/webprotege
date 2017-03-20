@@ -11,7 +11,7 @@ import com.google.gwt.resources.client.ClientBundle;
  */
 public interface CSVImportClientBundle extends ClientBundle {
 
-    public static final CSVImportClientBundle INSTANCE = GWT.create(CSVImportClientBundle.class);
+    CSVImportClientBundle INSTANCE = GWT.create(CSVImportClientBundle.class);
 
     @Source("CSVImportStyle.css")
     CSVImportStyle csvImportStyle();
