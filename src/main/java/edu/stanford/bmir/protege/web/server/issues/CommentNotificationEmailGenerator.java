@@ -44,7 +44,7 @@ public class CommentNotificationEmailGenerator {
     private final ApplicationNameProvider applicationNameProvider;
 
     @Inject
-    public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationTemplate FileContents templateFile,
+    public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationEmailTemplate FileContents templateFile,
                                              @Nonnull TemplateEngine templateEngine,
                                              @Nonnull ApplicationNameProvider applicationNameProvider,
                                              @Nonnull PlaceUrl placeUrl,

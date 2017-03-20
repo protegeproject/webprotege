@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.chgpwd.PasswordResetEmailTemplate;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
-import edu.stanford.bmir.protege.web.server.issues.CommentNotificationTemplate;
+import edu.stanford.bmir.protege.web.server.issues.CommentNotificationEmailTemplate;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveDataCopier;
@@ -60,15 +60,15 @@ public class FileSystemConfigurationModule {
     }
 
     @Provides
-    @CommentNotificationTemplate
-    public FileContents providesCommentNotificationTemplate(@CommentNotificationTemplate OverridableFile file) {
-        return new FileContents(file);
+    @CommentNotificationEmailTemplate
+    public OverridableFile provideCommentNotificationTemplateFile(OverridableFileFactory factory) {
+        return factory.getOverridableFile("templates/comment-notification.html");
     }
 
     @Provides
-    @CommentNotificationTemplate
-    public OverridableFile provideCommentNotificationTemplateFile(OverridableFileFactory factory) {
-        return factory.getOverridableFile("templates/comment-notification.html");
+    @CommentNotificationEmailTemplate
+    public FileContents providesCommentNotificationTemplate(@CommentNotificationEmailTemplate OverridableFile file) {
+        return new FileContents(file);
     }
 
     @Provides
@@ -78,14 +78,14 @@ public class FileSystemConfigurationModule {
 
     @Provides
     @PasswordResetEmailTemplate
-    public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile file) {
-        return new FileContents(file);
+    public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
+        return factory.getOverridableFile("templates/password-reset-template.html");
     }
 
     @Provides
     @PasswordResetEmailTemplate
-    public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
-        return factory.getOverridableFile("templates/password-reset-template.html");
+    public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile file) {
+        return new FileContents(file);
     }
 }
 
