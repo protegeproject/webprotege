@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
@@ -16,7 +16,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -57,7 +56,7 @@ public class ResetPasswordMailer_TestCase {
     private TemplateEngine templateEngine;
 
     @Mock
-    private FileContentsCache templateFile;
+    private FileContents templateFile;
 
     @Mock
     private PlaceUrl placeUrl;

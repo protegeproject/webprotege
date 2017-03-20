@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import com.github.mustachejava.DefaultMustacheFactory;
-import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.inject.OverridableFile;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
@@ -14,17 +14,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
-import java.util.Collections;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.isA;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -65,7 +62,7 @@ public class PasswordResetMailer_IT {
     public void setUp() throws Exception {
         when(placeUrl.getApplicationUrl()).thenReturn(applicationUrl);
         OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"), logger);
-        FileContentsCache templateFile = new FileContentsCache(() -> overridableFile.getTemplateFile());
+        FileContents templateFile = new FileContents(() -> overridableFile.getTemplateFile());
         TemplateEngine templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         ResetPasswordMailer mailer = new ResetPasswordMailer(mailManager,
                                                              templateEngine,

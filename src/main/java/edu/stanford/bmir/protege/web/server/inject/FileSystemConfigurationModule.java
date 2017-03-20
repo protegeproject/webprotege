@@ -5,7 +5,7 @@ import com.github.mustachejava.MustacheFactory;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.chgpwd.PasswordResetEmailTemplate;
-import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.issues.CommentNotificationTemplate;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
@@ -61,8 +61,8 @@ public class FileSystemConfigurationModule {
 
     @Provides
     @CommentNotificationTemplate
-    public FileContentsCache providesCommentNotificationTemplate(@CommentNotificationTemplate OverridableFile provider) {
-        return new FileContentsCache(provider::getTemplateFile);
+    public FileContents providesCommentNotificationTemplate(@CommentNotificationTemplate OverridableFile provider) {
+        return new FileContents(provider::getTemplateFile);
     }
 
     @Provides
@@ -78,8 +78,8 @@ public class FileSystemConfigurationModule {
 
     @Provides
     @PasswordResetEmailTemplate
-    public FileContentsCache providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile overridableFile) {
-        return new FileContentsCache(overridableFile::getTemplateFile);
+    public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile overridableFile) {
+        return new FileContents(overridableFile::getTemplateFile);
     }
 
     @Provides
