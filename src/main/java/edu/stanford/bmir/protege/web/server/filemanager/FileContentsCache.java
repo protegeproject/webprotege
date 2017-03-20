@@ -4,9 +4,9 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 import javax.annotation.Nonnull;
-import javax.inject.Provider;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,24 +16,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 10 Mar 2017
  *
  * A utility class for reading the latest contents of a file into a string.  When the method for getting
- * the contents is called, the fileProvider is checked to ensure that the latest contents are returned.  Contents
+ * the contents is called, the fileSupplier is checked to ensure that the latest contents are returned.  Contents
  * are cached in memory.
  */
 public class FileContentsCache implements HasGetFile {
 
-    private Provider<File> fileProvider;
+    private Supplier<File> fileSupplier;
 
     private long lastTimestamp = 0;
 
     private String cachedTemplate = "";
 
-    public FileContentsCache(@Nonnull Provider<File> fileProvider) {
-        this.fileProvider = checkNotNull(fileProvider);
+    public FileContentsCache(@Nonnull Supplier<File> fileSupplier) {
+        this.fileSupplier = checkNotNull(fileSupplier);
     }
 
     @Nonnull
     public File getFile() {
-        return fileProvider.get();
+        return fileSupplier.get();
     }
 
     public boolean exists() {
@@ -41,9 +41,9 @@ public class FileContentsCache implements HasGetFile {
     }
 
     /**
-     * Gets the contents of the specified fileProvider as a string.
+     * Gets the contents of the specified fileSupplier as a string.
      * @return The contents as a string.
-     * @throws IOException An exception if there was a problem reading the fileProvider.
+     * @throws IOException An exception if there was a problem reading the fileSupplier.
      */
     @Nonnull
     public synchronized String getContents() throws IOException {
