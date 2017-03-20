@@ -14,6 +14,7 @@
 <%@ page import="java.io.IOException" %>
 <%@ page import="java.util.Optional" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="java.util.HashSet" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -91,7 +92,7 @@
                 userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.<String>empty());
             }
         }
-        Set<ActionId> allowedApplicationActions = new HashSet<>(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));
+        Set<ActionId> allowedApplicationActions = new HashSet(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));
         userInSession = new UserInSession(userDetails, allowedApplicationActions);
         ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
                 .writeVariableDeclaration(userInSession, out);
