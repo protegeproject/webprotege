@@ -12,7 +12,7 @@
             width: 100%;
         }
 
-        .nameSupplier-field {
+        .name-field {
             display: inline-block;
             width: 100%;
         }

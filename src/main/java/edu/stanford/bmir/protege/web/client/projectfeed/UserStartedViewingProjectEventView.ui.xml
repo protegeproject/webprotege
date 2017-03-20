@@ -10,7 +10,7 @@
         }
 
 
-        .user-nameSupplier {
+        .user-name {
             font-weight: bold;
             color: #648dbe;
         }
