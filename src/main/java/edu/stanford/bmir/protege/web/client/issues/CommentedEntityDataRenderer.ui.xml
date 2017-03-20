@@ -44,6 +44,10 @@
             text-align: center;
             line-height: normal;
         }
+
+        .modifiedTime {
+            font-weight: bold;
+        }
     </ui:style>
 
     <div class="{style.main}">
@@ -55,7 +59,7 @@
                 </div>
                 <div class="{style.modifiedDetails}">
                     <div>
-                        Last comment <ui:text from="{value.modifiedAt}"/>
+                        Last comment <span class="{style.modifiedTime}"><ui:text from="{value.modifiedAt}"/></span>
                     </div>
                     <div>
                         by <ui:text from="{value.modifiedBy}"/>
