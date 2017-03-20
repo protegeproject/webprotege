@@ -121,11 +121,11 @@ public class PlaceUrl {
         try {
             final URI uri;
             String scheme = applicationSchemeProvider.getApplicationScheme().name().toLowerCase();
-            if(applicationPortSupplier.getApplicationPort().isPresent()) {
+            if(applicationPortSupplier.get().isPresent()) {
                 uri = new URI(scheme,
                               null,
                               applicationHostSupplier.get(),
-                              applicationPortSupplier.getApplicationPort().get(),
+                              applicationPortSupplier.get().get(),
                               applicationPathSupplier.get(),
                               null,
                               fragment);

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationPortSupplier {
+public class ApplicationPortSupplier implements Supplier<Optional<Integer>> {
 
     private final ApplicationSettingsManager manager;
 
@@ -22,7 +23,7 @@ public class ApplicationPortSupplier {
         this.manager = checkNotNull(manager);
     }
 
-    public Optional<Integer> getApplicationPort() {
+    public Optional<Integer> get() {
         int port = manager.getApplicationSettings().getApplicationLocation().getPort();
         if(port != 0) {
             return Optional.of(
