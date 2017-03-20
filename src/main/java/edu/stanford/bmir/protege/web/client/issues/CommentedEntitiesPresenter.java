@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.issues.SortingKey;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -17,9 +18,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
@@ -50,6 +49,14 @@ public class CommentedEntitiesPresenter {
 
     private final Set<OWLEntity> currentEntites = new HashSet<>();
 
+    private final List<CommentedEntityData> pageElements = new ArrayList<>();
+
+    private final Comparator<CommentedEntityData> entityComparator = Comparator.naturalOrder();
+
+    private final Comparator<CommentedEntityData> lastModifiedComparator =
+            Comparator.comparing(CommentedEntityData::getLastModified, Comparator.reverseOrder())
+                      .thenComparing(Comparator.naturalOrder());
+
     @Inject
     public CommentedEntitiesPresenter(@Nonnull ProjectId projectId,
                                       @Nonnull CommentedEntitiesView view,
@@ -65,6 +72,7 @@ public class CommentedEntitiesPresenter {
         container.setWidget(view);
         view.setSelectionHandler(this::handleEntitySelected);
         view.setPageNumberChangedHandler(pageNumber -> reload());
+        view.setSortingKeyChangedHandler(this::reload);
         reload();
         eventBus.addProjectEventHandler(projectId, ON_BROWSER_TEXT_CHANGED, this::handleBrowserTextChanged);
         eventBus.addProjectEventHandler(projectId, ON_COMMENT_POSTED, this::handleCommentPosted);
@@ -103,8 +111,14 @@ public class CommentedEntitiesPresenter {
                                            Page<CommentedEntityData> entities = result.getEntities();
                                            view.setPageCount(entities.getPageCount());
                                            view.setPageNumber(entities.getPageNumber());
-                                           List<CommentedEntityData> pageElements = entities.getPageElements();
-                                           sort(pageElements);
+                                           pageElements.clear();
+                                           pageElements.addAll(entities.getPageElements());
+                                           if(view.getSelectedSortingKey() == SortingKey.SORT_BY_ENTITY) {
+                                               pageElements.sort(entityComparator);
+                                           }
+                                           else {
+                                               pageElements.sort(lastModifiedComparator);
+                                           }
                                            view.setEntities(pageElements);
                                            currentEntites.clear();
                                            currentEntites.addAll(entities.getPageElements().stream()

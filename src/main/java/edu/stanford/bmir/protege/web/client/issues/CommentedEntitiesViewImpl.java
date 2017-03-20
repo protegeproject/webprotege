@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -8,9 +9,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -19,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeCellListResources;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
+import edu.stanford.bmir.protege.web.shared.issues.SortingKey;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -85,9 +89,14 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
     @UiField(provided = true)
     protected PaginatorView paginator;
 
+    @UiField
+    protected ListBox sortingKey;
+
     private final PaginatorPresenter paginatorPresenter;
 
     private ListDataProvider<CommentedEntityData> listDataProvider = new ListDataProvider<>();
+
+    private Runnable sortingKeyChangedHandler = () -> {};
 
     @Inject
     public CommentedEntitiesViewImpl(PaginatorPresenter paginatorPresenter) {
@@ -121,6 +130,21 @@ public class CommentedEntitiesViewImpl extends Composite implements CommentedEnt
     }
 
     private HandlerRegistration selectionHandlerRegistration = () -> {};
+
+    @UiHandler("sortingKey")
+    protected void handleSortingKeyChanged(ChangeEvent event) {
+        sortingKeyChangedHandler.run();
+    }
+
+    @Override
+    public SortingKey getSelectedSortingKey() {
+        return SortingKey.valueOf(sortingKey.getSelectedValue());
+    }
+
+    @Override
+    public void setSortingKeyChangedHandler(Runnable sortingKeyChangedHandler) {
+        this.sortingKeyChangedHandler = sortingKeyChangedHandler;
+    }
 
     @Override
     public void setSelectionHandler(@Nonnull SelectionHandler<CommentedEntityData> selectionHandler) {
