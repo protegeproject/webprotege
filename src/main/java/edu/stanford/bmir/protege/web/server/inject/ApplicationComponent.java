@@ -29,8 +29,7 @@ import javax.inject.Singleton;
         ActionHandlersModule.class,
         AuthenticationModule.class,
         AccessModule.class,
-        DbModule.class,
-        RepositoryModule.class,
+        DbModule.class
 })
 @Singleton
 @ApplicationSingleton
