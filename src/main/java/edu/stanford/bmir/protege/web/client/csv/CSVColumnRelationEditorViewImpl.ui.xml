@@ -10,7 +10,7 @@
         }
     </ui:style>
     <g:HTMLPanel>
-        <frame:PrimitiveDataEditorImpl ui:field="propertyField" addStyleNames="{style.property-editor-style}" placeholder="Enter property nameSupplier"/>
+        <frame:PrimitiveDataEditorImpl ui:field="propertyField" addStyleNames="{style.property-editor-style}" placeholder="Enter property name"/>
         <g:ListBox visibleItemCount="1" ui:field="relationTypeField" width="200px" addStyleNames="{style.filler-type-style}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

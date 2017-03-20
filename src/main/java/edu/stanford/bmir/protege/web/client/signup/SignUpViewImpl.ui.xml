@@ -27,9 +27,9 @@
         <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
             <g:Label text="Sign Up for Account" addStyleNames="{wp.dialog.title}"/>
 
-            <g:Label text="User nameSupplier"/>
+            <g:Label text="User name"/>
             <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Harry Potter"/>
-            <g:Label ui:field="userNameErrorLabel" text="Please specify a user nameSupplier" addStyleNames="{wp.dialog.errorLabel}"/>
+            <g:Label ui:field="userNameErrorLabel" text="Please specify a user name" addStyleNames="{wp.dialog.errorLabel}"/>
 
             <g:Label text="Email address"/>
             <g:TextBox ui:field="emailAddressField"/>

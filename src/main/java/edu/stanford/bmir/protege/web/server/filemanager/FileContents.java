@@ -41,9 +41,9 @@ public class FileContents implements HasGetFile {
     }
 
     /**
-     * Gets the contents of the specified fileSupplier as a string.
+     * Gets the contents of the specified file as a string.
      * @return The contents as a string.
-     * @throws IOException An exception if there was a problem reading the fileSupplier.
+     * @throws IOException An exception if there was a problem reading the file.
      */
     @Nonnull
     public synchronized String getContents() throws IOException {

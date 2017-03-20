@@ -37,13 +37,13 @@ public class PlaceUrl {
     private final EntityTypePerspectiveMapper mapper;
 
     /**
-     * Construct a {@link PlaceUrl} object that provides URLs for places for a given application hostSupplier,
-     * pathSupplier, portSupplier and nameSupplier.
-     * @param schemeSupplier The schemeSupplier for the application.
-     * @param hostSupplier A provider for the application hostSupplier.
-     * @param portSupplier A provider for the application portSupplier.
-     * @param pathSupplier A provider for the application pathSupplier.
-     * @param nameSupplier A provider for the application nameSupplier.
+     * Construct a {@link PlaceUrl} object that provides URLs for places for a given application host,
+     * path, port and name.
+     * @param schemeSupplier The scheme for the application.
+     * @param hostSupplier A provider for the application host.
+     * @param portSupplier A provider for the application port.
+     * @param pathSupplier A provider for the application path.
+     * @param nameSupplier A provider for the application name.
      * @param mapper An {@link EntityTypePerspectiveMapper} that will be used to retrieve the perspective id that
      *               should be shown for a given entity type.  For example for OWLClass entities the "Classes"
      *               perspective might be shown.
@@ -73,7 +73,7 @@ public class PlaceUrl {
     }
 
     /**
-     * Gets the application anchor.  This is the nameSupplier of the WebProtege application surrounded by
+     * Gets the application anchor.  This is the name of the WebProtege application surrounded by
      * anchor tags whose href is the value provided by {@link #getApplicationUrl()}.
      * @return A string representing the Url.
      */
