@@ -2,23 +2,24 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
+import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
-import edu.stanford.bmir.protege.web.server.project.ProjectAccessManager;
-import edu.stanford.bmir.protege.web.server.project.ProjectAccessManagerImpl;
-import edu.stanford.bmir.protege.web.server.project.ProjectCache;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.server.user.HasUserIds;
-import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
-import edu.stanford.bmir.protege.web.server.user.UserActivityManagerProvider;
+import edu.stanford.bmir.protege.web.server.project.*;
+import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
+import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
+import edu.stanford.bmir.protege.web.server.user.*;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -35,6 +36,48 @@ import java.util.Collections;
 @Module
 public class ApplicationModule {
 
+
+    @Provides
+    @Singleton
+    public ProjectExistsFilter provideProjectExistsFilter(ProjectExistsFilterImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public AuthenticationManager provideAuthenticationManager(AuthenticationManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public ProjectDetailsManager provideProjectDetailsManager(ProjectDetailsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public ProjectPermissionsManager provideProjectPermissionsManager(ProjectPermissionsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public ProjectSharingSettingsManager provideProjectSharingSettingsManager(ProjectSharingSettingsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public UserDetailsManager provideUserDetailsManager(UserDetailsManagerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @Singleton
+    public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
+        return manager;
+    }
 
     @Singleton
     @Provides
