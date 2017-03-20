@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import com.github.mustachejava.DefaultMustacheFactory;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.inject.OverridableFile;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -38,6 +39,8 @@ public class PasswordResetMailer_IT {
 
     private final String applicationUrl = "The Application URL";
 
+    private final String theAppName = "TheAppName";
+
     @Mock
     private WebProtegeLogger logger;
 
@@ -58,9 +61,13 @@ public class PasswordResetMailer_IT {
 
     private final String theNewPassword = "TheNewPassword";
 
+    @Mock
+    private ApplicationNameProvider appNameProvider;
+
     @Before
     public void setUp() throws Exception {
         when(placeUrl.getApplicationUrl()).thenReturn(applicationUrl);
+        when(appNameProvider.getApplicationName()).thenReturn(theAppName);
         OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"), logger);
         FileContents templateFile = new FileContents(overridableFile);
         TemplateEngine templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
@@ -68,6 +75,7 @@ public class PasswordResetMailer_IT {
                                                              templateEngine,
                                                              templateFile,
                                                              placeUrl,
+                                                             appNameProvider,
                                                              logger);
         mailer.sendEmail(userId, emailAddress, theNewPassword);
         verify(mailManager, times(1)).sendMail(eq(singletonList(emailAddress)),
@@ -89,5 +97,10 @@ public class PasswordResetMailer_IT {
     @Test
     public void shouldSendEmailContainingApplicationUrl() {
         assertThat(bodyCaptor.getValue(), containsString(applicationUrl));
+    }
+
+    @Test
+    public void shouldSendEmailContainingApplicationName() {
+        assertThat(bodyCaptor.getValue(), containsString(theAppName));
     }
 }
