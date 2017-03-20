@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 @Component(modules = {
         ApplicationModule.class,
         SharedApplicationModule.class,
-        WebProtegePropertiesModule.class,
         FileSystemConfigurationModule.class,
         ConfigurationTasksModule.class,
         MailModule.class,
