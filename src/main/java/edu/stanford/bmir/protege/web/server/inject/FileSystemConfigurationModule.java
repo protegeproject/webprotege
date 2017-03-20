@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentFileMatc
 import edu.stanford.bmir.protege.web.server.project.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
+import edu.stanford.bmir.protege.web.server.watches.WatchNotificationEmailTemplate;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import java.io.File;
 
@@ -85,6 +87,18 @@ public class FileSystemConfigurationModule {
     @Provides
     @PasswordResetEmailTemplate
     public FileContents providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile file) {
+        return new FileContents(file);
+    }
+
+    @Provides
+    @WatchNotificationEmailTemplate
+    OverridableFile provideWatchNotificationEmailTemplateFile(OverridableFileFactory factory) {
+        return factory.getOverridableFile("templates/watch-notification-email-template.html");
+    }
+
+    @Provides
+    @WatchNotificationEmailTemplate
+    FileContents provideWatchNotificationEmailTemplate(@WatchNotificationEmailTemplate OverridableFile file) {
         return new FileContents(file);
     }
 }

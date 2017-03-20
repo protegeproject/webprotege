@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.templates;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -41,6 +42,12 @@ public class TemplateObjectsBuilder {
 
     public TemplateObjectsBuilder withUserId(UserId userId) {
         builder.put("userId", userId.getUserName());
+        return this;
+    }
+
+    public TemplateObjectsBuilder withEntity(OWLEntityData entityData) {
+        builder.put("entity", entityData.getEntity());
+        builder.put("entity.browserText", entityData.getBrowserText());
         return this;
     }
 
