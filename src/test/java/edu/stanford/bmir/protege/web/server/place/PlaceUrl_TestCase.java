@@ -75,7 +75,7 @@ public class PlaceUrl_TestCase {
 
         when(hostProvider.get()).thenReturn(THE_APPLICATION_HOST);
         when(portProvider.getApplicationPort()).thenReturn(Optional.empty());
-        when(pathProvider.getApplicationPath()).thenReturn(THE_APPLICATION_PATH);
+        when(pathProvider.get()).thenReturn(THE_APPLICATION_PATH);
         when(appNameProvider.get()).thenReturn(THE_APPLICATION_NAME);
         when(schemeProvider.getApplicationScheme()).thenReturn(ApplicationScheme.HTTPS);
 

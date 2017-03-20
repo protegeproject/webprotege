@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.function.Supplier;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -12,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationPathSupplier {
+public class ApplicationPathSupplier implements Supplier<String> {
 
     private final ApplicationSettingsManager manager;
 
@@ -22,7 +24,7 @@ public class ApplicationPathSupplier {
     }
 
     @Nonnull
-    public String getApplicationPath() {
+    public String get() {
         return manager.getApplicationSettings().getApplicationLocation().getPath();
     }
 }

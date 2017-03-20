@@ -126,14 +126,14 @@ public class PlaceUrl {
                               null,
                               applicationHostSupplier.get(),
                               applicationPortProvider.getApplicationPort().get(),
-                              applicationPathSupplier.getApplicationPath(),
+                              applicationPathSupplier.get(),
                               null,
                               fragment);
             }
             else {
                 uri = new URI(scheme,
                               applicationHostSupplier.get(),
-                              applicationPathSupplier.getApplicationPath(),
+                              applicationPathSupplier.get(),
                               fragment);
             }
             return uri.toString();
