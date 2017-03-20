@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
-import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
-import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesResult;
+import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -21,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byEntity;
+import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byLastModified;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -88,6 +87,12 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
                 ));
             }
         });
+        if(action.getSortingKey() == SortingKey.SORT_BY_ENTITY) {
+            result.sort(byEntity);
+        }
+        else {
+            result.sort(byLastModified);
+        }
         Pager<CommentedEntityData> pager = Pager.getPagerForPageSize(result, request.getPageSize());
         return new GetCommentedEntitiesResult(action.getProjectId(), pager.getPage(request.getPageNumber()));
     }

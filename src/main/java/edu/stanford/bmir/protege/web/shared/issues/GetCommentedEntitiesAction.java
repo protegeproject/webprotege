@@ -28,6 +28,8 @@ public class GetCommentedEntitiesAction implements Action<GetCommentedEntitiesRe
 
     private String userIdFilter;
 
+    private SortingKey sortingKey;
+
     private Set<Status> statusFilter;
 
     @GwtSerializationConstructor
@@ -37,10 +39,12 @@ public class GetCommentedEntitiesAction implements Action<GetCommentedEntitiesRe
     public GetCommentedEntitiesAction(@Nonnull ProjectId projectId,
                                       @Nonnull String userIdFilter,
                                       @Nonnull Set<Status> statusFilter,
+                                      @Nonnull SortingKey sortingKey,
                                       @Nonnull PageRequest pageRequest) {
         this.projectId = projectId;
         this.userIdFilter = checkNotNull(userIdFilter);
-        this.statusFilter = new HashSet<>(statusFilter);
+        this.statusFilter = new HashSet<>(checkNotNull(statusFilter));
+        this.sortingKey = checkNotNull(sortingKey);
         this.pageRequest = pageRequest;
     }
 
@@ -48,6 +52,11 @@ public class GetCommentedEntitiesAction implements Action<GetCommentedEntitiesRe
     @Override
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    @Nonnull
+    public SortingKey getSortingKey() {
+        return sortingKey;
     }
 
     @Nonnull
@@ -88,6 +97,7 @@ public class GetCommentedEntitiesAction implements Action<GetCommentedEntitiesRe
     public String toString() {
         return toStringHelper("GetCommentedEntitiesAction")
                 .addValue(projectId)
+                .addValue(sortingKey)
                 .addValue(pageRequest)
                 .toString();
     }

@@ -66,5 +66,6 @@ public class CommentedEntitiesPortletPresenter extends AbstractWebProtegePortlet
                                         ON_PERMISSIONS_CHANGED,
                                         event -> permissionChecker.hasPermission(VIEW_OBJECT_COMMENT,
                                                                                  canView -> portletUi.setForbiddenVisible(!canView)));
+        presenter.setHasBusy(portletUi);
     }
 }

@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
+
+import java.util.Comparator;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -9,5 +13,5 @@ public enum SortingKey {
 
     SORT_BY_ENTITY,
 
-    SORT_BY_LAST_MODIFIED
+    SORT_BY_LAST_MODIFIED;
 }
