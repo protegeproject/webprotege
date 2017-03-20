@@ -66,7 +66,7 @@ public class PlaceUrl_TestCase {
     private ApplicationNameSupplier appNameProvider;
 
     @Mock
-    private ApplicationSchemeProvider schemeProvider;
+    private ApplicationSchemeSupplier schemeProvider;
 
     @Before
     public void setUp() throws Exception {
@@ -77,7 +77,7 @@ public class PlaceUrl_TestCase {
         when(portProvider.get()).thenReturn(Optional.empty());
         when(pathProvider.get()).thenReturn(THE_APPLICATION_PATH);
         when(appNameProvider.get()).thenReturn(THE_APPLICATION_NAME);
-        when(schemeProvider.getApplicationScheme()).thenReturn(ApplicationScheme.HTTPS);
+        when(schemeProvider.get()).thenReturn(ApplicationScheme.HTTPS);
 
         placeUrl = new PlaceUrl(schemeProvider,
                                 hostProvider,

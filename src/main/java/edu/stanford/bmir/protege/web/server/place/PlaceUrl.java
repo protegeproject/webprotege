@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PlaceUrl {
 
-    private final ApplicationSchemeProvider applicationSchemeProvider;
+    private final ApplicationSchemeSupplier applicationSchemeSupplier;
 
     private final ApplicationHostSupplier applicationHostSupplier;
 
@@ -38,7 +38,7 @@ public class PlaceUrl {
     /**
      * Construct a {@link PlaceUrl} object that provides URLs for places for a given application host,
      * path, port and name.
-     * @param applicationSchemeProvider The scheme for the application.
+     * @param applicationSchemeSupplier The scheme for the application.
      * @param applicationHostSupplier A provider for the application host.
      * @param applicationPortSupplier A provider for the application port.
      * @param applicationPathSupplier A provider for the application path.
@@ -48,13 +48,13 @@ public class PlaceUrl {
      *               perspective might be shown.
      */
     @Inject
-    public PlaceUrl(@Nonnull ApplicationSchemeProvider applicationSchemeProvider,
+    public PlaceUrl(@Nonnull ApplicationSchemeSupplier applicationSchemeSupplier,
                     @Nonnull ApplicationHostSupplier applicationHostSupplier,
                     @Nonnull ApplicationPortSupplier applicationPortSupplier,
                     @Nonnull ApplicationPathSupplier applicationPathSupplier,
                     @Nonnull ApplicationNameSupplier applicationNameSupplier,
                     @Nonnull EntityTypePerspectiveMapper mapper) {
-        this.applicationSchemeProvider = checkNotNull(applicationSchemeProvider);
+        this.applicationSchemeSupplier = checkNotNull(applicationSchemeSupplier);
         this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
         this.applicationPortSupplier = checkNotNull(applicationPortSupplier);
         this.applicationPathSupplier = checkNotNull(applicationPathSupplier);
@@ -120,7 +120,7 @@ public class PlaceUrl {
     private String createUrl(@Nullable String fragment) {
         try {
             final URI uri;
-            String scheme = applicationSchemeProvider.getApplicationScheme().name().toLowerCase();
+            String scheme = applicationSchemeSupplier.get().name().toLowerCase();
             if(applicationPortSupplier.get().isPresent()) {
                 uri = new URI(scheme,
                               null,
