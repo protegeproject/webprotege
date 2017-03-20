@@ -4,6 +4,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.server.chgpwd.PasswordResetEmailTemplate;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
 import edu.stanford.bmir.protege.web.server.issues.CommentNotificationTemplate;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
@@ -73,6 +74,18 @@ public class FileSystemConfigurationModule {
     @Provides
     public MustacheFactory providesMustacheFactory() {
         return new DefaultMustacheFactory();
+    }
+
+    @Provides
+    @PasswordResetEmailTemplate
+    public FileContentsCache providesPasswordResetEmailTemplate(@PasswordResetEmailTemplate OverridableFile overridableFile) {
+        return new FileContentsCache(overridableFile::getTemplateFile);
+    }
+
+    @Provides
+    @PasswordResetEmailTemplate
+    public OverridableFile providePasswordResetEmailTemplate(OverridableFileFactory factory) {
+        return factory.getOverridableFile("templates/password-reset-template.html");
     }
 }
 

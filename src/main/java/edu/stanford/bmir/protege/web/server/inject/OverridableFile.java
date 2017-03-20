@@ -61,8 +61,7 @@ public class OverridableFile {
             if (classPathFile != null) {
                 return Optional.of(classPathFile);
             }
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            URL templateUrl = classLoader.getResource("/" + relativePathName);
+            URL templateUrl = getClass().getResource("/" + relativePathName);
             if (templateUrl == null) {
                 logger.info("Unable to locate %s template file on class path: /", relativePathName);
                 return Optional.empty();
