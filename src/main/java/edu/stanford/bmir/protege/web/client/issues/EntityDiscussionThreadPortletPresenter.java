@@ -83,6 +83,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         addCommentAction.setEnabled(false);
         portletUi.setFilterView(filterView);
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());
+        presenter.setHasBusy(portletUi);
         presenter.start(eventBus);
         handleSetEntity(getSelectedEntity());
     }

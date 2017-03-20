@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.issues;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_OBJECT_COMMENT;
 import static edu.stanford.bmir.protege.web.shared.issues.CreateEntityDiscussionThreadAction.createEntityDiscussionThread;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent.ON_DISCUSSION_THREAD_CREATED;
@@ -60,6 +62,9 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     private final List<EntityDiscussionThread> displayedThreads = new ArrayList<>();
 
+    @Nonnull
+    private HasBusy hasBusy = busy -> {};
+
     @Inject
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
@@ -74,6 +79,10 @@ public class DiscussionThreadListPresenter implements HasDispose {
         this.projectId = projectId;
         this.commentEditorDialogProvider = commentEditorDialogProvider;
         this.discussionThreadPresenterProvider = discussionThreadPresenterProvider;
+    }
+
+    public void setHasBusy(@Nonnull HasBusy hasBusy) {
+        this.hasBusy = checkNotNull(hasBusy);
     }
 
     public void start(WebProtegeEventBus eventBus) {
@@ -125,6 +134,7 @@ public class DiscussionThreadListPresenter implements HasDispose {
         displayedEntity.ifPresent(e -> {
             dispatch.execute(
                     getDiscussionThreads(projectId, e),
+                    hasBusy,
                     result -> displayThreads(result.getThreads())
             );
         });
