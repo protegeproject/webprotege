@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
-import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
@@ -35,7 +35,7 @@ public class CommentNotificationEmailGenerator {
 
     private final TemplateEngine templateEngine;
 
-    private final FileContentsCache templateFile;
+    private final FileContents templateFile;
 
     private final WebProtegeLogger webProtegeLogger;
 
@@ -44,7 +44,7 @@ public class CommentNotificationEmailGenerator {
     private final ApplicationNameProvider applicationNameProvider;
 
     @Inject
-    public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationTemplate FileContentsCache templateFile,
+    public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationTemplate FileContents templateFile,
                                              @Nonnull TemplateEngine templateEngine,
                                              @Nonnull ApplicationNameProvider applicationNameProvider,
                                              @Nonnull PlaceUrl placeUrl,

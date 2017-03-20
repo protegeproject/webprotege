@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.github.mustachejava.DefaultMustacheFactory;
-import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
@@ -41,7 +41,7 @@ public class CommentNotificationEmailGenerator_TestCase {
     private CommentNotificationEmailGenerator generator;
 
     @Mock
-    private FileContentsCache templateFile;
+    private FileContents templateFile;
 
     @Mock
     private TemplateEngine templateEngine;

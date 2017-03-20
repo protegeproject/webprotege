@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * the contents is called, the fileSupplier is checked to ensure that the latest contents are returned.  Contents
  * are cached in memory.
  */
-public class FileContentsCache implements HasGetFile {
+public class FileContents implements HasGetFile {
 
     private Supplier<File> fileSupplier;
 
@@ -27,7 +27,7 @@ public class FileContentsCache implements HasGetFile {
 
     private String cachedTemplate = "";
 
-    public FileContentsCache(@Nonnull Supplier<File> fileSupplier) {
+    public FileContents(@Nonnull Supplier<File> fileSupplier) {
         this.fileSupplier = checkNotNull(fileSupplier);
     }
 

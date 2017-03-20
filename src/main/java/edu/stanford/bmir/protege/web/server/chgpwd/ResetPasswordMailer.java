@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import edu.stanford.bmir.protege.web.server.filemanager.FileContentsCache;
-import edu.stanford.bmir.protege.web.server.filemanager.HasGetFile;
-import edu.stanford.bmir.protege.web.server.inject.OverridableFile;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
@@ -30,14 +28,14 @@ public class ResetPasswordMailer {
 
     private final TemplateEngine templateEngine;
 
-    private final FileContentsCache templateFile;
+    private final FileContents templateFile;
 
     private final PlaceUrl placeUrl;
 
     @Inject
     public ResetPasswordMailer(MailManager mailManager,
                                TemplateEngine templateEngine,
-                               @PasswordResetEmailTemplate FileContentsCache templateFile,
+                               @PasswordResetEmailTemplate FileContents templateFile,
                                PlaceUrl placeUrl,
                                WebProtegeLogger logger) {
         this.mailManager = mailManager;
