@@ -103,7 +103,7 @@ public class UserDetails_TestCase {
     @Test
     public void shouldBeEqualToGuestUser() {
         assertThat(UserDetails.getGuestUserDetails(), is(new UserDetails(UserId.getGuest(), "Guest",
-                                                                         Optional.<String>empty())));
+                                                                         Optional.empty())));
     }
 
 }

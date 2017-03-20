@@ -31,20 +31,20 @@ public class LegacyCompatUtil {
             if (propertyType != null) {
                 switch(propertyType) {
                     case OBJECT:
-                        return Optional.<OWLEntityData>of(new OWLObjectPropertyData(DataFactory.getOWLObjectProperty(entityData.getName()), entityData.getBrowserText()));
+                        return Optional.of(new OWLObjectPropertyData(DataFactory.getOWLObjectProperty(entityData.getName()), entityData.getBrowserText()));
                     case DATATYPE:
-                        return Optional.<OWLEntityData>of(new OWLDataPropertyData(DataFactory.getOWLDataProperty(entityData.getName()), entityData.getBrowserText()));
+                        return Optional.of(new OWLDataPropertyData(DataFactory.getOWLDataProperty(entityData.getName()), entityData.getBrowserText()));
                     case ANNOTATION:
-                        return Optional.<OWLEntityData>of(new OWLAnnotationPropertyData(DataFactory.getOWLAnnotationProperty(entityData.getName()), entityData.getBrowserText()));
+                        return Optional.of(new OWLAnnotationPropertyData(DataFactory.getOWLAnnotationProperty(entityData.getName()), entityData.getBrowserText()));
 
                 }
             }
         }
         else if(entityData.getValueType() == ValueType.Cls) {
-            return Optional.<OWLEntityData>of(new OWLClassData(DataFactory.getOWLClass(entityData.getName()), entityData.getBrowserText()));
+            return Optional.of(new OWLClassData(DataFactory.getOWLClass(entityData.getName()), entityData.getBrowserText()));
         }
         else if(entityData.getValueType() == ValueType.Instance) {
-            return Optional.<OWLEntityData>of(new OWLNamedIndividualData(DataFactory.getOWLNamedIndividual(entityData.getName()), entityData.getBrowserText()));
+            return Optional.of(new OWLNamedIndividualData(DataFactory.getOWLNamedIndividual(entityData.getName()), entityData.getBrowserText()));
         }
 
         else if(entityData.getValueType() == ValueType.Property) {

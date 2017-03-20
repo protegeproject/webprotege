@@ -118,7 +118,7 @@ public class OBOTermSynonymEditorImpl extends Composite implements OBOTermSynony
         if(synonymName.isEmpty()) {
             return Optional.absent();
         }
-        final List<OBOXRef> xrefs = xrefListField.getValue().or(Collections.<OBOXRef>emptyList());
+        final List<OBOXRef> xrefs = xrefListField.getValue().or(Collections.emptyList());
         return Optional.of(new OBOTermSynonym(xrefs, synonymName, getSynonymScope()));
     }
 

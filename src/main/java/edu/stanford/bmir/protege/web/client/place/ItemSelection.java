@@ -50,7 +50,7 @@ public class ItemSelection implements Iterable<Item<?>> {
             return java.util.Optional.empty();
         }
         else {
-            return java.util.Optional.<Item<?>>of(items.get(0));
+            return java.util.Optional.of(items.get(0));
         }
     }
 
@@ -59,7 +59,7 @@ public class ItemSelection implements Iterable<Item<?>> {
             return Optional.absent();
         }
         else {
-            return Optional.<Item<?>>of(items.get(items.size() - 1));
+            return Optional.of(items.get(items.size() - 1));
         }
     }
 

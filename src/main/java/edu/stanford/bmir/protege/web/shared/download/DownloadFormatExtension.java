@@ -20,7 +20,7 @@ public enum DownloadFormatExtension {
 
     private String displayName;
 
-    private DownloadFormatExtension(String displayName) {
+    DownloadFormatExtension(String displayName) {
         this.displayName = displayName;
     }
 

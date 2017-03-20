@@ -39,7 +39,7 @@ public class SingleDocumentProjectSourcesExtractor implements RawProjectSourcesE
 
         @Override
         public Collection<OWLOntologyDocumentSource> getDocumentSources() {
-            return Lists.<OWLOntologyDocumentSource>newArrayList(new FileDocumentSource(ontologyDocument));
+            return Lists.newArrayList(new FileDocumentSource(ontologyDocument));
         }
 
         @Override

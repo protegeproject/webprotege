@@ -11,7 +11,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
  */
 public interface CSVGridResources extends DataGrid.Resources {
 
-    public static final CSVGridResources INSTANCE = GWT.create(CSVGridResources.class);
+    CSVGridResources INSTANCE = GWT.create(CSVGridResources.class);
 
 
     @Override

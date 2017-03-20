@@ -28,7 +28,7 @@ public class PerspectiveLayout_TestCase {
     @Before
     public void setUp() {
         when(rootNode.duplicate()).thenReturn(rootNode);
-        perspectiveLayout = new PerspectiveLayout(perspectiveId, Optional.<Node>of(rootNode));
+        perspectiveLayout = new PerspectiveLayout(perspectiveId, Optional.of(rootNode));
     }
 
     @Test(expected = NullPointerException.class)

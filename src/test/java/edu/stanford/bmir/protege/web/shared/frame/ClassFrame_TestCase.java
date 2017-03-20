@@ -117,13 +117,13 @@ public class ClassFrame_TestCase {
     @Test
     public void shouldReturnSignature() {
         OWLObjectProperty property = mock(OWLObjectProperty.class);
-        when(property.getSignature()).thenReturn(Collections.<OWLEntity>singleton(property));
+        when(property.getSignature()).thenReturn(Collections.singleton(property));
         when(propertyValue.getProperty()).thenReturn(property);
         OWLClass value = mock(OWLClass.class);
-        when(value.getSignature()).thenReturn(Collections.<OWLEntity>singleton(value));
+        when(value.getSignature()).thenReturn(Collections.singleton(value));
         when(propertyValue.getValue()).thenReturn(value);
         assertThat(classFrame.getSignature(),
-                Matchers.<OWLEntity>containsInAnyOrder(
+                Matchers.containsInAnyOrder(
                         subject, cls, property, value));
     }
 }

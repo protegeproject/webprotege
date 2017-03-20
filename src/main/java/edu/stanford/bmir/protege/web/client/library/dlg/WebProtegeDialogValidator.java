@@ -8,7 +8,7 @@ package edu.stanford.bmir.protege.web.client.library.dlg;
  */
 public interface WebProtegeDialogValidator {
     
-    public static final String VALID_STATE_MESSAGE = "";
+    String VALID_STATE_MESSAGE = "";
 
     /**
      * Gets the validation state that describes whether the contents of a {@link WebProtegeDialog} are valid or not.

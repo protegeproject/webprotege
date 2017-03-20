@@ -171,7 +171,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         UserId author = UserId.getUserId(annotation.getAuthor());
         String body = annotation.getBody() == null ? "" : annotation.getBody();
         long timestamp = annotation.getCreatedAt();
-        Optional<String> subject = annotation.getSubject() == null ? Optional.<String>absent() : Optional.of(annotation.getSubject());
+        Optional<String> subject = annotation.getSubject() == null ? Optional.absent() : Optional.of(annotation.getSubject());
 
         NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
         NoteHeader noteHeader = new NoteHeader(noteId, inReplyTo, author, timestamp);
@@ -287,7 +287,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 //        annotation.setCreatedAt(timestamp);
 //        final NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
         NoteId noteId = NoteId.createNoteIdFromLexicalForm("ABC");
-        NoteHeader noteHeader = new NoteHeader(noteId, Optional.<NoteId>absent(), author, timestamp);
+        NoteHeader noteHeader = new NoteHeader(noteId, Optional.absent(), author, timestamp);
         return Note.createNote(noteHeader, noteContent);
     }
 

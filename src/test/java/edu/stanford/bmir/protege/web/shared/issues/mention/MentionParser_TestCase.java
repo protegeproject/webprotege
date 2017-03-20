@@ -328,10 +328,7 @@ public class MentionParser_TestCase {
                 return false;
             }
             IssueMention parsedMention = (IssueMention) item.getParsedMention();
-            if(parsedMention.getIssueNumber() != expectedIssueNumber) {
-                return false;
-            }
-            return true;
+            return parsedMention.getIssueNumber() == expectedIssueNumber;
         }
 
         @Override
@@ -377,10 +374,7 @@ public class MentionParser_TestCase {
                 return false;
             }
             RevisionMention parsedMention = (RevisionMention) item.getParsedMention();
-            if(parsedMention.getRevisionNumber() != expectedRevision) {
-                return false;
-            }
-            return true;
+            return parsedMention.getRevisionNumber() == expectedRevision;
         }
 
         @Override
@@ -425,10 +419,7 @@ public class MentionParser_TestCase {
                 return false;
             }
             UserIdMention parsedMention = (UserIdMention) item.getParsedMention();
-            if(!parsedMention.getUserId().getUserName().equals(expectedUserId)) {
-                return false;
-            }
-            return true;
+            return parsedMention.getUserId().getUserName().equals(expectedUserId);
         }
 
         @Override
@@ -476,10 +467,7 @@ public class MentionParser_TestCase {
             if(!parsedMention.getEntity().getEntityType().equals(expectedEntityType)) {
                 return false;
             }
-            if(!parsedMention.getEntity().getIRI().toString().equals(expectedIri)) {
-                return false;
-            }
-            return true;
+            return parsedMention.getEntity().getIRI().toString().equals(expectedIri);
         }
 
         @Override

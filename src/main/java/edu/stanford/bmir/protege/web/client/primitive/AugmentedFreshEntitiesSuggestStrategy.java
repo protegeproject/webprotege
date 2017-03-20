@@ -27,7 +27,7 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
         for(OWLEntityData auxiliaryType : auxiliaryTypes) {
             this.auxiliaryTypes.add(Optional.of(auxiliaryType));
         }
-        this.auxiliaryTypes.add(Optional.<OWLEntityData>absent());
+        this.auxiliaryTypes.add(Optional.absent());
     }
 
     @Override

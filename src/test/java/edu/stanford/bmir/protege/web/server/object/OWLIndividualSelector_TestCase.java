@@ -50,7 +50,7 @@ public class OWLIndividualSelector_TestCase {
 
     @Test
     public void shouldNotSelectAnythingForEmptyList() {
-        assertThat(selector.selectOne(Collections.<OWLIndividual>emptyList()),
+        assertThat(selector.selectOne(Collections.emptyList()),
                 is(Optional.<OWLIndividual>absent()));
     }
 

@@ -60,10 +60,10 @@ public enum ColumnType {
     /**
      * For serialization only
      */
-    private ColumnType() {
+    ColumnType() {
     }
 
-    private ColumnType(String displayName, PrimitiveType primitiveType, EntityType<?> ... propertyTypes) {
+    ColumnType(String displayName, PrimitiveType primitiveType, EntityType<?>... propertyTypes) {
         this.displayName = displayName;
         this.primitiveType = primitiveType;
         this.propertyTypes = Arrays.asList(propertyTypes);

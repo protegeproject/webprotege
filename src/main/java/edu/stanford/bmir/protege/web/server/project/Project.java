@@ -292,7 +292,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                                                                        EntityType<E> entityType) {
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (entity.isPresent()) {
-            return new OWLEntityCreator<E>(entity.get(), Collections.<OWLOntologyChange>emptyList());
+            return new OWLEntityCreator<E>(entity.get(), Collections.emptyList());
         }
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler =

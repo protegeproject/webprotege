@@ -18,7 +18,7 @@ public enum  WhiteSpaceTreatment {
 
     private String displayName;
 
-    private WhiteSpaceTreatment(String displayName) {
+    WhiteSpaceTreatment(String displayName) {
         this.displayName = displayName;
     }
 

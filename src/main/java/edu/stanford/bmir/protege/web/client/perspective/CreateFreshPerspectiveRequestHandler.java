@@ -9,7 +9,7 @@ public interface CreateFreshPerspectiveRequestHandler {
 
     void createFreshPerspective(Callback callback);
 
-    public static interface Callback {
+    interface Callback {
         void createNewPerspective(PerspectiveId perspectiveId);
     }
 }

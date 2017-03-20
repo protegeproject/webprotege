@@ -156,7 +156,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
                 domains.setValue(primitiveDatas);
             }
         });
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
             public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();

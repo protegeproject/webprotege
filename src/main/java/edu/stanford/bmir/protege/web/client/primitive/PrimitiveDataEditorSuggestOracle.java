@@ -139,7 +139,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         if(!allowedPrimitiveTypes.contains(PrimitiveType.LITERAL)) {
             return false;
         }
-        OWLLiteral lit = DataFactory.parseLiteral(request.getQuery(), Optional.<String>absent());
+        OWLLiteral lit = DataFactory.parseLiteral(request.getQuery(), Optional.absent());
         return !(lit.getDatatype().isString() || lit.getDatatype().isRDFPlainLiteral());
     }
 

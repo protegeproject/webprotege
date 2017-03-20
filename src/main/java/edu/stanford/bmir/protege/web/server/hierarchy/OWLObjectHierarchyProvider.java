@@ -16,33 +16,33 @@ public interface OWLObjectHierarchyProvider<N extends OWLObject> {
     /**
      * Gets the objects that represent the roots of the hierarchy.
      */
-    public Set<N> getRoots();
+    Set<N> getRoots();
 
 
-    public Set<N> getChildren(N object);
+    Set<N> getChildren(N object);
 
 
-    public Set<N> getDescendants(N object);
+    Set<N> getDescendants(N object);
 
 
-    public Set<N> getParents(N object);
+    Set<N> getParents(N object);
 
 
-    public Set<N> getAncestors(N object);
+    Set<N> getAncestors(N object);
 
 
-    public Set<N> getEquivalents(N object);
+    Set<N> getEquivalents(N object);
 
 
-    public Set<List<N>> getPathsToRoot(N object);
+    Set<List<N>> getPathsToRoot(N object);
 
 
-    public boolean containsReference(N object);
+    boolean containsReference(N object);
 
 
-    public void addListener(OWLObjectHierarchyProviderListener<N> listener);
+    void addListener(OWLObjectHierarchyProviderListener<N> listener);
 
 
-    public void removeListener(OWLObjectHierarchyProviderListener<N> listener);
+    void removeListener(OWLObjectHierarchyProviderListener<N> listener);
 
 }

@@ -11,12 +11,12 @@ import com.google.gwt.resources.client.CssResource;
  */
 public interface DiffClientBundle extends ClientBundle {
 
-    public static final DiffClientBundle INSTANCE = GWT.create(DiffClientBundle.class);
+    DiffClientBundle INSTANCE = GWT.create(DiffClientBundle.class);
 
     @Source("diff.css")
     DiffCssResource style();
 
-    public static interface DiffCssResource extends CssResource {
+    interface DiffCssResource extends CssResource {
 
         String line();
 

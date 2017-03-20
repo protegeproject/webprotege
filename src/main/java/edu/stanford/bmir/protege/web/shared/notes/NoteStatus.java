@@ -18,10 +18,10 @@ public enum NoteStatus {
     /**
      * For serialization only
      */
-    private NoteStatus() {
+    NoteStatus() {
     }
 
-    private NoteStatus(String displayText) {
+    NoteStatus(String displayText) {
         this.displayText = displayText;
     }
 

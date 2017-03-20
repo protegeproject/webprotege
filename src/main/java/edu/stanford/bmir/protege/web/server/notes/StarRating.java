@@ -64,7 +64,7 @@ public enum StarRating {
      * @param localName The local name of the star rating.  This must not be null, must not be empty, and must be a
      * valid IRI fragment or path element.
      */
-    private StarRating(String localName) {
+    StarRating(String localName) {
         if(localName == null) {
             throw new NullPointerException("localName must not be null");
         }

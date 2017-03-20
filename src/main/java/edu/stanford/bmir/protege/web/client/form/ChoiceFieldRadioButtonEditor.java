@@ -93,7 +93,7 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
                 return Optional.of(descriptor.getValue());
             }
         }
-        return Optional.<FormDataValue>absent();
+        return Optional.absent();
     }
 
     @Override

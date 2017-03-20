@@ -244,7 +244,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                                                              result.getEntityDataMap()
                                                                                    .get(event.getChild())
                                                                                    .getBrowserText(),
-                                                                             Collections.<EntityData>emptyList(),
+                                                                             Collections.emptyList(),
                                                                              0);
                     subClassData.setValueType(ValueType.Cls);
                     onSubclassAdded((EntityData) tn.getUserObject(), Arrays.asList(subClassData), false);
@@ -624,7 +624,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                             final SubclassEntityData entityData = new SubclassEntityData(createdCls.getIRI().toString(),
                                                                                          result.getBrowserText(
                                                                                                  createdCls).or("" ),
-                                                                                         Collections.<EntityData>emptySet(),
+                                                                                         Collections.emptySet(),
                                                                                          0);
                             entityData.setValueType(ValueType.Cls);
                             Node n = createTreeNode(entityData);

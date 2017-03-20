@@ -50,7 +50,7 @@ public class OWLDataPropertyExpressionSelector_TestCase {
 
     @Test
     public void shouldNotSelectAnythingForEmptyList() {
-        assertThat(selector.selectOne(Collections.<OWLDataPropertyExpression>emptyList()),
+        assertThat(selector.selectOne(Collections.emptyList()),
                 is(Optional.<OWLDataPropertyExpression>absent()));
     }
 

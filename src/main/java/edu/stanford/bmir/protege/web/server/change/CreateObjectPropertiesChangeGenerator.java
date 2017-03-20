@@ -26,7 +26,7 @@ public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitie
     protected Set<OWLAxiom> createParentPlacementAxioms(OWLObjectProperty freshEntity, Project project, ChangeGenerationContext context, Optional<OWLObjectProperty> parent) {
         if (parent.isPresent()) {
             OWLSubObjectPropertyOfAxiom ax = project.getDataFactory().getOWLSubObjectPropertyOfAxiom(freshEntity, parent.get());
-            return Collections.<OWLAxiom>singleton(ax);
+            return Collections.singleton(ax);
         }
         else {
             return Collections.emptySet();

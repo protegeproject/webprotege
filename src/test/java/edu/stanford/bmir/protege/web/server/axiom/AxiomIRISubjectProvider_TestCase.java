@@ -92,7 +92,7 @@ public class AxiomIRISubjectProvider_TestCase {
 
         when(iriComparator.compare(iriB, iri)).thenReturn(1);
         when(iriComparator.compare(iri, iriB)).thenReturn(-1);
-        absent = Optional.<IRI>absent();
+        absent = Optional.absent();
         anonymousIndividual = mock(OWLAnonymousIndividual.class);
     }
 
@@ -268,14 +268,14 @@ public class AxiomIRISubjectProvider_TestCase {
     @Test
     public void shouldReturnSubjectFor_OWLDifferentIndividualsAxiom() {
         OWLDifferentIndividualsAxiom axiom = mockAxiom(OWLDifferentIndividualsAxiom.class);
-        when(axiom.getIndividuals()).thenReturn(Sets.<OWLIndividual>newHashSet(individual, individualB));
+        when(axiom.getIndividuals()).thenReturn(Sets.newHashSet(individual, individualB));
         assertThat(provider.getSubject(axiom), is(iriOptional));
     }
 
     @Test
     public void shouldReturn_Absent_SubjectFor_OWLDifferentIndividualsAxiom() {
         OWLDifferentIndividualsAxiom axiom = mockAxiom(OWLDifferentIndividualsAxiom.class);
-        when(axiom.getIndividuals()).thenReturn(Sets.<OWLIndividual>newHashSet(anonymousIndividual));
+        when(axiom.getIndividuals()).thenReturn(Sets.newHashSet(anonymousIndividual));
         assertThat(provider.getSubject(axiom), is(absent));
     }
 
@@ -283,7 +283,7 @@ public class AxiomIRISubjectProvider_TestCase {
     @Test
     public void shouldReturnSubjectFor_OWLDisjointDataPropertiesAxiom() {
         OWLDisjointDataPropertiesAxiom axiom = mockAxiom(OWLDisjointDataPropertiesAxiom.class);
-        when(axiom.getProperties()).thenReturn(Sets.<OWLDataPropertyExpression>newHashSet(dataProperty));
+        when(axiom.getProperties()).thenReturn(Sets.newHashSet(dataProperty));
         assertThat(provider.getSubject(axiom), is(iriOptional));
     }
 
@@ -298,7 +298,7 @@ public class AxiomIRISubjectProvider_TestCase {
     @Test
     public void shouldReturnSubjectFor_OWLDisjointObjectPropertiesAxiom() {
         OWLDisjointObjectPropertiesAxiom axiom = mockAxiom(OWLDisjointObjectPropertiesAxiom.class);
-        when(axiom.getProperties()).thenReturn(Sets.<OWLObjectPropertyExpression>newHashSet(objectProperty));
+        when(axiom.getProperties()).thenReturn(Sets.newHashSet(objectProperty));
         assertThat(provider.getSubject(axiom), is(iriOptional));
     }
 
@@ -522,13 +522,13 @@ public class AxiomIRISubjectProvider_TestCase {
     @Test
     public void shouldReturnSubjectFor_OWLSameIndividualAxiom() {
         OWLSameIndividualAxiom axiom = mockAxiom(OWLSameIndividualAxiom.class);
-        when(axiom.getIndividuals()).thenReturn(Sets.<OWLIndividual>newHashSet(individual, individualB));
+        when(axiom.getIndividuals()).thenReturn(Sets.newHashSet(individual, individualB));
         assertThat(provider.getSubject(axiom), is(iriOptional));
     }
     @Test
     public void shouldReturn_Absent_SubjectFor_OWLSameIndividualAxiom() {
         OWLSameIndividualAxiom axiom = mockAxiom(OWLSameIndividualAxiom.class);
-        when(axiom.getIndividuals()).thenReturn(Sets.<OWLIndividual>newHashSet(anonymousIndividual));
+        when(axiom.getIndividuals()).thenReturn(Sets.newHashSet(anonymousIndividual));
         assertThat(provider.getSubject(axiom), is(absent));
     }
 

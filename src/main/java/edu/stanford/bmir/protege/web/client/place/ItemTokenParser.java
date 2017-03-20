@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class ItemTokenParser {
 
-    public static interface ItemTypeMapper {
+    public interface ItemTypeMapper {
 
         <T> ItemParser<T> getParser(String typeName);
     }
 
 
-    public static interface ItemParser<T>{
+    public interface ItemParser<T>{
 
         Optional<Item<T>> parseItem(String content);
     }

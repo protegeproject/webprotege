@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SetEmailAddressResult implements Result {
 
-    public static enum Result {
+    public enum Result {
         /**
          * The address was changed.
          */

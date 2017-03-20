@@ -30,7 +30,7 @@ public enum PrimitiveType {
 
     private final EntityType<?> entityType;
 
-    private PrimitiveType(EntityType<?> entityType) {
+    PrimitiveType(EntityType<?> entityType) {
         this.entityType = entityType;
     }
 

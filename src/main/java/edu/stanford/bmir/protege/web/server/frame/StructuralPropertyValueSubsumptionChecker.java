@@ -73,12 +73,7 @@ public class StructuralPropertyValueSubsumptionChecker implements PropertyValueS
             if(litA.getDatatype().equals(dtB)) {
                 if(dtB.isBuiltIn()) {
                     Pattern pattern = dtB.getBuiltInDatatype().getPattern();
-                    if(pattern.matcher(litA.getLiteral()).matches()) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    return pattern.matcher(litA.getLiteral()).matches();
                 }
                 else {
                     return true;

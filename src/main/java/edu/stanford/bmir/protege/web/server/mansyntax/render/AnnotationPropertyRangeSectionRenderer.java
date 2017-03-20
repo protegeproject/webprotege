@@ -34,13 +34,13 @@ public class AnnotationPropertyRangeSectionRenderer extends AbstractOWLAxiomItem
             for(EntityType<?> entityType : EntityType.values()) {
                 OWLEntity entity = ontology.getOWLOntologyManager().getOWLDataFactory().getOWLEntity(entityType, item.getRange());
                 if(entity.isBuiltIn()) {
-                    return Lists.<OWLObject>newArrayList(entity);
+                    return Lists.newArrayList(entity);
                 }
             }
-            return Lists.<OWLObject>newArrayList(item.getRange());
+            return Lists.newArrayList(item.getRange());
         }
         else {
-            return Lists.<OWLObject>newArrayList(range);
+            return Lists.newArrayList(range);
         }
     }
 }

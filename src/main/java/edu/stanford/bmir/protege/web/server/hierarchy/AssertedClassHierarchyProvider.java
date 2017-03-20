@@ -94,7 +94,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
         List<OWLAxiomChange> filteredChanges = filterIrrelevantChanges(changes);
         updateImplicitRoots(filteredChanges);
         for (OWLOntologyChange change : filteredChanges) {
-            for (OWLEntity entity : ((OWLAxiomChange) change).getSignature()) {
+            for (OWLEntity entity : change.getSignature()) {
                 if (entity instanceof OWLClass && !entity.equals(root)) {
                     changedClasses.add((OWLClass) entity);
                 }

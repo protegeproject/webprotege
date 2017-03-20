@@ -106,7 +106,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
         }
 
         public OntologyChangeList<R> build() {
-            return build(Optional.<R>absent());
+            return build(Optional.absent());
         }
 
 

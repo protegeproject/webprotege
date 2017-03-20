@@ -80,12 +80,12 @@ public abstract class AuxiliaryTypeHandler {
 
                 @Override
                 public Set<OWLAxiom> visit(OWLClass desc) {
-                    return Collections.<OWLAxiom>singleton(DataFactory.get().getOWLSubClassOfAxiom(desc, type.getEntity()));
+                    return Collections.singleton(DataFactory.get().getOWLSubClassOfAxiom(desc, type.getEntity()));
                 }
 
                 @Override
                 public Set<OWLAxiom> visit(OWLNamedIndividual individual) {
-                    return Collections.<OWLAxiom>singleton(DataFactory.get().getOWLClassAssertionAxiom(type.getEntity(), individual));
+                    return Collections.singleton(DataFactory.get().getOWLClassAssertionAxiom(type.getEntity(), individual));
                 }
             });
         }

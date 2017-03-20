@@ -54,12 +54,7 @@ public final class ApplicationResource implements Resource {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ApplicationResource)) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return obj instanceof ApplicationResource;
     }
 
 

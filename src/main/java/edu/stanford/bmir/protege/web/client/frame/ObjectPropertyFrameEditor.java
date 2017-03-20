@@ -155,7 +155,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
         characteristics.clear();
         characteristics.addAll(object.getFrame().getCharacteristics());
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
             public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
@@ -168,7 +168,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                 domains.setValue(primitiveDatas);
             }
         });
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
             public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
@@ -212,7 +212,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValueSet,
                 new HashSet<>(editedDomains),
                 new HashSet<>(editedRanges),
-                Collections.<OWLObjectProperty>emptySet(),
+                Collections.emptySet(),
                 characteristics);
         return Optional.of(new LabelledFrame<>(previouslySetValue.get().getDisplayName(), frame));
     }

@@ -79,7 +79,7 @@ public class ZipArchiveProjectSourcesExtractor implements RawProjectSourcesExtra
 
         @Override
         public Collection<OWLOntologyDocumentSource> getDocumentSources() {
-            return Lists.<OWLOntologyDocumentSource>newArrayList(new FileDocumentSource(rootOntologyDocument));
+            return Lists.newArrayList(new FileDocumentSource(rootOntologyDocument));
         }
 
         @Override

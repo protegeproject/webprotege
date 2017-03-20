@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ClientObjectWriter<T>  {
 
-    private static final ImmutableMap<String, Object> WRITER_PROPERTIES = ImmutableMap.<String, Object>of(
+    private static final ImmutableMap<String, Object> WRITER_PROPERTIES = ImmutableMap.of(
             JsonGenerator.PRETTY_PRINTING, true
     );
 

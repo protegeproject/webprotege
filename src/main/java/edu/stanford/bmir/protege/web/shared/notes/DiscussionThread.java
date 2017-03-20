@@ -84,7 +84,7 @@ public final class DiscussionThread implements Serializable {
      * @return A (possibly empty) set of {@link Note} objects representing the root notes.  Not {@code null}.
      */
     public Set<Note> getRootNotes() {
-        return new HashSet<Note>(replyToMap.get(Optional.<NoteId>absent()));
+        return new HashSet<Note>(replyToMap.get(Optional.absent()));
     }
 
 

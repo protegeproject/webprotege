@@ -30,7 +30,7 @@ public class OBOTermCrossProduct implements Serializable {
     }
     
     public static OBOTermCrossProduct emptyOBOTermCrossProduct() {
-        return new OBOTermCrossProduct(Optional.<OWLClassData>absent(), new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
+        return new OBOTermCrossProduct(Optional.absent(), new OBOTermRelationships(Collections.emptySet()));
     }
 
     public OBOTermCrossProduct(Optional<OWLClassData> genus, OBOTermRelationships relationships) {

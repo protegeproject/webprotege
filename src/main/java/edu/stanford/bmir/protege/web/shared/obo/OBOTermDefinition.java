@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class OBOTermDefinition extends OBOTermMetaData implements Serializable {
 
-    public static final OBOTermDefinition EMPTY = new OBOTermDefinition(Collections.<OBOXRef>emptyList(), "");
+    public static final OBOTermDefinition EMPTY = new OBOTermDefinition(Collections.emptyList(), "");
 
     private String definition;
 

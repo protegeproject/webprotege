@@ -27,7 +27,7 @@ public enum EntityNameCharType {
 
     private LetterCategory letterCategory;
 
-    private EntityNameCharType(LetterCategory letterCategory) {
+    EntityNameCharType(LetterCategory letterCategory) {
         this.letterCategory = letterCategory;
     }
 
@@ -116,7 +116,7 @@ public enum EntityNameCharType {
     /**
      * A maker for categories of letters.  Splits letters into word letters and non-word letters.
      */
-    static enum LetterCategory {
+    enum LetterCategory {
         WORD,
         NON_WORD
     }

@@ -50,10 +50,10 @@ public abstract class HierarchyChangedEvent<T extends OWLEntity, H> extends Proj
     public Set<OWLEntity> getSignature() {
         Set<OWLEntity> result = new HashSet<OWLEntity>();
         if(child instanceof OWLEntity) {
-            result.add((OWLEntity) child);
+            result.add(child);
         }
         if(parent instanceof OWLEntity) {
-            result.add((OWLEntity) parent);
+            result.add(parent);
         }
         return result;
     }

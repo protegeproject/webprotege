@@ -73,7 +73,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         descriptors = new ArrayList<EntityCrudKit>(kitManager.getKits());
         for (EntityCrudKit descriptor : descriptors) {
             suffixSelectorListBox.addItem(descriptor.getDisplayName());
-            touchedEditors.add(Optional.<EntityCrudKitSuffixSettingsEditor>absent());
+            touchedEditors.add(Optional.absent());
         }
         suffixSelectorListBox.setSelectedIndex(0);
         updateEditor(true);
@@ -174,7 +174,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     @Override
     public Optional<Focusable> getInitialFocusable() {
-        return Optional.<Focusable>of(iriPrefixEditor);
+        return Optional.of(iriPrefixEditor);
     }
 
     @SuppressWarnings("unchecked")
@@ -221,7 +221,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         if(!editedValue.isPresent()) {
             return Optional.absent();
         }
-        return Optional.<EntityCrudKitSettings<?>>of(new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) editedValue.get()));
+        return Optional.of(new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) editedValue.get()));
     }
 
     @Override

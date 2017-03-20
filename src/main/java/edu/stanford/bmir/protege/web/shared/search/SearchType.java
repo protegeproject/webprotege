@@ -16,7 +16,7 @@ public enum SearchType {
 
     private boolean ignoreCase;
 
-    private SearchType(boolean ignoreCase) {
+    SearchType(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
 

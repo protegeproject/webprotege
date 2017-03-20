@@ -101,7 +101,7 @@ public class FormPresenter {
     private Optional<FormElementEditor> getFormElementEditor(FormElementDescriptor descriptor) {
         Optional<ValueEditorFactory<FormDataValue>> editorFactory = getValueEditorFactory(descriptor.getFieldDescriptor());
         if (!editorFactory.isPresent()) {
-            return Optional.<FormElementEditor>absent();
+            return Optional.absent();
         }
         return Optional.of(
                 new FormElementEditorImpl(
@@ -184,7 +184,7 @@ public class FormPresenter {
             );
         }
         else {
-            return Optional.<ValueEditorFactory<FormDataValue>>absent();
+            return Optional.absent();
         }
     }
 

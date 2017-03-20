@@ -24,10 +24,10 @@ public enum NoteType {
     private IRI iri;
 
     // Empty constructor for the purposes of serialization
-    private NoteType() {
+    NoteType() {
     }
 
-    private NoteType(String shortName) {
+    NoteType(String shortName) {
         this.shortName = shortName;
         this.iri = IRI.create(NotesVocabulary.NOTES_VOCABULARY_BASE + shortName);
     }

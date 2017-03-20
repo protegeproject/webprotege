@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChangeHandlers<String>, HasSelectionHandlers<EntitySuggestion>, HasAnchor, HasEnabled, HasPlaceholder, HasFocusHandlers, HasKeyUpHandlers {
 
-    public static enum Mode {SINGLE_LINE, MULTI_LINE}
+    enum Mode {SINGLE_LINE, MULTI_LINE}
 
     /**
      * Sets the line mode for this editor (single or multi-line).

@@ -31,10 +31,10 @@ public class AnnotationPropertyDomainSectionRenderer extends AbstractOWLAxiomIte
                                                  OWLOntology ontology) {
         Set<OWLEntity> domain = ontology.getEntitiesInSignature(item.getDomain(), true);
         if(domain.isEmpty()) {
-            return Lists.<OWLObject>newArrayList(item.getDomain());
+            return Lists.newArrayList(item.getDomain());
         }
         else {
-            return Lists.<OWLObject>newArrayList(domain);
+            return Lists.newArrayList(domain);
         }
     }
 }

@@ -32,7 +32,7 @@ public class OBOIdSuffixSettings extends EntityCrudKitSuffixSettings {
      * For serialization purposes only.
      */
     public OBOIdSuffixSettings() {
-        this(Collections.<UserIdRange>emptyList());
+        this(Collections.emptyList());
     }
 
     public OBOIdSuffixSettings(List<UserIdRange> userIdRanges) {

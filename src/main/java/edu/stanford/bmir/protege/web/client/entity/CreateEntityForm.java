@@ -57,7 +57,7 @@ public class CreateEntityForm extends WebProtegeDialogForm {
     }
 
     public Optional<Focusable> getInitialFocusable() {
-        return Optional.<Focusable>of(entityBrowserTextField);
+        return Optional.of(entityBrowserTextField);
     }
 
     private String getTypeName() {

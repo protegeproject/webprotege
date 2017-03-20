@@ -26,7 +26,7 @@ public enum ChAOVocabulary {
 
     private IRI iri;
 
-    private ChAOVocabulary(String localName) {
+    ChAOVocabulary(String localName) {
         this.localName = localName;
         this.iri = IRI.create(NotesVocabulary.NOTES_VOCABULARY_BASE + localName);
     }

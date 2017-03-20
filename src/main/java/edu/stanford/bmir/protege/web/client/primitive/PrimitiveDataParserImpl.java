@@ -54,14 +54,14 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
 
     private void parsePrimitiveDataFromTrimmedContent(final String trimmedContent, final Optional<String> lang, Set<PrimitiveType> allowedTypes, final PrimitiveDataParserCallback callback) {
         if (trimmedContent.isEmpty()) {
-            callback.onSuccess(Optional.<OWLPrimitiveData>absent());
+            callback.onSuccess(Optional.absent());
             return;
         }
 
         if (lang.isPresent()) {
             if (allowedTypes.contains(PrimitiveType.LITERAL)) {
                 OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
-                callback.onSuccess(Optional.<OWLPrimitiveData>of(literalData));
+                callback.onSuccess(Optional.of(literalData));
             }
             else {
                 // TODO: Literal not expected
@@ -94,15 +94,15 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
 
     private void handleEntityDataParsingResult(Optional<OWLEntityData> result, PrimitiveDataParserCallback callback, String trimmedContent, Optional<String> lang, Set<PrimitiveType> allowedTypes) {
         if (result.isPresent()) {
-            callback.onSuccess(Optional.<OWLPrimitiveData>of(result.get()));
+            callback.onSuccess(Optional.of(result.get()));
         }
         else if (allowedTypes.contains(PrimitiveType.IRI) && isAbsoluteIRI(trimmedContent)) {
             IRIData iriData = new IRIData(IRI.create(trimmedContent));
-            callback.onSuccess(Optional.<OWLPrimitiveData>of(iriData));
+            callback.onSuccess(Optional.of(iriData));
         }
         else if (allowedTypes.contains(PrimitiveType.LITERAL)) {
             OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
-            callback.onSuccess(Optional.<OWLPrimitiveData>of(literalData));
+            callback.onSuccess(Optional.of(literalData));
         }
         else {
             callback.parsingFailure();

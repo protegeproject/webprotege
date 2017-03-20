@@ -23,7 +23,7 @@ public enum MessageStyle {
 
     private Optional<ImageResource> image;
 
-    private MessageStyle(Optional<ImageResource> image) {
+    MessageStyle(Optional<ImageResource> image) {
         this.image = image;
     }
 

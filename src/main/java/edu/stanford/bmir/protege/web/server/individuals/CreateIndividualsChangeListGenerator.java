@@ -27,7 +27,7 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
     @Override
     protected Set<OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity, Project project, ChangeGenerationContext context, Optional<OWLClass> parent) {
         if(parent.isPresent() && !parent.get().isOWLThing()) {
-            return Collections.<OWLAxiom>singleton(project.getDataFactory().getOWLClassAssertionAxiom(parent.get(), freshEntity));
+            return Collections.singleton(project.getDataFactory().getOWLClassAssertionAxiom(parent.get(), freshEntity));
         }
         else {
             return Collections.emptySet();

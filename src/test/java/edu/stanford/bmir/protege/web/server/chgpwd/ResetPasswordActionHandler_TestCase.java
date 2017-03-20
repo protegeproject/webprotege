@@ -85,7 +85,7 @@ public class ResetPasswordActionHandler_TestCase {
 
     @Test
     public void shouldReturnInvalidEmailAddressIfCannotFindAnyUser() {
-        when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.<UserId>empty());
+        when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.empty());
         ResetPasswordResult result = handler.execute(action, context);
         assertThat(result.getResultCode(), is(ResetPasswordResultCode.INVALID_EMAIL_ADDRESS));
     }
@@ -94,7 +94,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void shouldReturnInvalidEmailAddressIfUserEmailAddressDoesNotExist() {
         when(userDetailsManager.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.of(userId));
         when(userDetailsManager.getUserDetails(userId)).thenReturn(Optional.of(userDetails));
-        when(userDetails.getEmailAddress()).thenReturn(Optional.<String>empty());
+        when(userDetails.getEmailAddress()).thenReturn(Optional.empty());
         ResetPasswordResult result = handler.execute(action, context);
         assertThat(result.getResultCode(), is(ResetPasswordResultCode.INVALID_EMAIL_ADDRESS));
     }

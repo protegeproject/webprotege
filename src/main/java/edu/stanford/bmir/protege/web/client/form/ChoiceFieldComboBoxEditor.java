@@ -80,10 +80,10 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
     public Optional<FormDataValue> getValue() {
         int selIndex = comboBox.getSelectedIndex();
         if(selIndex < 1) {
-            return Optional.<FormDataValue>absent();
+            return Optional.absent();
         }
         FormDataValue selData = choiceDescriptors.get(selIndex - 1).getValue();
-        return Optional.<FormDataValue>of(selData);
+        return Optional.of(selData);
     }
 
     @Override

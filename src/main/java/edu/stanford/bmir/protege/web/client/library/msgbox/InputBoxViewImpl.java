@@ -45,7 +45,7 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
 
     @Override
     public Optional<Focusable> getInitialFocusable() {
-        return Optional.<Focusable>of(inputArea);
+        return Optional.of(inputArea);
     }
 
     @Override

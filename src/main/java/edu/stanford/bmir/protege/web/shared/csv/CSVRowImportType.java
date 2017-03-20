@@ -18,7 +18,7 @@ public enum CSVRowImportType {
 
     private EntityType<?> entityType;
 
-    private CSVRowImportType(String displayName, EntityType<?> entityType) {
+    CSVRowImportType(String displayName, EntityType<?> entityType) {
         this.displayName = displayName;
         this.entityType = entityType;
     }

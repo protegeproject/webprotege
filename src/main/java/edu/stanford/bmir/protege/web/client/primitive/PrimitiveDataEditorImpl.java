@@ -354,10 +354,10 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void clearValue() {
         view.setText("");
-        view.setPrimitiveDataStyleName(Optional.<String>absent());
+        view.setPrimitiveDataStyleName(Optional.absent());
         languageEditor.setValue("");
         dirty = false;
-        setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
+        setCurrentData(Optional.absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 
     @Override
@@ -442,7 +442,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         primitiveDataParser.parsePrimitiveData(trimmedText, languageEditor.getValue(), allowedTypes, new PrimitiveDataParserCallback() {
             @Override
             public void parsingFailure() {
-                setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.FIRE_EVENTS);
+                setCurrentData(Optional.absent(), EventStrategy.FIRE_EVENTS);
                 showErrorLabel();
             }
 
@@ -514,10 +514,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         if (!iri.isAbsolute()) {
             return false;
         }
-        if (!"http".equalsIgnoreCase(iri.getScheme())) {
-            return false;
-        }
-        return true;
+        return "http".equalsIgnoreCase(iri.getScheme());
     }
 
     private void setIconInsetStyleName(Optional<String> name) {

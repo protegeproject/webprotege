@@ -53,7 +53,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     @Override
     public Optional<Focusable> getInitialFocusable() {
-        return Optional.<Focusable>of(displayNameField);
+        return Optional.of(displayNameField);
     }
 
     @Override

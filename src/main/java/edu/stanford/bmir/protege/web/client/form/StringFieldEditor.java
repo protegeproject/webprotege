@@ -141,10 +141,10 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     public Optional<FormDataValue> getValue() {
         Optional<OWLPrimitiveData> editedValue = editor.getValue();
         if(!editedValue.isPresent()) {
-            return Optional.<FormDataValue>absent();
+            return Optional.absent();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
-        return Optional.<FormDataValue>of(FormDataPrimitive.get(literalData.getLiteral()));
+        return Optional.of(FormDataPrimitive.get(literalData.getLiteral()));
     }
 
     @Override

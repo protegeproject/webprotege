@@ -40,7 +40,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
     public void lookupEntity(String displayName, final Set<EntityType<?>> allowedEntityTypes, final AsyncCallback<Optional<OWLEntityData>> callback) {
         final String trimmedContent = displayName.trim();
         if(allowedEntityTypes.isEmpty()) {
-            callback.onSuccess(Optional.<OWLEntityData>absent());
+            callback.onSuccess(Optional.absent());
             return;
         }
         if(freshEntitiesHandler.isRegisteredFreshEntity(displayName)) {

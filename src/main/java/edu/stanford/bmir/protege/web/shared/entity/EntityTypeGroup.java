@@ -27,7 +27,7 @@ public enum EntityTypeGroup {
 
     private String displayName;
 
-    private EntityTypeGroup(String displayName, EntityType<?> ... entityTypes) {
+    EntityTypeGroup(String displayName, EntityType<?>... entityTypes) {
         this.entityTypes = Collections.unmodifiableList(new ArrayList<EntityType<?>>(Arrays.asList(entityTypes)));
         this.displayName = displayName;
     }

@@ -15,7 +15,7 @@ import java.util.List;
 public interface FrameSectionRenderer<E extends OWLObject, I, R> {
 
 
-    public static enum Formatting {
+    enum Formatting {
         LINE_PER_ITEM,
         ALL_ONE_ONE_LINE
     }
