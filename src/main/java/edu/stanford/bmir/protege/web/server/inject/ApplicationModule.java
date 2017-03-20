@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
+import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
@@ -170,4 +173,10 @@ public class ApplicationModule {
         return handler;
     }
 
+    @Provides
+    @Singleton
+    public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
+            MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
+        return new ProjectEntityCrudKitSettingsRepository(database, converter);
+    }
 }
