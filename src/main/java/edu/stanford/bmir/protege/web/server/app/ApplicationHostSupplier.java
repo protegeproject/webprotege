@@ -4,13 +4,14 @@ import edu.stanford.bmir.protege.web.server.admin.AdminSettingsManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.function.Supplier;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationHostSupplier {
+public class ApplicationHostSupplier implements Supplier<String> {
 
     private final AdminSettingsManager adminSettingsManager;
 
@@ -19,7 +20,8 @@ public class ApplicationHostSupplier {
         this.adminSettingsManager = adminSettingsManager;
     }
 
-    public String getApplicationHost() {
+    @Nonnull
+    public String get() {
         return adminSettingsManager.getAdminSettings().getApplicationLocation().getHost();
     }
 }

@@ -82,7 +82,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                   .append(" at the link below:" );
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
-                directLinkBuilder.append(applicationHostSupplier.getApplicationHost());
+                directLinkBuilder.append(applicationHostSupplier.get());
                 ItemSelection selection = ItemSelection.builder().addEntity(entity).build();
                 ProjectViewPlace place = new ProjectViewPlace(projectId, new PerspectiveId("Classes"), selection);
                 ProjectViewPlaceTokenizer tokenizer = new ProjectViewPlaceTokenizer();
