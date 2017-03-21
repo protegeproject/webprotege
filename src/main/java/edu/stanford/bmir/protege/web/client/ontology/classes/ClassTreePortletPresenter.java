@@ -77,6 +77,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static java.util.Collections.singletonList;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -1061,11 +1062,11 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         deleteClassAction.setEnabled(false);
         watchClassAction.setEnabled(false);
         permissionChecker.hasPermission(CREATE_CLASS,
-                                        canCreateClass -> createClassAction.setEnabled(canCreateClass));
+                                        createClassAction::setEnabled);
         permissionChecker.hasPermission(DELETE_CLASS,
-                                        canDeleteClass -> deleteClassAction.setEnabled(canDeleteClass));
+                                        deleteClassAction::setEnabled);
         permissionChecker.hasPermission(WATCH_CHANGES,
-                                        canWatchChanges -> watchClassAction.setEnabled(canWatchChanges));
+                                        watchClassAction::setEnabled);
     }
 
     public String getNodeClsName(final Node node) {
@@ -1097,8 +1098,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         @Override
         public void onFailure(final Throwable caught) {
-            //getEl().unmask();
-            GWT.log("RPC error at getting subclasses of " + clsName, caught);
             if (endCallback != null) {
                 endCallback.onFailure(caught);
             }
@@ -1150,7 +1149,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                 return;
             }
             onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()),
-                            Arrays.asList(subClassData),
+                            singletonList(subClassData),
                             false);
             selectPathInTree(pathToRoot);
         }
@@ -1180,14 +1179,10 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         @Override
         public void onSuccess(final List<EntityData> result) {
-            GWT.log("Moved successfully class " + clsName, null);
             if (result == null) {
                 //MessageBox.alert("Success", "Class moved successfully.");
             }
             else {
-                GWT.log("Cycle warning after moving class " + clsName + ": " + result, null);
-
-
                 String warningMsg = "<B>WARNING! There is a cycle in the hierarchy: </B><BR><BR>";
                 for (EntityData p : result) {
                     warningMsg += "&nbsp;&nbsp;&nbsp;&nbsp;" + p.getBrowserText() + "<BR>";
