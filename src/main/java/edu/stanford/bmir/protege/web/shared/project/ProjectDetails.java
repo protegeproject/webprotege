@@ -51,6 +51,12 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * @param displayName The human readable name for the project.  Not {@code null}.
      * @param owner The owner of the project. Not {@code null}.
      * @param description A description of the project.  Not {@code null}. May be empty.
+     * @param inTrash A flag that specifies whether the project is in the trash.
+     * @param createdAt A timestamp that specifies when the project was created.  A zero value stands for unknown.
+     * @param createdBy A {@link UserId} that identifies the user that created the project.
+     * @param lastModifiedAt A timestamp that specifies when the project was last modified.  A zero value indicates
+     *                       unknown.
+     * @param lastModifiedBy A {@link UserId} that identifies the user that last modified the project.
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public ProjectDetails(@Nonnull ProjectId projectId,
@@ -117,19 +123,35 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
         return inTrash;
     }
 
+    /**
+     * Gets the timestamp of when the project was created.
+     * @return A timestamp.  A value of zero denotes unknown.
+     */
     public long getCreatedAt() {
         return createdAt;
     }
 
+    /**
+     * Gets the user who created the project.
+     * @return A {@link UserId} of the user who created the project.
+     */
     @Nonnull
     public UserId getCreatedBy() {
         return createdBy;
     }
 
+    /**
+     * Gets the timestamp of when the project was modified.
+     * @return A timestamp.  A value of zero denotes unknown.
+     */
     public long getLastModifiedAt() {
         return lastModifiedAt;
     }
 
+    /**
+     * Gets the user who last modified the project.
+     * @return A {@link UserId} of the user who last modified the project.
+     */
     @Nonnull
     public UserId getLastModifiedBy() {
         return lastModifiedBy;
