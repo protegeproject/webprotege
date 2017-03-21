@@ -53,15 +53,15 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * @param description A description of the project.  Not {@code null}. May be empty.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public ProjectDetails(ProjectId projectId,
-                          String displayName,
-                          String description,
-                          UserId owner,
+    public ProjectDetails(@Nonnull ProjectId projectId,
+                          @Nonnull String displayName,
+                          @Nonnull String description,
+                          @Nonnull UserId owner,
                           boolean inTrash,
                           long createdAt,
-                          UserId createdBy,
+                          @Nonnull UserId createdBy,
                           long lastModifiedAt,
-                          UserId lastModifiedBy) {
+                          @Nonnull UserId lastModifiedBy) {
         this.projectId = checkNotNull(projectId);
         this.displayName = checkNotNull(displayName);
         this.owner = checkNotNull(owner);
