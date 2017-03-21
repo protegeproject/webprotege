@@ -22,7 +22,7 @@ import static edu.stanford.bmir.protege.web.server.user.UserRecordConverter.*;
  */
 public class UserRecordRepository {
 
-    private static final String COLLECTION_NAME = "UserRecords";
+    private static final String COLLECTION_NAME = "Users";
 
     private UserRecordConverter converter = new UserRecordConverter();
 
