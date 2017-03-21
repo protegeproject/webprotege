@@ -24,7 +24,7 @@ import static edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntit
  */
 public class ProjectEntityCrudKitSettingsRepository {
 
-    public static final String COLLECTION_NAME = "projectEntityCrudKitSettings";
+    public static final String COLLECTION_NAME = "EntityCrudKitSettings";
 
     @Nonnull
     private final MongoCollection<Document> collection;
