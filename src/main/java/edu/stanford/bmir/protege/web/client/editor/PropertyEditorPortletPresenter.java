@@ -10,10 +10,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -21,20 +18,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 22 Mar 2017
  */
 @Portlet(
-        id = "portlet.individualeditor",
-        title = "Individual Editor",
-        tooltip = "Provides an editor that allows individuals to be edited"
+        id = "portlet.propertyeditor",
+        title = "Property Editor",
+        tooltip = "Provides an editor that allows property descriptions to be edited"
 )
-public class NamedIndividualEditorPortletPresenter extends AbstractWebProtegePortletPresenter {
+public class PropertyEditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final EditorPortletPresenter editorPresenter;
 
     @Inject
-    public NamedIndividualEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
-                                                 @Nonnull ProjectId projectId,
-                                                 @Nonnull EditorPortletPresenter editorPresenter) {
+    public PropertyEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                          @Nonnull ProjectId projectId,
+                                          @Nonnull EditorPortletPresenter editorPresenter) {
         super(selectionModel, projectId);
-        this.editorPresenter = checkNotNull(editorPresenter);
+        this.editorPresenter = editorPresenter;
     }
 
     @Override
@@ -47,7 +44,9 @@ public class NamedIndividualEditorPortletPresenter extends AbstractWebProtegePor
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         entityData.ifPresent(entity -> {
-            if(entity.isOWLNamedIndividual()) {
+            if(entity.isOWLObjectProperty()
+                    || entity.isOWLDataProperty()
+                    || entity.isOWLAnnotationProperty()) {
                 editorPresenter.handleAfterSetEntity(entityData);
             }
             else {
@@ -58,4 +57,5 @@ public class NamedIndividualEditorPortletPresenter extends AbstractWebProtegePor
             editorPresenter.handleAfterSetEntity(Optional.empty());
         }
     }
+
 }
