@@ -613,18 +613,17 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
             @Override
             public void handleSuccess(CreateClassesResult result) {
-                Set<OWLClass> createdClasses = result.getCreatedClasses();
+                Set<OWLClassData> createdClasses = result.getCreatedClasses();
                 for (TreeNode node : getSelectedTreeNodes()) {
                     Set<OWLClass> existingClasses = new HashSet<OWLClass>();
                     for (Node childNode : node.getChildNodes()) {
                         OWLClass childCls = DataFactory.getOWLClass(getNodeClsName(childNode));
                         existingClasses.add(childCls);
                     }
-                    for (OWLClass createdCls : createdClasses) {
-                        if (!existingClasses.contains(createdCls)) {
-                            final SubclassEntityData entityData = new SubclassEntityData(createdCls.getIRI().toString(),
-                                                                                         result.getBrowserText(
-                                                                                                 createdCls).or("" ),
+                    for (OWLClassData createdCls : createdClasses) {
+                        if (!existingClasses.contains(createdCls.getEntity())) {
+                            final SubclassEntityData entityData = new SubclassEntityData(createdCls.getEntity().getIRI().toString(),
+                                                                                         createdCls.getBrowserText(),
                                                                                          Collections.emptySet(),
                                                                                          0);
                             entityData.setValueType(ValueType.Cls);

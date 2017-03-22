@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableResult;
-import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.HashSet;
@@ -14,26 +14,26 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
  */
-public class CreateClassesResult extends RenderableResult {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class CreateClassesResult implements Result {
 
     private ObjectPath<OWLClass> superClassPathToRoot;
 
-    private Set<OWLClass> createdClasses = new HashSet<OWLClass>();
+    private Set<OWLClassData> createdClasses = new HashSet<>();
 
     private CreateClassesResult() {
     }
 
-    public CreateClassesResult(ObjectPath<OWLClass> superClassPathToRoot, Set<OWLClass> createdClasses, BrowserTextMap browserTextMap) {
-        super(browserTextMap);
+    public CreateClassesResult(ObjectPath<OWLClass> superClassPathToRoot, Set<OWLClassData> createdClasses) {
         this.superClassPathToRoot = superClassPathToRoot;
-        this.createdClasses = createdClasses;
+        this.createdClasses = new HashSet<>(createdClasses);
     }
 
     public ObjectPath<OWLClass> getSuperClassPathToRoot() {
         return superClassPathToRoot;
     }
 
-    public Set<OWLClass> getCreatedClasses() {
-        return new HashSet<OWLClass>(createdClasses);
+    public Set<OWLClassData> getCreatedClasses() {
+        return new HashSet<>(createdClasses);
     }
 }
