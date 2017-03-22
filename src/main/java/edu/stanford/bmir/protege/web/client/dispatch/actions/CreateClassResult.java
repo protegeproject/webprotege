@@ -49,11 +49,7 @@ public class CreateClassResult implements GetObjectResult<OWLClassData>, HasEven
     public OWLClassData getObject() {
         return cls;
     }
-
-    public List<OWLClass> getSuperClasses() {
-        return Arrays.asList(pathToRoot.get(0));
-    }
-
+    
     /**
      * Gets the path to root, which is non-empty.
      * @return A non-empty path to root.
