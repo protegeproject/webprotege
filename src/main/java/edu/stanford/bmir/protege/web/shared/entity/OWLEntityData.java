@@ -5,6 +5,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,7 +21,7 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
 
     public OWLEntityData(OWLEntity entity, String browserText) {
         super(entity);
-        this.browserText = browserText;
+        this.browserText = checkNotNull(browserText);
     }
 
     public OWLEntity getEntity() {
