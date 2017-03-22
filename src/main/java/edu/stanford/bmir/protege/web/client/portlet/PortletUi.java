@@ -28,4 +28,6 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
     void addPortletAction(PortletAction action);
 
     void setViewTitle(String title);
+
+    void setNothingSelectedVisible(boolean nothingSelectedVisible);
 }
