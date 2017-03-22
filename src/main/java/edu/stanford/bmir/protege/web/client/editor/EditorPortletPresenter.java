@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -44,7 +46,6 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setViewTitle("Nothing selected");
         portletUi.setWidget(editorView);
         editorPresenter.updatePermissionBasedItems();
         editorPresenter.setHasBusy(portletUi);
@@ -55,18 +56,23 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                             event -> editorPresenter.updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
-        handleAfterSetEntity(getSelectedEntity());
+//        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        GWT.log("handleAfterSetEntity " + entity);
+        setViewTitle("Dont' know");
         if(!entity.isPresent()) {
-            setViewTitle("Nothing selected");
-            return;
+            setViewTitle("Nothing selected!");
+            setNothingSelectedVisible(true);
         }
-        setViewTitle(entity.get().getEntityType().getPrintName() + " description");
-        final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
-        editorPresenter.setEditorContext(editorContext);
+        else {
+            setViewTitle(entity.get().getEntityType().getPrintName() + " description");
+            setNothingSelectedVisible(false);
+            final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
+            editorPresenter.setEditorContext(editorContext);
+        }
     }
 
     public static Optional<OWLEntityContext> getEditorContext(Optional<OWLEntity> sel, ProjectId projectId) {
