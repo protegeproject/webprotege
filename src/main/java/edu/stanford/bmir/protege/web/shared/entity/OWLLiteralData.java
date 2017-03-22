@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
@@ -9,6 +8,8 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Author: Matthew Horridge<br>
@@ -64,14 +65,12 @@ public final class OWLLiteralData extends OWLPrimitiveData implements HasLexical
         return getLiteral().getLang();
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("OWLLiteralData");
-        sb.append("(");
-        sb.append(getLiteral());
-        sb.append(")");
-        return sb.toString();
+        return toStringHelper("OWLLiteralData" )
+                .addValue(getLiteral())
+                .toString();
     }
 
     @Override
