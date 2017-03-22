@@ -4,6 +4,7 @@
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.frame">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
 
@@ -15,17 +16,17 @@
         <div style="height: 10px;"/>
 
 
-        <g:Label text="Types" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_types}" addStyleNames="{wp.style.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="types"/>
 
         <div style="height: 15px;"/>
 
-        <g:Label text="Properties" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
         <frame:PropertyValueListEditor ui:field="assertions"/>
 
         <div style="height: 15px;"/>
 
-        <g:Label text="Same As" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_sameIndividual}" addStyleNames="{wp.style.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="sameAs"/>
 
     </g:HTMLPanel>
