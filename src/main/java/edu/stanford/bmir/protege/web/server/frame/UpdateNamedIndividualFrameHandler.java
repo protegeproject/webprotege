@@ -51,9 +51,4 @@ public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandle
     protected String getChangeDescription(LabelledFrame<NamedIndividualFrame> from, LabelledFrame<NamedIndividualFrame> to) {
         return "Edited individual";
     }
-
-//    @Override
-//    protected EntityFrameChangedEvent<OWLNamedIndividual, ?> createEvent(OWLNamedIndividual subject, OWLAPIProject project) {
-//        return new NamedIndividualFrameChangedEvent(subject, project.getProjectId());
-//    }
 }
