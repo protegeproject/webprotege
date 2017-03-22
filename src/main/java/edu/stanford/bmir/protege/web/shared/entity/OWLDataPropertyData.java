@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -62,5 +64,14 @@ public final class OWLDataPropertyData extends OWLPropertyData {
         }
         OWLDataPropertyData other = (OWLDataPropertyData) obj;
         return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("OWLDataPropertyData" )
+                .addValue(getEntity())
+                .add("browserText", getBrowserText())
+                .toString();
     }
 }
