@@ -64,7 +64,7 @@ public final class OWLAnnotationPropertyData extends OWLPropertyData {
         OWLAnnotationPropertyData other = (OWLAnnotationPropertyData) obj;
         return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
     }
-    
+
     @Override
     public String toString() {
         return toStringHelper("OWLAnnotationPropertyData" )
