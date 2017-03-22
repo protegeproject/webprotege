@@ -6,11 +6,16 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
+import static org.semanticweb.owlapi.model.EntityType.DATA_PROPERTY;
+import static org.semanticweb.owlapi.model.EntityType.OBJECT_PROPERTY;
 
 /**
  * Matthew Horridge
@@ -36,26 +41,9 @@ public class PropertyEditorPortletPresenter extends AbstractWebProtegePortletPre
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        editorPresenter.setTrackSelection(false);
+        editorPresenter.setDisplayedTypes(OBJECT_PROPERTY,
+                                          DATA_PROPERTY,
+                                          ANNOTATION_PROPERTY);
         editorPresenter.start(portletUi, eventBus);
-        handleAfterSetEntity(getSelectedEntity());
     }
-
-    @Override
-    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        entityData.ifPresent(entity -> {
-            if(entity.isOWLObjectProperty()
-                    || entity.isOWLDataProperty()
-                    || entity.isOWLAnnotationProperty()) {
-                editorPresenter.handleAfterSetEntity(entityData);
-            }
-            else {
-                editorPresenter.handleAfterSetEntity(Optional.empty());
-            }
-        });
-        if(!entityData.isPresent()) {
-            editorPresenter.handleAfterSetEntity(Optional.empty());
-        }
-    }
-
 }
