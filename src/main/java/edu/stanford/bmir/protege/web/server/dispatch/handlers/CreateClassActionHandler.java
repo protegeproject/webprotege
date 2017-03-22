@@ -69,7 +69,9 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
         BrowserTextMap.Builder browserTextMap = new BrowserTextMap.Builder();
         browserTextMap.add(subclass);
         browserTextMap.addAll(pathToRoot);
-        return new CreateClassResult(subclass, pathToRoot, browserTextMap.build(project.getRenderingManager()), eventList);
+        return new CreateClassResult(project.getRenderingManager().getRendering(subclass),
+                                     pathToRoot,
+                                     eventList);
     }
 
     private ObjectPath<OWLClass> getPathToRoot(Project project, OWLClass subClass, OWLClass superClass) {

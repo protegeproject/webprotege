@@ -1138,10 +1138,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         @Override
         public void handleSuccess(final CreateClassResult result) {
-            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(),
-                                                                     result.getBrowserTextMap()
-                                                                           .getBrowserText(result.getObject())
-                                                                           .or("" ),
+            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getEntity().getIRI().toString(),
+                                                                     result.getObject().getBrowserText(),
                                                                      Collections.emptyList(),
                                                                      0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
