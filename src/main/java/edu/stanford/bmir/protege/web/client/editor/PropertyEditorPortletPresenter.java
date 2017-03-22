@@ -6,12 +6,9 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
 import static org.semanticweb.owlapi.model.EntityType.DATA_PROPERTY;
@@ -23,7 +20,7 @@ import static org.semanticweb.owlapi.model.EntityType.OBJECT_PROPERTY;
  * 22 Mar 2017
  */
 @Portlet(
-        id = "portlet.propertyeditor",
+        id = "portlets.PropertyEditor",
         title = "Property Editor",
         tooltip = "Provides an editor that allows property descriptions to be edited"
 )

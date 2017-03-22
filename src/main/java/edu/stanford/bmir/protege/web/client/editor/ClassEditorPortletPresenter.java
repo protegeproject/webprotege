@@ -19,7 +19,7 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
  * 22 Mar 2017
  */
 @Portlet(
-        id = "portlet.classeditor",
+        id = "portlets.ClassEditor",
         title = "Class Editor",
         tooltip = "Provides an editor that allows class descriptions to be edited"
 )
