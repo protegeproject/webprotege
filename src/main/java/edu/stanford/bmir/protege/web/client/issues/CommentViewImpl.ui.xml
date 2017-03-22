@@ -84,7 +84,7 @@
             <g:Label ui:field="userNameField" addStyleNames="{style.author}" debugId="userNameField"/>
             <timelabel:ElapsedTimeLabel ui:field="createdAtField" addStyleNames="{style.date}"/>
             <g:HTMLPanel ui:field="updatedAtPanel">
-                <g:InlineLabel text="Last updated " addStyleNames="{style.date}"/>
+                <g:InlineLabel text="{msg.lastUpdated} " addStyleNames="{style.date}"/>
                 <timelabel:ElapsedTimeLabel ui:field="updatedAtField" addStyleNames="{style.date}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
