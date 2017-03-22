@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
+import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.filter.FilterButtonImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
@@ -51,6 +52,9 @@ public class PortletUiImpl extends Composite implements PortletUi {
     protected BusyView busyView;
 
     @Nonnull
+    private final NothingSelectedView nothingSelectedView;
+
+    @Nonnull
     private final ForbiddenView forbiddenView;
 
     private Optional<IsWidget> content;
@@ -62,9 +66,11 @@ public class PortletUiImpl extends Composite implements PortletUi {
     private String viewTitle = "View";
 
     @Inject
-    public PortletUiImpl(@Nonnull ForbiddenView forbiddenView) {
+    public PortletUiImpl(@Nonnull ForbiddenView forbiddenView,
+                         @Nonnull NothingSelectedView nothingSelectedView) {
         initWidget(ourUiBinder.createAndBindUi(this));
         this.forbiddenView = forbiddenView;
+        this.nothingSelectedView = nothingSelectedView;
         setToolbarVisible(false);
         setMenuButtonVisible(false);
     }
@@ -169,6 +175,19 @@ public class PortletUiImpl extends Composite implements PortletUi {
         if (forbiddenVisible) {
             setToolbarVisible(false);
             contentHolder.setWidget(forbiddenView);
+        }
+        else {
+            setToolbarVisible(toolbarVisible);
+            content.ifPresent(widget -> contentHolder.setWidget(widget));
+        }
+    }
+
+    @Override
+    public void setNothingSelectedVisible(boolean nothingSelectedVisible) {
+        GWT.log("Set nothing selected: " + nothingSelectedVisible);
+        if(nothingSelectedVisible) {
+            setToolbarVisible(false);
+            contentHolder.setWidget(nothingSelectedView);
         }
         else {
             setToolbarVisible(toolbarVisible);
