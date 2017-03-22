@@ -60,7 +60,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
         RenderingManager renderingManager = project.getRenderingManager();
         String rendering = renderingManager.getShortForm(action.getSubject());
         LabelledFrame<NamedIndividualFrame> labelledFrame = new LabelledFrame<>(rendering, frame);
-        return new GetNamedIndividualFrameResult(labelledFrame, new BrowserTextMap(frame, renderingManager));
+        return new GetNamedIndividualFrameResult(labelledFrame);
 
     }
 }

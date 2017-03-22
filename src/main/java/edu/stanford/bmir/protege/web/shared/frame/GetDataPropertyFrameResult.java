@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,21 +13,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetDataPropertyFrameResult implements GetObjectResult<LabelledFrame<DataPropertyFrame>>, HasBrowserTextMap {
+public class GetDataPropertyFrameResult implements GetObjectResult<LabelledFrame<DataPropertyFrame>> {
 
     private LabelledFrame<DataPropertyFrame> frame;
 
-    private BrowserTextMap browserTextMap;
-
-    /**
-     * For serialization only
-     */
+    @GwtSerializationConstructor
     private GetDataPropertyFrameResult() {
     }
 
-    public GetDataPropertyFrameResult(LabelledFrame<DataPropertyFrame> frame, BrowserTextMap browserTextMap) {
+    public GetDataPropertyFrameResult(LabelledFrame<DataPropertyFrame> frame) {
         this.frame = checkNotNull(frame);
-        this.browserTextMap = checkNotNull(browserTextMap);
     }
 
     /**
@@ -41,10 +37,5 @@ public class GetDataPropertyFrameResult implements GetObjectResult<LabelledFrame
 
     public LabelledFrame<DataPropertyFrame> getFrame() {
         return frame;
-    }
-
-    @Override
-    public BrowserTextMap getBrowserTextMap() {
-        return browserTextMap;
     }
 }

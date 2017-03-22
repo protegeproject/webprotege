@@ -46,8 +46,7 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
                 project);
         String label = project.getRenderingManager().getBrowserText(action.getSubject());
         LabelledFrame<AnnotationPropertyFrame> labelledFrame = new LabelledFrame<>(label, frame);
-        BrowserTextMap btm = BrowserTextMap.build(project.getRenderingManager(), frame.getSignature());
-        return new GetAnnotationPropertyFrameResult(labelledFrame, btm);
+        return new GetAnnotationPropertyFrameResult(labelledFrame);
     }
 
     @Override

@@ -10,12 +10,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassFrame>>, HasBrowserTextMap {
+public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassFrame>> {
 
 
     private LabelledFrame<ClassFrame> frame;
-
-    private BrowserTextMap browserTextMap;
 
     /**
      * For serialization purposes only
@@ -23,9 +21,8 @@ public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassF
     private GetClassFrameResult() {
     }
 
-    public GetClassFrameResult(LabelledFrame<ClassFrame> frame, BrowserTextMap browserTextMap) {
+    public GetClassFrameResult(LabelledFrame<ClassFrame> frame) {
         this.frame = frame;
-        this.browserTextMap = browserTextMap;
     }
 
     public LabelledFrame<ClassFrame> getFrame() {
@@ -40,10 +37,5 @@ public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassF
     @Override
     public LabelledFrame<ClassFrame> getObject() {
         return frame;
-    }
-
-    @Override
-    public BrowserTextMap getBrowserTextMap() {
-        return browserTextMap;
     }
 }

@@ -54,7 +54,6 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
                 project.getRenderingManager().getRendering(action.getSubject()),
                 project, TRANSLATOR);
         LabelledFrame<ClassFrame> f = translator.doIT();
-        final BrowserTextMap browserTextMap = new BrowserTextMap(f, project.getRenderingManager());
-        return new GetClassFrameResult(f, browserTextMap);
+        return new GetClassFrameResult(f);
     }
 }
