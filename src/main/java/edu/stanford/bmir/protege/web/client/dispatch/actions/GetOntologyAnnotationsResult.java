@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.annotation.Nonnull;
 

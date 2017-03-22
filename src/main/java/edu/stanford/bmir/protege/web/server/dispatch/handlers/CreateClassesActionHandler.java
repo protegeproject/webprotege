@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,7 @@ import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -65,9 +67,11 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
 
         Set<OWLClass> createdClasses = result.getSubject().get();
 
-        BrowserTextMap browserTextMap = BrowserTextMap.build(project.getRenderingManager(), action.getSuperClass(), createdClasses);
-
-        return new CreateClassesResult(pathToRoot, createdClasses, browserTextMap);
+        Set<OWLClassData> classData = createdClasses.stream()
+                                                  .map(cls -> project.getRenderingManager().getRendering(cls))
+                                                  .collect(toSet());
+        return new CreateClassesResult(pathToRoot,
+                                       classData);
     }
 
     private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(Project project, CreateClassesAction action) {

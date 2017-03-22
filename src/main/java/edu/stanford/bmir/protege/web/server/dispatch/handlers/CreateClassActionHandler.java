@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -66,9 +65,6 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     protected CreateClassResult createActionResult(ChangeApplicationResult<OWLClass> changeApplicationResult, CreateClassAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         final OWLClass subclass = changeApplicationResult.getSubject().get();
         final ObjectPath<OWLClass> pathToRoot = getPathToRoot(project, subclass, action.getSuperClass());
-        BrowserTextMap.Builder browserTextMap = new BrowserTextMap.Builder();
-        browserTextMap.add(subclass);
-        browserTextMap.addAll(pathToRoot);
         return new CreateClassResult(project.getRenderingManager().getRendering(subclass),
                                      pathToRoot,
                                      eventList);
