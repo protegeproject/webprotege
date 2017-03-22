@@ -4,6 +4,7 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
 
@@ -15,17 +16,17 @@
 
         <div style="height: 10px;"/>
 
-        <g:Label text="Annotations" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
         <wp:PropertyValueListEditor ui:field="annotations"/>
 
         <div style="height: 10px;"/>
 
-        <g:Label text="Classes" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_classes}" addStyleNames="{wp.style.formLabel}"/>
         <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="Enter a class name"/>
 
         <div style="height: 15px;"/>
 
-        <g:Label text="Properties" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
         <wp:PropertyValueListEditor ui:field="properties"/>
 
     </g:HTMLPanel>
