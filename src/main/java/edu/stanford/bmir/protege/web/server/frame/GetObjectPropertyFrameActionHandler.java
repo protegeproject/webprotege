@@ -47,8 +47,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractHasProjectActio
                 project.getRenderingManager().getRendering(action.getSubject()),
                 project, TRANSLATOR);
         LabelledFrame<ObjectPropertyFrame> f = translator.doIT();
-        final BrowserTextMap browserTextMap = new BrowserTextMap(f, project.getRenderingManager());
-        return new GetObjectPropertyFrameResult(f, browserTextMap);
+        return new GetObjectPropertyFrameResult(f);
     }
 
     @Override
