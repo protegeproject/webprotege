@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
@@ -42,7 +43,9 @@ public class GetObjectPropertyFrameActionHandler extends AbstractHasProjectActio
 
     @Override
     protected GetObjectPropertyFrameResult execute(GetObjectPropertyFrameAction action, Project project, ExecutionContext executionContext) {
-        FrameActionResultTranslator<ObjectPropertyFrame, OWLObjectProperty> translator = new FrameActionResultTranslator<>(action.getSubject(), project, TRANSLATOR);
+        FrameActionResultTranslator<ObjectPropertyFrame, OWLObjectPropertyData> translator = new FrameActionResultTranslator<>(
+                project.getRenderingManager().getRendering(action.getSubject()),
+                project, TRANSLATOR);
         LabelledFrame<ObjectPropertyFrame> f = translator.doIT();
         final BrowserTextMap browserTextMap = new BrowserTextMap(f, project.getRenderingManager());
         return new GetObjectPropertyFrameResult(f, browserTextMap);

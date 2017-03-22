@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -14,14 +16,14 @@ public final class PropertyIndividualValue extends ObjectPropertyValue {
     private PropertyIndividualValue() {
     }
 
-    public PropertyIndividualValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
+    public PropertyIndividualValue(OWLObjectPropertyData property, OWLNamedIndividualData value, PropertyValueState propertyValueState) {
         super(property, value, propertyValueState);
     }
 
 
     @Override
-    public OWLNamedIndividual getValue() {
-        return (OWLNamedIndividual) super.getValue();
+    public OWLNamedIndividualData getValue() {
+        return (OWLNamedIndividualData) super.getValue();
     }
 
     @Override

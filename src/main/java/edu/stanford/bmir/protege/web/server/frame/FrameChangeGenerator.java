@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.*;
 
@@ -23,7 +24,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/01/2013
  */
-public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntity> implements ChangeListGenerator<S> {
+public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityData> implements ChangeListGenerator<S> {
 
 
     private final F from;

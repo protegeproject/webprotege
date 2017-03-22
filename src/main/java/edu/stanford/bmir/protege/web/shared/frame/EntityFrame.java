@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  *     A marker interface for entity frames.
  * </p>
  */
-public interface EntityFrame<E extends OWLEntity> extends Frame<E> {
+public interface EntityFrame<E extends OWLEntityData> extends Frame<E> {
 
 
 }

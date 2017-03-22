@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -15,34 +18,34 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class DataPropertyFrameTranslator implements FrameTranslator<DataPropertyFrame, OWLDataProperty> {
+public class DataPropertyFrameTranslator implements FrameTranslator<DataPropertyFrame, OWLDataPropertyData> {
 
     @Override
-    public DataPropertyFrame getFrame(OWLDataProperty subject, OWLOntology rootOntology, Project project) {
-        Set<OWLAxiom> propertyValueAxioms = new HashSet<OWLAxiom>();
-        Set<OWLClass> domains = new HashSet<OWLClass>();
-        Set<OWLDatatype> ranges = new HashSet<OWLDatatype>();
+    public DataPropertyFrame getFrame(OWLDataPropertyData subject, OWLOntology rootOntology, Project project) {
+        Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
+        Set<OWLClassData> domains = new HashSet<>();
+        Set<OWLDatatypeData> ranges = new HashSet<>();
         boolean functional = false;
         for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-            propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getIRI()));
-            for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject)) {
+            propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
+            for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject.getEntity())) {
                 if(!ax.getDomain().isAnonymous()) {
-                    domains.add(ax.getDomain().asOWLClass());
+                    domains.add(project.getRenderingManager().getRendering(ax.getDomain().asOWLClass()));
                 }
             }
-            for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject)) {
+            for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject.getEntity())) {
                 if(ax.getRange().isDatatype()) {
-                    ranges.add(ax.getRange().asOWLDatatype());
+                    ranges.add(project.getRenderingManager().getRendering(ax.getRange().asOWLDatatype()));
                 }
             }
-            if(EntitySearcher.isFunctional(subject, ontology)) {
+            if(EntitySearcher.isFunctional(subject.getEntity(), ontology)) {
                 functional = true;
             }
         }
-        Set<PropertyValue> propertyValues = new HashSet<PropertyValue>();
+        Set<PropertyValue> propertyValues = new HashSet<>();
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject, ax, rootOntology, PropertyValueState.ASSERTED));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, PropertyValueState.ASSERTED, project.getRenderingManager()));
         }
 
         PropertyValueList pvl = new PropertyValueList(propertyValues);
@@ -54,18 +57,18 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         Set<OWLAxiom> result = new HashSet<OWLAxiom>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            result.addAll(translator.getAxioms(frame.getSubject(), pv, mode));
+            result.addAll(translator.getAxioms(frame.getSubject().getEntity(), pv, mode));
         }
-        for(OWLClass domain : frame.getDomains()) {
-            OWLAxiom ax = DataFactory.get().getOWLDataPropertyDomainAxiom(frame.getSubject(), domain);
+        for(OWLClassData domain : frame.getDomains()) {
+            OWLAxiom ax = DataFactory.get().getOWLDataPropertyDomainAxiom(frame.getSubject().getEntity(), domain.getEntity());
             result.add(ax);
         }
-        for(OWLDatatype range : frame.getRanges()) {
-            OWLAxiom ax = DataFactory.get().getOWLDataPropertyRangeAxiom(frame.getSubject(), range);
+        for(OWLDatatypeData range : frame.getRanges()) {
+            OWLAxiom ax = DataFactory.get().getOWLDataPropertyRangeAxiom(frame.getSubject().getEntity(), range.getEntity());
             result.add(ax);
         }
         if(frame.isFunctional()) {
-            result.add(DataFactory.get().getOWLFunctionalDataPropertyAxiom(frame.getSubject()));
+            result.add(DataFactory.get().getOWLFunctionalDataPropertyAxiom(frame.getSubject().getEntity()));
         }
         return result;
     }

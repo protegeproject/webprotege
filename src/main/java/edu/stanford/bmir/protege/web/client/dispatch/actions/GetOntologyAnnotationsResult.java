@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.annotation.Nonnull;
@@ -15,30 +17,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetOntologyAnnotationsResult implements Result, HasBrowserTextMap {
+public class GetOntologyAnnotationsResult implements Result {
 
-    private ImmutableList<OWLAnnotation> annotations;
+    private ImmutableList<PropertyAnnotationValue> annotations;
 
-    private BrowserTextMap browserTextMap;
 
-    /**
-     * For serialization only
-     */
+    @GwtSerializationConstructor
     private GetOntologyAnnotationsResult() {
     }
 
-    public GetOntologyAnnotationsResult(ImmutableList<OWLAnnotation> annotations, BrowserTextMap browserTextMap) {
+    public GetOntologyAnnotationsResult(ImmutableList<PropertyAnnotationValue> annotations) {
         this.annotations = checkNotNull(annotations);
-        this.browserTextMap = checkNotNull(browserTextMap);
     }
 
     @Nonnull
-    public ImmutableList<OWLAnnotation> getAnnotations() {
+    public ImmutableList<PropertyAnnotationValue> getAnnotations() {
         return annotations;
-    }
-
-    @Override
-    public BrowserTextMap getBrowserTextMap() {
-        return browserTextMap;
     }
 }

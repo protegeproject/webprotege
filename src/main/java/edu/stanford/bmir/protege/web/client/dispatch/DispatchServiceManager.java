@@ -83,6 +83,7 @@ public class DispatchServiceManager {
             }
         }
         requestCount++;
+        GWT.log("[Dispatch] Executing action " + requestCount + "    " + action.getClass().getSimpleName());
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
 

@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
@@ -71,18 +72,9 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     private boolean dirty = false;
 
-    private ProjectId projectId;
-
-    private DispatchServiceManager dispatchServiceManager;
-
-
     @Inject
-    public AnnotationPropertyFrameEditor(ProjectId projectId,
-                                         PropertyValueListEditor annotationsEditor,
-                                         Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                         DispatchServiceManager dispatchServiceManager) {
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
+    public AnnotationPropertyFrameEditor(PropertyValueListEditor annotationsEditor,
+                                         Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider,
@@ -141,36 +133,10 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         dirty = false;
         lastFrame = Optional.of(object);
         final AnnotationPropertyFrame frame = object.getFrame();
-        iriField.setText(frame.getSubject().getIRI().toString());
+        iriField.setText(frame.getSubject().getEntity().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
-                for (OWLEntity cls : frame.getDomains()) {
-                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
-                    if (entityData.isPresent()) {
-                        primitiveDatas.add(entityData.get());
-                    }
-                }
-                domains.setValue(primitiveDatas);
-            }
-        });
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
-                for (OWLEntity dt : frame.getRanges()) {
-                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(dt));
-                    if (entityData.isPresent()) {
-                        primitiveDatas.add(entityData.get());
-                    }
-                }
-                ranges.setValue(primitiveDatas);
-            }
-        });
-
-
+        domains.setValue(new ArrayList<>(frame.getDomains()));
+        ranges.setValue(new ArrayList<>(frame.getRanges()));
     }
 
     @Override
@@ -186,16 +152,18 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         if(!lastFrame.isPresent()) {
             return Optional.absent();
         }
-        OWLAnnotationProperty property = DataFactory.getOWLAnnotationProperty(getIRIString());
-        final Set<OWLEntity> domainsClasses = Sets.newHashSet();
+        final Set<OWLEntityData> domainsClasses = Sets.newHashSet();
         for(OWLPrimitiveData data : domains.getValue().get()) {
-            domainsClasses.add((OWLClass) data.getObject());
+            domainsClasses.add((OWLClassData) data);
         }
-        final Set<OWLEntity> rangeTypes = Sets.newHashSet();
+        final Set<OWLEntityData> rangeTypes = Sets.newHashSet();
         for(OWLPrimitiveData data : ranges.getValue().get()) {
-            rangeTypes.add((OWLEntity) data.getObject());
+            rangeTypes.add((OWLEntityData) data);
         }
-        AnnotationPropertyFrame frame = new AnnotationPropertyFrame(property, annotations.getValue().get().getAnnotationPropertyValues(), domainsClasses, rangeTypes);
+        AnnotationPropertyFrame frame = new AnnotationPropertyFrame(lastFrame.get().getFrame().getSubject(),
+                                                                    annotations.getValue().get().getAnnotationPropertyValues(),
+                                                                    domainsClasses,
+                                                                    rangeTypes);
         return Optional.of(new LabelledFrame<>(lastFrame.get().getDisplayName(), frame));
     }
 

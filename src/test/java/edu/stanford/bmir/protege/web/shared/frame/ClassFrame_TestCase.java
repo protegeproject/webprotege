@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,16 +37,16 @@ public class ClassFrame_TestCase {
     private ClassFrame otherClassFrame;
 
     @Mock
-    private OWLClass subject;
+    private OWLClassData subject;
 
     @Mock
-    private OWLClass cls;
+    private OWLClassData cls;
 
     @Mock
     private PropertyValue propertyValue;
 
 
-    private Set<OWLClass> classes;
+    private Set<OWLClassData> classes;
 
     private Set<PropertyValue> propertyValues;
 
@@ -112,18 +113,5 @@ public class ClassFrame_TestCase {
     @Test
     public void shouldReturnSuppliedPropertyValues() {
         assertThat(classFrame.getPropertyValues(), is(propertyValues));
-    }
-
-    @Test
-    public void shouldReturnSignature() {
-        OWLObjectProperty property = mock(OWLObjectProperty.class);
-        when(property.getSignature()).thenReturn(Collections.singleton(property));
-        when(propertyValue.getProperty()).thenReturn(property);
-        OWLClass value = mock(OWLClass.class);
-        when(value.getSignature()).thenReturn(Collections.singleton(value));
-        when(propertyValue.getValue()).thenReturn(value);
-        assertThat(classFrame.getSignature(),
-                Matchers.containsInAnyOrder(
-                        subject, cls, property, value));
     }
 }

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,21 +37,21 @@ public class NamedIndividualFrame_TestCase {
     private NamedIndividualFrame otherNamedIndividualFrame;
 
     @Mock
-    private OWLNamedIndividual subject;
+    private OWLNamedIndividualData subject;
 
-    private Set<OWLClass> types;
+    private Set<OWLClassData> types;
 
     @Mock
-    private OWLClass typeA, typeB;
+    private OWLClassData typeA, typeB;
 
     @Mock
     private PropertyValueList propertyValueList;
 
 
-    private Set<OWLNamedIndividual> sameIndividuals;
+    private Set<OWLNamedIndividualData> sameIndividuals;
 
     @Mock
-    private OWLNamedIndividual individualA, individualB;
+    private OWLNamedIndividualData individualA, individualB;
 
     @Before
     public void setUp() throws Exception {
@@ -123,19 +125,4 @@ public class NamedIndividualFrame_TestCase {
     public void shouldReturnSupplied_SameIndividuals() {
         assertThat(namedIndividualFrame.getSameIndividuals(), is(sameIndividuals));
     }
-
-    @Test
-    public void shouldReturnSignature() {
-        OWLEntity property = mock(OWLEntity.class);
-        OWLEntity value = mock(OWLEntity.class);
-        when(propertyValueList.getSignature()).thenReturn(Sets.newHashSet(property, value));
-        assertThat(namedIndividualFrame.getSignature(), Matchers.containsInAnyOrder(
-                subject,
-                typeA, typeB,
-                property, value,
-                individualA, individualB
-        ));
-    }
-
-
 }

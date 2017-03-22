@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsComparator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
@@ -46,8 +45,10 @@ public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHand
                     PropertyValueList list = new PropertyValueList(
                             o.getAnnotations()
                                     .stream()
-                                    .sorted(new OntologyAnnotationsComparator(project))
-                                    .map(annotation -> new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), PropertyValueState.ASSERTED))
+                                    .map(annotation -> new PropertyAnnotationValue(
+                                            project.getRenderingManager().getRendering(annotation.getProperty()),
+                                            project.getRenderingManager().getRendering(annotation.getValue()),
+                                            PropertyValueState.ASSERTED))
                                     .collect(Collectors.toList())
                     );
                     return new OntologyFrame(o.getOntologyID(), list, new WebProtegeOntologyIRIShortFormProvider(rootOntology).getShortForm(o));

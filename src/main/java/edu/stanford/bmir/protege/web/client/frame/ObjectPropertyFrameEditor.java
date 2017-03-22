@@ -25,7 +25,9 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -70,17 +72,11 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     private static ObjectPropertyFrameEditorUiBinder ourUiBinder = GWT.create(ObjectPropertyFrameEditorUiBinder.class);
 
-    private ProjectId projectId;
-
     private Set<ObjectPropertyCharacteristic> characteristics = Sets.newHashSet();
 
-    private final DispatchServiceManager dispatchServiceManager;
-
     @Inject
-    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
         annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
@@ -151,36 +147,12 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     public void setValue(LabelledFrame<ObjectPropertyFrame> object) {
         dirty = false;
         final ObjectPropertyFrame frame = object.getFrame();
-        iriField.setValue(frame.getSubject().getIRI().toString());
+        iriField.setValue(frame.getSubject().getEntity().getIRI().toString());
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
         characteristics.clear();
         characteristics.addAll(object.getFrame().getCharacteristics());
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
-                for (OWLClass cls : frame.getDomains()) {
-                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
-                    if (entityData.isPresent()) {
-                        primitiveDatas.add(entityData.get());
-                    }
-                }
-                domains.setValue(primitiveDatas);
-            }
-        });
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
-                for (OWLClass cls : frame.getRanges()) {
-                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
-                    if (entityData.isPresent()) {
-                        primitiveDatas.add(entityData.get());
-                    }
-                }
-                ranges.setValue(primitiveDatas);
-            }
-        });
+        domains.setValue(new ArrayList<>(object.getFrame().getDomains()));
+        ranges.setValue(new ArrayList<>(object.getFrame().getRanges()));
         previouslySetValue = Optional.of(object);
     }
 
@@ -200,14 +172,14 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         Set<PropertyAnnotationValue> annotationValueSet = new HashSet<PropertyAnnotationValue>();
         annotationValueSet.addAll(annotations.getValue().get().getAnnotationPropertyValues());
         final ObjectPropertyFrame previousFrame = previouslySetValue.get().getFrame();
-        OWLObjectProperty subject = previousFrame.getSubject();
-        List<OWLClass> editedDomains = Lists.newArrayList();
+        OWLObjectPropertyData subject = previousFrame.getSubject();
+        List<OWLClassData> editedDomains = Lists.newArrayList();
         for(OWLPrimitiveData data : domains.getValue().get()) {
-            editedDomains.add((OWLClass) data.getObject());
+            editedDomains.add((OWLClassData) data);
         }
-        List<OWLClass> editedRanges = Lists.newArrayList();
+        List<OWLClassData> editedRanges = Lists.newArrayList();
         for(OWLPrimitiveData data : ranges.getValue().get()) {
-            editedRanges.add((OWLClass) data.getObject());
+            editedRanges.add((OWLClassData) data);
         }
         ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValueSet,
                 new HashSet<>(editedDomains),

@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
@@ -13,6 +16,7 @@ import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,22 +24,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class DataPropertyFrame implements EntityFrame<OWLDataProperty>, HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues  {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues  {
 
-    private OWLDataProperty dataProperty;
+    private OWLDataPropertyData dataProperty;
 
     private PropertyValueList propertyValueList;
 
-    private Set<OWLClass> domains;
+    private Set<OWLClassData> domains;
 
-    private Set<OWLDatatype> ranges;
+    private Set<OWLDatatypeData> ranges;
 
     private boolean functional;
 
     private DataPropertyFrame() {
     }
 
-    public DataPropertyFrame(OWLDataProperty dataProperty, PropertyValueList propertyValueList, Set<OWLClass> domains, Set<OWLDatatype> ranges, boolean functional) {
+    public DataPropertyFrame(OWLDataPropertyData dataProperty, PropertyValueList propertyValueList, Set<OWLClassData> domains, Set<OWLDatatypeData> ranges, boolean functional) {
         this.dataProperty = checkNotNull(dataProperty);
         this.propertyValueList = checkNotNull(propertyValueList);
         this.domains = ImmutableSet.copyOf(checkNotNull(domains));
@@ -44,7 +49,7 @@ public class DataPropertyFrame implements EntityFrame<OWLDataProperty>, HasSigna
     }
 
     @Override
-    public OWLDataProperty getSubject() {
+    public OWLDataPropertyData getSubject() {
         return dataProperty;
     }
 
@@ -71,18 +76,18 @@ public class DataPropertyFrame implements EntityFrame<OWLDataProperty>, HasSigna
     @Override
     public Set<OWLEntity> getSignature() {
         Set<OWLEntity> signature = new HashSet<OWLEntity>();
-        signature.add(dataProperty);
+        signature.add(dataProperty.getEntity());
         signature.addAll(propertyValueList.getSignature());
-        signature.addAll(domains);
-        signature.addAll(ranges);
+        signature.addAll(domains.stream().map(OWLClassData::getEntity).collect(toList()));
+        signature.addAll(ranges.stream().map(OWLDatatypeData::getEntity).collect(toList()));
         return signature;
     }
 
-    public Set<OWLClass> getDomains() {
+    public Set<OWLClassData> getDomains() {
         return domains;
     }
 
-    public Set<OWLDatatype> getRanges() {
+    public Set<OWLDatatypeData> getRanges() {
         return ranges;
     }
 

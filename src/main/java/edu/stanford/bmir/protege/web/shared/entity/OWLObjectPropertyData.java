@@ -27,6 +27,11 @@ public class OWLObjectPropertyData extends OWLPropertyData {
     }
 
     @Override
+    public boolean isOWLAnnotationProperty() {
+        return false;
+    }
+
+    @Override
     public <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E {
         return visitor.visit(this);
     }

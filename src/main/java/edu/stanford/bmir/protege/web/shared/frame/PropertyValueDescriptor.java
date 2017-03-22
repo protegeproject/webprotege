@@ -80,12 +80,12 @@ public class PropertyValueDescriptor {
                     return value.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                         @Override
                         public Optional<PropertyValue> visit(OWLClassData data) throws RuntimeException {
-                            return Optional.of(new PropertyClassValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyClassValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLNamedIndividualData data) throws RuntimeException {
-                            return Optional.of(new PropertyIndividualValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyIndividualValue(propertyData, data, state));
                         }
                     });
                 }
@@ -95,12 +95,12 @@ public class PropertyValueDescriptor {
                     return value.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                         @Override
                         public Optional<PropertyValue> visit(OWLDatatypeData data) throws RuntimeException {
-                            return Optional.of(new PropertyDatatypeValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyDatatypeValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLLiteralData data) throws RuntimeException {
-                            return Optional.of(new PropertyLiteralValue(propertyData.getEntity(), data.getLiteral(), state));
+                            return Optional.of(new PropertyLiteralValue(propertyData, data, state));
                         }
                     });
                 }
@@ -110,42 +110,42 @@ public class PropertyValueDescriptor {
                     return value.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                         @Override
                         public Optional<PropertyValue> visit(OWLLiteralData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getLiteral(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(IRIData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getObject(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLClassData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLObjectPropertyData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLDataPropertyData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLAnnotationPropertyData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLNamedIndividualData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
 
                         @Override
                         public Optional<PropertyValue> visit(OWLDatatypeData data) throws RuntimeException {
-                            return Optional.of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
+                            return Optional.of(new PropertyAnnotationValue(propertyData, data, state));
                         }
                     });
                 }

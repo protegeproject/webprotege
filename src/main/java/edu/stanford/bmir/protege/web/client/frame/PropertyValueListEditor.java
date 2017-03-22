@@ -79,24 +79,14 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public void setValue(final PropertyValueList propertyValueList) {
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(propertyValueList.getSignature())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(final GetEntityDataResult result) {
-                fillUp(propertyValueList, new HasEntityDataProvider() {
-                    @Override
-                    public Optional<OWLEntityData> getEntityData(OWLEntity entity) {
-                        return Optional.of(result.getEntityDataMap().get(entity));
-                    }
-                });
-            }
-        });
+        fillUp(propertyValueList);
     }
 
-    private void fillUp(PropertyValueList propertyValueList, HasEntityDataProvider provider) {
+    private void fillUp(PropertyValueList propertyValueList) {
         List<PropertyValueDescriptor> vals = Lists.newArrayList();
         for (PropertyValue propertyValue : propertyValueList.getPropertyValues()) {
             if (propertyValue.getState() == PropertyValueState.ASSERTED) {
-                Optional<PropertyValueDescriptor> val =    addRelationship(propertyValue, provider);
+                Optional<PropertyValueDescriptor> val =    addRelationship(propertyValue);
                 if (val.isPresent()) {
                     vals.add(val.get());
                 }
@@ -107,26 +97,35 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
 
 
-    private Optional<PropertyValueDescriptor> addRelationship(final PropertyValue propertyValue, HasEntityDataProvider provider) {
-        final Optional<OWLEntityData> propRendering = provider.getEntityData(propertyValue.getProperty());
-        OWLPrimitiveData valueRendering = null;
-        if (propertyValue.getValue() instanceof OWLEntity) {
-            final Optional<OWLEntityData> propertyData = provider.getEntityData((OWLEntity) propertyValue.getValue());
-            valueRendering = propertyData.get();
-        }
-        else if (propertyValue.getValue() instanceof OWLLiteral) {
-            valueRendering = new OWLLiteralData((OWLLiteral) propertyValue.getValue());
-        }
-        else if (propertyValue.getValue() instanceof IRI) {
-            valueRendering = new IRIData((IRI) propertyValue.getValue());
-        }
-        if(propRendering.isPresent()) {
-            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Collections.emptySet()));
-        }
-        else {
-            return Optional.absent();
-        }
-//        addRow(propRendering.isPresent() ? Optional.<OWLPrimitiveData>of(propRendering.get()) : Optional.<OWLPrimitiveData>absent(), Optional.of(valueRendering), propertyValue.getState(), propertyValue.isValueMostSpecific());
+    private Optional<PropertyValueDescriptor> addRelationship(final PropertyValue propertyValue) {
+        return Optional.of(
+                new PropertyValueDescriptor(
+                        propertyValue.getProperty(),
+                        propertyValue.getValue(),
+                        propertyValue.getState(),
+                        propertyValue.isValueMostSpecific(),
+                        Collections.emptySet()
+                )
+        );
+
+//        final Optional<OWLEntityData> propRendering = provider.getEntityData(propertyValue.getProperty());
+//        OWLPrimitiveData valueRendering = null;
+//        if (propertyValue.getValue() instanceof OWLEntity) {
+//            final Optional<OWLEntityData> propertyData = provider.getEntityData((OWLEntity) propertyValue.getValue());
+//            valueRendering = propertyData.get();
+//        }
+//        else if (propertyValue.getValue() instanceof OWLLiteral) {
+//            valueRendering = new OWLLiteralData((OWLLiteral) propertyValue.getValue());
+//        }
+//        else if (propertyValue.getValue() instanceof IRI) {
+//            valueRendering = new IRIData((IRI) propertyValue.getValue());
+//        }
+//        if(propRendering.isPresent()) {
+//            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Collections.emptySet()));
+//        }
+//        else {
+//            return Optional.absent();
+//        }
     }
 
     @Override

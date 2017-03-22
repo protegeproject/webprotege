@@ -40,7 +40,10 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
     @Override
     protected GetAnnotationPropertyFrameResult execute(GetAnnotationPropertyFrameAction action, Project project, ExecutionContext executionContext) {
         AnnotationPropertyFrameTranslator translator = new AnnotationPropertyFrameTranslator();
-        AnnotationPropertyFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
+        AnnotationPropertyFrame frame = translator.getFrame(
+                project.getRenderingManager().getRendering(action.getSubject()),
+                project.getRootOntology(),
+                project);
         String label = project.getRenderingManager().getBrowserText(action.getSubject());
         LabelledFrame<AnnotationPropertyFrame> labelledFrame = new LabelledFrame<>(label, frame);
         BrowserTextMap btm = BrowserTextMap.build(project.getRenderingManager(), frame.getSignature());

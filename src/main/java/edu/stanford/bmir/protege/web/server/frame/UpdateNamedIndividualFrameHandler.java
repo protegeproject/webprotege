@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
@@ -19,7 +20,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandler<UpdateNamedIndividualFrameAction, NamedIndividualFrame, OWLNamedIndividual> {
+public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandler<UpdateNamedIndividualFrameAction, NamedIndividualFrame, OWLNamedIndividualData> {
 
     @Inject
     public UpdateNamedIndividualFrameHandler(ProjectManager projectManager,
@@ -42,7 +43,7 @@ public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandle
     }
 
     @Override
-    protected FrameTranslator<NamedIndividualFrame, OWLNamedIndividual> createTranslator() {
+    protected FrameTranslator<NamedIndividualFrame, OWLNamedIndividualData> createTranslator() {
         return new NamedIndividualFrameTranslator();
     }
 

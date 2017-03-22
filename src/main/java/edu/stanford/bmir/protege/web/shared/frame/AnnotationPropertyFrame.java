@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -12,38 +14,39 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationProperty>, HasPropertyValueList {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropertyData>, HasPropertyValueList {
 
-    private OWLAnnotationProperty subject;
+    private OWLAnnotationPropertyData subject;
 
 
     private PropertyValueList propertyValues;
 
-    private Set<OWLEntity> domains;
+    private Set<OWLEntityData> domains;
 
-    private Set<OWLEntity> ranges;
+    private Set<OWLEntityData> ranges;
 
     private AnnotationPropertyFrame() {
     }
 
-    public AnnotationPropertyFrame(OWLAnnotationProperty subject, Set<PropertyAnnotationValue> propertyValues, Set<OWLEntity> domains, Set<OWLEntity> ranges) {
+    public AnnotationPropertyFrame(OWLAnnotationPropertyData subject, Set<PropertyAnnotationValue> propertyValues, Set<OWLEntityData> domains, Set<OWLEntityData> ranges) {
         this.subject = subject;
         this.propertyValues = new PropertyValueList(propertyValues);
-        this.domains = new HashSet<OWLEntity>(domains);
-        this.ranges = new HashSet<OWLEntity>(ranges);
+        this.domains = new HashSet<>(domains);
+        this.ranges = new HashSet<>(ranges);
     }
 
-    public OWLAnnotationProperty getSubject() {
+    public OWLAnnotationPropertyData getSubject() {
         return subject;
     }
 
     @Override
     public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> sig = new HashSet<OWLEntity>();
-        sig.add(subject);
+        Set<OWLEntity> sig = new HashSet<>();
+        sig.add(subject.getEntity());
         sig.addAll(propertyValues.getSignature());
-        sig.addAll(domains);
-        sig.addAll(ranges);
+        domains.stream().map(OWLEntityData::getEntity).forEach(sig::add);
+        ranges.stream().map(OWLEntityData::getEntity).forEach(sig::add);
         return sig;
     }
 
@@ -56,12 +59,12 @@ public class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropert
         return propertyValues.getAnnotationPropertyValues();
     }
 
-    public Set<OWLEntity> getDomains() {
-        return new HashSet<OWLEntity>(domains);
+    public Set<OWLEntityData> getDomains() {
+        return new HashSet<>(domains);
     }
 
-    public Set<OWLEntity> getRanges() {
-        return new HashSet<OWLEntity>(ranges);
+    public Set<OWLEntityData> getRanges() {
+        return new HashSet<>(ranges);
     }
 
     @Override

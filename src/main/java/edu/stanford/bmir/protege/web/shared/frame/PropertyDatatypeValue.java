@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
 
@@ -14,13 +16,13 @@ public final class PropertyDatatypeValue extends DataPropertyValue {
     private PropertyDatatypeValue() {
     }
 
-    public PropertyDatatypeValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
+    public PropertyDatatypeValue(OWLDataPropertyData property, OWLDatatypeData value, PropertyValueState propertyValueState) {
         super(property, value, propertyValueState);
     }
 
     @Override
-    public OWLDatatype getValue() {
-        return (OWLDatatype) super.getValue();
+    public OWLDatatypeData getValue() {
+        return (OWLDatatypeData) super.getValue();
     }
 
     @Override

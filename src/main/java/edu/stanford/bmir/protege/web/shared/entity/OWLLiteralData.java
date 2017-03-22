@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLLiteral;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,8 +18,11 @@ import org.semanticweb.owlapi.model.OWLLiteral;
  */
 public final class OWLLiteralData extends OWLPrimitiveData implements HasLexicalForm {
 
+    private final OWLLiteral literal;
+
     public OWLLiteralData(OWLLiteral object) {
         super(object);
+        this.literal = object;
     }
 
     @Override
@@ -24,7 +32,7 @@ public final class OWLLiteralData extends OWLPrimitiveData implements HasLexical
 
     @Override
     public OWLLiteral getObject() {
-        return (OWLLiteral) super.getObject();
+        return literal;
     }
 
     public OWLLiteral getLiteral() {
@@ -45,6 +53,15 @@ public final class OWLLiteralData extends OWLPrimitiveData implements HasLexical
     @Override
     public String getLexicalForm() {
         return getLiteral().getLiteral();
+    }
+
+    public boolean hasLang() {
+        return getLiteral().hasLang();
+    }
+
+    @Nonnull
+    public String getLang() {
+        return getLiteral().getLang();
     }
 
     @Override
@@ -84,5 +101,8 @@ public final class OWLLiteralData extends OWLPrimitiveData implements HasLexical
         return this.getLiteral().equals(other.getLiteral());
     }
 
-
+    @Override
+    public Optional<OWLAnnotationValue> asAnnotationValue() {
+        return Optional.of(getLiteral());
+    }
 }

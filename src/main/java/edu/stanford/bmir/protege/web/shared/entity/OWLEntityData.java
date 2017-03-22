@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 
 /**
@@ -66,4 +69,8 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
         }
     }
 
+    @Override
+    public Optional<OWLAnnotationValue> asAnnotationValue() {
+        return Optional.of(getEntity().getIRI());
+    }
 }

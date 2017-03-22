@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.Lists;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,30 +73,4 @@ public class PropertyValueList_TestCase {
     public void shouldGenerateToString() {
         assertThat(propertyValueList.toString(), startsWith("PropertyValueList"));
     }
-
-    @Test
-    public void shouldReturnSignature() {
-        OWLEntity propertyA = mock(OWLEntity.class);
-        when(propertyA.getSignature()).thenReturn(Collections.singleton(propertyA));
-        OWLEntity valueA = mock(OWLEntity.class);
-        when(valueA.getSignature()).thenReturn(Collections.singleton(valueA));
-        when(propertyValueA.getProperty()).thenReturn(propertyA);
-        when(propertyValueA.getValue()).thenReturn(valueA);
-
-        OWLEntity propertyB = mock(OWLEntity.class);
-        when(propertyB.getSignature()).thenReturn(Collections.singleton(propertyB));
-        OWLEntity valueB = mock(OWLEntity.class);
-        when(valueB.getSignature()).thenReturn(Collections.singleton(valueB));
-        when(propertyValueB.getProperty()).thenReturn(propertyB);
-        when(propertyValueB.getValue()).thenReturn(valueB);
-
-        assertThat(propertyValueList.getSignature(), containsInAnyOrder(
-                propertyA,
-                propertyB,
-                valueA,
-                valueB
-        ));
-    }
-
-
 }

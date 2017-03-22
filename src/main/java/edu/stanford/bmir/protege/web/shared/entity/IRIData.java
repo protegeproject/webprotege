@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.googlejavaformat.Op;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -48,5 +52,10 @@ public class IRIData extends OWLPrimitiveData {
     @Override
     public String getUnquotedBrowserText() {
         return getObject().toString();
+    }
+
+    @Override
+    public Optional<OWLAnnotationValue> asAnnotationValue() {
+        return Optional.of(getObject());
     }
 }

@@ -3,14 +3,17 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
-import org.semanticweb.owlapi.model.OWLClass;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,36 +21,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/12/2012
  */
-public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividual>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, HasSignature, Serializable {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, HasSignature, Serializable {
 
-    private OWLNamedIndividual subject;
+    private OWLNamedIndividualData subject;
 
-    private ImmutableSet<OWLClass> namedTypes;
+    private ImmutableSet<OWLClassData> namedTypes;
 
     private PropertyValueList propertyValueList;
 
-    private ImmutableSet<OWLNamedIndividual> sameIndividuals;
+    private ImmutableSet<OWLNamedIndividualData> sameIndividuals;
 
+    @GwtSerializationConstructor
     private NamedIndividualFrame() {
-
     }
 
-    public NamedIndividualFrame(OWLNamedIndividual subject, Set<OWLClass> namedTypes, PropertyValueList propertyValueList, Set<OWLNamedIndividual> sameIndividuals) {
+    public NamedIndividualFrame(@Nonnull OWLNamedIndividualData subject,
+                                @Nonnull Set<OWLClassData> namedTypes,
+                                @Nonnull PropertyValueList propertyValueList,
+                                @Nonnull Set<OWLNamedIndividualData> sameIndividuals) {
         this.subject = checkNotNull(subject);
         this.namedTypes = ImmutableSet.copyOf(checkNotNull(namedTypes));
         this.propertyValueList = checkNotNull(propertyValueList);
         this.sameIndividuals = ImmutableSet.copyOf(checkNotNull(sameIndividuals));
     }
 
-    public OWLNamedIndividual getSubject() {
+    public OWLNamedIndividualData getSubject() {
         return subject;
     }
 
-    public ImmutableSet<OWLClass> getClasses() {
+    public ImmutableSet<OWLClassData> getClasses() {
         return namedTypes;
     }
 
-    public ImmutableSet<OWLNamedIndividual> getSameIndividuals() {
+    public ImmutableSet<OWLNamedIndividualData> getSameIndividuals() {
         return sameIndividuals;
     }
 
@@ -73,10 +80,10 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividual>, Ha
     @Override
     public Set<OWLEntity> getSignature() {
         Set<OWLEntity> result = new HashSet<>();
-        result.add(subject);
-        result.addAll(namedTypes);
+        result.add(subject.getEntity());
+        result.addAll(namedTypes.stream().map(OWLClassData::getEntity).collect(toList()));
         result.addAll(propertyValueList.getSignature());
-        result.addAll(sameIndividuals);
+        result.addAll(sameIndividuals.stream().map(OWLNamedIndividualData::getEntity).collect(toList()));
         return result;
     }
 
@@ -115,23 +122,23 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividual>, Ha
 
     public static class Builder {
 
-        private OWLNamedIndividual subject;
+        private OWLNamedIndividualData subject;
 
-        private Set<OWLClass> namedTypes = new HashSet<>();
+        private Set<OWLClassData> namedTypes = new HashSet<>();
 
         private List<PropertyValue> propertyValues = new ArrayList<>();
 
-        private Set<OWLNamedIndividual> sameIndividuals = new HashSet<OWLNamedIndividual>();
+        private Set<OWLNamedIndividualData> sameIndividuals = new HashSet<>();
 
-        public Builder(OWLNamedIndividual subject) {
+        public Builder(OWLNamedIndividualData subject) {
             this.subject = subject;
         }
 
-        public void addClass(OWLClass cls) {
+        public void addClass(OWLClassData cls) {
             namedTypes.add(cls);
         }
 
-        public void addSameIndividual(OWLNamedIndividual individual) {
+        public void addSameIndividual(OWLNamedIndividualData individual) {
             this.sameIndividuals.add(individual);
         }
 

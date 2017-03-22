@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;
@@ -88,9 +88,9 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
         for(PropertyValue propertyValue : propertyValues) {
             result.addAll(propertyValue.getProperty().getSignature());
             if(propertyValue instanceof PropertyAnnotationValue) {
-                Optional<OWLEntity> entityValue = ((PropertyAnnotationValue) propertyValue).getValueAsEntity();
+                Optional<OWLEntityData> entityValue = ((PropertyAnnotationValue) propertyValue).getValueAsEntity();
                 if(entityValue.isPresent()) {
-                    result.add(entityValue.get());
+                    result.add(entityValue.get().getEntity());
                 }
             }
             else {

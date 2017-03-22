@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -21,7 +22,9 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.inject.Inject;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,7 +38,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     private final AnnotationsView annotationsView;
 
-    private Optional<Set<OWLAnnotation>> lastSet = Optional.absent();
+    private Optional<List<PropertyAnnotationValue>> lastSet = Optional.absent();
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -65,16 +68,14 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
     }
 
     private void updateView() {
-        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<GetOntologyAnnotationsResult>() {
-            @Override
-            public void handleSuccess(GetOntologyAnnotationsResult result) {
-                final Set<OWLAnnotation> object = new LinkedHashSet<>(result.getAnnotations());
-                if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
-                    lastSet = Optional.of(object);
-                    annotationsView.setValue(object);
-                }
-            }
-        });
+        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()),
+                                       result -> {
+                                           List<PropertyAnnotationValue> object = result.getAnnotations();
+                                           if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
+                                               lastSet = Optional.of(object);
+                                               annotationsView.setValue(new LinkedHashSet<>(object));
+                                           }
+                                       });
     }
 
 
@@ -91,14 +92,11 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         if(!annotationsView.isWellFormed()) {
             return;
         }
-        Optional<Set<OWLAnnotation>> annotations = annotationsView.getValue();
+        Optional<Set<PropertyAnnotationValue>> annotations = annotationsView.getValue();
         if (annotations.isPresent() && lastSet.isPresent()) {
-            dispatchServiceManager.execute(new SetOntologyAnnotationsAction(getProjectId(), lastSet.get(), annotations.get()), new DispatchServiceCallback<SetOntologyAnnotationsResult>() {
-                @Override
-                public void handleSuccess(SetOntologyAnnotationsResult result) {
-
-                }
-            });
+            dispatchServiceManager.execute(
+                    new SetOntologyAnnotationsAction(getProjectId(), new HashSet<>(lastSet.get()), annotations.get()),
+                    result-> {});
         }
     }
 }
