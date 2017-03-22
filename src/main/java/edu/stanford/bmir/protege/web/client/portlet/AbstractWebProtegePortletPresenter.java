@@ -27,13 +27,11 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
                                               @Nonnull ProjectId projectId) {
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
-
-        // TODO: Move this out
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
-//                if (portletUi.asWidget().isAttached()) {
+                if (portletUi.map(ui -> ui.asWidget().isAttached()).orElse(true)) {
                     handleBeforeSetEntity(e.getPreviousSelection());
                     handleAfterSetEntity(e.getLastSelection());
-//                }
+                }
             }
         );
     }
