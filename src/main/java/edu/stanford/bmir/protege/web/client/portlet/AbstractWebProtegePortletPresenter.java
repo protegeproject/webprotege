@@ -36,6 +36,13 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         );
     }
 
+    /**
+     * Stops this presenter from listening to selection changes.
+     */
+    public void setSelectionPinned() {
+        selectionModelHandlerRegistration.removeHandler();
+    }
+
     @Override
     public final void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
         this.portletUi = Optional.of(portletUi);
