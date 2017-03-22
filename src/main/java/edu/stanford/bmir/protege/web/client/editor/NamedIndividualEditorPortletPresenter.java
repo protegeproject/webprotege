@@ -6,13 +6,9 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
@@ -23,7 +19,7 @@ import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
  * 22 Mar 2017
  */
 @Portlet(
-        id = "portlet.individualeditor",
+        id = "portlets.IndividualEditor",
         title = "Individual Editor",
         tooltip = "Provides an editor that allows individual descriptions to be edited"
 )
