@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import com.beust.jcommander.internal.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -9,15 +10,20 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -34,6 +40,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final Widget editorView;
 
+    private final Set<EntityType<?>> displayedTypes = new HashSet<>();
+
     @Inject
     public EditorPortletPresenter(
             SelectionModel selectionModel,
@@ -42,6 +50,19 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         super(selectionModel, projectId);
         this.editorPresenter = editorPresenter;
         editorView = editorPresenter.getView();
+        displayedTypes.addAll(Arrays.asList(
+                CLASS,
+                OBJECT_PROPERTY,
+                DATA_PROPERTY,
+                ANNOTATION_PROPERTY,
+                NAMED_INDIVIDUAL,
+                DATATYPE
+        ));
+    }
+
+    public void setDisplayedTypes(EntityType<?> ... entityTypes) {
+        displayedTypes.clear();
+        displayedTypes.addAll(Arrays.asList(entityTypes));
     }
 
     @Override
@@ -56,15 +77,13 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                             event -> editorPresenter.updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
-//        handleAfterSetEntity(getSelectedEntity());
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        GWT.log("handleAfterSetEntity " + entity);
-        setViewTitle("Dont' know");
-        if(!entity.isPresent()) {
-            setViewTitle("Nothing selected!");
+        if(!entity.isPresent()  || !isDisplayedType(entity)) {
+            setViewTitle("Nothing selected");
             setNothingSelectedVisible(true);
         }
         else {
@@ -73,6 +92,10 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
             editorPresenter.setEditorContext(editorContext);
         }
+    }
+
+    private boolean isDisplayedType(Optional<OWLEntity> entity) {
+        return entity.map(e -> displayedTypes.contains(e.getEntityType())).orElse(false);
     }
 
     public static Optional<OWLEntityContext> getEditorContext(Optional<OWLEntity> sel, ProjectId projectId) {
