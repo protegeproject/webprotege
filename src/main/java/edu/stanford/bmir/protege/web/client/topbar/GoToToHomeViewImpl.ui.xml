@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
             display: inline-block;
@@ -10,6 +10,6 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.btn} {wp.buttons.topBarButton} {style.main}" text="Home"/>
+        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.btn} {wp.buttons.topBarButton} {style.main}" text="{msg.home}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
