@@ -170,11 +170,6 @@ public class ActionHandlersModule {
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetEntityAnnotationsActionHandler(GetEntityAnnotationsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
     public ActionHandler provideDeleteEntityActionHandler(DeleteEntityActionHandler handler) {
         return handler;
     }
