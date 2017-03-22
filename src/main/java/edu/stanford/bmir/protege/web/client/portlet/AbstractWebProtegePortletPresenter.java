@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
+import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -23,14 +24,18 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private Optional<PortletUi> portletUi = Optional.empty();
 
+    private boolean trackSelection = true;
+
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId) {
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
                 if (portletUi.map(ui -> ui.asWidget().isAttached()).orElse(true)) {
-                    handleBeforeSetEntity(e.getPreviousSelection());
-                    handleAfterSetEntity(e.getLastSelection());
+                    if (trackSelection) {
+                        handleBeforeSetEntity(e.getPreviousSelection());
+                        handleAfterSetEntity(e.getLastSelection());
+                    }
                 }
             }
         );
@@ -39,8 +44,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     /**
      * Stops this presenter from listening to selection changes.
      */
-    public void setSelectionPinned() {
-        selectionModelHandlerRegistration.removeHandler();
+    public void setTrackSelection(boolean trackSelection) {
+        this.trackSelection = trackSelection;
     }
 
     @Override
@@ -60,11 +65,16 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     }
 
     protected void setViewTitle(String title) {
+        GWT.log("[AbstractWebProtegePortletPresenter] Setting view title to: " + title);
         portletUi.ifPresent(ui -> ui.setViewTitle(title));
     }
 
     protected void setForbiddenVisible(boolean forbiddenVisible) {
         portletUi.ifPresent(ui -> ui.setForbiddenVisible(forbiddenVisible));
+    }
+
+    protected void setNothingSelectedVisible(boolean nothingSelectedVisible) {
+        portletUi.ifPresent(ui -> ui.setNothingSelectedVisible(nothingSelectedVisible));
     }
 
     protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {
