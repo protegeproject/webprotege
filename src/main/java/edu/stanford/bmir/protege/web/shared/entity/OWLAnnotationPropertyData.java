@@ -22,6 +22,11 @@ public final class OWLAnnotationPropertyData extends OWLPropertyData {
     }
 
     @Override
+    public boolean isOWLAnnotationProperty() {
+        return true;
+    }
+
+    @Override
     public PrimitiveType getType() {
         return PrimitiveType.ANNOTATION_PROPERTY;
     }

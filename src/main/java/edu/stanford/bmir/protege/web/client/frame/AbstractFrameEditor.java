@@ -32,21 +32,21 @@ public abstract class AbstractFrameEditor<O> extends SimplePanel implements Valu
         this.dispatchServiceManager = dispatchServiceManager;
     }
 
-    @Override
-    final public void setValue(final O object) {
-        if (object instanceof HasSignature) {
-            final HasSignature hasSignature = (HasSignature) object;
-            dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(hasSignature.getSignature())), new DispatchServiceCallback<GetEntityDataResult>() {
-                @Override
-                public void handleSuccess(final GetEntityDataResult result) {
-                    setValue(object, entity -> Optional.fromNullable(result.getEntityDataMap().get(entity)));
-                }
-            });
-        }
-        else {
-            setValue(object, entity -> Optional.absent());
-        }
-    }
-
-    public abstract void setValue(O object, HasEntityDataProvider entityDataProvider);
+//    @Override
+//    final public void setValue(final O object) {
+//        if (object instanceof HasSignature) {
+//            final HasSignature hasSignature = (HasSignature) object;
+//            dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(hasSignature.getSignature())), new DispatchServiceCallback<GetEntityDataResult>() {
+//                @Override
+//                public void handleSuccess(final GetEntityDataResult result) {
+//                    setValue(object, entity -> Optional.fromNullable(result.getEntityDataMap().get(entity)));
+//                }
+//            });
+//        }
+//        else {
+//            setValue(object, entity -> Optional.absent());
+//        }
+//    }
+//
+//    public abstract void setValue(O object, HasEntityDataProvider entityDataProvider);
 }

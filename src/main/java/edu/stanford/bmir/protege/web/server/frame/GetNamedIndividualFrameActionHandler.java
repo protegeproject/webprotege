@@ -54,7 +54,9 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
                                                     Project project,
                                                     ExecutionContext executionContext) {
         NamedIndividualFrameTranslator translator = new NamedIndividualFrameTranslator();
-        NamedIndividualFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
+        NamedIndividualFrame frame = translator.getFrame(
+                project.getRenderingManager().getRendering(action.getSubject()),
+                project.getRootOntology(), project);
         RenderingManager renderingManager = project.getRenderingManager();
         String rendering = renderingManager.getShortForm(action.getSubject());
         LabelledFrame<NamedIndividualFrame> labelledFrame = new LabelledFrame<>(rendering, frame);

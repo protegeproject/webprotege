@@ -9,10 +9,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
+import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
@@ -21,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
@@ -32,7 +35,9 @@ import org.semanticweb.owlapi.model.OWLClass;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -40,7 +45,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
  */
-public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFrame>> implements ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
+public class ClassFrameEditor extends SimplePanel implements ValueEditor<LabelledFrame<ClassFrame>>, ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
 
     @UiField
     protected TextBox iriField;
@@ -56,7 +61,7 @@ public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFra
 
     private LabelledFrame<ClassFrame> lastClassFrame;
 
-    private OWLClass currentSubject;
+    private OWLClassData currentSubject;
 
     private boolean enabled = true;
 
@@ -72,7 +77,6 @@ public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFra
 
     @Inject
     public ClassFrameEditor(ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager,  PropertyValueListEditor annotations, PropertyValueListEditor properties) {
-        super(projectId, dispatchServiceManager);
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.classes = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
@@ -85,24 +89,14 @@ public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFra
 
     }
 
-    public void setValue(final LabelledFrame<ClassFrame> lcf, HasEntityDataProvider entityDataProvider) {
-        GWT.log("[EditorView] setValue: " + lcf);
-
+    public void setValue(final LabelledFrame<ClassFrame> lcf) {
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
-        iriField.setValue(lcf.getFrame().getSubject().getIRI().toString());
+        iriField.setValue(lcf.getFrame().getSubject().getEntity().getIRI().toString());
         annotations.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getAnnotationPropertyValues())));
-        properties.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getLogicalPropertyValues())));
-
-        List<OWLPrimitiveData> dataList = new ArrayList<>();
-        for (OWLClass cls : lcf.getFrame().getClassEntries()) {
-            final Optional<OWLEntityData> rendering = entityDataProvider.getEntityData(cls);
-            if (rendering.isPresent()) {
-                dataList.add(rendering.get());
-            }
-        }
-        classes.setValue(dataList);
+        properties.setValue(new PropertyValueList(new ArrayList<>(lcf.getFrame().getLogicalPropertyValues())));
+        classes.setValue(new ArrayList<>(lcf.getFrame().getClassEntries()));
     }
 
 
@@ -183,15 +177,15 @@ public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFra
             return Optional.absent();
         }
         else {
-            ClassFrame.Builder builder = new ClassFrame.Builder(currentSubject);
+            Set<OWLClassData> classesData = new HashSet<>();
             for(OWLPrimitiveData cls : classes.getValue().get()) {
-                builder.addClass((OWLClass) cls.getObject());
+                classesData.add((OWLClassData) cls);
             }
-            builder.addPropertyValues(annotations.getValue().get().getPropertyValues());
-            builder.addPropertyValues(properties.getValue().get().getPropertyValues());
-            ClassFrame cf = builder.build();
+            Set<PropertyValue> propertyValues = new HashSet<>();
+            propertyValues.addAll(annotations.getValue().get().getPropertyValues());
+            propertyValues.addAll(properties.getValue().get().getPropertyValues());
+            ClassFrame cf = new ClassFrame(currentSubject, classesData, propertyValues);
             LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<>(lastClassFrame.getDisplayName(), cf);
-            GWT.log("[EditorView] getValue: " + labelledClassFrame);
             return Optional.of(labelledClassFrame);
         }
     }

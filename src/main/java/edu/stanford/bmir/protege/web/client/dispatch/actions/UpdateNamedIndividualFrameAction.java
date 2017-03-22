@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class UpdateNamedIndividualFrameAction extends UpdateFrameAction<NamedIndividualFrame, OWLNamedIndividual> {
+public class UpdateNamedIndividualFrameAction extends UpdateFrameAction<NamedIndividualFrame, OWLNamedIndividualData> {
 
     /**
      * For serialization purposes only

@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,20 +37,20 @@ public class DataPropertyFrame_TestCase {
     private DataPropertyFrame otherDataPropertyFrame;
 
     @Mock
-    private OWLDataProperty subject;
+    private OWLDataPropertyData subject;
 
     @Mock
     private PropertyValueList propertyValueList;
 
-    private Set<OWLClass> domains;
+    private Set<OWLClassData> domains;
 
     @Mock
-    private OWLClass domainA, domainB;
+    private OWLClassData domainA, domainB;
 
     @Mock
-    private OWLDatatype rangeA, rangeB;
+    private OWLDatatypeData rangeA, rangeB;
 
-    private Set<OWLDatatype> ranges;
+    private Set<OWLDatatypeData> ranges;
 
     private boolean functional = true;
 
@@ -128,19 +131,4 @@ public class DataPropertyFrame_TestCase {
     public void shouldReturnSupplied_Functional() {
         assertThat(dataPropertyFrame.isFunctional(), is(true));
     }
-
-    @Test
-    public void shouldReturnSignature() {
-        OWLEntity property = mock(OWLEntity.class);
-        OWLEntity value = mock(OWLEntity.class);
-        when(propertyValueList.getSignature()).thenReturn(Sets.newHashSet(property, value));
-        assertThat(dataPropertyFrame.getSignature(), containsInAnyOrder(
-                subject,
-                domainA, domainB,
-                rangeA, rangeB,
-                property, value
-        ));
-    }
-
-
 }

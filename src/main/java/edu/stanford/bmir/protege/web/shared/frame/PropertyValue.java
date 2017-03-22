@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
 
@@ -15,25 +18,27 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     private PropertyValueState state;
 
-    private OWLEntity property;
+    @SuppressWarnings("GwtInconsistentSerializableClass" )
+    private OWLPropertyData property;
 
-    private OWLObject value;
+    @SuppressWarnings("GwtInconsistentSerializableClass" )
+    private OWLPrimitiveData value;
 
     protected PropertyValue() {
 
     }
 
-    public PropertyValue(OWLEntity property, OWLObject value, PropertyValueState propertyValueState) {
+    public PropertyValue(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState propertyValueState) {
         this.property = property;
         this.value = value;
         this.state = propertyValueState;
     }
 
-    public OWLEntity getProperty() {
+    public OWLPropertyData getProperty() {
         return property;
     }
 
-    public OWLObject getValue() {
+    public OWLPrimitiveData getValue() {
         return value;
     }
 
@@ -67,7 +72,7 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
         if(diff != 0) {
             return diff;
         }
-        return this.getValue().compareTo(o.getValue());
+        return this.getValue().getBrowserText().compareTo(o.getValue().getBrowserText());
 
     }
 

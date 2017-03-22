@@ -4,6 +4,10 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.AnnotationPropertyC
 import edu.stanford.bmir.protege.web.server.mansyntax.render.IRIIndexProvider;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -50,11 +54,11 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
         // Sort property values by language, property rendering and then value rendering.
         // rdfs:label and then rdfs:comment get priority over other properties.
 
-        OWLObject val1 = o1.getValue();
-        OWLObject val2 = o2.getValue();
-        if(val1 instanceof OWLLiteral && val2 instanceof OWLLiteral) {
-            OWLLiteral lit1 = (OWLLiteral) val1;
-            OWLLiteral lit2 = (OWLLiteral) val2;
+        OWLPrimitiveData val1 = o1.getValue();
+        OWLPrimitiveData val2 = o2.getValue();
+        if(val1 instanceof OWLLiteralData && val2 instanceof OWLLiteralData) {
+            OWLLiteralData lit1 = (OWLLiteralData) val1;
+            OWLLiteralData lit2 = (OWLLiteralData) val2;
             if(lit1.hasLang() && lit2.hasLang()) {
                 if(isDefaultLanguage(lit1)) {
                     if(!isDefaultLanguage(lit2)) {
@@ -75,13 +79,13 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
 
 
 
-        OWLEntity property1 = o1.getProperty();
-        OWLEntity property2 = o2.getProperty();
+        OWLPropertyData property1 = o1.getProperty();
+        OWLPropertyData property2 = o2.getProperty();
         if(property1.isOWLAnnotationProperty()) {
             if (property2.isOWLAnnotationProperty()) {
-                OWLAnnotationProperty annoProp1 = (OWLAnnotationProperty) property1;
-                OWLAnnotationProperty annoProp2 = (OWLAnnotationProperty) property2;
-                return annotationPropertyComparator.compare(annoProp1, annoProp2);
+                OWLAnnotationPropertyData annoProp1 = (OWLAnnotationPropertyData) property1;
+                OWLAnnotationPropertyData annoProp2 = (OWLAnnotationPropertyData) property2;
+                return annotationPropertyComparator.compare(annoProp1.getEntity(), annoProp2.getEntity());
             }
             else {
                 return BEFORE;
@@ -91,19 +95,19 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
             return AFTER;
         }
         final RenderingManager rm = project.getRenderingManager();
-        String prop1BrowserText = rm.getBrowserText(property1);
-        String prop2BrowserText = rm.getBrowserText(property2);
+        String prop1BrowserText = property1.getBrowserText();
+        String prop2BrowserText = property2.getBrowserText();
         int delta = prop1BrowserText.compareToIgnoreCase(prop2BrowserText);
         if(delta != 0) {
             return delta;
         }
 
-        String val1Rendering = rm.getBrowserText(val1);
-        String val2Rendering = rm.getBrowserText(val2);
+        String val1Rendering = val1.getBrowserText();
+        String val2Rendering = val2.getBrowserText();
         return val1Rendering.compareToIgnoreCase(val2Rendering);
     }
 
-    private boolean isDefaultLanguage(OWLLiteral lit) {
+    private boolean isDefaultLanguage(OWLLiteralData lit) {
         return lit.hasLang() && project.getLang().equals(lit.getLang());
     }
 }

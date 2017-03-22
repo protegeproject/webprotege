@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -15,32 +17,13 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     private PropertyLiteralValue() {
     }
 
-    public PropertyLiteralValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
+    public PropertyLiteralValue(OWLDataPropertyData property, OWLLiteralData value, PropertyValueState propertyValueState) {
         super(property, value, propertyValueState);
     }
 
-    public PropertyLiteralValue(OWLDataProperty property, int value, PropertyValueState propertyValueState) {
-        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
-    }
-
-
-    public PropertyLiteralValue(OWLDataProperty property, double value, PropertyValueState propertyValueState) {
-        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
-    }
-
-
-    public PropertyLiteralValue(OWLDataProperty property, String value, PropertyValueState propertyValueState) {
-        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
-    }
-
-
-    public PropertyLiteralValue(OWLDataProperty property, boolean value, PropertyValueState propertyValueState) {
-        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
-    }
-
     @Override
-    public OWLLiteral getValue() {
-        return (OWLLiteral) super.getValue();
+    public OWLLiteralData getValue() {
+        return (OWLLiteralData) super.getValue();
     }
 
     @Override

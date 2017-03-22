@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -17,16 +21,16 @@ public abstract class ObjectPropertyValue extends PropertyValue implements Class
     protected ObjectPropertyValue() {
     }
 
-    public ObjectPropertyValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
+    public ObjectPropertyValue(OWLObjectPropertyData property, OWLNamedIndividualData value, PropertyValueState propertyValueState) {
         super(property, value, propertyValueState);
     }
 
-    protected ObjectPropertyValue(OWLEntity property, OWLClass value, PropertyValueState propertyValueState) {
+    protected ObjectPropertyValue(OWLObjectPropertyData property, OWLClassData value, PropertyValueState propertyValueState) {
         super(property, value, propertyValueState);
     }
 
     @Override
-    final public OWLObjectProperty getProperty() {
-        return (OWLObjectProperty) super.getProperty();
+    final public OWLObjectPropertyData getProperty() {
+        return (OWLObjectPropertyData) super.getProperty();
     }
 }

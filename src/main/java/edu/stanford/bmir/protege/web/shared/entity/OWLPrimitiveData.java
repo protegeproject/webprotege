@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.entity;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.*;
 
+import java.util.Optional;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -45,4 +47,5 @@ public abstract class OWLPrimitiveData extends ObjectData<OWLObject> {
         return getObject() instanceof OWLLiteral;
     }
 
+    public abstract Optional<OWLAnnotationValue> asAnnotationValue();
 }

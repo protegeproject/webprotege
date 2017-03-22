@@ -287,6 +287,18 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return DataFactory.getOWLEntityData(entity, getShortForm(entity));
     }
 
+    public OWLPrimitiveData getRendering(OWLAnnotationValue value) {
+        if(value instanceof IRI) {
+            return new IRIData((IRI) value);
+        }
+        else if(value instanceof OWLLiteral) {
+            return new OWLLiteralData((OWLLiteral) value);
+        }
+        else {
+            throw new RuntimeException("Unsupported");
+        }
+    }
+
     public OWLClassData getRendering(OWLClass cls) {
         return new OWLClassData(cls, getShortForm(cls));
     }

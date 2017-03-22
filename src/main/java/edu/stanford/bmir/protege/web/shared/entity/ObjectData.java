@@ -41,6 +41,4 @@ public abstract class ObjectData<O> implements HasBrowserText, HasSignature {
             return Collections.emptySet();
         }
     }
-
-
 }

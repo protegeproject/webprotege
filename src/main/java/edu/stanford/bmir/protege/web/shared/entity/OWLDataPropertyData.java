@@ -22,6 +22,11 @@ public final class OWLDataPropertyData extends OWLPropertyData {
     }
 
     @Override
+    public boolean isOWLAnnotationProperty() {
+        return false;
+    }
+
+    @Override
     public OWLDataProperty getEntity() {
         return (OWLDataProperty) super.getEntity();
     }

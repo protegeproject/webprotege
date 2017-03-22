@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.google.common.base.Optional;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,17 +14,19 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class PropertyAnnotationValue extends PropertyValue {
 
-    private OWLEntity entity;
+
+    @SuppressWarnings("GwtInconsistentSerializableClass" )
+    private OWLEntityData entity;
 
     private PropertyAnnotationValue() {
     }
 
-    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLAnnotationValue value, PropertyValueState propertyValueState) {
+    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLPrimitiveData value, PropertyValueState propertyValueState) {
         super(property, value, propertyValueState);
     }
 
-    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLEntity entityValue, PropertyValueState propertyValueState) {
-        super(property, entityValue.getIRI(), propertyValueState);
+    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLEntityData entityValue, PropertyValueState propertyValueState) {
+        super(property, entityValue, propertyValueState);
         this.entity = entityValue;
     }
 
@@ -33,18 +36,18 @@ public class PropertyAnnotationValue extends PropertyValue {
     }
 
     @Override
-    public OWLAnnotationProperty getProperty() {
-        return (OWLAnnotationProperty) super.getProperty();
+    public OWLAnnotationPropertyData getProperty() {
+        return (OWLAnnotationPropertyData) super.getProperty();
     }
 
     @Override
-    public OWLAnnotationValue getValue() {
-        return (OWLAnnotationValue) super.getValue();
+    public OWLPrimitiveData getValue() {
+        return super.getValue();
     }
 
-    public Optional<OWLEntity> getValueAsEntity() {
+    public Optional<OWLEntityData> getValueAsEntity() {
         if(entity == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(entity);

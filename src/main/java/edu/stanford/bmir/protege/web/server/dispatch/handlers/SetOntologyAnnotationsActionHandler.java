@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import org.semanticweb.owlapi.model.AddOntologyAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -54,21 +55,21 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
 
     @Override
     protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
-        final Set<OWLAnnotation> fromAnnotations = action.getFromAnnotations();
-        final Set<OWLAnnotation> toAnnotations = action.getToAnnotations();
+        final Set<PropertyAnnotationValue> fromAnnotations = action.getFromAnnotations();
+        final Set<PropertyAnnotationValue> toAnnotations = action.getToAnnotations();
 
         List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
 
-        for(OWLAnnotation annotation : fromAnnotations) {
-            if(!toAnnotations.contains(annotation)) {
-                changeList.add(new RemoveOntologyAnnotation(project.getRootOntology(), annotation));
-            }
-        }
-        for(OWLAnnotation annotation : toAnnotations) {
-            if(!fromAnnotations.contains(annotation)) {
-                changeList.add(new AddOntologyAnnotation(project.getRootOntology(), annotation));
-            }
-        }
+//        for(PropertyAnnotationValue annotation : fromAnnotations) {
+//            if(!toAnnotations.contains(annotation)) {
+//                changeList.add(new RemoveOntologyAnnotation(project.getRootOntology(), annotation.));
+//            }
+//        }
+//        for(PropertyAnnotationValue annotation : toAnnotations) {
+//            if(!fromAnnotations.contains(annotation)) {
+//                changeList.add(new AddOntologyAnnotation(project.getRootOntology(), annotation));
+//            }
+//        }
         return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList) {
             @Override
             public Set<OWLAnnotation> getRenamedResult(Set<OWLAnnotation> result, RenameMap renameMap) {

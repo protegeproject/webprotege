@@ -73,9 +73,9 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     }
 
     @Override
-    public void setValue(Set<OWLAnnotation> object) {
+    public void setValue(Set<PropertyAnnotationValue> object) {
         List<PropertyAnnotationValue> values = new ArrayList<>();
-        for(OWLAnnotation annotation : object) {
+        for(PropertyAnnotationValue annotation : object) {
             values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), PropertyValueState.ASSERTED));
         }
         editor.setValue(new PropertyValueList(values));
@@ -87,14 +87,14 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     }
 
     @Override
-    public Optional<Set<OWLAnnotation>> getValue() {
+    public Optional<Set<PropertyAnnotationValue>> getValue() {
         Optional<PropertyValueList> valueList = editor.getValue();
         if(!valueList.isPresent()) {
             return Optional.absent();
         }
-        Set<OWLAnnotation> result = new HashSet<OWLAnnotation>();
+        Set<PropertyAnnotationValue> result = new HashSet<PropertyAnnotationValue>();
         for(PropertyAnnotationValue value : valueList.get().getAnnotationPropertyValues()) {
-            result.add(DataFactory.get().getOWLAnnotation(value.getProperty(), value.getValue()));
+            result.add(value);
         }
         return Optional.of(result);
     }
@@ -120,7 +120,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<Set<OWLAnnotation>>> handler) {
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<Set<PropertyAnnotationValue>>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

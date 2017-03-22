@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.Serializable;
@@ -18,11 +21,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     A class frame describes some class in terms of other classEntries and property values.
  * </p>
  */
-public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class ClassFrame implements EntityFrame<OWLClassData>, HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
 
-    private OWLClass subject;
+    private OWLClassData subject;
 
-    private Set<OWLClass> classEntries;
+    private Set<OWLClassData> classEntries;
 
     private Set<PropertyValue> propertyValues;
 
@@ -30,11 +34,11 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     private ClassFrame() {
     }
 
-    public ClassFrame(OWLClass subject) {
+    public ClassFrame(OWLClassData subject) {
         this(subject, Collections.emptySet(), Collections.emptySet());
     }
 
-    public ClassFrame(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues) {
+    public ClassFrame(OWLClassData subject, Set<OWLClassData> classes, Set<PropertyValue> propertyValues) {
         this.subject = checkNotNull(subject);
         this.classEntries = new HashSet<>(checkNotNull(classes));
         this.propertyValues = new HashSet<>(checkNotNull(propertyValues));
@@ -53,19 +57,19 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
      * Gets the subject of this class frame.
      * @return The subject.  Not {@code null}.
      */
-    public OWLClass getSubject() {
+    public OWLClassData getSubject() {
         return subject;
     }
 
-    public Set<OWLClass> getClassEntries() {
+    public Set<OWLClassData> getClassEntries() {
         return classEntries;
     }
 
     public Set<OWLEntity> getSignature() {
         Set<OWLEntity> result = new HashSet<>();
-        result.add(subject);
-        for(OWLClass entry : classEntries) {
-            result.add(entry);
+        result.add(subject.getEntity());
+        for(OWLClassData entry : classEntries) {
+            result.add(entry.getEntity());
         }
         for(PropertyValue propertyValue : propertyValues) {
             result.addAll(propertyValue.getProperty().getSignature());
@@ -115,8 +119,8 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
         sb.append("(");
         sb.append(subject);
         sb.append(" Classes(");
-        for(Iterator<OWLClass> it = classEntries.iterator(); it.hasNext(); ) {
-            OWLClass entry = it.next();
+        for(Iterator<OWLClassData> it = classEntries.iterator(); it.hasNext(); ) {
+            OWLClassData entry = it.next();
             sb.append(entry);
             if(it.hasNext()) {
                 sb.append(" ");
@@ -155,7 +159,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     }
 
 
-    public static Builder builder(OWLClass subject) {
+    public static Builder builder(OWLClassData subject) {
         return new Builder(subject);
     }
 
@@ -167,25 +171,25 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
      */
     public static class Builder {
 
-        private OWLClass subject;
+        private OWLClassData subject;
 
         // Mutable
-        private final Set<OWLClass> classes = new HashSet<>();
+        private final Set<OWLClassData> classes = new HashSet<>();
 
         // Mutable
         private final Set<PropertyValue> propertyValues = new LinkedHashSet<PropertyValue>();
 
-        public Builder(OWLClass subject) {
+        public Builder(OWLClassData subject) {
             this(subject, Collections.emptySet(), Collections.emptySet());
         }
 
-        public Builder(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues) {
+        public Builder(OWLClassData subject, Set<OWLClassData> classes, Set<PropertyValue> propertyValues) {
             this.subject = subject;
             this.classes.addAll(classes);
             this.propertyValues.addAll(propertyValues);
         }
 
-        public OWLClass getSubject() {
+        public OWLClassData getSubject() {
             return subject;
         }
 
@@ -194,60 +198,60 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
          * @param subject The subject. Not {@code null}.
          * @throws NullPointerException if {@code subject} is {@code null}.
          */
-        public void setSubject(OWLClass subject) {
+        public void setSubject(OWLClassData subject) {
             if(subject == null) {
                 throw new NullPointerException("subject must not be null");
             }
             this.subject = subject;
         }
 
-        public void addClass(OWLClass cls) {
+        public void addClass(OWLClassData cls) {
             classes.add(cls);
         }
-
-        public void addPropertyValue(PropertyValue propertyValue) {
-            propertyValues.add(propertyValue);
-        }
+//
+//        public void addPropertyValue(PropertyValue propertyValue) {
+//            propertyValues.add(propertyValue);
+//        }
 
         public void addPropertyValues(Collection<PropertyValue> propertyValue) {
             propertyValues.addAll(propertyValue);
         }
-
-        public void addPropertyValue(OWLObjectProperty property, OWLClass value, PropertyValueState propertyValueState) {
-            addPropertyValue(new PropertyClassValue(property, value, propertyValueState));
-        }
-
-        public void addPropertyValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
-            addPropertyValue(new PropertyIndividualValue(property, value, propertyValueState));
-        }
-
-        public void addPropertyValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
-            addPropertyValue(new PropertyDatatypeValue(property, value, propertyValueState));
-        }
-
-        public void addPropertyValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
-            addPropertyValue(new PropertyLiteralValue(property, value, propertyValueState));
-        }
-
-        public void addPropertyValue(OWLDataProperty property, int value, PropertyValueState propertyValueState) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
-        }
-
-        public void addPropertyValue(OWLDataProperty property, double value, PropertyValueState propertyValueState) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
-        }
-
-        public void addPropertyValue(OWLDataProperty property, boolean value, PropertyValueState propertyValueState) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
-        }
-
-        public void addPropertyValue(OWLDataProperty property, String value, PropertyValueState propertyValueState) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
-        }
-
-        public void addPropertyValue(OWLAnnotationProperty property, OWLAnnotationValue value, PropertyValueState propertyValueState) {
-            addPropertyValue(new PropertyAnnotationValue(property, value, propertyValueState));
-        }
+//
+//        public void addPropertyValue(OWLObjectPropertyData property, OWLClassData value, PropertyValueState propertyValueState) {
+//            addPropertyValue(new PropertyClassValue(property, value, propertyValueState));
+//        }
+//
+//        public void addPropertyValue(OWLObjectPropertyData property, OWLNamedIndividualData value, PropertyValueState propertyValueState) {
+//            addPropertyValue(new PropertyIndividualValue(property, value, propertyValueState));
+//        }
+//
+//        public void addPropertyValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
+//            addPropertyValue(new PropertyDatatypeValue(property, value, propertyValueState));
+//        }
+//
+//        public void addPropertyValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
+//            addPropertyValue(new PropertyLiteralValue(property, value, propertyValueState));
+//        }
+//
+//        public void addPropertyValue(OWLDataProperty property, int value, PropertyValueState propertyValueState) {
+//            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
+//        }
+//
+//        public void addPropertyValue(OWLDataProperty property, double value, PropertyValueState propertyValueState) {
+//            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
+//        }
+//
+//        public void addPropertyValue(OWLDataProperty property, boolean value, PropertyValueState propertyValueState) {
+//            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
+//        }
+//
+//        public void addPropertyValue(OWLDataProperty property, String value, PropertyValueState propertyValueState) {
+//            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
+//        }
+//
+//        public void addPropertyValue(OWLAnnotationProperty property, OWLAnnotationValue value, PropertyValueState propertyValueState) {
+//            addPropertyValue(new PropertyAnnotationValue(property, value, propertyValueState));
+//        }
 
         /**
          * Builds a class frame from information held by this builder.

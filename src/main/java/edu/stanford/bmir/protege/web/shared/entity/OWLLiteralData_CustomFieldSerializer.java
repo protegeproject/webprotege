@@ -1,10 +1,17 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.CustomFieldSerializer;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import uk.ac.manchester.cs.owl.owlapi.OWLDatatypeImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLLiteralImpl;
 
 /**
  * An implementation of CustomFieldSerilizer for serializing {@link OWLLiteralData}
@@ -46,7 +53,25 @@ public class OWLLiteralData_CustomFieldSerializer extends CustomFieldSerializer<
     }
 
     public static OWLLiteralData instantiate(SerializationStreamReader streamReader) throws SerializationException {
-        return new OWLLiteralData((OWLLiteral) streamReader.readObject());
+        String lexicalValue = streamReader.readString();
+        String datatypeString = streamReader.readString();
+        String lang = streamReader.readString();
+        OWLLiteral literal;
+        OWLDataFactory df = DataFactory.get();
+        if(!lang.isEmpty()) {
+            literal = df.getOWLLiteral(lexicalValue, lang);
+        }
+        else {
+            IRI datatypeIri = IRI.create(datatypeString);
+            OWLDatatype datatype = df.getOWLDatatype(datatypeIri);
+            if (datatype.isString()) {
+                literal = df.getOWLLiteral(lexicalValue);
+            }
+            else {
+                literal = df.getOWLLiteral(lexicalValue, datatype);
+            }
+        }
+        return new OWLLiteralData(literal);
     }
 
 
@@ -66,7 +91,9 @@ public class OWLLiteralData_CustomFieldSerializer extends CustomFieldSerializer<
     }
 
     public static void serialize(SerializationStreamWriter streamWriter, OWLLiteralData instance) throws SerializationException {
-        streamWriter.writeObject(instance.getLiteral());
+        streamWriter.writeString(instance.getLiteral().getLiteral());
+        streamWriter.writeString(instance.getLiteral().getDatatype().getIRI().toString());
+        streamWriter.writeString(instance.getLiteral().getLang());
     }
 
 

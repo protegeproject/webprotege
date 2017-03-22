@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -10,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,24 +21,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/12/2012
  */
-public class ObjectPropertyFrame implements EntityFrame<OWLObjectProperty>, HasAnnotationPropertyValues, Serializable {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, HasAnnotationPropertyValues, Serializable {
 
-    private OWLObjectProperty subject;
+    private OWLObjectPropertyData subject;
 
     private Set<PropertyAnnotationValue> annotationValues;
 
-    private Set<OWLClass> domains;
+    private Set<OWLClassData> domains;
 
-    private Set<OWLClass> ranges;
+    private Set<OWLClassData> ranges;
 
-    private Set<OWLObjectProperty> inverses;
+    private Set<OWLObjectPropertyData> inverses;
 
     private Set<ObjectPropertyCharacteristic> characteristics;
 
     private ObjectPropertyFrame() {
     }
 
-    public ObjectPropertyFrame(OWLObjectProperty subject, Set<PropertyAnnotationValue> annotationValues, Set<OWLClass> domains, Set<OWLClass> ranges, Set<OWLObjectProperty> inverseProperties, Set<ObjectPropertyCharacteristic> characteristics) {
+    public ObjectPropertyFrame(OWLObjectPropertyData subject,
+                               Set<PropertyAnnotationValue> annotationValues,
+                               Set<OWLClassData> domains,
+                               Set<OWLClassData> ranges,
+                               Set<OWLObjectPropertyData> inverseProperties,
+                               Set<ObjectPropertyCharacteristic> characteristics) {
         this.subject = checkNotNull(subject);
         this.annotationValues = new HashSet<>(checkNotNull(annotationValues));
         this.domains = new HashSet<>(checkNotNull(domains));
@@ -43,7 +53,7 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectProperty>, HasA
         this.characteristics = new HashSet<>(checkNotNull(characteristics));
     }
 
-    public OWLObjectProperty getSubject() {
+    public OWLObjectPropertyData getSubject() {
         return subject;
     }
 
@@ -54,12 +64,12 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectProperty>, HasA
     @Override
     public Set<OWLEntity> getSignature() {
         Set<OWLEntity> signature = new HashSet<OWLEntity>();
-        signature.add(subject);
-        signature.addAll(domains);
-        signature.addAll(ranges);
-        signature.addAll(inverses);
+        signature.add(subject.getEntity());
+        signature.addAll(domains.stream().map(OWLEntityData::getEntity).collect(toList()));
+        signature.addAll(ranges.stream().map(OWLEntityData::getEntity).collect(toList()));
+        signature.addAll(inverses.stream().map(OWLEntityData::getEntity).collect(toList()));
         for(PropertyAnnotationValue v : annotationValues) {
-            signature.add(v.getProperty());
+            signature.add(v.getProperty().getEntity());
             signature.addAll(v.getValue().getSignature());
         }
         return signature;
@@ -73,56 +83,56 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectProperty>, HasA
 
     public static class Builder {
 
-        private OWLObjectProperty subject;
+        private OWLObjectPropertyData subject;
 
         private Set<PropertyAnnotationValue> values = new HashSet<>();
 
-        private Set<OWLClass> domains = new HashSet<>();
+        private Set<OWLClassData> domains = new HashSet<>();
 
-        private Set<OWLClass> ranges = new HashSet<>();
+        private Set<OWLClassData> ranges = new HashSet<>();
 
-        private Set<OWLObjectProperty> inverses = new HashSet<>();
+        private Set<OWLObjectPropertyData> inverses = new HashSet<>();
 
         private Set<ObjectPropertyCharacteristic> characteristics = new HashSet<>();
 
-        public Builder(OWLObjectProperty subject) {
+        public Builder(OWLObjectPropertyData subject) {
             this.subject = subject;
         }
 
-        public void addPropertyValue(PropertyAnnotationValue propertyValue) {
-            values.add(propertyValue);
-        }
-
-        public void addPropertyCharacteristic(ObjectPropertyCharacteristic characteristic) {
-            characteristics.add(characteristic);
-        }
-
-        public void addDomain(OWLClass domain) {
-            domains.add(domain);
-        }
-
-        public void addRange(OWLClass range) {
-            ranges.add(range);
-        }
-
-        public void clearDomains() {
-            domains.clear();
-        }
-
-        public void clearRanges() {
-            ranges.clear();
-        }
+//        public void addPropertyValue(PropertyAnnotationValue propertyValue) {
+//            values.add(propertyValue);
+//        }
+//
+//        public void addPropertyCharacteristic(ObjectPropertyCharacteristic characteristic) {
+//            characteristics.add(characteristic);
+//        }
+//
+//        public void addDomain(OWLClass domain) {
+//            domains.add(domain);
+//        }
+//
+//        public void addRange(OWLClass range) {
+//            ranges.add(range);
+//        }
+//
+//        public void clearDomains() {
+//            domains.clear();
+//        }
+//
+//        public void clearRanges() {
+//            ranges.clear();
+//        }
 
         public ObjectPropertyFrame build() {
             return new ObjectPropertyFrame(subject, values, domains, ranges, inverses, characteristics);
         }
     }
 
-    public Set<OWLClass> getDomains() {
+    public Set<OWLClassData> getDomains() {
         return new HashSet<>(domains);
     }
 
-    public Set<OWLClass> getRanges() {
+    public Set<OWLClassData> getRanges() {
         return new HashSet<>(ranges);
     }
 

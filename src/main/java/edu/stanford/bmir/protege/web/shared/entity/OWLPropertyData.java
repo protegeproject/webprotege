@@ -13,4 +13,6 @@ public abstract class OWLPropertyData extends OWLEntityData {
     protected OWLPropertyData(OWLEntity entity, String browserText) {
         super(entity, browserText);
     }
+
+    public abstract boolean isOWLAnnotationProperty();
 }

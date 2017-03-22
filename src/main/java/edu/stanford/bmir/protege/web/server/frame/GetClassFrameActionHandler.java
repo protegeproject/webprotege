@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -49,7 +50,9 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
 
     @Override
     protected GetClassFrameResult execute(GetClassFrameAction action, Project project, ExecutionContext executionContext) {
-        FrameActionResultTranslator<ClassFrame, OWLClass> translator = new FrameActionResultTranslator<>(action.getSubject(), project, TRANSLATOR);
+        FrameActionResultTranslator<ClassFrame, OWLClassData> translator = new FrameActionResultTranslator<>(
+                project.getRenderingManager().getRendering(action.getSubject()),
+                project, TRANSLATOR);
         LabelledFrame<ClassFrame> f = translator.doIT();
         final BrowserTextMap browserTextMap = new BrowserTextMap(f, project.getRenderingManager());
         return new GetClassFrameResult(f, browserTextMap);

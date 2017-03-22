@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,15 +29,15 @@ import static org.mockito.Mockito.when;
 public class ObjectPropertyFrame_TestCase {
 
     @Mock
-    private OWLObjectProperty subject;
+    private OWLObjectPropertyData subject;
 
-    private Set<OWLClass> domains;
+    private Set<OWLClassData> domains;
 
-    private Set<OWLClass> ranges;
+    private Set<OWLClassData> ranges;
 
     private Set<PropertyAnnotationValue> annotations;
 
-    private Set<OWLObjectProperty> inverses;
+    private Set<OWLObjectPropertyData> inverses;
 
     private Set<ObjectPropertyCharacteristic> characteristics;
 
@@ -50,18 +52,18 @@ public class ObjectPropertyFrame_TestCase {
     private PropertyAnnotationValue annotationValue;
 
     @Mock
-    private OWLClass domain;
+    private OWLClassData domain;
 
     @Mock
-    private OWLClass range;
+    private OWLClassData range;
 
     @Mock
-    private OWLObjectProperty inverse;
+    private OWLObjectPropertyData inverse;
 
     @Before
     public void setUp() throws Exception {
         annotations = Sets.newHashSet(annotationValue);
-        domain = mock(OWLClass.class);
+        domain = mock(OWLClassData.class);
         domains = Sets.newHashSet(domain);
         ranges = Sets.newHashSet(range);
         inverses = Sets.newHashSet(inverse);
@@ -213,21 +215,4 @@ public class ObjectPropertyFrame_TestCase {
     public void shouldReturnSuppliedCharacteristics() {
         assertThat(objectPropertyFrame.getCharacteristics(), is(characteristics));
     }
-
-    @Test
-    public void shouldReturnSignature() {
-        when(annotationValue.getProperty()).thenReturn(annotationProperty);
-        OWLAnnotationValue value = mock(OWLAnnotationValue.class);
-        when(annotationValue.getValue()).thenReturn(value);
-        when(value.getSignature()).thenReturn(Collections.emptySet());
-        assertThat(objectPropertyFrame.getSignature(), containsInAnyOrder(
-                subject,
-                annotationProperty,
-                domain,
-                range,
-                inverse));
-    }
-
-
-
 }

@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -14,7 +15,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntity> extends AbstractHasProjectAction<Result> implements UpdateObjectAction<LabelledFrame<F>> {
+public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntityData> extends AbstractHasProjectAction<Result> implements UpdateObjectAction<LabelledFrame<F>> {
 
     private LabelledFrame<F> from;
 

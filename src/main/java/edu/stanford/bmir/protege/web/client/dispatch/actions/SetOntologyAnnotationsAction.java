@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
@@ -15,27 +17,25 @@ import java.util.Set;
  */
 public class SetOntologyAnnotationsAction extends AbstractHasProjectAction<SetOntologyAnnotationsResult> {
 
-    private Set<OWLAnnotation> fromAnnotations;
+    private Set<PropertyAnnotationValue> fromAnnotations;
 
-    private Set<OWLAnnotation> toAnnotations;
+    private Set<PropertyAnnotationValue> toAnnotations;
 
-    /**
-     * For serialization purposes only
-     */
+    @GwtSerializationConstructor
     private SetOntologyAnnotationsAction() {
     }
 
-    public SetOntologyAnnotationsAction(ProjectId projectId, Set<OWLAnnotation> fromAnnotations, Set<OWLAnnotation> toAnnotations) {
+    public SetOntologyAnnotationsAction(ProjectId projectId, Set<PropertyAnnotationValue> fromAnnotations, Set<PropertyAnnotationValue> toAnnotations) {
         super(projectId);
-        this.fromAnnotations = new HashSet<OWLAnnotation>(fromAnnotations);
-        this.toAnnotations = new HashSet<OWLAnnotation>(toAnnotations);
+        this.fromAnnotations = new HashSet<>(fromAnnotations);
+        this.toAnnotations = new HashSet<>(toAnnotations);
     }
 
-    public Set<OWLAnnotation> getFromAnnotations() {
-        return new HashSet<OWLAnnotation>(fromAnnotations);
+    public Set<PropertyAnnotationValue> getFromAnnotations() {
+        return new HashSet<>(fromAnnotations);
     }
 
-    public Set<OWLAnnotation> getToAnnotations() {
-        return new HashSet<OWLAnnotation>(toAnnotations);
+    public Set<PropertyAnnotationValue> getToAnnotations() {
+        return new HashSet<>(toAnnotations);
     }
 }

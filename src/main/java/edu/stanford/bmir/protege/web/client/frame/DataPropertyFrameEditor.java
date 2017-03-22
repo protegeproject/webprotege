@@ -76,14 +76,9 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     private boolean dirty = false;
 
-    private final ProjectId projectId;
-
-    private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public DataPropertyFrameEditor(PropertyValueListEditor editor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
+    public DataPropertyFrameEditor(PropertyValueListEditor editor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         annotations = editor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
@@ -137,34 +132,10 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         dirty = false;
         lastDataPropertyFrame = Optional.of(object);
         final DataPropertyFrame frame = object.getFrame();
-        iriField.setText(frame.getSubject().getIRI().toString());
+        iriField.setText(frame.getSubject().getEntity().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
-                for (OWLClass cls : frame.getDomains()) {
-                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
-                    if (entityData.isPresent()) {
-                        primitiveDatas.add(entityData.get());
-                    }
-                }
-                domains.setValue(primitiveDatas);
-            }
-        });
-        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
-            @Override
-            public void handleSuccess(GetEntityDataResult result) {
-                List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
-                for (OWLDatatype dt : frame.getRanges()) {
-                    final Optional<OWLEntityData> entityData = Optional.of(result.getEntityDataMap().get(dt));
-                    if (entityData.isPresent()) {
-                        primitiveDatas.add(entityData.get());
-                    }
-                }
-                ranges.setValue(primitiveDatas);
-            }
-        });
+        domains.setValue(new ArrayList<>(frame.getDomains()));
+        ranges.setValue(new ArrayList<>(ranges.getAbsoluteLeft()));
         functionalCheckBox.setValue(frame.isFunctional());
 
 
@@ -183,20 +154,23 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         if(!lastDataPropertyFrame.isPresent()) {
             return Optional.absent();
         }
-        OWLDataProperty property = DataFactory.getOWLDataProperty(getIRIString());
-        final Set<OWLClass> domainsClasses = Sets.newHashSet();
+        final Set<OWLClassData> domainsClasses = Sets.newHashSet();
         if (domains.getValue().isPresent()) {
             for(OWLPrimitiveData primitiveData : domains.getValue().get()) {
-                domainsClasses.add(((OWLClassData) primitiveData).getEntity());
+                domainsClasses.add(((OWLClassData) primitiveData));
             }
         }
-        final Set<OWLDatatype> rangeTypes = Sets.newHashSet();
+        final Set<OWLDatatypeData> rangeTypes = Sets.newHashSet();
         if (ranges.getValue().isPresent()) {
             for(OWLPrimitiveData primitiveData : ranges.getValue().get()) {
-                rangeTypes.add(((OWLDatatypeData) primitiveData).getEntity());
+                rangeTypes.add(((OWLDatatypeData) primitiveData));
             }
         }
-        DataPropertyFrame frame = new DataPropertyFrame(property, annotations.getValue().get(), domainsClasses, rangeTypes, functionalCheckBox.getValue());
+        DataPropertyFrame frame = new DataPropertyFrame(lastDataPropertyFrame.get().getFrame().getSubject(),
+                                                        annotations.getValue().get(),
+                                                        domainsClasses,
+                                                        rangeTypes,
+                                                        functionalCheckBox.getValue());
         return Optional.of(new LabelledFrame<>(lastDataPropertyFrame.get().getDisplayName(), frame));
     }
 

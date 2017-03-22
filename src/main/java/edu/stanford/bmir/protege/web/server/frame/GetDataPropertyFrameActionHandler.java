@@ -40,7 +40,8 @@ public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionH
     @Override
     protected GetDataPropertyFrameResult execute(GetDataPropertyFrameAction action, Project project, ExecutionContext executionContext) {
         DataPropertyFrameTranslator translator = new DataPropertyFrameTranslator();
-        final DataPropertyFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
+        final DataPropertyFrame frame = translator.getFrame(project.getRenderingManager().getRendering(action.getSubject()),
+                                                            project.getRootOntology(), project);
         String displayName = project.getRenderingManager().getBrowserText(action.getSubject());
         BrowserTextMap btm = BrowserTextMap.build(project.getRenderingManager(), frame.getSignature());
         return new GetDataPropertyFrameResult(new LabelledFrame<>(displayName, frame), btm);
