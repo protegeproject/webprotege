@@ -348,4 +348,9 @@ public class ClientApplicationModule {
     AdminView provideAdminView(AdminViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    NothingSelectedView provideNothingSelectedView(NothingSelectedViewImpl impl) {
+        return impl;
+    }
 }
