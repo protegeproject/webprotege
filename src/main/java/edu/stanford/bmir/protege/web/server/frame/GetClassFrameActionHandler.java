@@ -7,12 +7,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;

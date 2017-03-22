@@ -6,13 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;

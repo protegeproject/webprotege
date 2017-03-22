@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -14,9 +15,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  */
 public class UpdateClassFrameAction extends UpdateFrameAction<ClassFrame, OWLClassData> {
 
-    /**
-     * For serialization purposes only
-     */
+    @GwtSerializationConstructor
     private UpdateClassFrameAction() {
     }
 
