@@ -4,6 +4,7 @@
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.frame">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain} {wp.style.webProtegeLaf}">
 
@@ -14,17 +15,17 @@
 
         <div style="height: 10px;"/>
 
-        <g:Label text="Annotations" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
         <frame:PropertyValueListEditor ui:field="annotations"/>
 
         <div style="height: 15px;"/>
 
-        <g:Label text="Domain" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_domain}" addStyleNames="{wp.style.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="domains"/>
 
         <div style="height: 15px;"/>
 
-        <g:Label text="Range" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_range}" addStyleNames="{wp.style.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="ranges"/>
 
     </g:HTMLPanel>
