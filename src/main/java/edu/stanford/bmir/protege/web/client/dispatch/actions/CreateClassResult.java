@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -20,15 +21,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public class CreateClassResult implements GetObjectResult<OWLClass>, HasEventList<ProjectEvent<?>>, HasBrowserTextMap {
+@SuppressWarnings("GwtInconsistentSerializableClass" )
+public class CreateClassResult implements GetObjectResult<OWLClassData>, HasEventList<ProjectEvent<?>> {
 
     private ObjectPath<OWLClass> pathToRoot;
 
-    private OWLClass cls;
+    private OWLClassData cls;
 
     private EventList<ProjectEvent<?>> eventList;
-
-    private BrowserTextMap browserTextMap;
 
     private CreateClassResult() {
     }
@@ -37,20 +37,18 @@ public class CreateClassResult implements GetObjectResult<OWLClass>, HasEventLis
      * Constructs a {@link CreateClassResult}.
      * @param cls The class that was created.  Not {@code null}.
      * @param pathToRoot The path to the root (owl:Thing).  Not {@code null}.
-     * @param browserTextMap A browse
      */
-    public CreateClassResult(OWLClass cls, ObjectPath<OWLClass> pathToRoot, BrowserTextMap browserTextMap, EventList<ProjectEvent<?>> eventList) {
+    public CreateClassResult(OWLClassData cls, ObjectPath<OWLClass> pathToRoot, EventList<ProjectEvent<?>> eventList) {
         if(pathToRoot.isEmpty()) {
             throw new IllegalArgumentException("pathToRoot must not be empty");
         }
         this.cls = checkNotNull(cls);
-        this.browserTextMap = checkNotNull(browserTextMap);
         this.pathToRoot = checkNotNull(pathToRoot);
         this.eventList = eventList;
     }
 
     @Override
-    public OWLClass getObject() {
+    public OWLClassData getObject() {
         return cls;
     }
 
@@ -69,10 +67,5 @@ public class CreateClassResult implements GetObjectResult<OWLClass>, HasEventLis
     @Override
     public EventList<ProjectEvent<?>> getEventList() {
         return eventList;
-    }
-
-    @Override
-    public BrowserTextMap getBrowserTextMap() {
-        return browserTextMap;
     }
 }
