@@ -4,6 +4,7 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .functional-label {
             display: inline-block;
@@ -30,13 +31,13 @@
 
         <div style="height: 30px;"/>
 
-        <g:Label text="Annotations" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
         <frame:PropertyValueListEditor ui:field="annotations"/>
 
         <div style="height: 30px;"/>
 
         <div>
-            <g:CheckBox ui:field="functionalCheckBox" text="Functional"
+            <g:CheckBox ui:field="functionalCheckBox" text="{msg.frame_functional}"
                         addStyleNames="web-protege-dialog-label {style.functional-label}"/>
             <g:InlineLabel text="(single valued)" addStyleNames="web-protege-annotated-radio-button-description-label"/>
         </div>
@@ -44,12 +45,12 @@
 
         <div style="height: 30px;"/>
 
-        <g:Label text="Domain" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_domain}" addStyleNames="{wp.style.formLabel}"/>
         <primitive:PrimitiveDataListEditor ui:field="domains"/>
 
         <div style="height: 30px;"/>
 
-        <g:Label text="Range" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="{msg.frame_range}" addStyleNames="{wp.style.formLabel}"/>
         <primitive:PrimitiveDataListEditor ui:field="ranges"/>
 
     </g:HTMLPanel>
