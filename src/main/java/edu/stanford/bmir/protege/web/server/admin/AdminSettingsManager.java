@@ -25,6 +25,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forGuestUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_ACCOUNT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
@@ -121,15 +122,21 @@ public class AdminSettingsManager {
                     adminSettings.getApplicationLocation()
             );
             appSettingsManager.setApplicationSettings(applicationSettings);
-            Set<RoleId> roleIds = new HashSet<>(accessManager.getAssignedRoles(forAnySignedInUser(),
-                                                                               ApplicationResource.get()));
+            Set<RoleId> guestRoleIds = new HashSet<>(accessManager.getAssignedRoles(forGuestUser(),
+                                                                                    ApplicationResource.get()));
             if(adminSettings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED) {
-                roleIds.add(ACCOUNT_CREATOR.getRoleId());
+                guestRoleIds.add(ACCOUNT_CREATOR.getRoleId());
             }
             else {
-                roleIds.remove(ACCOUNT_CREATOR.getRoleId());
+                guestRoleIds.remove(ACCOUNT_CREATOR.getRoleId());
             }
+            accessManager.setAssignedRoles(forGuestUser(),
+                                           ApplicationResource.get(),
+                                           guestRoleIds);
 
+
+            Set<RoleId> roleIds = new HashSet<>(accessManager.getAssignedRoles(forAnySignedInUser(),
+                                                                               ApplicationResource.get()));
             if(adminSettings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED) {
                 roleIds.add(PROJECT_CREATOR.getRoleId());
             }
