@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.place;
 
 import edu.stanford.bmir.protege.web.server.app.*;
-import edu.stanford.bmir.protege.web.server.perspective.EntityTypePerspectiveMapper;
+import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;

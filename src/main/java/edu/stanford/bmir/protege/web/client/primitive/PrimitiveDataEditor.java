@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -11,9 +10,10 @@ import edu.stanford.bmir.protege.web.client.library.common.HasTextRendering;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -64,130 +64,130 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
     void setAllowedTypes(Collection<PrimitiveType> primitiveTypes);
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLClass}
+     * Specifies whether or not the editor should allow {@link OWLClass}
      * entities to be edited.
-     * @param classesAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLClass}
+     * @param classesAllowed {@code true} if the editor should allow {@link OWLClass}
      * entities to be edited, otherwise {@code false}.
      */
     void setClassesAllowed(boolean classesAllowed);
 
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLAnnotationProperty} entities.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLAnnotationProperty} entities,
+     * Determines whether or not this editor can edit {@link OWLAnnotationProperty} entities.
+     * @return {@code true} if this editor can edit {@link OWLAnnotationProperty} entities,
      * otherwise {@code false}.
      */
     boolean isAnnotationPropertiesAllowed();
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLAnnotationProperty}
+     * Specifies whether or not the editor should allow {@link OWLAnnotationProperty}
      * entities to be edited.
-     * @param annotationPropertiesAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLAnnotationProperty}
+     * @param annotationPropertiesAllowed {@code true} if the editor should allow {@link OWLAnnotationProperty}
      * entities to be edited, otherwise {@code false}.
      */
     void setAnnotationPropertiesAllowed(boolean annotationPropertiesAllowed);
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLDataProperty} entities.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLDataProperty} entities,
+     * Determines whether or not this editor can edit {@link OWLDataProperty} entities.
+     * @return {@code true} if this editor can edit {@link OWLDataProperty} entities,
      * otherwise {@code false}.
      */
     boolean isDataPropertiesAllowed();
 
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLDataProperty}
+     * Specifies whether or not the editor should allow {@link OWLDataProperty}
      * entities to be edited.
-     * @param dataPropertiesAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLDataProperty}
+     * @param dataPropertiesAllowed {@code true} if the editor should allow {@link OWLDataProperty}
      * entities to be edited, otherwise {@code false}.
      */
     void setDataPropertiesAllowed(boolean dataPropertiesAllowed);
 
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLObjectProperty} entities.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLObjectProperty} entities,
+     * Determines whether or not this editor can edit {@link OWLObjectProperty} entities.
+     * @return {@code true} if this editor can edit {@link OWLObjectProperty} entities,
      * otherwise {@code false}.
      */
     boolean isObjectPropertiesAllowed();
 
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLObjectProperty}
+     * Specifies whether or not the editor should allow {@link OWLObjectProperty}
      * entities to be edited.
-     * @param objectPropertiesAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLObjectProperty}
+     * @param objectPropertiesAllowed {@code true} if the editor should allow {@link OWLObjectProperty}
      * entities to be edited, otherwise {@code false}.
      */
     void setObjectPropertiesAllowed(boolean objectPropertiesAllowed);
 
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLClass} entities.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLClass} entities,
+     * Determines whether or not this editor can edit {@link OWLClass} entities.
+     * @return {@code true} if this editor can edit {@link OWLClass} entities,
      * otherwise {@code false}.
      */
     boolean isClassesAllowed();
 
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLDatatype} entities.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLDatatype} entities,
+     * Determines whether or not this editor can edit {@link OWLDatatype} entities.
+     * @return {@code true} if this editor can edit {@link OWLDatatype} entities,
      * otherwise {@code false}.
      */
     boolean isDatatypesAllowed();
 
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLDatatype}
+     * Specifies whether or not the editor should allow {@link OWLDatatype}
      * entities to be edited.
-     * @param datatypesAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLDatatype}
+     * @param datatypesAllowed {@code true} if the editor should allow {@link OWLDatatype}
      * entities to be edited, otherwise {@code false}.
      */
     void setDatatypesAllowed(boolean datatypesAllowed);
 
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLNamedIndividual} entities.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLNamedIndividual} entities,
+     * Determines whether or not this editor can edit {@link OWLNamedIndividual} entities.
+     * @return {@code true} if this editor can edit {@link OWLNamedIndividual} entities,
      * otherwise {@code false}.
      */
     boolean isNamedIndividualsAllowed();
 
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLNamedIndividual}
+     * Specifies whether or not the editor should allow {@link OWLNamedIndividual}
      * entities to be edited.
-     * @param namedIndividualsAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLNamedIndividual}
+     * @param namedIndividualsAllowed {@code true} if the editor should allow {@link OWLNamedIndividual}
      * entities to be edited, otherwise {@code false}.
      */
     void setNamedIndividualsAllowed(boolean namedIndividualsAllowed);
 
     /**
-     * Determines whether or not this editor can edit {@link org.semanticweb.owlapi.model.OWLLiteral}s.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.OWLLiteral}s,
+     * Determines whether or not this editor can edit {@link OWLLiteral}s.
+     * @return {@code true} if this editor can edit {@link OWLLiteral}s,
      * otherwise {@code false}.
      */
     boolean isLiteralAllowed();
 
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLLiteral}s to be edited.
-     * @param literalsAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.OWLLiteral}s
+     * Specifies whether or not the editor should allow {@link OWLLiteral}s to be edited.
+     * @param literalsAllowed {@code true} if the editor should allow {@link OWLLiteral}s
      *                                   to be edited, otherwise {@code false}.
      */
     void setLiteralAllowed(boolean literalsAllowed);
 
 
     /**
-     * Determines whether or not this editor can edit raw {@link org.semanticweb.owlapi.model.IRI}s.
-     * @return {@code true} if this editor can edit {@link org.semanticweb.owlapi.model.IRI}s,
+     * Determines whether or not this editor can edit raw {@link IRI}s.
+     * @return {@code true} if this editor can edit {@link IRI}s,
      * otherwise {@code false}.
      */
     boolean isIRIAllowed();
 
     /**
-     * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.IRI}s to be edited.
-     * @param irisAllowed {@code true} if the editor should allow {@link org.semanticweb.owlapi.model.IRI}s
+     * Specifies whether or not the editor should allow {@link IRI}s to be edited.
+     * @param irisAllowed {@code true} if the editor should allow {@link IRI}s
      *                                   to be edited, otherwise {@code false}.
      */
     void setIRIAllowed(boolean irisAllowed);

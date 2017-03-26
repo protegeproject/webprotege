@@ -249,7 +249,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
         else {
             if(propertyField.getValue().isPresent() && valueField.getValue().isPresent()) {
                 Set<OWLAxiom> augmentingAxioms = Sets.newHashSet();
-                Optional<EntitySuggestion> selectedSuggestion = valueField.getSelectedSuggestion();
+                java.util.Optional<EntitySuggestion> selectedSuggestion = valueField.getSelectedSuggestion();
                 if(selectedSuggestion.isPresent()) {
                     if(selectedSuggestion.get() instanceof FreshEntitySuggestion) {
                         augmentingAxioms.addAll(((FreshEntitySuggestion) selectedSuggestion.get()).getAugmentingAxioms());

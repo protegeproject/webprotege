@@ -3,11 +3,15 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
@@ -15,12 +19,15 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
@@ -48,8 +55,6 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     public static final double PLACEHOLDER_ICON_OPACITY = 0.3;
 
-    private final ProjectId projectId;
-
     private final PrimitiveDataEditorSuggestOracle entitySuggestOracle;
 
     private final LanguageEditor languageEditor;
@@ -72,22 +77,31 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private Optional<OWLPrimitiveData> primitiveDataPlaceholder = Optional.absent();
 
-    private Optional<EntitySuggestion> selectedSuggestion = Optional.absent();
+    private java.util.Optional<EntitySuggestion> selectedSuggestion = java.util.Optional.empty();
+
+    private final PlaceController placeController;
+
+    private final EntityTypePerspectiveMapper typePerspectiveMapper = new EntityTypePerspectiveMapper();
 
     @Inject
-    public PrimitiveDataEditorImpl(ProjectId projectId, PrimitiveDataEditorView editorView, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
-        this.projectId = projectId;
+    public PrimitiveDataEditorImpl(PrimitiveDataEditorView editorView,
+                                   LanguageEditor languageEditor,
+                                   PrimitiveDataEditorSuggestOracle suggestOracle,
+                                   PrimitiveDataParser parser,
+                                   FreshEntitiesHandler freshEntitiesHandler,
+                                   PlaceController placeController) {
         this.languageEditor = languageEditor;
         this.freshEntitiesHandler = freshEntitiesHandler;
         this.primitiveDataParser = parser;
         entitySuggestOracle = suggestOracle;
+        this.placeController = placeController;
         view = editorView;
         view.asWidget().addStyleName("web-protege-form-layout-editor-input");
         view.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
         view.setSuggestOracle(entitySuggestOracle);
         view.addSelectionHandler(event -> {
             EntitySuggestion suggestion = event.getSelectedItem();
-            selectedSuggestion = Optional.of(suggestion);
+            selectedSuggestion = java.util.Optional.of(suggestion);
             setCurrentData(Optional.of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
         });
         view.addValueChangeHandler(event -> handleValueChanged());
@@ -131,7 +145,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
-    public Optional<EntitySuggestion> getSelectedSuggestion() {
+    public java.util.Optional<EntitySuggestion> getSelectedSuggestion() {
         return selectedSuggestion;
     }
 
@@ -199,10 +213,10 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     /**
-     * Adds a {@link com.google.gwt.event.dom.client.FocusEvent} handler.
+     * Adds a {@link FocusEvent} handler.
      *
      * @param handler the focus handler
-     * @return {@link com.google.gwt.event.shared.HandlerRegistration} used to remove this handler
+     * @return {@link HandlerRegistration} used to remove this handler
      */
     @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
@@ -210,10 +224,10 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     /**
-     * Adds a {@link com.google.gwt.event.dom.client.KeyUpEvent} handler.
+     * Adds a {@link KeyUpEvent} handler.
      *
      * @param handler the key up handler
-     * @return {@link com.google.gwt.event.shared.HandlerRegistration} used to remove this handler
+     * @return {@link HandlerRegistration} used to remove this handler
      */
     @Override
     public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
@@ -329,7 +343,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     /**
-     * Adds a {@link com.google.gwt.event.logical.shared.ValueChangeEvent} handler.
+     * Adds a {@link ValueChangeEvent} handler.
      *
      * @param handler the handler
      * @return the registration for the event
@@ -414,6 +428,51 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 Window.open(data.getObject().toString(), data.getBrowserText(), "");
                 return null;
             }
+
+            @Override
+            public Void visit(OWLClassData data) throws RuntimeException {
+                navigateTo(new OWLClassItem(data.getEntity()), data);
+                return null;
+            }
+
+            private void navigateTo(Item item, OWLEntityData entityData) {
+                PerspectiveId perspectiveId = typePerspectiveMapper
+                        .getPerspectiveId(entityData.getEntity().getEntityType());
+
+                Place place = placeController.getWhere();
+                if(place instanceof ProjectViewPlace) {
+                    ProjectViewPlace nextPlace = ((ProjectViewPlace) place).builder()
+                                                                           .withPerspectiveId(perspectiveId)
+                                                                           .clearSelection()
+                                                                           .withSelectedItem(item)
+                                                                           .build();
+                    placeController.goTo(nextPlace);
+                }
+            }
+
+            @Override
+            public Void visit(OWLObjectPropertyData data) throws RuntimeException {
+                navigateTo(new OWLObjectPropertyItem(data.getEntity()), data);
+                return null;
+            }
+
+            @Override
+            public Void visit(OWLDataPropertyData data) throws RuntimeException {
+                navigateTo(new OWLDataPropertyItem(data.getEntity()), data);
+                return null;
+            }
+
+            @Override
+            public Void visit(OWLAnnotationPropertyData data) throws RuntimeException {
+                navigateTo(new OWLAnnotationPropertyItem(data.getEntity()), data);
+                return null;
+            }
+
+            @Override
+            public Void visit(OWLNamedIndividualData data) throws RuntimeException {
+                navigateTo(new OWLNamedIndividualItem(data.getEntity()), data);
+                return null;
+            }
         });
     }
 
@@ -493,7 +552,14 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 view.setAnchorTitle("Open link in new window");
                 view.setAnchorVisible(true);
             } else {
-                view.setAnchorVisible(false);
+                OWLPrimitiveData primitiveData = currentData.get();
+                if(primitiveData.isOWLEntity()) {
+                    view.setAnchorTitle("Go to entity");
+                    view.setAnchorVisible(true);
+                }
+                else {
+                    view.setAnchorVisible(false);
+                }
             }
         }
         else {
@@ -691,12 +757,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             }
             if(selectedSuggestion.isPresent()) {
                 if(!selectedSuggestion.get().getReplacementString().equals(data.getBrowserText())) {
-                    selectedSuggestion = Optional.absent();
+                    selectedSuggestion = java.util.Optional.empty();
                 }
             }
         }
         else {
-            selectedSuggestion = Optional.absent();
+            selectedSuggestion = java.util.Optional.empty();
         }
         updateDisplayForCurrentData();
         if (eventStrategy == EventStrategy.FIRE_EVENTS) {
