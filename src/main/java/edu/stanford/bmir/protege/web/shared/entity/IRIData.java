@@ -48,7 +48,8 @@ public class IRIData extends OWLPrimitiveData {
     }
 
     public boolean isHTTPLink() {
-        return "http".equalsIgnoreCase(getObject().getScheme());
+        return "http".equalsIgnoreCase(getObject().getScheme())
+                || "https".equalsIgnoreCase(getObject().getScheme());
     }
 
     @Override
