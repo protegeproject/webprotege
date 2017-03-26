@@ -98,6 +98,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("link.png")
     ImageResource linkIcon();
 
+    @Source("link.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgLinkIcon();
+
     @Source("iri.png")
     ImageResource iriIcon();
 
