@@ -73,6 +73,7 @@
             right: 1px;
             padding: 2px;
             position: absolute;
+            text-decoration: none;
             /*width: 18px;*/
 
         }
