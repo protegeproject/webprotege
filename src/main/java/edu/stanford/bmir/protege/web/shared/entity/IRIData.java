@@ -16,6 +16,8 @@ import java.util.Optional;
  */
 public class IRIData extends OWLPrimitiveData {
 
+
+
     public IRIData(IRI object) {
         super(object);
     }
