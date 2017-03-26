@@ -7,6 +7,7 @@
 @url dataPropertyIconUrl svgDataPropertyIcon;
 @url annotationPropertyIconUrl svgAnnotationPropertyIcon;
 @url individualIconUrl svgIndividualIcon;
+@url linkIconUrl svgLinkIcon;
 @url literalIconUrl svgLiteralIcon;
 @url numberIconUrl svgNumberIcon;
 @url commentIconUrl svgCommentSmallFilledIcon;
@@ -227,8 +228,9 @@
     gwt-image: 'linkIcon';
 }
 
-@sprite .linkIconInset {
-    gwt-image: 'linkIcon';
+.linkIconInset {
+    background-image: linkIconUrl;
+    background-repeat: no-repeat;
     background-position: 2px 2px;
     width: auto;
     height: auto;
