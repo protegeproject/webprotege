@@ -63,23 +63,16 @@
         }
 
         .button-loc {
-            /*background: none repeat scroll 0 0 transparent;*/
-            /*border: medium none;*/
-            /*color: transparent;*/
             cursor: pointer;
-            /*float: right;*/
-            /*float: left;*/
             top: 1px;
             right: 1px;
             padding: 2px;
             position: absolute;
             text-decoration: none;
-            /*width: 18px;*/
-
         }
 
         .expandingarea > a {
-            color: #d3d3d3;
+            color: #f0f0f0;
         }
 
         .expandingarea > a:hover {
