@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadCreatedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
@@ -65,6 +66,9 @@ public class DiscussionThreadListPresenter implements HasDispose {
     @Nonnull
     private HasBusy hasBusy = busy -> {};
 
+    @Nonnull
+    private EntityDisplay entityDisplay = entity -> {};
+
     @Inject
     public DiscussionThreadListPresenter(
             @Nonnull DiscussionThreadListView view,
@@ -83,6 +87,10 @@ public class DiscussionThreadListPresenter implements HasDispose {
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
         this.hasBusy = checkNotNull(hasBusy);
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     public void start(WebProtegeEventBus eventBus) {
@@ -135,7 +143,10 @@ public class DiscussionThreadListPresenter implements HasDispose {
             dispatch.execute(
                     getDiscussionThreads(projectId, e),
                     hasBusy,
-                    result -> displayThreads(result.getThreads())
+                    result -> {
+                        entityDisplay.setDisplayedEntity(Optional.of(result.getEntityData()));
+                        displayThreads(result.getThreads());
+                    }
             );
         });
     }

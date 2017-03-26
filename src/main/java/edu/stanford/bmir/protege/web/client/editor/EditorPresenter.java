@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -63,6 +64,10 @@ public class EditorPresenter implements HasDispose {
 
     private HandlerRegistrationManager handlerRegistrationManager;
 
+
+    private EntityDisplay entityDisplay = entityData -> {};
+
+
     private Timer commitOnValueChangedTimer = new Timer() {
         @Override
         public void run() {
@@ -100,6 +105,10 @@ public class EditorPresenter implements HasDispose {
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
         this.hasBusy = checkNotNull(hasBusy);
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext) {
@@ -178,6 +187,7 @@ public class EditorPresenter implements HasDispose {
                 }
                 final O value = editorManager.extractObject(result);
                 final EditorView<O> editorView = editorManager.getView(editorCtx);
+                editorView.setEntityDisplay(entityDisplay);
                 editorView.setValue(value);
                 valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
                 final Widget editorWidget = editorView.asWidget();

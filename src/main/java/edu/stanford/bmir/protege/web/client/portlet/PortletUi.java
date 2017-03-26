@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -27,7 +29,9 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
 
     void addPortletAction(PortletAction action);
 
-    void setViewTitle(String title);
+    void setTitle(@Nonnull String title);
+
+    void setSubtitle(@Nonnull String subtitle);
 
     void setNothingSelectedVisible(boolean nothingSelectedVisible);
 }

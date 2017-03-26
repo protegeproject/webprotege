@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.ui.NumberFormatter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -28,12 +29,14 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_INDIVIDUAL;
@@ -71,6 +74,8 @@ public class IndividualsListPresenter {
         }
     };
 
+    private EntityDisplay entityDisplay = entityData -> {};
+
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
                                     final SelectionModel selectionModel,
@@ -91,12 +96,15 @@ public class IndividualsListPresenter {
             searchStringDelayTimer.cancel();
             searchStringDelayTimer.schedule(SEARCH_DELAY);});
         view.setPageNumberChangedHandler(pageNumber -> updateList());
-
     }
 
     public void start(AcceptsOneWidget container) {
         GWT.log("[IndividualsListPresenter] Started Individuals List");
         container.setWidget(view.asWidget());
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
@@ -134,6 +142,7 @@ public class IndividualsListPresenter {
             view.setPageCount(paginatedResult.getPageCount());
             view.setPageNumber(paginatedResult.getPageNumber());
             updateStatusLabel(displayedIndividuals, totalIndividuals);
+            entityDisplay.setDisplayedEntity(Optional.of(result.getType()));
         });
     }
 

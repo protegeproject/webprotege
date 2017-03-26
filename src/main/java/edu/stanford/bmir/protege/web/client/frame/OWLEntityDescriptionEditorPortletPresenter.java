@@ -40,9 +40,10 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
         if (selectedEntity.isPresent()) {
             presenter.setSubject(selectedEntity.get());
-            setViewTitle(entity.get().getEntityType().getPrintName() + " Description");
+            setNothingSelectedVisible(false);
         }
         else {
+            setNothingSelectedVisible(true);
             presenter.clearSubject();
         }
     }

@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.shared.individualslist;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
@@ -15,6 +17,10 @@ import java.util.List;
  */
 public class GetIndividualsResult implements Result {
 
+
+    @SuppressWarnings("GwtInconsistentSerializableClass" )
+    private OWLClassData type;
+
     private Page<OWLNamedIndividualData> result;
 
     private int totalIndividuals;
@@ -25,10 +31,16 @@ public class GetIndividualsResult implements Result {
     private GetIndividualsResult() {
     }
 
-    public GetIndividualsResult(Page<OWLNamedIndividualData> result, int totalIndividuals, int matchedIndividuals) {
+    public GetIndividualsResult(OWLClassData type,
+                                Page<OWLNamedIndividualData> result, int totalIndividuals, int matchedIndividuals) {
+        this.type = type;
         this.result = result;
         this.totalIndividuals = totalIndividuals;
         this.matchedIndividuals = matchedIndividuals;
+    }
+
+    public OWLClassData getType() {
+        return type;
     }
 
     public Page<OWLNamedIndividualData> getPaginatedResult() {

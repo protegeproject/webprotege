@@ -85,6 +85,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());
         presenter.setHasBusy(portletUi);
         presenter.start(eventBus);
+        presenter.setEntityDisplay(this);
         handleSetEntity(getSelectedEntity());
     }
 

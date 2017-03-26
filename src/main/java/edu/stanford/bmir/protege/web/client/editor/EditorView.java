@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
+
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -8,4 +12,5 @@ package edu.stanford.bmir.protege.web.client.editor;
  */
 public interface EditorView<O> extends ValueEditor<O> {
 
+    void setEntityDisplay(@Nonnull EntityDisplay entityDisplay);
 }

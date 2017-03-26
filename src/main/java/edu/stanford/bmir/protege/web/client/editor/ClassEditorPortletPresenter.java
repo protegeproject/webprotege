@@ -20,7 +20,7 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
  */
 @Portlet(
         id = "portlets.ClassEditor",
-        title = "Class Editor",
+        title = "Class",
         tooltip = "Provides an editor that allows class descriptions to be edited"
 )
 public class ClassEditorPortletPresenter extends AbstractWebProtegePortletPresenter {

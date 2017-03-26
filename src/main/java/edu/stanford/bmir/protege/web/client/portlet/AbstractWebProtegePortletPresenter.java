@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -14,7 +15,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
-public abstract class AbstractWebProtegePortletPresenter implements WebProtegePortletPresenter {
+public abstract class AbstractWebProtegePortletPresenter implements WebProtegePortletPresenter, EntityDisplay {
 
     private final SelectionModel selectionModel;
 
@@ -25,6 +26,8 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     private Optional<PortletUi> portletUi = Optional.empty();
 
     private boolean trackSelection = true;
+
+    private Optional<OWLEntityData> displayedEntityData = Optional.empty();
 
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId) {
@@ -64,9 +67,21 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         return projectId;
     }
 
-    protected void setViewTitle(String title) {
-        GWT.log("[AbstractWebProtegePortletPresenter] Setting view title to: " + title);
-        portletUi.ifPresent(ui -> ui.setViewTitle(title));
+    @Override
+    public void setDisplayedEntity(@Nonnull Optional<OWLEntityData> entityData) {
+        displayedEntityData = checkNotNull(entityData);
+        updateViewTitle();
+    }
+
+    private void updateViewTitle() {
+        portletUi.ifPresent(ui -> {
+            if(displayedEntityData.isPresent()) {
+                displayedEntityData.ifPresent(entityData -> ui.setSubtitle(entityData.getBrowserText()));
+            }
+            else {
+                ui.setSubtitle("");
+            }
+        });
     }
 
     protected void setForbiddenVisible(boolean forbiddenVisible) {
