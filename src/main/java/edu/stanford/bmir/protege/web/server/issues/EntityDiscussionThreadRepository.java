@@ -36,7 +36,8 @@ public class EntityDiscussionThreadRepository {
         this.datastore.ensureIndexes();
     }
 
-    public List<EntityDiscussionThread> findThreads(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+    public List<EntityDiscussionThread> findThreads(@Nonnull ProjectId projectId,
+                                                    @Nonnull OWLEntity entity) {
         datastore.createQuery(EntityDiscussionThread.class);
         return datastore.find(EntityDiscussionThread.class)
                         .disableValidation()
@@ -46,14 +47,16 @@ public class EntityDiscussionThreadRepository {
                         .asList();
     }
 
-    public int getCommentsCount(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+    public int getCommentsCount(@Nonnull ProjectId projectId,
+                                @Nonnull OWLEntity entity) {
         return findThreads(projectId, entity).stream()
                                              .map(thread -> thread.getComments().size())
                                              .reduce((left, right) -> left + right)
                                              .orElse(0);
     }
 
-    public int getOpenCommentsCount(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+    public int getOpenCommentsCount(@Nonnull ProjectId projectId,
+                                    @Nonnull OWLEntity entity) {
         return findThreads(projectId, entity).stream()
                                              .filter(thread -> thread.getStatus() == Status.OPEN)
                                              .map(thread -> thread.getComments().size())
@@ -61,23 +64,25 @@ public class EntityDiscussionThreadRepository {
                                              .orElse(0);
     }
 
-    public void saveThread(EntityDiscussionThread thread) {
+    public void saveThread(@Nonnull EntityDiscussionThread thread) {
         datastore.save(thread);
     }
 
-    public void addCommentToThread(ThreadId threadId, Comment comment) {
+    public void addCommentToThread(@Nonnull ThreadId threadId,
+                                   @Nonnull Comment comment) {
         Query<EntityDiscussionThread> query = createQueryForThread(threadId);
         UpdateOperations<EntityDiscussionThread> ops = getUpdateOperations().add("comments", comment);
         datastore.update(query, ops, false);
     }
 
-    public Optional<EntityDiscussionThread> setThreadStatus(ThreadId threadId, Status status) {
+    public Optional<EntityDiscussionThread> setThreadStatus(@Nonnull ThreadId threadId,
+                                                            @Nonnull Status status) {
         datastore.updateFirst(createQueryForThread(threadId), getUpdateOperations().set("status", status));
         return Optional.ofNullable(datastore.get(EntityDiscussionThread.class, threadId));
     }
 
 
-    public Optional<EntityDiscussionThread> getThread(ThreadId id) {
+    public Optional<EntityDiscussionThread> getThread(@Nonnull ThreadId id) {
         return Optional.ofNullable(datastore.find(EntityDiscussionThread.class)
                                             .field("_id").equal(id)
                                             .get());
