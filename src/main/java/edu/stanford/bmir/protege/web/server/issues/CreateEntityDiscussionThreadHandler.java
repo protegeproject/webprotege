@@ -81,12 +81,14 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
         project.getEventManager().postEvent(new DiscussionThreadCreatedEvent(thread));
         ProjectId projectId = project.getProjectId();
         int commentCount = repository.getCommentsCount(projectId, entity);
+        int openCommentCount = repository.getOpenCommentsCount(projectId, entity);
         Optional<OWLEntityData> rendering = Optional.of(project.getRenderingManager().getRendering(entity));
         project.getEventManager().postEvent(new CommentPostedEvent(projectId,
                                                                    thread.getId(),
                                                                    comment,
                                                                    rendering,
-                                                                   commentCount));
+                                                                   commentCount,
+                                                                   openCommentCount));
         notificationsEmailer.sendCommentPostedNotification(projectId,
                                                            thread,
                                                            comment);

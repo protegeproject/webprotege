@@ -55,6 +55,8 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.Status;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
@@ -76,6 +78,7 @@ import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
+import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static java.util.Collections.singletonList;
 
@@ -230,6 +233,9 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         eventBus.addProjectEventHandler(getProjectId(),
                                         ON_COMMENT_POSTED,
                                         this::onCommentPosted);
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ON_STATUS_CHANGED,
+                                        this::handleStatusChanged);
         updateButtonStates();
     }
 
@@ -284,6 +290,22 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     }
 
+    private void handleStatusChanged(DiscussionThreadStatusChangedEvent event) {
+        event.getEntity().ifPresent(entity -> {
+                String name = entity.getIRI().toString();
+                TreeNode node = findTreeNode(name);
+                if (node != null) {
+                    final Object userObject = node.getUserObject();
+                    if (userObject instanceof EntityData) {
+                        EntityData subclassEntityData = (EntityData) userObject;
+                        subclassEntityData.setLocalAnnotationsCount(event.getOpenThreadsForEntity());
+                        String nodeText = createNodeRenderText(node);
+                        node.setText(nodeText);
+                    }
+                }
+        });
+    }
+
     private void onCommentPosted(CommentPostedEvent event) {
         GWT.log("[ClassTreePortlet] Comment posted: " + event);
         event.getEntity().ifPresent(entity -> {
@@ -293,7 +315,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                 final Object userObject = node.getUserObject();
                 if (userObject instanceof EntityData) {
                     EntityData subclassEntityData = (EntityData) userObject;
-                    subclassEntityData.setLocalAnnotationsCount(event.getCommentCountForEntity());
+                    subclassEntityData.setLocalAnnotationsCount(event.getOpenCommentCountForEntity());
                     String nodeText = createNodeRenderText(node);
                     node.setText(nodeText);
                 }

@@ -91,11 +91,13 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
         thread.ifPresent(t -> {
             OWLEntityData entityData = project.getRenderingManager().getRendering(t.getEntity());
             int commentCount = repository.getCommentsCount(project.getProjectId(), t.getEntity());
+            int openCommentCount = repository.getOpenCommentsCount(project.getProjectId(), t.getEntity());
             CommentPostedEvent event = new CommentPostedEvent(project.getProjectId(),
                                                               threadId,
                                                               comment,
                                                               Optional.of(entityData),
-                                                              commentCount);
+                                                              commentCount,
+                                                              openCommentCount);
             project.getEventManager().postEvent(event);
 
         });

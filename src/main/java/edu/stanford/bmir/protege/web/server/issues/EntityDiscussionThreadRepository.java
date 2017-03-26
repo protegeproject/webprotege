@@ -53,6 +53,14 @@ public class EntityDiscussionThreadRepository {
                                              .orElse(0);
     }
 
+    public int getOpenCommentsCount(@Nonnull ProjectId projectId, @Nonnull OWLEntity entity) {
+        return findThreads(projectId, entity).stream()
+                                             .filter(thread -> thread.getStatus() == Status.OPEN)
+                                             .map(thread -> thread.getComments().size())
+                                             .reduce((left, right) -> left + right)
+                                             .orElse(0);
+    }
+
     public void saveThread(EntityDiscussionThread thread) {
         datastore.save(thread);
     }
@@ -63,8 +71,9 @@ public class EntityDiscussionThreadRepository {
         datastore.update(query, ops, false);
     }
 
-    public void setThreadStatus(ThreadId threadId, Status status) {
+    public Optional<EntityDiscussionThread> setThreadStatus(ThreadId threadId, Status status) {
         datastore.updateFirst(createQueryForThread(threadId), getUpdateOperations().set("status", status));
+        return Optional.ofNullable(datastore.get(EntityDiscussionThread.class, threadId));
     }
 
 
