@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,10 +17,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetEntityDiscussionThreadsResult implements Result {
 
+    @SuppressWarnings("GwtInconsistentSerializableClass" )
+    private OWLEntityData entityData;
+
     private ImmutableList<EntityDiscussionThread> threads;
 
     @Inject
-    public GetEntityDiscussionThreadsResult(@Nonnull ImmutableList<EntityDiscussionThread> threads) {
+    public GetEntityDiscussionThreadsResult(@Nonnull OWLEntityData entityData,
+                                            @Nonnull ImmutableList<EntityDiscussionThread> threads) {
+        this.entityData = checkNotNull(entityData);
         this.threads = checkNotNull(threads);
     }
 
@@ -27,6 +33,12 @@ public class GetEntityDiscussionThreadsResult implements Result {
     private GetEntityDiscussionThreadsResult() {
     }
 
+    @Nonnull
+    public OWLEntityData getEntityData() {
+        return entityData;
+    }
+
+    @Nonnull
     public ImmutableList<EntityDiscussionThread> getThreads() {
         return threads;
     }

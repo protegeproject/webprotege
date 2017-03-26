@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.beust.jcommander.internal.Sets;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -77,22 +74,24 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                             event -> editorPresenter.updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
+        editorPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         if(!entity.isPresent()  || !isDisplayedType(entity)) {
-            setViewTitle("Nothing selected");
             setNothingSelectedVisible(true);
+            setDisplayedEntity(Optional.empty());
         }
         else {
-            setViewTitle(entity.get().getEntityType().getPrintName() + " description");
             setNothingSelectedVisible(false);
             final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
             editorPresenter.setEditorContext(editorContext);
         }
     }
+
+
 
     private boolean isDisplayedType(Optional<OWLEntity> entity) {
         return entity.map(e -> displayedTypes.contains(e.getEntityType())).orElse(false);

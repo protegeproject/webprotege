@@ -21,7 +21,7 @@ import static org.semanticweb.owlapi.model.EntityType.OBJECT_PROPERTY;
  */
 @Portlet(
         id = "portlets.PropertyEditor",
-        title = "Property Editor",
+        title = "Property",
         tooltip = "Provides an editor that allows property descriptions to be edited"
 )
 public class PropertyEditorPortletPresenter extends AbstractWebProtegePortletPresenter {

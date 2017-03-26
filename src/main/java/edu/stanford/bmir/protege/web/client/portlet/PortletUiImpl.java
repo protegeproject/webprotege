@@ -65,6 +65,9 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     private String viewTitle = "View";
 
+    private String viewSubtitle = "";
+
+
     @Inject
     public PortletUiImpl(@Nonnull ForbiddenView forbiddenView,
                          @Nonnull NothingSelectedView nothingSelectedView) {
@@ -76,14 +79,20 @@ public class PortletUiImpl extends Composite implements PortletUi {
     }
 
     @Override
-    public void setViewTitle(String title) {
+    public void setTitle(@Nonnull String title) {
         this.viewTitle = checkNotNull(title);
-        fireEvent(new ViewTitleChangedEvent(title));
+        fireEvent(new ViewTitleChangedEvent(getViewTitle()));
+    }
+
+    @Override
+    public void setSubtitle(@Nonnull String subtitle) {
+        this.viewSubtitle = checkNotNull(subtitle);
+        fireEvent(new ViewTitleChangedEvent(getViewTitle()));
     }
 
     @Override
     public String getViewTitle() {
-        return viewTitle;
+        return viewTitle + (viewSubtitle.isEmpty() ? "" : ": " + viewSubtitle);
     }
 
     @Override

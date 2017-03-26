@@ -21,23 +21,24 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -69,6 +70,8 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
 
     private boolean dirty;
 
+    private EntityDisplay entityDisplay = entityData -> {};
+
     interface ClassFrameEditor2UiBinder extends UiBinder<HTMLPanel, ClassFrameEditor> {
 
     }
@@ -86,13 +89,17 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
+    }
 
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     public void setValue(final LabelledFrame<ClassFrame> lcf) {
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
+        entityDisplay.setDisplayedEntity(java.util.Optional.of(currentSubject));
         iriField.setValue(lcf.getFrame().getSubject().getEntity().getIRI().toString());
         annotations.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getAnnotationPropertyValues())));
         properties.setValue(new PropertyValueList(new ArrayList<>(lcf.getFrame().getLogicalPropertyValues())));
@@ -200,6 +207,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         annotations.clearValue();
         properties.clearValue();
         classes.clearValue();
+        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
     }
 
     @UiHandler("annotations")

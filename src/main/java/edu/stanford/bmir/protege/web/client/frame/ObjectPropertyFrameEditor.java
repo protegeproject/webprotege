@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -15,8 +14,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
@@ -25,22 +22,16 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -63,6 +54,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     final PrimitiveDataListEditor ranges;
 
     private boolean dirty = false;
+
+    private EntityDisplay entityDisplay = entityData -> {};
+
 
     private Optional<LabelledFrame<ObjectPropertyFrame>> previouslySetValue = Optional.absent();
 
@@ -89,6 +83,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     private boolean enabled = false;
 
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
+    }
 
     private void fireEventIfWellFormed() {
         if(isWellFormed()) {
@@ -154,6 +151,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         domains.setValue(new ArrayList<>(object.getFrame().getDomains()));
         ranges.setValue(new ArrayList<>(object.getFrame().getRanges()));
         previouslySetValue = Optional.of(object);
+        entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
     }
 
     @Override
@@ -162,6 +160,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         iriField.setValue("");
         annotations.clearValue();
         previouslySetValue = Optional.absent();
+        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
     }
 
     @Override

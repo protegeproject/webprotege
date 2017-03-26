@@ -7,6 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
+import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetEntityDiscussionThreadsResult;
@@ -31,11 +34,16 @@ public class GetEntityDiscussionThreadsHandler implements ActionHandler<GetEntit
     @Nonnull
     private final AccessManager accessManager;
 
+    @Nonnull
+    private final ProjectManager projectManager;
+
     @Inject
     public GetEntityDiscussionThreadsHandler(@Nonnull AccessManager accessManager,
-                                             @Nonnull EntityDiscussionThreadRepository repository) {
+                                             @Nonnull EntityDiscussionThreadRepository repository,
+                                             @Nonnull ProjectManager projectManager) {
         this.repository = checkNotNull(repository);
         this.accessManager = checkNotNull(accessManager);
+        this.projectManager = checkNotNull(projectManager);
     }
 
     @Override
@@ -54,6 +62,9 @@ public class GetEntityDiscussionThreadsHandler implements ActionHandler<GetEntit
     @Override
     public GetEntityDiscussionThreadsResult execute(GetEntityDiscussionThreadsAction action, ExecutionContext executionContext) {
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
-        return new GetEntityDiscussionThreadsResult(ImmutableList.copyOf(threads));
+        Project project = projectManager.getProject(action.getProjectId(), executionContext.getUserId());
+        OWLEntityData entityData = project.getRenderingManager().getRendering(action.getEntity());
+        return new GetEntityDiscussionThreadsResult(entityData,
+                                                    ImmutableList.copyOf(threads));
     }
 }

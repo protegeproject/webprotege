@@ -20,7 +20,7 @@ import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
  */
 @Portlet(
         id = "portlets.IndividualEditor",
-        title = "Individual Editor",
+        title = "Individual",
         tooltip = "Provides an editor that allows individual descriptions to be edited"
 )
 public class NamedIndividualEditorPortletPresenter extends AbstractWebProtegePortletPresenter {

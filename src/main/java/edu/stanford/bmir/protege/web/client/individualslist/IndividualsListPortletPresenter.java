@@ -37,6 +37,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         presenter.installActions(portletUi);
         presenter.start(portletUi);
+        presenter.setEntityDisplay(this);
     }
 
     @Override

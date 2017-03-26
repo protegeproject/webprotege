@@ -99,7 +99,7 @@ public class PortletWidgetMapper implements WidgetMapper {
                                         @Nonnull NodeProperties nodeProperties) {
         PortletUi portletUi = portletUiProvider.get();
         WebProtegeEventBus eventBus = eventBusProvider.get();
-        portletUi.setViewTitle(portlet.getPortletDescriptor().getTitle());
+        portletUi.setTitle(portlet.getPortletDescriptor().getTitle());
         WebProtegePortletPresenter portletPresenter = portlet.getPresenter();
         portletPresenter.start(portletUi, eventBus);
         ViewHolder viewHolder;

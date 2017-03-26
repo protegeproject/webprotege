@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -11,35 +10,25 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -76,6 +65,8 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     private boolean dirty = false;
 
+    private EntityDisplay entityDisplay = entityData -> {};
+
 
     @Inject
     public DataPropertyFrameEditor(PropertyValueListEditor editor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
@@ -88,6 +79,10 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         initWidget(rootElement);
         iriField.setEnabled(false);
         setEnabled(false);
+    }
+
+    public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
+        this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     @UiHandler("annotations")
@@ -137,7 +132,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         domains.setValue(new ArrayList<>(frame.getDomains()));
         ranges.setValue(new ArrayList<>(ranges.getAbsoluteLeft()));
         functionalCheckBox.setValue(frame.isFunctional());
-
+        entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
 
     }
 
@@ -147,6 +142,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         annotations.clearValue();
         domains.clearValue();
         ranges.clearValue();
+        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
     }
 
     @Override

@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
@@ -72,7 +73,8 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         PageRequest pageRequest = action.getPageRequest();
         Pager<OWLNamedIndividualData> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
         Page<OWLNamedIndividualData> page = pager.getPage(pageRequest.getPageNumber());
-        return new GetIndividualsResult(page, counter.getCount(), individualsData.size());
+        OWLClassData type = project.getRenderingManager().getRendering(action.getType());
+        return new GetIndividualsResult(type, page, counter.getCount(), individualsData.size());
     }
 
     @Override
