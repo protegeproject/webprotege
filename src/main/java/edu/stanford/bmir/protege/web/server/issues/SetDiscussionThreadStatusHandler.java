@@ -16,6 +16,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.SET_OBJECT_COMMENT_STATUS;
 
 /**
@@ -54,10 +56,13 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
         EventTag fromTag = project.getEventManager().getCurrentTag();
         ThreadId threadId = action.getThreadId();
         Status status = action.getStatus();
-        repository.setThreadStatus(threadId, status);
+        Optional<EntityDiscussionThread> thread = repository.setThreadStatus(threadId, status);
+        int openComments = thread.map(t -> repository.getOpenCommentsCount(project.getProjectId(), t.getEntity())).orElse(-1);
         ProjectId projectId = action.getProjectId();
         project.getEventManager().postEvent(new DiscussionThreadStatusChangedEvent(projectId,
                                                                                    threadId,
+                                                                                   thread.map(EntityDiscussionThread::getEntity),
+                                                                                   openComments,
                                                                                    status));
         EventList<ProjectEvent<?>> eventList = project.getEventManager().getEventsFromTag(fromTag);
         return new SetDiscussionThreadStatusResult(threadId, status, eventList);

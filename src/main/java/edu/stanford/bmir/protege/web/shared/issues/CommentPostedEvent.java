@@ -29,22 +29,27 @@ public class CommentPostedEvent extends ProjectEvent<CommentPostedHandler> imple
 
     private Comment comment;
 
+    @SuppressWarnings("GwtInconsistentSerializableClass" )
     @Nullable
     private OWLEntityData entity;
 
     private int commentCountForEntity;
 
+    private int openCommentCountForEntity;
+
     public CommentPostedEvent(@Nonnull ProjectId projectId,
                               @Nonnull ThreadId threadId,
                               @Nonnull Comment comment,
                               @Nonnull Optional<OWLEntityData> entity,
-                              int commentCountForEntity) {
+                              int commentCountForEntity,
+                              int openCommentCountForEntity) {
         super(projectId);
         this.projectId = checkNotNull(projectId);
         this.threadId = checkNotNull(threadId);
         this.comment = checkNotNull(comment);
         this.entity = checkNotNull(entity).orElse(null);
         this.commentCountForEntity = commentCountForEntity;
+        this.openCommentCountForEntity = openCommentCountForEntity;
     }
 
     @GwtSerializationConstructor
@@ -80,5 +85,9 @@ public class CommentPostedEvent extends ProjectEvent<CommentPostedHandler> imple
 
     public int getCommentCountForEntity() {
         return commentCountForEntity;
+    }
+
+    public int getOpenCommentCountForEntity() {
+        return openCommentCountForEntity;
     }
 }
