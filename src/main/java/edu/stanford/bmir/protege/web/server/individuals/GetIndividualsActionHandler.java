@@ -13,6 +13,9 @@ import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
@@ -55,9 +58,9 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         else {
             stream = project.getRootOntology().getImportsClosure().stream()
                             .flatMap(o -> o.getClassAssertionAxioms(action.getType()).stream())
-                            .map(ax -> ax.getIndividual())
-                            .filter(i -> i.isNamed())
-                            .map(i -> i.asOWLNamedIndividual());
+                            .map(OWLClassAssertionAxiom::getIndividual)
+                            .filter(OWLIndividual::isNamed)
+                            .map(OWLIndividual::asOWLNamedIndividual);
         }
         Counter counter = new Counter();
         List<OWLNamedIndividualData> individualsData = stream.peek(i -> counter.increment())
@@ -65,7 +68,9 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
                                                              .filter(i -> {
                                                                  String searchString = action.getFilterString();
                                                                  return searchString.isEmpty()
-                                                                         || i.getBrowserText().contains(searchString);
+                                                                         || StringUtils.containsIgnoreCase(
+                                                                                i.getBrowserText(),
+                                                                                searchString);
                                                              })
                                                              .distinct()
                                                              .sorted()
