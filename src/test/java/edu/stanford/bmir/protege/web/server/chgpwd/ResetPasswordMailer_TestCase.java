@@ -42,6 +42,8 @@ public class ResetPasswordMailer_TestCase {
 
     private static final String THE_POPULATED_TEMPLATE = "The populated template";
 
+    private static final String THE_APP_NAME = "TheAppName";
+
     private ResetPasswordMailer mailer;
 
     @Mock
@@ -63,7 +65,7 @@ public class ResetPasswordMailer_TestCase {
     private PlaceUrl placeUrl;
 
     @Mock
-    private ApplicationNameSupplier appNameProvider;
+    private ApplicationNameSupplier appNameSupplier;
 
 
     @Captor
@@ -71,10 +73,11 @@ public class ResetPasswordMailer_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        mailer = new ResetPasswordMailer(mailManager, templateEngine, templateFile, placeUrl, appNameProvider, logger);
+        mailer = new ResetPasswordMailer(mailManager, templateEngine, templateFile, placeUrl, appNameSupplier, logger);
         when(userId.getUserName()).thenReturn(THE_USER_NAME);
         when(placeUrl.getApplicationUrl()).thenReturn(THE_APPLICATION_URL);
         when(templateEngine.populateTemplate(anyString(), anyMap())).thenReturn(THE_POPULATED_TEMPLATE);
+        when(appNameSupplier.get()).thenReturn(THE_APP_NAME);
     }
 
     @Test
@@ -82,7 +85,7 @@ public class ResetPasswordMailer_TestCase {
         mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
         verify(templateEngine, times(1)).populateTemplate(anyString(), objectMapCaptor.capture());
         Map<String, Object> objectMap = objectMapCaptor.getValue();
-        assertThat(objectMap, Matchers.hasEntry("userId", userId));
+        assertThat(objectMap, Matchers.hasEntry("userId", THE_USER_NAME));
     }
 
     @Test
