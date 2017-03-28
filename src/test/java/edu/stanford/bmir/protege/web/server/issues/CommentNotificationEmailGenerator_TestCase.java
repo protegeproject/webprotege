@@ -22,6 +22,7 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -78,6 +79,8 @@ public class CommentNotificationEmailGenerator_TestCase {
         when(comment.getCreatedBy()).thenReturn(creator);
         when(creator.getUserName()).thenReturn(USER_NAME);
         when(applicationNameSupplier.get()).thenReturn("TheAppName");
+        when(placeUrl.getProjectUrl(any())).thenReturn("TheProjectUrl");
+        when(placeUrl.getEntityUrl(any(), any())).thenReturn("TheEntityUrl");
         templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         generator = new CommentNotificationEmailGenerator(templateFile,
                                                           templateEngine,
