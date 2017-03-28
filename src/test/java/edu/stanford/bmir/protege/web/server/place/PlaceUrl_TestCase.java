@@ -102,7 +102,7 @@ public class PlaceUrl_TestCase {
     @Test
     public void shouldBuildProjectUrl() {
         String url = placeUrl.getProjectUrl(projectId);
-        assertThat(url, is(EXPECTED_URL_BASE + "#ProjectViewPlace:/projects/"
+        assertThat(url, is(EXPECTED_URL_BASE + "#projects/"
                                    + projectId.getId()
                                    + "/edit/TheDefaultPerspective"));
     }
@@ -111,7 +111,7 @@ public class PlaceUrl_TestCase {
     public void shouldBuildEntityUrl() {
 
         String url = placeUrl.getEntityUrl(projectId, entity);
-        assertThat(url, is(EXPECTED_URL_BASE + "#ProjectViewPlace:/projects/"
+        assertThat(url, is(EXPECTED_URL_BASE + "#projects/"
                                    + projectId.getId()
                                    + "/edit/TheClassPerspective?selection=Class(%3C" + entityIri.toString() + "%3E)"));
     }
