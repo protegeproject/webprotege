@@ -77,7 +77,7 @@ public class MetricsPresenterTestCase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                metricsChangedHandler = (MetricsChangedHandler) invocationOnMock.getArguments()[1];
+                metricsChangedHandler = (MetricsChangedHandler) invocationOnMock.getArguments()[0];
                 return null;
             }
         }).when(eventManager).addProjectEventHandler(eq(projectId), any(MetricsChangedEvent.getType().getClass()), any(MetricsChangedHandler.class));
@@ -98,23 +98,4 @@ public class MetricsPresenterTestCase {
         presenter.handleMetricsChanged();
         verify(view).setMetrics(metricValues);
     }
-
-    @Test
-    public void shouldMarkViewAsDirtyOnMetricsChangedForCorrectProjectId() {
-        MetricsChangedEvent event = mock(MetricsChangedEvent.class);
-        when(event.getProjectId()).thenReturn(projectId);
-        metricsChangedHandler.handleMetricsChanged(event);
-        verify(view, atLeastOnce()).setDirty(true);
-    }
-
-    @Test
-    public void shouldNotMarkViewAsDirtyOnMetricsChangedForIncorrectProjectId() {
-        MetricsChangedEvent event = mock(MetricsChangedEvent.class);
-        when(event.getProjectId()).thenReturn(mock(ProjectId.class));
-        metricsChangedHandler.handleMetricsChanged(event);
-        verify(view, times(0)).setDirty(true);
-    }
-
-
-
 }
