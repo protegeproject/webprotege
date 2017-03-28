@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
@@ -71,24 +72,27 @@ public class AdminSettingsManager {
         try {
             readLock.lock();
             ApplicationSettings appSettings = appSettingsManager.getApplicationSettings();
-            Set<ActionId> appActionClosure = accessManager.getActionClosure(forAnySignedInUser(),
-                                                                         ApplicationResource.get());
             AccountCreationSetting accountCreationSetting;
-            if(appActionClosure.contains(CREATE_ACCOUNT.getActionId())) {
+            boolean canCreateAccounts = accessManager.hasPermission(forGuestUser(),
+                                                                    ApplicationResource.get(),
+                                                                    BuiltInAction.CREATE_ACCOUNT);
+            if(canCreateAccounts) {
                 accountCreationSetting = ACCOUNT_CREATION_ALLOWED;
             }
             else {
                 accountCreationSetting = ACCOUNT_CREATION_NOT_ALLOWED;
             }
             ProjectCreationSetting projectCreationSetting;
-            if(appActionClosure.contains(CREATE_EMPTY_PROJECT.getActionId())) {
+            Set<ActionId> appActionClosureForAnySignedInUser = accessManager.getActionClosure(forAnySignedInUser(),
+                                                                            ApplicationResource.get());
+            if(appActionClosureForAnySignedInUser.contains(CREATE_EMPTY_PROJECT.getActionId())) {
                 projectCreationSetting = EMPTY_PROJECT_CREATION_ALLOWED;
             }
             else {
                 projectCreationSetting = EMPTY_PROJECT_CREATION_NOT_ALLOWED;
             }
             ProjectUploadSetting projectUploadSetting;
-            if(appActionClosure.contains(UPLOAD_PROJECT.getActionId())) {
+            if(appActionClosureForAnySignedInUser.contains(UPLOAD_PROJECT.getActionId())) {
                 projectUploadSetting = PROJECT_UPLOAD_ALLOWED;
             }
             else {

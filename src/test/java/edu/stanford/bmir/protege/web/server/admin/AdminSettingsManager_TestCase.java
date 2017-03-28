@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forGuestUser;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
@@ -80,9 +81,9 @@ public class AdminSettingsManager_TestCase {
 
     @Test
     public void shouldGetAccountCreationAllowed() {
-        when(accessManager.hasPermission(forAnySignedInUser(),
+        when(accessManager.hasPermission(forGuestUser(),
                                          ApplicationResource.get(),
-                                         BuiltInAction.CREATE_ACCOUNT.getActionId())).thenReturn(true);
+                                         BuiltInAction.CREATE_ACCOUNT)).thenReturn(true);
         AdminSettings adminSettings = manager.getAdminSettings();
         assertThat(adminSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_ALLOWED));
     }
