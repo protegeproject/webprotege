@@ -60,7 +60,7 @@ public final class ApplicationResource implements Resource {
 
     @Override
     public String toString() {
-        return toStringHelper("ApplicationActionTarget")
+        return toStringHelper("ApplicationResource")
                 .toString();
     }
 }
