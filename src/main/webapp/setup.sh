@@ -1,0 +1,1 @@
+java -cp WEB-INF/classes:WEB-INF/lib/* edu.stanford.bmir.protege.web.server.setup.SetupTools
