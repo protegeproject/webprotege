@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import org.junit.Before;
@@ -14,6 +13,7 @@ import org.semanticweb.owlapi.model.*;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -92,7 +92,7 @@ public class AxiomIRISubjectProvider_TestCase {
 
         when(iriComparator.compare(iriB, iri)).thenReturn(1);
         when(iriComparator.compare(iri, iriB)).thenReturn(-1);
-        absent = Optional.absent();
+        absent = Optional.empty();
         anonymousIndividual = mock(OWLAnonymousIndividual.class);
     }
 
