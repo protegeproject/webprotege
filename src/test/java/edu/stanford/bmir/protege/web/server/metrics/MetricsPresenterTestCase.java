@@ -104,7 +104,7 @@ public class MetricsPresenterTestCase {
         MetricsChangedEvent event = mock(MetricsChangedEvent.class);
         when(event.getProjectId()).thenReturn(projectId);
         metricsChangedHandler.handleMetricsChanged(event);
-        verify(view, times(1)).setDirty(true);
+        verify(view, atLeastOnce()).setDirty(true);
     }
 
     @Test
