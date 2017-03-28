@@ -17,6 +17,7 @@ import static edu.stanford.bmir.protege.web.server.access.Subject.forGuestUser;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_NOT_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -91,16 +92,16 @@ public class AdminSettingsManager_TestCase {
     @Test
     public void shouldGetProjectCreationNotAllowed() {
         AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_ALLOWED));
+        assertThat(adminSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_NOT_ALLOWED));
     }
 
     @Test
     public void shouldGetProjectCreationAllowed() {
         when(accessManager.hasPermission(forAnySignedInUser(),
                                          ApplicationResource.get(),
-                                         BuiltInAction.CREATE_EMPTY_PROJECT.getActionId())).thenReturn(true);
+                                         BuiltInAction.CREATE_EMPTY_PROJECT)).thenReturn(true);
         AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getAccountCreationSetting(), is(EMPTY_PROJECT_CREATION_ALLOWED));
+        assertThat(adminSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_ALLOWED));
     }
 
     @Test
@@ -113,7 +114,7 @@ public class AdminSettingsManager_TestCase {
     public void shouldGetProjectUploadAllowed() {
         when(accessManager.hasPermission(forAnySignedInUser(),
                                          ApplicationResource.get(),
-                                         BuiltInAction.UPLOAD_PROJECT.getActionId())).thenReturn(true);
+                                         BuiltInAction.UPLOAD_PROJECT)).thenReturn(true);
         AdminSettings adminSettings = manager.getAdminSettings();
         assertThat(adminSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_ALLOWED));
     }

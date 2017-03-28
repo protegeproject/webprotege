@@ -83,16 +83,20 @@ public class AdminSettingsManager {
                 accountCreationSetting = ACCOUNT_CREATION_NOT_ALLOWED;
             }
             ProjectCreationSetting projectCreationSetting;
-            Set<ActionId> appActionClosureForAnySignedInUser = accessManager.getActionClosure(forAnySignedInUser(),
-                                                                            ApplicationResource.get());
-            if(appActionClosureForAnySignedInUser.contains(CREATE_EMPTY_PROJECT.getActionId())) {
+            boolean canCreateEmptyProject = accessManager.hasPermission(forAnySignedInUser(),
+                                                                        ApplicationResource.get(),
+                                                                        CREATE_EMPTY_PROJECT);
+            if(canCreateEmptyProject) {
                 projectCreationSetting = EMPTY_PROJECT_CREATION_ALLOWED;
             }
             else {
                 projectCreationSetting = EMPTY_PROJECT_CREATION_NOT_ALLOWED;
             }
             ProjectUploadSetting projectUploadSetting;
-            if(appActionClosureForAnySignedInUser.contains(UPLOAD_PROJECT.getActionId())) {
+            boolean canUploadProject = accessManager.hasPermission(forAnySignedInUser(),
+                                                                   ApplicationResource.get(),
+                                                                   UPLOAD_PROJECT);
+            if(canUploadProject) {
                 projectUploadSetting = PROJECT_UPLOAD_ALLOWED;
             }
             else {
