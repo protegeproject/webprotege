@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -51,33 +53,33 @@ public class TemplateObjectsBuilder {
         return this;
     }
 
-    public TemplateObjectsBuilder withProjectId(ProjectId projectId) {
+    public TemplateObjectsBuilder withProjectId(@Nonnull ProjectId projectId) {
         builder.put(PROJECT_ID, projectId.getId());
         return this;
     }
 
-    public TemplateObjectsBuilder withProjectDisplayName(String displayName) {
+    public TemplateObjectsBuilder withProjectDisplayName(@Nonnull String displayName) {
         builder.put(PROJECT_DISPLAY_NAME, displayName);
         return this;
     }
 
-    public TemplateObjectsBuilder withProjectUrl(String projectUrl) {
+    public TemplateObjectsBuilder withProjectUrl(@Nonnull String projectUrl) {
         builder.put(PROJECT_URL, projectUrl);
         return this;
     }
 
-    public TemplateObjectsBuilder withProjectDetails(ProjectDetails projectDetails) {
+    public TemplateObjectsBuilder withProjectDetails(@Nonnull ProjectDetails projectDetails) {
         builder.put(PROJECT_ID, projectDetails.getProjectId().getId());
         builder.put(PROJECT_DISPLAY_NAME, projectDetails.getDisplayName());
         return this;
     }
 
-    public TemplateObjectsBuilder withApplicationName(String applicationName) {
+    public TemplateObjectsBuilder withApplicationName(@Nonnull String applicationName) {
         builder.put(APPLICATION_NAME, applicationName);
         return this;
     }
 
-    public TemplateObjectsBuilder withApplicationUrl(String url) {
+    public TemplateObjectsBuilder withApplicationUrl(@Nonnull String url) {
         builder.put(APPLICATION_URL, url);
         return this;
     }
@@ -91,7 +93,7 @@ public class TemplateObjectsBuilder {
         return this;
     }
 
-    public TemplateObjectsBuilder with(String name, Object object) {
+    public TemplateObjectsBuilder with(@Nonnull String name, @Nonnull Object object) {
         builder.put(name, object);
         return this;
     }

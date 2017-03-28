@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder.PROJECT_URL;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -20,18 +22,11 @@ import javax.inject.Inject;
  */
 public class CommentNotificationEmailGenerator {
 
-    public static final String PROJECT_DISPLAY_NAME = "project.displayName";
-
-    public static final String PROJECT_URL = "project.url";
-
     public static final String ENTITY_URL = "entity.url";
 
     public static final String THREAD = "thread";
 
     public static final String COMMENT = "comment";
-
-    public static final String APPLICATION_NAME = "application.name";
-
 
     private final TemplateEngine templateEngine;
 

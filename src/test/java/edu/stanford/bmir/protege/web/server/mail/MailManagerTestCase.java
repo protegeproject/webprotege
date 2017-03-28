@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
+import edu.stanford.bmir.protege.web.server.app.ApplicationHostSupplier;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import javax.mail.Address;
@@ -10,16 +13,23 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-//import org.jvnet.mock_javamail.Mailbox;
+import org.jvnet.mock_javamail.Mailbox;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/05/2014
  */
+@RunWith(MockitoJUnitRunner.class)
 public class MailManagerTestCase {
 
     public static final String SUBJECT = "Test subject";
@@ -39,15 +49,25 @@ public class MailManagerTestCase {
     @Mock
     private WebProtegeLogger logger;
 
+    @Mock
+    private ApplicationNameSupplier applicationNameSupplier;
+
+    @Mock
+    private ApplicationHostSupplier applicationHostSupplier;
+
     @Before
     public void setUp() throws MessagingException {
-//        Mailbox.clearAll();
-//        Properties mailProperties = new Properties();
-//        MessagingExceptionHandler messagingExceptionHandler = mock(MessagingExceptionHandler.class);
-//        MailManager mailManager = new MailManager(APP_NAME, HOST_NAME, mailProperties, messagingExceptionHandler);
-//        mailManager.sendMail(singletonList(TO), SUBJECT, BODY, messagingExceptionHandler);
-//        List<Message> messageList = Mailbox.get(TO);
-//        message = messageList.get(0);
+        Mailbox.clearAll();
+        Properties mailProperties = new Properties();
+        MessagingExceptionHandler messagingExceptionHandler = mock(MessagingExceptionHandler.class);
+        when(applicationNameSupplier.get()).thenReturn(APP_NAME);
+        when(applicationHostSupplier.get()).thenReturn(HOST_NAME);
+        MailManager mailManager = new MailManager(applicationNameSupplier,
+                                                  applicationHostSupplier,
+                                                  mailProperties, messagingExceptionHandler);
+        mailManager.sendMail(singletonList(TO), SUBJECT, BODY, messagingExceptionHandler);
+        List<Message> messageList = Mailbox.get(TO);
+        message = messageList.get(0);
     }
 
     @Test

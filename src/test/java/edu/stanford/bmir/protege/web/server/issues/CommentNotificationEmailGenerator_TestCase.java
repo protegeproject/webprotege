@@ -77,7 +77,7 @@ public class CommentNotificationEmailGenerator_TestCase {
         when(file.getName()).thenReturn(THE_FILE_NAME);
         when(comment.getCreatedBy()).thenReturn(creator);
         when(creator.getUserName()).thenReturn(USER_NAME);
-        when(applicationNameSupplier.get()).thenReturn("webprotege.stanford.edu");
+        when(applicationNameSupplier.get()).thenReturn("TheAppName");
         templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         generator = new CommentNotificationEmailGenerator(templateFile,
                                                           templateEngine,
@@ -94,12 +94,5 @@ public class CommentNotificationEmailGenerator_TestCase {
 
     private String populateTemplate() {
         return generator.generateEmailBody("MyProject", thread, comment);
-    }
-
-    @Test
-    public void shouldHandleIOException() throws IOException {
-        when(templateFile.getContents()).thenThrow(new IOException());
-        String populate = populateTemplate();
-        assertThat(populate, startsWith("Invalid template file: " + THE_FILE_NAME));
     }
 }
