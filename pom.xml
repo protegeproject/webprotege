@@ -586,7 +586,7 @@
         <profile>
             <id>webprotege.stanford.edu</id>
             <properties>
-                <data.directory>/apps/bmir.apps/web-protege-data</data.directory>
+                <data.directory>/srv/protege/webprotege-data/</data.directory>
                 <mail.smtp.from.wp.personalName>WebProtege</mail.smtp.from.wp.personalName>
                 <mail.smtp.host>smtp-unencrypted.stanford.edu</mail.smtp.host>
                 <mail.smtp.auth>false</mail.smtp.auth>
