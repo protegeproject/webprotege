@@ -12,6 +12,10 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class Comment_TestCase {
 
@@ -40,7 +44,7 @@ public class Comment_TestCase {
 
     @Test
     public void shouldReturnSupplied_id() {
-        MatcherAssert.assertThat(comment.getId(), Matchers.is(this.id));
+        assertThat(comment.getId(), is(this.id));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -51,12 +55,12 @@ public class Comment_TestCase {
 
     @Test
     public void shouldReturnSupplied_createdBy() {
-        MatcherAssert.assertThat(comment.getCreatedBy(), Matchers.is(this.createdBy));
+        assertThat(comment.getCreatedBy(), is(this.createdBy));
     }
 
     @Test
     public void shouldReturnSupplied_createdAt() {
-        MatcherAssert.assertThat(comment.getCreatedAt(), Matchers.is(this.createdAt));
+        assertThat(comment.getCreatedAt(), is(this.createdAt));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -67,7 +71,7 @@ public class Comment_TestCase {
 
     @Test
     public void shouldReturnSupplied_updatedAt() {
-        MatcherAssert.assertThat(comment.getUpdatedAt(), Matchers.is(this.updatedAt));
+        assertThat(comment.getUpdatedAt(), is(this.updatedAt));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -78,7 +82,7 @@ public class Comment_TestCase {
 
     @Test
     public void shouldReturnSupplied_body() {
-        MatcherAssert.assertThat(comment.getBody(), Matchers.is(this.body));
+        assertThat(comment.getBody(), is(this.body));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -89,63 +93,63 @@ public class Comment_TestCase {
 
     @Test
     public void shouldReturnSupplied_renderedBody() {
-        MatcherAssert.assertThat(comment.getRenderedBody(), Matchers.is(this.renderedBody));
+        assertThat(comment.getRenderedBody(), is(this.renderedBody));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        MatcherAssert.assertThat(comment, Matchers.is(comment));
+        assertThat(comment, is(comment));
     }
 
     @Test
     @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        MatcherAssert.assertThat(comment.equals(null), Matchers.is(false));
+        assertThat(comment.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(comment, Matchers.is(new Comment(id, createdBy, createdAt, updatedAt, body, renderedBody)));
+        assertThat(comment, is(new Comment(id, createdBy, createdAt, updatedAt, body, renderedBody)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_id() {
-        MatcherAssert.assertThat(comment, Matchers.is(Matchers.not(new Comment(Mockito.mock(edu.stanford.bmir.protege.web.shared.issues.CommentId.class), createdBy, createdAt, updatedAt, body, renderedBody))));
+        assertThat(comment, is(not(new Comment(Mockito.mock(edu.stanford.bmir.protege.web.shared.issues.CommentId.class), createdBy, createdAt, updatedAt, body, renderedBody))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_createdBy() {
-        MatcherAssert.assertThat(comment, Matchers.is(Matchers.not(new Comment(id, Mockito.mock(UserId.class), createdAt, updatedAt, body, renderedBody))));
+        assertThat(comment, is(not(new Comment(id, Mockito.mock(UserId.class), createdAt, updatedAt, body, renderedBody))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_createdAt() {
-        MatcherAssert.assertThat(comment, Matchers.is(Matchers.not(new Comment(id, createdBy, 2L, updatedAt, body, renderedBody))));
+        assertThat(comment, is(not(new Comment(id, createdBy, 2L, updatedAt, body, renderedBody))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_updatedAt() {
-        MatcherAssert.assertThat(comment, Matchers.is(Matchers.not(new Comment(id, createdBy, createdAt, Mockito.mock(Optional.class), body, renderedBody))));
+        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, Optional.of(1234L), body, renderedBody))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_body() {
-        MatcherAssert.assertThat(comment, Matchers.is(Matchers.not(new Comment(id, createdBy, createdAt, updatedAt, "String-7db11dfc-07e3-4497-b089-f32f37e0daf8", renderedBody))));
+        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, updatedAt, "String-7db11dfc-07e3-4497-b089-f32f37e0daf8", renderedBody))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_renderedBody() {
-        MatcherAssert.assertThat(comment, Matchers.is(Matchers.not(new Comment(id, createdBy, createdAt, updatedAt, body, "String-ad3be5cf-83bf-4b6f-980b-426b0acb2633"))));
+        assertThat(comment, is(not(new Comment(id, createdBy, createdAt, updatedAt, body, "String-ad3be5cf-83bf-4b6f-980b-426b0acb2633"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(comment.hashCode(), Matchers.is(new Comment(id, createdBy, createdAt, updatedAt, body, renderedBody).hashCode()));
+        assertThat(comment.hashCode(), is(new Comment(id, createdBy, createdAt, updatedAt, body, renderedBody).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        MatcherAssert.assertThat(comment.toString(), Matchers.startsWith("Comment"));
+        assertThat(comment.toString(), Matchers.startsWith("Comment"));
     }
 
 }
