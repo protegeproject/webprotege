@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import org.apache.commons.io.FileUtils;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class PerspectiveDataCopier {
 
 
     @Inject
-    public PerspectiveDataCopier(@DefaultPerspectiveDataDirectory File defaultPerspectiveDataDirectory,
+    public PerspectiveDataCopier(@Nonnull @DefaultPerspectiveDataDirectory File defaultPerspectiveDataDirectory,
                                  WebProtegeLogger logger) {
         this.defaultPerspectiveDataDirectory = defaultPerspectiveDataDirectory;
         this.logger = logger;
