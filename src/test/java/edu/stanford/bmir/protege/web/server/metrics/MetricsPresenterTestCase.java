@@ -90,7 +90,7 @@ public class MetricsPresenterTestCase {
     @Test
     public void shouldGetMetricsOnRequestRefresh() {
         handler.handleRequestRefresh(mock(RequestRefreshEvent.class));
-        verify(view).setMetrics(metricValues);
+        verify(view, atLeastOnce()).setMetrics(metricValues);
     }
 
     @Test
