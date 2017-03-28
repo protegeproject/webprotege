@@ -46,13 +46,6 @@ import java.util.Properties;
 @Module
 public class ApplicationModule {
 
-
-    @Provides
-    @Singleton
-    public ProjectExistsFilter provideProjectExistsFilter(ProjectExistsFilterImpl impl) {
-        return impl;
-    }
-
     @Provides
     @Singleton
     public AuthenticationManager provideAuthenticationManager(AuthenticationManagerImpl impl) {
