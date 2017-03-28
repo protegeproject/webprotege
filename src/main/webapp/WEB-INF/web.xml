@@ -54,6 +54,10 @@
 			<web-resource-name>No Access</web-resource-name>
 			<url-pattern>/protege.properties</url-pattern>
 		</web-resource-collection>
+		<web-resource-collection>
+			<web-resource-name>No Access</web-resource-name>
+			<url-pattern>/setup.sh</url-pattern>
+		</web-resource-collection>
 		<auth-constraint />
 		<user-data-constraint>
 			<transport-guarantee>NONE</transport-guarantee>
