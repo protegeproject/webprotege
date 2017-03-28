@@ -12,7 +12,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public final class OWLDataPropertyData extends OWLPropertyData {
+public class OWLDataPropertyData extends OWLPropertyData {
 
     public OWLDataPropertyData(OWLDataProperty entity, String browserText) {
         super(entity, browserText);
