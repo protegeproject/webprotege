@@ -43,8 +43,8 @@ public class Comment implements IsSerializable {
              createdBy,
              createdAt,
              checkNotNull(updatedAt).orElse(null),
-             body,
-             renderedBody);
+             checkNotNull(body),
+             checkNotNull(renderedBody));
     }
 
     private Comment(@Nonnull CommentId id,
@@ -110,7 +110,8 @@ public class Comment implements IsSerializable {
                 && this.createdBy.equals(other.createdBy)
                 && this.createdAt == other.createdAt
                 && Objects.equal(this.updatedAt, other.updatedAt)
-                && this.body.equals(other.body);
+                && this.body.equals(other.body)
+                && Objects.equal(this.renderedBody, other.renderedBody);
     }
 
     @Override
