@@ -36,7 +36,7 @@ public class PerspectiveFileManager_TestCase {
     private final File PROJECT_DIRECTORY = new File("PROJECT_DIRECTORY");
 
     @Rule
-    public TemporaryFolder temporaryFolder;
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private PerspectiveFileManager fileManager;
 
@@ -68,7 +68,8 @@ public class PerspectiveFileManager_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        defaultPerspectivesDirectory = new File(temporaryFolder.newFolder(), DEFAULT_DIRECTORY);
+        File tempFolder = temporaryFolder.newFolder();
+        defaultPerspectivesDirectory = new File(tempFolder, DEFAULT_DIRECTORY);
         when(algorithm.computeDigestAsBase16Encoding()).thenReturn(DIGEST);
         when(algorithmProvider.get()).thenReturn(algorithm);
         when(projectDirectoryFactory.getProjectDirectory(projectId)).thenReturn(PROJECT_DIRECTORY);
@@ -81,7 +82,7 @@ public class PerspectiveFileManager_TestCase {
     @Test
     public void shouldReturnDefaultFile() {
         File defaultDirectory = fileManager.getDefaultPerspectiveLayout(perspectiveId);
-        assertThat(defaultDirectory, is(new File("DEFAULT_DIRECTORY/DIGEST.json")));
+        assertThat(defaultDirectory, is(new File(defaultPerspectivesDirectory, "DIGEST.json")));
     }
 
     @Test
