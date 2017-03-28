@@ -50,6 +50,7 @@ public class MetricsPresenterTestCase {
 
     private RequestRefreshEventHandler handler;
 
+    @Mock
     private MetricsChangedHandler metricsChangedHandler;
 
     private MetricsPresenter presenter;
@@ -79,7 +80,7 @@ public class MetricsPresenterTestCase {
                 metricsChangedHandler = (MetricsChangedHandler) invocationOnMock.getArguments()[1];
                 return null;
             }
-        }).when(eventManager).addProjectEventHandler(projectId, any(MetricsChangedEvent.getType().getClass()), any(MetricsChangedHandler.class));
+        }).when(eventManager).addProjectEventHandler(eq(projectId), any(MetricsChangedEvent.getType().getClass()), any(MetricsChangedHandler.class));
 
         presenter = new MetricsPresenter(projectId, view, dispatchServiceManager);
         presenter.start();
