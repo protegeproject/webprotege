@@ -30,7 +30,7 @@ public class SharingSettingsPlaceTokenizer_TestCase {
     @Mock
     private SharingSettingsPlace place;
 
-    private final String EXPECTED_TOKEN = "/projects/" + PROJECT_ID + "/sharing";
+    private final String EXPECTED_TOKEN = "projects/" + PROJECT_ID + "/sharing";
 
     @Before
     public void setUp() {
