@@ -79,7 +79,7 @@ public class PlaceUrl {
      */
     @Nonnull
     public String getApplicationAnchor() {
-        return String.format("<a href=\"%s\">%s</a>", nameSupplier, getApplicationUrl());
+        return String.format("<a href=\"%s\">%s</a>", nameSupplier.get(), getApplicationUrl());
     }
 
     /**
@@ -113,8 +113,7 @@ public class PlaceUrl {
 
     private String getProjectPlaceFragment(ProjectViewPlace place) {
         ProjectViewPlaceTokenizer tokenizer = new ProjectViewPlaceTokenizer();
-        String placeToken = tokenizer.getToken(place);
-        return "ProjectViewPlace:" + placeToken;
+        return tokenizer.getToken(place);
     }
 
 
