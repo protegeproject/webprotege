@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public final class OWLNamedIndividualData extends OWLEntityData {
+public class OWLNamedIndividualData extends OWLEntityData {
 
     public OWLNamedIndividualData(OWLNamedIndividual entity, String browserText) {
         super(entity, browserText);
