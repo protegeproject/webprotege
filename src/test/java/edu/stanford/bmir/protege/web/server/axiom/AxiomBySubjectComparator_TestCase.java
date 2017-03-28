@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomBySubjectComparator;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
 import org.junit.Before;
@@ -13,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -56,21 +56,21 @@ public class AxiomBySubjectComparator_TestCase {
 
     @Test
     public void shouldReturnZero() {
-        Mockito.doReturn(Optional.absent()).when(axiomSubjectProvider).getSubject(axiom1);
-        Mockito.doReturn(Optional.absent()).when(axiomSubjectProvider).getSubject(axiom2);
+        Mockito.doReturn(Optional.empty()).when(axiomSubjectProvider).getSubject(axiom1);
+        Mockito.doReturn(Optional.empty()).when(axiomSubjectProvider).getSubject(axiom2);
         assertThat(comparator.compare(axiom1, axiom2), is(0));
     }
 
     @Test
     public void shouldReturnMinusOne() {
         Mockito.doReturn(Optional.of(subject1)).when(axiomSubjectProvider).getSubject(axiom1);
-        Mockito.doReturn(Optional.absent()).when(axiomSubjectProvider).getSubject(axiom2);
+        Mockito.doReturn(Optional.empty()).when(axiomSubjectProvider).getSubject(axiom2);
         assertThat(comparator.compare(axiom1, axiom2), is(-1));
     }
 
     @Test
     public void shouldReturnPlusOne() {
-        Mockito.doReturn(Optional.absent()).when(axiomSubjectProvider).getSubject(axiom1);
+        Mockito.doReturn(Optional.empty()).when(axiomSubjectProvider).getSubject(axiom1);
         Mockito.doReturn(Optional.of(subject2)).when(axiomSubjectProvider).getSubject(axiom2);
         assertThat(comparator.compare(axiom1, axiom2), is(1));
     }
