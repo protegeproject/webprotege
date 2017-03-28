@@ -7,7 +7,9 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -33,6 +35,9 @@ public class PerspectiveFileManager_TestCase {
 
     private final File PROJECT_DIRECTORY = new File("PROJECT_DIRECTORY");
 
+    @Rule
+    public TemporaryFolder temporaryFolder;
+
     private PerspectiveFileManager fileManager;
 
     @Mock
@@ -47,7 +52,7 @@ public class PerspectiveFileManager_TestCase {
     @Mock
     private UserId userId;
 
-    private File defaultPerspectivesDirectory = new File(DEFAULT_DIRECTORY);
+    private File defaultPerspectivesDirectory;
 
     @Mock
     private ProjectDirectoryFactory projectDirectoryFactory;
@@ -62,7 +67,8 @@ public class PerspectiveFileManager_TestCase {
     private WebProtegeLogger logger;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
+        defaultPerspectivesDirectory = new File(temporaryFolder.newFolder(), DEFAULT_DIRECTORY);
         when(algorithm.computeDigestAsBase16Encoding()).thenReturn(DIGEST);
         when(algorithmProvider.get()).thenReturn(algorithm);
         when(projectDirectoryFactory.getProjectDirectory(projectId)).thenReturn(PROJECT_DIRECTORY);
