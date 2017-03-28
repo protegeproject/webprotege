@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.object;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.object.SWRLAtomSelector;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,10 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.SWRLAtom;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -46,12 +42,12 @@ public class SWRLAtomSelector_TestCase {
     @Test
     public void shouldReturnAbsent() {
         Iterable<SWRLAtom> input = Collections.emptyList();
-        assertThat(selector.selectOne(input), is(Optional.<SWRLAtom>absent()));
+        assertThat(selector.selectOne(input), is(Optional.empty()));
     }
 
     @Test
     public void shouldReturnSingleAtom() {
-        List<SWRLAtom> input = Arrays.asList(atom1);
+        List<SWRLAtom> input = Collections.singletonList(atom1);
         assertThat(selector.selectOne(input), is(Optional.of(atom1)));
     }
 

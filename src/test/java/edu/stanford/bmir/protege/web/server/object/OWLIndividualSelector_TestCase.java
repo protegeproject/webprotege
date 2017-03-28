@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.object;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.object.OWLIndividualSelector;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -51,21 +47,21 @@ public class OWLIndividualSelector_TestCase {
     @Test
     public void shouldNotSelectAnythingForEmptyList() {
         assertThat(selector.selectOne(Collections.emptyList()),
-                is(Optional.<OWLIndividual>absent()));
+                is(Optional.empty()));
     }
 
     @Test
     public void shouldSelectAbsentForNoPropertyName() {
         List<OWLIndividual> input = Arrays.asList(individual1, individual2);
         assertThat(selector.selectOne(input),
-                is(Optional.<OWLIndividual>absent()));
+                is(Optional.empty()));
     }
 
     @Test
     public void shouldSelectSingleOWLNamedIndividual() {
         List<OWLIndividual> input = Arrays.asList(individual1, individual2, namedIndividual2);
         assertThat(selector.selectOne(input),
-                is(Optional.<OWLIndividual>absent()));
+                is(Optional.empty()));
     }
 
     @Test
@@ -74,6 +70,6 @@ public class OWLIndividualSelector_TestCase {
         when(namedIndividual2.compareTo(namedIndividual1)).thenReturn(AFTER);
         List<OWLIndividual> input = Arrays.asList(individual2, namedIndividual2, namedIndividual1);
         assertThat(selector.selectOne(input),
-                is(Optional.<OWLIndividual>absent()));
+                is(Optional.empty()));
     }
 }

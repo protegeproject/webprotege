@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.object;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.object.OWLObjectPropertyExpressionSelector;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -51,21 +47,21 @@ public class OWLObjectPropertyExpressionSelector_TestCase {
     @Test
     public void shouldNotSelectAnythingForEmptyList() {
         assertThat(selector.selectOne(Collections.emptyList()),
-                is(Optional.<OWLObjectPropertyExpression>absent()));
+                is(Optional.empty()));
     }
 
     @Test
     public void shouldSelectAbsentForNoPropertyName() {
         List<OWLObjectPropertyExpression> input = Arrays.asList(propertyExpression1, propertyExpression2);
         assertThat(selector.selectOne(input),
-                is(Optional.<OWLObjectPropertyExpression>absent()));
+                is(Optional.empty()));
     }
 
     @Test
     public void shouldSelectSingleOWLObjectProperty() {
         List<OWLObjectPropertyExpression> input = Arrays.asList(propertyExpression1, propertyExpression2, property2);
         assertThat(selector.selectOne(input),
-                is(Optional.<OWLObjectPropertyExpression>absent()));
+                is(Optional.empty()));
     }
 
     @Test
@@ -74,6 +70,6 @@ public class OWLObjectPropertyExpressionSelector_TestCase {
         when(property2.compareTo(property1)).thenReturn(AFTER);
         List<OWLObjectPropertyExpression> input = Arrays.asList(property2, property1, propertyExpression1);
         assertThat(selector.selectOne(input),
-                is(Optional.<OWLObjectPropertyExpression>absent()));
+                is(Optional.empty()));
     }
 }

@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
@@ -21,7 +20,9 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -79,7 +80,7 @@ public class RevisionManagerImpl_TestCase {
 
     @Test
     public void should_getRevisions() {
-        assertThat(manager.getRevisions(), is(Arrays.asList(revision)));
+        assertThat(manager.getRevisions(), is(Collections.singletonList(revision)));
     }
 
     @Test
