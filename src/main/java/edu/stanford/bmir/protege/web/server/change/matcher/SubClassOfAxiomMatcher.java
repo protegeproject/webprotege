@@ -31,7 +31,7 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Added property value (%s %s) to %s", property.get(), filler.get(), axiom.getSubClass());
+            return formatter.format("Added relationship (%s %s) on %s", property.get(), filler.get(), axiom.getSubClass());
         }
         else {
             return formatter.format("Made %s a subclass of %s", axiom.getSubClass(), axiom.getSuperClass());
@@ -45,7 +45,7 @@ public class SubClassOfAxiomMatcher extends AbstractAxiomMatcher<OWLSubClassOfAx
         Optional<OWLProperty> property = propertyFiller.getProperty();
         Optional<OWLObject> filler = propertyFiller.getFiller();
         if(property.isPresent() && filler.isPresent()) {
-            return formatter.format("Removed property value (%s %s) from %s", property.get(), filler.get(), axiom.getSubClass());
+            return formatter.format("Removed relationship (%s %s) from %s", property.get(), filler.get(), axiom.getSubClass());
         }
         else {
             return formatter.format("Removed %s as a subclass of %s" , axiom.getSubClass(), axiom.getSuperClass());
