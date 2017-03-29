@@ -54,14 +54,14 @@ public class SubClassOfWithFreshEntitiesMatcher implements ChangeMatcher {
             created += formatter.formatString("Created %s inline.  " , declaredFiller.get());
         }
         if (removed.isEmpty()) {
-            return formatter.format("Added property value (%s  %s) to %s.  %s" ,
+            return formatter.format("Added relationship (%s  %s) on %s.  %s" ,
                                     addedPropertyValue.getProperty().get(),
                                     addedPropertyValue.getFiller().get(),
                                     addedPropertyValue.getSubClass(),
                                     created);
         }
         else {
-            return formatter.format("Edited property value (%s  %s) on %s.  %s" ,
+            return formatter.format("Edited relationship (%s  %s) on %s.  %s" ,
                                     addedPropertyValue.getProperty().get(),
                                     addedPropertyValue.getFiller().get(),
                                     addedPropertyValue.getSubClass(),

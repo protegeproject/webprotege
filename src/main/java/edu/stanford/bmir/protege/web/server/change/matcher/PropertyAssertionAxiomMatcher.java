@@ -25,7 +25,7 @@ public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPrope
     @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLPropertyAssertionAxiom<?,?> axiom) {
         return Optional.of(formatter.formatString(
-                "Added property value (%s %s) to individual %s",
+                "Added relationship (%s %s) on individual %s",
                 axiom.getProperty(),
                 axiom.getObject(),
                 axiom.getSubject()
@@ -35,7 +35,7 @@ public class PropertyAssertionAxiomMatcher extends AbstractAxiomMatcher<OWLPrope
     @Override
     protected Optional<String> getDescriptionForRemoveAxiomChange(OWLPropertyAssertionAxiom<?,?> axiom) {
         return Optional.of(formatter.formatString(
-                "Removed property value (%s %s) from individual %s",
+                "Removed relationship (%s %s) on individual %s",
                 axiom.getProperty(),
                 axiom.getObject(),
                 axiom.getSubject()
