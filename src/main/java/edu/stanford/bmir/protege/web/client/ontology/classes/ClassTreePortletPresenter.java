@@ -767,7 +767,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     protected String getMoveClsOperationDescription(final EntityData cls,
                                                     final EntityData oldParent,
                                                     final EntityData newParent) {
-        return "Move class: " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(
+        return "Move class " + getDisplayText(cls) + " from " + getDisplayText(oldParent) + " to " + getDisplayText(
                 newParent);
     }
 
