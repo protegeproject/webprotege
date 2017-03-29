@@ -767,7 +767,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     protected String getMoveClsOperationDescription(final EntityData cls,
                                                     final EntityData oldParent,
                                                     final EntityData newParent) {
-        return "Move class " + getDisplayText(cls) + " from " + getDisplayText(oldParent) + " to " + getDisplayText(
+        return "Moved class " + getDisplayText(cls) + " from " + getDisplayText(oldParent) + " to " + getDisplayText(
                 newParent);
     }
 
@@ -1176,9 +1176,24 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     class DeleteClassHandler extends DispatchServiceCallback<DeleteEntityResult> {
 
+        private final List<TreeNode> treeNodes = new ArrayList<>(getSelectedTreeNodes());
 
         @Override
         public void handleSuccess(final DeleteEntityResult result) {
+            treeNodes.forEach(node -> {
+                TreeNode parentNode = (TreeNode) node.getParentNode();
+                if(parentNode != null) {
+                    parentNode.select();
+                    parentNode.removeChild(node);
+                    node.destroy();
+                    Node [] nodes = parentNode.getChildNodes();
+                    if(nodes.length == 0) {
+                        parentNode.collapse();
+                        parentNode.setExpanded(false);
+                        parentNode.setExpandable(false);
+                    }
+                }
+            });
         }
     }
 
