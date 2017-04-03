@@ -41,7 +41,8 @@ public class CommentRenderer {
         if(currentPos < commentBody.length()) {
             rendering.append(commentBody.substring(currentPos));
         }
-        PegDownProcessor processor = new PegDownProcessor(Extensions.ALL, new PegDownPlugins.Builder().build());
+        PegDownProcessor processor = new PegDownProcessor(Extensions.ABBREVIATIONS | Extensions.QUOTES | Extensions.STRIKETHROUGH | Extensions.AUTOLINKS | Extensions.FENCED_CODE_BLOCKS,
+                                                          new PegDownPlugins.Builder().build());
         String html = processor.markdownToHtml(rendering.toString(), new LinkRenderer() {
 
         });
