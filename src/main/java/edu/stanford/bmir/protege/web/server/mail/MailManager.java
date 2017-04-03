@@ -96,8 +96,9 @@ public class MailManager implements SendMail {
      */
     public void sendMail(@Nonnull final List<String> recipientEmailAddresses,
                          @Nonnull final String subject,
-                         @Nonnull final String text) {
-        sendMail(recipientEmailAddresses, subject, text, messagingExceptionHandler);
+                         @Nonnull final String text,
+                         @Nonnull final MessageHeader ... messageHeaders) {
+        sendMail(recipientEmailAddresses, subject, text, messagingExceptionHandler, messageHeaders);
     }
 
     /**
@@ -112,7 +113,8 @@ public class MailManager implements SendMail {
     public void sendMail(@Nonnull final List<String> recipientEmailAddresses,
                          @Nonnull final String subject,
                          @Nonnull final String text,
-                         @Nonnull MessagingExceptionHandler exceptionHandler) {
+                         @Nonnull MessagingExceptionHandler exceptionHandler,
+                         @Nonnull final MessageHeader ... messageHeaders) {
         try {
             final Session session = createMailSession();
             MimeMessage msg = new MimeMessage(session);
@@ -127,6 +129,9 @@ public class MailManager implements SendMail {
             msg.setText(checkNotNull(text), UTF_8);
             msg.setHeader("Content-Type" , String.format("text/html; charset=\"%s\"" , UTF_8));
             msg.setHeader("Content-Transfer-Encoding" , "quoted-printable" );
+            for(MessageHeader  messageHeader : messageHeaders) {
+                msg.setHeader(messageHeader.getName(), messageHeader.getValue());
+            }
             InternetAddress from = getFromAddress();
             msg.setFrom(from);
             Transport.send(msg);
