@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:gwtcodemirror="urn:import:edu.stanford.bmir.gwtcodemirror.client">
     <ui:style>
         .main {
             /*display: flex;*/
@@ -12,10 +13,11 @@
         }
         .editor {
             display: block;
+            border: 1px solid #f0f0f0;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:TextArea ui:field="bodyField" width="60em" tabIndex="2" height="10em" addStyleNames="{style.editor}"/>
+        <gwtcodemirror:GWTCodeMirror ui:field="bodyField" width="60em" height="10em" addStyleNames="{style.editor}"/>
         <g:Anchor text="Markdown supported" target="_blank" href="http://www.markdown-tutorial.com/" addStyleNames="{style.help}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
