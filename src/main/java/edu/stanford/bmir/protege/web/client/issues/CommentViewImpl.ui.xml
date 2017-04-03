@@ -32,9 +32,20 @@
             border: none;
             padding-left: 30px;
             padding-top: 3px;
+            line-height: 1.4em;
+        }
+        .body h1 {
+            font-size: large;
+            font-weight: bold;
+            line-height: 2em;
+        }
+        .body h2 {
+            font-size: larger;
+            font-weight: bold;
+            line-height: 2em;
         }
         .body ul,ol {
-            padding-left: 10px;
+            padding-left: 20px;
             margin: 10px;
         }
         .body ul li {
@@ -44,11 +55,26 @@
             list-style-type: decimal;
         }
         .body em {
-            font-weight: 500;
+            font-style: italic;
+        }
+        .body strong {
+            font-weight: bold;
+        }
+        .body p+p {
+            margin-top: 10px;
+        }
+        .body pre {
+            margin: 20px;
+        }
+        .body code {
+            word-wrap: break-word;
         }
         .body .user-mention {
             font-weight: 500;
             color: #434b5d;
+            background: #ffffcc;
+            padding-left: 2px;
+            padding-right: 2px;
         }
         .links:hover {
             color: #648dbe !important;
