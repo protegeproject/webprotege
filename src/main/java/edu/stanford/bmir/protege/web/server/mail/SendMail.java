@@ -21,7 +21,8 @@ public interface SendMail {
      */
     void sendMail(@Nonnull List<String> recipientEmailAddresses,
                   @Nonnull String subject,
-                  @Nonnull String text);
+                  @Nonnull String text,
+                  @Nonnull MessageHeader ... messageHeaders);
 
     /**
      * Sends an email to the specified recipients.  The email will have the specified subject and specified content.The email will be
@@ -36,5 +37,6 @@ public interface SendMail {
     void sendMail(@Nonnull List<String> recipientEmailAddresses,
                   @Nonnull String subject,
                   @Nonnull String text,
-                  @Nonnull MessagingExceptionHandler exceptionHandler);
+                  @Nonnull MessagingExceptionHandler exceptionHandler,
+                  @Nonnull MessageHeader ... messageHeaders);
 }

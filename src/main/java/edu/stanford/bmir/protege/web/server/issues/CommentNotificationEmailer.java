@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.mail.MessageHeader;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
@@ -98,7 +99,8 @@ public class CommentNotificationEmailer {
                 .collect(toList());
         sendMail.sendMail(emailAddresses,
                           formatSubjectLine(projectId, discussionThread, postedComment),
-                          formatMessage(projectId, discussionThread, postedComment));
+                          formatMessage(projectId, discussionThread, postedComment),
+                          MessageHeader.references(discussionThread.getId().getId()));
     }
 
 
