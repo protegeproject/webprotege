@@ -5,13 +5,6 @@ body, input, textarea, keygen, select, button, isindex, .x-tree-node, .x-tree {
     font-size: 12px;
 }
 
-h1 {
-    font-size: 18px;
-    font-weight: normal;
-    line-height: 30px;
-    padding-bottom: 10px;
-}
-
 .centeredImage {
     margin-bottom: 0;
     margin-top: 0;
