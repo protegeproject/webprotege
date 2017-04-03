@@ -58,8 +58,8 @@ public class CommentAutoCompleter {
         dispatchServiceManager.execute(new GetUserIdCompletionsAction(matchedPartialName),
                                        userIdsResult -> {
                                            List<AutoCompletionChoice> suggestions = new ArrayList<>();
-                                           List<UserId> possibleUserIdCompletions = userIdsResult.getPossibleItemCompletions();
-                                           for (UserId userId : possibleUserIdCompletions) {
+                                           List<UserId> userIds = userIdsResult.getPossibleItemCompletions();
+                                           for (UserId userId : userIds) {
                                                String userName = userId.getUserName();
                                                String replacement = getReplacementStringFromUserName(userName);
                                                EditorPosition replaceTextTo = new EditorPosition(
