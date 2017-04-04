@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 /**
@@ -57,8 +58,8 @@ public class ChangePasswordViewImpl extends Composite implements ChangePasswordV
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(oldPasswordField);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> oldPasswordField.setFocus(true));
     }
 
     @Override

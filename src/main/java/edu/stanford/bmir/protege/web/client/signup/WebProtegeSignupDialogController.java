@@ -5,10 +5,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.client.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
@@ -60,7 +57,7 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
 
     @Nonnull
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

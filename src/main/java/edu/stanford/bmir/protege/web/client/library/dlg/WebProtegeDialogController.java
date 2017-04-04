@@ -103,7 +103,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
      * @return The {@link Focusable} that will receive the focus. Not <code>null</code>
      */
     @Nonnull
-    public abstract Optional<Focusable> getInitialFocusable();
+    public abstract Optional<HasRequestFocus> getInitialFocusable();
 
     /**
      * Gets the installed validators for the contents of the widget provided by this controller.

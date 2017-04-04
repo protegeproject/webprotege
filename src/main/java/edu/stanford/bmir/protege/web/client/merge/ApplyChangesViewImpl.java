@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffViewImpl;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
@@ -79,7 +80,7 @@ public class ApplyChangesViewImpl extends Composite implements ApplyChangesView,
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(commitMessageField);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> commitMessageField.setFocus(true));
     }
 }

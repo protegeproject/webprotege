@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.chgpwd;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 
@@ -27,7 +28,7 @@ public class ResetPasswordDialogController extends WebProtegeOKCancelDialogContr
 
     @Nonnull
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return view.getInitialFocusable();
     }
 

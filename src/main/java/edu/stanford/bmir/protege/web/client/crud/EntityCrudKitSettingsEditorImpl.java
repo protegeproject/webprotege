@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UUIDSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
@@ -173,8 +174,8 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(iriPrefixEditor);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> iriPrefixEditor.setFocus(true));
     }
 
     @SuppressWarnings("unchecked")

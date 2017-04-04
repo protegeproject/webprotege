@@ -63,7 +63,7 @@ public class InputBox {
 
         @Nonnull
         @Override
-        public java.util.Optional<Focusable> getInitialFocusable() {
+        public java.util.Optional<HasRequestFocus> getInitialFocusable() {
             return view.getInitialFocusable();
         }
 

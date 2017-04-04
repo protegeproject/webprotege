@@ -243,7 +243,7 @@ public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialF
         return label.endsWith(LABEL_SUFFIX) ? label : label + LABEL_SUFFIX;
     }
     
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.ofNullable(initialFocusable);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> initialFocusable.setFocus(true));
     }
 }
