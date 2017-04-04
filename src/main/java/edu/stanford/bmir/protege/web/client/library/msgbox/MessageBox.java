@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
 import javax.annotation.Nonnull;
-import java.util.function.Consumer;
 
 /**
  * Author: Matthew Horridge<br>
@@ -151,20 +148,14 @@ public class MessageBox {
                 return RETURN;
             }
         };
-        controller.setDialogButtonHandler(DialogButton.YES, new WebProtegeDialogButtonHandler<Void>() {
-            @Override
-            public void handleHide(Void data, WebProtegeDialogCloser closer) {
-                closer.hide();
-                handler.handleYes();
-            }
+        controller.setDialogButtonHandler(DialogButton.YES, (data, closer) -> {
+            closer.hide();
+            handler.handleYes();
         });
-        controller.setDialogButtonHandler(DialogButton.NO, new WebProtegeDialogButtonHandler<Void>() {
-            @Override
-            public void handleHide(Void data, WebProtegeDialogCloser closer) {
-                closer.hide();
-                handler.handleNo();
+        controller.setDialogButtonHandler(DialogButton.NO, (data, closer) -> {
+            closer.hide();
+            handler.handleNo();
 
-            }
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.show();
