@@ -3,16 +3,21 @@ package edu.stanford.bmir.protege.web.server.inject;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.app.WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME;
 
 /**
  * Matthew Horridge
@@ -26,11 +31,10 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
      */
     private static final String SYSTEM_PROPERTY_PREFIX = "webprotege.";
 
-    private final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger("WebProtegeProperties");
 
     @Inject
     public WebProtegePropertiesProvider() {
-        logger = Logger.getLogger("WebProtegeProperties");
     }
 
     @Override
@@ -39,22 +43,34 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
     }
 
     private WebProtegeProperties loadProperties() throws WebProtegeConfigurationException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME);
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-
-        Properties properties = new Properties();
         try {
+            BufferedInputStream bufferedInputStream = getBufferedInputStream();
+            Properties properties = new Properties();
             properties.load(bufferedInputStream);
             bufferedInputStream.close();
+            overridePropertiesWithSystemProperties(properties);
+            return new WebProtegeProperties(properties);
         } catch (IOException e) {
             throw new WebProtegeConfigurationException(
-                    String.format("Could not read %s from class path. Message: %s",
-                            WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME,
+                    String.format("Could not read %s. Cause: %s",
+                            WEB_PROTEGE_PROPERTIES_FILE_NAME,
                             e.getMessage()));
         }
-        overridePropertiesWithSystemProperties(properties);
-        return new WebProtegeProperties(properties);
+    }
+
+    private BufferedInputStream getBufferedInputStream() throws IOException {
+        Path stdConfigPath = Paths.get("etc", "webprotege", WEB_PROTEGE_PROPERTIES_FILE_NAME);
+        if(Files.exists(stdConfigPath)) {
+            logger.info("Found {} at {}", WEB_PROTEGE_PROPERTIES_FILE_NAME, stdConfigPath.toAbsolutePath());
+            return new BufferedInputStream(Files.newInputStream(stdConfigPath));
+        }
+        else {
+            logger.info("Loading {} from the class path", WEB_PROTEGE_PROPERTIES_FILE_NAME);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream(WEB_PROTEGE_PROPERTIES_FILE_NAME);
+            return new BufferedInputStream(inputStream);
+        }
+
     }
 
     /**
