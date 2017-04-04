@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionCallback;
@@ -14,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
