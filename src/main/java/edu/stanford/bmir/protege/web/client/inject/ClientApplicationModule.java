@@ -150,12 +150,6 @@ public class ClientApplicationModule {
 
     @Provides
     @Singleton
-    SignUpForAccountHandler provideSignUpForAccountHandler(SignUpForAccountHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    @Singleton
     SignUpView provideSignUpView(SignUpViewImpl signUpView) {
         return signUpView;
     }
