@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.inject.OverridableFile;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.mail.MailManager;
+import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
@@ -45,7 +45,7 @@ public class PasswordResetMailer_IT {
     private WebProtegeLogger logger;
 
     @Mock
-    private MailManager mailManager;
+    private SendMailImpl sendMailImpl;
 
     @Mock
     private PlaceUrl placeUrl;
@@ -71,14 +71,14 @@ public class PasswordResetMailer_IT {
         OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"), logger);
         FileContents templateFile = new FileContents(overridableFile);
         TemplateEngine templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
-        ResetPasswordMailer mailer = new ResetPasswordMailer(mailManager,
+        ResetPasswordMailer mailer = new ResetPasswordMailer(sendMailImpl,
                                                              templateEngine,
                                                              templateFile,
                                                              placeUrl,
                                                              appNameProvider,
                                                              logger);
         mailer.sendEmail(userId, emailAddress, theNewPassword);
-        verify(mailManager, times(1)).sendMail(
+        verify(sendMailImpl, times(1)).sendMail(
                 eq(singletonList(emailAddress)),
                 eq("Your password has been reset"),
                 bodyCaptor.capture(), any(MessagingExceptionHandler.class));

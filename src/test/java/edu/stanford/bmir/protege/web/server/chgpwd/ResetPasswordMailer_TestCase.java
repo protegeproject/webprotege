@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.mail.MailManager;
+import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
@@ -47,7 +47,7 @@ public class ResetPasswordMailer_TestCase {
     private ResetPasswordMailer mailer;
 
     @Mock
-    private MailManager mailManager;
+    private SendMailImpl sendMailImpl;
 
     @Mock
     private WebProtegeLogger logger;
@@ -73,7 +73,7 @@ public class ResetPasswordMailer_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        mailer = new ResetPasswordMailer(mailManager, templateEngine, templateFile, placeUrl, appNameSupplier, logger);
+        mailer = new ResetPasswordMailer(sendMailImpl, templateEngine, templateFile, placeUrl, appNameSupplier, logger);
         when(userId.getUserName()).thenReturn(THE_USER_NAME);
         when(placeUrl.getApplicationUrl()).thenReturn(THE_APPLICATION_URL);
         when(templateEngine.populateTemplate(anyString(), anyMap())).thenReturn(THE_POPULATED_TEMPLATE);
@@ -107,7 +107,7 @@ public class ResetPasswordMailer_TestCase {
     @Test
     public void shouldSendEmailToSpecifiedAddress() {
         mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
-        verify(mailManager, times(1)).sendMail(
+        verify(sendMailImpl, times(1)).sendMail(
                 eq(singletonList(EMAIL_ADDRESS)),
                 anyString(),
                 eq(THE_POPULATED_TEMPLATE), any(MessagingExceptionHandler.class));

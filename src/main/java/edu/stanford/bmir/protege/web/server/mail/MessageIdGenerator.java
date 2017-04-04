@@ -23,6 +23,10 @@ public class MessageIdGenerator {
         this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
     }
 
+    /**
+     * Generates a globally unique {@link MessageId}
+     * @return The generated {@link MessageId}.
+     */
     public MessageId generateUniqueMessageId() {
         String id = String.format("<%s@%s>", UUID.randomUUID().toString(), applicationHostSupplier.get());
         return new MessageId(id);
