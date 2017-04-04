@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationExceptio
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.DaggerApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.ServletComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -12,13 +14,13 @@ import javax.servlet.ServletContextListener;
 
 public class WebProtegeServletContextListener implements ServletContextListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebProtegeServletContextListener.class);
+
     public WebProtegeServletContextListener() {
     }
 
-
-
-
     public void contextInitialized(ServletContextEvent sce) {
+        logger.info("Initializing WebProtege");
         try {
             ApplicationComponent applicationComponent = DaggerApplicationComponent.create();
             ServletContext servletContext = sce.getServletContext();
@@ -46,20 +48,19 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             applicationComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
 
+            logger.info("WebProtege Initialized");
         }
         catch (WebProtegeConfigurationException e) {
+            logger.error("Encountered a configuration error during initialization: {}", e.getMessage(), e);
             WebProtegeWebAppFilter.setConfigError(e);
-        }
-        catch (ExceptionInInitializerError error) {
-            error.printStackTrace();
-            WebProtegeWebAppFilter.setError(error);
-        }
-        catch (Throwable error) {
+        } catch (Throwable error) {
+            logger.error("Encountered an error during initialization: {}", error.getMessage(), error);
             WebProtegeWebAppFilter.setError(error);
         }
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        logger.info("WebProtege Destroyed");
     }
 }
