@@ -110,7 +110,6 @@ public class ResetPasswordMailer_TestCase {
         verify(mailManager, times(1)).sendMail(
                 eq(singletonList(EMAIL_ADDRESS)),
                 anyString(),
-                eq(THE_POPULATED_TEMPLATE),
-                any(MessagingExceptionHandler.class));
+                eq(THE_POPULATED_TEMPLATE), any(MessagingExceptionHandler.class));
     }
 }

@@ -15,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,6 +56,9 @@ public class MailManagerTestCase {
     @Mock
     private ApplicationHostSupplier applicationHostSupplier;
 
+    @Mock
+    private MessageIdGenerator messageIdGenerator;
+
     @Before
     public void setUp() throws MessagingException {
         Mailbox.clearAll();
@@ -62,9 +66,11 @@ public class MailManagerTestCase {
         MessagingExceptionHandler messagingExceptionHandler = mock(MessagingExceptionHandler.class);
         when(applicationNameSupplier.get()).thenReturn(APP_NAME);
         when(applicationHostSupplier.get()).thenReturn(HOST_NAME);
+        when(messageIdGenerator.generateUniqueMessageId()).thenReturn(new MessageId(UUID.randomUUID().toString()));
         MailManager mailManager = new MailManager(applicationNameSupplier,
                                                   applicationHostSupplier,
-                                                  mailProperties, messagingExceptionHandler);
+                                                  mailProperties, messagingExceptionHandler,
+                                                  messageIdGenerator);
         mailManager.sendMail(singletonList(TO), SUBJECT, BODY, messagingExceptionHandler);
         List<Message> messageList = Mailbox.get(TO);
         message = messageList.get(0);

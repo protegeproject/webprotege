@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -88,9 +87,9 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                                                     userDetails.getDisplayName());
                 String emailBody = templateEngine.populateTemplate(watchTemplate.getContents(), templateObjects);
                 Thread t = new Thread(() -> {
-                    sendMail.sendMail(singletonList(emailAddress),
-                                      emailSubject,
-                                      emailBody);
+                    sendMail.sendMail(
+                            singletonList(emailAddress),
+                            emailSubject, emailBody);
                 });
                 t.setPriority(Thread.MIN_PRIORITY);
                 t.start();

@@ -4,7 +4,9 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.mail.CommentMessageIdGenerator;
 import edu.stanford.bmir.protege.web.server.mail.MessageHeader;
+import edu.stanford.bmir.protege.web.server.mail.MessageId;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
@@ -16,12 +18,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -43,19 +43,23 @@ public class CommentNotificationEmailer {
 
     private final CommentNotificationEmailGenerator emailGenerator;
 
+    private final CommentMessageIdGenerator messageIdGenerator;
+
     @Inject
     public CommentNotificationEmailer(@Nonnull ProjectDetailsManager projectDetailsManager,
                                       @Nonnull UserDetailsManager userDetailsManager,
                                       @Nonnull AccessManager accessManager,
                                       @Nonnull DiscussionThreadParticipantsExtractor participantsExtractor,
                                       @Nonnull CommentNotificationEmailGenerator emailGenerator,
-                                      @Nonnull SendMail sendMail) {
-        this.projectDetailsManager = projectDetailsManager;
-        this.userDetailsManager = userDetailsManager;
-        this.accessManager = accessManager;
-        this.sendMail = sendMail;
-        this.participantsExtractor = participantsExtractor;
-        this.emailGenerator = emailGenerator;
+                                      @Nonnull SendMail sendMail,
+                                      @Nonnull CommentMessageIdGenerator messageIdGenerator) {
+        this.messageIdGenerator = checkNotNull(messageIdGenerator);
+        this.projectDetailsManager = checkNotNull(projectDetailsManager);
+        this.userDetailsManager = checkNotNull(userDetailsManager);
+        this.accessManager = checkNotNull(accessManager);
+        this.sendMail = checkNotNull(sendMail);
+        this.participantsExtractor = checkNotNull(participantsExtractor);
+        this.emailGenerator = checkNotNull(emailGenerator);
     }
 
     public void sendCommentPostedNotification(@Nonnull ProjectId projectId,
@@ -97,10 +101,23 @@ public class CommentNotificationEmailer {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(toList());
-        sendMail.sendMail(emailAddresses,
-                          formatSubjectLine(projectId, discussionThread, postedComment),
-                          formatMessage(projectId, discussionThread, postedComment),
-                          MessageHeader.references(discussionThread.getId().getId()));
+        MessageId postedCommentMessageId = messageIdGenerator.generateCommentMessageId(projectId,
+                                                                                postedComment.getId());
+        List<MessageHeader> messageHeaders = new ArrayList<>();
+        int commentIndex = discussionThread.getComments().indexOf(postedComment);
+        if(commentIndex != 0) {
+            // Reply to the original message
+            MessageId headCommentMessageId = messageIdGenerator.generateCommentMessageId(projectId,
+                                                                               discussionThread.getComments().get(0).getId());
+            messageHeaders.add(MessageHeader.inReplyTo(headCommentMessageId.getId()));
+            messageHeaders.add(MessageHeader.references(headCommentMessageId.getId()));
+        }
+        sendMail.sendMail(
+                postedCommentMessageId,
+                emailAddresses,
+                formatSubjectLine(projectId, discussionThread, postedComment),
+                formatMessage(projectId, discussionThread, postedComment),
+                messageHeaders.toArray(new MessageHeader [messageHeaders.size()]));
     }
 
 
