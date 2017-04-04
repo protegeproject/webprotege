@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -35,8 +36,9 @@ public class EntityCrudKitSettingsDialogController extends WebProtegeOKCancelDia
         return editor.asWidget();
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return editor.getInitialFocusable();
     }
 

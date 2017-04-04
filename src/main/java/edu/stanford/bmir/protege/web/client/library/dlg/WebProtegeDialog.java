@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.library.dlg;
 
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
@@ -20,11 +21,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
     public static final boolean AUTO_HIDE = false;
 
     public static final boolean MODAL = true;
-
-    /**
-     * The time that should pass between the dialog showing and the default widget requesting the focus.
-     */
-    private static final int DEFAULT_WIDGET_FOCUS_DELAY = 100;
 
     private static final String WEB_PROTEGE_LAF = "web-protege-laf";
 
@@ -130,21 +126,10 @@ public final class WebProtegeDialog<D> extends DialogBox {
         setFocusToDefaultWidget();
     }
 
-    /**
-     * Sets the focus to the default widget.  I'm not totally sure how to do this, but looking through the code in
-     * other places Tania does it by using a timer (although I know she's not happy about this).
-     */
     private void setFocusToDefaultWidget() {
-        Timer timer = new Timer() {
-            @Override
-            public void run() {
-                Optional<Focusable> initialFocusable = controller.getInitialFocusable();
-                if (initialFocusable != null && initialFocusable.isPresent()) {
-                    initialFocusable.get().setFocus(true);
-                }
-            }
-        };
-        timer.schedule(DEFAULT_WIDGET_FOCUS_DELAY);
+        Scheduler.get().scheduleDeferred(() -> {
+            controller.getInitialFocusable().ifPresent(focusable -> focusable.setFocus(true));
+        });
     }
 
 

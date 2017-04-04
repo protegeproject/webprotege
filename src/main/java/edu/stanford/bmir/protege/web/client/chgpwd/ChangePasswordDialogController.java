@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ChangePasswordData;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -27,8 +29,9 @@ public class ChangePasswordDialogController extends WebProtegeOKCancelDialogCont
         return changePasswordView.asWidget();
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return changePasswordView.getInitialFocusable();
     }
 

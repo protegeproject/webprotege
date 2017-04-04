@@ -57,8 +57,8 @@ public class ChangePasswordViewImpl extends Composite implements ChangePasswordV
     }
 
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.of(oldPasswordField);
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.of(oldPasswordField);
     }
 
     @Override

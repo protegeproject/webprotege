@@ -33,8 +33,9 @@ public class CommentEditorDialog {
                 return view.asWidget();
             }
 
+            @Nonnull
             @Override
-            public Optional<Focusable> getInitialFocusable() {
+            public java.util.Optional<Focusable> getInitialFocusable() {
                 return view.getInitialFocusable();
             }
 

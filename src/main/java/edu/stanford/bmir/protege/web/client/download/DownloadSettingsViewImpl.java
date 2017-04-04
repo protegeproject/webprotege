@@ -58,7 +58,7 @@ public class DownloadSettingsViewImpl extends Composite implements DownloadSetti
     }
 
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.absent();
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.empty();
     }
 }

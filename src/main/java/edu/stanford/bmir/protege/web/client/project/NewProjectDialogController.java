@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsExcepti
 import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -101,7 +103,8 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
         return widget;
     }
 
-    public Optional<Focusable> getInitialFocusable() {
+    @Nonnull
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return widget.getInitialFocusable();
     }
 

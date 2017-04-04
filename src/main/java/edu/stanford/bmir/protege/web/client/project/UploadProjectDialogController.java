@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsExcepti
 import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -132,8 +133,9 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
         return uploadFileWidget;
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return uploadFileWidget.getInitialFocusable();
     }
 

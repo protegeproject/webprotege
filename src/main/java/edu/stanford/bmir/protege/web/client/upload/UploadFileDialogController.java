@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -52,8 +54,9 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
     }
 
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

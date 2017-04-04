@@ -173,8 +173,8 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     }
 
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.of(iriPrefixEditor);
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.of(iriPrefixEditor);
     }
 
     @SuppressWarnings("unchecked")

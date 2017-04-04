@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -56,8 +58,9 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
         return form;
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

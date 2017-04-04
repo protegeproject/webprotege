@@ -68,7 +68,7 @@ public class CommentEditorViewImpl extends Composite implements CommentEditorVie
     }
 
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.of(bodyField);
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.of(bodyField);
     }
 }
