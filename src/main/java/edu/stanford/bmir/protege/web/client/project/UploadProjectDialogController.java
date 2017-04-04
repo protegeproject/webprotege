@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -135,7 +136,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
 
     @Nonnull
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return uploadFileWidget.getInitialFocusable();
     }
 

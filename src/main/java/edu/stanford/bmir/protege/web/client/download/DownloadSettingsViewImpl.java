@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 
 /**
@@ -58,7 +59,7 @@ public class DownloadSettingsViewImpl extends Composite implements DownloadSetti
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return java.util.Optional.empty();
     }
 }

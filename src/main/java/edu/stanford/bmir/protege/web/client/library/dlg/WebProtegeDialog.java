@@ -128,7 +128,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
     private void setFocusToDefaultWidget() {
         Scheduler.get().scheduleDeferred(() -> {
-            controller.getInitialFocusable().ifPresent(focusable -> focusable.setFocus(true));
+            controller.getInitialFocusable().ifPresent(HasRequestFocus::requestFocus);
         });
     }
 
@@ -143,11 +143,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             }
         }
         WebProtegeDialogButtonHandler<D> buttonHandler = controller.getButtonHandlers().get(button.ordinal());
-        buttonHandler.handleHide(controller.getData(), new WebProtegeDialogCloser() {
-            public void hide() {
-                WebProtegeDialog.this.hide();
-            }
-        });
+        buttonHandler.handleHide(controller.getData(), () -> WebProtegeDialog.this.hide());
     }
 
     private void displayContentsInvalidMessage(String message) {

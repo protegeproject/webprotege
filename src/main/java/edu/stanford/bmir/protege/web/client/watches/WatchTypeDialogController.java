@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.watches;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKDialogController;
 
 import javax.annotation.Nonnull;
@@ -30,7 +31,7 @@ public class WatchTypeDialogController extends WebProtegeOKDialogController<Watc
 
     @Nonnull
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return java.util.Optional.empty();
     }
 

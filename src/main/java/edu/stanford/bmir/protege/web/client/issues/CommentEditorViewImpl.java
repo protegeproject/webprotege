@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.gwtcodemirror.client.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -68,7 +69,7 @@ public class CommentEditorViewImpl extends Composite implements CommentEditorVie
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(bodyField);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> bodyField.setFocus(true));
     }
 }

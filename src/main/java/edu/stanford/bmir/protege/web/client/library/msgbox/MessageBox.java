@@ -110,7 +110,7 @@ public class MessageBox {
 
             @Nonnull
             @Override
-            public java.util.Optional<Focusable> getInitialFocusable() {
+            public java.util.Optional<HasRequestFocus> getInitialFocusable() {
                 return java.util.Optional.empty();
             }
 
@@ -119,19 +119,13 @@ public class MessageBox {
                 return RETURN;
             }
         };
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
-            @Override
-            public void handleHide(Void data, WebProtegeDialogCloser closer) {
-                closer.hide();
-                handler.handleOK();
-            }
+        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            closer.hide();
+            handler.handleOK();
         });
-        controller.setDialogButtonHandler(DialogButton.CANCEL, new WebProtegeDialogButtonHandler<Void>() {
-            @Override
-            public void handleHide(Void data, WebProtegeDialogCloser closer) {
-                closer.hide();
-                handler.handleCancel();
-            }
+        controller.setDialogButtonHandler(DialogButton.CANCEL, (data, closer) -> {
+            closer.hide();
+            handler.handleCancel();
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
@@ -148,7 +142,7 @@ public class MessageBox {
 
             @Nonnull
             @Override
-            public java.util.Optional<Focusable> getInitialFocusable() {
+            public java.util.Optional<HasRequestFocus> getInitialFocusable() {
                 return java.util.Optional.empty();
             }
 
@@ -202,7 +196,7 @@ public class MessageBox {
 
             @Nonnull
             @Override
-            public java.util.Optional<Focusable> getInitialFocusable() {
+            public java.util.Optional<HasRequestFocus> getInitialFocusable() {
                 return java.util.Optional.empty();
             }
 

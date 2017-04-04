@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.user.client.ui.Focusable;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
@@ -56,8 +57,8 @@ public class CreateEntityForm extends WebProtegeDialogForm {
         return result;
     }
 
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(entityBrowserTextField);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> entityBrowserTextField.setFocus(true));
     }
 
     private String getTypeName() {

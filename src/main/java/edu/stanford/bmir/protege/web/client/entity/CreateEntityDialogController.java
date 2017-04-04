@@ -41,7 +41,7 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
 
     @Nonnull
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

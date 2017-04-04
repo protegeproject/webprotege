@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 
 /**
@@ -44,8 +45,8 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(inputArea);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> inputArea.setFocus(true));
     }
 
     @Override

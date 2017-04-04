@@ -12,5 +12,5 @@ import java.util.Optional;
  */
 public interface HasInitialFocusable {
 
-    Optional<Focusable> getInitialFocusable();
+    Optional<HasRequestFocus> getInitialFocusable();
 }

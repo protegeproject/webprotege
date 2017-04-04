@@ -104,7 +104,7 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
     }
 
     @Nonnull
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return widget.getInitialFocusable();
     }
 

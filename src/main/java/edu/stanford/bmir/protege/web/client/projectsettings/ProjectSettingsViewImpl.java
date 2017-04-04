@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -52,8 +53,8 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     }
 
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
-        return java.util.Optional.of(displayNameField);
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
+        return java.util.Optional.of(() -> displayNameField.setFocus(true));
     }
 
     @Override

@@ -6,10 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.client.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.csv.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -88,7 +85,7 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
 
     @Nonnull
     @Override
-    public java.util.Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
         return java.util.Optional.empty();
     }
 
