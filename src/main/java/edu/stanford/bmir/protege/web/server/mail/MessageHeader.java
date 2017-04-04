@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.issues.Comment;
 
 import javax.annotation.Nonnull;
 
@@ -67,5 +68,9 @@ public class MessageHeader {
 
     public static MessageHeader references(@Nonnull String references) {
         return new MessageHeader("References", references);
+    }
+
+    public static MessageHeader inReplyTo(String id) {
+        return new MessageHeader("In-Reply-To", id);
     }
 }
