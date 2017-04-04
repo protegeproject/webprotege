@@ -78,10 +78,10 @@ public class PasswordResetMailer_IT {
                                                              appNameProvider,
                                                              logger);
         mailer.sendEmail(userId, emailAddress, theNewPassword);
-        verify(mailManager, times(1)).sendMail(eq(singletonList(emailAddress)),
-                                               eq("Your password has been reset"),
-                                               bodyCaptor.capture(),
-                                               any(MessagingExceptionHandler.class));
+        verify(mailManager, times(1)).sendMail(
+                eq(singletonList(emailAddress)),
+                eq("Your password has been reset"),
+                bodyCaptor.capture(), any(MessagingExceptionHandler.class));
     }
 
     @Test

@@ -13,10 +13,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,6 +54,8 @@ public class MailManager implements SendMail {
 
     private final ApplicationHostSupplier applicationHostSupplier;
 
+    private final MessageIdGenerator messageIdGenerator;
+
 
     /**
      * Constructs a {@code MailManager} using the specified {@link Properties} object and the specified exception handler.
@@ -79,45 +78,75 @@ public class MailManager implements SendMail {
     public MailManager(@Nonnull ApplicationNameSupplier applicationNameSupplier,
                        @Nonnull ApplicationHostSupplier applicationHostSupplier,
                        @Nonnull @MailProperties Properties properties,
-                       @Nonnull MessagingExceptionHandler messagingExceptionHandler) {
+                       @Nonnull MessagingExceptionHandler messagingExceptionHandler,
+                       @Nonnull MessageIdGenerator messageIdGenerator) {
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
+        this.messageIdGenerator = checkNotNull(messageIdGenerator);
+    }
+
+    @Override
+    public void sendMail(@Nonnull List<String> recipientEmailAddresses,
+                         @Nonnull String subject,
+                         @Nonnull String text,
+                         @Nonnull MessageHeader... messageHeaders) {
+
     }
 
     /**
      * Sends an email to the specified recipient.  The email will have the specified subject and specified content.
      *
+     *
+     * @param messageId The id of the message to be sent.
      * @param recipientEmailAddresses The email address of the recipient.  Not {@code null}.
      * @param subject                 The subject of the email.  Not {@code null}.
      * @param text                    The content of the email.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public void sendMail(@Nonnull final List<String> recipientEmailAddresses,
+    public void sendMail(@Nonnull MessageId messageId,
+                         @Nonnull final List<String> recipientEmailAddresses,
                          @Nonnull final String subject,
                          @Nonnull final String text,
-                         @Nonnull final MessageHeader ... messageHeaders) {
-        sendMail(recipientEmailAddresses, subject, text, messagingExceptionHandler, messageHeaders);
+                         @Nonnull final MessageHeader... messageHeaders) {
+        sendMail(messageId,
+                 recipientEmailAddresses, subject, text, messagingExceptionHandler, messageHeaders);
+    }
+
+    @Override
+    public void sendMail(@Nonnull List<String> recipientEmailAddresses,
+                         @Nonnull String subject,
+                         @Nonnull String text,
+                         @Nonnull MessagingExceptionHandler exceptionHandler,
+                         @Nonnull MessageHeader... messageHeaders) {
+        sendMail(messageIdGenerator.generateUniqueMessageId(),
+                 recipientEmailAddresses,
+                 subject,
+                 text,
+                 exceptionHandler,
+                 messageHeaders);
     }
 
     /**
      * Sends an email to the specified recipients.  The email will have the specified subject and specified content.
      *
+     *
+     * @param messageId The id of the message to be sent.
      * @param recipientEmailAddresses The email addresses of the recipients.  Not {@code null}.
      * @param subject                 The subject of the email.  Not {@code null}.
      * @param text                    The content of the email.  Not {@code null}.
      * @param exceptionHandler        An exception handler for handling {@link MessagingException}s.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public void sendMail(@Nonnull final List<String> recipientEmailAddresses,
+    public void sendMail(@Nonnull MessageId messageId, @Nonnull final List<String> recipientEmailAddresses,
                          @Nonnull final String subject,
                          @Nonnull final String text,
                          @Nonnull MessagingExceptionHandler exceptionHandler,
-                         @Nonnull final MessageHeader ... messageHeaders) {
+                         @Nonnull final MessageHeader... messageHeaders) {
         try {
             final Session session = createMailSession();
-            MimeMessage msg = new MimeMessage(session);
+            WebProtegeMimeMessage msg = new WebProtegeMimeMessage(messageId, session);
             Address[] recipients = checkNotNull(recipientEmailAddresses).stream()
                                                                         .map(MailManager::toInternetAddress)
                                                                         .filter(Optional::isPresent)
@@ -136,13 +165,15 @@ public class MailManager implements SendMail {
             msg.setFrom(from);
             Transport.send(msg);
             logger.info(String.format(
-                    "Sent email with subject \"%s\" to %s (mail.smtp.host: %s, mail.smtp.port: %s, mail.smtp.auth: %s, mail.smtp.from: %s)" ,
+                    "Sent email with subject \"%s\" to %s (mail.smtp.host: %s, mail.smtp.port: %s, mail.smtp.auth: %s, mail.smtp.from: %s, Message-ID: %s, Headers: %s)" ,
                     subject,
                     Arrays.toString(recipients),
                     session.getProperty(MAIL_SMTP_HOST),
                     session.getProperty(MAIL_SMTP_PORT),
                     session.getProperty(MAIL_SMTP_AUTH),
-                    session.getProperty(MAIL_SMTP_FROM))
+                    session.getProperty(MAIL_SMTP_FROM),
+                    messageId,
+                    Collections.list(msg.getAllHeaderLines()))
             );
         } catch (MessagingException e) {
             logger.info("There was a problem sending mail: " + e.getMessage());
