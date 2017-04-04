@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -17,8 +16,6 @@ import java.util.Optional;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.util.Collections.singletonList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -114,10 +111,6 @@ public class DefaultLogger implements WebProtegeLogger {
         t.printStackTrace(pw);
         return sw.toString();
     }
-
-//    private MetaProjectManager getMetaProjectManager() {
-//        return MetaProjectManager.getManager();
-//    }
 
     @Override
     public void info(String message) {
