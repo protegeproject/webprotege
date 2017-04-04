@@ -8,19 +8,18 @@
     </appender>
 
 
-    <!--<appender name="files" class="ch.qos.logback.core.FileAppender">-->
-        <!--<file>${user.home}/.Protege/logs/protege.log</file>-->
-        <!--<append>true</append>-->
-        <!--<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
-            <!--<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0}    %msg%n</Pattern>-->
-        <!--</encoder>-->
-    <!--</appender>-->
+    <appender name="files" class="ch.qos.logback.core.FileAppender">
+        <file>/var/log/webprotege/webprotege.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{0}    %msg%n</Pattern>
+        </encoder>
+    </appender>
 
 
     <root level="info">
         <appender-ref ref="stdout" />
-        <!--<appender-ref ref="files"/>-->
+        <appender-ref ref="files"/>
     </root>
-
 
 </configuration>
