@@ -115,8 +115,8 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
 
 
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.of(emailField);
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.of(emailField);
     }
     
     public EmailAddress getEmailAddress() {

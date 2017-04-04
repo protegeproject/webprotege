@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,8 +61,9 @@ public class InputBox {
             return view.getWidget();
         }
 
+        @Nonnull
         @Override
-        public Optional<Focusable> getInitialFocusable() {
+        public java.util.Optional<Focusable> getInitialFocusable() {
             return view.getInitialFocusable();
         }
 

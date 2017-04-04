@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -25,8 +27,9 @@ public class DownloadSettingsDialog {
                 return view.asWidget();
             }
 
+            @Nonnull
             @Override
-            public Optional<Focusable> getInitialFocusable() {
+            public java.util.Optional<Focusable> getInitialFocusable() {
                 return view.getInitialFocusable();
             }
 

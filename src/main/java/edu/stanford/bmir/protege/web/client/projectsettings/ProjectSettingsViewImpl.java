@@ -52,8 +52,8 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     }
 
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.of(displayNameField);
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.of(displayNameField);
     }
 
     @Override

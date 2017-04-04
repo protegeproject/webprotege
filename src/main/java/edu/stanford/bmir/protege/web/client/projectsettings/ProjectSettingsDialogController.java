@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -42,8 +44,9 @@ public class ProjectSettingsDialogController extends WebProtegeOKCancelDialogCon
      * Gets the focusable that should receive the focus when the dialog is shown.
      * @return The focusable that will receive the focus. Not <code>null</code>
      */
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return view.getInitialFocusable();
     }
 

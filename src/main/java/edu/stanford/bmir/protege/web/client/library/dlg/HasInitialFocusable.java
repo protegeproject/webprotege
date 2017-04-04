@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
@@ -42,9 +43,10 @@ public class PortletChooserPresenter {
                 return view.asWidget();
             }
 
+            @Nonnull
             @Override
-            public Optional<Focusable> getInitialFocusable() {
-                return Optional.absent();
+            public java.util.Optional<Focusable> getInitialFocusable() {
+                return java.util.Optional.empty();
             }
 
             @Override

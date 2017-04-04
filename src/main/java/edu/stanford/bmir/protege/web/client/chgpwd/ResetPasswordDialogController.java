@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
@@ -23,8 +25,9 @@ public class ResetPasswordDialogController extends WebProtegeOKCancelDialogContr
         return view.asWidget();
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
+    public java.util.Optional<Focusable> getInitialFocusable() {
         return view.getInitialFocusable();
     }
 

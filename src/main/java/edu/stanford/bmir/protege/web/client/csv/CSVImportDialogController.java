@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.csv.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -84,9 +86,10 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
         return csvImportView;
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.absent();
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.empty();
     }
 
     @Override

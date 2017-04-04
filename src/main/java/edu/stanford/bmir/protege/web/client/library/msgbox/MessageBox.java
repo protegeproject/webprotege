@@ -108,9 +108,10 @@ public class MessageBox {
                 return messageBoxView.asWidget();
             }
 
+            @Nonnull
             @Override
-            public Optional<Focusable> getInitialFocusable() {
-                return Optional.absent();
+            public java.util.Optional<Focusable> getInitialFocusable() {
+                return java.util.Optional.empty();
             }
 
             @Override
@@ -145,9 +146,10 @@ public class MessageBox {
                 return messageBoxView.asWidget();
             }
 
+            @Nonnull
             @Override
-            public Optional<Focusable> getInitialFocusable() {
-                return Optional.absent();
+            public java.util.Optional<Focusable> getInitialFocusable() {
+                return java.util.Optional.empty();
             }
 
             @Override
@@ -198,9 +200,10 @@ public class MessageBox {
                 return messageBoxView.asWidget();
             }
 
+            @Nonnull
             @Override
-            public Optional<Focusable> getInitialFocusable() {
-                return Optional.absent();
+            public java.util.Optional<Focusable> getInitialFocusable() {
+                return java.util.Optional.empty();
             }
 
             @Override

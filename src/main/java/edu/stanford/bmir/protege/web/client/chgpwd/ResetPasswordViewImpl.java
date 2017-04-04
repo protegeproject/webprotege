@@ -47,8 +47,8 @@ public class ResetPasswordViewImpl extends Composite implements ResetPasswordVie
     }
 
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.of(emailAddressField);
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.of(emailAddressField);
     }
 
     @Override

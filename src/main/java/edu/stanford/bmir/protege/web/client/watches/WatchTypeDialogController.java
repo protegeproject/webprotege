@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKDialogController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -27,9 +28,10 @@ public class WatchTypeDialogController extends WebProtegeOKDialogController<Watc
         return view.asWidget();
     }
 
+    @Nonnull
     @Override
-    public Optional<Focusable> getInitialFocusable() {
-        return Optional.absent();
+    public java.util.Optional<Focusable> getInitialFocusable() {
+        return java.util.Optional.empty();
     }
 
     @Override

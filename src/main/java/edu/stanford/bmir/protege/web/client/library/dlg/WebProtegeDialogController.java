@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -101,6 +102,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
      * then {@link com.google.common.base.Optional#absent()} will be returned.
      * @return The {@link Focusable} that will receive the focus. Not <code>null</code>
      */
+    @Nonnull
     public abstract Optional<Focusable> getInitialFocusable();
 
     /**
