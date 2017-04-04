@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.mail.MailManager;
+import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
@@ -21,7 +21,7 @@ public class ResetPasswordMailer {
 
     public static final String SUBJECT = "Your password has been reset";
 
-    private final MailManager mailManager;
+    private final SendMailImpl sendMailImpl;
 
     private final WebProtegeLogger logger;
 
@@ -34,13 +34,13 @@ public class ResetPasswordMailer {
     private final ApplicationNameSupplier applicationNameSupplier;
 
     @Inject
-    public ResetPasswordMailer(MailManager mailManager,
+    public ResetPasswordMailer(SendMailImpl sendMailImpl,
                                TemplateEngine templateEngine,
                                @PasswordResetEmailTemplate FileContents templateFile,
                                PlaceUrl placeUrl,
                                ApplicationNameSupplier applicationNameSupplier,
                                WebProtegeLogger logger) {
-        this.mailManager = mailManager;
+        this.sendMailImpl = sendMailImpl;
         this.templateEngine = templateEngine;
         this.templateFile = templateFile;
         this.placeUrl = placeUrl;
@@ -60,7 +60,7 @@ public class ResetPasswordMailer {
         String template = templateFile.getContents();
         String emailBody = templateEngine.populateTemplate(template, objects);
 
-        mailManager.sendMail(singletonList(emailAddress), SUBJECT, emailBody, e -> {
+        sendMailImpl.sendMail(singletonList(emailAddress), SUBJECT, emailBody, e -> {
             logger.info("A password reset email could not be sent to user % at %s.  The password was reset to %s." ,
                         userId.getUserName(),
                         emailAddress,

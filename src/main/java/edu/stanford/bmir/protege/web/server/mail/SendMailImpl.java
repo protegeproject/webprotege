@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -24,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 05/11/2013
  */
 @ApplicationSingleton
-public class MailManager implements SendMail {
+public class SendMailImpl implements SendMail {
 
     public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 
@@ -40,7 +39,7 @@ public class MailManager implements SendMail {
 
     public static final String DEFAULT_FROM_VALUE_PREFIX = "no-reply@";
 
-    private static final Logger logger = LoggerFactory.getLogger(MailManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SendMailImpl.class.getName());
 
     public static final String MAIL_SMTP_HOST = "mail.smtp.host";
 
@@ -58,7 +57,7 @@ public class MailManager implements SendMail {
 
 
     /**
-     * Constructs a {@code MailManager} using the specified {@link Properties} object and the specified exception handler.
+     * Constructs a {@code SendMailImpl} using the specified {@link Properties} object and the specified exception handler.
      * The {@link Properties} object should contain java mail properties e.g. mail.smtp.host etc.  See
      * <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html">https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html</a>
      * for more information.    Note
@@ -75,11 +74,11 @@ public class MailManager implements SendMail {
      * @throws NullPointerException if any parameters are {@code null}.
      */
     @Inject
-    public MailManager(@Nonnull ApplicationNameSupplier applicationNameSupplier,
-                       @Nonnull ApplicationHostSupplier applicationHostSupplier,
-                       @Nonnull @MailProperties Properties properties,
-                       @Nonnull MessagingExceptionHandler messagingExceptionHandler,
-                       @Nonnull MessageIdGenerator messageIdGenerator) {
+    public SendMailImpl(@Nonnull ApplicationNameSupplier applicationNameSupplier,
+                        @Nonnull ApplicationHostSupplier applicationHostSupplier,
+                        @Nonnull @MailProperties Properties properties,
+                        @Nonnull MessagingExceptionHandler messagingExceptionHandler,
+                        @Nonnull MessageIdGenerator messageIdGenerator) {
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.applicationHostSupplier = checkNotNull(applicationHostSupplier);
         this.properties = new Properties(checkNotNull(properties));
@@ -148,7 +147,7 @@ public class MailManager implements SendMail {
             final Session session = createMailSession();
             WebProtegeMimeMessage msg = new WebProtegeMimeMessage(messageId, session);
             Address[] recipients = checkNotNull(recipientEmailAddresses).stream()
-                                                                        .map(MailManager::toInternetAddress)
+                                                                        .map(SendMailImpl::toInternetAddress)
                                                                         .filter(Optional::isPresent)
                                                                         .map(Optional::get)
                                                                         .toArray(Address[]::new);
@@ -211,11 +210,11 @@ public class MailManager implements SendMail {
     }
 
     /**
-     * Creates a {@link Session} using the values stored in {@link MailManager#properties}.  If mail.smtp.auth is set
+     * Creates a {@link Session} using the values stored in {@link SendMailImpl#properties}.  If mail.smtp.auth is set
      * to {@code true} then an authentication handler will be set up to authenticate against the given user name
      * (specified by mail.smtp.user) and password (specified by mail.smtp.password).
      *
-     * @return A session with the settings in {@link MailManager#properties}.  Not {@code null}.
+     * @return A session with the settings in {@link SendMailImpl#properties}.  Not {@code null}.
      */
     private Session createMailSession() {
         final Session session;
@@ -236,7 +235,7 @@ public class MailManager implements SendMail {
     /**
      * Gets the from address as an {@link InternetAddress}.  The personal name will be set to either the value supplied
      * by the {@code mail.smtp.from} property, or by the default value, which is specified by
-     * concatenating the default prefix (@link MailManager#DEFAULT_FROM_VALUE_PREFIX) with the application host name.
+     * concatenating the default prefix (@link SendMailImpl#DEFAULT_FROM_VALUE_PREFIX) with the application host name.
      *
      * @return The from address.
      * @throws UnsupportedEncodingException

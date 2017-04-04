@@ -161,7 +161,7 @@ public class ApplicationModule {
     }
 
     @Provides
-    public SendMail provideSendMail(MailManager manager) {
+    public SendMail provideSendMail(SendMailImpl manager) {
         return manager;
     }
 

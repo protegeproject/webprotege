@@ -31,7 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/05/2014
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MailManagerTestCase {
+public class SendMailImplTestCase {
 
     public static final String SUBJECT = "Test subject";
 
@@ -67,11 +67,11 @@ public class MailManagerTestCase {
         when(applicationNameSupplier.get()).thenReturn(APP_NAME);
         when(applicationHostSupplier.get()).thenReturn(HOST_NAME);
         when(messageIdGenerator.generateUniqueMessageId()).thenReturn(new MessageId(UUID.randomUUID().toString()));
-        MailManager mailManager = new MailManager(applicationNameSupplier,
-                                                  applicationHostSupplier,
-                                                  mailProperties, messagingExceptionHandler,
-                                                  messageIdGenerator);
-        mailManager.sendMail(singletonList(TO), SUBJECT, BODY, messagingExceptionHandler);
+        SendMailImpl sendMailImpl = new SendMailImpl(applicationNameSupplier,
+                                                     applicationHostSupplier,
+                                                     mailProperties, messagingExceptionHandler,
+                                                     messageIdGenerator);
+        sendMailImpl.sendMail(singletonList(TO), SUBJECT, BODY, messagingExceptionHandler);
         List<Message> messageList = Mailbox.get(TO);
         message = messageList.get(0);
     }

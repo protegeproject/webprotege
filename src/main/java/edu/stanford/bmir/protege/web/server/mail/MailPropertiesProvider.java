@@ -49,11 +49,11 @@ public class MailPropertiesProvider implements Provider<Properties> {
                 throw new WebProtegeConfigurationException("Could not read mail.properties. Message: " + e.getMessage());
             }
         overridePropertiesWithSystemProperties(mailProperties);
-        if("true".equals(mailProperties.getProperty(MailManager.MAIL_SMTP_AUTH))) {
-            if(mailProperties.getProperty(MailManager.MAIL_SMTP_USER) == null) {
+        if("true".equals(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_AUTH))) {
+            if(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_USER) == null) {
                 throw new WebProtegeConfigurationException(MAIL_SMTP_USER_MISSING_MESSAGE);
             }
-            if(mailProperties.getProperty(MailManager.MAIL_SMTP_PASSWORD) == null) {
+            if(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_PASSWORD) == null) {
                 throw new WebProtegeConfigurationException(MAIL_SMTP_PASSWORD_MISSING_MESSAGE);
             }
         }
