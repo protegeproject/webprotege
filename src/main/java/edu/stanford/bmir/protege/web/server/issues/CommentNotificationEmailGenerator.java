@@ -13,8 +13,6 @@ import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder.PROJECT_URL;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -72,7 +70,7 @@ public class CommentNotificationEmailGenerator {
             String template = templateFile.getContents();
             return templateEngine.populateTemplate(template, objects);
         } catch (Exception e) {
-            webProtegeLogger.severe(e);
+            webProtegeLogger.error(e);
             return String.format("Invalid template file: %s (Cause: %s)" ,
                                  templateFile.getFile().getName(),
                                  e.getMessage());

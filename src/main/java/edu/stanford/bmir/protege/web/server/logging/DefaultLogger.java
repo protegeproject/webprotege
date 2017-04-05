@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
-import com.google.gwt.user.client.rpc.SerializationException;
-import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +13,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.IllegalFormatException;
 import java.util.Optional;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,46 +22,32 @@ import java.util.logging.Logger;
  */
 public class DefaultLogger implements WebProtegeLogger {
 
-    private static final String SUBJECT = "Unexpected Exception in webprotege";
-
-    public static final String LOG_NAME = "webprotege";
-
-    private Logger logger;
-
-    private SendMail sendMail;
+    private static final Logger logger = LoggerFactory.getLogger(DefaultLogger.class);
 
     @Inject
-    public DefaultLogger(SendMail sendMail) {
-        this.logger = Logger.getLogger(LOG_NAME);
-        this.sendMail = sendMail;
-        if (logger.getUseParentHandlers()) {
-            this.logger.setUseParentHandlers(false);
-            ConsoleHandler consoleHandler = new ConsoleHandler();
-            consoleHandler.setFormatter(new WebProtegeLogFormatter());
-            this.logger.addHandler(consoleHandler);
-        }
+    public DefaultLogger() {
     }
 
     @Override
-    public void severe(Throwable t, UserId userId) {
+    public void error(Throwable t, UserId userId) {
         String message = formatMessage(t, Optional.of(userId), Optional.empty());
-        logSevereMessage(message, isMailableException(t));
+        logErrorMessage(message);
     }
 
     @Override
-    public void severe(Throwable t, UserId userId, HttpServletRequest servletRequest) {
+    public void error(Throwable t, UserId userId, HttpServletRequest servletRequest) {
         String message = formatMessage(t, Optional.of(userId), Optional.of(servletRequest));
-        logSevereMessage(message, isMailableException(t));
+        logErrorMessage(message);
     }
 
     @Override
-    public void severe(Throwable t) {
+    public void error(Throwable t) {
         String message = formatMessage(t, Optional.empty(), Optional.empty());
-        logSevereMessage(message, isMailableException(t));
+        logErrorMessage(message);
     }
 
-    private void logSevereMessage(String message, boolean sendMail) {
-        writeToLog(message, Level.SEVERE);
+    private void logErrorMessage(String message) {
+        logger.error(WebProtegeMarker, message);
     }
 
     private String formatMessage(Throwable t, Optional<UserId> userId, Optional<HttpServletRequest> request) {
@@ -114,31 +97,27 @@ public class DefaultLogger implements WebProtegeLogger {
 
     @Override
     public void info(String message) {
-        writeToLog(message, Level.INFO);
+        logger.info(WebProtegeMarker, message);
     }
 
 
 
     @Override
     public void info(String message, Object... args) {
-        if(!logger.isLoggable(Level.INFO)) {
+        if(!logger.isInfoEnabled()) {
             return;
         }
         String formattedMessage = formatMessage(message, args);
-        writeToLog(formattedMessage, Level.INFO);
+        logger.info(WebProtegeMarker, formattedMessage);
     }
 
     @Override
     public void info(ProjectId projectId, String message, Object... args) {
-        if(!logger.isLoggable(Level.INFO)) {
+        if(!logger.isInfoEnabled()) {
             return;
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("Project: ");
-        sb.append(projectId.getId());
-        sb.append("\n");
-        sb.append(formatMessage(message, args));
-        writeToLog(sb.toString(), Level.INFO);
+        String formattedMessage = String.format("ProjectId: %s    %s", projectId.getId(), formatMessage(message, args));
+        logger.info(WebProtegeMarker, formattedMessage);
     }
 
     private String formatMessage(String message, Object[] args) {
@@ -150,16 +129,5 @@ public class DefaultLogger implements WebProtegeLogger {
             formattedMessage = "Illegally formatted log message: " + message + ". " + e.getMessage();
         }
         return formattedMessage;
-    }
-
-    private void writeToLog(String message, Level level) {
-        if (logger.isLoggable(level)) {
-            logger.log(level, message);
-        }
-    }
-
-    private boolean isMailableException(Throwable throwable) {
-        // We get too many of these on deployment sometimes.  For now, exclude from emailing.
-        return !(throwable instanceof SerializationException);
     }
 }

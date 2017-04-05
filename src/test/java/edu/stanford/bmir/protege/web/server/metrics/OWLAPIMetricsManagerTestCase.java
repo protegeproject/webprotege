@@ -104,6 +104,6 @@ public class OWLAPIMetricsManagerTestCase {
         List<MetricValue> values = metricsManager.getMetrics();
         assertThat(values.isEmpty(), is(true));
         // Make sure that the exception is logged.
-        verify(logger, times(1)).severe(exception);
+        verify(logger, times(1)).error(exception);
     }
 }

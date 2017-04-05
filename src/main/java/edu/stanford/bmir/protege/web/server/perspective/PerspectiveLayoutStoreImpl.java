@@ -90,7 +90,7 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
                 String serialization = serializer.serialize(layout.getRootNode().get());
                 Files.write(serialization.getBytes(Charsets.UTF_8), file);
             } catch (IOException e) {
-                logger.severe(e);
+                logger.error(e);
             }
         }
         else {

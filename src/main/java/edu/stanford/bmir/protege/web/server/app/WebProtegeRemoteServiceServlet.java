@@ -90,7 +90,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
-        logger.severe(e, getUserInSession(), request);
+        logger.error(e, getUserInSession(), request);
         super.doUnexpectedFailure(e);
     }
 

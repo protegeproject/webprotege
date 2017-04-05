@@ -101,7 +101,7 @@ public class FileUploadServlet extends HttpServlet {
 
         }
         catch (Throwable e) {
-            logger.severe(e);
+            logger.error(e);
             sendErrorMessage(resp, e);
         }
     }

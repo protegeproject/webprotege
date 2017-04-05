@@ -135,7 +135,7 @@ public class ImportsCacheManager {
             }
 
             catch (IOException e) {
-                logger.severe(e);
+                logger.error(e);
             }
             finally {
                 try {
@@ -144,7 +144,7 @@ public class ImportsCacheManager {
                     }
                 }
                 catch (IOException e) {
-                    logger.severe(e);
+                    logger.error(e);
                 }
             }
         }
@@ -219,13 +219,13 @@ public class ImportsCacheManager {
                 }
             }
             catch (IOException e) {
-                logger.severe(e);
+                logger.error(e);
             }
             catch (BinaryOWLParseException e) {
-                logger.severe(e);
+                logger.error(e);
             }
             catch (UnloadableImportException e) {
-                logger.severe(e);
+                logger.error(e);
             }
             finally {
                 try {
@@ -234,7 +234,7 @@ public class ImportsCacheManager {
                     }
                 }
                 catch (IOException e) {
-                    logger.severe(e);
+                    logger.error(e);
                 }
             }
         }
