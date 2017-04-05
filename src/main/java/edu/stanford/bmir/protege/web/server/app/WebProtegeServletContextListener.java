@@ -5,12 +5,17 @@ import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationExceptio
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.DaggerApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.ServletComponent;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import static edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger.WebProtegeMarker;
 
 public class WebProtegeServletContextListener implements ServletContextListener {
 
@@ -20,7 +25,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
     }
 
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info("Initializing WebProtege");
+        logger.info(WebProtegeMarker, "Initializing WebProtege");
         try {
             ApplicationComponent applicationComponent = DaggerApplicationComponent.create();
             ServletContext servletContext = sce.getServletContext();
@@ -48,19 +53,19 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             applicationComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
 
-            logger.info("WebProtege Initialized");
+            logger.info(WebProtegeMarker, "WebProtege Initialized");
         }
         catch (WebProtegeConfigurationException e) {
-            logger.error("Encountered a configuration error during initialization: {}", e.getMessage(), e);
+            logger.error(WebProtegeMarker, "Encountered a configuration error during initialization: {}", e.getMessage(), e);
             WebProtegeWebAppFilter.setConfigError(e);
         } catch (Throwable error) {
-            logger.error("Encountered an error during initialization: {}", error.getMessage(), error);
+            logger.error(WebProtegeMarker, "Encountered an error during initialization: {}", error.getMessage(), error);
             WebProtegeWebAppFilter.setError(error);
         }
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.info("WebProtege Destroyed");
+        logger.info(WebProtegeMarker, "WebProtege Destroyed");
     }
 }

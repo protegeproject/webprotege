@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.logging;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,11 +15,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface WebProtegeLogger {
 
-    void severe(Throwable t, UserId userId);
+    Marker WebProtegeMarker = MarkerFactory.getMarker("WebProtege");
 
-    void severe(Throwable t, UserId userId, HttpServletRequest servletRequest);
+    void error(Throwable t, UserId userId);
 
-    void severe(Throwable t);
+    void error(Throwable t, UserId userId, HttpServletRequest servletRequest);
+
+    void error(Throwable t);
 
     void info(String message);
 

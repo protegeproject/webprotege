@@ -114,7 +114,7 @@ public class ProjectDocumentStore {
                 }
 
             } catch (IOException e) {
-                logger.severe(e);
+                logger.error(e);
                 // NOW WHAT?!?!?!?!?!?!?!?!?!?
                 e.printStackTrace();
             }

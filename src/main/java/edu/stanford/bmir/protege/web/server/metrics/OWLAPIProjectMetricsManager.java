@@ -91,7 +91,7 @@ public class OWLAPIProjectMetricsManager {
                     MetricValue metricValue = metric.computeValue();
                     valueCache.put(metric, metricValue);
                 } catch (Exception e) {
-                    logger.severe(e);
+                    logger.error(e);
                     // Mark as not computed
                     valueCache.put(metric, null);
                 }

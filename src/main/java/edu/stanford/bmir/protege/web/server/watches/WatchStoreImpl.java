@@ -113,7 +113,7 @@ public class WatchStoreImpl implements WatchStore {
             bufferedReader.close();
             return result;
         } catch (IOException e) {
-            logger.severe(e);
+            logger.error(e);
             return Collections.emptySet();
         }
     }
@@ -170,7 +170,7 @@ public class WatchStoreImpl implements WatchStore {
                 pw.println();
                 pw.close();
             } catch (IOException e) {
-                logger.severe(e);
+                logger.error(e);
             }
         } finally {
             lock.unlock();

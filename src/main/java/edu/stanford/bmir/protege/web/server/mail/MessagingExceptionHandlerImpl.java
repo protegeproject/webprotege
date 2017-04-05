@@ -21,7 +21,7 @@ public class MessagingExceptionHandlerImpl implements MessagingExceptionHandler 
 
     @Override
     public void handleMessagingException(MessagingException e) {
-        // We don't log this as severe because logging severe messages sends an email to the admin - we'd go round
+        // We don't log this as error because logging error messages sends an email to the admin - we'd go round
         // in an endless loop!
         logger.info("WARNING: Could not send email. " + e.getMessage());
     }

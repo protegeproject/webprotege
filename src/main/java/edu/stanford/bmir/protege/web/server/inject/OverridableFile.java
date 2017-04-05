@@ -70,7 +70,7 @@ public class OverridableFile implements Supplier<File> {
             classPathFile = new File(templateUrl.toURI());
             return Optional.of(classPathFile);
         } catch (URISyntaxException e) {
-            logger.severe(e);
+            logger.error(e);
             return Optional.empty();
         }
     }

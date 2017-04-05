@@ -176,7 +176,7 @@ public class RevisionStoreImpl implements RevisionStore {
                 logger.info(projectId, "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
             } catch (Exception e) {
-                logger.severe(e);
+                logger.error(e);
                 logger.info(projectId, "Failed to load change history.  Cause: " + e.getMessage());
             }
         } finally {
@@ -278,7 +278,7 @@ public class RevisionStoreImpl implements RevisionStore {
                     logger.info("Saving first revision of project " + projectId);
                     revisionSerializationTask.call();
                 } catch (IOException e) {
-                    logger.severe(e);
+                    logger.error(e);
                 }
             }
         } finally {
@@ -289,7 +289,7 @@ public class RevisionStoreImpl implements RevisionStore {
     private void handleCorruptChangeLog(BinaryOWLParseException e) {
         // The change log appears to be corrupt.  We somehow need a way of backing up the old log and creating
         // a fresh one.
-        logger.severe(new RuntimeException("Corrupt change log", e));
+        logger.error(new RuntimeException("Corrupt change log", e));
     }
 
 }
