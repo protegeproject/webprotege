@@ -11,6 +11,7 @@ import org.mongodb.morphia.annotations.Property;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -42,10 +43,10 @@ public class UserActivityRecord {
     private final UserId userId;
 
     @Property(LAST_LOGIN)
-    private final long lastLogin;
+    private final Date lastLogin;
 
     @Property(LAST_LOGOUT)
-    private final long lastLogout;
+    private final Date lastLogout;
 
     @Nonnull
     private final List<RecentProjectRecord> recentProjects;
@@ -62,8 +63,8 @@ public class UserActivityRecord {
                               long lastLogout,
                               @Nonnull List<RecentProjectRecord> recentProjects) {
         this.userId = checkNotNull(userId);
-        this.lastLogin = lastLogin;
-        this.lastLogout = lastLogout;
+        this.lastLogin = new Date(lastLogin);
+        this.lastLogout = new Date(lastLogout);
         this.recentProjects = ImmutableList.copyOf(recentProjects);
     }
 
@@ -92,7 +93,7 @@ public class UserActivityRecord {
      * @return The timestamp.
      */
     public long getLastLogin() {
-        return lastLogin;
+        return lastLogin.getTime();
     }
 
     /**
@@ -100,7 +101,7 @@ public class UserActivityRecord {
      * @return The timestamp
      */
     public long getLastLogout() {
-        return lastLogout;
+        return lastLogout.getTime();
     }
 
     /**
@@ -127,8 +128,8 @@ public class UserActivityRecord {
         }
         UserActivityRecord other = (UserActivityRecord) obj;
         return this.userId.equals(other.userId)
-                && this.lastLogin == other.lastLogin
-                && this.lastLogout == other.lastLogout
+                && this.lastLogin.equals(other.lastLogin)
+                && this.lastLogout.equals(other.lastLogout)
                 && this.recentProjects.equals(other.recentProjects);
     }
 
@@ -137,8 +138,8 @@ public class UserActivityRecord {
     public String toString() {
         return toStringHelper("UserActivityRecord" )
                 .addValue(userId)
-                .add("lastLogin", lastLogin)
-                .add("lastLogout", lastLogout)
+                .add("lastLogin", lastLogin.getTime())
+                .add("lastLogout", lastLogout.getTime())
                 .add("recentProjects", recentProjects)
                 .toString();
     }
