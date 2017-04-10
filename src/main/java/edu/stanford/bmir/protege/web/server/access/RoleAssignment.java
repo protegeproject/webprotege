@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.server.access.RoleAssignment.USER_NA
  * A persistence structure for role assignments.  This assumes the persistence is provided by
  * MongoDb, which is access via Morphia.
  */
-@Entity(noClassnameStored = true)
+@Entity(noClassnameStored = true, value = "RoleAssignments")
 @Indexes(
         @Index(fields = {
                 @Field(USER_NAME),
