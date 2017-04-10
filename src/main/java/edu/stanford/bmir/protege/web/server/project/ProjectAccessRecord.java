@@ -7,6 +7,8 @@ import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
 
+import java.util.Date;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,14 +30,14 @@ public class ProjectAccessRecord {
 
     private final UserId userId;
 
-    private final long timestamp;
+    private final Date timestamp;
 
     public ProjectAccessRecord(@Nonnull ProjectId projectId,
                                @Nonnull UserId userId,
                                long timestamp) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
-        this.timestamp = timestamp;
+        this.timestamp = new Date(timestamp);
     }
 
     @Nonnull
@@ -49,7 +51,7 @@ public class ProjectAccessRecord {
     }
 
     public long getTimestamp() {
-        return timestamp;
+        return timestamp.getTime();
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ProjectAccessRecord {
         ProjectAccessRecord other = (ProjectAccessRecord) obj;
         return this.projectId.equals(other.projectId)
                 && this.userId.equals(other.userId)
-                && this.timestamp == other.timestamp;
+                && this.timestamp.equals(other.timestamp);
     }
 
 
@@ -77,7 +79,7 @@ public class ProjectAccessRecord {
         return toStringHelper("ProjectAccessRecord")
                 .addValue(projectId)
                 .addValue(userId)
-                .add("ts", timestamp)
+                .add("ts", timestamp.getTime())
                 .toString();
     }
 }
