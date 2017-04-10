@@ -6,6 +6,7 @@ import org.mongodb.morphia.annotations.Property;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
+import java.util.Date;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -28,7 +29,7 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
     private final ProjectId projectId;
 
     @Property(value = TIMESTAMP)
-    private final long timestamp;
+    private final Date timestamp;
 
     private static Comparator<RecentProjectRecord> comparator = Comparator.comparing(RecentProjectRecord::getTimestamp)
                                                                .reversed()
@@ -42,7 +43,7 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
      */
     public RecentProjectRecord(@Nonnull ProjectId projectId, long timestamp) {
         this.projectId = checkNotNull(projectId);
-        this.timestamp = timestamp;
+        this.timestamp = new Date(timestamp);
     }
 
     /**
@@ -59,7 +60,7 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
      * @return The timestamp.
      */
     public long getTimestamp() {
-        return timestamp;
+        return timestamp.getTime();
     }
 
     @Override
@@ -77,7 +78,7 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
         }
         RecentProjectRecord other = (RecentProjectRecord) obj;
         return this.projectId.equals(other.projectId)
-                && this.timestamp == other.timestamp;
+                && this.timestamp.equals(other.timestamp);
     }
 
 
@@ -85,7 +86,7 @@ public class RecentProjectRecord implements Comparable<RecentProjectRecord> {
     public String toString() {
         return toStringHelper("RecentProjectRecord" )
                 .addValue(projectId)
-                .add("timestamp", timestamp)
+                .add("timestamp", timestamp.getTime())
                 .toString();
     }
 
