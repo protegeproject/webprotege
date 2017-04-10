@@ -12,6 +12,7 @@ import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -58,9 +59,9 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
         }
         document.append(OWNER, object.getOwner().getUserName());
         document.append(IN_TRASH, object.isInTrash());
-        document.append(CREATED_AT, object.getCreatedAt());
+        document.append(CREATED_AT, new Date(object.getCreatedAt()));
         document.append(CREATED_BY, object.getCreatedBy().getUserName());
-        document.append(MODIFIED_AT, object.getLastModifiedAt());
+        document.append(MODIFIED_AT, new Date(object.getLastModifiedAt()));
         document.append(MODIFIED_BY, object.getLastModifiedBy().getUserName());
         return document;
     }
@@ -72,9 +73,9 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
         String description = Optional.ofNullable(document.getString(DESCRIPTION)).orElse("");
         UserId owner = UserId.getUserId(document.getString(OWNER));
         boolean inTrash = document.getBoolean(IN_TRASH, false);
-        long createdAt = Optional.ofNullable(document.getLong(CREATED_AT)).orElse(0L);
+        long createdAt = Optional.ofNullable(document.getDate(CREATED_AT)).map(Date::getTime).orElse(0L);
         UserId createdBy = UserId.getUserId(Optional.ofNullable(document.getString(CREATED_BY)).orElse(owner.getUserName()));
-        long lastModifiedAt = Optional.ofNullable(document.getLong(MODIFIED_AT)).orElse(0L);
+        long lastModifiedAt = Optional.ofNullable(document.getDate(MODIFIED_AT)).map(Date::getTime).orElse(0L);
         UserId lastModifiedBy = UserId.getUserId(Optional.ofNullable(document.getString(MODIFIED_BY)).orElse(owner.getUserName()));
         return new ProjectDetails(projectId, displayName, description, owner, inTrash, createdAt, createdBy, lastModifiedAt, lastModifiedBy);
     }
@@ -100,7 +101,7 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
 
     public static Bson updateModified(UserId userId, long timestamp) {
         return Updates.combine(
-                Updates.set(MODIFIED_AT, timestamp),
+                Updates.set(MODIFIED_AT, new Date(timestamp)),
                 Updates.set(MODIFIED_BY, userId.getUserName())
         );
     }
