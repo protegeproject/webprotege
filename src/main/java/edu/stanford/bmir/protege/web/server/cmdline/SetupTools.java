@@ -1,8 +1,9 @@
-package edu.stanford.bmir.protege.web.server.app;
+package edu.stanford.bmir.protege.web.server.cmdline;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import edu.stanford.bmir.protege.web.server.user.*;
@@ -61,7 +62,10 @@ public class SetupTools {
                                        Collections.singleton(BuiltInRole.SYSTEM_ADMIN.getRoleId()));
 
         console.printf("You have successfully set up the administrator account.\n");
-        console.printf("Please log into WebProtege using the user name and password that you specified.");
+        console.printf("Please log into WebProtege using the user name and password that you specified.\n");
+        console.printf("You should complete your WebProtege setup by viewing the #admin page of your installation.  " +
+                               "If you have WebProtege running at https://my.domain.com/webprotege/WebProtege.jsp then the admin " +
+                               "page can be found at https://my.domain.com/webprotege/WebProtege.jsp#admin\n");
     }
 
     private void createAdministratorAccount(@Nonnull String userName,

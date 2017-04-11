@@ -61,9 +61,14 @@ public class AdminViewImpl extends Composite implements AdminView {
     PlaceholderTextBox applicationPortField;
 
     @UiField
+    Button rebuildPermissionsButton;
+
+    @UiField
     Button applyButton;
 
     private Runnable applySettingsHandler = () -> {};
+
+    private Runnable rebuildPermissionsHandler = () -> {};
 
     @Inject
     public AdminViewImpl() {
@@ -78,9 +83,19 @@ public class AdminViewImpl extends Composite implements AdminView {
         applySettingsHandler.run();
     }
 
+    @UiHandler("rebuildPermissionsButton")
+    protected void handleRebuildPermissions(ClickEvent event) {
+        rebuildPermissionsHandler.run();
+    }
+
     @Override
     public void setApplySettingsHandler(@Nonnull Runnable runnable) {
         this.applySettingsHandler = checkNotNull(runnable);
+    }
+
+    @Override
+    public void setRebuildPermissionsHandler(@Nonnull Runnable runnable) {
+        this.rebuildPermissionsHandler = checkNotNull(runnable);
     }
 
     @Nonnull
