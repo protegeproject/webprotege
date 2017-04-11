@@ -22,6 +22,7 @@
             padding: 5px;
             border-bottom: 1px solid #f0f0f0;
             flex-grow: 0;
+            min-height: 2em;
             /*flex-shrink: 0;*/
         }
 
