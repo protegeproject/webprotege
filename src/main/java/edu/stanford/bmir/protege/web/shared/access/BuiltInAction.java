@@ -28,6 +28,9 @@ public enum BuiltInAction {
 
     EDIT_ADMIN_SETTINGS,
 
+    REBUILD_PERMISSIONS,
+
+
 
     VIEW_PROJECT,
 

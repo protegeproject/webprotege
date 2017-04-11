@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -207,7 +208,8 @@ public class AccessManagerImpl implements AccessManager {
                  UpdateOperations<RoleAssignment> updateOperations = datastore.createUpdateOperations(RoleAssignment.class);
                  updateOperations.set(RoleAssignment.ACTION_CLOSURE, actionClosure)
                          .set(RoleAssignment.ROLE_CLOSURE, roleClosure);
-                 datastore.update(roleAssignment, updateOperations);
+                 UpdateResults updateResults = datastore.update(roleAssignment, updateOperations);
+                 System.out.println(updateResults);
              });
 
     }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.access;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
@@ -42,7 +43,8 @@ public class RoleAssignment {
 
     @Id
     @Nullable
-    private String id;
+    @SuppressWarnings("unused")
+    private ObjectId id;
 
     @Nullable
     private String userName;
