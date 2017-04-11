@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
@@ -107,8 +106,8 @@ public class SetupTools {
         MongoDatabase database = mongoClient.getDatabase(DB_NAME);
         UserRecordRepository userRecordRepository = new UserRecordRepository(database, new UserRecordConverter());
         SetupTools tools = new SetupTools(userRecordRepository,
-                                          new AccessManagerMongoDbImpl(RoleOracleImpl.get(),
-                                                                       datastore),
+                                          new AccessManagerImpl(RoleOracleImpl.get(),
+                                                                datastore),
                                           System.console());
         tools.createAdministratorAccount();
     }

@@ -4,7 +4,7 @@ import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.AccessManagerMongoDbImpl;
+import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
@@ -179,7 +179,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public AccessManager provideAccessManager(AccessManagerMongoDbImpl impl) {
+    public AccessManager provideAccessManager(AccessManagerImpl impl) {
         return impl;
     }
 

@@ -38,6 +38,8 @@ public class RoleAssignment {
 
     public static final String ACTION_CLOSURE = "actionClosure";
 
+    public static final String ROLE_CLOSURE = "roleClosure";
+
     @Id
     @Nullable
     private String id;

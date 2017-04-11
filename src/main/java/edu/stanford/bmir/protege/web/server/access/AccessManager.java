@@ -86,4 +86,8 @@ public interface AccessManager {
     Collection<Resource> getResourcesAccessibleToSubject(Subject subject, ActionId actionId);
 
 
+    /**
+     * Rebuilds the role and action closure for all subjects and resources.
+     */
+    void rebuild();
 }
