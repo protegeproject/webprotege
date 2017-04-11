@@ -208,8 +208,7 @@ public class AccessManagerImpl implements AccessManager {
                  UpdateOperations<RoleAssignment> updateOperations = datastore.createUpdateOperations(RoleAssignment.class);
                  updateOperations.set(RoleAssignment.ACTION_CLOSURE, actionClosure)
                          .set(RoleAssignment.ROLE_CLOSURE, roleClosure);
-                 UpdateResults updateResults = datastore.update(roleAssignment, updateOperations);
-                 System.out.println(updateResults);
+                 datastore.update(roleAssignment, updateOperations);
              });
 
     }
