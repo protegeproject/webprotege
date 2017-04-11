@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandl
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.GetProjectPermissionsActionHandler;
+import edu.stanford.bmir.protege.web.server.permissions.RebuildPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetProjectDetailsActionHandler;
@@ -517,6 +518,11 @@ public class ActionHandlersModule {
 
     @Provides(type = SET)
     public ActionHandler provideSetAdminSettingsActionHandler(SetAdminSettingsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ActionHandler providesRebuildPermissionsActionHandler(RebuildPermissionsActionHandler handler) {
         return handler;
     }
 }

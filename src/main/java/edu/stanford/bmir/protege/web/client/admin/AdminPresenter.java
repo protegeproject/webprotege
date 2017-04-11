@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.admin.*;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
+import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
@@ -72,6 +73,7 @@ public class AdminPresenter implements Presenter {
                                            });
         }
         view.setApplySettingsHandler(this::applySettings);
+        view.setRebuildPermissionsHandler(this::rebuildPermissions);
     }
 
     private void displaySettings(AdminSettings adminSettings) {
@@ -113,6 +115,11 @@ public class AdminPresenter implements Presenter {
                 view.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS
         );
         dispatchServiceManager.execute(new SetAdminSettingsAction(adminSettings),
+                                       result -> {});
+    }
+
+    private void rebuildPermissions() {
+        dispatchServiceManager.execute(new RebuildPermissionsAction(),
                                        result -> {});
     }
 

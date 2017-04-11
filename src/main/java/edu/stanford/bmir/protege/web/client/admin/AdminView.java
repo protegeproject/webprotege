@@ -13,6 +13,8 @@ public interface AdminView extends IsWidget {
 
     void setApplySettingsHandler(@Nonnull Runnable runnable);
 
+    void setRebuildPermissionsHandler(@Nonnull Runnable runnable);
+
     @Nonnull
     String getApplicationName();
 
