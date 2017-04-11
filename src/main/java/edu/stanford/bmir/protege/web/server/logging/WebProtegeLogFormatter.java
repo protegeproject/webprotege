@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.LayoutBase;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.regex.Pattern;
 
 /**
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/12/2013
  */
-public class WebProtegeLogFormatter extends Formatter {
+public class WebProtegeLogFormatter extends LayoutBase<ILoggingEvent> {
 
     private static final int COL_WIDTH = 160;
 
@@ -24,19 +25,19 @@ public class WebProtegeLogFormatter extends Formatter {
     public static final Pattern WS = Pattern.compile("\\n| ");
 
     @Override
-    public String format(LogRecord logRecord) {
+    public String doLayout(ILoggingEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append(PREFIX);
-        sb.append(new Date(logRecord.getMillis()));
+        sb.append(new Date(event.getTimeStamp()));
         sb.append("\n");
 
         StringBuilder messageBuilder = new StringBuilder();
-        if (logRecord.getLevel() == Level.SEVERE) {
+        if (event.getLevel().isGreaterOrEqual(Level.ERROR)) {
             messageBuilder.append(" ***** ");
-            messageBuilder.append(logRecord.getLevel());
+            messageBuilder.append(event.getLevel().toString());
             messageBuilder.append(" *****\n");
         }
-        messageBuilder.append(logRecord.getMessage());
+        messageBuilder.append(event.getMessage());
         Iterable<String> lines = wrap(messageBuilder.toString(), COL_WIDTH);
         for(String line : lines) {
             padWithPrefix(sb);
