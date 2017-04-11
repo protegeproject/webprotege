@@ -17,8 +17,6 @@ import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyCheck
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
@@ -114,12 +112,6 @@ public class ProjectModule {
     @Provides
     @ProjectSpecificUiConfigurationDataDirectory
     public File provideProjectSpecificUiConfigurationDataDirectory(ProjectSpecificUiConfigurationDataDirectoryProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
-    @NotesOntologyDocument
-    public File provideNotesOntologyDocument(NotesOntologyDocumentProvider provider) {
         return provider.get();
     }
 
@@ -323,12 +315,6 @@ public class ProjectModule {
     @ProjectSingleton
     public RevisionStore provideRevisionStore(RevisionStoreProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    @ProjectSingleton
-    public OWLAPINotesManager provideOWLAPINotesManager(OWLAPINotesManagerNotesAPIImpl impl) {
-        return impl;
     }
 
     @Provides
