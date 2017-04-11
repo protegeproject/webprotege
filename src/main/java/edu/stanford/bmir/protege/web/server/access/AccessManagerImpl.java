@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.server.access.RoleAssignment.*;
 import static java.util.stream.Collectors.toList;
@@ -24,7 +26,7 @@ import static java.util.stream.Collectors.toSet;
  * Stanford Center for Biomedical Informatics Research
  * 7 Jan 2017
  */
-public class AccessManagerMongoDbImpl implements AccessManager {
+public class AccessManagerImpl implements AccessManager {
 
     private final RoleOracle roleOracle;
 
@@ -37,7 +39,7 @@ public class AccessManagerMongoDbImpl implements AccessManager {
      * @param datastore  A Morphia datastore that is used to access MongoDb.
      */
     @Inject
-    public AccessManagerMongoDbImpl(RoleOracle roleOracle, Datastore datastore) {
+    public AccessManagerImpl(RoleOracle roleOracle, Datastore datastore) {
         this.roleOracle = roleOracle;
         this.datastore = datastore;
     }
@@ -49,16 +51,8 @@ public class AccessManagerMongoDbImpl implements AccessManager {
         String userName = toUserName(subject);
         String projectId = toProjectId(resource);
         List<String> assignedRoles = roleIds.stream().map(RoleId::getId).collect(toList());
-        List<String> roleClosure = roleIds.stream()
-                                          .flatMap(id -> roleOracle.getRoleClosure(id).stream())
-                                          .map(r -> r.getRoleId().getId())
-                                          .collect(toList());
-        List<String> actionClosure = roleIds.stream()
-                                            .flatMap(id -> roleOracle.getRoleClosure(id).stream())
-                                            .flatMap(r -> r.getActions().stream())
-                                            .map(ActionId::getId)
-                                            .sorted()
-                                            .collect(toList());
+        List<String> roleClosure = getRoleClosure(roleIds);
+        List<String> actionClosure = getActionClosure(roleIds);
         RoleAssignment assignment = new RoleAssignment(userName,
                                                        projectId,
                                                        assignedRoles,
@@ -66,6 +60,22 @@ public class AccessManagerMongoDbImpl implements AccessManager {
                                                        actionClosure);
         datastore.delete(withUserAndTarget(subject, resource));
         datastore.save(assignment);
+    }
+
+    private List<String> getActionClosure(@Nonnull Collection<RoleId> roleIds) {
+        return roleIds.stream()
+                      .flatMap(id -> roleOracle.getRoleClosure(id).stream())
+                      .flatMap(r -> r.getActions().stream())
+                      .map(ActionId::getId)
+                      .sorted()
+                      .collect(toList());
+    }
+
+    private List<String> getRoleClosure(@Nonnull Collection<RoleId> roleIds) {
+        return roleIds.stream()
+                      .flatMap(id -> roleOracle.getRoleClosure(id).stream())
+                      .map(r -> r.getRoleId().getId())
+                      .collect(toList());
     }
 
     private Query<RoleAssignment> withUserAndTarget(Subject subject, Resource resource) {
@@ -182,6 +192,24 @@ public class AccessManagerMongoDbImpl implements AccessManager {
                         }
                     })
                     .collect(toList());
+    }
+
+    @Override
+    public void rebuild() {
+        Query<RoleAssignment> query = datastore.createQuery(RoleAssignment.class);
+        query.asList()
+             .forEach(roleAssignment -> {
+                 List<RoleId> assignedRoles = roleAssignment.getAssignedRoles().stream()
+                         .map(RoleId::new)
+                         .collect(Collectors.toList());
+                 List<String> roleClosure = getRoleClosure(assignedRoles);
+                 List<String> actionClosure = getActionClosure(assignedRoles);
+                 UpdateOperations<RoleAssignment> updateOperations = datastore.createUpdateOperations(RoleAssignment.class);
+                 updateOperations.set(RoleAssignment.ACTION_CLOSURE, actionClosure)
+                         .set(RoleAssignment.ROLE_CLOSURE, roleClosure);
+                 datastore.update(roleAssignment, updateOperations);
+             });
+
     }
 
     /**
