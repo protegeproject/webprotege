@@ -39,8 +39,6 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
 
-            <g:Label text="Admin Settings" addStyleNames="{wp.dialog.title}"/>
-
             <g:TabLayoutPanel ui:field="tabPanel" barUnit='EM' barHeight='3' addStyleNames="{style.tabPanel}">
 
                 <g:tab>
