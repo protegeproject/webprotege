@@ -46,7 +46,7 @@ public class PlaceholderTextBox extends TextBox implements HasPlaceholder {
         this.regExp = RegExp.compile(regexp);
     }
 
-    private void doValidation() {
+    public void doValidation() {
         if(regExp != null) {
             GWT.log("Performing validation");
             regExp.setLastIndex(0);
