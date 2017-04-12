@@ -188,6 +188,7 @@ public class AdminViewImpl extends Composite implements AdminView {
     @Override
     public void setHost(@Nonnull String host) {
         applicationHostField.setText(checkNotNull(host));
+        applicationHostField.doValidation();
     }
 
     @Nonnull
@@ -199,6 +200,7 @@ public class AdminViewImpl extends Composite implements AdminView {
     @Override
     public void setPath(@Nonnull String path) {
         applicationPathField.setText(path);
+        applicationPathField.doValidation();
     }
 
     @Nonnull
@@ -210,6 +212,7 @@ public class AdminViewImpl extends Composite implements AdminView {
     @Override
     public void setPort(String port) {
         applicationPortField.setText(port);
+        applicationPortField.doValidation();
     }
 
     @Override
