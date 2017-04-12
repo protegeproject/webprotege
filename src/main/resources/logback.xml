@@ -9,7 +9,7 @@
 
 
     <appender name="files" class="ch.qos.logback.core.FileAppender">
-        <file>/var/log/webprotege/webprotege.log</file>
+        <file>${logfile.location:-/var/log/webprotege/webprotege.log}</file>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
