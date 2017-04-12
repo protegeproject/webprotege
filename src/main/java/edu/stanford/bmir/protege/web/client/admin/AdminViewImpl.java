@@ -66,6 +66,9 @@ public class AdminViewImpl extends Composite implements AdminView {
     @UiField
     Button applyButton;
 
+    @UiField
+    TabLayoutPanel tabPanel;
+
     private Runnable applySettingsHandler = () -> {};
 
     private Runnable rebuildPermissionsHandler = () -> {};
@@ -212,5 +215,12 @@ public class AdminViewImpl extends Composite implements AdminView {
     @Override
     public String getPort() throws NumberFormatException {
         return applicationPortField.getText().trim();
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        tabPanel.setSize("500px", "450px");
+        tabPanel.onResize();
     }
 }

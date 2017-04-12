@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 
+import javax.inject.Inject;
+
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REBUILD_PERMISSIONS;
 
 /**
@@ -21,6 +23,7 @@ public class RebuildPermissionsActionHandler implements ActionHandler<RebuildPer
 
     private final AccessManager accessManager;
 
+    @Inject
     public RebuildPermissionsActionHandler(AccessManager accessManager) {
         this.accessManager = accessManager;
     }
