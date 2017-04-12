@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -15,6 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 28/11/2012
  */
 public abstract class OWLEntityData extends OWLPrimitiveData implements Comparable<OWLEntityData> {
+
+    private static final OWLAnnotationProperty RDFS_LABEL = DataFactory.get().getRDFSLabel();
 
     private final String browserText;
 
@@ -39,6 +43,16 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
 
     @Override
     public int compareTo(OWLEntityData o) {
+        if(this.getEntity().equals(RDFS_LABEL)) {
+            if(!o.getEntity().equals(RDFS_LABEL)) {
+                return -1;
+            }
+        }
+        else {
+            if(o.getEntity().equals(RDFS_LABEL)) {
+                return 1;
+            }
+        }
         return this.browserText.compareTo(o.getBrowserText());
     }
 
