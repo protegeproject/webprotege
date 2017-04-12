@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.HasDeleteable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,18 +59,8 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         this.valueEditorFactory = valueEditorFactory;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        valueChangeHandler = new ValueChangeHandler<Optional<O>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<O>> event) {
-                handleValueEditorValueChanged();
-            }
-        };
-        dirtyChangedHandler = new DirtyChangedHandler() {
-            @Override
-            public void handleDirtyChanged(DirtyChangedEvent event) {
-                handleValueEditorDirtyChanged(event);
-            }
-        };
+        valueChangeHandler = event -> handleValueEditorValueChanged();
+        dirtyChangedHandler = event -> handleValueEditorDirtyChanged(event);
         tableField.setBorderWidth(0);
         tableField.setCellPadding(0);
         tableField.setCellSpacing(0);
@@ -169,8 +160,14 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
             }
         }
         for(int i = 0; i < tableField.getRowCount(); i++) {
+            ValueEditor<?> editor = currentEditors.get(i);
+            boolean deletable = true;
+            if(editor instanceof HasDeleteable) {
+                GWT.log("[ValueListEditorImpl] Implements HasDeleteable");
+                deletable = ((HasDeleteable) editor).isDeleteable();
+            }
             DeleteButton deleteButton = (DeleteButton) tableField.getWidget(i, DELETE_BUTTON_COLUMN);
-            deleteButton.setEnabled(enabled);
+            deleteButton.setEnabled(enabled && deletable);
             // Don't enabled the delete button for the last row if it is a blank row
             if (i < tableField.getRowCount() - 1 || !enabled) {
                 deleteButton.setVisible(enabled);
@@ -197,26 +194,33 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
             }
         }
         for(int i = 0; i < tableField.getRowCount(); i++) {
+            ValueEditor<?> currentEditor = currentEditors.get(i);
+            boolean deletable = true;
+            if(currentEditor instanceof HasDeleteable) {
+                deletable = ((HasDeleteable) currentEditor).isDeleteable();
+            }
             DeleteButton deleteButton = (DeleteButton) tableField.getWidget(i, DELETE_BUTTON_COLUMN);
             if(i < tableField.getRowCount() - 1 && !deleteButton.isVisible()) {
-                deleteButton.setEnabled(enabled);
+                deleteButton.setEnabled(enabled && deletable);
                 deleteButton.setVisible(enabled);
             }
         }
     }
 
-    private ValueEditor<O> addValueEditor(boolean deleteVisible) {
+    private ValueEditor<O> addValueEditor(boolean deleteVisibleByDefault) {
+        GWT.log("[ValueListEditorImpl] Adding value list editor");
         final ValueEditor<O> editor = getFreshValueEditor();
+        boolean deletable = deleteVisibleByDefault;
+        GWT.log("[ValueListEditorImpl] Editor class: " + editor.getClass().getName());
+        GWT.log("[ValueListEditorImpl] HasDeleteable: " + (editor instanceof HasDeleteable));
+        if(deleteVisibleByDefault && editor instanceof HasDeleteable) {
+            deletable = ((HasDeleteable) editor).isDeleteable();
+        }
         currentEditors.add(editor);
         final int rowCount = tableField.getRowCount();
         tableField.setWidget(rowCount, 0, editor.asWidget());
         final DeleteButton deleteButton = new DeleteButton();
-        deleteButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                handleDelete(editor);
-            }
-        });
+        deleteButton.addClickHandler(event -> handleDelete(editor));
         tableField.setWidget(rowCount, 1, deleteButton);
         final FlexTable.FlexCellFormatter formatter = tableField.getFlexCellFormatter();
         formatter.setWidth(rowCount, 0, "100%");
@@ -226,7 +230,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         formatter.setVerticalAlignment(rowCount, 1, HasVerticalAlignment.ALIGN_TOP);
         editor.addDirtyChangedHandler(dirtyChangedHandler);
         editor.addValueChangeHandler(valueChangeHandler);
-        deleteButton.setVisible(deleteVisible);
+        deleteButton.setVisible(deletable);
         deleteButton.setEnabled(enabled);
         if(editor instanceof HasEnabled) {
             ((HasEnabled) editor).setEnabled(enabled);

@@ -596,7 +596,7 @@ ul.x-menu-list {
     padding: 2px;
     line-height: 16px;
     color: #000000;
-    background: #ffffff;
+    background: transparent;
 }
 
 .gwt-SuggestBoxPopup {
@@ -850,12 +850,6 @@ select {
 [asserted=false] textarea {
     color: #9d3600;
 
-}
-
-.derived-property-value input {
-}
-
-.derived-property-value textarea {
 }
 
 .error {

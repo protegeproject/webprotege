@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesHandler;
 import edu.stanford.bmir.protege.web.client.primitive.FreshEntitySuggestStrategy;
+import edu.stanford.bmir.protege.web.shared.HasDeleteable;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
@@ -21,7 +22,7 @@ import java.util.Collection;
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/12/2012
  */
-public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValueDescriptor>, HasEnabled {
+public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValueDescriptor>, HasEnabled, HasDeleteable {
 
     HandlerRegistration addPropertyValueChangedHandler(PropertyValuePropertyChangedHandler handler);
 
