@@ -23,6 +23,8 @@ import java.util.*;
  */
 public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, OWLClassData> {
 
+    private boolean includeAncestorFrames = false;
+
     /**
      * Gets the entity type that this translator translates.
      *
@@ -52,12 +54,14 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                 rootOntology,
                 relevantAxioms,
                 PropertyValueState.ASSERTED, project));
-        for (OWLClass ancestor : project.getClassHierarchyProvider().getAncestors(subject.getEntity())) {
-            if (!ancestor.equals(subject.getEntity())) {
-                propertyValues.addAll(translateAxiomsToPropertyValues(ancestor,
-                        rootOntology,
-                        getRelevantAxioms(ancestor, rootOntology, builder, false, project),
-                        PropertyValueState.DERIVED, project));
+        if (includeAncestorFrames) {
+            for (OWLClass ancestor : project.getClassHierarchyProvider().getAncestors(subject.getEntity())) {
+                if (!ancestor.equals(subject.getEntity())) {
+                    propertyValues.addAll(translateAxiomsToPropertyValues(ancestor,
+                            rootOntology,
+                            getRelevantAxioms(ancestor, rootOntology, builder, false, project),
+                            PropertyValueState.DERIVED, project));
+                }
             }
         }
         propertyValues = new PropertyValueMinimiser().minimisePropertyValues(propertyValues, rootOntology, project);
