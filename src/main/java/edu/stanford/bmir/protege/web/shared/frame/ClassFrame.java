@@ -89,7 +89,7 @@ public class ClassFrame implements EntityFrame<OWLClassData>, HasSignature, Seri
      * @return The (possibly empty) set of property values in this frame. Not {@code null}.  The returned set is unmodifiable.
      */
     public Set<PropertyValue> getPropertyValues() {
-        return propertyValues;
+        return new TreeSet<>(propertyValues);
     }
 
     public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {

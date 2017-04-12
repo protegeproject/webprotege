@@ -26,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,10 +34,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -101,10 +99,17 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         currentSubject = lcf.getFrame().getSubject();
         entityDisplay.setDisplayedEntity(java.util.Optional.of(currentSubject));
         iriField.setValue(lcf.getFrame().getSubject().getEntity().getIRI().toString());
-        annotations.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getAnnotationPropertyValues())));
-        properties.setValue(new PropertyValueList(new ArrayList<>(lcf.getFrame().getLogicalPropertyValues())));
+        ArrayList<PropertyAnnotationValue> annotationPropertyValues = new ArrayList<>(lcf.getFrame()
+                                                                               .getAnnotationPropertyValues());
+        Collections.sort(annotationPropertyValues);
+        annotations.setValue(new PropertyValueList(annotationPropertyValues));
+        ArrayList<PropertyValue> logicalPropertyValues = new ArrayList<>(lcf.getFrame().getLogicalPropertyValues());
+        Collections.sort(logicalPropertyValues);
+        properties.setValue(new PropertyValueList(logicalPropertyValues));
         classes.setValue(new ArrayList<>(lcf.getFrame().getClassEntries()));
     }
+
+
 
 
     /**
@@ -188,7 +193,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
             for(OWLPrimitiveData cls : classes.getValue().get()) {
                 classesData.add((OWLClassData) cls);
             }
-            Set<PropertyValue> propertyValues = new HashSet<>();
+            Set<PropertyValue> propertyValues = new TreeSet<>();
             propertyValues.addAll(annotations.getValue().get().getPropertyValues());
             propertyValues.addAll(properties.getValue().get().getPropertyValues());
             ClassFrame cf = new ClassFrame(currentSubject, classesData, propertyValues);
