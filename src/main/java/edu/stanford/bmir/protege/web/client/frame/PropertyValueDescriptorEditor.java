@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Collection;
@@ -28,7 +28,7 @@ public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValue
 
     HandlerRegistration addPropertyValueChangedHandler(PropertyValueValueChangedHandler handler);
 
-    PropertyValueState getPropertyValueState();
+    State getState();
 
     Optional<OWLPropertyData> getPropertyFieldValue();
 
@@ -36,7 +36,7 @@ public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValue
 
     Optional<OWLPrimitiveData> getValueFieldValue();
 
-    void setPropertyValueState(PropertyValueState propertyValueState);
+    void setState(State state);
 
     void setAllowedPropertyTypes(Collection<PrimitiveType> types);
 

@@ -1,34 +1,22 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
-import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -71,7 +59,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
     private void fillUp(PropertyValueList propertyValueList) {
         List<PropertyValueDescriptor> vals = Lists.newArrayList();
         for (PropertyValue propertyValue : propertyValueList.getPropertyValues()) {
-//            if (propertyValue.getState() == PropertyValueState.ASSERTED) {
+//            if (propertyValue.getState() == State.ASSERTED) {
                 Optional<PropertyValueDescriptor> val =    addRelationship(propertyValue);
                 if (val.isPresent()) {
                     vals.add(val.get());

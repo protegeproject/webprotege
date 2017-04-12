@@ -21,12 +21,12 @@ public class PropertyAnnotationValue extends PropertyValue {
     private PropertyAnnotationValue() {
     }
 
-    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLPrimitiveData value, PropertyValueState propertyValueState) {
-        super(property, value, propertyValueState);
+    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLPrimitiveData value, State state) {
+        super(property, value, state);
     }
 
-    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLEntityData entityValue, PropertyValueState propertyValueState) {
-        super(property, entityValue, propertyValueState);
+    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLEntityData entityValue, State state) {
+        super(property, entityValue, state);
         this.entity = entityValue;
     }
 
@@ -65,7 +65,7 @@ public class PropertyAnnotationValue extends PropertyValue {
     }
 
     @Override
-    protected PropertyValue duplicateWithState(PropertyValueState state) {
+    protected PropertyValue duplicateWithState(State state) {
         return new PropertyAnnotationValue(getProperty(), getValue(), state);
     }
 

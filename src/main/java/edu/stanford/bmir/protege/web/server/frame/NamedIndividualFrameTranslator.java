@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -56,7 +56,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         List<PropertyValue> propertyValues = new ArrayList<>();
         for(OWLAxiom axiom : relevantAxioms) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, rootOntology, PropertyValueState.ASSERTED, rm));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, rootOntology, State.ASSERTED, rm));
         }
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(subject.getEntity())) {
@@ -67,7 +67,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
                     for(PropertyValue propertyValue : classFrame.getPropertyValues()) {
                         // Bit yucky
                         if (!propertyValue.isAnnotation()) {
-                            propertyValues.add(propertyValue.setState(PropertyValueState.DERIVED));
+                            propertyValues.add(propertyValue.setState(State.DERIVED));
                         }
                     }
                 }

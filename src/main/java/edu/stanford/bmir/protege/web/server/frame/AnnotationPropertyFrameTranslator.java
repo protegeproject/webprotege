@@ -3,12 +3,10 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
@@ -33,7 +31,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {
                     propertyValues.add(new PropertyAnnotationValue(project.getRenderingManager().getRendering(ax.getProperty()),
                                                                    project.getRenderingManager().getRendering(ax.getValue()),
-                                                                   PropertyValueState.ASSERTED));
+                                                                   State.ASSERTED));
                 }
             }
             for(OWLAnnotationPropertyDomainAxiom ax : ont.getAnnotationPropertyDomainAxioms(subject.getEntity())) {

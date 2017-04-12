@@ -42,12 +42,12 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
     @Override
     public int compare(PropertyValue o1, PropertyValue o2) {
 
-//        if(o1.getState() == PropertyValueState.DERIVED) {
-//            if(o2.getState() != PropertyValueState.DERIVED) {
+//        if(o1.getState() == State.DERIVED) {
+//            if(o2.getState() != State.DERIVED) {
 //                return -1;
 //            }
 //        }
-//        else if(o2.getState() == PropertyValueState.DERIVED) {
+//        else if(o2.getState() == State.DERIVED) {
 //            return 1;
 //        }
 

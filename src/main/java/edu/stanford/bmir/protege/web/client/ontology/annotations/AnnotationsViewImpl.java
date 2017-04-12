@@ -13,13 +13,11 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.frame.PropertyValueGridGrammar;
 import edu.stanford.bmir.protege.web.client.frame.PropertyValueListEditor;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
-import org.semanticweb.owlapi.model.OWLAnnotation;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -76,7 +74,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     public void setValue(Set<PropertyAnnotationValue> object) {
         List<PropertyAnnotationValue> values = new ArrayList<>();
         for(PropertyAnnotationValue annotation : object) {
-            values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), PropertyValueState.ASSERTED));
+            values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), State.ASSERTED));
         }
         editor.setValue(new PropertyValueList(values));
     }

@@ -3,9 +3,6 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,12 +16,12 @@ public abstract class DataPropertyValue extends PropertyValue implements ClassFr
     protected DataPropertyValue() {
     }
 
-    public DataPropertyValue(OWLDataPropertyData property, OWLDatatypeData value, PropertyValueState propertyValueState) {
-        super(property, value, propertyValueState);
+    public DataPropertyValue(OWLDataPropertyData property, OWLDatatypeData value, State state) {
+        super(property, value, state);
     }
 
-    protected DataPropertyValue(OWLDataPropertyData property, OWLLiteralData value, PropertyValueState propertyValueState) {
-        super(property, value, propertyValueState);
+    protected DataPropertyValue(OWLDataPropertyData property, OWLLiteralData value, State state) {
+        super(property, value, state);
     }
 
     @Override

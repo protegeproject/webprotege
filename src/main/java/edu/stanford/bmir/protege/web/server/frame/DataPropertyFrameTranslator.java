@@ -45,7 +45,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         Set<PropertyValue> propertyValues = new HashSet<>();
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, PropertyValueState.ASSERTED, project.getRenderingManager()));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED, project.getRenderingManager()));
         }
 
         PropertyValueList pvl = new PropertyValueList(propertyValues);

@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -51,16 +51,16 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         List<PropertyValue> propertyValues = Lists.newArrayList();
         final Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity(), rootOntology, builder, true, project);
         propertyValues.addAll(translateAxiomsToPropertyValues(subject.getEntity(),
-                rootOntology,
-                relevantAxioms,
-                PropertyValueState.ASSERTED, project));
+                                                              rootOntology,
+                                                              relevantAxioms,
+                                                              State.ASSERTED, project));
         if (includeAncestorFrames) {
             for (OWLClass ancestor : project.getClassHierarchyProvider().getAncestors(subject.getEntity())) {
                 if (!ancestor.equals(subject.getEntity())) {
                     propertyValues.addAll(translateAxiomsToPropertyValues(ancestor,
-                            rootOntology,
-                            getRelevantAxioms(ancestor, rootOntology, builder, false, project),
-                            PropertyValueState.DERIVED, project));
+                                                                          rootOntology,
+                                                                          getRelevantAxioms(ancestor, rootOntology, builder, false, project),
+                                                                          State.DERIVED, project));
                 }
             }
         }
@@ -78,7 +78,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     private List<PropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
                                                                 OWLOntology rootOntology,
                                                                 Set<OWLAxiom> relevantAxioms,
-                                                                PropertyValueState initialState,
+                                                                State initialState,
                                                                 Project project) {
         List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
         for (OWLAxiom axiom : relevantAxioms) {

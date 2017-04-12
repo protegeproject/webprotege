@@ -48,7 +48,7 @@ public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHand
                                     .map(annotation -> new PropertyAnnotationValue(
                                             project.getRenderingManager().getRendering(annotation.getProperty()),
                                             project.getRenderingManager().getRendering(annotation.getValue()),
-                                            PropertyValueState.ASSERTED))
+                                            State.ASSERTED))
                                     .collect(Collectors.toList())
                     );
                     return new OntologyFrame(o.getOntologyID(), list, new WebProtegeOntologyIRIShortFormProvider(rootOntology).getShortForm(o));
