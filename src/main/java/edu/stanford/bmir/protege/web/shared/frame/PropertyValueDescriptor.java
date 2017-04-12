@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -72,7 +72,7 @@ public class PropertyValueDescriptor {
             return property.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                 @Override
                 protected Optional<PropertyValue> getDefaultReturnValue() {
-                    return Optional.absent();
+                    return Optional.empty();
                 }
 
                 @Override

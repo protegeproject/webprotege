@@ -71,12 +71,12 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
     private void fillUp(PropertyValueList propertyValueList) {
         List<PropertyValueDescriptor> vals = Lists.newArrayList();
         for (PropertyValue propertyValue : propertyValueList.getPropertyValues()) {
-            if (propertyValue.getState() == PropertyValueState.ASSERTED) {
+//            if (propertyValue.getState() == PropertyValueState.ASSERTED) {
                 Optional<PropertyValueDescriptor> val =    addRelationship(propertyValue);
                 if (val.isPresent()) {
                     vals.add(val.get());
                 }
-            }
+//            }
         }
         editor.setValue(vals);
     }
@@ -127,7 +127,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
         }
         List<PropertyValue> propertyValues = Lists.newArrayList();
         for(PropertyValueDescriptor val : value.get()) {
-            Optional<PropertyValue> propertyValue = val.toPropertyValue();
+            java.util.Optional<PropertyValue> propertyValue = val.toPropertyValue();
             if (propertyValue.isPresent()) {
                 propertyValues.add(propertyValue.get());
             }

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.primitive.MutableFreshEntitiesHandle
 import edu.stanford.bmir.protege.web.client.primitive.NullFreshEntitySuggestStrategy;
 import edu.stanford.bmir.protege.web.client.primitive.SimpleFreshEntitySuggestStrategy;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.HasDeleteable;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
@@ -24,7 +25,7 @@ import java.util.Collection;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
  */
-public class PropertyValueDescriptorEditorPresenter implements ValueEditor<PropertyValueDescriptor>, HasEnabled {
+public class PropertyValueDescriptorEditorPresenter implements ValueEditor<PropertyValueDescriptor>, HasEnabled, HasDeleteable {
 
     private PropertyValueDescriptorEditor editor;
 
@@ -69,6 +70,11 @@ public class PropertyValueDescriptorEditorPresenter implements ValueEditor<Prope
     @Override
     public void setEnabled(boolean enabled) {
         editor.setEnabled(enabled);
+    }
+
+    @Override
+    public boolean isDeleteable() {
+        return editor.isDeleteable();
     }
 
     public IsWidget getWidget() {

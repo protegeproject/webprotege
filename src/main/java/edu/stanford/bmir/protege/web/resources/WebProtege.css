@@ -36,8 +36,12 @@
     box-sizing: border-box;
 }
 
+.formMain [derived-property-value] {
+    background-color: burlywood;
+}
+
 .formMain [disabled] {
-    background-color: #ffffff !important;
+    /*background-color: #ffffff !important;*/
 }
 
 .formGroup {
@@ -334,4 +338,8 @@ blockquote {
     color: #808080;
     padding: 5px;
     margin-left: 10px;
+}
+
+.derivedInformation {
+    background-color: #fff9f0;
 }
