@@ -7,6 +7,7 @@
     <ui:style>
         .main {
             overflow: auto;
+            padding-top: 10px;
         }
         .divider {
             margin-top: 20px;
@@ -17,53 +18,116 @@
             display: block;
             padding-top: 5px;
             padding-bottom: 5px;
+            padding-left: 20px;
         }
+        .sectionHeading {
+            font-size: 14px;
+        }
+        .section {
+            padding: 10px;
+            padding-bottom: 15px;
+        }
+        .tabPanel {
+        }
+        .tabContent {
+            padding: 10px;
+            padding-left: 20px;
+        }
+
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
-            <g:Label text="Appearance" addStyleNames="{wp.dialog.title}"/>
-            <g:Label text="Application name"/>
-            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
-            <g:Label text="Application logo Url"/>
-            <text:PlaceholderTextBox ui:field="applicationLogoField" placeholder="Application Logo Url"/>
+
+            <g:Label text="Admin Settings" addStyleNames="{wp.dialog.title}"/>
+
+            <g:TabLayoutPanel ui:field="tabPanel" barUnit='EM' barHeight='3' addStyleNames="{style.tabPanel}">
+
+                <g:tab>
+                    <g:header size='7'>Main Settings</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        <g:Label text="Administrator Details" addStyleNames="{style.sectionHeading}"/>
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:Label text="Admin email address"/>
+                            <text:PlaceholderTextBox ui:field="adminEmailAddressField"
+                                                     placeholder="Admin email address"/>
+                        </g:HTMLPanel>
+
+
+                        <g:Label text="Application URL" addStyleNames="{style.sectionHeading}"/>
+
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:Label text="Scheme"/>
+                            <g:ListBox ui:field="applicationSchemeField">
+                                <g:item value="HTTPS">https</g:item>
+                                <g:item value="HTTP">http</g:item>
+                            </g:ListBox>
+                            <g:Label text="Host"/>
+                            <text:PlaceholderTextBox ui:field="applicationHostField"
+                                                     placeholder="e.g. webprotege.stanford.edu"/>
+                            <g:Label text="Path"/>
+                            <text:PlaceholderTextBox ui:field="applicationPathField"
+                                                     placeholder="e.g. /webprotege (leave blank for no path)"/>
+                            <g:Label text="Port"/>
+                            <text:PlaceholderTextBox ui:field="applicationPortField"
+                                                     placeholder="e.g. 443 (leave blank for default port)"/>
+                        </g:HTMLPanel>
+
+                    </g:HTMLPanel>
+                </g:tab>
+
+                <g:tab>
+                    <g:header size='7'>Appearance</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        <g:Label text="Name and Logo" addStyleNames="{style.sectionHeading}"/>
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:Label text="Application name"/>
+                            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
+                            <g:Label text="Application logo Url"/>
+                            <text:PlaceholderTextBox ui:field="applicationLogoField"
+                                                     placeholder="Application Logo Url"/>
+                        </g:HTMLPanel>
+
+                    </g:HTMLPanel>
+                </g:tab>
+
+                <g:tab>
+                    <g:header size='7'>Global Permissions</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        <g:Label text="Account Creation" addStyleNames="{style.sectionHeading}"/>
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:CheckBox ui:field="accountCreationEnabledCheckBox" text="Account creation enabled"
+                                        addStyleNames="{style.checkBox}"/>
+                        </g:HTMLPanel>
+                        <g:Label text="Project Creation and Upload" addStyleNames="{style.sectionHeading}"/>
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:CheckBox ui:field="projectCreationEnabledCheckBox" text="Project creation enabled"
+                                        addStyleNames="{style.checkBox}"/>
+                            <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled"
+                                        addStyleNames="{style.checkBox}"/>
+                        </g:HTMLPanel>
+                        <g:Label text="Email notifications" addStyleNames="{style.sectionHeading}"/>
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:CheckBox ui:field="emailNotificationsEnabledCheckBox" text="Email notifications enabled"
+                                        addStyleNames="{style.checkBox}"/>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                </g:tab>
+                <g:tab>
+                    <g:header size='7'>Actions</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:Button ui:field="rebuildPermissionsButton" text="Rebuild permissions"/>
+                        </g:HTMLPanel>
+
+                    </g:HTMLPanel>
+                </g:tab>
+            </g:TabLayoutPanel>
+
             <g:HTMLPanel addStyleNames="{style.divider}"/>
-            <g:Label text="Administrator Details" addStyleNames="{wp.dialog.title}"/>
-            <g:Label text="Admin email address"/>
-            <text:PlaceholderTextBox ui:field="adminEmailAddressField" placeholder="Admin email address"/>
-            <g:HTMLPanel addStyleNames="{style.divider}"/>
-            <g:Label text="Application URL" addStyleNames="{wp.dialog.title}"/>
-            <g:HTMLPanel addStyleNames="{wp.dialog.group}">
-                <g:Label text="Scheme"/>
-                <g:ListBox ui:field="applicationSchemeField">
-                    <g:item value="HTTPS">https</g:item>
-                    <g:item value="HTTP">http</g:item>
-                </g:ListBox>
-                <g:Label text="Host"/>
-                <text:PlaceholderTextBox ui:field="applicationHostField" placeholder="e.g. webprotege.stanford.edu"/>
-                <g:Label text="Path"/>
-                <text:PlaceholderTextBox ui:field="applicationPathField"
-                                         placeholder="e.g. /webprotege (leave blank for no path)"/>
-                <g:Label text="Port"/>
-                <text:PlaceholderTextBox ui:field="applicationPortField"
-                                         placeholder="e.g. 443 (leave blank for default port)"/>
-            </g:HTMLPanel>
 
-
-            <g:HTMLPanel addStyleNames="{style.divider}"/>
-
-            <g:CheckBox ui:field="accountCreationEnabledCheckBox" text="Account creation enabled" addStyleNames="{style.checkBox}"/>
-            <g:CheckBox ui:field="projectCreationEnabledCheckBox" text="Project creation enabled" addStyleNames="{style.checkBox}"/>
-            <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled" addStyleNames="{style.checkBox}"/>
-            <g:CheckBox ui:field="emailNotificationsEnabledCheckBox" text="Email notifications enabled" addStyleNames="{style.checkBox}"/>
-
-            <g:HTMLPanel addStyleNames="{style.divider}"/>
-
-            <g:Button ui:field="rebuildPermissionsButton" text="Rebuild permissions"/>
 
             <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
-                <!--<g:Button ui:field="cancelButton" text="Cancel"-->
-                          <!--addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>-->
                 <g:Button ui:field="applyButton" text="Apply"
                           addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
             </g:HTMLPanel>
