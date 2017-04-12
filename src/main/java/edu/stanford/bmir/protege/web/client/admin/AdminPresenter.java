@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.admin.*;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
@@ -120,7 +122,17 @@ public class AdminPresenter implements Presenter {
 
     private void rebuildPermissions() {
         dispatchServiceManager.execute(new RebuildPermissionsAction(),
-                                       result -> {});
+                                       new DispatchServiceCallbackWithProgressDisplay<RebuildPermissionsResult>() {
+                                           @Override
+                                           public String getProgressDisplayTitle() {
+                                               return "Rebuilding permissions";
+                                           }
+
+                                           @Override
+                                           public String getProgressDisplayMessage() {
+                                               return "Please wait";
+                                           }
+                                       });
     }
 
     private String getHostNameFromView() {
