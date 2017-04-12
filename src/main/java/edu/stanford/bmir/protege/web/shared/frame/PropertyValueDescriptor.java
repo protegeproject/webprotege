@@ -16,13 +16,13 @@ public class PropertyValueDescriptor {
 
     private OWLPrimitiveData value;
 
-    private PropertyValueState state = PropertyValueState.ASSERTED;
+    private State state = State.ASSERTED;
 
     private boolean mostSpecific;
 
     private Set<OWLAxiom> additionalAxioms;
 
-    public PropertyValueDescriptor(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState state, boolean mostSpecific, Set<OWLAxiom> additionalAxioms) {
+    public PropertyValueDescriptor(OWLPropertyData property, OWLPrimitiveData value, State state, boolean mostSpecific, Set<OWLAxiom> additionalAxioms) {
         this.property = property;
         this.value = value;
         this.state = state;
@@ -50,7 +50,7 @@ public class PropertyValueDescriptor {
                 this.mostSpecific == other.mostSpecific;
     }
 
-    public PropertyValueState getState() {
+    public State getState() {
         return state;
     }
 

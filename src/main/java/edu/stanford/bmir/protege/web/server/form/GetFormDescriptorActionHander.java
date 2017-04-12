@@ -3,25 +3,11 @@ package edu.stanford.bmir.protege.web.server.form;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
-import edu.stanford.bmir.protege.web.server.frame.EntityFrameTranslator;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Matthew Horridge
@@ -227,7 +213,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 //            }
 //            else if(((OWLPropertyData) property).getIRI().toString().equals("http://webprotege.stanford.edu/hasManufacturer")) {
 //                if(pv.getValue() instanceof OWLNamedIndividual) {
-//                    if (pv.getState() == PropertyValueState.ASSERTED) {
+//                    if (pv.getState() == State.ASSERTED) {
 //                        dataBuilder.addData(manufacturerField, FormDataPrimitive.get((OWLNamedIndividual) pv.getValue()));
 //                    }
 //                }

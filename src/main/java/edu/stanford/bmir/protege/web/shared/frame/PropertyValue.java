@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObject;
 
 import java.io.Serializable;
 
@@ -16,7 +13,7 @@ import java.io.Serializable;
  */
 public abstract class PropertyValue implements Comparable<PropertyValue>, Serializable {
 
-    private PropertyValueState state;
+    private State state;
 
     @SuppressWarnings("GwtInconsistentSerializableClass" )
     private OWLPropertyData property;
@@ -28,10 +25,10 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     }
 
-    public PropertyValue(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState propertyValueState) {
+    public PropertyValue(OWLPropertyData property, OWLPrimitiveData value, State state) {
         this.property = property;
         this.value = value;
-        this.state = propertyValueState;
+        this.state = state;
     }
 
     public OWLPropertyData getProperty() {
@@ -42,7 +39,7 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
         return value;
     }
 
-    public PropertyValueState getState() {
+    public State getState() {
         return state;
     }
 
@@ -76,7 +73,7 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     }
 
-    public PropertyValue setState(PropertyValueState state) {
+    public PropertyValue setState(State state) {
         if(this.state == state) {
             return this;
         }
@@ -85,6 +82,6 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
         }
     }
 
-    protected abstract PropertyValue duplicateWithState(PropertyValueState state);
+    protected abstract PropertyValue duplicateWithState(State state);
 
 }

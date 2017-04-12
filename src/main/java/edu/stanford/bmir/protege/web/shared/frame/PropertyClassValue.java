@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,8 +14,8 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
     private PropertyClassValue() {
     }
 
-    public PropertyClassValue(OWLObjectPropertyData property, OWLClassData value, PropertyValueState propertyValueState) {
-        super(property, value, propertyValueState);
+    public PropertyClassValue(OWLObjectPropertyData property, OWLClassData value, State state) {
+        super(property, value, state);
     }
 
     @Override
@@ -63,7 +61,7 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
     }
 
     @Override
-    protected PropertyValue duplicateWithState(PropertyValueState state) {
+    protected PropertyValue duplicateWithState(State state) {
         return new PropertyClassValue(getProperty(), getValue(), state);
     }
 }

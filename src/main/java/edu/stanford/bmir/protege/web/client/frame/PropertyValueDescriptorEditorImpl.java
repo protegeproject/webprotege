@@ -24,7 +24,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Set;
 
-import static edu.stanford.bmir.protege.web.shared.frame.PropertyValueState.ASSERTED;
+import static edu.stanford.bmir.protege.web.shared.frame.State.ASSERTED;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
@@ -61,7 +61,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     private boolean enabled = true;
 
-    private PropertyValueState propertyValueState = ASSERTED;
+    private State state = ASSERTED;
 
 
     @Inject
@@ -84,7 +84,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     @UiHandler("valueField")
     protected void handleValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
         // Edit made.  Now we are in asserted mode.
-        setPropertyValueState(ASSERTED);
+        setState(ASSERTED);
         setDirty();
         fireEvent(new PropertyValueValueChangedEvent(getValueFieldValue()));
         handlePossibleValueChange();
@@ -92,19 +92,19 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     @UiHandler("languageField")
     protected void handleLanguageChanged(ValueChangeEvent<Optional<String>> event) {
-        setPropertyValueState(ASSERTED);
+        setState(ASSERTED);
         setDirty();
         fireEvent(new PropertyValueValueChangedEvent(getValueFieldValue()));
         handlePossibleValueChange();
     }
 
 
-    public PropertyValueState getPropertyValueState() {
-        return propertyValueState;
+    public State getState() {
+        return state;
     }
 
     private void updatePropertyValueStateStyle() {
-        if(propertyValueState == PropertyValueState.DERIVED) {
+        if(state == State.DERIVED) {
             addStyleName(WebProtegeClientBundle.BUNDLE.style().derivedInformation());
         }
         else {
@@ -112,8 +112,8 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
         }
     }
 
-    public void setPropertyValueState(PropertyValueState propertyValueState) {
-        this.propertyValueState = propertyValueState;
+    public void setState(State state) {
+        this.state = state;
         updatePropertyValueStateStyle();
     }
 
@@ -212,7 +212,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 //            }
         }
         updateEnabled();
-        setPropertyValueState(propertyValue.getState());
+        setState(propertyValue.getState());
         setLanguageEditorVisible(propertyValue.getValue().isOWLLiteral());
     }
 
@@ -246,7 +246,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     @Override
     public Optional<PropertyValueDescriptor> getValue() {
-        if(propertyValueState == PropertyValueState.DERIVED) {
+        if(state == State.DERIVED) {
             return currentValue;
         }
         else {
@@ -259,7 +259,8 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
                     }
                 }
                 return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propertyField.getValue().get(),
-                        valueField.getValue().get(), propertyValueState, false, augmentingAxioms));
+                                                               valueField.getValue().get(),
+                                                               state, false, augmentingAxioms));
             }
             else {
                 return Optional.absent();
@@ -297,13 +298,13 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     @Override
     public boolean isDeleteable() {
-        return propertyValueState == ASSERTED;
+        return state == ASSERTED;
     }
 
     private void updateEnabled() {
-        propertyField.setEnabled(enabled && propertyValueState == ASSERTED);
-        valueField.setEnabled(enabled && propertyValueState == ASSERTED);
-        languageField.setEnabled(enabled && propertyValueState == ASSERTED);
+        propertyField.setEnabled(enabled && state == ASSERTED);
+        valueField.setEnabled(enabled && state == ASSERTED);
+        languageField.setEnabled(enabled && state == ASSERTED);
     }
 
     @Override

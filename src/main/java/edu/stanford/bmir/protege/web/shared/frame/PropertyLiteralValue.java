@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,8 +14,8 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     private PropertyLiteralValue() {
     }
 
-    public PropertyLiteralValue(OWLDataPropertyData property, OWLLiteralData value, PropertyValueState propertyValueState) {
-        super(property, value, propertyValueState);
+    public PropertyLiteralValue(OWLDataPropertyData property, OWLLiteralData value, State state) {
+        super(property, value, state);
     }
 
     @Override
@@ -64,7 +61,7 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     }
 
     @Override
-    protected PropertyValue duplicateWithState(PropertyValueState state) {
+    protected PropertyValue duplicateWithState(State state) {
         return new PropertyLiteralValue(getProperty(), getValue(), state);
     }
 }

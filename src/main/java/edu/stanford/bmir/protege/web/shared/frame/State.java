@@ -6,7 +6,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/10/2013
  */
-public enum PropertyValueState {
+public enum State {
 
     ASSERTED,
 

@@ -69,7 +69,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         for(OWLAxiom ax : propertyValueAxioms) {
             Set<PropertyValue> translationResult = translator.getPropertyValues(
                     subject.getEntity(), ax, rootOntology,
-                    PropertyValueState.ASSERTED, rm);
+                    State.ASSERTED, rm);
             for(PropertyValue pv : translationResult) {
                 if(pv.isAnnotation()) {
                     propertyValues.add((PropertyAnnotationValue) pv);
