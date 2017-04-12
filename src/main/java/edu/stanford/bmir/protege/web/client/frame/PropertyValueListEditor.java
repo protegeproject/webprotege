@@ -42,34 +42,20 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     private ValueListEditor<PropertyValueDescriptor> editor;
 
-    private ProjectId projectId;
-
     private PropertyValueGridGrammar grammar = PropertyValueGridGrammar.getClassGrammar();
-
-    private DispatchServiceManager dispatchServiceManager;
 
     @Inject
     public PropertyValueListEditor(ProjectId projectId, final Provider<PrimitiveDataEditorImpl> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
-        this.projectId = projectId;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.editor = new ValueListEditorImpl<PropertyValueDescriptor>(
-                new ValueEditorFactory<PropertyValueDescriptor>() {
-                    @Override
-                    public ValueEditor<PropertyValueDescriptor> createEditor() {
-                        PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl(primitiveDataEditorProvider.get(), primitiveDataEditorProvider.get());
-                        PropertyValueDescriptorEditorPresenter presenter = new PropertyValueDescriptorEditorPresenter(propertyValueEditor);
-                        presenter.setGrammar(grammar);
-                        return presenter;
-                    }
+        this.editor = new ValueListEditorImpl<>(
+                () -> {
+                    PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl(primitiveDataEditorProvider.get(), primitiveDataEditorProvider.get());
+                    PropertyValueDescriptorEditorPresenter presenter = new PropertyValueDescriptorEditorPresenter(propertyValueEditor);
+                    presenter.setGrammar(grammar);
+                    return presenter;
                 }
         );
         initWidget(editor.asWidget());
-        editor.addValueChangeHandler(new ValueChangeHandler<Optional<List<PropertyValueDescriptor>>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<List<PropertyValueDescriptor>>> event) {
-                ValueChangeEvent.fire(PropertyValueListEditor.this, getValue());
-            }
-        });
+        editor.addValueChangeHandler(event -> ValueChangeEvent.fire(PropertyValueListEditor.this, getValue()));
     }
 
 
