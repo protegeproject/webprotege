@@ -29,7 +29,8 @@ public enum BuiltInRole {
     SYSTEM_ADMIN(USER_ADMIN,
                  MOVE_ANY_PROJECT_TO_TRASH,
                  SUBSTITUTE_USER,
-                 EDIT_ADMIN_SETTINGS),
+                 EDIT_ADMIN_SETTINGS,
+                 REBUILD_PERMISSIONS),
 
 
     // Project Roles
