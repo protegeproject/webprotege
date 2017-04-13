@@ -18,7 +18,6 @@
             display: block;
             padding-top: 5px;
             padding-bottom: 5px;
-            padding-left: 20px;
         }
         .sectionHeading {
             font-size: 14px;
@@ -103,6 +102,11 @@
                                         addStyleNames="{style.checkBox}"/>
                             <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled"
                                         addStyleNames="{style.checkBox}"/>
+                            <div style="padding-left: 40px;">
+                                <g:Label text="Max upload size (MB)"/>
+                                <text:PlaceholderTextBox ui:field="maxUploadSize" visibleLength="10"
+                                                         placeholder="Enter max upload size in Megabytes (MB).  Leave blank for no limit."/>
+                            </div>
                         </g:HTMLPanel>
                         <g:Label text="Email notifications" addStyleNames="{style.sectionHeading}"/>
                         <g:HTMLPanel addStyleNames="{style.section}">

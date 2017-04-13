@@ -1,13 +1,9 @@
 
 package edu.stanford.bmir.protege.web.shared.admin;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +12,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static java.util.Collections.singletonList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
-import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,34 +35,57 @@ public class AdminSettings_TestCase {
     @Mock
     private ApplicationLocation applicationLocation;
 
-    private AccountCreationSetting accountCreationSetting = AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
+    private AccountCreationSetting accountCreationSetting = AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
 
     @Mock
-    private List<UserId> accountCreators = singletonList(mock(UserId.class));
+    private List<UserId> accountCreators;
 
-    private ProjectCreationSetting projectCreationSetting = ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
-
-    @Mock
-    private List<UserId> projectCreators = singletonList(mock(UserId.class));
-
-    private ProjectUploadSetting projectUploadSetting = ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED;
+    private ProjectCreationSetting projectCreationSetting = ProjectCreationSetting.EMPTY_PROJECT_CREATION_NOT_ALLOWED;
 
     @Mock
-    private List<UserId> projectUploaders = singletonList(mock(UserId.class));
+    private List<UserId> projectCreators;
 
-    private NotificationEmailsSetting notificationEmailsSetting = NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS;
+    private ProjectUploadSetting projectUploadSetting = ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED;
+
+    @Mock
+    private List<UserId> projectUploaders;
+
+    private NotificationEmailsSetting notificationEmailsSetting = NotificationEmailsSetting.DO_NOT_SEND_NOTIFICATION_EMAILS;
+
+    private long maxUploadSize = 1L;
 
     @Before
     public void setUp()
-        throws Exception
-    {
-        adminSettings = new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+            throws Exception {
+        adminSettings = new AdminSettings(applicationName,
+                                          customLogoUrl,
+                                          adminEmailAddress,
+                                          applicationLocation,
+                                          accountCreationSetting,
+                                          accountCreators,
+                                          projectCreationSetting,
+                                          projectCreators,
+                                          projectUploadSetting,
+                                          projectUploaders,
+                                          notificationEmailsSetting,
+                                          maxUploadSize);
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationName_IsNull() {
-        new AdminSettings(null, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(null,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -74,10 +93,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getApplicationName(), is(this.applicationName));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_customLogoUrl_IsNull() {
-        new AdminSettings(applicationName, null, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          null,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -85,10 +115,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getCustomLogoUrl(), is(this.customLogoUrl));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_adminEmailAddress_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, null, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          null,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -96,10 +137,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getAdminEmailAddress(), is(this.adminEmailAddress));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationLocation_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, null, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          null,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -107,10 +159,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getApplicationLocation(), is(this.applicationLocation));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_accountCreationSetting_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, null, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          null,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -118,10 +181,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getAccountCreationSetting(), is(this.accountCreationSetting));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_accountCreators_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, null, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          null,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -129,10 +203,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getAccountCreators(), is(this.accountCreators));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectCreationSetting_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, null, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          null,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -140,10 +225,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getProjectCreationSetting(), is(this.projectCreationSetting));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectCreators_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, null, projectUploadSetting, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          null,
+                          projectUploadSetting,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -151,10 +247,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getProjectCreators(), is(this.projectCreators));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectUploadSetting_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, null, projectUploaders, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          null,
+                          projectUploaders,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -162,10 +269,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getProjectUploadSetting(), is(this.projectUploadSetting));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectUploaders_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, null, notificationEmailsSetting);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          null,
+                          notificationEmailsSetting,
+                          maxUploadSize);
     }
 
     @Test
@@ -173,10 +291,21 @@ public class AdminSettings_TestCase {
         assertThat(adminSettings.getProjectUploaders(), is(this.projectUploaders));
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_notificationEmailsSetting_IsNull() {
-        new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, null);
+        new AdminSettings(applicationName,
+                          customLogoUrl,
+                          adminEmailAddress,
+                          applicationLocation,
+                          accountCreationSetting,
+                          accountCreators,
+                          projectCreationSetting,
+                          projectCreators,
+                          projectUploadSetting,
+                          projectUploaders,
+                          null,
+                          maxUploadSize);
     }
 
     @Test
@@ -185,84 +314,262 @@ public class AdminSettings_TestCase {
     }
 
     @Test
+    public void shouldReturnSupplied_maxUploadSize() {
+        assertThat(adminSettings.getMaxUploadSize(), is(this.maxUploadSize));
+    }
+
+    @Test
     public void shouldBeEqualToSelf() {
         assertThat(adminSettings, is(adminSettings));
     }
 
     @Test
-    @SuppressWarnings("ObjectEqualsNull")
+    @SuppressWarnings("ObjectEqualsNull" )
     public void shouldNotBeEqualToNull() {
         assertThat(adminSettings.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(adminSettings, is(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting)));
+        assertThat(adminSettings,
+                   is(new AdminSettings(applicationName,
+                                        customLogoUrl,
+                                        adminEmailAddress,
+                                        applicationLocation,
+                                        accountCreationSetting,
+                                        accountCreators,
+                                        projectCreationSetting,
+                                        projectCreators,
+                                        projectUploadSetting,
+                                        projectUploaders,
+                                        notificationEmailsSetting,
+                                        maxUploadSize)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationName() {
-        assertThat(adminSettings, is(not(new AdminSettings("String-114adece-bdde-4100-839d-10ac38097625", customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings("String-c8a90a1d-4357-4486-846a-963795f4ff23" ,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_customLogoUrl() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, "String-f5caad45-6853-4ff9-aadd-99119c5dc7ed", adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            "String-fdc1d7b6-0cd2-4694-8b79-301f2cd31248" ,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_adminEmailAddress() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, mock(EmailAddress.class), applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            mock(EmailAddress.class),
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationLocation() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, mock(ApplicationLocation.class), accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            mock(ApplicationLocation.class),
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_accountCreationSetting() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            AccountCreationSetting.ACCOUNT_CREATION_ALLOWED,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_accountCreators() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, singletonList(mock(UserId.class)), projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            Collections.singletonList(mock(UserId.class)),
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectCreationSetting() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, ProjectCreationSetting.EMPTY_PROJECT_CREATION_NOT_ALLOWED, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectCreators() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, singletonList(mock(UserId.class)), projectUploadSetting, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            Collections.singletonList(mock(UserId.class)),
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectUploadSetting() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED, projectUploaders, notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectUploaders() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, singletonList(mock(UserId.class)), notificationEmailsSetting))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            Collections.singletonList(mock(UserId.class)),
+                                            notificationEmailsSetting,
+                                            maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_notificationEmailsSetting() {
-        assertThat(adminSettings, is(not(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, NotificationEmailsSetting.DO_NOT_SEND_NOTIFICATION_EMAILS))));
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS,
+                                            maxUploadSize))));
+    }
+
+    @Test
+    public void shouldNotBeEqualToOtherThatHasDifferent_maxUploadSize() {
+        assertThat(adminSettings,
+                   is(not(new AdminSettings(applicationName,
+                                            customLogoUrl,
+                                            adminEmailAddress,
+                                            applicationLocation,
+                                            accountCreationSetting,
+                                            accountCreators,
+                                            projectCreationSetting,
+                                            projectCreators,
+                                            projectUploadSetting,
+                                            projectUploaders,
+                                            notificationEmailsSetting,
+                                            2L))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(adminSettings.hashCode(), is(new AdminSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, accountCreationSetting, accountCreators, projectCreationSetting, projectCreators, projectUploadSetting, projectUploaders, notificationEmailsSetting).hashCode()));
+        assertThat(adminSettings.hashCode(),
+                   is(new AdminSettings(applicationName,
+                                        customLogoUrl,
+                                        adminEmailAddress,
+                                        applicationLocation,
+                                        accountCreationSetting,
+                                        accountCreators,
+                                        projectCreationSetting,
+                                        projectCreators,
+                                        projectUploadSetting,
+                                        projectUploaders,
+                                        notificationEmailsSetting,
+                                        maxUploadSize).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(adminSettings.toString(), startsWith("AdminSettings"));
+        assertThat(adminSettings.toString(), Matchers.startsWith("AdminSettings" ));
     }
 
 }

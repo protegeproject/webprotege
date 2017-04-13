@@ -40,7 +40,8 @@ public class DefaultApplicationSettings {
             new ApplicationLocation(DEFAULT_SCHEME,
                                     DEFAULT_HOST,
                                     DEFAULT_PATH,
-                                    DEFAULT_PORT));
+                                    DEFAULT_PORT),
+            Long.MAX_VALUE);
 
     public static ApplicationSettings get() {
             return DEFAULT_SETTINGS;
