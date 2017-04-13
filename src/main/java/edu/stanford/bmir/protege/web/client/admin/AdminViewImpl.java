@@ -69,6 +69,9 @@ public class AdminViewImpl extends Composite implements AdminView {
     @UiField
     TabLayoutPanel tabPanel;
 
+    @UiField
+    PlaceholderTextBox maxUploadSize;
+
     private Runnable applySettingsHandler = () -> {};
 
     private Runnable rebuildPermissionsHandler = () -> {};
@@ -79,6 +82,7 @@ public class AdminViewImpl extends Composite implements AdminView {
         applicationHostField.setValidation(AdminPresenter.HOST_REGEXP.getSource());
         applicationPathField.setValidation(AdminPresenter.PATH_REGEXP.getSource());
         applicationPortField.setValidation("^(\\d)*$");
+        maxUploadSize.setValidation("^(\\d)*$");
     }
 
     @UiHandler("applyButton")
@@ -218,6 +222,16 @@ public class AdminViewImpl extends Composite implements AdminView {
     @Override
     public String getPort() throws NumberFormatException {
         return applicationPortField.getText().trim();
+    }
+
+    @Override
+    public String getMaxUploadSize() {
+        return maxUploadSize.getText().trim();
+    }
+
+    @Override
+    public void setMaxUploadSize(String size) {
+        maxUploadSize.setText(size);
     }
 
     @Override

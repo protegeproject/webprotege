@@ -113,7 +113,8 @@ public class AdminSettingsManager {
                     ImmutableList.of(),
                     projectUploadSetting,
                     ImmutableList.of(),
-                    SEND_NOTIFICATION_EMAILS
+                    SEND_NOTIFICATION_EMAILS,
+                    appSettings.getMaxUploadSize()
             );
         } finally {
             readLock.unlock();
@@ -127,7 +128,8 @@ public class AdminSettingsManager {
                     adminSettings.getApplicationName(),
                     adminSettings.getCustomLogoUrl(),
                     adminSettings.getAdminEmailAddress().getEmailAddress(),
-                    adminSettings.getApplicationLocation()
+                    adminSettings.getApplicationLocation(),
+                    adminSettings.getMaxUploadSize()
             );
             appSettingsManager.setApplicationSettings(applicationSettings);
             Set<RoleId> guestRoleIds = new HashSet<>(accessManager.getAssignedRoles(forGuestUser(),

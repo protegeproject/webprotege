@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.admin.*;
@@ -97,6 +98,15 @@ public class AdminPresenter implements Presenter {
         else {
             view.setPort(Integer.toString(port));
         }
+
+        if(adminSettings.getMaxUploadSize() == Long.MAX_VALUE) {
+            view.setMaxUploadSize("");
+        }
+        else {
+            String maxUploadSize = Long.toString(adminSettings.getMaxUploadSize() / (1024 * 1024));
+            view.setMaxUploadSize(maxUploadSize);
+        }
+
     }
 
     private void applySettings() {
@@ -114,10 +124,23 @@ public class AdminPresenter implements Presenter {
                 Collections.emptyList(),
                 view.isProjectUploadAllowed() ? PROJECT_UPLOAD_ALLOWED : PROJECT_UPLOAD_NOT_ALLOWED,
                 Collections.emptyList(),
-                view.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS
+                view.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS,
+                parseMaxUploadSize()
         );
         dispatchServiceManager.execute(new SetAdminSettingsAction(adminSettings),
-                                       result -> {});
+                                       result -> MessageBox.showMessage("Settings applied", "The application settings have successfully been applied"));
+    }
+
+    private long parseMaxUploadSize() {
+        String maxUploadSize = view.getMaxUploadSize();
+        if(maxUploadSize.isEmpty()) {
+            return Long.MAX_VALUE;
+        }
+        try {
+            return Long.parseLong(maxUploadSize) * 1024 * 1024;
+        } catch (NumberFormatException e) {
+            return Long.MAX_VALUE;
+        }
     }
 
     private void rebuildPermissions() {
@@ -166,4 +189,6 @@ public class AdminPresenter implements Presenter {
             return view.getScheme().getDefaultPort();
         }
     }
+
+
 }

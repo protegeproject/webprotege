@@ -1,19 +1,21 @@
-package edu.stanford.bmir.protege.web.server.filesubmission;
+package edu.stanford.bmir.protege.web.server.upload;
 
 import edu.stanford.bmir.protege.web.client.upload.FileUploadResponseAttributes;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
-import org.semanticweb.owlapi.io.UnparsableOntologyException;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,8 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -56,25 +59,41 @@ public class FileUploadServlet extends HttpServlet {
 
     public static final String TEMP_FILE_SUFFIX = "";
 
-    public static final long DEFAULT_MAX_FILE_SIZE = 1024 * 1024;
-
     public static final String RESPONSE_MIME_TYPE = "text/html";
 
     @UploadsDirectory
     @Nonnull
     private final File uploadsDirectory;
 
+    private final AccessManager accessManager;
+
+    private final ApplicationNameSupplier applicationNameSupplier;
+
+    private final MaxUploadSizeSupplier maxUploadSizeSupplier;
+
     @Inject
     public FileUploadServlet(
+            @Nonnull AccessManager accessManager,
+            @Nonnull ApplicationNameSupplier applicationNameSupplier,
+            @Nonnull MaxUploadSizeSupplier maxUploadSizeSupplier,
             @Nonnull @UploadsDirectory File uploadsDirectory) {
-        this.uploadsDirectory = uploadsDirectory;
+        this.accessManager = checkNotNull(accessManager);
+        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
+        this.maxUploadSizeSupplier = checkNotNull(maxUploadSizeSupplier);
+        this.uploadsDirectory = checkNotNull(uploadsDirectory);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
+        UserId userId = webProtegeSession.getUserInSession();
+        if(!accessManager.hasPermission(Subject.forUser(userId),
+                                    ApplicationResource.get(),
+                                    BuiltInAction.UPLOAD_PROJECT)) {
+            sendErrorMessage(resp, "You do not have permission to upload files to " + applicationNameSupplier.get());
+        }
+
         logger.info("Received upload request from {} at {} (Host: {})",
                     webProtegeSession.getUserInSession(),
                     req.getRemoteAddr(),
@@ -84,7 +103,7 @@ public class FileUploadServlet extends HttpServlet {
             if (ServletFileUpload.isMultipartContent(req)) {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                upload.setFileSizeMax(DEFAULT_MAX_FILE_SIZE);
+                upload.setFileSizeMax(maxUploadSizeSupplier.get());
                 List<FileItem> items = upload.parseRequest(req);
 
                 for (FileItem item : items) {
@@ -110,8 +129,8 @@ public class FileUploadServlet extends HttpServlet {
         catch (FileUploadBase.FileSizeLimitExceededException | FileUploadBase.SizeLimitExceededException e) {
             logger.info("File upload failed because the file exceeds the maximum allowed size.");
             sendErrorMessage(resp, String.format("The file that you attempted to upload is too large.  " +
-                                                         "Files must not exceed %d MB",
-                                                 DEFAULT_MAX_FILE_SIZE / (1024 * 1024)));
+                                                         "Files must not exceed %d MB.",
+                                                 maxUploadSizeSupplier.get() / (1024 * 1024)));
         }
         catch (FileUploadBase.FileUploadIOException | FileUploadBase.IOFileUploadException e) {
             logger.info("File upload failed because an IOException occurred: {}", e.getMessage(), e);

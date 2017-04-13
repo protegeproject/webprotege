@@ -42,6 +42,18 @@ public interface AdminView extends IsWidget {
 
     void setProjectUploadAllowed(boolean allowed);
 
+    /**
+     * Gets the max upload size.
+     * @return The max upload size in MB represented as a string.
+     */
+    String getMaxUploadSize();
+
+    /**
+     * Sets the max upload size.
+     * @param maxUploadSize The max upload size in MB represented as a String
+     */
+    void setMaxUploadSize(String maxUploadSize);
+
     boolean isNotificationEmailsEnabled();
 
     void setNotificationEmailsEnabled(boolean enabled);

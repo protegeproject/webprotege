@@ -29,7 +29,8 @@ public class ApplicationSettingsManager_IT {
                     "TheHost" ,
                     "ThePath" ,
                     33
-            )
+            ),
+            44L
     );
 
     private ApplicationSettingsManager manager;

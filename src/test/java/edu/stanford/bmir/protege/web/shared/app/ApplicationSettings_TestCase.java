@@ -12,33 +12,28 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSettings_TestCase {
 
     private ApplicationSettings applicationSettings;
-
     private String applicationName = "The applicationName";
-
     private String customLogoUrl = "The customLogoUrl";
-
     private String adminEmailAddress = "The adminEmailAddress";
-
     @Mock
     private ApplicationLocation applicationLocation;
+    private long maxUploadSize = 1L;
 
     @Before
     public void setUp()
     {
-        applicationSettings = new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation);
+        applicationSettings = new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationName_IsNull() {
-        new ApplicationSettings(null, customLogoUrl, adminEmailAddress, applicationLocation);
+        new ApplicationSettings(null, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize);
     }
 
     @Test
@@ -49,7 +44,7 @@ public class ApplicationSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_customLogoUrl_IsNull() {
-        new ApplicationSettings(applicationName, null, adminEmailAddress, applicationLocation);
+        new ApplicationSettings(applicationName, null, adminEmailAddress, applicationLocation, maxUploadSize);
     }
 
     @Test
@@ -60,7 +55,7 @@ public class ApplicationSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_adminEmailAddress_IsNull() {
-        new ApplicationSettings(applicationName, customLogoUrl, null, applicationLocation);
+        new ApplicationSettings(applicationName, customLogoUrl, null, applicationLocation, maxUploadSize);
     }
 
     @Test
@@ -71,12 +66,17 @@ public class ApplicationSettings_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationLocation_IsNull() {
-        new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, null);
+        new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, null, maxUploadSize);
     }
 
     @Test
     public void shouldReturnSupplied_applicationLocation() {
         assertThat(applicationSettings.getApplicationLocation(), is(this.applicationLocation));
+    }
+
+    @Test
+    public void shouldReturnSupplied_maxUploadSize() {
+        assertThat(applicationSettings.getMaxUploadSize(), is(this.maxUploadSize));
     }
 
     @Test
@@ -92,37 +92,42 @@ public class ApplicationSettings_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(applicationSettings, is(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation)));
+        assertThat(applicationSettings, is(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationName() {
-        assertThat(applicationSettings, is(not(new ApplicationSettings("String-98073672-bb93-495a-915d-f58d37884e9b", customLogoUrl, adminEmailAddress, applicationLocation))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings("String-59344631-c3b4-4d9b-9091-e4cf31570afe", customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_customLogoUrl() {
-        assertThat(applicationSettings, is(not(new ApplicationSettings(applicationName, "String-0f8ae6e4-d4ae-4214-862f-8de4cc1f5ffc", adminEmailAddress, applicationLocation))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, "String-9cdcccb5-5a5e-4191-8864-77c6257dde2a", adminEmailAddress, applicationLocation, maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_adminEmailAddress() {
-        assertThat(applicationSettings, is(not(new ApplicationSettings(applicationName, customLogoUrl, "String-d412217f-ee0a-4337-8011-d749063e5d00", applicationLocation))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, customLogoUrl, "String-05b955de-a3d7-4444-bef7-032fd22c0bb1", applicationLocation, maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationLocation() {
-        assertThat(applicationSettings, is(not(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, Mockito.mock(ApplicationLocation.class)))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, Mockito.mock(ApplicationLocation.class), maxUploadSize))));
+    }
+
+    @Test
+    public void shouldNotBeEqualToOtherThatHasDifferent_maxUploadSize() {
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, 2L))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(applicationSettings.hashCode(), is(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation).hashCode()));
+        assertThat(applicationSettings.hashCode(), is(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(applicationSettings.toString(), startsWith("ApplicationSettings"));
+        assertThat(applicationSettings.toString(), Matchers.startsWith("ApplicationSettings"));
     }
 
 }

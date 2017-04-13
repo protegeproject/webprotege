@@ -38,14 +38,18 @@ public class ApplicationSettings {
     @Nonnull
     private final ApplicationLocation applicationLocation;
 
+    private final long maxUploadSize;
+
     public ApplicationSettings(@Nonnull String applicationName,
                                @Nonnull String customLogoUrl,
                                @Nonnull String adminEmailAddress,
-                               @Nonnull ApplicationLocation applicationLocation) {
+                               @Nonnull ApplicationLocation applicationLocation,
+                               long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
         this.customLogoUrl = checkNotNull(customLogoUrl);
         this.adminEmailAddress = checkNotNull(adminEmailAddress);
         this.applicationLocation = checkNotNull(applicationLocation);
+        this.maxUploadSize = maxUploadSize;
     }
 
     /**
@@ -85,12 +89,21 @@ public class ApplicationSettings {
         return applicationLocation;
     }
 
+    /**
+     * Gets the maximum file upload size.
+     * @return The maximum file upload size.
+     */
+    public long getMaxUploadSize() {
+        return maxUploadSize;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(applicationName,
                                 customLogoUrl,
                                 adminEmailAddress,
-                                applicationLocation);
+                                applicationLocation,
+                                maxUploadSize);
     }
 
     @Override
@@ -105,7 +118,8 @@ public class ApplicationSettings {
         return this.applicationName.equals(other.applicationName)
                 && this.customLogoUrl.equals(other.customLogoUrl)
                 && this.adminEmailAddress.equals(other.adminEmailAddress)
-                && this.applicationLocation.equals(other.applicationLocation);
+                && this.applicationLocation.equals(other.applicationLocation)
+                && this.maxUploadSize == other.maxUploadSize;
     }
 
 

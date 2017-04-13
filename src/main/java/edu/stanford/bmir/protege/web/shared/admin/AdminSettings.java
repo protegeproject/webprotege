@@ -49,6 +49,8 @@ public class AdminSettings implements IsSerializable {
 
     private NotificationEmailsSetting notificationEmailsSetting;
 
+    private long maxUploadSize;
+
     @GwtSerializationConstructor
     private AdminSettings() {
     }
@@ -63,7 +65,8 @@ public class AdminSettings implements IsSerializable {
                          @Nonnull List<UserId> projectCreators,
                          @Nonnull ProjectUploadSetting projectUploadSetting,
                          @Nonnull List<UserId> projectUploaders,
-                         @Nonnull NotificationEmailsSetting notificationEmailsSetting) {
+                         @Nonnull NotificationEmailsSetting notificationEmailsSetting,
+                         long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
         this.customLogoUrl = checkNotNull(customLogoUrl);
         this.adminEmailAddress = checkNotNull(adminEmailAddress);
@@ -75,6 +78,7 @@ public class AdminSettings implements IsSerializable {
         this.projectUploadSetting = checkNotNull(projectUploadSetting);
         this.projectUploaders = checkNotNull(projectUploaders);
         this.notificationEmailsSetting = checkNotNull(notificationEmailsSetting);
+        this.maxUploadSize = maxUploadSize;
     }
 
     @Nonnull
@@ -132,6 +136,11 @@ public class AdminSettings implements IsSerializable {
         return applicationLocation;
     }
 
+    public long getMaxUploadSize() {
+        return maxUploadSize;
+    }
+
+
     @Override
     public int hashCode() {
         return Objects.hashCode(
@@ -145,7 +154,8 @@ public class AdminSettings implements IsSerializable {
                 projectCreators,
                 projectUploadSetting,
                 projectUploaders,
-                notificationEmailsSetting
+                notificationEmailsSetting,
+                maxUploadSize
         );
     }
 
@@ -168,7 +178,8 @@ public class AdminSettings implements IsSerializable {
                 && this.projectCreators.equals(other.projectCreators)
                 && this.projectUploadSetting == other.projectUploadSetting
                 && this.projectUploaders.equals(other.projectUploaders)
-                && this.notificationEmailsSetting == other.notificationEmailsSetting;
+                && this.notificationEmailsSetting == other.notificationEmailsSetting
+                && this.maxUploadSize == other.maxUploadSize;
     }
 
 
