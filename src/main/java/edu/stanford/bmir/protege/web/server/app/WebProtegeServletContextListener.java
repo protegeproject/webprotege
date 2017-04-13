@@ -53,8 +53,8 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             applicationComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
 
-            logger.info("Max  Memory: {} MB", (Runtime.getRuntime().maxMemory() / (1024 * 1024)));
-            logger.info("Free Memory: {} MB", (Runtime.getRuntime().freeMemory() / (1024 * 1024)));
+            Runtime runtime = Runtime.getRuntime();
+            logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));
             logger.info(WebProtegeMarker, "Initialized WebProtege");
         }
         catch (WebProtegeConfigurationException e) {

@@ -3,13 +3,19 @@ package edu.stanford.bmir.protege.web.server.filesubmission;
 import edu.stanford.bmir.protege.web.client.upload.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.UnparsableOntologyException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -23,6 +29,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Author: Matthew Horridge<br>
@@ -43,49 +50,49 @@ import java.util.List;
  */
 public class FileUploadServlet extends HttpServlet {
 
+    public static final Logger logger = LoggerFactory.getLogger(FileUploadServlet.class);
+
     public static final String TEMP_FILE_PREFIX = "upload-";
 
     public static final String TEMP_FILE_SUFFIX = "";
 
-    public static final long DEFAULT_MAX_FILE_SIZE = Long.MAX_VALUE;
+    public static final long DEFAULT_MAX_FILE_SIZE = 1024 * 1024;
 
     public static final String RESPONSE_MIME_TYPE = "text/html";
-
 
     @UploadsDirectory
     @Nonnull
     private final File uploadsDirectory;
 
-    @Nonnull
-    public final WebProtegeLogger logger;
-
     @Inject
     public FileUploadServlet(
-            @Nonnull @UploadsDirectory File uploadsDirectory,
-            @Nonnull WebProtegeLogger logger) {
+            @Nonnull @UploadsDirectory File uploadsDirectory) {
         this.uploadsDirectory = uploadsDirectory;
-        this.logger = logger;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("Received upload from %s", req.getRemoteAddr());
+
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
+        logger.info("Received upload request from {} at {} (Host: {})",
+                    webProtegeSession.getUserInSession(),
+                    req.getRemoteAddr(),
+                    req.getRemoteHost());
         resp.setHeader("Content-Type", RESPONSE_MIME_TYPE);
         try {
             if (ServletFileUpload.isMultipartContent(req)) {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
                 upload.setFileSizeMax(DEFAULT_MAX_FILE_SIZE);
-
                 List<FileItem> items = upload.parseRequest(req);
 
                 for (FileItem item : items) {
                     if (!item.isFormField()) {
                         File uploadedFile = createServerSideFile();
                         long sizeInBytes = uploadedFile.length();
-                        long sizeInMB = sizeInBytes / (1024 * 1024);
-                        logger.info("Created server side file %s.  File size is %d MB ", uploadedFile.getName(), sizeInMB);
+                        logger.info("File size is {} bytes", sizeInBytes);
+                        logger.info("Writing uploaded file to {}", uploadedFile.getName());
                         item.write(uploadedFile);
                         resp.setStatus(HttpServletResponse.SC_CREATED);
                         sendSuccessMessage(resp, uploadedFile.getName());
@@ -95,14 +102,31 @@ public class FileUploadServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not find form file item");
             }
             else {
-                logger.info("BAD REQUEST: POST must be multipart encoding.");
+                logger.info("Bad upload request: POST must be multipart encoding.");
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "POST must be multipart encoding.");
             }
 
         }
-        catch (Throwable e) {
-            logger.error(e);
-            sendErrorMessage(resp, e);
+        catch (FileUploadBase.FileSizeLimitExceededException | FileUploadBase.SizeLimitExceededException e) {
+            logger.info("File upload failed because the file exceeds the maximum allowed size.");
+            sendErrorMessage(resp, String.format("The file that you attempted to upload is too large.  " +
+                                                         "Files must not exceed %d MB",
+                                                 DEFAULT_MAX_FILE_SIZE / (1024 * 1024)));
+        }
+        catch (FileUploadBase.FileUploadIOException | FileUploadBase.IOFileUploadException e) {
+            logger.info("File upload failed because an IOException occurred: {}", e.getMessage(), e);
+            sendErrorMessage(resp, "File upload failed because of an IOException");
+        }
+        catch (FileUploadBase.InvalidContentTypeException e) {
+            logger.info("File upload failed because the content type was invalid: {}", e.getMessage());
+            sendErrorMessage(resp, "File upload failed because the content type is invalid");
+        }
+        catch (FileUploadException e) {
+            logger.info("File upload failed: {}", e.getMessage());
+            sendErrorMessage(resp, "File upload failed");
+        } catch (Exception e) {
+            logger.info("File upload failed because of an error when trying to write the file item: {}", e.getMessage(), e);
+            sendErrorMessage(resp, "File upload failed");
         }
     }
     
@@ -114,14 +138,7 @@ public class FileUploadServlet extends HttpServlet {
 
     }
 
-    private void sendErrorMessage(HttpServletResponse response, Throwable exception) throws IOException {
-        String errorMessage;
-        if(exception instanceof OWLOntologyCreationException) {
-            errorMessage = getErrorMessage((OWLOntologyCreationException) exception);
-        }
-        else {
-            errorMessage = exception.getMessage();
-        }
+    private void sendErrorMessage(HttpServletResponse response, String errorMessage) throws IOException {
         writeJSONPairs(response.getWriter(), 
                 new Pair(FileUploadResponseAttributes.RESPONSE_TYPE_ATTRIBUTE.name(), FileUploadResponseAttributes.RESPONSE_TYPE_VALUE_UPLOAD_REJECTED.name()),
                 new Pair(FileUploadResponseAttributes.UPLOAD_REJECTED_MESSAGE_ATTRIBUTE.name(), errorMessage)
@@ -152,18 +169,6 @@ public class FileUploadServlet extends HttpServlet {
         printWriter.print("\"");
         printWriter.print(string);
         printWriter.print("\"");
-    }
-
-
-    private static String getErrorMessage(OWLOntologyCreationException e) {
-        if(e instanceof UnparsableOntologyException) {
-            return "Could not parse ontology. Please load your ontology document into Protege to check that it is well formed.";
-        }
-        else if(e instanceof OWLOntologyCreationIOException) {
-            OWLOntologyCreationIOException ioException = (OWLOntologyCreationIOException) e;
-            return "Problem reading ontology document: " + ioException.getCause().getMessage();
-        }
-        return e.getMessage();
     }
 
     /**
