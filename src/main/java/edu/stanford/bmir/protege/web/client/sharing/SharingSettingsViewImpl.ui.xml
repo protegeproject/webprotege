@@ -37,6 +37,9 @@
             border-bottom: 1px solid #e0e0e0;
             margin-bottom: 20px;
         }
+        .main input {
+            background-color: white;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} ">

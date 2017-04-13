@@ -50,19 +50,9 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
     @UiField
     HTMLPanel linkSharingView;
 
-    private ApplyChangesHandler applyChangesHandler = new ApplyChangesHandler() {
-        @Override
-        public void handleApplyChanges() {
+    private ApplyChangesHandler applyChangesHandler = () -> {};
 
-        }
-    };
-
-    private CancelHandler cancelHandler = new CancelHandler() {
-        @Override
-        public void handleCancel() {
-
-        }
-    };
+    private CancelHandler cancelHandler = () -> {};
 
     @Inject
     public SharingSettingsViewImpl(final DispatchServiceManager dispatchServiceManager) {
