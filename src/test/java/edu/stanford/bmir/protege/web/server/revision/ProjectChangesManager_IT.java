@@ -67,8 +67,7 @@ public class ProjectChangesManager_IT {
         RevisionManager revisionManager = new RevisionManagerImpl(new RevisionStoreImpl(
                 projectId,
                 changeHistoryFile,
-                dataFactory,
-                logger
+                dataFactory
         ));
         WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
