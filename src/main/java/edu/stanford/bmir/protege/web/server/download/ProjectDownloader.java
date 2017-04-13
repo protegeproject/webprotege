@@ -3,16 +3,18 @@ package edu.stanford.bmir.protege.web.server.download;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
+import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
@@ -28,6 +30,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 06/06/2012
  */
 public class ProjectDownloader {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProjectDownloader.class);
 
     public static final String MIME_TYPE = "application/zip";
 
@@ -117,6 +121,7 @@ public class ProjectDownloader {
         }
         else {
             // An error - no flipping ontology!
+            logger.info("Project download failed because the root ontology could not be retrived from the manager.  Project: ", project.getProjectId());
             throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.get() + ".  Please contact the administrator.");
         }
     }
@@ -129,6 +134,7 @@ public class ProjectDownloader {
             RevisionNumber revisionNumber) throws
             IOException,
             OWLOntologyStorageException {
+        MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
         // TODO: Separate object
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
@@ -146,6 +152,7 @@ public class ProjectDownloader {
             zipOutputStream.putNextEntry(zipEntry);
             ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
             zipOutputStream.closeEntry();
+            memoryMonitor.monitorMemoryUsage();
         }
         zipOutputStream.finish();
         zipOutputStream.flush();

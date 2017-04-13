@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -97,5 +99,15 @@ public class FileDownloadParameters {
      */
     private String getRawProjectNameParameter() {
         return request.getParameter(FileDownloadConstants.PROJECT_NAME_PARAMETER);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("FileDownloadParameters" )
+                .add("projectId", getProjectId())
+                .add("revision", getRequestedRevision())
+                .add("format", getFormat())
+                .toString();
     }
 }

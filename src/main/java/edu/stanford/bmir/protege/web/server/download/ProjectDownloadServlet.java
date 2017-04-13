@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -65,13 +66,18 @@ public class ProjectDownloadServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
+        final WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
         UserId userId = webProtegeSession.getUserInSession();
-
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
+        logger.info("Received download request from {} at {} (Host: {}) for project {}",
+                    userId,
+                    req.getRemoteAddr(),
+                    req.getRemoteHost(),
+                    downloadParameters.getFormat());
         if (!accessManager.hasPermission(Subject.forUser(userId),
                                          new ProjectResource(downloadParameters.getProjectId()),
                                          BuiltInAction.DOWNLOAD_PROJECT)) {
+            logger.info("Denied download request as user does not have permission to download this project.");
             resp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -80,8 +86,11 @@ public class ProjectDownloadServlet extends HttpServlet {
             RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
             DownloadFormat format = downloadParameters.getFormat();
             String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-            WebProtegeSession session = new WebProtegeSessionImpl(req.getSession());
-            Project project = projectManager.getProject(projectId, session.getUserInSession());
+            logger.info("Retrieving project to download");
+            MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+            memoryMonitor.monitorMemoryUsage();
+            Project project = projectManager.getProject(projectId, webProtegeSession.getUserInSession());
+            memoryMonitor.monitorMemoryUsage();
             ProjectDownloader downloader = new ProjectDownloader(displayName,
                                                                  project,
                                                                  revisionNumber,
@@ -92,8 +101,10 @@ public class ProjectDownloadServlet extends HttpServlet {
             bufferedOutputStream.flush();
         }
         else {
+            logger.info("Bad project download request: {}", downloadParameters);
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
-
     }
+
+
 }
