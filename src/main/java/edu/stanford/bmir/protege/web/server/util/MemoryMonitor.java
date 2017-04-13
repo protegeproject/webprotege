@@ -44,9 +44,9 @@ public class MemoryMonitor {
      */
     public void monitorMemoryUsage() {
         update();
-        if(freeMemoryBytes < WARNING_THRESHOLD) {
-            logger.warn("Low Memory: Using %d MB of %d MB (%.2f%%) [%d MB free]",
-                        toMB(usedMemoryBytes), toMB(maxMemoryBytes), percentageUsed, toMB(remainingMemoryBytes));
+        if(remainingMemoryBytes < WARNING_THRESHOLD) {
+            logger.warn("Low Memory: Using {} MB of {} MB ({}%) [{} MB free]",
+                        toMB(usedMemoryBytes), toMB(maxMemoryBytes), formatPercentageUsed(), toMB(remainingMemoryBytes));
         }
     }
 
@@ -55,8 +55,12 @@ public class MemoryMonitor {
      */
     public void logMemoryUsage() {
         update();
-        logger.warn("Memory Usage: Using %d MB of %d MB (%.2f%%) [%d MB free]",
-                    toMB(usedMemoryBytes), toMB(maxMemoryBytes), percentageUsed, toMB(remainingMemoryBytes));
+        logger.info("Memory Usage: Using {} MB of {} MB ({}%) [{} MB free]",
+                    toMB(usedMemoryBytes), toMB(maxMemoryBytes), formatPercentageUsed(), toMB(remainingMemoryBytes));
+    }
+
+    String formatPercentageUsed() {
+        return String.format("%.2f", percentageUsed);
     }
 
     private static long toMB(long bytes) {

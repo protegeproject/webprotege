@@ -100,6 +100,7 @@ public class ProjectDownloadServlet extends HttpServlet {
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();
             logger.info("Sent project download to client");
+            memoryMonitor.logMemoryUsage();
         }
         else {
             logger.info("Bad project download request: {}", downloadParameters);
