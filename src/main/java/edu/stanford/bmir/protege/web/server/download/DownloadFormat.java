@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.filedownload;
+package edu.stanford.bmir.protege.web.server.download;
 
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import org.semanticweb.owlapi.formats.*;
