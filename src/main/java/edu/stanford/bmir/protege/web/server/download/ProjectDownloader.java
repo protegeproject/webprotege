@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.download;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
@@ -13,8 +12,10 @@ import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -70,12 +71,7 @@ public class ProjectDownloader {
         try {
             setFileType(response);
             setFileName(response);
-//            if(revision.isHead()) {
-//                documentStore.exportProject(fileName, outputStream, format);
-//            }
-//            else {
-                exportProjectRevision(fileName, revision, outputStream, format);
-//            }
+            exportProjectRevision(fileName, revision, outputStream, format);
 
         }
         catch (OWLOntologyStorageException e) {
@@ -89,7 +85,7 @@ public class ProjectDownloader {
         response.setContentType(MIME_TYPE);
     }
 
-    private void setFileName(HttpServletResponse response) {
+    private void setFileName(@Nonnull HttpServletResponse response) {
         String revisionNumber;
         if(revision.isHead()) {
             revisionNumber = "";
@@ -155,29 +151,6 @@ public class ProjectDownloader {
         zipOutputStream.flush();
     }
 
-//     private void createDownloadCacheIfNecessary(String projectDisplayName, DownloadFormat format) throws IOException, OWLOntologyStorageException {
-//        ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
-//        try {
-//            projectDownloadCacheLock.writeLock().lock();
-//            File downloadCacheDirectory = projectFileStore.getDownloadCacheDirectory();
-//            File cachedFile = getDownloadCacheFile(format);
-//            if (!cachedFile.exists()) {
-//                downloadCacheDirectory.mkdirs();
-//                // Create
-//                OWLAPIProject project = projectManager.getProject(projectId);
-//                RevisionManager changeManager = project.getChangeManager();
-//                RevisionNumber currentRevisionNumber = changeManager.getCurrentRevision();
-//
-//                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(cachedFile));
-//                exportProjectRevision(projectDisplayName, currentRevisionNumber, outputStream, format);
-//                outputStream.close();
-//            }
-//        } finally {
-//            projectDownloadCacheLock.writeLock().unlock();
-//        }
-//    }
-
-
     /**
      * Gets an ontology from the manager specified manager.  This method is a workaround for
      * https://github.com/owlcs/owlapi/issues/215
@@ -202,6 +175,6 @@ public class ProjectDownloader {
                 return Optional.of(manager.getOntologies().iterator().next());
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }
