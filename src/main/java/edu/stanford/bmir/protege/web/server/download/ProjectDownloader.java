@@ -139,7 +139,7 @@ public class ProjectDownloader {
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
         baseFolder = baseFolder.toLowerCase();
-        baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();
+        baseFolder = baseFolder + "-REVISION-" + (revisionNumber.isHead() ? "HEAD" : revisionNumber.getValue());
         ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
         zipOutputStream.putNextEntry(rootOntologyEntry);
         rootOntology.getOWLOntologyManager().saveOntology(rootOntology, format.getDocumentFormat(), zipOutputStream);
