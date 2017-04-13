@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.download;
+package edu.stanford.bmir.protege.web.shared.download;
 
 /**
  * Author: Matthew Horridge<br>
@@ -6,9 +6,9 @@ package edu.stanford.bmir.protege.web.server.download;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/06/2012
  */
-public class FileDownloadConstants {
+public class ProjectDownloadConstants {
 
-    public static final String PROJECT_NAME_PARAMETER = "ontology";
+    public static final String PROJECT = "project";
     
     public static final String REVISION = "revision";
 

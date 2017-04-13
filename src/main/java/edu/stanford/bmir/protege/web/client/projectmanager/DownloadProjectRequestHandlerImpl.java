@@ -32,12 +32,7 @@ public class DownloadProjectRequestHandlerImpl implements DownloadProjectRequest
 
             @Override
             public void onSuccess() {
-                DownloadSettingsDialog.showDialog(new DownloadFormatExtensionHandler() {
-                    @Override
-                    public void handleDownload(DownloadFormatExtension extension) {
-                        doDownload(projectId, extension);
-                    }
-                });
+                DownloadSettingsDialog.showDialog(extension -> doDownload(projectId, extension));
             }
         });
 

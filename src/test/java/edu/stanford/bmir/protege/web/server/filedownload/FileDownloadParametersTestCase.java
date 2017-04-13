@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.server.download.DownloadFormat;
-import edu.stanford.bmir.protege.web.server.download.FileDownloadConstants;
+import edu.stanford.bmir.protege.web.shared.download.ProjectDownloadConstants;
 import edu.stanford.bmir.protege.web.server.download.FileDownloadParameters;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -36,7 +36,7 @@ public class FileDownloadParametersTestCase {
 
     @Test
     public void shouldParseRevision() {
-        when(servletRequest.getParameter(FileDownloadConstants.REVISION)).thenReturn("3");
+        when(servletRequest.getParameter(ProjectDownloadConstants.REVISION)).thenReturn("3");
         RevisionNumber revisionNumber = parameters.getRequestedRevision();
         assertThat(revisionNumber.getValue(), is(equalTo(3l)));
     }
@@ -49,7 +49,7 @@ public class FileDownloadParametersTestCase {
 
     @Test
     public void shouldParseMalformedRevisionIntoHeadRevision() {
-        when(servletRequest.getParameter(FileDownloadConstants.REVISION)).thenReturn("x");
+        when(servletRequest.getParameter(ProjectDownloadConstants.REVISION)).thenReturn("x");
         RevisionNumber revisionNumber = parameters.getRequestedRevision();
         assertThat(revisionNumber.isHead(), is(true));
     }
@@ -57,7 +57,7 @@ public class FileDownloadParametersTestCase {
     @Test
     public void shouldParseLongMaxIntoHeadRevision() {
         String rev = Long.toString(Long.MAX_VALUE);
-        when(servletRequest.getParameter(FileDownloadConstants.REVISION)).thenReturn(rev);
+        when(servletRequest.getParameter(ProjectDownloadConstants.REVISION)).thenReturn(rev);
         RevisionNumber revisionNumber = parameters.getRequestedRevision();
         assertThat(revisionNumber.isHead(), is(true));
     }
@@ -69,7 +69,7 @@ public class FileDownloadParametersTestCase {
 
     @Test
     public void shouldReturnFalseForIsDownloadIfProjectIdIsMalformed() {
-        when(servletRequest.getParameter(FileDownloadConstants.PROJECT_NAME_PARAMETER)).thenReturn("x");
+        when(servletRequest.getParameter(ProjectDownloadConstants.PROJECT)).thenReturn("x");
         assertThat(parameters.isProjectDownload(), is(false));
     }
 
@@ -77,7 +77,7 @@ public class FileDownloadParametersTestCase {
     @Test
     public void shouldParseOntologyId() {
         ProjectId projectId = ProjectId.get("00000000-0000-0000-0000-000000000000");
-        when(servletRequest.getParameter(FileDownloadConstants.PROJECT_NAME_PARAMETER)).thenReturn(projectId.getId());
+        when(servletRequest.getParameter(ProjectDownloadConstants.PROJECT)).thenReturn(projectId.getId());
         assertThat(parameters.getProjectId(), is(equalTo(projectId)));
     }
 
@@ -88,41 +88,41 @@ public class FileDownloadParametersTestCase {
 
     @Test
     public void shouldParseJunkAsRDFXMLFormat() {
-        when(servletRequest.getParameter(FileDownloadConstants.FORMAT)).thenReturn("junk");
+        when(servletRequest.getParameter(ProjectDownloadConstants.FORMAT)).thenReturn("junk");
         assertThat(parameters.getFormat(), is(equalTo(DownloadFormat.RDF_XML)));
     }
 
     @Test
     public void shouldParseRDFXMLFormat() {
-        when(servletRequest.getParameter(FileDownloadConstants.FORMAT)).thenReturn("owl");
+        when(servletRequest.getParameter(ProjectDownloadConstants.FORMAT)).thenReturn("owl");
         assertThat(parameters.getFormat(), is(equalTo(DownloadFormat.RDF_XML)));
     }
 
 
     @Test
     public void shouldParseRDFTurtleFormat() {
-        when(servletRequest.getParameter(FileDownloadConstants.FORMAT)).thenReturn("ttl");
+        when(servletRequest.getParameter(ProjectDownloadConstants.FORMAT)).thenReturn("ttl");
         assertThat(parameters.getFormat(), is(equalTo(DownloadFormat.RDF_TURLE)));
     }
 
 
     @Test
     public void shouldParseOWLXMLFormat() {
-        when(servletRequest.getParameter(FileDownloadConstants.FORMAT)).thenReturn("owx");
+        when(servletRequest.getParameter(ProjectDownloadConstants.FORMAT)).thenReturn("owx");
         assertThat(parameters.getFormat(), is(equalTo(DownloadFormat.OWL_XML)));
     }
 
 
     @Test
     public void shouldParseManchesterSyntaxFormat() {
-        when(servletRequest.getParameter(FileDownloadConstants.FORMAT)).thenReturn("omn");
+        when(servletRequest.getParameter(ProjectDownloadConstants.FORMAT)).thenReturn("omn");
         assertThat(parameters.getFormat(), is(equalTo(DownloadFormat.MANCHESTER)));
     }
 
 
     @Test
     public void shouldParseFunctionalSyntaxFormat() {
-        when(servletRequest.getParameter(FileDownloadConstants.FORMAT)).thenReturn("ofn");
+        when(servletRequest.getParameter(ProjectDownloadConstants.FORMAT)).thenReturn("ofn");
         assertThat(parameters.getFormat(), is(equalTo(DownloadFormat.FUNCTIONAL_SYNTAX)));
     }
 }

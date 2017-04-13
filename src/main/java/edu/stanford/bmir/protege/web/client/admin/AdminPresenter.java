@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 import java.util.Collections;
 
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ADMIN_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_APPLICATION_SETTINGS;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting.DO_NOT_SEND_NOTIFICATION_EMAILS;
@@ -65,7 +65,7 @@ public class AdminPresenter implements Presenter {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        if(!loggedInUserManager.isAllowedApplicationAction(EDIT_ADMIN_SETTINGS)) {
+        if(!loggedInUserManager.isAllowedApplicationAction(EDIT_APPLICATION_SETTINGS)) {
             container.setWidget(forbiddenView);
         }
         else {
