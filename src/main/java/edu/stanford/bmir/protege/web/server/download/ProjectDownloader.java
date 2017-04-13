@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/06/2012
  */
-public class OWLAPIProjectDownloader {
+public class ProjectDownloader {
 
     public static final String MIME_TYPE = "application/zip";
 
@@ -54,11 +54,11 @@ public class OWLAPIProjectDownloader {
      * @param format The format which the project should be downloaded in.
      */
     @Inject
-    public OWLAPIProjectDownloader(@Nonnull String fileName,
-                                   @Nonnull Project project,
-                                   @Nonnull RevisionNumber revision,
-                                   @Nonnull DownloadFormat format,
-                                   @Nonnull ApplicationNameSupplier applicationNameSupplier) {
+    public ProjectDownloader(@Nonnull String fileName,
+                             @Nonnull Project project,
+                             @Nonnull RevisionNumber revision,
+                             @Nonnull DownloadFormat format,
+                             @Nonnull ApplicationNameSupplier applicationNameSupplier) {
         this.project = project;
         this.revision = revision;
         this.format = format;

@@ -29,7 +29,7 @@ import java.io.IOException;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/06/2012
  * <p>
- * A servlet which allows ontologies to be downloaded from WebProtege.  See {@link OWLAPIProjectDownloader} for
+ * A servlet which allows ontologies to be downloaded from WebProtege.  See {@link ProjectDownloader} for
  * the piece of machinery that actually does the processing of request parameters and the downloading.
  * </p>
  */
@@ -77,11 +77,11 @@ public class FileDownloadServlet extends HttpServlet {
             String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
             WebProtegeSession session = new WebProtegeSessionImpl(req.getSession());
             Project project = projectManager.getProject(projectId, session.getUserInSession());
-            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(displayName,
-                                                                             project,
-                                                                             revisionNumber,
-                                                                             format,
-                                                                             applicationNameSupplier);
+            ProjectDownloader downloader = new ProjectDownloader(displayName,
+                                                                 project,
+                                                                 revisionNumber,
+                                                                 format,
+                                                                 applicationNameSupplier);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();
