@@ -70,8 +70,12 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         ProjectId projectId = settings.getProjectId();
         ProjectResource projectResource = new ProjectResource(projectId);
 
+        // Remove existing assignments
+        accessManager.getSubjectsWithAccessToResource(projectResource)
+                .forEach(subject -> accessManager.setAssignedRoles(subject, projectResource, Collections.emptySet()));
+
         Map<PersonId, SharingSetting> map = settings.getSharingSettings().stream()
-                                                    .collect(toMap(s -> s.getPersonId(), s -> s, (s1, s2) -> s1));
+                                                    .collect(toMap(SharingSetting::getPersonId, s -> s, (s1, s2) -> s1));
         Optional<SharingPermission> linkSharingPermission = settings.getLinkSharingPermission();
         linkSharingPermission.ifPresent(permission -> {
             Collection<RoleId> roleId = Roles.fromSharingPermission(permission);
