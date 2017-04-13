@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.filedownload;
+package edu.stanford.bmir.protege.web.server.download;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;

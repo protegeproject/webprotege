@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.server.obo.OBOTextEditorServiceImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceImpl;
-import edu.stanford.bmir.protege.web.server.filedownload.FileDownloadServlet;
+import edu.stanford.bmir.protege.web.server.download.FileDownloadServlet;
 import edu.stanford.bmir.protege.web.server.upload.FileUploadServlet;
 import edu.stanford.bmir.protege.web.server.legacy.OntologyServiceOWLAPIImpl;
 

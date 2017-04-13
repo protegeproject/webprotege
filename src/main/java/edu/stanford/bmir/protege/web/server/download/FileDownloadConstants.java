@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.filedownload;
+package edu.stanford.bmir.protege.web.server.download;
 
 /**
  * Author: Matthew Horridge<br>
