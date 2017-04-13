@@ -3,14 +3,10 @@ package edu.stanford.bmir.protege.web.server.admin;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.server.access.Resource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsAction;
 import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsResult;
@@ -18,14 +14,11 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ADMIN_SETTINGS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_APPLICATION_SETTINGS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -78,7 +71,7 @@ public class GetAdminSettingsActionHandler_TestCase {
         assertThat(result.isInvalid(), is(true));
         verify(accessManager, times(1)).hasPermission(forUser(userId),
                                                       ApplicationResource.get(),
-                                                      EDIT_ADMIN_SETTINGS.getActionId());
+                                                      EDIT_APPLICATION_SETTINGS.getActionId());
     }
 
     @Test

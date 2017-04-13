@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.download;
 
+import edu.stanford.bmir.protege.web.shared.download.ProjectDownloadConstants;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectIdFormatException;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -86,11 +87,11 @@ public class FileDownloadParameters {
     }
 
     private String getRawFormatParameter() {
-        return request.getParameter(FileDownloadConstants.FORMAT);
+        return request.getParameter(ProjectDownloadConstants.FORMAT);
     }
 
     private String getRawRevisionParameter() {
-        return request.getParameter(FileDownloadConstants.REVISION);
+        return request.getParameter(ProjectDownloadConstants.REVISION);
     }
 
     /**
@@ -98,7 +99,7 @@ public class FileDownloadParameters {
      * @return The parameter or <code>null</code> if the parameter was not specified in the request.
      */
     private String getRawProjectNameParameter() {
-        return request.getParameter(FileDownloadConstants.PROJECT_NAME_PARAMETER);
+        return request.getParameter(ProjectDownloadConstants.PROJECT);
     }
 
 

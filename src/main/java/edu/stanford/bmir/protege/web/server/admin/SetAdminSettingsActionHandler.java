@@ -40,7 +40,7 @@ public class SetAdminSettingsActionHandler implements ActionHandler<SetAdminSett
     public RequestValidator getRequestValidator(SetAdminSettingsAction action, RequestContext requestContext) {
         return new ApplicationPermissionValidator(accessManager,
                                                   requestContext.getUserId(),
-                                                  BuiltInAction.EDIT_ADMIN_SETTINGS.getActionId());
+                                                  BuiltInAction.EDIT_APPLICATION_SETTINGS.getActionId());
     }
 
     @Override
