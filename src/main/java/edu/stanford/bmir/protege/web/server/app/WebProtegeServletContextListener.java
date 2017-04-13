@@ -43,7 +43,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("OBOTextEditorService", servletComponent.getOBOTextEditorService())
                           .addMapping("/webprotege/obotexteditorservice");
 
-            servletContext.addServlet("FileDownloadServlet", servletComponent.getFileDownloadServlet())
+            servletContext.addServlet("ProjectDownloadServlet", servletComponent.getFileDownloadServlet())
                           .addMapping("/download");
 
             servletContext.addServlet("FileUploadServlet", servletComponent.getFileUploadServlet())

@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,7 +35,9 @@ import java.io.IOException;
  * the piece of machinery that actually does the processing of request parameters and the downloading.
  * </p>
  */
-public class FileDownloadServlet extends HttpServlet {
+public class ProjectDownloadServlet extends HttpServlet {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProjectDownloadServlet.class);
 
     @Nonnull
     private final ProjectManager projectManager;
@@ -48,7 +52,7 @@ public class FileDownloadServlet extends HttpServlet {
     private final ApplicationNameSupplier applicationNameSupplier;
 
     @Inject
-    public FileDownloadServlet(
+    public ProjectDownloadServlet(
             @Nonnull ProjectManager projectManager,
             @Nonnull ProjectDetailsManager projectDetailsManager,
             @Nonnull AccessManager accessManager,
@@ -63,6 +67,7 @@ public class FileDownloadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
         UserId userId = webProtegeSession.getUserInSession();
+
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if (!accessManager.hasPermission(Subject.forUser(userId),
                                          new ProjectResource(downloadParameters.getProjectId()),
