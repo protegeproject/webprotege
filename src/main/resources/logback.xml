@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="10 seconds">
 
+    <property resource="webprotege.properties"/>
+    <property name="logsdir" value="${logs.directory}:-/var/log/webprotege"/>
+
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%highlight(%msg) %n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level  %highlight(%msg) %n</Pattern>
         </encoder>
     </appender>
 
-
-    <appender name="files" class="ch.qos.logback.core.FileAppender">
-        <file>${logfile.location:-/var/log/webprotege/webprotege.log}</file>
+    <appender name="webprotege" class="ch.qos.logback.core.FileAppender">
+        <file>${logsdir}/webprotege.log</file>
         <append>true</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
         </encoder>
     </appender>
 
+    <appender name="webprotege-all" class="ch.qos.logback.core.FileAppender">
+        <file>${logsdir}/webprotege-all.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="edu.stanford.bmir.protege.web" level="info">
+        <appender-ref ref="webprotege"/>
+        <appender-ref ref="stdout"/>
+    </logger>
 
     <root level="info">
-        <appender-ref ref="stdout" />
-        <appender-ref ref="files"/>
+        <appender-ref ref="webprotege-all"/>
     </root>
 
 </configuration>

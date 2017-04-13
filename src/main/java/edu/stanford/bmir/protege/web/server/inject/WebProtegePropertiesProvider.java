@@ -31,7 +31,7 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
      */
     private static final String SYSTEM_PROPERTY_PREFIX = "webprotege.";
 
-    private static final Logger logger = LoggerFactory.getLogger("WebProtegeProperties");
+    private static final Logger logger = LoggerFactory.getLogger(WebProtegePropertiesProvider.class);
 
     @Inject
     public WebProtegePropertiesProvider() {
@@ -85,7 +85,7 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
             String value = getSystemProperty(systemPropertyName);
             if(value != null) {
                 properties.setProperty(propertyName.getPropertyName(), value);
-                logger.info("WebProtege configuration (using system variable): " + systemPropertyName + " = " + value);
+                logger.info("Overriding {} with system property value: {}", systemPropertyName, value);
             }
         }
     }
