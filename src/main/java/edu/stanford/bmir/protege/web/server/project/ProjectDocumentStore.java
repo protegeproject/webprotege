@@ -4,7 +4,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocument;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.util.IdUtil;
+import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
@@ -16,6 +18,8 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,7 +46,7 @@ public class ProjectDocumentStore {
 
     public static final String GENERATED_ONTOLOGY_IRI_PREFIX = "http://webprotege.stanford.edu/project/";
 
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ProjectDocumentStore.class);
 
     private ProjectId projectId;
 
@@ -60,9 +64,7 @@ public class ProjectDocumentStore {
     @Inject
     public ProjectDocumentStore(ProjectId projectId,
                                 @RootOntologyDocument File rootOntologyDocument,
-                                WebProtegeLogger logger,
                                 Provider<ImportsCacheManager> importsCacheManagerProvider) {
-        this.logger = logger;
         this.projectId = projectId;
         this.rootOntologyDocument = rootOntologyDocument;
         this.importsCacheManagerProvider = importsCacheManagerProvider;
@@ -104,7 +106,7 @@ public class ProjectDocumentStore {
                 }
 
             } catch (IOException e) {
-                logger.error(e);
+                logger.error("An error occurred whilst saving ontology changes: {}", e.getMessage(), e);
                 e.printStackTrace();
             }
         } finally {
@@ -131,41 +133,37 @@ public class ProjectDocumentStore {
     }
 
     private OWLOntology loadProjectOntologiesIntoManager(OWLOntologyManager manager) throws OWLOntologyCreationException {
-        logger.info("Loading %s" , projectId);
+        logger.info("{} Loading project" , projectId);
         long t0 = System.currentTimeMillis();
         OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
             public void startedLoadingOntology(LoadingStartedEvent event) {
-                logger.info(projectId, "Ontology loading started: " + event.getDocumentIRI());
+                logger.info("{} Ontology loading started: {}",
+                            projectId,
+                            event.getDocumentIRI());
             }
 
             public void finishedLoadingOntology(LoadingFinishedEvent event) {
                 // Give something else a chance - in case we have LOTS of imports
                 Thread.yield();
                 if (event.isSuccessful()) {
-                    logger.info(projectId, "Ontology loading finished: " + event.getDocumentIRI() + " (Loaded: "
-                            + event.getOntologyID() + ")" );
+                    logger.info("{} Ontology loading finished: (Loaded:  {})",
+                                projectId, event.getDocumentIRI(),
+                                event.getOntologyID());
                 }
                 else {
-                    logger.info(projectId, "Ontology loading failed: " + event.getDocumentIRI() + " (Reason: " +
-                            event.getException().getMessage() + ")" );
+                    logger.info("Ontology loading failed: {} (Reason: )", projectId, event.getException().getMessage());
                 }
             }
         };
         manager.addOntologyLoaderListener(loaderListener);
-        final MissingImportListener missingImportListener = new MissingImportListener() {
-            @Override
-            public void importMissing(MissingImportEvent missingImportEvent) {
-                logger.info(projectId, "Missing import: " + missingImportEvent.getImportedOntologyURI() + " due " +
-                        "to " + missingImportEvent.getCreationException().getMessage());
-            }
-        };
+        final MissingImportListener missingImportListener = (MissingImportListener) missingImportEvent ->
+                logger.info("{} Missing import: {} due to {}", projectId,
+                            missingImportEvent.getImportedOntologyURI(),
+                            missingImportEvent.getCreationException().getMessage());
         manager.addMissingImportListener(missingImportListener);
-        manager.addIRIMapper(new OWLOntologyIRIMapper() {
-            @Override
-            public IRI getDocumentIRI(IRI iri) {
-                logger.info(projectId, "Fetching imported ontology from %s." , iri.toQuotedString());
-                return iri;
-            }
+        manager.addIRIMapper((OWLOntologyIRIMapper) iri -> {
+            logger.info("{} Fetching imported ontology from {}.", projectId, iri.toQuotedString());
+            return iri;
         });
         // Important - add last
         ImportsCacheManager importsCacheManager = importsCacheManagerProvider.get();
@@ -178,14 +176,17 @@ public class ProjectDocumentStore {
             config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
             config = config.setReportStackTraces(true);
             FileDocumentSource documentSource = new FileDocumentSource(rootOntologyDocument);
-            logger.info(projectId, "Loading root ontology imports closure." );
+            logger.info("{} Loading root ontology imports closure.", projectId);
             OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(documentSource, config);
             importsCacheManager.cacheImports(rootOntology);
             return rootOntology;
 
         } finally {
             long t1 = System.currentTimeMillis();
-            logger.info(projectId, "Ontology loading completed in " + (t1 - t0) + " ms." );
+            logger.info("{} Ontology loading completed in ms.", projectId, (t1 - t0) );
+            MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+            memoryMonitor.monitorMemoryUsage();
+            memoryMonitor.logMemoryUsage();
             manager.removeIRIMapper(iriMapper);
             manager.removeOntologyLoaderListener(loaderListener);
             manager.removeMissingImportListener(missingImportListener);
