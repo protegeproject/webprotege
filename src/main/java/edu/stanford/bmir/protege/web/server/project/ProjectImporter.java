@@ -63,8 +63,8 @@ public class ProjectImporter {
                 new ProjectDirectoryFactory(dataDirectory), projectId).get();
         rootOntologyDocument = new RootOntologyDocumentProvider(projectDirectory).get();
         this.revisionStore = new RevisionStoreImpl(projectId,
-                                                   new ChangeHistoryFileProvider(projectDirectory).get(), new OWLDataFactoryImpl(),
-                                                   logger);
+                                                   new ChangeHistoryFileProvider(projectDirectory).get(),
+                                                   new OWLDataFactoryImpl());
         this.logger = logger;
         this.uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractor;
         this.revisionStore.load();

@@ -18,6 +18,8 @@ import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -45,6 +47,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RevisionStoreImpl implements RevisionStore {
 
+    private static final Logger logger = LoggerFactory.getLogger(RevisionStoreImpl.class);
+
     private final ExecutorService changeSerializationExucutor = Executors.newSingleThreadExecutor();
 
     private ImmutableList<Revision> revisions = ImmutableList.of();
@@ -62,17 +66,14 @@ public class RevisionStoreImpl implements RevisionStore {
 
     private final File changeHistoryFile;
 
-    private final WebProtegeLogger logger;
 
     @Inject
     public RevisionStoreImpl(@Nonnull ProjectId projectId,
                              @Nonnull @ChangeHistoryFile File changeHistoryFile,
-                             @Nonnull OWLDataFactory dataFactory,
-                             @Nonnull WebProtegeLogger logger) {
+                             @Nonnull OWLDataFactory dataFactory) {
         this.projectId = checkNotNull(projectId);
         this.dataFactory = checkNotNull(dataFactory);
         this.changeHistoryFile = checkNotNull(changeHistoryFile);
-        this.logger = checkNotNull(logger);
     }
 
     @Nonnull
@@ -173,11 +174,10 @@ public class RevisionStoreImpl implements RevisionStore {
                 inputStream.close();
                 stopwatch.stop();
                 revisions = revisionsBuilder.build();
-                logger.info(projectId, "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+                logger.info("{} Change history loading complete.  Loaded {} revisions in {} ms.", projectId, revisions.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
             } catch (Exception e) {
-                logger.error(e);
-                logger.info(projectId, "Failed to load change history.  Cause: " + e.getMessage());
+                logger.error("{} Failed to load change history for project.  Cause: {}", projectId, e.getMessage(), e);
             }
         } finally {
             writeLock.unlock();
@@ -275,21 +275,14 @@ public class RevisionStoreImpl implements RevisionStore {
             } else {
                 // Save immediately
                 try {
-                    logger.info("Saving first revision of project " + projectId);
+                    logger.info("{} Saving first revision of project", projectId);
                     revisionSerializationTask.call();
                 } catch (IOException e) {
-                    logger.error(e);
+                    logger.error("{} An error occurred whilst saving the first revision of the project.  Cause: {}.", projectId, e.getMessage(), e);
                 }
             }
         } finally {
             writeLock.unlock();
         }
     }
-
-    private void handleCorruptChangeLog(BinaryOWLParseException e) {
-        // The change log appears to be corrupt.  We somehow need a way of backing up the old log and creating
-        // a fresh one.
-        logger.error(new RuntimeException("Corrupt change log", e));
-    }
-
 }
