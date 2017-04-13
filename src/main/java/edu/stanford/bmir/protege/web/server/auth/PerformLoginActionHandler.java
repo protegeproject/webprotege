@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginAction;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -19,6 +21,8 @@ import javax.inject.Inject;
  * 14/02/15
  */
 public class PerformLoginActionHandler extends AuthenticatedActionHandler<PerformLoginAction, PerformLoginResult> {
+
+    private static final Logger logger = LoggerFactory.getLogger(PerformLoginActionHandler.class);
 
     private final UserActivityManager activityManager;
 
@@ -44,6 +48,7 @@ public class PerformLoginActionHandler extends AuthenticatedActionHandler<Perfor
         WebProtegeSession session = executionContext.getSession();
         session.setUserInSession(action.getUserId());
         activityManager.setLastLogin(action.getUserId(), System.currentTimeMillis());
+        logger.info("User logged in: {}", action.getUserId().getUserName());
         return new PerformLoginResult(AuthenticationResponse.SUCCESS);
     }
 

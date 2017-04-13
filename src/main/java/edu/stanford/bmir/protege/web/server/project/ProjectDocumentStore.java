@@ -144,7 +144,7 @@ public class ProjectDocumentStore {
     }
 
     private OWLOntology loadProjectOntologiesIntoManager(OWLOntologyManager manager) throws OWLOntologyCreationException {
-        logger.info("Loading existing project: %s", projectId);
+        logger.info("Loading %s", projectId);
         long t0 = System.currentTimeMillis();
         OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
             public void startedLoadingOntology(LoadingStartedEvent event) {

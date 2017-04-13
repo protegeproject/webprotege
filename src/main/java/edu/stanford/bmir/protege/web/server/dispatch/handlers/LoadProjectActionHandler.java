@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
@@ -35,7 +36,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
     private final AccessManager accessManager;
 
-    private final WebProtegeLogger webProtegeLogger;
+    private final WebProtegeLogger logger;
 
     private final UserActivityManager userActivityManager;
 
@@ -47,7 +48,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
                                     UserActivityManager userActivityManager) {
         this.projectDetailsManager = projectDetailsManager;
         this.accessManager = accessManager;
-        this.webProtegeLogger = webProtegeLogger;
+        this.logger = webProtegeLogger;
         this.projectManager = projectManager;
         this.userActivityManager = userActivityManager;
     }
@@ -66,12 +67,14 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
     @Override
     public LoadProjectResult execute(final LoadProjectAction action, ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        webProtegeLogger.info("Loading project: " + action.getProjectId());
+        logger.info("Loading project %s", action.getProjectId());
         projectManager.getProject(action.getProjectId(), executionContext.getUserId());
         stopwatch.stop();
-        webProtegeLogger.info(".... loaded project in %s ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        final ProjectId projectId = action.getProjectId();
+        logger.info("Loaded project %s in %s ms", action.getProjectId(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(logger);
+        loggerEx.logMemoryUsage();
 
+        final ProjectId projectId = action.getProjectId();
         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
         if (!executionContext.getUserId().isGuest()) {
             userActivityManager.addRecentProject(executionContext.getUserId(), action.getProjectId(), System.currentTimeMillis());
