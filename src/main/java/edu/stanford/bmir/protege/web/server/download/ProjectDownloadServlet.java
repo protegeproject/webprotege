@@ -73,7 +73,7 @@ public class ProjectDownloadServlet extends HttpServlet {
                     userId,
                     req.getRemoteAddr(),
                     req.getRemoteHost(),
-                    downloadParameters.getFormat());
+                    downloadParameters.getProjectId());
         if (!accessManager.hasPermission(Subject.forUser(userId),
                                          new ProjectResource(downloadParameters.getProjectId()),
                                          BuiltInAction.DOWNLOAD_PROJECT)) {
@@ -99,6 +99,7 @@ public class ProjectDownloadServlet extends HttpServlet {
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();
+            logger.info("Sent project download to client");
         }
         else {
             logger.info("Bad project download request: {}", downloadParameters);
