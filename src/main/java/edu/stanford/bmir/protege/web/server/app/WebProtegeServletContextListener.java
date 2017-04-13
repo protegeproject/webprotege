@@ -53,7 +53,9 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             applicationComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
 
-            logger.info(WebProtegeMarker, "WebProtege Initialized");
+            logger.info("Max  Memory: {} MB", (Runtime.getRuntime().maxMemory() / (1024 * 1024)));
+            logger.info("Free Memory: {} MB", (Runtime.getRuntime().freeMemory() / (1024 * 1024)));
+            logger.info(WebProtegeMarker, "Initialized WebProtege");
         }
         catch (WebProtegeConfigurationException e) {
             logger.error(WebProtegeMarker, "Encountered a configuration error during initialization: {}", e.getMessage(), e);
