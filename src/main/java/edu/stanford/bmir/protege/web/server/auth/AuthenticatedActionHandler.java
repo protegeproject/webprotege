@@ -43,7 +43,7 @@ public abstract class AuthenticatedActionHandler<A extends AbstractAuthenticatio
         UserId userId = action.getUserId();
         Optional<SaltedPasswordDigest> passwordDigest = authenticationManager.getSaltedPasswordDigest(userId);
         if (!passwordDigest.isPresent()) {
-            logger.info("Authentication attempt, but no digestOfSaltedPassword set for user %s", userId);
+            logger.info("Authentication attempt, but no digest of salted password set for user %s", userId);
             return createAuthenticationFailedResult();
         }
         Optional<ChapSession> chapDataOptional = chapSessionManager.retrieveChallengeMessage(action.getChapSessionId());
