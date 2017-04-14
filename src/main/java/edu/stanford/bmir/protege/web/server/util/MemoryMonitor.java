@@ -44,10 +44,14 @@ public class MemoryMonitor {
      */
     public void monitorMemoryUsage() {
         update();
-        if(remainingMemoryBytes < WARNING_THRESHOLD) {
+        if (remainingMemoryBytes < WARNING_THRESHOLD) {
             logger.warn("Low Memory: Using {} MB of {} MB ({}%) [{} MB free]",
-                        toMB(usedMemoryBytes), toMB(maxMemoryBytes), formatPercentageUsed(), toMB(remainingMemoryBytes));
+                        toMB(usedMemoryBytes),
+                        toMB(maxMemoryBytes),
+                        formatPercentageUsed(),
+                        toMB(remainingMemoryBytes));
         }
+        printMemoryUsageToLog();
     }
 
     /**
@@ -55,6 +59,10 @@ public class MemoryMonitor {
      */
     public void logMemoryUsage() {
         update();
+        printMemoryUsageToLog();
+    }
+
+    void printMemoryUsageToLog() {
         logger.info("Memory Usage: Using {} MB of {} MB ({}%) [{} MB free]",
                     toMB(usedMemoryBytes), toMB(maxMemoryBytes), formatPercentageUsed(), toMB(remainingMemoryBytes));
     }

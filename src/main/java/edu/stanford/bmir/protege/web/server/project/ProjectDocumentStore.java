@@ -183,7 +183,7 @@ public class ProjectDocumentStore {
 
         } finally {
             long t1 = System.currentTimeMillis();
-            logger.info("{} Ontology loading completed in ms.", projectId, (t1 - t0) );
+            logger.info("{} Ontology loading completed in {} ms.", projectId, (t1 - t0) );
             MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
             memoryMonitor.monitorMemoryUsage();
             memoryMonitor.logMemoryUsage();

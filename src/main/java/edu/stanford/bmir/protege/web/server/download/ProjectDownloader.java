@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.download;
 
-import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
@@ -15,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -50,35 +49,35 @@ public class ProjectDownloader {
     private final Project project;
 
     @Nonnull
-    private final ApplicationNameSupplier applicationNameSupplier;
+    private final String applicationName;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
-     * @param project The project to be downloaded.  Not <code>null</code>.
+     *
+     * @param project  The project to be downloaded.  Not <code>null</code>.
      * @param revision The revision of the project to be downloaded.
-     * @param format The format which the project should be downloaded in.
+     * @param format   The format which the project should be downloaded in.
      */
     @Inject
     public ProjectDownloader(@Nonnull String fileName,
                              @Nonnull Project project,
                              @Nonnull RevisionNumber revision,
                              @Nonnull DownloadFormat format,
-                             @Nonnull ApplicationNameSupplier applicationNameSupplier) {
+                             @Nonnull String applicationName) {
         this.project = project;
         this.revision = revision;
         this.format = format;
         this.fileName = fileName;
-        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
+        this.applicationName = checkNotNull(applicationName);
     }
-    
-    public void writeProject(HttpServletResponse response, OutputStream outputStream) throws IOException {
+
+    public void writeProject(HttpServletResponse response) throws IOException {
         try {
             setFileType(response);
             setFileName(response);
-            exportProjectRevision(fileName, revision, outputStream, format);
+            exportProjectRevision(fileName, revision, response, format);
 
-        }
-        catch (OWLOntologyStorageException e) {
+        } catch (OWLOntologyStorageException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
@@ -91,38 +90,41 @@ public class ProjectDownloader {
 
     private void setFileName(@Nonnull HttpServletResponse response) {
         String revisionNumber;
-        if(revision.isHead()) {
+        if (revision.isHead()) {
             revisionNumber = "";
         }
         else {
             revisionNumber = "-REVISION-" + Long.toString(revision.getValue());
         }
         String displayName = fileName;
-        String fileName = displayName.replaceAll("\\s+", "-") + revisionNumber + "-ontologies." + format.getExtension() + ".zip";
+        String fileName = displayName.replaceAll("\\s+",
+                                                 "-") + revisionNumber + "-ontologies." + format.getExtension() + ".zip";
         fileName = fileName.toLowerCase();
         response.setHeader(CONTENT_DISPOSITION_HEADER_FIELD, "attachment; filename=\"" + fileName + "\"");
     }
 
     private void exportProjectRevision(
-            String projectDisplayName,
-            RevisionNumber revisionNumber,
-            OutputStream outputStream,
-            DownloadFormat format) throws IOException, OWLOntologyStorageException {
-        checkNotNull(revisionNumber);
-        checkNotNull(outputStream);
-        checkNotNull(format);
-
+            @Nonnull String projectDisplayName,
+            @Nonnull RevisionNumber revisionNumber,
+            @Nonnull HttpServletResponse response,
+            @Nonnull DownloadFormat format) throws IOException, OWLOntologyStorageException {
         RevisionManager revisionManager = project.getChangeManager();
         OWLOntologyManager manager = revisionManager.getOntologyManagerForRevision(revisionNumber);
         OWLOntologyID rootOntologyId = project.getRootOntology().getOntologyID();
         Optional<OWLOntology> revisionRootOntology = getOntologyFromManager(manager, rootOntologyId);
         if (revisionRootOntology.isPresent()) {
-            saveImportsClosureToStream(projectDisplayName, revisionRootOntology.get(), format, outputStream, revisionNumber);
+            saveImportsClosureToStream(projectDisplayName,
+                                       revisionRootOntology.get(),
+                                       format,
+                                       response,
+                                       revisionNumber);
         }
         else {
             // An error - no flipping ontology!
-            logger.info("Project download failed because the root ontology could not be retrived from the manager.  Project: ", project.getProjectId());
-            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.get() + ".  Please contact the administrator.");
+            logger.info(
+                    "Project download failed because the root ontology could not be retrived from the manager.  Project: ",
+                    project.getProjectId());
+            throw new RuntimeException("The ontology could not be downloaded from " + applicationName + ".  Please contact the administrator.");
         }
     }
 
@@ -130,32 +132,34 @@ public class ProjectDownloader {
             String projectDisplayName,
             OWLOntology rootOntology,
             DownloadFormat format,
-            OutputStream outputStream,
+            HttpServletResponse response,
             RevisionNumber revisionNumber) throws
             IOException,
             OWLOntologyStorageException {
         MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
         // TODO: Separate object
-        ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-        String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
-        baseFolder = baseFolder.toLowerCase();
-        baseFolder = baseFolder + "-REVISION-" + (revisionNumber.isHead() ? "HEAD" : revisionNumber.getValue());
-        ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
-        zipOutputStream.putNextEntry(rootOntologyEntry);
-        rootOntology.getOWLOntologyManager().saveOntology(rootOntology, format.getDocumentFormat(), zipOutputStream);
-        zipOutputStream.closeEntry();
-        int importCount = 0;
-        for (OWLOntology ontology : rootOntology.getImports()) {
-            importCount++;
-            ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
-                    .getExtension());
-            zipOutputStream.putNextEntry(zipEntry);
-            ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()))) {
+            String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
+            baseFolder = baseFolder.toLowerCase();
+            baseFolder = baseFolder + "-REVISION-" + (revisionNumber.isHead() ? "HEAD" : revisionNumber.getValue());
+            ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
+            zipOutputStream.putNextEntry(rootOntologyEntry);
+            rootOntology.getOWLOntologyManager()
+                        .saveOntology(rootOntology, format.getDocumentFormat(), zipOutputStream);
             zipOutputStream.closeEntry();
-            memoryMonitor.monitorMemoryUsage();
+            int importCount = 0;
+            for (OWLOntology ontology : rootOntology.getImportsClosure()) {
+                importCount++;
+                ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
+                        .getExtension());
+                zipOutputStream.putNextEntry(zipEntry);
+                ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
+                zipOutputStream.closeEntry();
+                memoryMonitor.monitorMemoryUsage();
+            }
+            zipOutputStream.finish();
+            zipOutputStream.flush();
         }
-        zipOutputStream.finish();
-        zipOutputStream.flush();
     }
 
     /**
