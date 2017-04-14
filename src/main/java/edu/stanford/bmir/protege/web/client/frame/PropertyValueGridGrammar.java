@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.shared.PrimitiveType.*;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -28,7 +30,7 @@ public class PropertyValueGridGrammar {
     }
 
     public Collection<PrimitiveType> getPropertyTypes() {
-        return new LinkedHashSet<PrimitiveType>(productionMap.keySet());
+        return new LinkedHashSet<>(productionMap.keySet());
     }
 
     public Collection<PrimitiveType> getValueTypes() {
@@ -40,37 +42,39 @@ public class PropertyValueGridGrammar {
         if(values == null) {
             return Collections.emptyList();
         }
-        return new LinkedHashSet<PrimitiveType>(values);
+        return new LinkedHashSet<>(values);
     }
 
     public static PropertyValueGridGrammar getAnnotationsGrammar() {
         PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
-        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.LITERAL);
-        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.IRI);
+        grammar.addProduction(ANNOTATION_PROPERTY, LITERAL);
+        grammar.addProduction(ANNOTATION_PROPERTY, IRI);
+//        grammar.addProduction(ANNOTATION_PROPERTY, CLASS);
+//        grammar.addProduction(ANNOTATION_PROPERTY, OBJECT_PROPERTY);
+//        grammar.addProduction(ANNOTATION_PROPERTY, DATA_PROPERTY);
+//        grammar.addProduction(ANNOTATION_PROPERTY, ANNOTATION_PROPERTY);
+//        grammar.addProduction(ANNOTATION_PROPERTY, NAMED_INDIVIDUAL);
+//        grammar.addProduction(ANNOTATION_PROPERTY, DATA_TYPE);
         return grammar;
     }
 
     public static PropertyValueGridGrammar getClassGrammar() {
         PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
-        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
-        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
-        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
-        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
+        grammar.addProduction(OBJECT_PROPERTY, CLASS);
+        grammar.addProduction(OBJECT_PROPERTY, NAMED_INDIVIDUAL);
+        grammar.addProduction(DATA_PROPERTY, DATA_TYPE);
+        grammar.addProduction(DATA_PROPERTY, LITERAL);
         return grammar;
     }
 
     public static PropertyValueGridGrammar getNamedIndividualGrammar() {
         PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
-        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.LITERAL);
-        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.IRI);
-        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
-        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
-        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
-        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
+        grammar.addProduction(ANNOTATION_PROPERTY, LITERAL);
+        grammar.addProduction(ANNOTATION_PROPERTY, IRI);
+        grammar.addProduction(OBJECT_PROPERTY, NAMED_INDIVIDUAL);
+        grammar.addProduction(OBJECT_PROPERTY, CLASS);
+        grammar.addProduction(DATA_PROPERTY, LITERAL);
+        grammar.addProduction(DATA_PROPERTY, DATA_TYPE);
         return grammar;
     }
-
-//    public Set<PrimitiveType> getPropertyTypesForValueType(PrimitiveType valueType) {
-//
-//    }
 }
