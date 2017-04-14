@@ -5,11 +5,8 @@ import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationExceptio
 import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.DaggerApplicationComponent;
 import edu.stanford.bmir.protege.web.server.inject.ServletComponent;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

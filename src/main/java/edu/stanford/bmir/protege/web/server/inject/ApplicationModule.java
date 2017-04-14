@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
+import edu.stanford.bmir.protege.web.server.download.DownloadExecutor;
+import edu.stanford.bmir.protege.web.server.download.ProjectDownloadService;
 import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.*;
@@ -35,8 +37,11 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import javax.inject.Singleton;
+import javax.jnlp.DownloadService;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Matthew Horridge
@@ -187,5 +192,12 @@ public class ApplicationModule {
     @Singleton
     public RoleOracle provideRoleOracle() {
         return RoleOracleImpl.get();
+    }
+
+    @Provides
+    @DownloadExecutor
+    public ExecutorService provideDownloadExecutorService() {
+        // Might prove to be too much of a bottle neck
+        return Executors.newSingleThreadExecutor();
     }
 }
