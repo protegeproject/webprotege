@@ -149,6 +149,8 @@ public class ProjectDocumentStore {
                     logger.info("{} Ontology loading finished: (Loaded:  {})",
                                 projectId, event.getDocumentIRI(),
                                 event.getOntologyID());
+                    MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+                    memoryMonitor.monitorMemoryUsage();
                 }
                 else {
                     logger.info("Ontology loading failed: {} (Reason: )", projectId, event.getException().getMessage());

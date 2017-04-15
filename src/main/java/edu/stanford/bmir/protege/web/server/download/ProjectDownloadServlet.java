@@ -74,7 +74,7 @@ public class ProjectDownloadServlet extends HttpServlet {
 
     private void startProjectDownload(HttpServletResponse resp,
                                       UserId userId,
-                                      FileDownloadParameters downloadParameters) {
+                                      FileDownloadParameters downloadParameters) throws IOException {
         ProjectId projectId = downloadParameters.getProjectId();
         RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
         DownloadFormat format = downloadParameters.getFormat();

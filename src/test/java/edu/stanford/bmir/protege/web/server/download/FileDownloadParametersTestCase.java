@@ -1,8 +1,6 @@
-package edu.stanford.bmir.protege.web.server.filedownload;
+package edu.stanford.bmir.protege.web.server.download;
 
-import edu.stanford.bmir.protege.web.server.download.DownloadFormat;
 import edu.stanford.bmir.protege.web.shared.download.ProjectDownloadConstants;
-import edu.stanford.bmir.protege.web.server.download.FileDownloadParameters;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.junit.Before;
