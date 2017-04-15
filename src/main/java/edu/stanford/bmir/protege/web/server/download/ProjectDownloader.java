@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -31,10 +32,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProjectDownloader {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectDownloader.class);
-
-    public static final String MIME_TYPE = "application/zip";
-
-    public static final String CONTENT_DISPOSITION_HEADER_FIELD = "Content-Disposition";
 
     @Nonnull
     private final RevisionNumber revision;
@@ -71,42 +68,20 @@ public class ProjectDownloader {
         this.applicationName = checkNotNull(applicationName);
     }
 
-    public void writeProject(HttpServletResponse response) throws IOException {
+    public void writeProject(OutputStream outputStream) throws IOException {
         try {
-            setFileType(response);
-            setFileName(response);
-            exportProjectRevision(fileName, revision, response, format);
+            exportProjectRevision(fileName, revision, outputStream, format);
 
         } catch (OWLOntologyStorageException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-    }
-
-    private void setFileType(HttpServletResponse response) {
-        response.setContentType(MIME_TYPE);
-    }
-
-    private void setFileName(@Nonnull HttpServletResponse response) {
-        String revisionNumber;
-        if (revision.isHead()) {
-            revisionNumber = "";
-        }
-        else {
-            revisionNumber = "-REVISION-" + Long.toString(revision.getValue());
-        }
-        String displayName = fileName;
-        String fileName = displayName.replaceAll("\\s+",
-                                                 "-") + revisionNumber + "-ontologies." + format.getExtension() + ".zip";
-        fileName = fileName.toLowerCase();
-        response.setHeader(CONTENT_DISPOSITION_HEADER_FIELD, "attachment; filename=\"" + fileName + "\"");
     }
 
     private void exportProjectRevision(
             @Nonnull String projectDisplayName,
             @Nonnull RevisionNumber revisionNumber,
-            @Nonnull HttpServletResponse response,
+            @Nonnull OutputStream outputStream,
             @Nonnull DownloadFormat format) throws IOException, OWLOntologyStorageException {
         RevisionManager revisionManager = project.getChangeManager();
         OWLOntologyManager manager = revisionManager.getOntologyManagerForRevision(revisionNumber);
@@ -116,7 +91,7 @@ public class ProjectDownloader {
             saveImportsClosureToStream(projectDisplayName,
                                        revisionRootOntology.get(),
                                        format,
-                                       response,
+                                       outputStream,
                                        revisionNumber);
         }
         else {
@@ -128,17 +103,14 @@ public class ProjectDownloader {
         }
     }
 
-    private void saveImportsClosureToStream(
-            String projectDisplayName,
-            OWLOntology rootOntology,
-            DownloadFormat format,
-            HttpServletResponse response,
-            RevisionNumber revisionNumber) throws
-            IOException,
-            OWLOntologyStorageException {
+    private void saveImportsClosureToStream(@Nonnull String projectDisplayName,
+                                            @Nonnull OWLOntology rootOntology,
+                                            @Nonnull DownloadFormat format,
+                                            @Nonnull OutputStream outputStream,
+                                            @Nonnull RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
         MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
         // TODO: Separate object
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(response.getOutputStream()))) {
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(outputStream))) {
             String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
             baseFolder = baseFolder.toLowerCase();
             baseFolder = baseFolder + "-REVISION-" + (revisionNumber.isHead() ? "HEAD" : revisionNumber.getValue());

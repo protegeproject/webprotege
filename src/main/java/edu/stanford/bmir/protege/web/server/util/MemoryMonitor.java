@@ -51,7 +51,6 @@ public class MemoryMonitor {
                         formatPercentageUsed(),
                         toMB(remainingMemoryBytes));
         }
-        printMemoryUsageToLog();
     }
 
     /**
