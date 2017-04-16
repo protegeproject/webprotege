@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFacto
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.revision.HeadRevisionNumberFinder;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -63,7 +64,7 @@ public class ProjectDownloadService {
     private final ProjectDownloadCache projectDownloadCache;
 
     @Nonnull
-    private final ProjectDirectoryFactory projectDirectoryFactory;
+    private final HeadRevisionNumberFinder headRevisionNumberFinder;
 
     private final Striped<Lock> lockStripes = Striped.lazyWeakLock(10);
 
@@ -74,14 +75,14 @@ public class ProjectDownloadService {
                                   @Nonnull ProjectDetailsManager projectDetailsManager,
                                   @Nonnull ApplicationNameSupplier applicationNameSupplier,
                                   @Nonnull ProjectDownloadCache projectDownloadCache,
-                                  @Nonnull ProjectDirectoryFactory projectDirectoryFactory) {
+                                  @Nonnull HeadRevisionNumberFinder headRevisionNumberFinder) {
         this.downloadGeneratorExecutor = checkNotNull(downloadGeneratorExecutor);
         this.fileTransferExecutor = checkNotNull(fileTransferExecutor);
         this.projectManager = checkNotNull(projectManager);
         this.projectDetailsManager = checkNotNull(projectDetailsManager);
         this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.projectDownloadCache = checkNotNull(projectDownloadCache);
-        this.projectDirectoryFactory = checkNotNull(projectDirectoryFactory);
+        this.headRevisionNumberFinder = checkNotNull(headRevisionNumberFinder);
     }
 
     public void downloadProject(@Nonnull UserId requester,
@@ -209,31 +210,15 @@ public class ProjectDownloadService {
         fileTransferExecutor.shutdown();
     }
 
-
-    /**
-     * Computes the head revision number for the specified project.  This method works fairly well, even for large
-     * projects, but it is only intended to be a stopgap and needs replacing.
-     * @param projectId The project.
-     * @return The {@link RevisionNumber}
-     */
-    private RevisionNumber getHeadRevisionNumber(ProjectId projectId) throws IOException {
-        // TODO: Use head revision number provider
-        File projectDir = projectDirectoryFactory.getProjectDirectory(projectId);
-        ChangeHistoryFileProvider changeHistoryFileProvider = new ChangeHistoryFileProvider(projectDir);
-        File changeHistoryFile = changeHistoryFileProvider.get();
+    private RevisionNumber getHeadRevisionNumber(@Nonnull ProjectId projectId) throws IOException {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        try(BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(changeHistoryFile.toPath()))) {
-            BinaryOWLOntologyChangeLog log = new BinaryOWLOntologyChangeLog();
-            AtomicInteger counter = new AtomicInteger();
-            log.readChanges(bufferedInputStream, new OWLDataFactoryImpl(), (list, skipSetting, filePosition) -> {
-                counter.incrementAndGet();
-            }, SkipSetting.SKIP_DATA);
-            logger.info("{} Computed head revision number ({}) in {} ms",
-                        projectId,
-                        counter.get(),
-                        stopwatch.elapsed(MILLISECONDS));
-            return RevisionNumber.getRevisionNumber(counter.get());
-        }
+        RevisionNumber headRevisionNumber = headRevisionNumberFinder.getHeadRevisionNumber(projectId);
+        logger.info("{} Computed head revision number ({}) in {} ms",
+                    projectId,
+                    headRevisionNumber,
+                    stopwatch.elapsed(MILLISECONDS));
+        return headRevisionNumber;
+
     }
 
 }
