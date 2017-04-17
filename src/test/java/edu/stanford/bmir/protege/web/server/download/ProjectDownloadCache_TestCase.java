@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -30,9 +31,6 @@ public class ProjectDownloadCache_TestCase {
 
     private ProjectDownloadCache cache;
 
-    @Rule
-    public TemporaryFolder temporaryFolder;
-
     @Mock
     private ProjectDownloadCacheDirectorySupplier directorySupplier;
 
@@ -43,19 +41,15 @@ public class ProjectDownloadCache_TestCase {
     private RevisionNumber revisionNumber;
 
     private DownloadFormat downloadFormat;
-
-
+    
     private Path root;
-
-
 
     @Before
     public void setUp() throws Exception {
         when(projectId.getId()).thenReturn(THE_PROJECT_ID);
         when(revisionNumber.getValue()).thenReturn(REVISION_NUMBER);
         downloadFormat = DownloadFormat.RDF_XML;
-
-        root = temporaryFolder.getRoot().toPath();
+        root = Paths.get("tmp");
         when(directorySupplier.get()).thenReturn(root);
         cache = new ProjectDownloadCache(directorySupplier);
     }
@@ -63,7 +57,7 @@ public class ProjectDownloadCache_TestCase {
     @Test
     public void shouldResolvePath() {
         Path path = cache.getCachedDownloadPath(projectId, revisionNumber, downloadFormat);
-        Path expectedPath = root.resolve(THE_PROJECT_ID).resolve(THE_PROJECT_ID + "-" + REVISION_NUMBER + "." + downloadFormat.getExtension() + ".zip");
+        Path expectedPath = root.resolve(THE_PROJECT_ID).resolve(THE_PROJECT_ID + "-R" + REVISION_NUMBER + "." + downloadFormat.getExtension() + ".zip");
         assertThat(path, is(expectedPath));
     }
 }
