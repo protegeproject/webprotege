@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
@@ -334,7 +333,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                 return Optional.of((E) entity);
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -506,7 +505,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                     projectDetailsRepository.setModified(projectId, rev.getTimestamp(), userId);
                 }
                 else {
-                    revision = Optional.absent();
+                    revision = Optional.empty();
                 }
             } finally {
                 // Release for reads

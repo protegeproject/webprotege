@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -9,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

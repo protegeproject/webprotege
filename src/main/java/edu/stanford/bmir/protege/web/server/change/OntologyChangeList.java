@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasResult;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -106,7 +106,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
         }
 
         public OntologyChangeList<R> build() {
-            return build(Optional.absent());
+            return build(Optional.empty());
         }
 
 
