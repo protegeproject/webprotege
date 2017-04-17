@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.obo;
 
-import com.beust.jcommander.internal.Sets;
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 
 import java.util.Set;

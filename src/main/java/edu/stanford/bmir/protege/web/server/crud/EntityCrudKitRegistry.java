@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import com.beust.jcommander.internal.Maps;
+import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;

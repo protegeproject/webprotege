@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
