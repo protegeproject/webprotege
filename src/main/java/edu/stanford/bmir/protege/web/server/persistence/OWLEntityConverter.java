@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationDataFactory;
 import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.mapping.MappedField;
 import org.semanticweb.owlapi.model.IRI;
@@ -37,7 +37,7 @@ public class OWLEntityConverter extends TypeSafeConverter<DBObject, OWLEntity> i
     private final OWLEntityProvider dataFactory;
 
     @Inject
-    public OWLEntityConverter(@Nonnull @ApplicationSingleton OWLEntityProvider dataFactory) {
+    public OWLEntityConverter(@Nonnull @ApplicationDataFactory OWLEntityProvider dataFactory) {
         this.dataFactory = checkNotNull(dataFactory);
         // Don't specify a specific type or enumeration of types as we want to convert anything that is assignable
         // to OWLEntity.

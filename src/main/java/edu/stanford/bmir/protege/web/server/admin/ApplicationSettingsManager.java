@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.admin;
 
-import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.server.app.DefaultApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;

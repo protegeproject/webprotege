@@ -31,12 +31,12 @@ import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.*;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
-import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -53,48 +53,48 @@ public class ApplicationModule {
     private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public AuthenticationManager provideAuthenticationManager(AuthenticationManagerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public ProjectDetailsManager provideProjectDetailsManager(ProjectDetailsManagerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public ProjectPermissionsManager provideProjectPermissionsManager(ProjectPermissionsManagerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public ProjectSharingSettingsManager provideProjectSharingSettingsManager(ProjectSharingSettingsManagerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public UserDetailsManager provideUserDetailsManager(UserDetailsManagerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public HasGetUserIdByUserIdOrEmail provideHasGetUserIdByUserIdOrEmail(UserDetailsManager manager) {
         return manager;
     }
 
-    @Singleton
+    @ApplicationSingleton
     @Provides
     public PerspectiveLayoutStore providesPerspectiveLayoutStore(PerspectiveLayoutStoreImpl impl) {
         return impl;
     }
 
-    @Singleton
+    @ApplicationSingleton
     @Provides
     public PerspectivesManager providesPerspectivesManager(PerspectivesManagerImpl impl) {
         return impl;
@@ -102,23 +102,23 @@ public class ApplicationModule {
 
     @Provides
     public HasUserIds providesHasUserIds() {
-        return () -> Collections.emptySet();
+        return Collections::emptySet;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public ProjectManager provideOWLAPIProjectManager(ProjectCache projectCache, ProjectAccessManager projectAccessManager) {
         return new ProjectManager(projectCache, projectAccessManager);
     }
 
-    @Singleton
+    @ApplicationSingleton
     @Provides
     public ProjectAccessManager provideProjectAccessManager(ProjectAccessManagerImpl projectAccessManager) {
         return projectAccessManager;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public ActionHandlerRegistry provideActionHandlerRegistry(ActionHandlerRegistryImpl impl) {
         return impl;
     }
@@ -128,40 +128,40 @@ public class ApplicationModule {
         return impl;
     }
 
-    @Singleton
+    @ApplicationSingleton
     @Provides
     public WebProtegeLogger provideWebProtegeLogger(DefaultLogger logger) {
         return logger;
     }
 
     @Provides
-    @Singleton
     @ApplicationSingleton
+    @ApplicationDataFactory
     public OWLDataFactory provideOWLDataFactory() {
         return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
     }
 
     @Provides
-    @Singleton
+    @ApplicationDataFactory
     @ApplicationSingleton
-    public OWLEntityProvider provideOWLProvider(@ApplicationSingleton OWLDataFactory dataFactory) {
+    public OWLEntityProvider provideOWLProvider(@ApplicationDataFactory OWLDataFactory dataFactory) {
         return dataFactory;
     }
 
-    @Singleton
+    @ApplicationSingleton
     public UserActivityManager provideUserActivityManager(UserActivityManagerProvider provider) {
         return provider.get();
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public WebProtegeProperties provideWebProtegeProperties(WebProtegePropertiesProvider povider) {
         return povider.get();
     }
 
     @Provides
     @MailProperties
-    @Singleton
+    @ApplicationSingleton
     public Properties provideMailProperties(MailPropertiesProvider provider) {
         return provider.get();
     }
@@ -177,20 +177,20 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
             MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
         return new ProjectEntityCrudKitSettingsRepository(database, converter);
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public AccessManager provideAccessManager(AccessManagerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     public RoleOracle provideRoleOracle() {
         return RoleOracleImpl.get();
     }

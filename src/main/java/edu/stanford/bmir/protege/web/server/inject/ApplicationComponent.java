@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectComponent;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 
 import javax.inject.Singleton;

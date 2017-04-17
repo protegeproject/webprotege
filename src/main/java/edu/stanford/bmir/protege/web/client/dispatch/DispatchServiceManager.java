@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
@@ -37,7 +38,7 @@ import java.util.function.Consumer;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  */
-@Singleton
+@ApplicationSingleton
 public class DispatchServiceManager {
 
     @Nonnull

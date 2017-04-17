@@ -2,12 +2,11 @@ package edu.stanford.bmir.protege.web.server.auth;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.auth.ChallengeMessage;
 import edu.stanford.bmir.protege.web.shared.auth.ChapSessionId;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
-
-import javax.inject.Singleton;
 
 /**
  * Matthew Horridge
@@ -30,7 +29,7 @@ public class AuthenticationModule {
         return MAX_SESSION_DURATION_MS;
     }
 
-    @Singleton
+    @ApplicationSingleton
     @Provides
     public ChapSessionManager provideChapSessionManager(ChapSessionFactory factory,
                                                         @ChapSessionMaxDuration long maxSessionDuration) {

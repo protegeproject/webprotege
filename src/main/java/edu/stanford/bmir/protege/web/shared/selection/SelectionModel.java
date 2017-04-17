@@ -6,6 +6,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.place.*;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import org.semanticweb.owlapi.model.*;
 
@@ -21,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 15/05/15
  */
-@Singleton
+@ProjectSingleton
 public class SelectionModel {
 
     private final EventBus eventBus;
