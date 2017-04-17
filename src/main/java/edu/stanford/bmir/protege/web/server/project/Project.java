@@ -49,7 +49,6 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.vocab.Namespaces;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -63,6 +62,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static java.util.stream.Collectors.toList;
 import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
 
 /**
@@ -192,6 +192,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return changeDescriptionGeneratorFactory;
     }
 
+    @SuppressWarnings("deprecation")
     @Deprecated
     public LegacyEntityDataManager getLegacyEntityDataManager() {
         return legacyEntityDataManager;
@@ -295,7 +296,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                                                                        EntityType<E> entityType) {
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (entity.isPresent()) {
-            return new OWLEntityCreator<E>(entity.get(), Collections.emptyList());
+            return new OWLEntityCreator<>(entity.get(), Collections.emptyList());
         }
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
         EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler =
@@ -305,7 +306,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                                EntityShortForm.get(shortName),
                                getEntityCrudContext(userId),
                                builder);
-        return new OWLEntityCreator<E>(ent, builder.build().getChanges());
+        return new OWLEntityCreator<>(ent, builder.build().getChanges());
 
     }
 
@@ -394,7 +395,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
             throw new PermissionDeniedException("You do not have permission to edit this project");
         }
 
-        final Set<OWLEntity> changeSignature = new HashSet<>();
         final List<OWLOntologyChange> appliedChanges;
         final ChangeApplicationResult<R> finalResult;
 
@@ -480,10 +480,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
             List<OWLOntologyChange> minimisedChanges = getMinimisedChanges(allChangesIncludingRenames);
 
-            for (OWLOntologyChange change : minimisedChanges) {
-                changeSignature.addAll(change.getSignature());
-            }
-
             final EventTranslatorManager eventTranslatorManager = eventTranslatorManagerProvider.get();
             eventTranslatorManager.prepareForOntologyChanges(minimisedChanges);
 
@@ -498,7 +494,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                 appliedChanges = effectiveChanges;
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
-                finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
+                finalResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
                     Revision rev = logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
                     revision = Optional.of(rev);
@@ -531,13 +527,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     }
 
     private List<OWLOntologyChange> getEffectiveChanges(List<OWLOntologyChange> minimisedChanges) {
-        List<OWLOntologyChange> result = new ArrayList<>(minimisedChanges.size());
-        for (OWLOntologyChange chg : minimisedChanges) {
-            if (isEffectiveChange(chg)) {
-                result.add(chg);
-            }
-        }
-        return result;
+        return minimisedChanges.stream()
+                               .filter(this::isEffectiveChange)
+                               .collect(toList());
     }
 
     private boolean isEffectiveChange(OWLOntologyChange chg) {
@@ -625,10 +617,10 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         // Generate a description for the changes that were actually applied
         String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
         // Log the changes
-        List<OWLOntologyChangeRecord> changeRecords = new ArrayList<>();
-        for (OWLOntologyChange change : finalResult.getChangeList()) {
-            changeRecords.add(change.getChangeRecord());
-        }
+        List<OWLOntologyChangeRecord> changeRecords = finalResult.getChangeList()
+                                                                 .stream()
+                                                                 .map(OWLOntologyChange::getChangeRecord)
+                                                                 .collect(toList());
         Revision revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
         // TODO: THis list of "listeners" should be injected
