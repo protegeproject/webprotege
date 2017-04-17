@@ -73,9 +73,9 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
                                         canEdit -> editProjectSettings.setEnabled(canEdit));
         permissionChecker.hasPermission(UPLOAD_AND_MERGE,
-                                        canUploadAndMerge -> uploadAndMerge.setVisible(canUploadAndMerge));
+                                        canUploadAndMerge -> uploadAndMerge.setEnabled(canUploadAndMerge));
         permissionChecker.hasPermission(EDIT_NEW_ENTITY_SETTINGS,
-                                        canEdit -> editNewEntitySettings.setVisible(canEdit));
+                                        canEdit -> editNewEntitySettings.setEnabled(canEdit));
     }
 
     public void dispose() {
