@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;

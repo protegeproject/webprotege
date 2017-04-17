@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web;
 
-import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.primitive.EntityDataLookupHandler;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataParserCallback;

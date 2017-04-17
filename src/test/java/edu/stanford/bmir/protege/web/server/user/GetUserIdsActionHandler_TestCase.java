@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import com.beust.jcommander.internal.Sets;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
