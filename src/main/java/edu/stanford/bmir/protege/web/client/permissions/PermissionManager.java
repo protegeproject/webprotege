@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetProjectPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
@@ -29,7 +30,7 @@ import java.util.Optional;
  * Manages the permissions for projects and users.
  * @author Matthew Horridge
  */
-@Singleton
+@ApplicationSingleton
 public class PermissionManager implements HasDispose {
 
     private final EventBus eventBus;

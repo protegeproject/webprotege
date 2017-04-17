@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,7 +17,7 @@ import javax.inject.Singleton;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/04/2013
  */
-@Singleton
+@ApplicationSingleton
 public class PlaceManager {
 
     private PlaceController placeController;

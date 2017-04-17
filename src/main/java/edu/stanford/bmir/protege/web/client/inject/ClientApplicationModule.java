@@ -51,6 +51,7 @@ import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
 import javax.inject.Singleton;
 
@@ -64,134 +65,134 @@ import javax.inject.Singleton;
 public class ClientApplicationModule {
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     EventBus provideEventBus() {
         return new SimpleEventBus();
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     PlaceController providePlaceController(EventBus eventBus) {
         return new PlaceController(eventBus);
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     PlaceHistoryHandler providePlaceHistoryHandler(PlaceHistoryHandlerProvider provider) {
         return provider.get();
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     PlaceHistoryMapper providePlaceHistoryMapper(WebProtegePlaceHistoryMapper mapper) {
         return mapper;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     WebProtegePlaceHistoryMapper provideWebProtegePlaceHistoryMapper() {
         return GWT.create(WebProtegePlaceHistoryMapper.class);
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     Messages provideMessages() {
         return GWT.create(Messages.class);
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     WebProtegeClientBundle provideClientBundle() {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         return WebProtegeClientBundle.BUNDLE;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ActivityMapper provideActivityMapper(WebProtegeActivityMapper mapper) {
         return mapper;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ActivityManager provideActivityManager(WebProtegeActivityManager manager) {
         return manager;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ApplicationView provideApplicationView(ApplicationViewImpl applicationView) {
         return applicationView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     LoggedInUserProvider provideLoggedInUserProvider(LoggedInUserManager loggedInUserManager) {
         return loggedInUserManager;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     LoggedInUserManager provideLoggedInUserManager(LoggedInUserManagerProvider provider) {
         return provider.get();
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     SignInRequestHandler provideSignInRequestHandler(SignInRequestHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     SignOutRequestHandler provideSignOutRequestHandler(SignOutRequestHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     SignUpView provideSignUpView(SignUpViewImpl signUpView) {
         return signUpView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     SignInRequiredHandler provideSignInRequiredHandler(SignInRequiredHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ChangeEmailAddressHandler provideChangeEmailAddressHandler(ChangeEmailAddressHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ShowUserGuideHandler provideShowUserGuideHandler(ShowUserGuideHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ChangePasswordHandler provideChangePasswordHandler(ChangePasswordHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ShowAboutBoxHandler provideShowAboutBoxHandler(ShowAboutBoxHandlerImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     TopBarView provideTopBarView(TopBarViewImpl impl) {
         return impl;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ProjectManagerView provideProjectManagerView(ProjectManagerViewImpl impl) {
         return impl;
     }
@@ -222,37 +223,37 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     LoginView provideLoginView(LoginViewImpl loginView) {
         return loginView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     LogoutView provideLogoutView(LogoutViewImpl logoutView) {
         return logoutView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     ResetPasswordView provideResetPasswordView(ResetPasswordViewImpl resetPasswordView) {
         return resetPasswordView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     LoggedInUserView provideLoggedInUserView(LoggedInUserViewImpl loggedInUserView) {
         return loggedInUserView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     HelpView provideHelpView(HelpViewImpl helpView) {
         return helpView;
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     GoToHomeView provideGoToHomeView(GoToToHomeViewImpl goToToHomeView) {
         return goToToHomeView;
     }
@@ -263,7 +264,7 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @Singleton
+    @ApplicationSingleton
     PerspectiveSwitcherView providePerspectiveSwitcherView(PerspectiveSwitcherViewImpl view) {
         return view;
     }

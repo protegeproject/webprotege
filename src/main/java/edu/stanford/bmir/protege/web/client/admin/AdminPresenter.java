@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWith
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.admin.*;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;

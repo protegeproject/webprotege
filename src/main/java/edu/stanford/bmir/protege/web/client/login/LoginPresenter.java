@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
 import edu.stanford.bmir.protege.web.shared.auth.PerformLoginActionFactory;
 import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -32,7 +33,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_A
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
-@Singleton
+@ApplicationSingleton
 public class LoginPresenter implements Presenter {
 
     private final LoginView view;

@@ -1,6 +1,6 @@
-package edu.stanford.bmir.protege.web.server.inject;
+package edu.stanford.bmir.protege.web.shared.inject;
 
-import javax.inject.Qualifier;
+import javax.inject.Scope;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
-@Qualifier
+@Scope
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApplicationSingleton {
 

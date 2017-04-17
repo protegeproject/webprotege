@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -46,7 +47,7 @@ import static java.util.Comparator.reverseOrder;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-@Singleton
+@ApplicationSingleton
 public class ProjectManagerPresenter implements Presenter {
 
     private final DispatchServiceManager dispatchServiceManager;

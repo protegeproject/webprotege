@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.download;
 
-import edu.stanford.bmir.protege.web.server.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
