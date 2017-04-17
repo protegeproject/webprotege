@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.hierarchy.OWLObjectHierarchyProviderListener;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.ArrayList;
@@ -151,7 +150,7 @@ public abstract class AbstractOWLObjectHierarchyProvider<N extends OWLObject> im
         if (!fireEvents) {
             return;
         }
-        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<OWLObjectHierarchyProviderListener<N>>(
+        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<>(
                 listeners)) {
             try {
                 listener.nodeChanged(node);
