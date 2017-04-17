@@ -12,9 +12,6 @@
     <source path="shared"/>
     <source path="resources"/>
 
-
-    <inherits name='com.google.gwt.junit.JUnit'/>
-
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.google.gwt.resources.Resources" />
     <inherits name="com.google.gwt.place.Place"/>
