@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
@@ -112,6 +113,6 @@ public class ClassFrame_TestCase {
 
     @Test
     public void shouldReturnSuppliedPropertyValues() {
-        assertThat(classFrame.getPropertyValues(), is(propertyValues));
+        assertThat(classFrame.getPropertyValues(), hasItems(propertyValue));
     }
 }
