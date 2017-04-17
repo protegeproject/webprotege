@@ -43,7 +43,7 @@ public class ProjectDownloadCache {
                                       @Nonnull RevisionNumber revisionNumber,
                                       @Nonnull DownloadFormat downloadFormat) {
         // If the revision is the head revision then we need to find the real number
-        String fileName = String.format("%s-%d.%s.zip",
+        String fileName = String.format("%s-R%d.%s.zip",
                                         projectId.getId(),
                                         revisionNumber.getValue(),
                                         downloadFormat.getExtension());
