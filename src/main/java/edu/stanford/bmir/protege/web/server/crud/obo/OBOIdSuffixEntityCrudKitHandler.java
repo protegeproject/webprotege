@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud.obo;
 
-import com.beust.jcommander.internal.Maps;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;

@@ -255,18 +255,6 @@
         </dependency>
 
         <dependency>
-            <groupId>edu.stanford.protege</groupId>
-            <artifactId>bioportal-services-lib</artifactId>
-            <version>1.0.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.7</version>

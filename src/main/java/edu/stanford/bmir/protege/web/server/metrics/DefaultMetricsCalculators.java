@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metrics;
 
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.profiles.*;
