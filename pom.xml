@@ -245,7 +245,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>codemirror-gwt</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>
