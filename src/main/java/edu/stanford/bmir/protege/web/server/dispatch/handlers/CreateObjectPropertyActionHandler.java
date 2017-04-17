@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -16,10 +15,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -53,16 +49,18 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
 
     @Override
     protected ChangeDescriptionGenerator<Set<OWLObjectProperty>> getChangeDescription(CreateObjectPropertiesAction action, Project project, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<Set<OWLObjectProperty>>("Created object properties");
+        return new FixedMessageChangeDescriptionGenerator<>("Created object properties");
     }
 
     @Override
     protected CreateObjectPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLObjectProperty>> changeApplicationResult, CreateObjectPropertiesAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Optional<Set<OWLObjectProperty>> result = changeApplicationResult.getSubject();
-        Map<OWLObjectProperty, String> map = new HashMap<OWLObjectProperty, String>();
-        for(OWLObjectProperty prop : result.get()) {
-            map.put(prop, project.getRenderingManager().getBrowserText(prop));
-        }
+        Map<OWLObjectProperty, String> map = new HashMap<>();
+        result.ifPresent(props -> {
+            for(OWLObjectProperty prop : props) {
+                map.put(prop, project.getRenderingManager().getBrowserText(prop));
+            }
+        });
         return new CreateObjectPropertiesResult(map, project.getProjectId(), action.getParent(), eventList);
     }
 }
