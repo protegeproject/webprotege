@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
-import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ import java.util.Set;
  */
 public abstract class AbstractOWLObjectHierarchyProvider<N extends OWLObject> implements OWLObjectHierarchyProvider<N> {
 
-    private static final Logger logger = Logger.getLogger(AbstractOWLObjectHierarchyProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractOWLObjectHierarchyProvider.class);
 
 
     private boolean fireEvents;
