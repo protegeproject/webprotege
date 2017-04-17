@@ -146,6 +146,15 @@ public class ProjectOWLOntologyManager implements OWLOntologyManager {
         return delegate.applyChanges(changes);
     }
 
+    @Nonnull
+    @Override
+    public ChangeDetails applyChangesAndGetDetails(@Nonnull List<? extends OWLOntologyChange> list) {
+        if(sealed) {
+            throw new DirectChangeApplicationNotAllowedException();
+        }
+        return delegate.applyChangesAndGetDetails(list);
+    }
+
     @Override
     public ChangeApplied addAxioms(OWLOntology ont, Set<? extends OWLAxiom> axioms) {
         if (sealed) {

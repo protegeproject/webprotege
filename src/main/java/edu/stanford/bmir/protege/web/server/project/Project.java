@@ -46,6 +46,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.vocab.Namespaces;
@@ -63,6 +64,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -127,6 +129,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     private final ProjectDetailsRepository projectDetailsRepository;
 
+    @SuppressWarnings("deprecation")
     private final LegacyEntityDataManager legacyEntityDataManager;
 
     @Inject
@@ -135,7 +138,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                    OWLDataFactory dataFactory,
                    AccessManager accessManager,
                    RenderingManager renderingManager,
-                   LegacyEntityDataManager legacyEntityDataManager,
+                   @SuppressWarnings("deprecation") LegacyEntityDataManager legacyEntityDataManager,
                    EventManager<ProjectEvent<?>> projectEventManager,
                    @RootOntology OWLOntology ontology,
                    ProjectDetailsRepository projectDetailsRepository,
@@ -202,7 +205,8 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
      * @return {@code true} if the entity is deprecated in this project, otherwise {@code false}.
      */
     public boolean isDeprecated(OWLEntity entity) {
-        if (!getRootOntology().containsAnnotationPropertyInSignature(OWLRDFVocabulary.OWL_DEPRECATED.getIRI(), true)) {
+        if (!getRootOntology().containsAnnotationPropertyInSignature(OWL_DEPRECATED.getIRI(),
+                                                                     Imports.INCLUDED)) {
             return false;
         }
         // TODO: Cache
@@ -375,8 +379,11 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     public <R> ChangeApplicationResult<R> applyChanges(final UserId userId,
                                                        final ChangeListGenerator<R> changeListGenerator,
                                                        final ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException {
+        //noinspection ResultOfMethodCallIgnored
         checkNotNull(userId);
+        //noinspection ResultOfMethodCallIgnored
         checkNotNull(changeListGenerator);
+        //noinspection ResultOfMethodCallIgnored
         checkNotNull(changeDescriptionGenerator);
 
         // Final check of whether the user can actually edit the project
@@ -538,31 +545,31 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return chg.accept(new OWLOntologyChangeVisitorEx<Boolean>() {
             @Nonnull
             @Override
-            public Boolean visit(AddAxiom addAxiom) {
+            public Boolean visit(@Nonnull AddAxiom addAxiom) {
                 return !addAxiom.getOntology().containsAxiom(addAxiom.getAxiom());
             }
 
             @Nonnull
             @Override
-            public Boolean visit(RemoveAxiom removeAxiom) {
+            public Boolean visit(@Nonnull RemoveAxiom removeAxiom) {
                 return removeAxiom.getOntology().containsAxiom(removeAxiom.getAxiom());
             }
 
             @Nonnull
             @Override
-            public Boolean visit(SetOntologyID setOntologyID) {
+            public Boolean visit(@Nonnull SetOntologyID setOntologyID) {
                 return false;
             }
 
             @Nonnull
             @Override
-            public Boolean visit(AddImport addImport) {
+            public Boolean visit(@Nonnull AddImport addImport) {
                 return !addImport.getOntology().getImportsDeclarations().contains(addImport.getImportDeclaration());
             }
 
             @Nonnull
             @Override
-            public Boolean visit(RemoveImport removeImport) {
+            public Boolean visit(@Nonnull RemoveImport removeImport) {
                 return removeImport.getOntology()
                                    .getImportsDeclarations()
                                    .contains(removeImport.getImportDeclaration());
@@ -570,7 +577,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
             @Nonnull
             @Override
-            public Boolean visit(AddOntologyAnnotation addOntologyAnnotation) {
+            public Boolean visit(@Nonnull AddOntologyAnnotation addOntologyAnnotation) {
                 return !addOntologyAnnotation.getOntology()
                                              .getAnnotations()
                                              .contains(addOntologyAnnotation.getAnnotation());
@@ -578,7 +585,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
             @Nonnull
             @Override
-            public Boolean visit(RemoveOntologyAnnotation removeOntologyAnnotation) {
+            public Boolean visit(@Nonnull RemoveOntologyAnnotation removeOntologyAnnotation) {
                 return removeOntologyAnnotation.getOntology()
                                                .getAnnotations()
                                                .contains(removeOntologyAnnotation.getAnnotation());
@@ -657,56 +664,64 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                 return (T) object;
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(RemoveAxiom change) {
+            public OWLOntologyChange visit(@Nonnull RemoveAxiom change) {
                 return new RemoveAxiom(change.getOntology(), duplicate(change.getAxiom()));
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(SetOntologyID change) {
+            public OWLOntologyChange visit(@Nonnull SetOntologyID change) {
                 return change;
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(AddAxiom change) {
+            public OWLOntologyChange visit(@Nonnull AddAxiom change) {
                 return new AddAxiom(change.getOntology(), duplicate(change.getAxiom()));
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(AddImport change) {
+            public OWLOntologyChange visit(@Nonnull AddImport change) {
                 return change;
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(RemoveImport change) {
+            public OWLOntologyChange visit(@Nonnull RemoveImport change) {
                 return change;
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(AddOntologyAnnotation change) {
+            public OWLOntologyChange visit(@Nonnull AddOntologyAnnotation change) {
                 return new AddOntologyAnnotation(change.getOntology(), duplicate(change.getAnnotation()));
             }
 
+            @Nonnull
             @Override
-            public OWLOntologyChange visit(RemoveOntologyAnnotation change) {
+            public OWLOntologyChange visit(@Nonnull RemoveOntologyAnnotation change) {
                 return new RemoveOntologyAnnotation(change.getOntology(), duplicate(change.getAnnotation()));
             }
         });
     }
 
     @Override
-    public boolean containsEntityInSignature(OWLEntity entity) {
-        return getRootOntology().containsEntityInSignature(entity, true);
+    public boolean containsEntityInSignature(@Nonnull OWLEntity entity) {
+        return getRootOntology().containsEntityInSignature(entity, Imports.INCLUDED);
     }
 
     @Override
     public Set<OWLEntity> getEntitiesWithIRI(IRI iri) {
-        return getRootOntology().getEntitiesInSignature(iri, true);
+        return getRootOntology().getEntitiesInSignature(iri, Imports.INCLUDED);
     }
 
+    @Nonnull
     @Override
-    public Set<OWLEntity> getEntitiesInSignature(IRI entityIRI) {
-        return getRootOntology().getEntitiesInSignature(entityIRI, true);
+    public Set<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIRI) {
+        return getRootOntology().getEntitiesInSignature(entityIRI, Imports.INCLUDED);
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -732,12 +747,13 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     private OWLObjectRenderer getOWLObjectRenderer() {
         return new OWLObjectRenderer() {
             @Override
-            public void setShortFormProvider(ShortFormProvider shortFormProvider) {
+            public void setShortFormProvider(@Nonnull ShortFormProvider shortFormProvider) {
 
             }
 
+            @Nonnull
             @Override
-            public String render(OWLObject object) {
+            public String render(@Nonnull OWLObject object) {
                 return renderingManager.getHTMLBrowserText(object);
             }
         };

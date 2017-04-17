@@ -207,7 +207,7 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>4.2.8</version>
+            <version>4.3.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
@@ -218,19 +218,11 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-gwt</artifactId>
-            <version>4.2.5-SNAPSHOT</version>
+            <version>4.3.1-SNAPSHOT</version>
             <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi-gwt-client-side-emul</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-user</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -287,17 +279,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>codemirror-gwt</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-servlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-user</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>3.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -346,7 +328,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>widgetmap</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>2.0.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
@@ -492,18 +474,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <!--<annotationProcessorPaths>-->
-                    <!--<pathSupplier>-->
-                    <!--<groupId>com.google.auto.factory</groupId>-->
-                    <!--<artifactId>auto-factory</artifactId>-->
-                    <!--<version>1.0-beta3</version>-->
-                    <!--</pathSupplier>-->
-                    <!--<pathSupplier>-->
-                    <!--<groupId>com.google.dagger</groupId>-->
-                    <!--<artifactId>dagger-compiler</artifactId>-->
-                    <!--<version>2.4</version>-->
-                    <!--</pathSupplier>-->
-                    <!--</annotationProcessorPaths>-->
                 </configuration>
             </plugin>
 
