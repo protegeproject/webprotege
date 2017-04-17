@@ -158,7 +158,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         // components get what they deserve!
         Set<OWLEntity> entities = shortFormProvider.getEntities(entityName);
         if (!entities.isEmpty()) {
-            printBrowserTextReferenceWarningMessage(entityName);
             return entities;
         }
         // Not referring to browser text, or there is no browser text!
@@ -365,10 +364,4 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
     public void dispose() {
     }
-
-
-    private void printBrowserTextReferenceWarningMessage(String referenceName) {
-        logger.info("Could not find entity by name \"%s\".  This name may be the browser text rather than an entity IRI.", referenceName);
-    }
-
 }
