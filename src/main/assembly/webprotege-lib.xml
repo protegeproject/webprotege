@@ -26,7 +26,6 @@
             <unpack>true</unpack>
             <scope>runtime</scope>
             <excludes>
-                <exclude>com.google.gwt:gwt-servlet</exclude>
                 <exclude>com.gwt-ext:gwt-ext</exclude>
                 <exclude>net.sourceforge.owlapi:owlapi-gwt</exclude>
                 <exclude>com.google.guava:guava-gwt:jar</exclude>
