@@ -11,7 +11,7 @@
 
     <fileSets>
         <fileSet>
-            <directory>${outputDirectory}/${project.build.finalName}/WEB-INF/classes</directory>
+            <directory>${project.build.outputDirectory}</directory>
             <outputDirectory>/</outputDirectory>
             <excludes>
                 <exclude>edu/stanford/bmir/protege/web/client/**/*.*</exclude>
