@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.project;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
+import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
@@ -19,7 +20,7 @@ import static com.mongodb.client.model.Filters.eq;
  * Stanford Center for Biomedical Informatics Research
  * 3 Mar 2017
  */
-public class ProjectAccessManagerImpl implements ProjectAccessManager {
+public class ProjectAccessManagerImpl implements ProjectAccessManager, Repository {
 
     public static final String COLLECTION_NAME = "ProjectAccess";
 
@@ -34,6 +35,10 @@ public class ProjectAccessManagerImpl implements ProjectAccessManager {
     @Inject
     public ProjectAccessManagerImpl(@Nonnull MongoDatabase database) {
         this.collection = database.getCollection(COLLECTION_NAME);
+    }
+
+    @Override
+    public void ensureIndexes() {
         collection.createIndex(new Document()
                                        .append(PROJECT_ID, 1)
                                        .append(USER_ID, 1));
