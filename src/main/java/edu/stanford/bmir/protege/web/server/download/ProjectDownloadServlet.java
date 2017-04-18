@@ -52,11 +52,17 @@ public class ProjectDownloadServlet extends HttpServlet {
         final WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(req.getSession());
         UserId userId = webProtegeSession.getUserInSession();
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
+        if(!downloadParameters.isProjectDownload()) {
+            logger.info("Bad project download request: {} (Request URI: {})", downloadParameters, req.getRequestURI());
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
         logger.info("Received download request from {} at {} (Host: {}) for project {}",
                     userId,
                     req.getRemoteAddr(),
                     req.getRemoteHost(),
                     downloadParameters.getProjectId());
+
         if (!accessManager.hasPermission(Subject.forUser(userId),
                                          new ProjectResource(downloadParameters.getProjectId()),
                                          BuiltInAction.DOWNLOAD_PROJECT)) {
@@ -65,10 +71,6 @@ public class ProjectDownloadServlet extends HttpServlet {
         }
         else if (downloadParameters.isProjectDownload()) {
             startProjectDownload(resp, userId, downloadParameters);
-        }
-        else {
-            logger.info("Bad project download request: {}", downloadParameters);
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
