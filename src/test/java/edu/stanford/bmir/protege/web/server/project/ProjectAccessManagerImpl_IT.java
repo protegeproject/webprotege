@@ -70,7 +70,7 @@ public class ProjectAccessManagerImpl_IT {
 
     private MongoCollection<Document> getCollection() {
         return mongoClient.getDatabase(getTestDbName())
-                          .getCollection("ProjectAccessRecords");
+                          .getCollection("ProjectAccess");
     }
 
 

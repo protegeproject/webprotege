@@ -21,7 +21,7 @@ import static com.mongodb.client.model.Filters.eq;
  */
 public class ProjectAccessManagerImpl implements ProjectAccessManager {
 
-    public static final String COLLECTION_NAME = "ProjectAccessRecords";
+    public static final String COLLECTION_NAME = "ProjectAccess";
 
     public static final String PROJECT_ID = "projectId";
 
