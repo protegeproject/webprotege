@@ -163,14 +163,14 @@ public class ProjectDocumentStore {
                             missingImportEvent.getImportedOntologyURI(),
                             missingImportEvent.getCreationException().getMessage());
         manager.addMissingImportListener(missingImportListener);
-        manager.addIRIMapper((OWLOntologyIRIMapper) iri -> {
+        manager.getIRIMappers().add((OWLOntologyIRIMapper) iri -> {
             logger.info("{} Fetching imported ontology from {}.", projectId, iri.toQuotedString());
             return iri;
         });
         // Important - add last
         ImportsCacheManager importsCacheManager = importsCacheManagerProvider.get();
         OWLOntologyIRIMapper iriMapper = importsCacheManager.getIRIMapper();
-        manager.addIRIMapper(iriMapper);
+        manager.getIRIMappers().add(iriMapper);
 
 
         try {

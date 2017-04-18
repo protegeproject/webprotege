@@ -13,6 +13,8 @@ import org.semanticweb.binaryowl.owlapi.OWLOntologyWrapper;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.SetOntologyIDData;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
@@ -31,6 +33,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class ImportsCacheManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(ImportsCacheManager.class);
 
 
     private static final String META_DATA_TIME_STAMP_ATTR = "timestamp";
@@ -48,13 +51,6 @@ public class ImportsCacheManager {
 
 
 
-
-
-
-
-
-    private final WebProtegeLogger logger;
-
     private Map<OWLOntologyID, ImportedOntologyMetadata> metadataMap = new HashMap<OWLOntologyID, ImportedOntologyMetadata>();
 
     private Set<OWLOntologyID> ontologyIDs = new HashSet<OWLOntologyID>();
@@ -64,26 +60,21 @@ public class ImportsCacheManager {
 
     private final ProjectId projectId;
 
-//    private final OWLAPIProjectFileStore projectFileStore;
-
     @Nonnull
     private final File importsCacheDirectory;
 
     @Inject
     public ImportsCacheManager(@Nonnull ProjectId projectId,
-                               @Nonnull ImportsCacheDirectoryProvider importsCacheDirectoryProvider,
-                               WebProtegeLogger logger) {
-        this.logger = logger;
+                               @Nonnull ImportsCacheDirectoryProvider importsCacheDirectoryProvider) {
         this.projectId = projectId;
         this.importsCacheDirectory = importsCacheDirectoryProvider.get();
-//        projectFileStore = fileStore;
     }
 
     public OWLOntologyIRIMapper getIRIMapper() {
         try {
             WRITE_LOCK.lock();
             readCachedImportsFromDisk();
-            return new ImportsCacheIRIMapper(iri2Document);
+            return new ImportsCacheIRIMapper(iri2Document, projectId);
         }
         finally {
             WRITE_LOCK.lock();
@@ -115,8 +106,8 @@ public class ImportsCacheManager {
             if(ontologyIDs.contains(ont.getOntologyID())) {
                 return;
             }
-            DataOutputStream os = null;
-            try {
+            final File file = getFreshImportCacheFile();
+            try(DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
 
                 final long timestamp = System.currentTimeMillis();
                 IRI documentIRI = ont.getOWLOntologyManager().getOntologyDocumentIRI(ont);
@@ -125,27 +116,14 @@ public class ImportsCacheManager {
 
                 BinaryOWLMetadata metadata = toBinaryOWLMetadata(value);
                 BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
-                final File file = getFreshImportCacheFile();
-                os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
                 serializer.write(new OWLOntologyWrapper(ont), os, metadata);
 
                 ontologyIDs.add(ont.getOntologyID());
                 metadataMap.put(ont.getOntologyID(), value);
                 logger.info("Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
             }
-
             catch (IOException e) {
-                logger.error(e);
-            }
-            finally {
-                try {
-                    if (os != null) {
-                        os.close();
-                    }
-                }
-                catch (IOException e) {
-                    logger.error(e);
-                }
+                logger.error("An error occurred whilst caching an ontology: {}", e.getMessage(), e);
             }
         }
         finally {
@@ -201,11 +179,8 @@ public class ImportsCacheManager {
     private void parseOntologyDocument(File ontologyDocument) {
         try {
             WRITE_LOCK.lock();
-            InputStream is = null;
-
-            try {
+            try(InputStream is = new BufferedInputStream(new FileInputStream(ontologyDocument))) {
                 BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
-                is = new BufferedInputStream(new FileInputStream(ontologyDocument));
                 final Handler handler = new Handler();
                 serializer.read(is, handler, new OWLDataFactoryImpl());
                 OWLOntologyID id = handler.getOntologyID();
@@ -218,24 +193,8 @@ public class ImportsCacheManager {
                     metadataMap.put(id, new ImportedOntologyMetadata(id, handler.getDocumentIRI(), handler.getTimestamp()));
                 }
             }
-            catch (IOException e) {
-                logger.error(e);
-            }
-            catch (BinaryOWLParseException e) {
-                logger.error(e);
-            }
-            catch (UnloadableImportException e) {
-                logger.error(e);
-            }
-            finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                    }
-                }
-                catch (IOException e) {
-                    logger.error(e);
-                }
+            catch (IOException | BinaryOWLParseException | UnloadableImportException e) {
+                logger.error("An error occurred", e);
             }
         }
         finally {
@@ -243,26 +202,27 @@ public class ImportsCacheManager {
         }
     }
 
-
-
-
-//    public void refreshCachedOntology(OWLOntologyID ontologyID) {
-//
-//    }
-
-
-
     private static class ImportsCacheIRIMapper implements OWLOntologyIRIMapper {
 
-        private Map<IRI, IRI> map = new HashMap<IRI, IRI>();
+        private Map<IRI, IRI> map = new HashMap<>();
 
-        private ImportsCacheIRIMapper(Map<IRI, IRI> map) {
+        private final ProjectId projectId;
+
+        private ImportsCacheIRIMapper(Map<IRI, IRI> map, ProjectId projectId) {
             this.map = map;
+            this.projectId = projectId;
         }
 
         @Override
-        public IRI getDocumentIRI(IRI ontologyIRI) {
-            return map.get(ontologyIRI);
+        public IRI getDocumentIRI(@Nonnull IRI ontologyIRI) {
+            IRI documentIRI =  map.get(ontologyIRI);
+            if (documentIRI != null) {
+                logger.info("{} Found import in cache: {}", projectId, ontologyIRI);
+            }
+            else {
+                logger.info("{} Could not find import in cache: {}", ontologyIRI);
+            }
+            return documentIRI;
         }
     }
 
