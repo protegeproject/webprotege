@@ -37,7 +37,8 @@
 
     <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
 
-    <!--<extend-property name="locale" values="de" />-->
+    <set-property-fallback name="locale" value="en"/>
+    <set-property name="locale" value="en,de"/>
 
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
