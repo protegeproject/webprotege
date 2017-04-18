@@ -3,3 +3,4 @@ jdk:
   - oraclejdk8
 script: mvn verify
 sudo: false
+services: mongodb
