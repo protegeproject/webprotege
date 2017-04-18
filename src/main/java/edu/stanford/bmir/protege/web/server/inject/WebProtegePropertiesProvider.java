@@ -43,8 +43,7 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
     }
 
     private WebProtegeProperties loadProperties() throws WebProtegeConfigurationException {
-        try {
-            BufferedInputStream bufferedInputStream = getBufferedInputStream();
+        try(BufferedInputStream bufferedInputStream = createBufferedInputStream()) {
             Properties properties = new Properties();
             properties.load(bufferedInputStream);
             bufferedInputStream.close();
@@ -58,7 +57,7 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
         }
     }
 
-    private BufferedInputStream getBufferedInputStream() throws IOException {
+    private BufferedInputStream createBufferedInputStream() throws IOException {
         Path stdConfigPath = Paths.get("etc", "webprotege", WEB_PROTEGE_PROPERTIES_FILE_NAME);
         if(Files.exists(stdConfigPath)) {
             logger.info("Found {} at {}", WEB_PROTEGE_PROPERTIES_FILE_NAME, stdConfigPath.toAbsolutePath());

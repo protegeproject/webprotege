@@ -1,12 +1,17 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,6 +31,8 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
     public static final String MAIL_SMTP_PASSWORD_MISSING_MESSAGE = "Mail properties are not configured correctly.  The mail.smtp.auth has been specified, which means that authentication will be used to send emails, but the mail.smtp.password property has not been specified.  Please specify a password for the smtp mail server by using this property.  Mail properties may be specified using a mail.properties file placed in the root directory of the WebProtégé web-app directory.";
 
+    private static Logger logger = LoggerFactory.getLogger(MailPropertiesProvider.class);
+
     @Inject
     public MailPropertiesProvider() {
     }
@@ -38,38 +45,50 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
     private Properties getProperties() {
         Properties mailProperties = new Properties(System.getProperties());
-        String fileName = MAIL_PROPERTIES_FILE_NAME;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileName);
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-            try {
-                mailProperties.load(bufferedInputStream);
-                bufferedInputStream.close();
-            } catch (IOException e) {
-                throw new WebProtegeConfigurationException("Could not read mail.properties. Message: " + e.getMessage());
-            }
+        try (BufferedInputStream bufferedInputStream = createBufferedInputStream()) {
+            mailProperties.load(bufferedInputStream);
+            bufferedInputStream.close();
+        } catch (IOException e) {
+            throw new WebProtegeConfigurationException("Could not read mail.properties. Message: " + e.getMessage());
+        }
         overridePropertiesWithSystemProperties(mailProperties);
-        if("true".equals(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_AUTH))) {
-            if(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_USER) == null) {
+        if ("true".equals(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_AUTH))) {
+            if (mailProperties.getProperty(SendMailImpl.MAIL_SMTP_USER) == null) {
                 throw new WebProtegeConfigurationException(MAIL_SMTP_USER_MISSING_MESSAGE);
             }
-            if(mailProperties.getProperty(SendMailImpl.MAIL_SMTP_PASSWORD) == null) {
+            if (mailProperties.getProperty(SendMailImpl.MAIL_SMTP_PASSWORD) == null) {
                 throw new WebProtegeConfigurationException(MAIL_SMTP_PASSWORD_MISSING_MESSAGE);
             }
         }
         return mailProperties;
     }
 
+    private BufferedInputStream createBufferedInputStream() throws IOException {
+        Path stdConfigPath = Paths.get("etc" , "webprotege" , MAIL_PROPERTIES_FILE_NAME);
+        if (Files.exists(stdConfigPath)) {
+            logger.info("Found {} at {}" , MAIL_PROPERTIES_FILE_NAME, stdConfigPath.toAbsolutePath());
+            return new BufferedInputStream(Files.newInputStream(stdConfigPath));
+        }
+        else {
+            logger.info("Loading {} from the class path" , MAIL_PROPERTIES_FILE_NAME);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream(MAIL_PROPERTIES_FILE_NAME);
+            return new BufferedInputStream(inputStream);
+        }
+
+    }
+
     /**
      * Overrides any property values in the specified {@link Properties} object with property values that are specified
      * via the command line (with a -D argument) or via environment variables.
+     *
      * @param properties The properties object whose property values should be replaced.  Not {@code null}.
      */
     private void overridePropertiesWithSystemProperties(Properties properties) {
         checkNotNull(properties);
         Properties systemProperties = getSystemProperties();
-        for(String systemPropertyName : systemProperties.stringPropertyNames()) {
-            if(systemPropertyName.startsWith(MAIL_PROPERTIES_PREFIX)) {
+        for (String systemPropertyName : systemProperties.stringPropertyNames()) {
+            if (systemPropertyName.startsWith(MAIL_PROPERTIES_PREFIX)) {
                 String propertyValue = systemProperties.getProperty(systemPropertyName);
                 properties.setProperty(systemPropertyName, propertyValue);
             }
@@ -81,7 +100,7 @@ public class MailPropertiesProvider implements Provider<Properties> {
             return System.getProperties();
         } catch (SecurityException e) {
             System.err.println("A security exception was thrown while asking for the system properties: "
-                    + e.getMessage());
+                                       + e.getMessage());
             return new Properties();
         }
     }
