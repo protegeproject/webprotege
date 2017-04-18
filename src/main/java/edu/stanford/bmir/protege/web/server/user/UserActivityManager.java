@@ -66,6 +66,7 @@ public class UserActivityManager implements Repository {
         if(userId.isGuest()) {
             return;
         }
+        getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
                                                                    .set(LAST_LOGIN, new Date(lastLogin));
@@ -76,6 +77,7 @@ public class UserActivityManager implements Repository {
         if(userId.isGuest()) {
             return;
         }
+        getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
                                                                    .set(LAST_LOGOUT, new Date(lastLogout));
