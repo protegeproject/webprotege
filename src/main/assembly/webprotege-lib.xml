@@ -12,7 +12,7 @@
     <fileSets>
         <fileSet>
             <directory>${project.build.outputDirectory}</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory/>
             <excludes>
                 <exclude>edu/stanford/bmir/protege/web/client/**/*.*</exclude>
             </excludes>
@@ -22,7 +22,7 @@
     <dependencySets>
         <dependencySet>
             <outputDirectory/>
-            <useProjectArtifact>true</useProjectArtifact>
+            <useProjectArtifact>false</useProjectArtifact>
             <unpack>true</unpack>
             <scope>runtime</scope>
         </dependencySet>
