@@ -114,6 +114,7 @@ public class ApplicationModule {
     @ApplicationSingleton
     @Provides
     public ProjectAccessManager provideProjectAccessManager(ProjectAccessManagerImpl projectAccessManager) {
+        projectAccessManager.ensureIndexes();
         return projectAccessManager;
     }
 

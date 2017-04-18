@@ -40,6 +40,7 @@ public class ProjectAccessManagerImpl_IT {
         mongoClient = MongoTestUtils.createMongoClient();
         MongoDatabase database = mongoClient.getDatabase(getTestDbName());
         manager = new ProjectAccessManagerImpl(database);
+        manager.ensureIndexes();
     }
 
     @After
