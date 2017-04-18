@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 3 Mar 2017
  */
-@Entity(value = "ProjectAccessRecords", noClassnameStored = true)
+@Entity(value = "ProjectAccess", noClassnameStored = true)
 @Indexes(
         {
                 @Index(fields = {@Field("projectId"), @Field("userId")},
