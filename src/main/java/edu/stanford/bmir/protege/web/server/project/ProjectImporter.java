@@ -136,8 +136,7 @@ public class ProjectImporter {
                 new ImportsCacheDirectoryProvider(
                         new ProjectDirectoryProvider(
                                 new ProjectDirectoryFactory(dataDirectory),
-                                projectId)),
-                logger
+                                projectId))
         );
         importsCacheManager.cacheImports(ontology);
     }
