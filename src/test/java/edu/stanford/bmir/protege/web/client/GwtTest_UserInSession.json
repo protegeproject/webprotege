@@ -2,12 +2,7 @@
   "userName": "JohnSmith",
   "displayName": "John Smith",
   "userEmail": "john.smith@gmail.com",
-  "groups": [
-    "X",
-    "Y",
-    "Z"
-  ],
-  "allowedActions" : [
+  "applicationActions" : [
     "MyAction"
   ]
 }
