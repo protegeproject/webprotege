@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 
 import java.io.Serializable;
@@ -10,18 +11,23 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
+@SuppressWarnings("GwtInconsistentSerializableClass")
 public class EntityLookupResult implements Serializable, Comparable<EntityLookupResult> {
 
     private OWLEntityData visualEntity;
     
     private EntityNameMatchResult matchResult;
 
+    private String directLink;
+
+    @GwtSerializationConstructor
     private EntityLookupResult() {
     }
 
-    public EntityLookupResult(OWLEntityData visualEntity, EntityNameMatchResult matchResult) {
+    public EntityLookupResult(OWLEntityData visualEntity, EntityNameMatchResult matchResult, String directLink) {
         this.visualEntity = visualEntity;
         this.matchResult = matchResult;
+        this.directLink = directLink;
     }
 
     public OWLEntityData getOWLEntityData() {
@@ -31,6 +37,10 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
 
     public EntityNameMatchResult getMatchResult() {
         return matchResult;
+    }
+
+    public String getDirectLink() {
+        return directLink;
     }
 
     public String getDisplayText() {

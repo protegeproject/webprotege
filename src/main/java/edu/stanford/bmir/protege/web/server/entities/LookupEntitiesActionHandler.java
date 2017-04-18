@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -18,6 +19,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -26,10 +29,14 @@ import java.util.*;
  */
 public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
 
+    private final PlaceUrl placeUrl;
+
     @Inject
     public LookupEntitiesActionHandler(ProjectManager projectManager,
-                                       AccessManager accessManager) {
+                                       AccessManager accessManager,
+                                       PlaceUrl placeUrl) {
         super(projectManager, accessManager);
+        this.placeUrl = checkNotNull(placeUrl);
     }
 
     @Override
@@ -79,11 +86,13 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         List<EntityLookupResult> result = new ArrayList<EntityLookupResult>();
         for(OWLEntityDataMatch match : matches) {
             OWLEntityData entityData = match.getEntityData();
-            result.add(new EntityLookupResult(entityData, match.getMatchResult()));
+            result.add(new EntityLookupResult(entityData,
+                                              match.getMatchResult(),
+                                              placeUrl.getEntityUrl(project.getProjectId(), entityData.getEntity())));
         }
         Collections.sort(result);
         if(result.size() >= entityLookupRequest.getSearchLimit()) {
-            result = new ArrayList<EntityLookupResult>(result.subList(0, entityLookupRequest.getSearchLimit()));
+            result = new ArrayList<>(result.subList(0, entityLookupRequest.getSearchLimit()));
         }
         return result;
     }

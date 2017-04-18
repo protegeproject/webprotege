@@ -78,7 +78,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
             throw new IllegalArgumentException("Search limit must not be less than zero");
         }
         this.searchLimit = searchLimit;
-        this.searchedEntityTypes = new HashSet<EntityType<?>>(checkNotNull(searchedEntityTypes));
+        this.searchedEntityTypes = new HashSet<>(checkNotNull(searchedEntityTypes));
     }
 
     /**
@@ -107,7 +107,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
     }
 
     public Set<EntityType<?>> getSearchedEntityTypes() {
-        return new HashSet<EntityType<?>>(searchedEntityTypes);
+        return new HashSet<>(searchedEntityTypes);
     }
 
     @Override
