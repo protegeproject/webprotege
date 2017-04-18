@@ -12,6 +12,12 @@
     <version>3.0.0.beta-SNAPSHOT</version>
     <name>GWT Maven Archetype</name>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <properties>
         <gwtVersion>2.8.0</gwtVersion>
         <guava.version>20.0</guava.version>
@@ -24,6 +30,8 @@
         <mail.smtp.port/>
         <application.analytics/>
     </properties>
+
+
 
     <repositories>
         <repository>
@@ -401,10 +409,9 @@
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <extraJvmArgs>-Xms1000M -Xmx3000M</extraJvmArgs>
                     <logLevel>INFO</logLevel>
-                    <!--<localWorkers>1</localWorkers>-->
+                    <localWorkers>1</localWorkers>
                     <i18nMessagesBundle>edu.stanford.bmir.protege.web.client.Messages</i18nMessagesBundle>
-                    <gen>/tmp/gwt-generated</gen>
-                    <style>DETAILED</style>
+                    <style>OBF</style>
                 </configuration>
             </plugin>
 
