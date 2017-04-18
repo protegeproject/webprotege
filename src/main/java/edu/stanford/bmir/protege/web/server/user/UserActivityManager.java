@@ -11,6 +11,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +69,7 @@ public class UserActivityManager implements Repository {
         getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
-                                                                   .set(LAST_LOGIN, lastLogin);
+                                                                   .set(LAST_LOGIN, new Date(lastLogin));
         datastore.update(query, operations);
     }
 
@@ -79,7 +80,7 @@ public class UserActivityManager implements Repository {
         getByUserId(userId);
         Query<UserActivityRecord> query = queryByUserId(userId);
         UpdateOperations<UserActivityRecord> operations = datastore.createUpdateOperations(UserActivityRecord.class)
-                                                                   .set(LAST_LOGOUT, lastLogout);
+                                                                   .set(LAST_LOGOUT, new Date(lastLogout));
         datastore.update(query, operations);
     }
 
