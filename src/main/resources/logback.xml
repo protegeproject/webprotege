@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="10 seconds">
 
     <property resource="webprotege.properties"/>
-    <property name="logsdir" value="${logs.directory}:-/var/log/webprotege"/>
+    <property name="logsdir" value="${logs.directory:-/var/log/webprotege}"/>
 
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
