@@ -196,7 +196,7 @@ public class ProjectDocumentStore {
     }
 
     private OWLOntology createFreshProjectOntology(OWLOntologyManager manager) throws OWLOntologyCreationException, OWLOntologyStorageException {
-        logger.info("Creating fresh project: %s" , projectId);
+        logger.info("Creating a fresh project with an Id of {}" , projectId);
         File parentDirectory = rootOntologyDocument.getParentFile();
         parentDirectory.mkdirs();
         IRI ontologyIRI = createUniqueOntologyIRI();
