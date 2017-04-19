@@ -333,11 +333,11 @@
 }
 
 blockquote {
-    margin: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border-left: 3px solid #d0d0d0;
-    color: #808080;
+    color: #a0a0a0;
     padding: 5px;
-    margin-left: 10px;
 }
 
 .derivedInformation {
