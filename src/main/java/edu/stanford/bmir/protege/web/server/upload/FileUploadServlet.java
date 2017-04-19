@@ -110,9 +110,8 @@ public class FileUploadServlet extends HttpServlet {
                     if (!item.isFormField()) {
                         File uploadedFile = createServerSideFile();
                         long sizeInBytes = uploadedFile.length();
-                        logger.info("File size is {} bytes", sizeInBytes);
-                        logger.info("Writing uploaded file to {}", uploadedFile.getName());
                         item.write(uploadedFile);
+                        logger.info("File size is {} bytes. Stored uploaded file with name {}", sizeInBytes, uploadedFile.getName());
                         resp.setStatus(HttpServletResponse.SC_CREATED);
                         sendSuccessMessage(resp, uploadedFile.getName());
                         return;
