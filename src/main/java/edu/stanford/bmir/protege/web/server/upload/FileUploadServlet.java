@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
+import edu.stanford.bmir.protege.web.server.logging.RequestFormatter;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -33,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.logging.RequestFormatter.formatAddr;
 
 /**
  * Author: Matthew Horridge<br>
@@ -94,10 +96,9 @@ public class FileUploadServlet extends HttpServlet {
             sendErrorMessage(resp, "You do not have permission to upload files to " + applicationNameSupplier.get());
         }
 
-        logger.info("Received upload request from {} at {} (Host: {})",
+        logger.info("Received upload request from {} at {}",
                     webProtegeSession.getUserInSession(),
-                    req.getRemoteAddr(),
-                    req.getRemoteHost());
+                    formatAddr(req));
         resp.setHeader("Content-Type", RESPONSE_MIME_TYPE);
         try {
             if (ServletFileUpload.isMultipartContent(req)) {
