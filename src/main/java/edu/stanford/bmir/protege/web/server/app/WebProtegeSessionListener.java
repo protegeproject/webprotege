@@ -40,7 +40,9 @@ public class WebProtegeSessionListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         WebProtegeSession session = new WebProtegeSessionImpl(httpSessionEvent.getSession());
         UserId userId = session.getUserInSession();
-        logger.info("{} Session expired", userId);
-        userActivityManager.setLastLogout(userId, System.currentTimeMillis());
+        if (!userId.isGuest()) {
+            logger.info("{} Session expired", userId);
+            userActivityManager.setLastLogout(userId, System.currentTimeMillis());
+        }
     }
 }
