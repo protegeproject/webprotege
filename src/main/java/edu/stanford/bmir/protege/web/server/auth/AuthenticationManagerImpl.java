@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -19,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AuthenticationManagerImpl implements AuthenticationManager {
 
     private final UserRecordRepository repository;
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationManagerImpl.class);
 
     @Inject
     public AuthenticationManagerImpl(UserRecordRepository repository) {
@@ -39,6 +43,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if(existingRecordByEmail.isPresent()) {
             throw new UserEmailAlreadyExistsException(email.getEmailAddress());
         }
+        logger.info("Created new user account for {} with email address {}", userId, email.getEmailAddress());
         UserRecord newUserRecord = new UserRecord(
                 userId,
                 userId.getUserName(),
