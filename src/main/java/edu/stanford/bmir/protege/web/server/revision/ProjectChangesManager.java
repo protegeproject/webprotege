@@ -104,7 +104,13 @@ public class ProjectChangesManager {
         sortDiff(axiomDiffElements);
         List<DiffElement<String, SafeHtml>> renderedDiffElements = renderDiffElements(axiomDiffElements);
         int pageElements = renderedDiffElements.size();
-        int pageCount = totalChanges / pageElements + (totalChanges % pageElements);
+        int pageCount;
+        if(pageElements == 0) {
+            pageCount = 1;
+        }
+        else {
+            pageCount = totalChanges / pageElements + (totalChanges % pageElements);
+        }
         Page<DiffElement<String, SafeHtml>> page = new Page<>(
                 1,
                 pageCount,
