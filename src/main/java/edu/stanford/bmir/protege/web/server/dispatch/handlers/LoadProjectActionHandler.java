@@ -67,7 +67,9 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
     @Override
     public LoadProjectResult execute(final LoadProjectAction action, ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        logger.info("Loading project %s", action.getProjectId());
+        logger.info("Loading project %s due to request by {}",
+                    action.getProjectId(),
+                    executionContext.getUserId());
         projectManager.getProject(action.getProjectId(), executionContext.getUserId());
         stopwatch.stop();
         logger.info("Loaded project %s in %s ms", action.getProjectId(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
