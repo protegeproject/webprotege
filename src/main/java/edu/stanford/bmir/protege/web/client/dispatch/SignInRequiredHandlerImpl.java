@@ -23,7 +23,7 @@ public class SignInRequiredHandlerImpl implements SignInRequiredHandler {
 
     @Override
     public void handleSignInRequired() {
-        MessageBox.showAlert("You are not signed in", "WebProtege requires you to be signed in.  Please sign in to continue.");
+        MessageBox.showAlert("You are not signed in", "WebProtégé requires you to be signed in.  Please sign in to continue.");
         Place currentPlace = placeController.getWhere();
         LoginPlace loginPlace;
         if(!(currentPlace instanceof LoginPlace)) {

@@ -24,14 +24,11 @@ public class AboutBox {
         popupPanel.setWidget(new AboutBoxContent());
         popupPanel.show();
         popupPanel.addStyleName("glass-popup-shadow");
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                int left = (Window.getClientWidth() - popupPanel.getOffsetWidth()) / 2;
-                int top = (Window.getClientHeight() - popupPanel.getOffsetHeight()) / 2;
-                popupPanel.setPopupPosition(left, top);
-                popupPanel.setVisible(true);
-            }
+        Scheduler.get().scheduleDeferred(() -> {
+            int left = (Window.getClientWidth() - popupPanel.getOffsetWidth()) / 2;
+            int top = (Window.getClientHeight() - popupPanel.getOffsetHeight()) / 2;
+            popupPanel.setPopupPosition(left, top);
+            popupPanel.setVisible(true);
         });
     }
 }
