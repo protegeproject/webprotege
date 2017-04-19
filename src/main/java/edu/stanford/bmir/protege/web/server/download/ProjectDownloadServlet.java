@@ -53,7 +53,12 @@ public class ProjectDownloadServlet extends HttpServlet {
         UserId userId = webProtegeSession.getUserInSession();
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if(!downloadParameters.isProjectDownload()) {
-            logger.info("Bad project download request: {} (Request URI: {})", downloadParameters, req.getRequestURI());
+            logger.info("Bad project download request.  Request URI: {}  Query String: {}  UserId: {}  RemoteHost: {}  X-Forwarded-For: {}",
+                        req.getRequestURI(),
+                        req.getQueryString(),
+                        webProtegeSession.getUserInSession(),
+                        req.getRemoteHost(),
+                        req.getHeader("X-Forwarded-For"));
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
