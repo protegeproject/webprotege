@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.download;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.logging.RequestFormatter;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static edu.stanford.bmir.protege.web.server.logging.RequestFormatter.formatAddr;
 
 /**
  * Author: Matthew Horridge<br>
@@ -53,19 +56,17 @@ public class ProjectDownloadServlet extends HttpServlet {
         UserId userId = webProtegeSession.getUserInSession();
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if(!downloadParameters.isProjectDownload()) {
-            logger.info("Bad project download request.  Request URI: {}  Query String: {}  UserId: {}  RemoteHost: {}  X-Forwarded-For: {}",
-                        req.getRequestURI(),
-                        req.getQueryString(),
+            logger.info("Bad project download request from {} at {}.  Request URI: {}  Query String: {}",
                         webProtegeSession.getUserInSession(),
-                        req.getRemoteHost(),
-                        req.getHeader("X-Forwarded-For"));
+                        formatAddr(req),
+                        req.getRequestURI(),
+                        req.getQueryString());
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        logger.info("Received download request from {} at {} (Host: {}) for project {}",
+        logger.info("Received download request from {} at {} for project {}",
                     userId,
-                    req.getRemoteAddr(),
-                    req.getRemoteHost(),
+                    formatAddr(req),
                     downloadParameters.getProjectId());
 
         if (!accessManager.hasPermission(Subject.forUser(userId),
