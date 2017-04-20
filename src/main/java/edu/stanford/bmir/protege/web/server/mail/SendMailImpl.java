@@ -92,7 +92,11 @@ public class SendMailImpl implements SendMail {
                          @Nonnull String subject,
                          @Nonnull String text,
                          @Nonnull MessageHeader... messageHeaders) {
-
+        sendMail(messageIdGenerator.generateUniqueMessageId(),
+                 recipientEmailAddresses,
+                 subject,
+                 text,
+                 messageHeaders);
     }
 
     /**
