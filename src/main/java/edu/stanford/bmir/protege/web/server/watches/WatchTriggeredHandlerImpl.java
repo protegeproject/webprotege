@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
+import edu.stanford.bmir.protege.web.server.mail.MessageHeader;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
@@ -95,11 +96,14 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                                       .build();
 
         String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-        String emailSubject = String.format("[%s] Changes made in %s",
+        String emailSubject = String.format("[%s] Changes made in %s by %s",
+                                            displayName,
                                             displayName,
                                             userDetailsManager.getUserDetails(byUser).map(d -> "by " + d.getDisplayName()).orElse(""));
         String emailBody = templateEngine.populateTemplate(watchTemplate.getContents(), templateObjects);
         logger.info("{} Watch triggered by {} on {}.  Notifying {}", projectId, byUser, modifiedEntity, usersToNotify);
-        sendMail.sendMail(emailAddresses, emailSubject, emailBody);
+        sendMail.sendMail(emailAddresses, emailSubject, emailBody,
+                          MessageHeader.inReplyTo(projectId.getId()),
+                          MessageHeader.references(projectId.getId()));
     }
 }
