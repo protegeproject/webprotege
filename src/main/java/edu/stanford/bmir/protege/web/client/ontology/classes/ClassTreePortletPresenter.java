@@ -697,7 +697,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     public void setTreeNodeIcon(final TreeNode node, EntityData entityData) {
         if (entityData instanceof SubclassEntityData && ((SubclassEntityData) entityData).isDeprecated()) {
-            node.setIconCls(BUNDLE.style().deprecatedClassIcon());
+            node.setIconCls(BUNDLE.svgDeprecatedClassIcon().getSafeUri().asString());
         }
         else {
             node.setIcon(BUNDLE.svgClassIcon().getSafeUri().asString());
