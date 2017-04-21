@@ -124,9 +124,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("warning.png")
     ImageResource warningIcon();
 
-    @Source("eye.png")
-    ImageResource eyeIcon();
-
     @Source("eye.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIcon();
@@ -134,9 +131,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("eye-down.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIconDown();
-
-    @Source("eye-down.png")
-    ImageResource eyeDownIcon();
 
     @Source("note.png")
     ImageResource noteIcon();
