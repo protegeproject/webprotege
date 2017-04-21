@@ -41,12 +41,12 @@ public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandl
         EventTag startTag = eventManager.getCurrentTag();
         WatchManager watchManager = project.getWatchManager();
         UserId userId = action.getUserId();
-        Set<Watch<?>> watches = watchManager.getDirectWatches(action.getEntity(), userId);
-        for(Watch<?> watch : watches) {
-            watchManager.removeWatch(watch, userId);
+        Set<Watch> watches = watchManager.getDirectWatches(action.getEntity(), userId);
+        for(Watch watch : watches) {
+            watchManager.removeWatch(watch);
         }
-        for(Watch<?> watch : action.getWatches()) {
-            watchManager.addWatch(watch, userId);
+        for(Watch watch : action.getWatches()) {
+            watchManager.addWatch(watch);
         }
         return new SetEntityWatchesResult(eventManager.getEventsFromTag(startTag));
     }

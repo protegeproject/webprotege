@@ -15,10 +15,7 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
     public static final transient Event.Type<WatchAddedHandler> TYPE = new Event.Type<>();
 
-    private Watch<?> watch;
-
-    private UserId userId;
-
+    private Watch watch;
 
     /**
      * For serialization only.
@@ -30,20 +27,18 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
      * Creates a {@link WatchAddedEvent}.
      * @param source The id of the project that the watch was added to.  Not {@code null}.
      * @param watch The watch that was added.  Not {@code null}.
-     * @param userId The id of the user that the watch was added for
      */
-    public WatchAddedEvent(ProjectId source, Watch<?> watch, UserId userId) {
+    public WatchAddedEvent(ProjectId source, Watch watch) {
         super(source);
         this.watch = watch;
-        this.userId = userId;
     }
 
-    public Watch<?> getWatch() {
+    public Watch getWatch() {
         return watch;
     }
 
     public UserId getUserId() {
-        return userId;
+        return watch.getUserId();
     }
 
 

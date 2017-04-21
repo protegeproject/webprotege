@@ -5,11 +5,11 @@ package edu.stanford.bmir.protege.web.client.watches;
  * Stanford Center for Biomedical Informatics Research
  * 28/02/16
  */
-public enum WatchType {
+public enum WatchTypeSelection {
 
-    NONE,
+    NONE_SELECTED,
 
-    ENTITY,
+    ENTITY_SELECTED,
 
-    BRANCH
+    BRANCH_SELECTED
 }

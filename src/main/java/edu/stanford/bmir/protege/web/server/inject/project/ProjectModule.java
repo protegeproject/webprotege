@@ -116,12 +116,6 @@ public class ProjectModule {
     }
 
     @Provides
-    @WatchFile
-    public File provideWatchFile(WatchFileProvider provider) {
-        return provider.get();
-    }
-
-    @Provides
     @RootOntology
     @ProjectSingleton
     public OWLOntology provideRootOntology(RootOntologyProvider provider) {
@@ -208,17 +202,31 @@ public class ProjectModule {
     }
 
     @Provides
+    public HasGetAncestors<OWLClass> providesOWLClassAncestors(OWLObjectHierarchyProvider<OWLClass> hierarchyProvider) {
+        return hierarchyProvider;
+    }
+    
+    @Provides
+    public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(OWLObjectHierarchyProvider<OWLObjectProperty> hierarchyProvider) {
+        return hierarchyProvider;
+    }
+    
+    @Provides
+    public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(OWLObjectHierarchyProvider<OWLDataProperty> hierarchyProvider) {
+        return hierarchyProvider;
+    }
+
+    @Provides
+    public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(OWLObjectHierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
+        return hierarchyProvider;
+    }
+    
+    @Provides
     public WatchManager provideWatchManager(WatchManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    public WatchEventManager provideWatchEventManager(WatchEventManagerImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    public WatchStore provideWatchStore(WatchStoreImpl impl) {
+        // Attach it so that it listens for entity frame changed events
+        // There's no need to detatch it because it is project scoped
+        // and has the same lifetime as a project event manager.
+        impl.attach();
         return impl;
     }
 

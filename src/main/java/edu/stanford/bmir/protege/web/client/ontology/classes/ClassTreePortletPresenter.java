@@ -327,15 +327,13 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         if (!event.getUserId().equals(loggedInUserProvider.getCurrentUserId())) {
             return;
         }
-        Watch<?> watch = event.getWatch();
-        if (watch instanceof EntityBasedWatch) {
-            TreeNode tn = findTreeNode(((EntityBasedWatch) watch).getEntity().getIRI().toString());
+        Watch watch = event.getWatch();
+            TreeNode tn = findTreeNode(watch.getEntity().getIRI().toString());
             if (tn != null) {
                 SubclassEntityData data = (SubclassEntityData) tn.getUserObject();
                 data.addWatch(watch);
                 updateTreeNodeRendering(tn);
             }
-        }
     }
 
     private void updateTreeNodeRendering(TreeNode tn) {
@@ -347,16 +345,14 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         if (!event.getUserId().equals(loggedInUserProvider.getCurrentUserId())) {
             return;
         }
-        Watch<?> watch = event.getWatch();
-        if (watch instanceof EntityBasedWatch) {
-            OWLEntity entity = ((EntityBasedWatch) watch).getEntity();
+        Watch watch = event.getWatch();
+            OWLEntity entity = watch.getEntity();
             TreeNode tn = findTreeNode(entity.getIRI().toString());
             if (tn != null) {
                 SubclassEntityData data = (SubclassEntityData) tn.getUserObject();
                 data.clearWatches();
                 updateTreeNodeRendering(tn);
             }
-        }
     }
 
     private boolean inRemove = false;
@@ -991,11 +987,11 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     protected String createNodeWatchLabel(EntityData cls) {
-        Set<Watch<?>> w = cls.getWatches();
+        Set<Watch> w = cls.getWatches();
         if (w.isEmpty()) {
             return "";
         }
-        if (w.iterator().next() instanceof EntityFrameWatch) {
+        if (w.iterator().next().getType() == WatchType.ENTITY) {
             return "<img src=\"" + BUNDLE.eyeIcon()
                                          .getSafeUri()
                                          .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";

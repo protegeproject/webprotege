@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.watches;
 
-import com.google.common.base.Optional;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKDialogController;
@@ -14,7 +12,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 28/02/16
  */
-public class WatchTypeDialogController extends WebProtegeOKDialogController<WatchType> {
+public class WatchTypeDialogController extends WebProtegeOKDialogController<WatchTypeSelection> {
 
     private final WatchTypeSelectorView view;
 
@@ -36,11 +34,11 @@ public class WatchTypeDialogController extends WebProtegeOKDialogController<Watc
     }
 
     @Override
-    public WatchType getData() {
+    public WatchTypeSelection getData() {
         return view.getSelectedType();
     }
 
-    public void setSelectedType(WatchType watchType) {
-        view.setSelectedType(watchType);
+    public void setSelectedType(WatchTypeSelection watchTypeSelection) {
+        view.setSelectedType(watchTypeSelection);
     }
 }

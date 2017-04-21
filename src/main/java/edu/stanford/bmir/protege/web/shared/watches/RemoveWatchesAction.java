@@ -18,13 +18,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RemoveWatchesAction extends AbstractHasProjectAction<RemoveWatchesResult> implements HasUserId {
 
-    private Set<Watch<?>> watches;
+    private Set<Watch> watches;
 
     private UserId userId;
 
-    public RemoveWatchesAction(Set<Watch<?>> watches, ProjectId projectId, UserId userId) {
+    public RemoveWatchesAction(Set<Watch> watches, ProjectId projectId, UserId userId) {
         super(projectId);
-        this.watches = new HashSet<Watch<?>>(checkNotNull(watches));
+        this.watches = new HashSet<Watch>(checkNotNull(watches));
         this.userId = checkNotNull(userId);
     }
 
@@ -34,8 +34,8 @@ public class RemoveWatchesAction extends AbstractHasProjectAction<RemoveWatchesR
     private RemoveWatchesAction() {
     }
 
-    public Set<Watch<?>> getWatches() {
-        return new HashSet<Watch<?>>(watches);
+    public Set<Watch> getWatches() {
+        return new HashSet<Watch>(watches);
     }
 
     @Override

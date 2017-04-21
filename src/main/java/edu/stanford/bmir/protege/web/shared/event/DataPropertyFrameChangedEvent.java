@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
 /**
@@ -14,8 +15,8 @@ public class DataPropertyFrameChangedEvent extends EntityFrameChangedEvent<OWLDa
 
     public transient static final Event.Type<DataPropertyFrameChangedEventHandler> TYPE = new Event.Type<DataPropertyFrameChangedEventHandler>();
 
-    public DataPropertyFrameChangedEvent(OWLDataProperty entity, ProjectId projectId) {
-        super(entity, projectId);
+    public DataPropertyFrameChangedEvent(OWLDataProperty entity, ProjectId projectId, UserId userId) {
+        super(entity, projectId, userId);
     }
 
     private DataPropertyFrameChangedEvent() {

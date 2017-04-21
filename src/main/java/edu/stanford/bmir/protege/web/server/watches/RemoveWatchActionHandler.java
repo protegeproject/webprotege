@@ -30,8 +30,8 @@ public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<Re
     @Override
     protected RemoveWatchesResult execute(RemoveWatchesAction action, Project project, ExecutionContext executionContext) {
         EventTag tag = project.getEventManager().getCurrentTag();
-        for(Watch<?> watch : action.getWatches()) {
-            project.getWatchManager().removeWatch(watch, action.getUserId());
+        for(Watch watch : action.getWatches()) {
+            project.getWatchManager().removeWatch(watch);
         }
         return new RemoveWatchesResult(project.getEventManager().getEventsFromTag(tag));
     }

@@ -9,8 +9,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface WatchTypeSelectorView extends IsWidget {
 
-    WatchType getSelectedType();
+    WatchTypeSelection getSelectedType();
 
-    void setSelectedType(WatchType watchType);
+    void setSelectedType(WatchTypeSelection watchTypeSelection);
 
 }

@@ -46,13 +46,13 @@ public class WatchPresenter {
         dispatchServiceManager.execute(new GetWatchesAction(projectId, userId, forEntity), new DispatchServiceCallback<GetWatchesResult>() {
             @Override
             public void handleSuccess(GetWatchesResult result) {
-                Set<EntityBasedWatch> watches = result.getWatches();
+                Set<Watch> watches = result.getWatches();
                 updateDialog(watches);
-                WebProtegeDialog<WatchType> dlg = new WebProtegeDialog<>(controller);
+                WebProtegeDialog<WatchTypeSelection> dlg = new WebProtegeDialog<>(controller);
                 dlg.show();
-                controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<WatchType>() {
+                controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<WatchTypeSelection>() {
                     @Override
-                    public void handleHide(WatchType data, WebProtegeDialogCloser closer) {
+                    public void handleHide(WatchTypeSelection data, WebProtegeDialogCloser closer) {
                         closer.hide();
                         handleWatchTypeForEntity(data, forEntity);
                     }
@@ -62,25 +62,25 @@ public class WatchPresenter {
 
     }
 
-    private void updateDialog(Set<EntityBasedWatch> watches) {
+    private void updateDialog(Set<Watch> watches) {
         GWT.log("[WatchPresenter] Updating dialog for watches: " + watches);
-        controller.setSelectedType(WatchType.NONE);
-        for(Watch<?> watch : watches) {
-            if(watch instanceof EntityFrameWatch) {
-                controller.setSelectedType(WatchType.ENTITY);
+        controller.setSelectedType(WatchTypeSelection.NONE_SELECTED);
+        for(Watch watch : watches) {
+            if(watch.getType() == WatchType.ENTITY) {
+                controller.setSelectedType(WatchTypeSelection.ENTITY_SELECTED);
                 break;
             }
-            else if(watch instanceof HierarchyBranchWatch) {
-                controller.setSelectedType(WatchType.BRANCH);
+            else if(watch.getType() == WatchType.BRANCH) {
+                controller.setSelectedType(WatchTypeSelection.BRANCH_SELECTED);
                 break;
             }
         }
     }
 
-    private void handleWatchTypeForEntity(final WatchType type, final OWLEntity entity) {
+    private void handleWatchTypeForEntity(final WatchTypeSelection type, final OWLEntity entity) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
-        Optional<EntityBasedWatch> watch = getWatchFromType(type, entity);
-        ImmutableSet<EntityBasedWatch> watches = ImmutableSet.copyOf(watch.asSet());
+        Optional<Watch> watch = getWatchFromType(type, entity);
+        ImmutableSet<Watch> watches = ImmutableSet.copyOf(watch.asSet());
             dispatchServiceManager.execute(new SetEntityWatchesAction(projectId, userId, entity, watches), new DispatchServiceCallback<SetEntityWatchesResult>() {
                 @Override
                 public void handleSuccess(SetEntityWatchesResult setEntityWatchesResult) {
@@ -91,14 +91,18 @@ public class WatchPresenter {
 
     }
 
-    private Optional<EntityBasedWatch> getWatchFromType(final WatchType type, final OWLEntity entity) {
+    private Optional<Watch> getWatchFromType(final WatchTypeSelection type, final OWLEntity entity) {
         switch (type) {
-            case NONE:
+            case NONE_SELECTED:
                 return Optional.absent();
-            case ENTITY:
-                return Optional.of(new EntityFrameWatch(entity));
-            case BRANCH:
-                return Optional.of(new HierarchyBranchWatch(entity));
+            case ENTITY_SELECTED:
+                return Optional.of(new Watch(loggedInUserProvider.getCurrentUserId(),
+                                             entity,
+                                             WatchType.ENTITY));
+            case BRANCH_SELECTED:
+                return Optional.of(new Watch(loggedInUserProvider.getCurrentUserId(),
+                                             entity,
+                                             WatchType.BRANCH));
             default:
                 return Optional.absent();
         }
