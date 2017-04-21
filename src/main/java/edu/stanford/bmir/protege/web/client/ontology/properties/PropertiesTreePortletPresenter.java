@@ -563,7 +563,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             node.setIcon(BUNDLE.svgAnnotationPropertyIcon().getSafeUri().asString());
         }
         else {
-            node.setIconCls(BUNDLE.style().objectPropertyIcon());
+            node.setIconCls(BUNDLE.svgObjectPropertyIcon().getSafeUri().asString());
         }
     }
 

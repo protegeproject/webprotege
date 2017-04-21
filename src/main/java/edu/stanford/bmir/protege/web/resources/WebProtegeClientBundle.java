@@ -39,11 +39,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgClassIcon();
 
-    @Source("class.png")
-    ImageResource classIcon();
-
-    @Source("property.png")
-    ImageResource propertyIcon();
+    @Source("deprecated-class.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDeprecatedClassIcon();
 
     @Source("property.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -53,50 +51,25 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgDataPropertyIcon();
 
-    @Source("property.png")
-    ImageResource objectPropertyIcon();
-
-
     @Source("object-property.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgObjectPropertyIcon();
-
-
-    @Source("property.png")
-    ImageResource dataPropertyIcon();
-
-    @Source("annotation-property.png")
-    ImageResource annotationPropertyIcon();
 
     @Source("annotation-property.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgAnnotationPropertyIcon();
 
-    @Source("datatype.png")
-    ImageResource datatypeIcon();
-
     @Source("datatype.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgDatatypeIcon();
-
-    @Source("individual.png")
-    ImageResource individualIcon();
 
     @Source("individual.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgIndividualIcon();
 
-    @Source("literal.png")
-    ImageResource literalIcon();
-
-
     @Source("literal.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgLiteralIcon();
-
-
-    @Source("link.png")
-    ImageResource linkIcon();
 
     @Source("link.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -105,12 +78,13 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("iri.png")
     ImageResource iriIcon();
 
-    @Source("number.png")
-    ImageResource numberIcon();
-
     @Source("number.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgNumberIcon();
+
+    @Source("iri.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgIriIcon();
 
     @Source("date-time.png")
     ImageResource dateTimeIcon();
@@ -131,9 +105,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("eye-down.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIconDown();
-
-    @Source("note.png")
-    ImageResource noteIcon();
 
     @Source("user.png")
     ImageResource userIcon();
@@ -212,61 +183,27 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String warningLabel();
 
-        String classIcon();
-
-        String deprecatedClassIcon();
-
         String classIconInset();
-
-        String objectPropertyIcon();
-
-        String deprecatedObjectPropertyIcon();
 
         String objectPropertyIconInset();
 
-        String dataPropertyIcon();
-
         String dataPropertyIconInset();
-
-        String deprecatedDataPropertyIcon();
-
-        String annotationPropertyIcon();
-
-        String deprecatedAnnotationPropertyIcon();
 
         String annotationPropertyIconInset();
 
-        String datatypeIcon();
-
-        String deprecatedDatatypeIcon();
-
         String datatypeIconInset();
-
-        String literalIcon();
 
         String literalIconInset();
 
-        String individualIcon();
-
-        String deprecatedIndividualIcon();
+        String dateTimeIconInset();
 
         String individualIconInset();
 
-        String linkIcon();
-
         String linkIconInset();
-
-        String iriIcon();
 
         String iriIconInset();
 
-        String numberIcon();
-
         String numberIconInset();
-
-        String dateTimeIcon();
-
-        String dateTimeIconInset();
 
         String portletToolbar();
 
