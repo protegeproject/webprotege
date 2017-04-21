@@ -18,7 +18,7 @@ public class EntityData implements Serializable {
 //    private WatchType watchType;
     private Map<String, String> properties;
 
-    private Set<Watch<?>> watches;
+    private Set<Watch> watches;
 
     /**
      * TODO: Should be for serialization purposes only.
@@ -145,12 +145,12 @@ public class EntityData implements Serializable {
 //    }
 
 
-    public Set<Watch<?>> getWatches() {
+    public Set<Watch> getWatches() {
         if(watches == null) {
             return Collections.emptySet();
         }
         else {
-            return new HashSet<Watch<?>>(watches);
+            return new HashSet<>(watches);
         }
     }
 
@@ -158,7 +158,7 @@ public class EntityData implements Serializable {
         watches = null;
     }
 
-    public void addWatch(Watch<?> watch) {
+    public void addWatch(Watch watch) {
         if(watches == null) {
             setWatches(Collections.singleton(watch));
         }
@@ -168,8 +168,8 @@ public class EntityData implements Serializable {
     }
 
 
-    public void setWatches(Set<Watch<?>> watches) {
-        this.watches = new HashSet<Watch<?>>(watches);
+    public void setWatches(Set<Watch> watches) {
+        this.watches = new HashSet<Watch>(watches);
     }
 
     public Map<String, String> getProperties() {

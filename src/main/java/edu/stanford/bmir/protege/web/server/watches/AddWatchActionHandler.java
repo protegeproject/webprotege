@@ -54,7 +54,7 @@ public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWa
         final EventManager<ProjectEvent<?>> eventManager = project.getEventManager();
         EventTag startTag = eventManager.getCurrentTag();
         WatchManager watchManager = project.getWatchManager();
-        watchManager.addWatch(action.getWatch(), action.getUserId());
+        watchManager.addWatch(action.getWatch());
         return new AddWatchResult(eventManager.getEventsFromTag(startTag));
     }
 }

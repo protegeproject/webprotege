@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Set;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
+ *
+ * Manages the watches for a project and the firing of events related to the watches.
  */
 @ProjectSingleton
 public interface WatchManager {
@@ -22,33 +25,30 @@ public interface WatchManager {
      * @return The set of {@link Watch} objects for the specified {@link UserId}.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    Set<Watch<?>> getWatches(UserId userId);
+    Set<Watch> getWatches(@Nonnull UserId userId);
 
     /**
      * Adds the specified watch for the specified user.
      *
-     * @param watch The {@link edu.stanford.bmir.protege.web.shared.watches.Watch} to be added for the specified user. Not {@code null}.
-     * @param userId The {@link edu.stanford.bmir.protege.web.shared.user.UserId} which specifies the user to add the watch for. Not {@code null}.
+     * @param watch The {@link Watch} to be added for the specified user. Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    void addWatch(Watch<?> watch, UserId userId);
+    void addWatch(@Nonnull Watch watch);
 
     /**
      * Removes the specified watch for the specified user.
      *
-     * @param watch The {@link edu.stanford.bmir.protege.web.shared.watches.Watch} to be removed for the specified user.  Not {@code null}.
-     * @param userId The {@link edu.stanford.bmir.protege.web.shared.user.UserId} that specifies the user.  Not {@code null}.
+     * @param watch The {@link Watch} to be removed for the specified user.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    void removeWatch(Watch<?> watch, UserId userId);
+    void removeWatch(@Nonnull Watch watch);
 
-
-    Set<Watch<?>> getDirectWatches(OWLEntity watchedObject, UserId userId);
-
-    void handleEntityFrameChanged(OWLEntity entity);
-
-
-
-
-
+    /**
+     * Gets the watches that are attached to the specified entity by the specified user.
+     * @param watchedObject The entity to which the watches are attched.
+     * @param userId The user who the watches belong to.
+     * @return The watches.
+     */
+    Set<Watch> getDirectWatches(@Nonnull OWLEntity watchedObject,
+                                @Nonnull UserId userId);
 }

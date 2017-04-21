@@ -12,14 +12,20 @@ import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -27,6 +33,8 @@ import static java.util.Collections.singletonList;
  * 04/03/15
  */
 public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
+
+    private final static Logger logger = LoggerFactory.getLogger(WatchTriggeredHandler.class);
 
     private final ProjectId projectId;
 
@@ -68,32 +76,30 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
     }
 
     @Override
-    public void handleWatchTriggered(final Watch<?> watch, final UserId userId, final OWLEntity entity) {
-        Optional<UserDetails> userDetailsOptional = userDetailsManager.getUserDetails(userId);
-        userDetailsOptional.ifPresent(userDetails -> {
-            userDetails.getEmailAddress().ifPresent(emailAddress -> {
-                Map<String, Object> templateObjects =
-                        TemplateObjectsBuilder.builder()
-                                              .withUserId(userId)
-                                              .withEntity(renderingManager.getRendering(entity))
-                                              .withProjectDetails(projectDetailsManager.getProjectDetails(projectId))
-                                              .withApplicationName(applicationNameSupplier.get())
-                                              .withProjectUrl(placeUrl.getProjectUrl(projectId))
-                                              .build();
+    public void handleWatchTriggered(@Nonnull Set<UserId> usersToNotify,
+                                     @Nonnull OWLEntity modifiedEntity,
+                                     @Nonnull UserId byUser) {
+        List<String> emailAddresses = usersToNotify.stream()
+                                                   .map(userDetailsManager::getEmail)
+                                                   .filter(Optional::isPresent)
+                                                   .map(Optional::get)
+                                                   .distinct()
+                                                   .collect(toList());
+        Map<String, Object> templateObjects =
+                TemplateObjectsBuilder.builder()
+                                      .withUserId(byUser)
+                                      .withEntity(renderingManager.getRendering(modifiedEntity))
+                                      .withProjectDetails(projectDetailsManager.getProjectDetails(projectId))
+                                      .withApplicationName(applicationNameSupplier.get())
+                                      .withProjectUrl(placeUrl.getProjectUrl(projectId))
+                                      .build();
 
-                String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-                String emailSubject = String.format("[%s] Changes made in by %s" ,
-                                                    displayName,
-                                                    userDetails.getDisplayName());
-                String emailBody = templateEngine.populateTemplate(watchTemplate.getContents(), templateObjects);
-                Thread t = new Thread(() -> {
-                    sendMail.sendMail(
-                            singletonList(emailAddress),
-                            emailSubject, emailBody);
-                });
-                t.setPriority(Thread.MIN_PRIORITY);
-                t.start();
-            });
-        });
+        String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
+        String emailSubject = String.format("[%s] Changes made in %s",
+                                            displayName,
+                                            userDetailsManager.getUserDetails(byUser).map(d -> "by " + d.getDisplayName()).orElse(""));
+        String emailBody = templateEngine.populateTemplate(watchTemplate.getContents(), templateObjects);
+        logger.info("{} Watch triggered by {} on {}.  Notifying {}", projectId, byUser, modifiedEntity, usersToNotify);
+        sendMail.sendMail(emailAddresses, emailSubject, emailBody);
     }
 }

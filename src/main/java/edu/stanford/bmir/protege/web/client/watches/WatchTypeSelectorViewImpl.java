@@ -37,33 +37,33 @@ public class WatchTypeSelectorViewImpl extends Composite implements WatchTypeSel
     protected RadioButton branch;
 
     @Override
-    public WatchType getSelectedType() {
+    public WatchTypeSelection getSelectedType() {
         if(none.getValue()) {
-            return WatchType.NONE;
+            return WatchTypeSelection.NONE_SELECTED;
         }
         if(entity.getValue()) {
-            return WatchType.ENTITY;
+            return WatchTypeSelection.ENTITY_SELECTED;
         }
         if(branch.getValue()) {
-            return WatchType.BRANCH;
+            return WatchTypeSelection.BRANCH_SELECTED;
         }
-        return WatchType.NONE;
+        return WatchTypeSelection.NONE_SELECTED;
     }
 
     @Override
-    public void setSelectedType(WatchType watchType) {
-        switch (watchType) {
-            case NONE:
+    public void setSelectedType(WatchTypeSelection watchTypeSelection) {
+        switch (watchTypeSelection) {
+            case NONE_SELECTED:
                 none.setValue(true);
                 entity.setValue(false);
                 branch.setValue(false);
                 break;
-            case ENTITY:
+            case ENTITY_SELECTED:
                 none.setValue(false);
                 entity.setValue(true);
                 branch.setValue(false);
                 break;
-            case BRANCH:
+            case BRANCH_SELECTED:
                 none.setValue(false);
                 entity.setValue(false);
                 branch.setValue(true);

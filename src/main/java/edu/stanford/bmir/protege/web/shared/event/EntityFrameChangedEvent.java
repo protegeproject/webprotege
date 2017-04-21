@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 import com.google.gwt.event.shared.EventHandler;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;
@@ -20,6 +21,8 @@ public abstract class EntityFrameChangedEvent<E extends OWLEntity, H extends Eve
 
     private E entity;
 
+    private UserId userId;
+
     /**
      * For serialization purposes only
      */
@@ -27,9 +30,14 @@ public abstract class EntityFrameChangedEvent<E extends OWLEntity, H extends Eve
 
     }
 
-    public EntityFrameChangedEvent(E entity, ProjectId projectId) {
+    public EntityFrameChangedEvent(E entity, ProjectId projectId, UserId userId) {
         super(projectId);
         this.entity = entity;
+        this.userId = userId;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public E getEntity() {

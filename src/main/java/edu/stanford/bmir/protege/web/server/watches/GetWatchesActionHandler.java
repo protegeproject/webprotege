@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.watches.EntityBasedWatch;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -47,10 +46,7 @@ public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<Get
     @Override
     protected GetWatchesResult execute(GetWatchesAction action, Project project, ExecutionContext executionContext) {
         WatchManager watchManager = project.getWatchManager();
-        Set<EntityBasedWatch> watches = new HashSet<>();
-        for(Watch<?> watch : watchManager.getDirectWatches(action.getEntity(), action.getUserId())) {
-            watches.add((EntityBasedWatch) watch);
-        }
+        Set<Watch> watches = watchManager.getDirectWatches(action.getEntity(), action.getUserId());
         return new GetWatchesResult(watches);
     }
 }

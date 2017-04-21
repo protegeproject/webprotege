@@ -16,14 +16,11 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
 
     public transient static final Event.Type<WatchRemovedHandler> TYPE = new Event.Type<WatchRemovedHandler>();
 
-    private Watch<?> watch;
+    private Watch watch;
 
-    private UserId userId;
-
-    public WatchRemovedEvent(ProjectId source, Watch<?> watch, UserId userId) {
+    public WatchRemovedEvent(ProjectId source, Watch watch) {
         super(source);
         this.watch = watch;
-        this.userId = userId;
     }
 
     private WatchRemovedEvent() {
@@ -39,17 +36,17 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
         handler.handleWatchRemoved(this);
     }
 
-    public Watch<?> getWatch() {
+    public Watch getWatch() {
         return watch;
     }
 
     public UserId getUserId() {
-        return userId;
+        return watch.getUserId();
     }
 
     @Override
     public int hashCode() {
-        return "WatchRemovedEvent".hashCode() + getProjectId().hashCode() + watch.hashCode() + userId.hashCode();
+        return "WatchRemovedEvent".hashCode() + getProjectId().hashCode() + watch.hashCode();
     }
 
     @Override
@@ -61,6 +58,6 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
             return false;
         }
         WatchRemovedEvent other = (WatchRemovedEvent) obj;
-        return this.getProjectId().equals(other.getProjectId()) && this.getWatch().equals(other.getWatch()) && this.getUserId().equals(other.getUserId());
+        return this.getProjectId().equals(other.getProjectId()) && this.getWatch().equals(other.getWatch());
     }
 }

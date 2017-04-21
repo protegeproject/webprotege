@@ -2,7 +2,8 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
+import edu.stanford.bmir.protege.web.shared.watches.WatchType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,9 +18,9 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class WatchRecord_TestCase {
+public class Watch_TestCase {
 
-    private WatchRecord watchRecord;
+    private Watch watch;
 
     @Mock
     private UserId userId;
@@ -32,88 +33,88 @@ public class WatchRecord_TestCase {
     @Before
     public void setUp()
             throws Exception {
-        watchRecord = new WatchRecord(userId, entity, type);
+        watch = new Watch(userId, entity, type);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_userId_IsNull() {
-        new WatchRecord(null, entity, type);
+        new Watch(null, entity, type);
     }
 
     @Test
     public void shouldReturnSupplied_userId() {
-        assertThat(watchRecord.getUserId(), is(this.userId));
+        assertThat(watch.getUserId(), is(this.userId));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        new WatchRecord(userId, null, type);
+        new Watch(userId, null, type);
     }
 
     @Test
     public void shouldReturnSupplied_entity() {
-        assertThat(watchRecord.getEntity(), is(this.entity));
+        assertThat(watch.getEntity(), is(this.entity));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_type_IsNull() {
-        new WatchRecord(userId, entity, null);
+        new Watch(userId, entity, null);
     }
 
     @Test
     public void shouldReturnSupplied_type() {
-        assertThat(watchRecord.getType(), is(this.type));
+        assertThat(watch.getType(), is(this.type));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(watchRecord, is(watchRecord));
+        assertThat(watch, is(watch));
     }
 
     @Test
     @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(watchRecord.equals(null), is(false));
+        assertThat(watch.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(watchRecord, is(new WatchRecord(userId, entity, type)));
+        assertThat(watch, is(new Watch(userId, entity, type)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        assertThat(watchRecord,
-                   is(not(new WatchRecord(mock(UserId.class), entity, type))));
+        assertThat(watch,
+                   is(not(new Watch(mock(UserId.class), entity, type))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(watchRecord,
-                   is(not(new WatchRecord(userId,
-                                          mock(OWLEntity.class),
-                                          type))));
+        assertThat(watch,
+                   is(not(new Watch(userId,
+                                    mock(OWLEntity.class),
+                                    type))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_type() {
-        assertThat(watchRecord,
-                   is(not(new WatchRecord(userId,
-                                          entity,
-                                          WatchType.BRANCH))));
+        assertThat(watch,
+                   is(not(new Watch(userId,
+                                    entity,
+                                    WatchType.BRANCH))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(watchRecord.hashCode(), is(new WatchRecord(userId, entity, type).hashCode()));
+        assertThat(watch.hashCode(), is(new Watch(userId, entity, type).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(watchRecord.toString(), startsWith("WatchRecord"));
+        assertThat(watch.toString(), startsWith("Watch"));
     }
 
 }

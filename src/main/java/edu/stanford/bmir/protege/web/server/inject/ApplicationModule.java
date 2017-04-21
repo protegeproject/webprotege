@@ -31,6 +31,8 @@ import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.*;
+import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
+import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
@@ -182,6 +184,13 @@ public class ApplicationModule {
     public ProjectEntityCrudKitSettingsRepository provideProjectEntityCrudKitSettingsRepository(
             MongoDatabase database, ProjectEntityCrudKitSettingsConverter converter) {
         return new ProjectEntityCrudKitSettingsRepository(database, converter);
+    }
+
+    @Provides
+    @ApplicationSingleton
+    public WatchRecordRepository provideWatchRecordRepository(WatchRecordRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return impl;
     }
 
     @Provides

@@ -53,7 +53,7 @@ public class GetWatchedEntitiesActionHandler_TestCase {
     private UserId userId;
 
     @Mock
-    private Set<Watch<?>> watches;
+    private Set<Watch> watches;
 
     @Mock
     private ImmutableList<ProjectChange> projectChanges;

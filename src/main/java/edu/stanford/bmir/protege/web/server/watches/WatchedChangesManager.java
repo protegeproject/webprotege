@@ -7,8 +7,6 @@ import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
-import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
-import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -20,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.watches.WatchType.BRANCH;
 
 /**
  * Matthew Horridge
@@ -63,17 +62,17 @@ public class WatchedChangesManager {
         this.entitiesByRevisionCache = checkNotNull(entitiesByRevisionCache);
     }
 
-    public ImmutableList<ProjectChange> getProjectChangesForWatches(Set<Watch<?>> watches) {
+    public ImmutableList<ProjectChange> getProjectChangesForWatches(Set<Watch> watches) {
         Set<OWLEntity> superEntities = new HashSet<>();
         Set<OWLEntity> directWatches = new HashSet<>();
-        for (Watch<?> watch : watches) {
-            if (watch instanceof HierarchyBranchWatch) {
-                OWLEntity entity = ((HierarchyBranchWatch) watch).getEntity();
+        for (Watch watch : watches) {
+            if (watch.getType() == BRANCH) {
+                OWLEntity entity = watch.getEntity();
                 superEntities.add(entity);
                 directWatches.add(entity);
             }
-            if (watch instanceof EntityFrameWatch) {
-                directWatches.add(((EntityFrameWatch) watch).getEntity());
+            else {
+                directWatches.add(watch.getEntity());
             }
         }
         if (superEntities.isEmpty() && directWatches.isEmpty()) {

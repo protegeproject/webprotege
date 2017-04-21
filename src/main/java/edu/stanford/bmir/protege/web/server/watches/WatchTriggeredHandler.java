@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -11,5 +13,13 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public interface WatchTriggeredHandler {
 
-    void handleWatchTriggered(final Watch<?> watch, final UserId userId, final OWLEntity entity);
+    /**
+     * Handles a watch that was trigger on the specified entity
+     * @param usersToNotify The users to notify that the watch has been triggered.
+     * @param modifiedEntity The entity that was "changed" that triggered the watch.
+     * @param byUser The user that made the change that triggered the watch
+     */
+    void handleWatchTriggered(@Nonnull Set<UserId> usersToNotify,
+                              @Nonnull OWLEntity modifiedEntity,
+                              @Nonnull UserId byUser);
 }

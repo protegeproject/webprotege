@@ -39,7 +39,7 @@ public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActi
 
     @Override
     protected GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, Project project, ExecutionContext executionContext) {
-        Set<Watch<?>> watches = project.getWatchManager().getWatches(action.getUserId());
+        Set<Watch> watches = project.getWatchManager().getWatches(action.getUserId());
         ImmutableList<ProjectChange> changes = project.getWatchedChangesManager().getProjectChangesForWatches(watches);
         return new GetWatchedEntityChangesResult(changes);
     }

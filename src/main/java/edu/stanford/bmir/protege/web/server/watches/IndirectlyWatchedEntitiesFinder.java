@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,56 +25,77 @@ public class IndirectlyWatchedEntitiesFinder {
 
     private final OWLOntology rootOntology;
 
-    private final edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider;
+    @Nonnull
+    private final HasGetAncestors<OWLClass> classAncestorsProvider;
 
-    private final OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider;
+    @Nonnull
+    private final HasGetAncestors<OWLObjectProperty> objectAncestorsProvider;
 
-    private final OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider;
+    @Nonnull
+    private final HasGetAncestors<OWLDataProperty> dataPropertyAncestorsProvider;
+
+    @Nonnull
+    private final HasGetAncestors<OWLAnnotationProperty> annotationPropertyAncestorsProvider;
 
 
     @Inject
     public IndirectlyWatchedEntitiesFinder(@RootOntology OWLOntology rootOntology,
-                                           OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider,
-                                           OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider,
-                                           OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider) {
-        this.rootOntology = checkNotNull(rootOntology);
-        this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
-        this.objectPropertyHierarchyProvider = checkNotNull(objectPropertyHierarchyProvider);
-        this.dataPropertyHierarchyProvider = checkNotNull(dataPropertyHierarchyProvider);
+                                           @Nonnull HasGetAncestors<OWLClass> classAncestorsProvider,
+                                           @Nonnull HasGetAncestors<OWLObjectProperty> objectAncestorsProvider,
+                                           @Nonnull HasGetAncestors<OWLDataProperty> dataPropertyAncestorsProvider,
+                                           @Nonnull HasGetAncestors<OWLAnnotationProperty> annotationPropertyAncestorsProvider) {
+
+        this.rootOntology = rootOntology;
+        this.classAncestorsProvider = classAncestorsProvider;
+        this.objectAncestorsProvider = objectAncestorsProvider;
+        this.dataPropertyAncestorsProvider = dataPropertyAncestorsProvider;
+        this.annotationPropertyAncestorsProvider = annotationPropertyAncestorsProvider;
     }
 
     public Set<? extends OWLEntity> getRelatedWatchedEntities(OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorExAdapter<Set<? extends OWLEntity>>(null) {
+        return entity.accept(new OWLEntityVisitorEx<Set<? extends OWLEntity>>() {
+
+            @Nonnull
             @Override
-            protected Set<? extends OWLEntity> getDefaultReturnValue(OWLEntity object) {
-                return Collections.emptySet();
+            public Set<? extends OWLEntity> visit(@Nonnull OWLClass desc) {
+                return classAncestorsProvider.getAncestors(desc);
             }
 
+            @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(OWLClass desc) {
-                return classHierarchyProvider.getAncestors(desc);
+            public Set<? extends OWLEntity> visit(@Nonnull OWLDataProperty property) {
+                return dataPropertyAncestorsProvider.getAncestors(property);
             }
 
+            @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(OWLDataProperty property) {
-                return dataPropertyHierarchyProvider.getAncestors(property);
+            public Set<? extends OWLEntity> visit(@Nonnull OWLObjectProperty property) {
+                return objectAncestorsProvider.getAncestors(property);
             }
 
+            @Nonnull
             @Override
-            public Set<? extends OWLEntity> visit(OWLObjectProperty property) {
-                return objectPropertyHierarchyProvider.getAncestors(property);
-            }
-
-            @Override
-            public Set<? extends OWLEntity> visit(OWLNamedIndividual individual) {
+            public Set<? extends OWLEntity> visit(@Nonnull OWLNamedIndividual individual) {
                 Collection<OWLClassExpression> types = EntitySearcher.getTypes(individual, rootOntology.getImportsClosure());
                 Set<OWLClass> result = new HashSet<>();
                 for(OWLClassExpression ce : types) {
                     if(!ce.isAnonymous()) {
-                        result.addAll(classHierarchyProvider.getAncestors(ce.asOWLClass()));
+                        result.addAll(classAncestorsProvider.getAncestors(ce.asOWLClass()));
                     }
                 }
                 return result;
+            }
+
+            @Nonnull
+            @Override
+            public Set<? extends OWLEntity> visit(@Nonnull OWLDatatype owlDatatype) {
+                return Collections.singleton(owlDatatype);
+            }
+
+            @Nonnull
+            @Override
+            public Set<? extends OWLEntity> visit(@Nonnull OWLAnnotationProperty owlAnnotationProperty) {
+                return annotationPropertyAncestorsProvider.getAncestors(owlAnnotationProperty);
             }
         });
     }

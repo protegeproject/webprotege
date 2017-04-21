@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
+import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -32,7 +34,10 @@ public class HighLevelEventGenerator implements EventTranslator {
     private final HasGetEntitiesWithIRI hasGetEntitiesWithIRI;
 
     @Inject
-    public HighLevelEventGenerator(ProjectId projectId, BrowserTextProvider browserTextProvider, HasGetEntitiesWithIRI hasGetEntitiesWithIRI, HasGetRevisionSummary hasGetRevisionSummary) {
+    public HighLevelEventGenerator(ProjectId projectId,
+                                   BrowserTextProvider browserTextProvider,
+                                   HasGetEntitiesWithIRI hasGetEntitiesWithIRI,
+                                   HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
         this.browserTextProvider = browserTextProvider;
         this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
@@ -52,9 +57,39 @@ public class HighLevelEventGenerator implements EventTranslator {
         for(OWLOntologyChange change : appliedChanges) {
             change.accept(new OWLOntologyChangeVisitor() {
                 @Override
-                public void visit(AddAxiom change) {
+                public void visit(@Nonnull AddAxiom change) {
                     final OWLAxiom axiom = change.getAxiom();
                     handleAxiomChange(axiom);
+                }
+
+                @Override
+                public void visit(@Nonnull RemoveAxiom change) {
+                    handleAxiomChange(change.getAxiom());
+                }
+
+                @Override
+                public void visit(@Nonnull SetOntologyID change) {
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
+                }
+
+                @Override
+                public void visit(@Nonnull AddImport change) {
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
+                }
+
+                @Override
+                public void visit(@Nonnull RemoveImport change) {
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
+                }
+
+                @Override
+                public void visit(@Nonnull AddOntologyAnnotation change) {
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
+                }
+
+                @Override
+                public void visit(@Nonnull RemoveOntologyAnnotation change) {
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
                 }
 
                 private void handleAxiomChange(OWLAxiom axiom) {
@@ -74,75 +109,52 @@ public class HighLevelEventGenerator implements EventTranslator {
                         if (!changedEntities.contains(e)) {
                             changedEntities.add(e);
                             ProjectEvent<?> event = e.accept(new OWLEntityVisitorEx<ProjectEvent<?>>() {
+                                @Nonnull
                                 @Override
-                                public ProjectEvent<?> visit(OWLClass cls) {
-                                    return new ClassFrameChangedEvent(cls, projectId);
+                                public ProjectEvent<?> visit(@Nonnull OWLClass cls) {
+                                    return new ClassFrameChangedEvent(cls, projectId, revision.getUserId());
                                 }
 
+                                @Nonnull
                                 @Override
-                                public ProjectEvent<?> visit(OWLObjectProperty property) {
-                                    return new ObjectPropertyFrameChangedEvent(property, projectId);
+                                public ProjectEvent<?> visit(@Nonnull OWLObjectProperty property) {
+                                    return new ObjectPropertyFrameChangedEvent(property, projectId, revision.getUserId());
                                 }
 
+                                @Nonnull
                                 @Override
-                                public ProjectEvent<?> visit(OWLDataProperty property) {
-                                    return new DataPropertyFrameChangedEvent(property, projectId);
+                                public ProjectEvent<?> visit(@Nonnull OWLDataProperty property) {
+                                    return new DataPropertyFrameChangedEvent(property, projectId, revision.getUserId());
                                 }
 
+                                @Nonnull
                                 @Override
-                                public ProjectEvent<?> visit(OWLNamedIndividual individual) {
-                                    return new NamedIndividualFrameChangedEvent(individual, projectId);
+                                public ProjectEvent<?> visit(@Nonnull OWLNamedIndividual individual) {
+                                    return new NamedIndividualFrameChangedEvent(individual, projectId, revision.getUserId());
                                 }
 
+                                @Nonnull
                                 @Override
-                                public ProjectEvent<?> visit(OWLDatatype datatype) {
-                                    return new DatatypeFrameChangedEvent(datatype, projectId);
+                                public ProjectEvent<?> visit(@Nonnull OWLDatatype datatype) {
+                                    return new DatatypeFrameChangedEvent(datatype, projectId, revision.getUserId());
                                 }
 
+                                @Nonnull
                                 @Override
-                                public ProjectEvent<?> visit(OWLAnnotationProperty property) {
-                                    return new AnnotationPropertyFrameChangedEvent(property, projectId);
+                                public ProjectEvent<?> visit(@Nonnull OWLAnnotationProperty property) {
+                                    return new AnnotationPropertyFrameChangedEvent(property, projectId, revision.getUserId());
                                 }
                             });
                             projectEventList.add(event);
                         }
                     }
                 }
-
-                @Override
-                public void visit(RemoveAxiom change) {
-                    handleAxiomChange(change.getAxiom());
-                }
-
-                @Override
-                public void visit(SetOntologyID change) {
-                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
-                }
-
-                @Override
-                public void visit(AddImport change) {
-                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
-                }
-
-                @Override
-                public void visit(RemoveImport change) {
-                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
-                }
-
-                @Override
-                public void visit(AddOntologyAnnotation change) {
-                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
-                }
-
-                @Override
-                public void visit(RemoveOntologyAnnotation change) {
-                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
-                }
             });
         }
 
 
         Set<OWLEntityData> changedEntitiesData = new HashSet<>();
+
         for (OWLEntity entity : changedEntities) {
             Optional<String> browserText = browserTextProvider.getOWLEntityBrowserText(entity);
             changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.orElse("" )));

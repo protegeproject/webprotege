@@ -222,7 +222,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 data.setDeprecated(deprecated);
                 int commentsCount = entityDiscussionThreadRepository.getOpenCommentsCount(project.getProjectId(), subclass);
                 data.setLocalAnnotationsCount(commentsCount);
-            Set<Watch<?>> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
+            Set<Watch> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
             if(!directWatches.isEmpty()) {
                 data.setWatches(directWatches);
             }

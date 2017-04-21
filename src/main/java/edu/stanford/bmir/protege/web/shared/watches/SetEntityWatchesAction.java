@@ -24,7 +24,7 @@ public class SetEntityWatchesAction implements Action<SetEntityWatchesResult>, H
 
     private OWLEntity entity;
 
-    private ImmutableSet<EntityBasedWatch> watches;
+    private ImmutableSet<Watch> watches;
 
     /**
      * For serialization only
@@ -32,7 +32,7 @@ public class SetEntityWatchesAction implements Action<SetEntityWatchesResult>, H
     private SetEntityWatchesAction() {
     }
 
-    public SetEntityWatchesAction(ProjectId projectId, UserId userId, OWLEntity entity, ImmutableSet<EntityBasedWatch> watches) {
+    public SetEntityWatchesAction(ProjectId projectId, UserId userId, OWLEntity entity, ImmutableSet<Watch> watches) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.entity = checkNotNull(entity);
@@ -51,7 +51,7 @@ public class SetEntityWatchesAction implements Action<SetEntityWatchesResult>, H
         return entity;
     }
 
-    public ImmutableSet<EntityBasedWatch> getWatches() {
+    public ImmutableSet<Watch> getWatches() {
         return watches;
     }
 
