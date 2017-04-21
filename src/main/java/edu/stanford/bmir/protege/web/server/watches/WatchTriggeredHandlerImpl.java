@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -86,18 +87,20 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                                                    .map(Optional::get)
                                                    .distinct()
                                                    .collect(toList());
+        OWLEntityData modifiedEntityData = renderingManager.getRendering(modifiedEntity);
         Map<String, Object> templateObjects =
                 TemplateObjectsBuilder.builder()
                                       .withUserId(byUser)
-                                      .withEntity(renderingManager.getRendering(modifiedEntity))
+                                      .withEntity(modifiedEntityData)
                                       .withProjectDetails(projectDetailsManager.getProjectDetails(projectId))
                                       .withApplicationName(applicationNameSupplier.get())
                                       .withProjectUrl(placeUrl.getProjectUrl(projectId))
                                       .build();
 
         String displayName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-        String emailSubject = String.format("[%s] Changes made in %s by %s",
+        String emailSubject = String.format("[%s] Changes made to %s in %s by %s",
                                             displayName,
+                                            modifiedEntityData.getBrowserText(),
                                             displayName,
                                             userDetailsManager.getUserDetails(byUser).map(d -> "by " + d.getDisplayName()).orElse(""));
         String emailBody = templateEngine.populateTemplate(watchTemplate.getContents(), templateObjects);
