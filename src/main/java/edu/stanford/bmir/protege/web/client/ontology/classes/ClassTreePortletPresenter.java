@@ -101,7 +101,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private static final String SUFFIX_ID_LOCAL_ANNOTATION_IMG = "_locAnnImg";
 
-    protected static final String WATCH_ICON_STYLE_STRING = "style=\"position:relative; top:3px; left:2px;\"";
+    protected static final String WATCH_ICON_STYLE_STRING = "style=\"position:relative; top:2px; left:2px;\"";
 
     private TreePanel treePanel;
 
@@ -992,12 +992,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             return "";
         }
         if (w.iterator().next().getType() == WatchType.ENTITY) {
-            return "<img src=\"" + BUNDLE.eyeIcon()
+            return "<img src=\"" + BUNDLE.svgEyeIcon()
                                          .getSafeUri()
                                          .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
-            return "<img src=\"" + BUNDLE.eyeDownIcon()
+            return "<img src=\"" + BUNDLE.svgEyeIconDown()
                                          .getSafeUri()
                                          .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
