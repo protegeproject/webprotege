@@ -143,9 +143,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgCommentSmallFilledIcon();
 
-    @Source("edit.png")
-    ImageResource editIcon();
-
     @Source("WebProtege.css")
     WebProtegeCss style();
 
