@@ -1,0 +1,33 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        @external .searchedIri;
+        .main {
+            font-size: 12px;
+            white-space: nowrap;
+            padding-bottom: 2px;
+        }
+        .main:hover {
+            background: #f0f0f0;
+        }
+        .icon {
+            display: inline-block;
+            vertical-align: top;
+        }
+        .rendering {
+            display: inline-block;
+            vertical-align: top;
+            white-space: nowrap;
+            padding-top: 1px;
+        }
+        .main .searchedIri {
+            color: #707070;
+            padding-bottom: 5px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Image ui:field="iconField" addStyleNames="{style.icon}"/>
+        <g:HTML ui:field="renderingField" addStyleNames="{style.rendering}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -41,6 +41,8 @@ import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.projectmanager.*;
+import edu.stanford.bmir.protege.web.client.search.SearchView;
+import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;
 import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
@@ -346,6 +348,11 @@ public class ClientApplicationModule {
 
     @Provides
     NothingSelectedView provideNothingSelectedView(NothingSelectedViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SearchView providesSearchView(SearchViewImpl impl) {
         return impl;
     }
 }

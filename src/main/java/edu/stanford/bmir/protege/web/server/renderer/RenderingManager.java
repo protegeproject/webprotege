@@ -37,7 +37,7 @@ import java.util.concurrent.ExecutionException;
  *
  */
 @ProjectSingleton
-public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasHtmlBrowserText {
+public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasGetRendering, HasHtmlBrowserText {
 
     private final BidirectionalShortFormProvider shortFormProvider;
 

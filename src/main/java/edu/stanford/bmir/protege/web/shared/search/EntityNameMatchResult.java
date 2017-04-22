@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -90,10 +92,10 @@ public class EntityNameMatchResult implements Serializable, Comparable<EntityNam
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("EntityNameMatchResult")
-                .add("start", start)
-                .add("end", end)
-                .add("matchType", matchType)
-                .add("prefixNameMatchType", prefixNameMatchType).toString();
+        return toStringHelper("EntityNameMatchResult")
+                          .add("start", start)
+                          .add("end", end)
+                          .add("matchType", matchType)
+                          .add("prefixNameMatchType", prefixNameMatchType).toString();
     }
 }

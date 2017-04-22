@@ -43,6 +43,7 @@ import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsAc
 import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetHeadRevisionNumberActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetRevisionSummariesActionHandler;
+import edu.stanford.bmir.protege.web.server.search.PerformEntitySearchActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
@@ -523,6 +524,11 @@ public class ActionHandlersModule {
 
     @Provides(type = SET)
     public ActionHandler providesRebuildPermissionsActionHandler(RebuildPermissionsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ActionHandler providesPerformEntitySearchActionHandler(PerformEntitySearchActionHandler handler) {
         return handler;
     }
 }
