@@ -40,6 +40,8 @@ import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
+import edu.stanford.bmir.protege.web.client.search.SearchPresenter;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
@@ -81,6 +83,7 @@ import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static java.util.Collections.singletonList;
+import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -130,6 +133,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
 
+    private final SearchDialogController searchDialogController;
+
     @Inject
     public ClassTreePortletPresenter(SelectionModel selectionModel,
                                      WatchPresenter watchPresenter,
@@ -137,14 +142,16 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                      final ProjectId projectId,
                                      LoggedInUserProvider loggedInUserProvider,
                                      LoggedInUserProjectPermissionChecker permissionChecker,
-                                     Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+                                     Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
+                                     SearchDialogController searchDialogController) {
         this(selectionModel,
              primitiveDataEditorProvider,
              watchPresenter,
              dispatchServiceManager,
              loggedInUserProvider,
              projectId,
-             permissionChecker);
+             permissionChecker,
+             searchDialogController);
     }
 
     private ClassTreePortletPresenter(SelectionModel selectionModel,
@@ -153,13 +160,15 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                       DispatchServiceManager dispatchServiceManager,
                                       LoggedInUserProvider loggedInUserProvider,
                                       final ProjectId projectId,
-                                      LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+                                      LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker,
+                                      SearchDialogController searchDialogController) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         this.watchPresenter = watchPresenter;
         this.primitiveDataEditorProvider = primitiveDataEditorProvider;
+        this.searchDialogController = searchDialogController;
 
 
         if (nodeListener == null) {
@@ -196,6 +205,10 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         portletUi.addPortletAction(createClassAction);
         portletUi.addPortletAction(deleteClassAction);
         portletUi.addPortletAction(watchClassAction);
+        portletUi.addPortletAction(new PortletAction("Search", (action, event) -> {
+            searchDialogController.setEntityTypes(CLASS);
+            WebProtegeDialog.showDialog(searchDialogController);
+        }));
         Scheduler.get().scheduleDeferred(() -> {
             EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing" );
             createRoot(root, portletUi);
@@ -566,7 +579,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             showClassNotSelectedMessage();
             return;
         }
-        WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.CLASS,
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(CLASS,
                                                                      createEntityInfo -> {
                                                                          final java.util.Optional<OWLClass> superCls = getSelectedTreeNodeClass();
                                                                          if (!superCls.isPresent()) {

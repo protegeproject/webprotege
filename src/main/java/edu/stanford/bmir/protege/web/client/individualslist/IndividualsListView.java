@@ -4,6 +4,7 @@ import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
+import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import java.util.Collection;
@@ -17,10 +18,6 @@ import java.util.Optional;
  * Date: 12/09/2013
  */
 public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, HasBusy, IsWidget {
-
-    interface SearchStringChangedHandler {
-        void handleSearchStringChanged();
-    }
 
     void setListData(List<OWLNamedIndividualData> individuals);
 
