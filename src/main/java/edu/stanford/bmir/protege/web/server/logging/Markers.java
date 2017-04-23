@@ -10,5 +10,5 @@ import org.slf4j.MarkerFactory;
  */
 public class Markers {
 
-    public static final Marker BROWSING = MarkerFactory.getMarker("Browsing");
+    public static final Marker BROWSING = MarkerFactory.getMarker("BROWSING");
 }

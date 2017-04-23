@@ -31,6 +31,13 @@
         <appender-ref ref="stdout"/>
     </logger>
 
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Name>BrowsingFilter</Name>
+        <Marker>BROWSING</Marker>
+        <OnMatch>DENY</OnMatch>
+    </turboFilter>
+
+
     <root level="info">
         <appender-ref ref="webprotege-all"/>
     </root>
