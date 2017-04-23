@@ -44,6 +44,7 @@ public class PerformEntitySearchActionHandler extends AbstractHasProjectActionHa
         Set<EntityType<?>> entityTypes = action.getEntityTypes();
         String searchString = action.getSearchString();
         EntitySearcher entitySearcher = EntitySearcher.get(project.getProjectId(),
+                                                           executionContext.getUserId(),
                                                            () -> entityStream(entityTypes,
                                                                               project.getRootOntology(),
                                                                               Imports.INCLUDED),
