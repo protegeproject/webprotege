@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.search.SearchField.displayName;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
@@ -189,7 +190,8 @@ public class EntitySearcher {
                             .limit(limit)
                             .map(m -> toSearchResult(searchPattern, m))
                             .forEach(results::add);
-        logger.info("{} {} Performed entity search for \"{}\".  Found {} matches in {} entities in {} ms.",
+        logger.info(BROWSING,
+                    "{} {} Performed entity search for \"{}\".  Found {} matches in {} entities in {} ms.",
                     projectId,
                     userId,
                     searchString,

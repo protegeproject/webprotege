@@ -10,10 +10,13 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
@@ -23,6 +26,8 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Date: 23/04/2013
  */
 public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetAnnotationPropertyFrameAction, GetAnnotationPropertyFrameResult> {
+
+    private Logger logger = LoggerFactory.getLogger(GetAnnotationPropertyFrameActionHandler.class);
 
     @Inject
     public GetAnnotationPropertyFrameActionHandler(ProjectManager projectManager,
@@ -45,6 +50,12 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
                 project);
         String label = project.getRenderingManager().getBrowserText(action.getSubject());
         LabelledFrame<AnnotationPropertyFrame> labelledFrame = new LabelledFrame<>(label, frame);
+        logger.info(BROWSING,
+                     "{} {} retrieved AnnotationProperty frame for {} ({})",
+                    action.getProjectId(),
+                    executionContext.getUserId(),
+                    action.getSubject(),
+                    labelledFrame.getDisplayName());
         return new GetAnnotationPropertyFrameResult(labelledFrame);
     }
 

@@ -10,10 +10,13 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 
 /**
@@ -23,6 +26,8 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  * Date: 23/04/2013
  */
 public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetDataPropertyFrameAction, GetDataPropertyFrameResult> {
+
+    private static final Logger logger = LoggerFactory.getLogger(GetDataPropertyFrameActionHandler.class);
 
     @Inject
     public GetDataPropertyFrameActionHandler(ProjectManager projectManager,
@@ -42,6 +47,12 @@ public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionH
         final DataPropertyFrame frame = translator.getFrame(project.getRenderingManager().getRendering(action.getSubject()),
                                                             project.getRootOntology(), project);
         String displayName = project.getRenderingManager().getBrowserText(action.getSubject());
+        logger.info(BROWSING,
+                     "{} {} retrieved DataProperty frame for {} ({})",
+                    action.getProjectId(),
+                    executionContext.getUserId(),
+                    action.getSubject(),
+                    displayName);
         return new GetDataPropertyFrameResult(new LabelledFrame<>(displayName, frame));
     }
 

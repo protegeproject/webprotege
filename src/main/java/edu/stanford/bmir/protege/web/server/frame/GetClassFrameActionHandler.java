@@ -11,9 +11,13 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,6 +28,8 @@ import javax.inject.Inject;
 public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<GetClassFrameAction, GetClassFrameResult> {
 
     public static final ClassFrameTranslator TRANSLATOR = new ClassFrameTranslator();
+
+    private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
     @Inject
     public GetClassFrameActionHandler(ProjectManager projectManager,
@@ -52,6 +58,12 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
                 project.getRenderingManager().getRendering(action.getSubject()),
                 project, TRANSLATOR);
         LabelledFrame<ClassFrame> f = translator.doIT();
+        logger.info(BROWSING,
+                     "{} {} retrieved Class frame for {} ({})",
+                    action.getProjectId(),
+                    executionContext.getUserId(),
+                    action.getSubject(),
+                    f.getDisplayName());
         return new GetClassFrameResult(f);
     }
 }
