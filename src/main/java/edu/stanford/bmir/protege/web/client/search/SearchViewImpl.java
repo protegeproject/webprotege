@@ -8,8 +8,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.view.client.ListDataProvider;
-import edu.stanford.bmir.protege.web.client.library.common.HasTextRendering;
+import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
@@ -20,13 +20,14 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
-public class SearchViewImpl extends Composite implements SearchView {
+public class SearchViewImpl extends Composite implements SearchView, HasAcceptKeyHandler {
 
     private List<OWLEntityData> currentResults = new ArrayList<>();
 
@@ -51,7 +52,7 @@ public class SearchViewImpl extends Composite implements SearchView {
     @UiField
     BusyViewImpl busyView;
 
-    private int selectedIndex = 0;
+    private int selectedIndex = -1;
 
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
@@ -59,6 +60,7 @@ public class SearchViewImpl extends Composite implements SearchView {
 
     private String previousSearchString = "";
 
+    private AcceptKeyHandler acceptKeyHandler = () -> {};
 
     @Inject
     public SearchViewImpl() {
@@ -68,6 +70,11 @@ public class SearchViewImpl extends Composite implements SearchView {
     @Override
     public void setSearchResultChosenHandler(SearchResultChosenHandler searchResultChosenHandler) {
         this.searchResultChosenHandler = searchResultChosenHandler;
+    }
+
+    @Override
+    public void setAcceptKeyHandler(AcceptKeyHandler acceptKey) {
+        this.acceptKeyHandler = acceptKey;
     }
 
     @Override
@@ -81,13 +88,22 @@ public class SearchViewImpl extends Composite implements SearchView {
     }
 
     @UiHandler("base")
+    protected void handleDoubleClick(DoubleClickEvent event) {
+        handleEventTarget(event.getClientY(), i -> acceptKeyHandler.handleAcceptKey());
+    }
+
+    @UiHandler("base")
     protected void handleClick(ClickEvent event) {
-        int y = event.getClientY();
+        handleEventTarget(event.getClientY(), this::setSelectedIndex);
+    }
+
+
+    private void handleEventTarget(int clientY, Consumer<Integer> consumer) {
         for(int i = 0; i < list.getWidgetCount(); i++) {
             Widget w = list.getWidget(i);
             int itemY = w.getAbsoluteTop();
-            if(itemY < y && y < itemY + w.getOffsetHeight()) {
-                setSelectedIndex(i);
+            if(itemY < clientY && clientY < itemY + w.getOffsetHeight()) {
+                consumer.accept(i);
                 return;
             }
         }
@@ -153,8 +169,8 @@ public class SearchViewImpl extends Composite implements SearchView {
     private void chooseSearchResult() {
         if(selectedIndex != -1) {
             searchResultChosenHandler.handleSearchResultChosen(currentResults.get(selectedIndex));
+            acceptKeyHandler.handleAcceptKey();
         }
-
     }
 
     private void decrementSelectedIndex() {
@@ -164,7 +180,7 @@ public class SearchViewImpl extends Composite implements SearchView {
     }
 
     private void clearCurrentSelectionBackground() {
-        if(selectedIndex != -1) {
+        if(-1 < selectedIndex && selectedIndex < list.getWidgetCount()) {
             list.getWidget(selectedIndex).getElement().getStyle().clearBackgroundColor();
         }
     }

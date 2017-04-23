@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,6 +29,8 @@ public final class WebProtegeDialog<D> extends DialogBox {
     private static final String WEB_PROTEGE_DIALOG_MAIN_PANEL = "web-protege-dialog-main-panel";
 
     private static final String WEB_PROTEGE_DIALOG_BUTTON_BAR = "web-protege-dialog-button-bar";
+
+    private final ArrayList<HandlerRegistration> handlerRegistrations;
 
     private WebProtegeDialogController<D> controller;
 
@@ -54,7 +58,8 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
         mainPanel.add(buttonBar);
 
-        attachAcceleratorKeyHandlers(contentWidget);
+        handlerRegistrations = new ArrayList<>();
+        attachAcceleratorKeyHandlers(contentWidget, handlerRegistrations);
 
         center();
     }
@@ -86,25 +91,20 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
 
 
-    private void attachAcceleratorKeyHandlers(Widget widget) {
+    private void attachAcceleratorKeyHandlers(Widget widget, List<HandlerRegistration> handlerRegistrations) {
         if(widget instanceof HasAcceptKeyHandler) {
-            ((HasAcceptKeyHandler) widget).setAcceptKeyHandler(new AcceptKeyHandler() {
-                @Override
-                public void handleAcceptKey() {
-                    hideWithDefaultButton();
-                }
-            });
+            ((HasAcceptKeyHandler) widget).setAcceptKeyHandler(this::hideWithDefaultButton);
         }
         else {
             if (widget instanceof TextArea) {
-                ((TextArea) widget).addKeyDownHandler(new CtrlEnterKeyDownHandler());
+                handlerRegistrations.add(((TextArea) widget).addKeyDownHandler(new CtrlEnterKeyDownHandler()));
             }
             else if (widget instanceof TextBox) {
-                ((HasKeyDownHandlers) widget).addKeyDownHandler(new EnterKeyDownHandler());
+                handlerRegistrations.add(((HasKeyDownHandlers) widget).addKeyDownHandler(new EnterKeyDownHandler()));
             }
         }
         if(widget instanceof HasKeyDownHandlers) {
-            ((HasKeyDownHandlers) widget).addKeyDownHandler(new EscapeKeyDownHandler());
+            handlerRegistrations.add(((HasKeyDownHandlers) widget).addKeyDownHandler(new EscapeKeyDownHandler()));
         }
 
 
@@ -112,12 +112,22 @@ public final class WebProtegeDialog<D> extends DialogBox {
         if (widget instanceof HasWidgets) {
             HasWidgets hasWidgets = (HasWidgets) widget;
             for (Widget childWidget : hasWidgets) {
-                attachAcceleratorKeyHandlers(childWidget);
+                attachAcceleratorKeyHandlers(childWidget, handlerRegistrations);
             }
         }
     }
 
+    @Override
+    public void hide(boolean autoClosed) {
+        super.hide(autoClosed);
+        handlerRegistrations.forEach(HandlerRegistration::removeHandler);
+    }
 
+    @Override
+    public void hide() {
+        super.hide();
+        handlerRegistrations.forEach(HandlerRegistration::removeHandler);
+    }
 
     @Override
     public void show() {
@@ -143,7 +153,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             }
         }
         WebProtegeDialogButtonHandler<D> buttonHandler = controller.getButtonHandlers().get(button.ordinal());
-        buttonHandler.handleHide(controller.getData(), () -> WebProtegeDialog.this.hide());
+        buttonHandler.handleHide(controller.getData(), WebProtegeDialog.this::hide);
     }
 
     private void displayContentsInvalidMessage(String message) {
@@ -215,7 +225,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
      */
     public static <D> void showDialog(WebProtegeDialogController<D> controller) {
         WebProtegeDialog<D> dlg = new WebProtegeDialog<D>(checkNotNull(controller));
-        dlg.setVisible(true);
+        dlg.show();
     }
 
 }
