@@ -18,12 +18,15 @@ import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static java.util.stream.Collectors.toList;
 
@@ -34,6 +37,8 @@ import static java.util.stream.Collectors.toList;
  * Date: 12/09/2013
  */
 public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler<GetIndividualsAction, GetIndividualsResult> {
+
+    private Logger logger = LoggerFactory.getLogger(GetIndividualsActionHandler.class);
 
     @Inject
     public GetIndividualsActionHandler(ProjectManager projectManager,
@@ -79,6 +84,12 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         Pager<OWLNamedIndividualData> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
         Page<OWLNamedIndividualData> page = pager.getPage(pageRequest.getPageNumber());
         OWLClassData type = project.getRenderingManager().getRendering(action.getType());
+        logger.info(BROWSING,
+                    "{} {} retrieved instances of {} ({})",
+                    action.getProjectId(),
+                    executionContext.getUserId(),
+                    action.getType(),
+                    project.getRenderingManager().getRendering(action.getType()).getBrowserText());
         return new GetIndividualsResult(type, page, counter.getCount(), individualsData.size());
     }
 

@@ -11,10 +11,14 @@ import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
@@ -26,6 +30,8 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
 public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActionHandler<GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
     private static final NamedIndividualFrameTranslator TRANSLATOR = new NamedIndividualFrameTranslator();
+
+    private static Logger logger = LoggerFactory.getLogger(GetNamedIndividualFrameActionHandler.class);
 
     @Inject
     public GetNamedIndividualFrameActionHandler(ProjectManager projectManager,
@@ -59,6 +65,12 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
         RenderingManager renderingManager = project.getRenderingManager();
         String rendering = renderingManager.getShortForm(action.getSubject());
         LabelledFrame<NamedIndividualFrame> labelledFrame = new LabelledFrame<>(rendering, frame);
+        logger.info(BROWSING,
+                     "{} {} retrieved NamedIndividual frame for {} ({})",
+                    action.getProjectId(),
+                    executionContext.getUserId(),
+                    action.getSubject(),
+                    labelledFrame.getDisplayName());
         return new GetNamedIndividualFrameResult(labelledFrame);
 
     }
