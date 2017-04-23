@@ -5,17 +5,19 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.server.util.ProtegeStreams;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
-import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.server.util.ProtegeStreams.entityStream;
 
 /**
  * Matthew Horridge
@@ -39,15 +41,17 @@ public class PerformEntitySearchActionHandler extends AbstractHasProjectActionHa
     protected PerformEntitySearchResult execute(PerformEntitySearchAction action,
                                                 Project project,
                                                 ExecutionContext executionContext) {
-
-
         Set<EntityType<?>> entityTypes = action.getEntityTypes();
         String searchString = action.getSearchString();
-        EntitySearcher entitySearcher = new EntitySearcher(project.getRootOntology(),
+        EntitySearcher entitySearcher = EntitySearcher.get(project.getProjectId(),
+                                                           () -> entityStream(entityTypes,
+                                                                              project.getRootOntology(),
+                                                                              Imports.INCLUDED),
                                                            project.getRenderingManager(),
                                                            entityTypes,
-                                                           searchString).invoke();
-        int totalSearchResults = entitySearcher.getTotalSearchResultsCount();
+                                                           searchString);
+        entitySearcher.invoke();
+        int totalSearchResults = entitySearcher.getSearchResultsCount();
         List<EntitySearchResult> results = entitySearcher.getResults();
         return new PerformEntitySearchResult(totalSearchResults, results);
     }
