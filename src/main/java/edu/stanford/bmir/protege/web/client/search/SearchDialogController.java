@@ -1,16 +1,13 @@
 package edu.stanford.bmir.protege.web.client.search;
 
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,7 +33,10 @@ public class SearchDialogController extends WebProtegeOKCancelDialogController<O
             data.ifPresent(this::selectEntity);
             closer.hide();
         });
-        setDialogButtonHandler(DialogButton.CANCEL, (data, closer) -> closer.hide());
+        setDialogButtonHandler(DialogButton.CANCEL, (data, closer) -> {
+            GWT.log("CANCEL");
+            closer.hide();
+        });
     }
 
     public void setEntityTypes(EntityType<?> ... entityTypes) {
