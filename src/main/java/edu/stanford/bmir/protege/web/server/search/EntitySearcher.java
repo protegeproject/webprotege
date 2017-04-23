@@ -42,7 +42,7 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 public class EntitySearcher {
 
     private static final Logger logger = LoggerFactory.getLogger(EntitySearcher.class);
-    
+
     /**
      * The default limit for the returned results.
      */

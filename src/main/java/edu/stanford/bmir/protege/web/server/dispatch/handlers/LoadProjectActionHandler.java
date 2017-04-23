@@ -12,10 +12,13 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
+import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
@@ -30,25 +33,23 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  */
 public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction, LoadProjectResult> {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoadProjectActionHandler.class);
+
     private final ProjectDetailsManager projectDetailsManager;
 
     private final ProjectManager projectManager;
 
     private final AccessManager accessManager;
 
-    private final WebProtegeLogger logger;
-
     private final UserActivityManager userActivityManager;
 
     @Inject
     public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager,
                                     ProjectManager projectManager,
-                                    WebProtegeLogger webProtegeLogger,
                                     AccessManager accessManager,
                                     UserActivityManager userActivityManager) {
         this.projectDetailsManager = projectDetailsManager;
         this.accessManager = accessManager;
-        this.logger = webProtegeLogger;
         this.projectManager = projectManager;
         this.userActivityManager = userActivityManager;
     }
@@ -67,15 +68,18 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
     @Override
     public LoadProjectResult execute(final LoadProjectAction action, ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        logger.info("Loading project %s due to request by %s",
+        logger.info("{} is being loaded due to request by {}",
                     action.getProjectId(),
                     executionContext.getUserId());
         projectManager.getProject(action.getProjectId(), executionContext.getUserId());
         stopwatch.stop();
-        logger.info("Loaded project %s in %s ms", action.getProjectId(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(logger);
-        loggerEx.logMemoryUsage();
-
+        logger.info("{} was loaded in {} ms due to request by {}",
+                    action.getProjectId(),
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS),
+                    executionContext.getUserId());
+        MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
+        memoryMonitor.monitorMemoryUsage();
+        memoryMonitor.logMemoryUsage();
         final ProjectId projectId = action.getProjectId();
         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
         if (!executionContext.getUserId().isGuest()) {
