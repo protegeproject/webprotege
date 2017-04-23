@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.lang.StringUtils;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.EntityType;
@@ -52,6 +53,9 @@ public class EntitySearcher {
     private final ProjectId projectId;
 
     @Nonnull
+    private final UserId userId;
+
+    @Nonnull
     private final Supplier<Stream<OWLEntity>> entityStreamSupplier;
 
     private HasGetRendering renderingSupplier;
@@ -76,11 +80,13 @@ public class EntitySearcher {
     private int limit = DEFAULT_LIMIT;
 
     private EntitySearcher(@Nonnull ProjectId projectId,
+                           @Nonnull UserId userId,
                            @Nonnull Supplier<Stream<OWLEntity>> entityStreamSupplier,
                            @Nonnull HasGetRendering renderingSupplier,
                            @Nonnull Set<EntityType<?>> entityTypes,
                            @Nonnull String searchString) {
         this.projectId = checkNotNull(projectId);
+        this.userId = checkNotNull(userId);
         this.entityStreamSupplier = checkNotNull(entityStreamSupplier);
         this.renderingSupplier = checkNotNull(renderingSupplier);
         this.entityTypes = new HashSet<>(checkNotNull(entityTypes));
@@ -89,11 +95,13 @@ public class EntitySearcher {
     }
 
     public static EntitySearcher get(@Nonnull ProjectId projectId,
+                                     @Nonnull UserId userId,
                                      @Nonnull Supplier<Stream<OWLEntity>> entityStreamSupplier,
                                      @Nonnull HasGetRendering renderingSupplier,
                                      @Nonnull Set<EntityType<?>> entityTypes,
                                      @Nonnull String searchString) {
         return new EntitySearcher(projectId,
+                                  userId,
                                   entityStreamSupplier,
                                   renderingSupplier,
                                   entityTypes,
@@ -181,8 +189,9 @@ public class EntitySearcher {
                             .limit(limit)
                             .map(m -> toSearchResult(searchPattern, m))
                             .forEach(results::add);
-        logger.info("{} Performed entity search for \"{}\".  Found {} matches in {} entities in {} ms",
+        logger.info("{} {} Performed entity search for \"{}\".  Found {} matches in {} entities in {} ms.",
                     projectId,
+                    userId,
                     searchString,
                     matchCounter.getCounter(),
                     searchCounter.getCounter(),
