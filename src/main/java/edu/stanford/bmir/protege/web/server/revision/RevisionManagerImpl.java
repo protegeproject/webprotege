@@ -47,7 +47,9 @@ public class RevisionManagerImpl implements RevisionManager {
 
     @Nonnull
     @Override
-    public Revision addRevision(@Nonnull UserId userId, @Nonnull List<? extends OWLOntologyChangeRecord> changes, @Nonnull String desc) {
+    public Revision addRevision(@Nonnull UserId userId,
+                                @Nonnull List<? extends OWLOntologyChangeRecord> changes,
+                                @Nonnull String desc) {
         try {
             writeLock.lock();
             long timestamp = System.currentTimeMillis();
@@ -67,7 +69,6 @@ public class RevisionManagerImpl implements RevisionManager {
     }
 
 
-
     @Nonnull
     @Override
     public RevisionNumber getCurrentRevision() {
@@ -77,21 +78,23 @@ public class RevisionManagerImpl implements RevisionManager {
     @Nonnull
     @Override
     public OWLOntologyManager getOntologyManagerForRevision(@Nonnull RevisionNumber revision) {
-         try {
+        try {
             OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
             final OWLOntologyID singletonOntologyId = new OWLOntologyID();
             for (Revision rev : revisionStore.getRevisions()) {
-                if(rev.getRevisionNumber().compareTo(revision) <= 0)
-                for (OWLOntologyChangeRecord record : rev) {
-                    // Anonymous ontologies are not handled nicely at all.
-                    OWLOntologyChangeRecord normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
-                    OWLOntologyID ontologyId = normalisedChangeRecord.getOntologyID();
-                    if (!manager.contains(ontologyId)) {
-                        manager.createOntology(ontologyId);
-                    }
+                if (rev.getRevisionNumber().compareTo(revision) <= 0) {
+                    for (OWLOntologyChangeRecord record : rev) {
+                        // Anonymous ontologies are not handled nicely at all.
+                        OWLOntologyChangeRecord normalisedChangeRecord = normaliseChangeRecord(record,
+                                                                                               singletonOntologyId);
+                        OWLOntologyID ontologyId = normalisedChangeRecord.getOntologyID();
+                        if (!manager.contains(ontologyId)) {
+                            manager.createOntology(ontologyId);
+                        }
 
-                    OWLOntologyChange change = normalisedChangeRecord.createOntologyChange(manager);
-                    manager.applyChange(change);
+                        OWLOntologyChange change = normalisedChangeRecord.createOntologyChange(manager);
+                        manager.applyChange(change);
+                    }
                 }
             }
             if (manager.getOntologies().isEmpty()) {
@@ -104,11 +107,13 @@ public class RevisionManagerImpl implements RevisionManager {
         }
     }
 
-    private OWLOntologyChangeRecord normaliseChangeRecord(OWLOntologyChangeRecord changeRecord, OWLOntologyID singletonAnonymousId) {
+    private OWLOntologyChangeRecord normaliseChangeRecord(OWLOntologyChangeRecord changeRecord,
+                                                          OWLOntologyID singletonAnonymousId) {
         OWLOntologyID ontologyID = changeRecord.getOntologyID();
         if (ontologyID.isAnonymous()) {
             return new OWLOntologyChangeRecord(singletonAnonymousId, changeRecord.getData());
-        } else {
+        }
+        else {
             // As is
             return changeRecord;
         }
@@ -122,6 +127,7 @@ public class RevisionManagerImpl implements RevisionManager {
 
     /**
      * Gets the specified revision
+     *
      * @param revisionNumber The revision number of the revision to return
      * @return The revision that has the specified revision number, or absent if the revision with the specfied
      * revision number does not exist.
@@ -136,7 +142,7 @@ public class RevisionManagerImpl implements RevisionManager {
     @Override
     public Optional<RevisionSummary> getRevisionSummary(@Nonnull RevisionNumber revisionNumber) {
         Optional<Revision> revision = revisionStore.getRevision(revisionNumber);
-        if(!revision.isPresent()) {
+        if (!revision.isPresent()) {
             return Optional.empty();
         }
         else {
@@ -150,8 +156,8 @@ public class RevisionManagerImpl implements RevisionManager {
     @Override
     public List<RevisionSummary> getRevisionSummaries() {
         return revisionStore.getRevisions().stream()
-                .map(RevisionManagerImpl::toRevisionSummary)
-                .collect(toList());
+                            .map(RevisionManagerImpl::toRevisionSummary)
+                            .collect(toList());
     }
 
     private static RevisionSummary toRevisionSummary(Revision revision) {
