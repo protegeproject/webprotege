@@ -70,10 +70,13 @@ class CreateDownloadTask implements Callable<Void> {
     @Override
     public Void call() throws Exception {
         if(Files.exists(downloadPath)) {
-            logger.info("{} Project download already exists.  Not recreating download. ({})", projectId, downloadPath.toAbsolutePath());
+            logger.info("{} {} Project download already exists.  Not recreating download. ({})",
+                        projectId,
+                        userId,
+                        downloadPath.toAbsolutePath());
             return null;
         }
-        logger.info("{} Creating project download", projectId);
+        logger.info("{} {} Creating project download", projectId, userId);
         MemoryMonitor memoryMonitor = new MemoryMonitor(logger);
         memoryMonitor.monitorMemoryUsage();
         Project project = projectManager.getProject(projectId, userId);
@@ -83,13 +86,13 @@ class CreateDownloadTask implements Callable<Void> {
                                                              revisionNumber,
                                                              format,
                                                              applicationName);
-        logger.info("{} Writing download to file: {}", projectId, downloadPath);
+        logger.info("{} {} Writing download to file: {}", projectId, userId, downloadPath);
         Files.createDirectories(downloadPath.getParent());
         try (BufferedOutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(downloadPath))) {
             downloader.writeProject(outputStream);
         }
         double sizeInMB = Files.size(downloadPath) / (1024.0 * 1024);
-        logger.info("{} Finished creating download ({} MB)", projectId, String.format("%.2f", sizeInMB));
+        logger.info("{} {} Finished creating download ({} MB)", projectId, userId, String.format("%.4f", sizeInMB));
         memoryMonitor.monitorMemoryUsage();
         return null;
     }

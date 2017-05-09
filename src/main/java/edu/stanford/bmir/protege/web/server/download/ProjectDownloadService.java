@@ -84,7 +84,7 @@ public class ProjectDownloadService {
 
         RevisionNumber realRevisionNumber;
         if(revisionNumber.isHead()) {
-            realRevisionNumber = getHeadRevisionNumber(projectId);
+            realRevisionNumber = getHeadRevisionNumber(projectId, requester);
         }
         else {
             realRevisionNumber = revisionNumber;
@@ -99,6 +99,7 @@ public class ProjectDownloadService {
                                   downloadPath);
 
         transferFileToClient(projectId,
+                             requester,
                              revisionNumber,
                              downloadFormat,
                              downloadPath,
@@ -117,7 +118,9 @@ public class ProjectDownloadService {
         try {
             lock.lock();
             if (Files.exists(downloadPath)) {
-                logger.info("{} Download for the requested revision already exists.  Using cached download.", projectId);
+                logger.info("{} {} Download for the requested revision already exists.  Using cached download.",
+                            projectId,
+                            requester);
                 return;
             }
             CreateDownloadTask task = new CreateDownloadTask(projectManager,
@@ -128,17 +131,18 @@ public class ProjectDownloadService {
                                                              downloadFormat,
                                                              applicationNameSupplier.get(),
                                                              downloadPath);
-            logger.info("{} Submitted request to create download to queue", projectId);
+            logger.info("{} {} Submitted request to create download to queue", projectId, requester);
             Future<?> futureOfCreateDownload = downloadGeneratorExecutor.submit(task);
             try {
                 Stopwatch stopwatch = Stopwatch.createStarted();
                 futureOfCreateDownload.get();
-                logger.info("{} Created download after {} ms", projectId, stopwatch.elapsed(MILLISECONDS));
+                logger.info("{} {} Created download after {} ms", projectId, requester, stopwatch.elapsed(MILLISECONDS));
             } catch (InterruptedException e) {
-                logger.info("{} The download of this project was interrupted.", projectId);
+                logger.info("{} {} The download of this project was interrupted.", projectId, requester);
             } catch (ExecutionException e) {
-                logger.info("{} An execution exception occurred whilst creating the download.  Cause: {}",
+                logger.info("{} {} An execution exception occurred whilst creating the download.  Cause: {}",
                             projectId,
+                            requester,
                             Optional.ofNullable(e.getCause()).map(Throwable::getMessage).orElse(""),
                             e.getCause());
             }
@@ -154,22 +158,27 @@ public class ProjectDownloadService {
     }
 
     private void transferFileToClient(@Nonnull ProjectId projectId,
+                                      @Nonnull UserId userId,
                                       @Nonnull RevisionNumber revisionNumber,
                                       @Nonnull DownloadFormat downloadFormat,
                                       @Nonnull Path downloadSource,
                                       @Nonnull HttpServletResponse response) {
 
         String fileName = getClientSideFileName(projectId, revisionNumber, downloadFormat);
-        FileTransferTask task = new FileTransferTask(downloadSource, fileName,
+        FileTransferTask task = new FileTransferTask(projectId,
+                                                     userId,
+                                                     downloadSource,
+                                                     fileName,
                                                      response);
         Future<?> transferFuture = fileTransferExecutor.submit(task);
         try {
             transferFuture.get();
         } catch (InterruptedException e) {
-            logger.info("{} The download of this project was interrupted.", projectId);
+            logger.info("{} {} The download of this project was interrupted.", projectId, userId);
         } catch (ExecutionException e) {
-            logger.info("{} An execution exception occurred whilst transferring the project.  Cause: {}",
+            logger.info("{} {} An execution exception occurred whilst transferring the project.  Cause: {}",
                         projectId,
+                        userId,
                         Optional.ofNullable(e.getCause()).map(Throwable::getMessage).orElse(""),
                         e.getCause());
         }
@@ -201,11 +210,12 @@ public class ProjectDownloadService {
         fileTransferExecutor.shutdown();
     }
 
-    private RevisionNumber getHeadRevisionNumber(@Nonnull ProjectId projectId) throws IOException {
+    private RevisionNumber getHeadRevisionNumber(@Nonnull ProjectId projectId, @Nonnull UserId userId) throws IOException {
         Stopwatch stopwatch = Stopwatch.createStarted();
         RevisionNumber headRevisionNumber = headRevisionNumberFinder.getHeadRevisionNumber(projectId);
-        logger.info("{} Computed head revision number ({}) in {} ms",
+        logger.info("{} {} Computed head revision number ({}) in {} ms",
                     projectId,
+                    userId,
                     headRevisionNumber,
                     stopwatch.elapsed(MILLISECONDS));
         return headRevisionNumber;
