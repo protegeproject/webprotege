@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.download;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * Matthew Horridge
@@ -33,6 +37,10 @@ class FileTransferTask implements Callable<Void> {
     private static final String CONTENT_DISPOSITION_HEADER_FIELD = "Content-Disposition";
 
 
+    private final ProjectId projectId;
+
+    private final UserId userId;
+
     private final Path downloadSource;
 
     private final HttpServletResponse response;
@@ -45,9 +53,13 @@ class FileTransferTask implements Callable<Void> {
      * @param clientSideFileName The name of the file that should be created on the client side.
      * @param response The {@link HttpServletResponse} that should be used to send the file.
      */
-    public FileTransferTask(@Nonnull Path fileToTransfer,
+    public FileTransferTask(@Nonnull ProjectId projectId,
+                            @Nonnull UserId userId,
+                            @Nonnull Path fileToTransfer,
                             @Nonnull String clientSideFileName,
                             @Nonnull HttpServletResponse response) {
+        this.projectId = checkNotNull(projectId);
+        this.userId = checkNotNull(userId);
         this.fileName = checkNotNull(clientSideFileName);
         this.downloadSource = checkNotNull(fileToTransfer);
         this.response = checkNotNull(response);
@@ -99,13 +111,21 @@ class FileTransferTask implements Callable<Void> {
         try (BufferedInputStream inputStream = new BufferedInputStream(Files.newInputStream(downloadSource))) {
             try (BufferedOutputStream outputStream = new BufferedOutputStream(response.getOutputStream())) {
                 double sizeMB = Files.size(downloadSource) / (1024.0 * 1024);
-                logger.info("Transferring {} MB download to client", String.format("%.2f", sizeMB));
+                String formattedSize = String.format("%.4f", sizeMB);
+                logger.info("{} {} Transferring {} MB download to client",
+                            projectId,
+                            userId,
+                            formattedSize);
 
                 Stopwatch stopwatch = Stopwatch.createStarted();
                 IOUtils.copy(inputStream, outputStream);
                 outputStream.flush();
 
-                logger.info("Finished transferring {} MB to client after {} ms", sizeMB, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+                logger.info("{} {} Finished transferring {} MB to client after {} ms",
+                            projectId,
+                            userId,
+                            formattedSize,
+                            stopwatch.elapsed(MILLISECONDS));
             }
         }
     }
