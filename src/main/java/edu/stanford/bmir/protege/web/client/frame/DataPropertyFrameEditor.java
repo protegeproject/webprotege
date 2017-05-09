@@ -130,7 +130,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         iriField.setText(frame.getSubject().getEntity().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
         domains.setValue(new ArrayList<>(frame.getDomains()));
-        ranges.setValue(new ArrayList<>(ranges.getAbsoluteLeft()));
+        ranges.setValue(new ArrayList<>(frame.getRanges()));
         functionalCheckBox.setValue(frame.isFunctional());
         entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
 
