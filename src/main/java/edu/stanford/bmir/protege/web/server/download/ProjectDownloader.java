@@ -121,13 +121,15 @@ public class ProjectDownloader {
             zipOutputStream.closeEntry();
             int importCount = 0;
             for (OWLOntology ontology : rootOntology.getImportsClosure()) {
-                importCount++;
-                ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
-                        .getExtension());
-                zipOutputStream.putNextEntry(zipEntry);
-                ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
-                zipOutputStream.closeEntry();
-                memoryMonitor.monitorMemoryUsage();
+                if (!ontology.equals(rootOntology)) {
+                    importCount++;
+                    ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
+                            .getExtension());
+                    zipOutputStream.putNextEntry(zipEntry);
+                    ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
+                    zipOutputStream.closeEntry();
+                    memoryMonitor.monitorMemoryUsage();
+                }
             }
             zipOutputStream.finish();
             zipOutputStream.flush();
