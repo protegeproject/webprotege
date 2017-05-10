@@ -13,14 +13,13 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.ProvidesKey;
-import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.gwt.view.client.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeCellListResources;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -76,6 +75,8 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
 
     private EntitiesListItemRenderer<E> renderer = new DefaultEntitiesListItemRenderer<E>();
 
+    private final MultiSelectionModel<E> selectionModel;
+
     interface EntitiesListImplUiBinder extends UiBinder<HTMLPanel, EntitiesListImpl<?>> {
 
     }
@@ -89,15 +90,28 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
         OWLEntityDataKeyProvider keyProvider = new OWLEntityDataKeyProvider();
         cellList = new CellList<E>(new OWLEntityDataCell(), WebProtegeCellListResources.INSTANCE, keyProvider);
         listDataProvider.addDataDisplay(cellList);
-        cellList.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.BOUND_TO_SELECTION);
-        final SingleSelectionModel<E> selectionModel = new SingleSelectionModel<E>(keyProvider);
+        cellList.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.ENABLED);
+        selectionModel = new MultiSelectionModel<E>(keyProvider);
         cellList.setSelectionModel(selectionModel);
-        selectionModel.addSelectionChangeHandler(event -> SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject()));
-        cellList.addDomHandler(mouseUpEvent -> SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject()), MouseUpEvent.getType());
+        selectionModel.addSelectionChangeHandler(event -> SelectionEvent.fire(EntitiesListImpl.this, getSingleSelection()));
+        cellList.addDomHandler(mouseUpEvent -> SelectionEvent.fire(EntitiesListImpl.this, getSingleSelection()), MouseUpEvent.getType());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
 
+    @Nullable
+    private E getSingleSelection() {
+        Set<E> sel = selectionModel.getSelectedSet();
+        if(sel.isEmpty()) {
+            return null;
+        }
+        else if(sel.size() == 1) {
+            return sel.iterator().next();
+        }
+        else {
+            return sel.iterator().next();
+        }
+    }
 
 
     @Override
@@ -133,18 +147,19 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
 
     @Override
     public void setSelectedEntity(E selectedEntity) {
-        getSingleSelectionModel().setSelected(selectedEntity, true);
+        selectionModel.clear();
+        selectionModel.setSelected(selectedEntity, true);
     }
 
     @Override
     public Optional<E> getSelectedEntity() {
-        E sel = getSingleSelectionModel().getSelectedObject();
+        E sel = getSingleSelection();
         return Optional.ofNullable(sel);
     }
 
-    @SuppressWarnings("unchecked")
-    private SingleSelectionModel<E> getSingleSelectionModel() {
-        return ((SingleSelectionModel<E>) cellList.getSelectionModel());
+    @Override
+    public Set<E> getSelectedEntities() {
+        return selectionModel.getSelectedSet();
     }
 
     @Override

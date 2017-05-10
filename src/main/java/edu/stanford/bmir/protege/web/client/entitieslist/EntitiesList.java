@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,6 +24,8 @@ public interface EntitiesList<E extends OWLEntityData> extends HasSelectionHandl
     void setSelectedEntity(E entity);
 
     Optional<E> getSelectedEntity();
+
+    Set<E> getSelectedEntities();
 
     void remove(E entity);
 
