@@ -4,9 +4,11 @@ import com.mongodb.BasicDBObject;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.UpdateOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -88,7 +90,6 @@ public class EntityDiscussionThreadRepository {
                                             .get());
     }
 
-
     private UpdateOperations<EntityDiscussionThread> getUpdateOperations() {
         return datastore.createUpdateOperations(EntityDiscussionThread.class);
     }
@@ -117,7 +118,7 @@ public class EntityDiscussionThreadRepository {
         Query<EntityDiscussionThread> query = datastore.createQuery(EntityDiscussionThread.class)
                                                        .field(COMMENTS_ID_PATH).equal(commentId);
         UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
-                .removeAll("comments", new BasicDBObject("id", commentId.getId()));
+                .removeAll("comments", new BasicDBObject("_id", commentId.getId()));
         UpdateResults updateResults = datastore.updateFirst(query, update);
         return updateResults.getUpdatedCount() == 1;
     }
