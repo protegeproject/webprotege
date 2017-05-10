@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.entities;
+package edu.stanford.bmir.protege.web.server.entity;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
