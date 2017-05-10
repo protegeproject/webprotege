@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
-import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
+import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
 import edu.stanford.bmir.protege.web.server.frame.*;
@@ -53,7 +53,6 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
-import edu.stanford.bmir.protege.web.shared.admin.SetAdminSettingsAction;
 
 import static dagger.Provides.Type.SET;
 
