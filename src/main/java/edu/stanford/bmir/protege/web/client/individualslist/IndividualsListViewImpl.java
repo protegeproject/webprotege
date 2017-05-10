@@ -94,12 +94,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Override
     public Collection<OWLNamedIndividualData> getSelectedIndividuals() {
-        if(individualsList.getSelectedEntity().isPresent()) {
-            return Collections.singleton(individualsList.getSelectedEntity().get());
-        }
-        else {
-            return Collections.emptyList();
-        }
+        return individualsList.getSelectedEntities();
     }
 
     @Override

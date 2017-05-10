@@ -531,4 +531,9 @@ public class ActionHandlersModule {
     public ActionHandler providesPerformEntitySearchActionHandler(PerformEntitySearchActionHandler handler) {
         return handler;
     }
+
+    @Provides(type = SET)
+    public ActionHandler providesDeleteEntitiesActionHandler(DeleteEntitiesActionHandler handler) {
+        return handler;
+    }
 }
