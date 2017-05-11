@@ -116,10 +116,9 @@ public class EntityDiscussionThreadRepository {
     }
 
     public Optional<EntityDiscussionThread> findThreadByCommentId(CommentId commentId) {
-        return Optional.ofNullable(datastore.find(EntityDiscussionThread.class)
-                                            .field(COMMENTS_ID).equal(commentId)
-                                            .limit(1)
-                                            .get());
+        Query<EntityDiscussionThread> query = datastore.createQuery(EntityDiscussionThread.class)
+                                                       .field(COMMENTS_ID).equal(commentId);
+        return Optional.ofNullable(query.get());
     }
 
     public boolean deleteComment(CommentId commentId) {
