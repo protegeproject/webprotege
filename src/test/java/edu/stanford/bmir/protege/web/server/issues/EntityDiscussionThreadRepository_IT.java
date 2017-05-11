@@ -15,10 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -135,9 +133,7 @@ public class EntityDiscussionThreadRepository_IT {
         repository.updateComment(thread.getId(), updatedComment);
         Optional<EntityDiscussionThread> t = repository.getThread(thread.getId());
         assertThat(t.isPresent(), is(true));
-        t.ifPresent(updatedThread -> {
-            assertThat(updatedThread.getComments(), hasItem(updatedComment));
-        });
+        t.ifPresent(updatedThread -> assertThat(updatedThread.getComments(), hasItem(updatedComment)));
     }
 
     @Test
