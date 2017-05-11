@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread.*;
 
 /**
  * Matthew Horridge
@@ -24,8 +25,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 5 Oct 2016
  */
 public class EntityDiscussionThreadRepository {
-
-    public static final String COMMENTS_ID_PATH = "comments.id";
 
     public static final String MATCHED_COMMENT_PATH = "comments.$";
 
@@ -43,8 +42,8 @@ public class EntityDiscussionThreadRepository {
         datastore.createQuery(EntityDiscussionThread.class);
         return datastore.find(EntityDiscussionThread.class)
                         .disableValidation()
-                        .field("projectId").equal(projectId)
-                        .field("entity").equal(entity)
+                        .field(PROJECT_ID).equal(projectId)
+                        .field(ENTITY).equal(entity)
                         .order("-comments.0.createdAt")
                         .asList();
     }
@@ -73,13 +72,13 @@ public class EntityDiscussionThreadRepository {
     public void addCommentToThread(@Nonnull ThreadId threadId,
                                    @Nonnull Comment comment) {
         Query<EntityDiscussionThread> query = createQueryForThread(threadId);
-        UpdateOperations<EntityDiscussionThread> ops = getUpdateOperations().add("comments", comment);
+        UpdateOperations<EntityDiscussionThread> ops = getUpdateOperations().add(COMMENTS, comment);
         datastore.update(query, ops, false);
     }
 
     public Optional<EntityDiscussionThread> setThreadStatus(@Nonnull ThreadId threadId,
                                                             @Nonnull Status status) {
-        datastore.updateFirst(createQueryForThread(threadId), getUpdateOperations().set("status", status));
+        datastore.updateFirst(createQueryForThread(threadId), getUpdateOperations().set(STATUS, status));
         return Optional.ofNullable(datastore.get(EntityDiscussionThread.class, threadId));
     }
 
@@ -92,8 +91,8 @@ public class EntityDiscussionThreadRepository {
 
     public void replaceEntity(ProjectId projectId, OWLEntity entity, OWLEntity withEntity) {
         Query<EntityDiscussionThread> query = datastore.find(EntityDiscussionThread.class)
-                                                       .field("projectId").equal(projectId)
-                                                       .field("entity").equal(entity);
+                                                       .field(PROJECT_ID).equal(projectId)
+                                                       .field(ENTITY).equal(entity);
         UpdateOperations<EntityDiscussionThread> updateOperations = datastore.createUpdateOperations(EntityDiscussionThread.class);
         updateOperations.set("entity", withEntity);
         datastore.update(query, updateOperations);
@@ -110,7 +109,7 @@ public class EntityDiscussionThreadRepository {
 
     public void updateComment(ThreadId id, Comment comment) {
         Query<EntityDiscussionThread> query = createQueryForThread(id)
-                .field(COMMENTS_ID_PATH).equal(comment.getId());
+                .field(COMMENTS_ID).equal(comment.getId());
         UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
                 .set(MATCHED_COMMENT_PATH, comment);
         datastore.updateFirst(query, update);
@@ -118,23 +117,23 @@ public class EntityDiscussionThreadRepository {
 
     public Optional<EntityDiscussionThread> findThreadByCommentId(CommentId commentId) {
         return Optional.ofNullable(datastore.find(EntityDiscussionThread.class)
-                                            .field("comments.id").equal(commentId)
+                                            .field(COMMENTS_ID).equal(commentId)
                                             .limit(1)
                                             .get());
     }
 
     public boolean deleteComment(CommentId commentId) {
         Query<EntityDiscussionThread> query = datastore.createQuery(EntityDiscussionThread.class)
-                                                       .field(COMMENTS_ID_PATH).equal(commentId);
+                                                       .field(COMMENTS_ID).equal(commentId);
         UpdateOperations<EntityDiscussionThread> update = getUpdateOperations()
-                .removeAll("comments", new BasicDBObject("_id", commentId.getId()));
+                .removeAll(COMMENTS, new BasicDBObject("_id", commentId.getId()));
         UpdateResults updateResults = datastore.updateFirst(query, update);
         return updateResults.getUpdatedCount() == 1;
     }
 
     public List<EntityDiscussionThread> getThreadsInProject(ProjectId projectId) {
         return datastore.createQuery(EntityDiscussionThread.class)
-                        .field("projectId").equal(projectId)
+                        .field(PROJECT_ID).equal(projectId)
                         .asList();
     }
 }

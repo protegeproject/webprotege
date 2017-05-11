@@ -32,6 +32,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 )
 public class EntityDiscussionThread implements IsSerializable {
 
+    public static final String PROJECT_ID = "projectId";
+
+    public static final String STATUS = "status";
+
+    public static final String COMMENTS = "comments";
+
+    public static final String COMMENTS_ID = "comments._id";
+
+    public static final String ENTITY = "entity";
+
     @Id
     private ThreadId id;
 
