@@ -72,7 +72,7 @@ public class EntityDiscussionThreadRepository {
     public void addCommentToThread(@Nonnull ThreadId threadId,
                                    @Nonnull Comment comment) {
         Query<EntityDiscussionThread> query = createQueryForThread(threadId);
-        UpdateOperations<EntityDiscussionThread> ops = getUpdateOperations().add(COMMENTS, comment);
+        UpdateOperations<EntityDiscussionThread> ops = getUpdateOperations().push(COMMENTS, comment);
         datastore.update(query, ops, false);
     }
 
