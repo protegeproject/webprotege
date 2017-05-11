@@ -90,6 +90,15 @@ public class EntityDiscussionThreadRepository {
                                             .get());
     }
 
+    public void replaceEntity(ProjectId projectId, OWLEntity entity, OWLEntity withEntity) {
+        Query<EntityDiscussionThread> query = datastore.find(EntityDiscussionThread.class)
+                                                       .field("projectId").equal(projectId)
+                                                       .field("entity").equal(entity);
+        UpdateOperations<EntityDiscussionThread> updateOperations = datastore.createUpdateOperations(EntityDiscussionThread.class);
+        updateOperations.set("entity", withEntity);
+        datastore.update(query, updateOperations);
+    }
+
     private UpdateOperations<EntityDiscussionThread> getUpdateOperations() {
         return datastore.createUpdateOperations(EntityDiscussionThread.class);
     }

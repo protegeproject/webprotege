@@ -15,7 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -151,9 +154,23 @@ public class EntityDiscussionThreadRepository_IT {
         assertThat(updatedThread.get().getComments(), not(hasItem(comment)));
     }
 
+    @Test
+    public void shouldReplaceEntity() {
+        OWLEntity theReplacement = MockingUtils.mockOWLClass();
+        repository.replaceEntity(projectId,
+                                 entity,
+                                 theReplacement);
+
+        List<EntityDiscussionThread> threads = repository.findThreads(projectId, theReplacement);
+        assertThat(threads.size(), is(1));
+
+    }
+
     private MongoCollection<Document> getCollection() {
         return mongoClient.getDatabase(getTestDbName())
                           .getCollection("EntityDiscussionThreads");
     }
+
+
 
 }
