@@ -162,6 +162,24 @@ public class EntityDiscussionThreadRepository_IT {
 
     }
 
+    @Test
+    public void shouldGetThreadsInProject() {
+        List<EntityDiscussionThread> threads = repository.getThreadsInProject(projectId);
+        assertThat(threads.size(), is(1));
+    }
+
+    @Test
+    public void shouldGetCommentsCount() {
+        int count = repository.getCommentsCount(projectId, entity);
+        assertThat(count, is(1));
+    }
+
+    @Test
+    public void shouldGetOpenCommentsCount() {
+        int count = repository.getOpenCommentsCount(projectId, entity);
+        assertThat(count, is(1));
+    }
+
     private MongoCollection<Document> getCollection() {
         return mongoClient.getDatabase(getTestDbName())
                           .getCollection("EntityDiscussionThreads");
