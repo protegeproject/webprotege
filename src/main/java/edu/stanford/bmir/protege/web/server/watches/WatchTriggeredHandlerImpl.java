@@ -1,15 +1,20 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ProjectResource;
+import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.mail.MessageHeader;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
+import edu.stanford.bmir.protege.web.server.project.ProjectAccessManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
@@ -25,6 +30,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.server.access.ProjectResource.forProject;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -52,6 +60,8 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
 
     private final ProjectDetailsManager projectDetailsManager;
 
+    private final AccessManager accessManager;
+
     private final TemplateEngine templateEngine;
 
     private final FileContents watchTemplate;
@@ -60,6 +70,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
     public WatchTriggeredHandlerImpl(ProjectId projectId,
                                      RenderingManager renderingManager,
                                      ApplicationNameSupplier applicationNameSupplier,
+                                     AccessManager accessManager,
                                      PlaceUrl placeUrl,
                                      SendMail sendMail,
                                      UserDetailsManager userDetailsManager,
@@ -69,6 +80,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
         this.projectId = projectId;
         this.renderingManager = renderingManager;
         this.applicationNameSupplier = applicationNameSupplier;
+        this.accessManager = accessManager;
         this.placeUrl = placeUrl;
         this.sendMail = sendMail;
         this.userDetailsManager = userDetailsManager;
@@ -82,6 +94,10 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                                      @Nonnull OWLEntity modifiedEntity,
                                      @Nonnull UserId byUser) {
         List<String> emailAddresses = usersToNotify.stream()
+                                                   // The user should have view permissions to be notified
+                                                   .filter(u -> accessManager.hasPermission(forUser(u),
+                                                                                            forProject(projectId),
+                                                                                            VIEW_PROJECT))
                                                    .map(userDetailsManager::getEmail)
                                                    .filter(Optional::isPresent)
                                                    .map(Optional::get)
