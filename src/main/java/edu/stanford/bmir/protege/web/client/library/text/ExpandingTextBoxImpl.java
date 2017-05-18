@@ -140,7 +140,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
      */
     @Override
     public boolean isEnabled() {
-        return suggestBox.getTextBox().isEnabled();
+        return suggestBox.getValueBox().isEnabled();
     }
 
     /**
@@ -150,7 +150,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
      */
     @Override
     public void setEnabled(boolean enabled) {
-        suggestBox.getTextBox().setEnabled(enabled);
+        suggestBox.getValueBox().setEnabled(enabled);
         if(enabled) {
             setPlaceholderInternal(placeholder);
         }
@@ -209,7 +209,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
 
     @Override
     public String getPlaceholder() {
-        return suggestBox.getTextBox().getElement().getAttribute("placeholder");
+        return suggestBox.getValueBox().getElement().getAttribute("placeholder");
     }
 
     @Override
@@ -219,7 +219,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     }
 
     private void setPlaceholderInternal(String placeholder) {
-        suggestBox.getTextBox().getElement().setAttribute("placeholder", placeholder);
+        suggestBox.getValueBox().getElement().setAttribute("placeholder", placeholder);
         doPreElements(false);
     }
 
@@ -280,7 +280,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
      */
     @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
-        return suggestBox.getTextBox().addFocusHandler(handler);
+        return suggestBox.getValueBox().addFocusHandler(handler);
     }
 
     /**
