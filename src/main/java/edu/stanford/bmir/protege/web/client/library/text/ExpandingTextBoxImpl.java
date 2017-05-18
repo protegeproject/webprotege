@@ -68,11 +68,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
 
     private ExpandingTextBoxMode mode = ExpandingTextBoxMode.SINGLE_LINE;
 
-    private AcceptKeyHandler acceptKeyHandler = new AcceptKeyHandler() {
-        @Override
-        public void handleAcceptKey() {
-        }
-    };
+    private AcceptKeyHandler acceptKeyHandler = () -> {};
 
     @Inject
     public ExpandingTextBoxImpl() {
@@ -83,36 +79,25 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
 
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
-        textArea.addKeyUpHandler(new KeyUpHandler() {
-            @Override
-            public void onKeyUp(KeyUpEvent event) {
-                doPreElements(false);
+        textArea.addKeyUpHandler(event -> doPreElements(false));
+        textArea.addKeyDownHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.SINGLE_LINE) {
+                event.preventDefault();
+                acceptKeyHandler.handleAcceptKey();
             }
-        });
-        textArea.addKeyDownHandler(new KeyDownHandler() {
-            @Override
-            public void onKeyDown(KeyDownEvent event) {
-                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.SINGLE_LINE) {
-                    event.preventDefault();
-                    acceptKeyHandler.handleAcceptKey();
-                }
-                else if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && isCurrentTextAutoCompleted(textArea)) {
-                    event.preventDefault();
-                }
-                else if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && event.isControlKeyDown()) {
-                    event.preventDefault();
-                    acceptKeyHandler.handleAcceptKey();
-                }
-                doPreElements(mode == ExpandingTextBoxMode.MULTI_LINE && event.getNativeKeyCode() == KeyCodes.KEY_ENTER && (!event.isControlKeyDown() && !isCurrentTextAutoCompleted(textArea)));
+            else if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && isCurrentTextAutoCompleted(textArea)) {
+                event.preventDefault();
             }
+            else if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && event.isControlKeyDown()) {
+                event.preventDefault();
+                acceptKeyHandler.handleAcceptKey();
+            }
+            doPreElements(mode == ExpandingTextBoxMode.MULTI_LINE && event.getNativeKeyCode() == KeyCodes.KEY_ENTER && (!event.isControlKeyDown() && !isCurrentTextAutoCompleted(textArea)));
         });
         // Regain the focus after the suggest box closes (doesn't seem to happen by default here).
-        suggestBox.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
-            @Override
-            public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
-                textArea.setFocus(true);
-                lastSelection = event.getSelectedItem().getReplacementString();
-            }
+        suggestBox.addSelectionHandler(event -> {
+            textArea.setFocus(true);
+            lastSelection = event.getSelectedItem().getReplacementString();
         });
     }
 
@@ -139,18 +124,10 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     @Override
     public HandlerRegistration addAnchorClickedHandler(AnchorClickedHandler handler) {
         final HandlerRegistration anchorClickReg = addHandler(handler, AnchorClickedEvent.TYPE);
-        final HandlerRegistration clickReg = anchor.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                fireEvent(new AnchorClickedEvent(ExpandingTextBoxImpl.this));
-            }
-        });
-        return new HandlerRegistration() {
-            @Override
-            public void removeHandler() {
-                clickReg.removeHandler();
-                anchorClickReg.removeHandler();
-            }
+        final HandlerRegistration clickReg = anchor.addClickHandler(event -> fireEvent(new AnchorClickedEvent(ExpandingTextBoxImpl.this)));
+        return () -> {
+            clickReg.removeHandler();
+            anchorClickReg.removeHandler();
         };
     }
 
@@ -253,12 +230,9 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
      */
     @Override
     public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<String> handler) {
-        return suggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                if (!suggestBox.isSuggestionListShowing()) {
-                    handler.onValueChange(event);
-                }
+        return suggestBox.addValueChangeHandler(event -> {
+            if (!suggestBox.isSuggestionListShowing()) {
+                handler.onValueChange(event);
             }
         });
     }
