@@ -53,6 +53,11 @@ public class TemplateObjectsBuilder {
         return this;
     }
 
+    public TemplateObjectsBuilder withEntityUrl(String entityUrl) {
+        builder.put("entity.url", entityUrl);
+        return this;
+    }
+
     public TemplateObjectsBuilder withProjectId(@Nonnull ProjectId projectId) {
         builder.put(PROJECT_ID, projectId.getId());
         return this;
