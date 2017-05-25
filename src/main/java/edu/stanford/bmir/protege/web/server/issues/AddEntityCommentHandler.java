@@ -4,10 +4,13 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.webhook.CommentPostedSlackWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
@@ -28,14 +31,22 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
 
     private final CommentNotificationEmailer notificationsEmailer;
 
+    private final CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker;
+
+    private final ProjectDetailsRepository projectDetailsRepository;
+
     @Inject
     public AddEntityCommentHandler(@Nonnull ProjectManager projectManager,
                                    @Nonnull AccessManager accessManager,
                                    @Nonnull EntityDiscussionThreadRepository repository,
-                                   @Nonnull CommentNotificationEmailer notificationsEmailer) {
+                                   @Nonnull CommentNotificationEmailer notificationsEmailer,
+                                   @Nonnull CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker,
+                                   @Nonnull ProjectDetailsRepository projectDetailsRepository) {
         super(projectManager, accessManager);
         this.repository = checkNotNull(repository);
         this.notificationsEmailer = checkNotNull(notificationsEmailer);
+        this.commentPostedSlackWebhookInvoker = checkNotNull(commentPostedSlackWebhookInvoker);
+        this.projectDetailsRepository = checkNotNull(projectDetailsRepository);
     }
 
     @Override
@@ -71,7 +82,13 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
             notificationsEmailer.sendCommentPostedNotification(project.getProjectId(),
                                                                thread,
                                                                comment);
+            commentPostedSlackWebhookInvoker.invoke(project.getProjectId(),
+                                                    projectDetailsRepository.findOne(project.getProjectId()).map(
+                                                            ProjectDetails::getDisplayName).orElse("Project"),
+                                                    project.getRenderingManager().getRendering(thread.getEntity()),
+                                                    comment);
         });
+
         return new AddEntityCommentResult(action.getProjectId(), threadId, comment, renderedComment);
 
     }

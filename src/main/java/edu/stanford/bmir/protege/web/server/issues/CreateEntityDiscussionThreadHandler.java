@@ -5,10 +5,13 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.webhook.CommentPostedSlackWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -33,16 +36,26 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     private final EntityDiscussionThreadRepository repository;
 
     @Nonnull
+    private final ProjectDetailsRepository projectDetailsRepository;
+
+    @Nonnull
     private final CommentNotificationEmailer notificationsEmailer;
+
+    @Nonnull
+    private final CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker;
 
     @Inject
     public CreateEntityDiscussionThreadHandler(@Nonnull ProjectManager projectManager,
+                                               @Nonnull ProjectDetailsRepository projectDetailsRepository,
                                                @Nonnull AccessManager accessManager,
                                                @Nonnull EntityDiscussionThreadRepository repository,
-                                               @Nonnull CommentNotificationEmailer notificationsEmailer) {
+                                               @Nonnull CommentNotificationEmailer notificationsEmailer,
+                                               @Nonnull CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker) {
         super(projectManager, accessManager);
+        this.projectDetailsRepository = checkNotNull(projectDetailsRepository);
         this.repository = checkNotNull(repository);
         this.notificationsEmailer = checkNotNull(notificationsEmailer);
+        this.commentPostedSlackWebhookInvoker = checkNotNull(commentPostedSlackWebhookInvoker);
     }
 
     @Override
@@ -92,6 +105,11 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
         notificationsEmailer.sendCommentPostedNotification(projectId,
                                                            thread,
                                                            comment);
+        commentPostedSlackWebhookInvoker.invoke(project.getProjectId(),
+                                                projectDetailsRepository.findOne(project.getProjectId()).map(
+                                                        ProjectDetails::getDisplayName).orElse("Project"),
+                                                project.getRenderingManager().getRendering(thread.getEntity()),
+                                                comment);
 
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), entity);
         return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));

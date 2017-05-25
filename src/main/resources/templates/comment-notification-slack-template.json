@@ -1,0 +1,17 @@
+{
+  "username" : "{{application.name}}",
+  "mrkdwn_in" : ["text", "fields"],
+  "attachments": [
+    {
+      "fallback": "Comment posted by {{userId}}\n{{comment.body}}",
+      "color": "#6c1a91",
+      "pretext": "New comment in {{project.displayName}}",
+      "title" : "Commented posted on {{entity.browserText}}",
+      "title_link" : "{{{entity.url}}}",
+      "author_name": "{{userId}}",
+      "text": "{{{comment.body}}}",
+      "footer" : "<{{{entity.url}}}|View comment on {{application.name}}>",
+      "ts": {{comment.ts}}
+    }
+  ]
+}
