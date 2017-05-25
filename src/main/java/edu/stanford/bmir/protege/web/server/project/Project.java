@@ -26,6 +26,7 @@ import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchedChangesManager;
+import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -131,6 +132,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     @SuppressWarnings("deprecation")
     private final LegacyEntityDataManager legacyEntityDataManager;
 
+    @Nonnull
+    private final ProjectChangedWebhookInvoker projectChangedWebhookInvoker;
+
     @Inject
     public Project(ProjectDocumentStore documentStore,
                    ProjectId projectId,
@@ -154,7 +158,8 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                    ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository,
                    Provider<EventTranslatorManager> eventTranslatorManagerProvider,
                    Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider,
-                   ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory) {
+                   ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory,
+                   @Nonnull ProjectChangedWebhookInvoker projectChangedWebhookInvoker) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -178,6 +183,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
         this.changeDescriptionGeneratorFactory = changeDescriptionGeneratorFactory;
         this.projectDetailsRepository = projectDetailsRepository;
+        this.projectChangedWebhookInvoker = projectChangedWebhookInvoker;
     }
 
     public ProjectId getProjectId() {
@@ -511,11 +517,15 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
             if (revision.isPresent() && !(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<>();
-                eventTranslatorManager.translateOntologyChanges(revision.get(), appliedChanges, highLevelEvents);
+                Revision rev = revision.get();
+                eventTranslatorManager.translateOntologyChanges(rev, appliedChanges, highLevelEvents);
                 if (changeListGenerator instanceof HasHighLevelEvents) {
                     highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
                 }
                 projectEventManager.postEvents(highLevelEvents);
+                projectChangedWebhookInvoker.invoke(userId,
+                                                    rev.getRevisionNumber(),
+                                                    rev.getTimestamp());
             }
         } finally {
             changeProcesssingLock.unlock();
