@@ -33,6 +33,8 @@ import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManage
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
@@ -217,5 +219,10 @@ public class ApplicationModule {
     @FileTransferExecutor
     public ExecutorService provideFileTransferExecutorService() {
         return Executors.newFixedThreadPool(MAX_FILE_DOWNLOAD_THREADS);
+    }
+
+    @Provides
+    public WebhookRepository providesWebhookRepository(WebhookRepositoryImpl impl) {
+        return impl;
     }
 }
