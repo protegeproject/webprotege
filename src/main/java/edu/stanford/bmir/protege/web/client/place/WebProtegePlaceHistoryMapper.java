@@ -4,6 +4,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlaceTokenizer;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlaceTokenizer;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new LoginPlaceTokenizer());
         tokenizers.add(new SignUpPlaceTokenizer());
         tokenizers.add(new SharingSettingsPlaceTokenizer());
+        tokenizers.add(new ProjectSettingsPlaceTokenizer());
         tokenizers.add(new AdminPlaceTokenizer());
     }
 
