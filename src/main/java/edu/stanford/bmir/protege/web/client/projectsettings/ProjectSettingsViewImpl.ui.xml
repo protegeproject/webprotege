@@ -3,15 +3,88 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="Display name" addStyleNames="{wp.style.dlgLabel}"/>
-            <g:TextBox ui:field="displayNameField" visibleLength="60"/>
-        </div>
-        <div class="{wp.style.formGroup}">
-            <g:Label text="Description" addStyleNames="{wp.style.dlgLabel}"/>
-            <g:TextArea ui:field="descriptionField" visibleLines="5" characterWidth="61"/>
-        </div>
+    <ui:style>
+        .main {
+            overflow: auto;
+            padding-top: 10px;
+        }
+        .divider {
+            margin-top: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        /*.checkBox {*/
+            /*display: block;*/
+            /*padding-top: 5px;*/
+            /*padding-bottom: 5px;*/
+        /*}*/
+        /*.sectionHeading {*/
+            /*font-size: 14px;*/
+        /*}*/
+        /*.section {*/
+            /*padding: 10px;*/
+            /*padding-bottom: 15px;*/
+        /*}*/
+        .tabPanel {
+            height: 400px;
+        }
+        .tabContent {
+            padding: 10px;
+            padding-left: 20px;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main} web-protege-laf">
+        <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
+
+            <g:TabLayoutPanel ui:field="tabPanel" barUnit='EM' barHeight='3' addStyleNames="{style.tabPanel}">
+
+                <g:tab>
+                    <g:header size='7'>Main Settings</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Display name" addStyleNames="{wp.style.dlgLabel}"/>
+                            <g:TextBox ui:field="displayNameField" visibleLength="60"/>
+                        </g:HTMLPanel>
+
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Description" addStyleNames="{wp.style.dlgLabel}"/>
+                            <g:TextArea ui:field="descriptionField" visibleLines="5" width="100%"/>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                </g:tab>
+
+
+
+                <g:tab>
+                    <g:header size='7'>Slack Integration</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+                            <g:Label text="Slack Webhook Url" addStyleNames="{wp.style.dlgLabel}"/>
+                            <g:TextBox ui:field="slackWebHookUrl" visibleLength="60"/>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                </g:tab>
+
+                <g:tab>
+                    <g:header size='7'>Webhooks</g:header>
+                    <g:HTMLPanel addStyleNames="{style.tabContent}">
+                        WebHooks
+                    </g:HTMLPanel>
+                </g:tab>
+
+            </g:TabLayoutPanel>
+
+            <g:HTMLPanel addStyleNames="{style.divider}"/>
+
+            <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
+                <g:Button ui:field="applyButton" text="Apply"
+                          addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
+            </g:HTMLPanel>
+
+        </g:HTMLPanel>
 
     </g:HTMLPanel>
+
 </ui:UiBinder>

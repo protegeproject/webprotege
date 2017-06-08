@@ -2,18 +2,24 @@ package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -33,6 +39,10 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     @UiField
     protected TextArea descriptionField;
 
+    @UiField
+    protected HasClickHandlers applyButton;
+
+    private ApplyChangesHandler applyChangesHandler = () -> {};
 
     private java.util.Optional<ProjectSettings> pristineValue = java.util.Optional.empty();
 
@@ -40,6 +50,16 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     public ProjectSettingsViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+    }
+
+    @UiHandler("applyButton")
+    protected void handleApplyButtonClicked(ClickEvent event) {
+        applyChangesHandler.handleApplyChanges();
+    }
+
+    @Override
+    public void setApplyChangesHandler(@Nonnull ApplyChangesHandler applyChangesHandler) {
+        this.applyChangesHandler = checkNotNull(applyChangesHandler);
     }
 
     @Override
