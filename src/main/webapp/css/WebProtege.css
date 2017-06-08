@@ -520,7 +520,7 @@ ul.x-menu-list {
 }
 
 *.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
-    border: 1px solid rgb(198, 198, 198);
+    border: 1px solid #e0e0e0;
     font-size: 12px;
     padding: 2px;
     line-height: 15px;
