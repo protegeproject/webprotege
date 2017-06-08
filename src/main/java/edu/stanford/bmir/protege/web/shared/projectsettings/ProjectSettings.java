@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,13 +15,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectSettings implements Serializable {
+public class ProjectSettings implements Serializable, IsSerializable {
 
     private ProjectId projectId;
 
     private String projectDisplayName;
     
     private String projectDescription;
+
+    private SlackIntegrationSettings slackIntegrationSettings;
 
 
     /**
@@ -31,12 +35,17 @@ public class ProjectSettings implements Serializable {
      * Constructs a ProjectSettingsData object.
      * @param projectId The projectId.  Not {@code null}.
      * @param projectDescription The project description. Not {@code null}.
+     * @param slackIntegrationSettings
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
-    public ProjectSettings(ProjectId projectId, String projectDisplayName, String projectDescription) {
+    public ProjectSettings(@Nonnull ProjectId projectId,
+                           @Nonnull String projectDisplayName,
+                           @Nonnull String projectDescription,
+                           @Nonnull SlackIntegrationSettings slackIntegrationSettings) {
         this.projectId = checkNotNull(projectId);
         this.projectDisplayName = checkNotNull(projectDisplayName);
         this.projectDescription = checkNotNull(projectDescription);
+        this.slackIntegrationSettings = checkNotNull(slackIntegrationSettings);
     }
 
     /**
@@ -63,9 +72,13 @@ public class ProjectSettings implements Serializable {
         return projectDescription;
     }
 
+    public SlackIntegrationSettings getSlackIntegrationSettings() {
+        return slackIntegrationSettings;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectId, projectDisplayName, projectDescription);
+        return Objects.hashCode(projectId, projectDisplayName, projectDescription, slackIntegrationSettings);
     }
 
     @Override
@@ -79,7 +92,8 @@ public class ProjectSettings implements Serializable {
         ProjectSettings other = (ProjectSettings) obj;
         return this.projectDisplayName.equals(other.projectDisplayName)
                 && this.projectDescription.equals(other.projectDescription)
-                && this.projectId.equals(other.projectId);
+                && this.projectId.equals(other.projectId)
+                && this.slackIntegrationSettings.equals(other.slackIntegrationSettings);
     }
 
 
