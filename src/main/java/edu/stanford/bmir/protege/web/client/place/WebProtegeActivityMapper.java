@@ -20,6 +20,9 @@ import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.place.ProjectSettingsPlace;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsActivity;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -48,6 +51,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     private final LoggedInUserProvider loggedInUserProvider;
 
     private final PlaceController placeController;
+
 
     private Optional<ProjectPresenter> lastProjectPresenter = Optional.empty();
 
@@ -81,6 +85,13 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
         if(place instanceof AdminPlace) {
             return new AdminActivity(adminPresenter);
+        }
+        if(place instanceof ProjectSettingsPlace) {
+            ProjectSettingsPlace projectSettingsPlace = (ProjectSettingsPlace) place;
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(
+                    new ClientProjectModule(projectSettingsPlace.getProjectId()));
+            return new ProjectSettingsActivity(projectComponent.getProjectSettingsPresenter(),
+                                               projectSettingsPlace.getNextPlace());
         }
         if(place instanceof LoginPlace) {
             LoginPresenter presenter = loginPresenterProvider.get();

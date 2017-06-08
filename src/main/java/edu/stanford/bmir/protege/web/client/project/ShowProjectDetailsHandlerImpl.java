@@ -1,10 +1,16 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
+import edu.stanford.bmir.protege.web.shared.place.ProjectSettingsPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,17 +24,18 @@ public class ShowProjectDetailsHandlerImpl implements ShowProjectDetailsHandler 
     private final ProjectId projectId;
 
     @Nonnull
-    private final ProjectSettingsPresenter presenter;
+    private final PlaceController placeController;
 
     @Inject
     public ShowProjectDetailsHandlerImpl(@Nonnull ProjectId projectId,
-                                         @Nonnull ProjectSettingsPresenter presenter) {
-        this.projectId = projectId;
-        this.presenter = presenter;
+                                         @Nonnull PlaceController placeController) {
+        this.projectId = checkNotNull(projectId);
+        this.placeController = checkNotNull(placeController);
     }
 
     @Override
     public void handleShowProjectDetails() {
-        presenter.showDialog(projectId);
+        Place currentPlace = placeController.getWhere();
+        placeController.goTo(new ProjectSettingsPlace(projectId, Optional.ofNullable(currentPlace)));
     }
 }
