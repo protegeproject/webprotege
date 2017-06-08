@@ -33,6 +33,8 @@ import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManage
 import edu.stanford.bmir.protege.web.server.user.*;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepository;
 import edu.stanford.bmir.protege.web.server.watches.WatchRecordRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
+import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -223,6 +225,13 @@ public class ApplicationModule {
 
     @Provides
     public WebhookRepository providesWebhookRepository(WebhookRepositoryImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    public SlackWebhookRepository provideSlackWebhookRepository(SlackWebhookRepositoryImpl impl) {
+        impl.ensureIndexes();
         return impl;
     }
 }
