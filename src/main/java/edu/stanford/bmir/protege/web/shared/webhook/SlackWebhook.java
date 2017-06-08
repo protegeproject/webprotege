@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.webhook;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.annotations.*;
 
@@ -25,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook.PROJECT_
                 )
         }
 )
-public class SlackWebhook {
+public class SlackWebhook implements IsSerializable {
 
 
     public static final String PROJECT_ID = "projectId";
@@ -35,6 +37,10 @@ public class SlackWebhook {
     private ProjectId projectId;
 
     private String payloadUrl;
+
+    @GwtSerializationConstructor
+    private SlackWebhook() {
+    }
 
     public SlackWebhook(@Nonnull ProjectId projectId,
                         @Nonnull String payloadUrl) {

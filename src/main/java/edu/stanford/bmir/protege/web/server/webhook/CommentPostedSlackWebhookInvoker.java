@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ public class CommentPostedSlackWebhookInvoker implements WebhookInvoker {
     private final WebhookExecutor webhookExecutor;
 
     @Nonnull
-    private final WebhookRepository webhookRepository;
+    private final SlackWebhookRepository webhookRepository;
 
     @Nonnull
     private final PlaceUrl placeUrl;
@@ -57,7 +58,7 @@ public class CommentPostedSlackWebhookInvoker implements WebhookInvoker {
     public CommentPostedSlackWebhookInvoker(@Nonnull ApplicationNameSupplier applicationNameSupplier,
                                             @Nonnull PlaceUrl placeUrl,
                                             @Nonnull WebhookExecutor webhookExecutor,
-                                            @Nonnull WebhookRepository webhookRepository,
+                                            @Nonnull SlackWebhookRepository webhookRepository,
                                             @Nonnull @CommentNotificationSlackTemplate FileContents payloadTemplateFile,
                                             @Nonnull TemplateEngine templateEngine) {
         this.applicationNameSupplier = applicationNameSupplier;
@@ -85,7 +86,7 @@ public class CommentPostedSlackWebhookInvoker implements WebhookInvoker {
                                                                     .with(COMMENT_TS, comment.getCreatedAt() / 1000)
                                                                     .build();
         String jsonPayload = templateEngine.populateTemplate(payloadTemplate, templateObjects);
-        webhookRepository.getProjectWebhooks(projectId, COMMENT_POSTED)
+        webhookRepository.getWebhooks(projectId)
                          .forEach(webhook -> {
                              String payloadUrl = webhook.getPayloadUrl();
                              String invocationId = UUID.randomUUID().toString();

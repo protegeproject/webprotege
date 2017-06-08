@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,6 +42,9 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     @UiField
     protected HasClickHandlers applyButton;
+
+    @UiField
+    TextBox slackPayloadUrl;
 
     private ApplyChangesHandler applyChangesHandler = () -> {};
 
@@ -82,6 +86,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
         pristineValue = java.util.Optional.of(object);
         displayNameField.setText(object.getProjectDisplayName());
         descriptionField.setText(object.getProjectDescription());
+        slackPayloadUrl.setText(object.getSlackIntegrationSettings().getPayloadUrl());
     }
 
     @Override
@@ -95,7 +100,10 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     public Optional<ProjectSettings> getValue() {
         if(pristineValue.isPresent()) {
             ProjectSettings oldValue = pristineValue.get();
-            return Optional.of(new ProjectSettings(oldValue.getProjectId(), getDisplayName(), getDescription()));
+            return Optional.of(new ProjectSettings(oldValue.getProjectId(),
+                                                   getDisplayName(),
+                                                   getDescription(),
+                                                   getSlackIntegrationSettings()));
         }
         else {
             return Optional.absent();
@@ -119,5 +127,9 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     private String getDescription() {
         return descriptionField.getText().trim();
+    }
+
+    private SlackIntegrationSettings getSlackIntegrationSettings() {
+        return new SlackIntegrationSettings(slackPayloadUrl.getText().trim());
     }
 }

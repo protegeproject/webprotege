@@ -62,7 +62,7 @@
                     <g:HTMLPanel addStyleNames="{style.tabContent}">
                         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
                             <g:Label text="Slack Webhook Url" addStyleNames="{wp.style.dlgLabel}"/>
-                            <g:TextBox ui:field="slackWebHookUrl" visibleLength="60"/>
+                            <g:TextBox ui:field="slackPayloadUrl" visibleLength="60"/>
                         </g:HTMLPanel>
                     </g:HTMLPanel>
                 </g:tab>
