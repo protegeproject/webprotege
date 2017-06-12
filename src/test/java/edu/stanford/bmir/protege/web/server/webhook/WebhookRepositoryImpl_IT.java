@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
+import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static edu.stanford.bmir.protege.web.server.webhook.ProjectWebhookEventType.COMMENT_POSTED;
-import static edu.stanford.bmir.protege.web.server.webhook.ProjectWebhookEventType.PROJECT_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.COMMENT_POSTED;
+import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.PROJECT_CHANGED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;

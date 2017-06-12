@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -25,6 +26,7 @@ public class ProjectSettings implements Serializable, IsSerializable {
 
     private SlackIntegrationSettings slackIntegrationSettings;
 
+    private WebhookSettings webhookSettings;
 
     /**
      * For serialization purposes only
@@ -36,16 +38,19 @@ public class ProjectSettings implements Serializable, IsSerializable {
      * @param projectId The projectId.  Not {@code null}.
      * @param projectDescription The project description. Not {@code null}.
      * @param slackIntegrationSettings
+     * @param webhookSettings
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
     public ProjectSettings(@Nonnull ProjectId projectId,
                            @Nonnull String projectDisplayName,
                            @Nonnull String projectDescription,
-                           @Nonnull SlackIntegrationSettings slackIntegrationSettings) {
+                           @Nonnull SlackIntegrationSettings slackIntegrationSettings,
+                           @Nonnull WebhookSettings webhookSettings) {
         this.projectId = checkNotNull(projectId);
         this.projectDisplayName = checkNotNull(projectDisplayName);
         this.projectDescription = checkNotNull(projectDescription);
         this.slackIntegrationSettings = checkNotNull(slackIntegrationSettings);
+        this.webhookSettings = checkNotNull(webhookSettings);
     }
 
     /**
@@ -76,9 +81,17 @@ public class ProjectSettings implements Serializable, IsSerializable {
         return slackIntegrationSettings;
     }
 
+    public WebhookSettings getWebhookSettings() {
+        return webhookSettings;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectId, projectDisplayName, projectDescription, slackIntegrationSettings);
+        return Objects.hashCode(projectId,
+                                projectDisplayName,
+                                projectDescription,
+                                slackIntegrationSettings,
+                                webhookSettings);
     }
 
     @Override
@@ -93,16 +106,17 @@ public class ProjectSettings implements Serializable, IsSerializable {
         return this.projectDisplayName.equals(other.projectDisplayName)
                 && this.projectDescription.equals(other.projectDescription)
                 && this.projectId.equals(other.projectId)
-                && this.slackIntegrationSettings.equals(other.slackIntegrationSettings);
+                && this.slackIntegrationSettings.equals(other.slackIntegrationSettings)
+                && this.webhookSettings.equals(other.webhookSettings);
     }
 
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ProjectSettings")
-                .addValue(projectId)
-                .add("displayName", projectDisplayName)
-                .add("description", projectDescription)
-                .toString();
+        return MoreObjects.toStringHelper("ProjectSettings")
+                          .addValue(projectId)
+                          .add("displayName", projectDisplayName)
+                          .add("description", projectDescription)
+                          .toString();
     }
 }

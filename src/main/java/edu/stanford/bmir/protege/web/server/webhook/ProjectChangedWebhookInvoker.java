@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import java.util.UUID;
 
-import static edu.stanford.bmir.protege.web.server.webhook.ProjectWebhookEventType.PROJECT_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.PROJECT_CHANGED;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 /**

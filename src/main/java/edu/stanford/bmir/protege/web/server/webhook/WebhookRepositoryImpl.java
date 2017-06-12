@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.webhook;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
+import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.DeleteOptions;
 import org.mongodb.morphia.query.Query;
 
 import javax.annotation.Nonnull;
