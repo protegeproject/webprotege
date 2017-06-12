@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.webhook;
 
-import com.google.gson.GsonBuilder;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
@@ -10,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +17,6 @@ import javax.inject.Inject;
 import java.util.Map;
 import java.util.UUID;
 
-import static edu.stanford.bmir.protege.web.server.webhook.ProjectWebhookEventType.COMMENT_POSTED;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 /**

@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
@@ -70,7 +71,8 @@
                 <g:tab>
                     <g:header size='7'>Webhooks</g:header>
                     <g:HTMLPanel addStyleNames="{style.tabContent}">
-                        WebHooks
+                        <g:Label text="Payload Urls" addStyleNames="{wp.style.dlgLabel}"/>
+                        <editor:ValueListEditorImpl ui:field="webhooks"/>
                     </g:HTMLPanel>
                 </g:tab>
 

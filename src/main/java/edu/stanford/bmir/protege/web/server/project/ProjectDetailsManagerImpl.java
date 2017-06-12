@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
+import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -8,17 +10,16 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
+import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
 import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.webhook.ProjectWebhookEventType.COMMENT_POSTED;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -31,10 +32,14 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     private final SlackWebhookRepository slackWebhookRepository;
 
+    private final WebhookRepository webhookRepository;
+
     @Inject
     public ProjectDetailsManagerImpl(ProjectDetailsRepository repository,
-                                     SlackWebhookRepository slackWebhookRepository) {
+                                     SlackWebhookRepository slackWebhookRepository,
+                                     WebhookRepository webhookRepository) {
         this.repository = checkNotNull(repository);
+        this.webhookRepository = checkNotNull(webhookRepository);
         this.slackWebhookRepository = checkNotNull(slackWebhookRepository);
     }
 
@@ -95,6 +100,15 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         if(!payloadUrl.isEmpty()) {
             slackWebhookRepository.addWebhooks(Collections.singletonList(new SlackWebhook(projectId, payloadUrl)));
         }
+        webhookRepository.clearProjectWebhooks(projectId);
+        List<ProjectWebhook> projectWebhooks = projectSettings.getWebhookSettings().getWebhookSettings().stream()
+                                                      .map(s -> new ProjectWebhook(projectId,
+                                                                                   s.getPayloadUrl(),
+                                                                                   new ArrayList<ProjectWebhookEventType>(
+                                                                                           s.getEventTypes())))
+                                                      .collect(toList());
+        webhookRepository.addProjectWebhooks(projectWebhooks);
+
     }
 
     @Override
@@ -103,11 +117,15 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         String slackPayloadUrl = projectWebhooks.stream()
                                                 .findFirst()
                                                 .map(SlackWebhook::getPayloadUrl).orElse("");
+        List<WebhookSetting> webhookSettings = webhookRepository.getProjectWebhooks(projectId).stream()
+                                                               .map(wh -> new WebhookSetting(wh.getPayloadUrl(), new LinkedHashSet<ProjectWebhookEventType>(wh.getSubscribedToEvents())))
+                                                               .collect(toList());
         ProjectDetails projectDetails = getProjectDetails(projectId);
             return new ProjectSettings(projectId,
                     projectDetails.getDisplayName(),
                     projectDetails.getDescription(),
-                                       new SlackIntegrationSettings(slackPayloadUrl));
+                                       new SlackIntegrationSettings(slackPayloadUrl),
+                                       new WebhookSettings(webhookSettings));
     }
 
 }

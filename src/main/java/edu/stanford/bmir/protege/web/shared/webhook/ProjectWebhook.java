@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.webhook;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.server.webhook.ProjectWebhookEventType;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.annotations.*;

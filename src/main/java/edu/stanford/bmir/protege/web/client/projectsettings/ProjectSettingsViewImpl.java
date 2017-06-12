@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -11,16 +12,25 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
+import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -46,12 +56,17 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     @UiField
     TextBox slackPayloadUrl;
 
+    @UiField(provided = true)
+    ValueListEditorImpl<String> webhooks;
+
     private ApplyChangesHandler applyChangesHandler = () -> {};
 
     private java.util.Optional<ProjectSettings> pristineValue = java.util.Optional.empty();
 
     @Inject
     public ProjectSettingsViewImpl() {
+        webhooks = new ValueListEditorImpl<>(() -> new WebhookViewImpl());
+        webhooks.setEnabled(true);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -87,6 +102,11 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
         displayNameField.setText(object.getProjectDisplayName());
         descriptionField.setText(object.getProjectDescription());
         slackPayloadUrl.setText(object.getSlackIntegrationSettings().getPayloadUrl());
+        webhooks.clearValue();
+        List<String> payloadUrls = object.getWebhookSettings().getWebhookSettings().stream()
+                .map(WebhookSetting::getPayloadUrl)
+                .collect(toList());
+        webhooks.setValue(payloadUrls);
     }
 
     @Override
@@ -103,10 +123,24 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
             return Optional.of(new ProjectSettings(oldValue.getProjectId(),
                                                    getDisplayName(),
                                                    getDescription(),
-                                                   getSlackIntegrationSettings()));
+                                                   getSlackIntegrationSettings(),
+                                                   getWebhookSettings()));
         }
         else {
             return Optional.absent();
+        }
+    }
+
+    private WebhookSettings getWebhookSettings() {
+        Optional<List<String>> value = webhooks.getValue();
+        if(value.isPresent()) {
+            List<WebhookSetting> settings = value.get().stream()
+                    .map(u -> new WebhookSetting(u, Sets.newHashSet(ProjectWebhookEventType.values())))
+                    .collect(toList());
+            return new WebhookSettings(settings);
+        }
+        else {
+            return new WebhookSettings(Collections.emptyList());
         }
     }
 

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.webhook;
+package edu.stanford.bmir.protege.web.shared.webhook;
 
 /**
  * Matthew Horridge
