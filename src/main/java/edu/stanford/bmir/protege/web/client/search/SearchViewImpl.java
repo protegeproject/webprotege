@@ -124,7 +124,7 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     }
 
     private void performSearchIfChanged() {
-        String searchString = searchStringField.getText().trim();
+        String searchString = searchStringField.getText();
         if (!previousSearchString.equals(searchString)) {
             previousSearchString = searchString;
             searchStringChangedHandler.handleSearchStringChanged();
@@ -203,7 +203,7 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
 
     @Override
     public String getSearchString() {
-        return searchStringField.getText().trim();
+        return searchStringField.getText();
     }
 
     @Override
