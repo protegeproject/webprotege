@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import static org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax.*;
 
@@ -334,6 +335,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             stringBuilder.append(": ");
             stringBuilder.append("</span>");
             axiom.getEntity().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -341,6 +343,20 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getSubClass().accept(this);
             renderBinaryKeyword(SUBCLASS_OF);
             axiom.getSuperClass().accept(this);
+            renderAxiomAnnotations(axiom);
+        }
+
+        void renderAxiomAnnotations(OWLAxiom axiom) {
+            Set<OWLAnnotation> annotations = axiom.getAnnotations();
+            if (!annotations.isEmpty()) {
+                stringBuilder.append("<div class=\"ms-annotations\">");
+                annotations.forEach(anno -> {
+                    stringBuilder.append("<div>");
+                    anno.accept(this);
+                    stringBuilder.append("</div>");
+                });
+                stringBuilder.append("</div>");
+            }
         }
 
         @Override
@@ -353,6 +369,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             renderSpace();
             axiom.getObject().accept(this);
             renderCloseBracket();
+            renderAxiomAnnotations(axiom);
         }
 
         private void renderSpace() {
@@ -390,6 +407,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         @Override
         public void visit(OWLDisjointClassesAxiom axiom) {
             renderNaryCollection(DISJOINT_CLASSES, axiom.getClassExpressions(), DISJOINT_WITH);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -401,6 +419,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getProperty().accept(this);
             renderBinaryKeyword(DOMAIN);
             axiom.getDomain().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -411,6 +430,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         @Override
         public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
             renderNaryCollection(EQUIVALENT_PROPERTIES, axiom.getProperties(), EQUIVALENT_TO);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -422,22 +442,26 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         @Override
         public void visit(OWLDifferentIndividualsAxiom axiom) {
             renderNaryCollection(DIFFERENT_INDIVIDUALS, axiom.getIndividuals(), DIFFERENT_FROM);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
         public void visit(OWLDisjointDataPropertiesAxiom axiom) {
             renderNaryCollection(DISJOINT_PROPERTIES, axiom.getProperties(), DISJOINT_WITH);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
         public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
             renderNaryCollection(DISJOINT_PROPERTIES, axiom.getProperties(), DISJOINT_WITH);
+            renderAxiomAnnotations(axiom);
         }
 
         private void renderRangeAxiom(OWLPropertyRangeAxiom<?, ?> axiom) {
             axiom.getProperty().accept(this);
             renderBinaryKeyword(RANGE);
             axiom.getRange().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -456,6 +480,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getProperty().accept(this);
             renderSpace();
             axiom.getObject().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -472,6 +497,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getSubProperty().accept(this);
             renderBinaryKeyword(SUB_PROPERTY_OF);
             axiom.getSuperProperty().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -479,6 +505,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getOWLClass().accept(this);
             renderBinaryKeyword(DISJOINT_UNION_OF);
             renderCollection(axiom.getClassExpressions(), ", ");
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -499,6 +526,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         @Override
         public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
             renderNaryCollection(EQUIVALENT_PROPERTIES, axiom.getProperties(), EQUIVALENT_TO);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -506,11 +534,13 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getIndividual().accept(this);
             renderBinaryKeyword(TYPE);
             axiom.getClassExpression().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
         public void visit(OWLEquivalentClassesAxiom axiom) {
             renderNaryCollection(EQUIVALENT_CLASSES, axiom.getClassExpressions(), EQUIVALENT_TO);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -526,6 +556,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         private void renderPropertyCharacteristic(ManchesterOWLSyntax keyword, OWLUnaryPropertyAxiom<?> axiom) {
             renderSectionKeyword(keyword);
             axiom.getProperty().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -553,6 +584,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             renderCollection(axiom.getPropertyChain(), " o ");
             renderBinaryKeyword(SUB_PROPERTY_OF);
             axiom.getSuperProperty().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -560,6 +592,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getFirstProperty().accept(this);
             renderBinaryKeyword(INVERSE_OF);
             axiom.getSecondProperty().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -567,6 +600,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getClassExpression().accept(this);
             renderBinaryKeyword(HAS_KEY);
             renderCollection(axiom.getPropertyExpressions(), ", ");
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -574,6 +608,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getDatatype().accept(this);
             renderBinaryKeyword(EQUIVALENT_TO);
             axiom.getDataRange().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -581,6 +616,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             renderCollection(rule.getBody(), ", ");
             stringBuilder.append(" -> ");
             renderCollection(rule.getHead(), ", ");
+            renderAxiomAnnotations(rule);
         }
 
         @Override
@@ -590,6 +626,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getProperty().accept(this);
             renderSpace();
             axiom.getValue().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -597,6 +634,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getSubProperty().accept(this);
             renderBinaryKeyword(SUB_PROPERTY_OF);
             axiom.getSuperProperty().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -604,6 +642,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getProperty().accept(this);
             renderBinaryKeyword(DOMAIN);
             axiom.getDomain().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
         @Override
@@ -611,6 +650,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             axiom.getProperty().accept(this);
             renderBinaryKeyword(RANGE);
             axiom.getRange().accept(this);
+            renderAxiomAnnotations(axiom);
         }
 
 
