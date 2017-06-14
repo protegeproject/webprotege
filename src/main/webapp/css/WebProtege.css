@@ -1295,7 +1295,7 @@ td {
 }
 
 .ms-frame-kw {
-    color: #02178E;
+    color: #07589f;
     font-weight: bold;
 }
 
@@ -1324,7 +1324,7 @@ td {
 }
 
 .ms-section-kw {
-    color: #02178E;
+    color: #07589f;
     font-weight: bold;
 }
 
@@ -1395,27 +1395,22 @@ td {
 
 .ms-item-ce {
     /*background: url("../../java/edu/stanford/bmir/protege/web/resources/class.png") no-repeat 0 -1px;*/
-    padding-left: 20px;
 }
 
 .ms-item-ind {
     /*background: url("../images/tree/individual.png") no-repeat 0 -1px;*/
-    padding-left: 20px;
 }
 
 .ms-item-anno {
     /*background: url("../images/tree/annotation-property.png") no-repeat 0 -1px;*/
-    padding-left: 20px;
 }
 
 .ms-item-prop {
     /*background: url("../images/tree/property.png") no-repeat 0 -1px;*/
-    padding-left: 20px;
 }
 
 .ms-item-dr {
     /*background: url("../images/tree/datatype.png") no-repeat 0 -1px;*/
-    padding-left: 20px;
 }
 
 .ms-literal p:only-child {
