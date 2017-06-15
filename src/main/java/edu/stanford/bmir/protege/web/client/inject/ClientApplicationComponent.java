@@ -5,7 +5,6 @@ import dagger.Component;
 import edu.stanford.bmir.protege.web.client.app.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.app.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
-import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryModuleGenerated;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 
@@ -17,8 +16,7 @@ import edu.stanford.bmir.protege.web.shared.inject.SharedApplicationModule;
 @Component(
         modules = {
                 ClientApplicationModule.class,
-                SharedApplicationModule.class,
-                PortletFactoryModuleGenerated.class})
+                SharedApplicationModule.class})
 @ApplicationSingleton
 public interface ClientApplicationComponent {
 

@@ -28,6 +28,8 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
+import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
@@ -51,7 +53,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Oct 2016
  */
-@Module
+@Module(includes = PortletModulesGenerated.class)
 public class ClientProjectModule {
 
     private final ProjectId projectId;
