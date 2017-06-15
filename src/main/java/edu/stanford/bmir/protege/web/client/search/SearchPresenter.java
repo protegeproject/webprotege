@@ -12,7 +12,10 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import org.semanticweb.owlapi.model.EntityType;
@@ -60,9 +63,17 @@ public class SearchPresenter implements HasInitialFocusable {
 
     public void start() {
         view.setSearchStringChangedHandler(() -> {
-            searchTimer.cancel();
-            searchTimer.schedule(500);
+            view.setPageNumber(1);
+            restartSearchTimer();
         });
+        view.setPageNumberChangedHandler(pageNumber -> {
+            restartSearchTimer();
+        });
+    }
+
+    void restartSearchTimer() {
+        searchTimer.cancel();
+        searchTimer.schedule(500);
     }
 
     public void setSearchResultChosenHandler(SearchResultChosenHandler handler) {
@@ -93,12 +104,19 @@ public class SearchPresenter implements HasInitialFocusable {
             view.clearSearchMatches();
             return;
         }
+        int pageNumber = view.getPageNumber();
         dispatchServiceManager.execute(new PerformEntitySearchAction(projectId,
                                                                      view.getSearchString(),
-                                                                     entityTypes),
+                                                                     entityTypes,
+                                                                     PageRequest.requestPage(pageNumber)),
                                        view,
-                                       result -> view.setSearchMatches(result.getTotalResultCount(),
-                                                                       result.getResults()));
+                                       result -> {
+                                           Page<EntitySearchResult> results = result.getResults();
+                                           view.setSearchMatches(result.getTotalResultCount(),
+                                                                 results.getPageElements());
+                                           view.setPageCount(results.getPageCount());
+                                           view.setPageNumber(results.getPageNumber());
+                                       });
     }
 
 
