@@ -2,10 +2,15 @@ package edu.stanford.bmir.protege.web.shared.search;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 
+import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -20,29 +25,39 @@ public class PerformEntitySearchAction implements Action<PerformEntitySearchResu
 
     private Set<EntityType<?>> entityTypes;
 
+    private PageRequest pageRequest;
+
     private PerformEntitySearchAction() {
     }
 
-    public PerformEntitySearchAction(ProjectId projectId,
-                                     String searchString,
-                                     Set<EntityType<?>> entityTypes) {
-        this.projectId = projectId;
-        this.searchString = searchString;
-        this.entityTypes = entityTypes;
+    public PerformEntitySearchAction(@Nonnull ProjectId projectId,
+                                     @Nonnull String searchString,
+                                     @Nonnull Set<EntityType<?>> entityTypes,
+                                     @Nonnull PageRequest pageRequest) {
+        this.projectId = checkNotNull(projectId);
+        this.searchString = checkNotNull(searchString);
+        this.entityTypes = checkNotNull(entityTypes);
+        this.pageRequest = checkNotNull(pageRequest);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    @Nonnull
     public Set<EntityType<?>> getEntityTypes() {
-        return entityTypes;
+        return new HashSet<>(entityTypes);
     }
 
+    @Nonnull
     public String getSearchString() {
         return searchString;
     }
 
-
+    @Nonnull
+    public PageRequest getPageRequest() {
+        return pageRequest;
+    }
 }

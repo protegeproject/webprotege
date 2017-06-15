@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.search;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -18,15 +19,16 @@ public class PerformEntitySearchResult implements Result {
 
     private int totalResultCount;
 
-    private List<EntitySearchResult> results;
+    private Page<EntitySearchResult> results;
 
     @GwtSerializationConstructor
     private PerformEntitySearchResult() {
     }
 
-    public PerformEntitySearchResult(int totalResultCount, @Nonnull List<EntitySearchResult> results) {
+    public PerformEntitySearchResult(int totalResultCount,
+                                     @Nonnull Page<EntitySearchResult> results) {
         this.totalResultCount = totalResultCount;
-        this.results = new ArrayList<>(results);
+        this.results = results;
     }
 
     public int getTotalResultCount() {
@@ -34,8 +36,8 @@ public class PerformEntitySearchResult implements Result {
     }
 
     @Nonnull
-    public List<EntitySearchResult> getResults() {
-        return new ArrayList<>(results);
+    public Page<EntitySearchResult> getResults() {
+        return results;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class PerformEntitySearchResult implements Result {
     @Override
     public String toString() {
         return toStringHelper("PerformEntitySearchResult")
-                .add("results", results.size())
+                .add("results", results.getTotalElements())
                 .toString();
     }
 }

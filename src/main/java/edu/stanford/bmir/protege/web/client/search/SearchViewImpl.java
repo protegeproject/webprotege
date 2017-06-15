@@ -12,6 +12,10 @@ import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.text.PlaceholderTextBox;
+import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
@@ -52,6 +56,11 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     @UiField
     BusyViewImpl busyView;
 
+    @UiField(provided = true)
+    PaginatorView paginator;
+
+    private PaginatorPresenter paginatorPresenter;
+
     private int selectedIndex = -1;
 
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
@@ -63,7 +72,9 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     private AcceptKeyHandler acceptKeyHandler = () -> {};
 
     @Inject
-    public SearchViewImpl() {
+    public SearchViewImpl(PaginatorPresenter paginatorPresenter) {
+        this.paginatorPresenter = paginatorPresenter;
+        paginator = paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -240,11 +251,31 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
         }
     }
 
-    void highlightSelectedIndex() {
+    private void highlightSelectedIndex() {
         if (-1 < selectedIndex && selectedIndex < list.getWidgetCount()) {
             Element element = list.getWidget(selectedIndex).getElement();
             element.getStyle().setBackgroundColor("#D9E8FB");
             element.scrollIntoView();
         }
+    }
+
+    @Override
+    public void setPageCount(int pageCount) {
+        paginatorPresenter.setPageCount(pageCount);
+    }
+
+    @Override
+    public void setPageNumber(int pageNumber) {
+        paginatorPresenter.setPageNumber(pageNumber);
+    }
+
+    @Override
+    public int getPageNumber() {
+        return paginatorPresenter.getPageNumber();
+    }
+
+    @Override
+    public void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler) {
+        paginatorPresenter.setPageNumberChangedHandler(handler);
     }
 }

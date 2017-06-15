@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.search;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
+import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
@@ -29,4 +31,15 @@ public interface SearchView extends HasBusy, IsWidget, HasInitialFocusable {
     void setSearchResultChosenHandler(SearchResultChosenHandler handler);
 
     Optional<OWLEntityData> getSelectedSearchResult();
+
+
+
+    void setPageCount(int pageCount);
+
+    void setPageNumber(int pageNumber);
+
+    int getPageNumber();
+
+    void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
+
 }

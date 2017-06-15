@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.util.ProtegeStreams;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
@@ -51,10 +53,21 @@ public class PerformEntitySearchActionHandler extends AbstractHasProjectActionHa
                                                            project.getRenderingManager(),
                                                            entityTypes,
                                                            searchString);
+        PageRequest pageRequest = action.getPageRequest();
+        int pageSize = pageRequest.getPageSize();
+        entitySearcher.setLimit(pageSize);
+
+        int pageNumber = pageRequest.getPageNumber();
+        entitySearcher.setSkip((pageNumber - 1) * pageSize);
+
         entitySearcher.invoke();
+
         int totalSearchResults = entitySearcher.getSearchResultsCount();
         List<EntitySearchResult> results = entitySearcher.getResults();
-        return new PerformEntitySearchResult(totalSearchResults, results);
+        int pageCount = (totalSearchResults / pageSize) + 1;
+        Page<EntitySearchResult> page = new Page<>(pageNumber > pageCount ? 1 : pageNumber,
+                                                   pageCount, results, totalSearchResults);
+        return new PerformEntitySearchResult(totalSearchResults, page);
     }
 }
 
