@@ -68,6 +68,14 @@ public class PageRequest implements Serializable, IsSerializable {
         return pageSize;
     }
 
+    /**
+     * Gets the number of entities to skip over for this page request.
+     * @return The number of entities to skip over.
+     */
+    public int getSkip() {
+        return (pageNumber - 1) * pageSize;
+    }
+
     @Override
     public int hashCode() {
         return "PageRequest".hashCode() + pageNumber + pageSize;
