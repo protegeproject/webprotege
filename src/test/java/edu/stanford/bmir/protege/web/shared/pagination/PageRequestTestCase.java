@@ -88,4 +88,15 @@ public class PageRequestTestCase {
         assertEquals(requestA.hashCode(), requestB.hashCode());
     }
 
+    @Test
+    public void shouldSkipNothingForFirstPage() {
+        PageRequest request = PageRequest.requestFirstPage();
+        assertEquals(request.getSkip(), 0);
+    }
+
+    @Test
+    public void shouldSkipOverPages() {
+        PageRequest request = PageRequest.requestPageWithSize(3, 10);
+        assertEquals(request.getSkip(), 20);
+    }
 }
