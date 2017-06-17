@@ -46,8 +46,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     /**
      * The root node for annotation properties
      */
-    public static final PropertyEntityData ANNOTATION_PROPERTIES_ROOT = new PropertyEntityData(ANNOTATION_PROPERTIES_ROOT_NAME);
-
+    public static final PropertyEntityData ANNOTATION_PROPERTIES_ROOT = new PropertyEntityData(
+            ANNOTATION_PROPERTIES_ROOT_NAME);
 
 
     static {
@@ -89,6 +89,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     /**
      * Gets the OWLAPIProject for a given project name.  If a project with the specified name exists then that project
      * will be returned, otherwise, a fresh project will be created and that fresh project returned.
+     *
      * @param projectName The name of the project.
      * @return The OWL API project. Not <code>null</code>.
      */
@@ -104,6 +105,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     /**
      * Gets the OWLAPIProject for a given {@link ProjectId}.If a project with the specified id exists then that project
      * will be returned, otherwise, a fresh project will be created and that fresh project returned.
+     *
      * @param projectId The id of the project.
      * @return The OWL API project. Not <code>null</code>.
      */
@@ -113,6 +115,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     /**
      * Gets the root ontology for a given project name.
+     *
      * @param projectName The name of the project.
      * @return The root ontology. Not <code>null</code>.
      */
@@ -188,10 +191,11 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
+     *
      * @param projectName The name of the relevant project.
-     * @param className The class name which corresponds to an entity for which subclasses will be retrieved.  This
-     * should be an IRI, but this implementation will tolerate browser text.  If null, then this implementation returns
-     * an empty list.
+     * @param className   The class name which corresponds to an entity for which subclasses will be retrieved.  This
+     *                    should be an IRI, but this implementation will tolerate browser text.  If null, then this implementation returns
+     *                    an empty list.
      * @return The list of subclasses.
      */
     public List<SubclassEntityData> getSubclasses(String projectName, String className) {
@@ -207,45 +211,50 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         AssertedClassHierarchyProvider hierarchyProvider = project.getClassHierarchyProvider();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
 
-        boolean checkForDeprecated = project.getRootOntology().containsAnnotationPropertyInSignature(OWLRDFVocabulary.OWL_DEPRECATED.getIRI());
+        boolean checkForDeprecated = project.getRootOntology()
+                                            .containsAnnotationPropertyInSignature(OWLRDFVocabulary.OWL_DEPRECATED.getIRI());
         for (OWLClass subclass : new ArrayList<OWLClass>(hierarchyProvider.getChildren(cls))) {
             boolean deprecated = false;
-            if(checkForDeprecated) {
+            if (checkForDeprecated) {
                 deprecated = project.isDeprecated(subclass);
             }
-//            if (!deprecated) {
+            if (!deprecated) {
                 Set<OWLClass> children = hierarchyProvider.getChildren(subclass);
                 int subClassSubClassesCount = children.size();
                 String browserText = rm.getBrowserText(subclass);
                 String name = subclass.getIRI().toString();
-                SubclassEntityData data = new SubclassEntityData(name, browserText, new HashSet<EntityData>(0), subClassSubClassesCount);
+                SubclassEntityData data = new SubclassEntityData(name,
+                                                                 browserText,
+                                                                 new HashSet<EntityData>(0),
+                                                                 subClassSubClassesCount);
                 data.setDeprecated(deprecated);
-                int commentsCount = entityDiscussionThreadRepository.getOpenCommentsCount(project.getProjectId(), subclass);
+                int commentsCount = entityDiscussionThreadRepository.getOpenCommentsCount(project.getProjectId(),
+                                                                                          subclass);
                 data.setLocalAnnotationsCount(commentsCount);
-            Set<Watch> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
-            if(!directWatches.isEmpty()) {
-                data.setWatches(directWatches);
-            }
+                Set<Watch> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
+                if (!directWatches.isEmpty()) {
+                    data.setWatches(directWatches);
+                }
                 data.setValueType(ValueType.Cls);
                 result.add(data);
-//            }
+            }
         }
         Collections.sort(result, new Comparator<SubclassEntityData>() {
             public int compare(SubclassEntityData o1, SubclassEntityData o2) {
-                if(o1.isDeprecated()) {
-                    if(!o2.isDeprecated()) {
+                if (o1.isDeprecated()) {
+                    if (!o2.isDeprecated()) {
                         return 1;
                     }
                 }
-                else if(o2.isDeprecated()) {
+                else if (o2.isDeprecated()) {
                     return -1;
                 }
                 String browserText1 = o1.getBrowserText();
                 String browserText2 = o2.getBrowserText();
-                if(browserText1.startsWith("'")) {
+                if (browserText1.startsWith("'")) {
                     browserText1 = browserText1.substring(1);
                 }
-                if(browserText2.startsWith("'")) {
+                if (browserText2.startsWith("'")) {
                     browserText2 = browserText2.substring(1);
                 }
                 return browserText1.compareToIgnoreCase(browserText2);
@@ -254,11 +263,23 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return result;
     }
 
-    public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles, String user, String operationDescription) {
+    public List<EntityData> moveCls(String projectName,
+                                    String clsName,
+                                    String oldParentName,
+                                    String newParentName,
+                                    boolean checkForCycles,
+                                    String user,
+                                    String operationDescription) {
         // Why check for cycles here and nowhere else?
         Project project = getProject(projectName);
         UserId userId = getUserId(user);
-        MoveClassChangeFactory cf = new MoveClassChangeFactory(project, userId, operationDescription, clsName, oldParentName, newParentName, checkForCycles);
+        MoveClassChangeFactory cf = new MoveClassChangeFactory(project,
+                                                               userId,
+                                                               operationDescription,
+                                                               clsName,
+                                                               oldParentName,
+                                                               newParentName,
+                                                               checkForCycles);
         applyChanges(cf);
         // Not sure what this is meant to return - the other impl returns null - return null.  Confirmation from Csongor null idicates no cycles.
         return null;
@@ -287,10 +308,11 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         }
 
         // Special handling for fake annotation property root
-        if(propertyName.equals(ANNOTATION_PROPERTIES_ROOT_NAME)) {
+        if (propertyName.equals(ANNOTATION_PROPERTIES_ROOT_NAME)) {
             Set<EntityData> annotationPropertyRoots = new LinkedHashSet<EntityData>();
             Set<IRI> addedProperties = new HashSet<IRI>();
-            for (OWLAnnotationProperty annotationProperty : project.getAnnotationPropertyHierarchyProvider().getRoots()) {
+            for (OWLAnnotationProperty annotationProperty : project.getAnnotationPropertyHierarchyProvider()
+                                                                   .getRoots()) {
                 annotationPropertyRoots.add(rm.getEntityData(annotationProperty));
                 addedProperties.add(annotationProperty.getIRI());
             }
@@ -378,7 +400,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 }
             }
             else if (entity.isOWLObjectProperty()) {
-                Set<List<OWLObjectProperty>> paths = project.getObjectPropertyHierarchyProvider().getPathsToRoot(entity.asOWLObjectProperty());
+                Set<List<OWLObjectProperty>> paths = project.getObjectPropertyHierarchyProvider()
+                                                            .getPathsToRoot(entity.asOWLObjectProperty());
                 if (!paths.isEmpty()) {
                     for (OWLObjectProperty prop : paths.iterator().next()) {
                         result.add(rm.getEntityData(prop));
@@ -386,7 +409,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 }
             }
             else if (entity.isOWLDataProperty()) {
-                Set<List<OWLDataProperty>> paths = project.getDataPropertyHierarchyProvider().getPathsToRoot(entity.asOWLDataProperty());
+                Set<List<OWLDataProperty>> paths = project.getDataPropertyHierarchyProvider()
+                                                          .getPathsToRoot(entity.asOWLDataProperty());
                 if (!paths.isEmpty()) {
                     for (OWLDataProperty prop : paths.iterator().next()) {
                         result.add(rm.getEntityData(prop));
@@ -394,7 +418,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 }
             }
             else if (entity.isOWLAnnotationProperty()) {
-                Set<List<OWLAnnotationProperty>> paths = project.getAnnotationPropertyHierarchyProvider().getPathsToRoot(entity.asOWLAnnotationProperty());
+                Set<List<OWLAnnotationProperty>> paths = project.getAnnotationPropertyHierarchyProvider()
+                                                                .getPathsToRoot(entity.asOWLAnnotationProperty());
                 if (!paths.isEmpty()) {
                     for (OWLAnnotationProperty prop : paths.iterator().next()) {
                         result.add(rm.getEntityData(prop));
