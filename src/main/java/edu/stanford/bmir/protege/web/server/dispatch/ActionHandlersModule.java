@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
+import edu.stanford.bmir.protege.web.server.entity.GetDeprecatedEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
@@ -533,6 +534,11 @@ public class ActionHandlersModule {
 
     @Provides(type = SET)
     public ActionHandler providesDeleteEntitiesActionHandler(DeleteEntitiesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ActionHandler providesGetDeprecatedEntitiesActionHandler(GetDeprecatedEntitiesActionHandler handler) {
         return handler;
     }
 }

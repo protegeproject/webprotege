@@ -18,6 +18,8 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
+import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
+import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
@@ -353,6 +355,11 @@ public class ClientApplicationModule {
 
     @Provides
     SearchView providesSearchView(SearchViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DeprecatedEntitiesView provideDeprecatedEntitiesView(DeprecatedEntitiesViewImpl impl) {
         return impl;
     }
 }
