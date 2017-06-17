@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 1 Mar 2017
  */
-public class PaginatorPresenter {
+public class PaginatorPresenter implements HasPages {
 
     private final PaginatorView view;
 
@@ -30,6 +30,7 @@ public class PaginatorPresenter {
         setPageNumber(1);
     }
 
+    @Override
     public void setPageNumberChangedHandler(@Nonnull HasPagination.PageNumberChangedHandler pageNumberChangedHandler) {
         this.pageNumberChangedHandler = checkNotNull(pageNumberChangedHandler);
     }
@@ -38,10 +39,12 @@ public class PaginatorPresenter {
         return view;
     }
 
+    @Override
     public int getPageNumber() {
         return pageNumber;
     }
 
+    @Override
     public void setPageNumber(int pageNumber) {
         if(pageNumber < 1) {
             return;
@@ -54,6 +57,7 @@ public class PaginatorPresenter {
         updateState();
     }
 
+    @Override
     public void setPageCount(int pageCount) {
         if(pageCount < 1) {
             return;
