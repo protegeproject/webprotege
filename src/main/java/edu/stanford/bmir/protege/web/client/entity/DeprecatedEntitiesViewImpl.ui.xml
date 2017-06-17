@@ -2,7 +2,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .container {
             position: absolute;
@@ -25,7 +24,7 @@
         <g:ScrollPanel  addStyleNames="{style.list}">
             <entitieslist:EntitiesListImpl ui:field="entitiesList"/>
         </g:ScrollPanel>
-        <g:HTMLPanel addStyleNames="{style.paginatorHolder} {wp.style.grayScale}">
+        <g:HTMLPanel addStyleNames="{style.paginatorHolder}">
             <pagination:PaginatorView ui:field="paginator"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
