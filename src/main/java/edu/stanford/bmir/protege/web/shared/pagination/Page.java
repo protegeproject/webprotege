@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,6 +41,10 @@ public class Page<T> implements Serializable, Iterable<T>, IsSerializable {
         this.pageElements = new ArrayList<T>(checkNotNull(pageElements));
         checkArgument(totalElements > -1);
         this.totalElements = totalElements;
+    }
+
+    public static <T> Page<T> emptyPage() {
+        return new Page<>(1, 1, Collections.emptyList(), 0);
     }
 
     public List<T> getPageElements() {
