@@ -218,7 +218,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
             if (checkForDeprecated) {
                 deprecated = project.isDeprecated(subclass);
             }
-            if (!deprecated) {
+            if (!deprecated || !hierarchyProvider.getChildren(subclass).isEmpty()) {
                 Set<OWLClass> children = hierarchyProvider.getChildren(subclass);
                 int subClassSubClassesCount = children.size();
                 String browserText = rm.getBrowserText(subclass);
