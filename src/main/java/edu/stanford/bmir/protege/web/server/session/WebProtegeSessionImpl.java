@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
