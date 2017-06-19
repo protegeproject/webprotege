@@ -1,15 +1,13 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 /**

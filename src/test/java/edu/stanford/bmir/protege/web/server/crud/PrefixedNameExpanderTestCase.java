@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.IRI;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -31,44 +32,44 @@ public class PrefixedNameExpanderTestCase {
     }
 
     @Test
-    public void shouldReturnAbsentForEmptySuppliedName() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName("");
-        assertThat(expanded, is(equalTo(Optional.<IRI>absent())));
+    public void shouldReturnemptyForEmptySuppliedName() {
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName("");
+        assertThat(expanded, is(equalTo(Optional.<IRI>empty())));
     }
 
     @Test
-    public void shouldReturnAbsentForSuppliedNameEqualToSingleColon() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName(":");
-        assertThat(expanded, is(equalTo(Optional.<IRI>absent())));
+    public void shouldReturnemptyForSuppliedNameEqualToSingleColon() {
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName(":");
+        assertThat(expanded, is(equalTo(Optional.<IRI>empty())));
     }
 
     @Test
-    public void shouldReturnAbsentForEmptyPrefixName() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName(":" + SUPPLIED_NAME);
-        assertThat(expanded, is(equalTo(Optional.<IRI>absent())));
+    public void shouldReturnemptyForEmptyPrefixName() {
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName(":" + SUPPLIED_NAME);
+        assertThat(expanded, is(equalTo(Optional.<IRI>empty())));
     }
 
     @Test
-    public void shouldReturnAbsentForSuppliedNameWithPrefixNameButWithEmptyLocalName() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName(PREFIX_NAME);
-        assertThat(expanded, is(equalTo(Optional.<IRI>absent())));
+    public void shouldReturnemptyForSuppliedNameWithPrefixNameButWithEmptyLocalName() {
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName(PREFIX_NAME);
+        assertThat(expanded, is(equalTo(Optional.<IRI>empty())));
     }
 
     @Test
-    public void shouldReturnAbsentForSuppliedNameWithoutColon() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName(SUPPLIED_NAME);
-        assertThat(expanded, is(equalTo(Optional.<IRI>absent())));
+    public void shouldReturnemptyForSuppliedNameWithoutColon() {
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName(SUPPLIED_NAME);
+        assertThat(expanded, is(equalTo(Optional.<IRI>empty())));
     }
 
     @Test
     public void shouldExpandSuppliedNameWithColonThatMatchesPrefixName() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName(PREFIX_NAME + SUPPLIED_NAME);
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName(PREFIX_NAME + SUPPLIED_NAME);
         assertThat(expanded, is(equalTo(Optional.of(IRI.create(PREFIX + SUPPLIED_NAME)))));
     }
 
     @Test
-    public void shouldReturnAbsentForSuppliedNameWithColonThatDoesNotMatchPrefixName() {
-        Optional<IRI> expanded = expander.getExpandedPrefixName("abc:" + SUPPLIED_NAME);
-        assertThat(expanded, is(equalTo(Optional.<IRI>absent())));
+    public void shouldReturnemptyForSuppliedNameWithColonThatDoesNotMatchPrefixName() {
+        java.util.Optional<IRI> expanded = expander.getExpandedPrefixName("abc:" + SUPPLIED_NAME);
+        assertThat(expanded, is(equalTo(Optional.<IRI>empty())));
     }
 }

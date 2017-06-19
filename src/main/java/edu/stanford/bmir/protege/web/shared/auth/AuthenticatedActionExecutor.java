@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

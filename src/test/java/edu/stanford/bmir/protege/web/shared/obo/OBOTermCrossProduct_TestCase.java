@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -23,8 +24,7 @@ public class OBOTermCrossProduct_TestCase {
 
     private OBOTermCrossProduct crossProduct;
 
-    @Mock
-    private Optional<OWLClassData> genus;
+    private Optional<OWLClassData> genus = Optional.of(mock(OWLClassData.class));
 
     @Mock
     private OBOTermRelationships relationships;
@@ -92,12 +92,4 @@ public class OBOTermCrossProduct_TestCase {
         when(relationships.isEmpty()).thenReturn(true);
         assertThat(crossProduct.isEmpty(), is(true));
     }
-
-    @Test
-    public void shouldReturn_false_For_isEmpty() {
-        when(relationships.isEmpty()).thenReturn(false);
-        when(genus.isPresent()).thenReturn(true);
-        assertThat(crossProduct.isEmpty(), is(false));
-    }
-
 }

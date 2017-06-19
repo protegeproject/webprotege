@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.dispatch.InvalidRequestException;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,7 +19,7 @@ public class RequestValidationResult {
     private Optional<Exception> exception;
 
     protected RequestValidationResult() {
-        this(ValidationResult.VALID, Optional.absent());
+        this(ValidationResult.VALID, Optional.empty());
     }
 
     protected RequestValidationResult(String exceptionMessage) {

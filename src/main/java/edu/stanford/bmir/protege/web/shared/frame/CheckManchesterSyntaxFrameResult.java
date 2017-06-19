@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
@@ -12,6 +14,7 @@ public class CheckManchesterSyntaxFrameResult implements Result {
 
     private ManchesterSyntaxFrameParseError error;
 
+    @GwtSerializationConstructor
     private CheckManchesterSyntaxFrameResult() {
     }
 
@@ -29,6 +32,6 @@ public class CheckManchesterSyntaxFrameResult implements Result {
     }
 
     public Optional<ManchesterSyntaxFrameParseError> getError() {
-        return Optional.fromNullable(error);
+        return Optional.ofNullable(error);
     }
 }

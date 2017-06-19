@@ -93,12 +93,12 @@ public class PrimitiveDataParserImpl_EntityParsing_TestCase {
     private void parseEntityData(OWLEntityData entityData) {
         lookupMap.put(entityData.getBrowserText(), entityData);
         parser.parsePrimitiveData(entityData.getBrowserText(),
-                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+                                  Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult(entityData);
     }
 
     private void verifyResult(OWLEntityData entityData) {
-        java.util.Optional<OWLPrimitiveData> expectedData = Optional.of(entityData);
+        Optional<OWLPrimitiveData> expectedData = Optional.of(entityData);
         Mockito.verify(primitiveDataParserCallback).onSuccess(expectedData);
     }
 }

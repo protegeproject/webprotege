@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -24,10 +24,10 @@ public abstract class AbstractCreateEntityInHierarchyAction<R extends AbstractCr
 
     public AbstractCreateEntityInHierarchyAction(ProjectId projectId, Set<String> browserTexts, Optional<E> parent) {
         super(projectId, browserTexts);
-        this.parent = parent.orNull();
+        this.parent = parent.orElse(null);
     }
 
     public Optional<E> getParent() {
-        return Optional.fromNullable(parent);
+        return Optional.ofNullable(parent);
     }
 }

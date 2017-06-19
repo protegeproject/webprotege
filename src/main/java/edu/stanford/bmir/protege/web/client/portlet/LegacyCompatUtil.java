@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -23,7 +24,7 @@ public class LegacyCompatUtil {
      */
     public static Optional<OWLEntityData> toOWLEntityData(EntityData entityData) {
         if(entityData == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(entityData instanceof PropertyEntityData) {
             PropertyEntityData propertyEntityData = (PropertyEntityData) entityData;
@@ -48,8 +49,8 @@ public class LegacyCompatUtil {
         }
 
         else if(entityData.getValueType() == ValueType.Property) {
-            return Optional.absent();
+            return Optional.empty();
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }

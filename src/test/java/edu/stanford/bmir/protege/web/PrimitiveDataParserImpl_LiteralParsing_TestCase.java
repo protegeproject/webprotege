@@ -67,90 +67,90 @@ public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
     @Test
     public void shouldParseStringWithoutLanguageTagAsXSDString() {
         parser.parsePrimitiveData("Hello World!",
-                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+                                  Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("Hello World!", OWL2Datatype.XSD_STRING);
     }
 
     @Test
     public void shouldParseStringWithLanguageTagAsRDFPlainLiteral() {
-        parser.parsePrimitiveData("Hello World!", java.util.Optional.of("en"), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("Hello World!", Optional.of("en"), primitiveTypes, primitiveDataParserCallback);
         verifyResult("Hello World!@en", OWL2Datatype.RDF_PLAIN_LITERAL);
     }
 
     @Test
     public void shouldParseStringIncludingLanguageTagAsXSDString() {
         parser.parsePrimitiveData("Hello World!@fr",
-                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+                                  Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("Hello World!@fr", OWL2Datatype.XSD_STRING);
     }
 
     @Test
     public void shouldParseDecimalAsXSDDecimal() {
-        parser.parsePrimitiveData("3.3", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("3.3", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3.3", OWL2Datatype.XSD_DECIMAL);
     }
 
     @Test
     public void shouldParseDecimalWithCommaSeparatorsAsXSDDecimal() {
-        parser.parsePrimitiveData("3,333.3", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("3,333.3", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3333.3", OWL2Datatype.XSD_DECIMAL);
     }
 
     @Test
     public void shouldParseIntegerAsXSDInteger() {
-        parser.parsePrimitiveData("3", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("3", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3", OWL2Datatype.XSD_INTEGER);
     }
 
     @Test
     public void shouldParseIntegerWithCommanSeparatorsAsXSDInteger() {
-        parser.parsePrimitiveData("3,333", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("3,333", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3333", OWL2Datatype.XSD_INTEGER);
     }
 
     @Test
     public void shouldParseFloatAsXSDFloat() {
-        parser.parsePrimitiveData("3f", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("3f", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3", OWL2Datatype.XSD_FLOAT);
     }
 
     @Test
     public void shouldParseFloatWithCommaSeparatorsAsXSDFloat() {
-        parser.parsePrimitiveData("3,333f", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("3,333f", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3333", OWL2Datatype.XSD_FLOAT);
     }
 
     @Test
     public void shouldParseYyyyMmDdAsXSDDateTime() {
-        parser.parsePrimitiveData("2004-10-13", java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("2004-10-13", Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("2004-10-13T00:00:00", OWL2Datatype.XSD_DATE_TIME);
     }
 
     @Test
     public void shouldParseYyyyMmDdTHhMmSsAsXSDDateTime() {
         parser.parsePrimitiveData("2004-10-13T12:51:12",
-                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+                                  Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("2004-10-13T12:51:12", OWL2Datatype.XSD_DATE_TIME);
     }
 
     @Test
     public void shouldParseYyyyMmDdTHhMmSsDotSsAsXSDDateTime() {
         parser.parsePrimitiveData("2004-10-13T12:51:12.34",
-                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+                                  Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("2004-10-13T12:51:12.34", OWL2Datatype.XSD_DATE_TIME);
     }
 
     @Test
     public void shouldParseYyyyMmDdSpaceHhMmSsAsXSDDateTime() {
         parser.parsePrimitiveData("2004-10-13 12:51:12",
-                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
+                                  Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("2004-10-13T12:51:12", OWL2Datatype.XSD_DATE_TIME);
     }
 
 
     private void verifyResult(String lexicalValue, OWL2Datatype datatype) {
         OWLLiteral expected = dataFactory.getOWLLiteral(lexicalValue, datatype);
-        java.util.Optional<OWLPrimitiveData> expectedData = Optional.of(new OWLLiteralData(expected));
+        Optional<OWLPrimitiveData> expectedData = Optional.of(new OWLLiteralData(expected));
         Mockito.verify(primitiveDataParserCallback).onSuccess(expectedData);
     }
 }

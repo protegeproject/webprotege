@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionChoice;
@@ -26,11 +25,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -218,7 +215,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         }
 
         @Override
-        public int compareTo(AutoCompletionMatch autoCompletionMatch) {
+        public int compareTo(@Nonnull AutoCompletionMatch autoCompletionMatch) {
             int diff = this.matchResult.compareTo(autoCompletionMatch.matchResult);
             if(diff != 0) {
                 return diff;

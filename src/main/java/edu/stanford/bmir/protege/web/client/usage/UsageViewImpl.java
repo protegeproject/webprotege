@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.usage;
 
-import com.google.common.base.Optional;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.cell.client.TextCell;
@@ -29,10 +28,7 @@ import edu.stanford.bmir.protege.web.shared.usage.UsageReferenceComparator;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -234,7 +230,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
             sb.append("<div class=\"").append(iconClass);
             final String fontWeight;
-            if(object.getAxiomSubject().equals(Optional.fromNullable(currentSubject))) {
+            if(object.getAxiomSubject().equals(Optional.ofNullable(currentSubject))) {
                 fontWeight = "bold";
             }
             else {

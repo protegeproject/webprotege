@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -28,7 +27,7 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
     
     private final OBOTermRelationshipEditor editor;
 
-    private Optional<List<OBORelationship>> pristineValue = Optional.absent();
+    private Optional<List<OBORelationship>> pristineValue = Optional.empty();
 
     @Inject
     public OBOTermRelationshipPortletPresenter(OBOTermRelationshipEditor editor, ProjectId projectId, SelectionModel selectionModel) {
@@ -60,15 +59,15 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        java.util.Optional<OWLEntity> current = getSelectedEntity();
+        Optional<OWLEntity> current = getSelectedEntity();
         if(!current.isPresent()) {
             editor.clearValue();
-            pristineValue = Optional.absent();
+            pristineValue = Optional.empty();
             return;
         }
         if(!(current.get() instanceof OWLClass)) {
             editor.clearValue();
-            pristineValue = Optional.absent();
+            pristineValue = Optional.empty();
             return;
         }
         getService().getRelationships(getProjectId(),  (OWLClass) current.get(), new AsyncCallback<OBOTermRelationships>() {
@@ -88,7 +87,7 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
     @Override
     protected void clearDisplay() {
         editor.clearValue();
-        pristineValue = Optional.absent();
+        pristineValue = Optional.empty();
     }
 
     @Override

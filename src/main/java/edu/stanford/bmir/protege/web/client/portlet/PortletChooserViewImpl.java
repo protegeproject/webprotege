@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -62,7 +62,7 @@ public class PortletChooserViewImpl extends Composite implements PortletChooserV
         String value = listBox.getSelectedValue();
         PortletDescriptor descriptor = displayName2DescriptorMap.get(value);
         if(descriptor == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(descriptor.getPortletId());

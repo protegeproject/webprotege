@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -11,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Portlet(id = "portlets.IndividualsList", title = "Individuals by Class")
 public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPresenter {
@@ -23,7 +23,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
      * of the preconfigured class.
      */
     // TODO: This needs fixing
-    private Optional<OWLClass> preconfiguredClass = Optional.absent();
+    private Optional<OWLClass> preconfiguredClass = Optional.empty();
 
     @Inject
     public IndividualsListPortletPresenter(IndividualsListPresenter presenter,
@@ -41,7 +41,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     }
 
     @Override
-    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         Optional<OWLClass> selectedClass;
         if(preconfiguredClass.isPresent()) {
             selectedClass = preconfiguredClass;
@@ -50,7 +50,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
             selectedClass = Optional.of(getSelectionModel().getLastSelectedClass().get());
         }
         else {
-            selectedClass = Optional.absent();
+            selectedClass = Optional.empty();
         }
 
 

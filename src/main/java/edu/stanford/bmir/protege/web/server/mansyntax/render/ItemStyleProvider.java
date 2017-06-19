@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014

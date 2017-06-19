@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.usage;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,9 +32,9 @@ public class UsageReference implements Serializable, Comparable<UsageReference> 
     private UsageReference() {
     }
 
-    public UsageReference(AxiomType<?> axiomType, String axiomRendering, Optional<OWLEntity> axiomSubject, Optional<String> subjectRendering) {
-        this.subject = checkNotNull(axiomSubject).orNull();
-        this.subjectRendering = subjectRendering.or("");
+    public UsageReference(AxiomType<?> axiomType, String axiomRendering, java.util.Optional<OWLEntity> axiomSubject, Optional<String> subjectRendering) {
+        this.subject = checkNotNull(axiomSubject).orElse(null);
+        this.subjectRendering = subjectRendering.orElse("");
         this.axiomType = checkNotNull(axiomType);
         this.axiomRendering = checkNotNull(axiomRendering);
     }
@@ -44,8 +44,8 @@ public class UsageReference implements Serializable, Comparable<UsageReference> 
         return subjectRendering;
     }
 
-    public Optional<OWLEntity> getAxiomSubject() {
-        return Optional.fromNullable(subject);
+    public java.util.Optional<OWLEntity> getAxiomSubject() {
+        return java.util.Optional.ofNullable(subject);
     }
 
     public AxiomType getAxiomType() {
@@ -58,7 +58,7 @@ public class UsageReference implements Serializable, Comparable<UsageReference> 
 
     @Override
     public int hashCode() {
-        return "UsageReference".hashCode() + Optional.fromNullable(subject).hashCode() + axiomType.hashCode() + axiomRendering.hashCode();
+        return "UsageReference".hashCode() + Optional.ofNullable(subject).hashCode() + axiomType.hashCode() + axiomRendering.hashCode();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class UsageReference implements Serializable, Comparable<UsageReference> 
             return false;
         }
         UsageReference other = (UsageReference) obj;
-        return Optional.fromNullable(this.subject).equals(Optional.fromNullable(other.subject)) && this.axiomType.equals(other.axiomType) && this.axiomRendering.equals(other.axiomRendering);
+        return Optional.ofNullable(this.subject).equals(Optional.ofNullable(other.subject)) && this.axiomType.equals(other.axiomType) && this.axiomRendering.equals(other.axiomRendering);
     }
 
     @Override

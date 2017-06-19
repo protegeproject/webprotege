@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -19,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
@@ -51,7 +51,7 @@ public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActio
             type = Optional.of(action.getType().get());
         }
         else {
-            type = Optional.absent();
+            type = Optional.empty();
         }
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = project.applyChanges(executionContext.getUserId(), new CreateIndividualsChangeListGenerator(action.getShortNames(), type), new FixedMessageChangeDescriptionGenerator<Set<OWLNamedIndividual>>("Created individuals"));
         Set<OWLNamedIndividual> individuals = result.getSubject().get();

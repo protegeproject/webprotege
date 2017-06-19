@@ -99,7 +99,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
 
     /**
      * Gets the {@link Focusable} that should receive the focus when the dialog is shown.  If no widget should receive the focus
-     * then {@link com.google.common.base.Optional#absent()} will be returned.
+     * then {@link Optional#empty()} will be returned.
      * @return The {@link Focusable} that will receive the focus. Not <code>null</code>
      */
     @Nonnull

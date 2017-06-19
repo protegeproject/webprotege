@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
@@ -9,9 +8,11 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -53,12 +54,13 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
         if (prefix2PrefixNameMap.containsKey(iriNS)) {
             return Optional.of(iriNS);
         } else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
+    @Nonnull
     @Override
-    public String getShortForm(IRI iri) {
+    public String getShortForm(@Nonnull IRI iri) {
         Optional<String> builtInPrefix = getBuiltInPrefix(iri);
         if (builtInPrefix.isPresent()) {
             return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + iri.getFragment();

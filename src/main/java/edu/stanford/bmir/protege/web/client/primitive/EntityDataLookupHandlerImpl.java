@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -13,6 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -40,7 +40,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
     public void lookupEntity(String displayName, final Set<EntityType<?>> allowedEntityTypes, final AsyncCallback<Optional<OWLEntityData>> callback) {
         final String trimmedContent = displayName.trim();
         if(allowedEntityTypes.isEmpty()) {
-            callback.onSuccess(Optional.absent());
+            callback.onSuccess(Optional.empty());
             return;
         }
         if(freshEntitiesHandler.isRegisteredFreshEntity(displayName)) {
@@ -77,7 +77,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
      */
     private Optional<OWLEntityData> getMatchingEntity(List<EntityLookupResult> result, String text, ProjectId projectId, Set<EntityType<?>> allowedEntityTypes) {
         if (result.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         EntityLookupResult lookupResult = result.get(0);
         final OWLEntityData lookedUpEntityData = lookupResult.getOWLEntityData();
@@ -86,7 +86,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             return Optional.of(lookedUpEntityData);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

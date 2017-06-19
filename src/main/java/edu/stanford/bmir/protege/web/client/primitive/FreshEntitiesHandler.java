@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 /**

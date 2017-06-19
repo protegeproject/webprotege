@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
-import com.google.common.base.Optional;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static junit.framework.Assert.*;
 

@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import static com.google.common.base.Objects.toStringHelper;
+import javax.annotation.Nullable;
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -15,17 +18,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetChapSessionResult implements Result {
 
-    private Optional<ChapSession> chapSession;
+    @Nullable
+    private ChapSession chapSession;
 
+    @GwtSerializationConstructor
     private GetChapSessionResult() {
     }
 
     public GetChapSessionResult(Optional<ChapSession> chapSession) {
-        this.chapSession = checkNotNull(chapSession);
+        this.chapSession = checkNotNull(chapSession).orElse(null);
     }
 
     public Optional<ChapSession> getChapSession() {
-        return chapSession;
+        return Optional.ofNullable(chapSession);
     }
 
     @Override
@@ -42,13 +47,13 @@ public class GetChapSessionResult implements Result {
             return false;
         }
         GetChapSessionResult other = (GetChapSessionResult) obj;
-        return this.chapSession.equals(other.chapSession);
+        return Objects.equal(this.chapSession, other.chapSession);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("GetChapSessionResult")
+        return MoreObjects.toStringHelper("GetChapSessionResult")
                 .addValue(chapSession)
                 .toString();
     }

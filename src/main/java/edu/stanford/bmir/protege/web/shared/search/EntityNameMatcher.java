@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNameUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -43,9 +42,9 @@ public class EntityNameMatcher {
      * in {@code entityName}.  Not {@code null}.  An absent value indicates that no match was found.
      * @throws NullPointerException if {@code entityName} is {@code null}.
      */
-    public Optional<EntityNameMatchResult> findIn(String entityName) {
+    public java.util.Optional<EntityNameMatchResult> findIn(String entityName) {
         checkNotNull(entityName);
-        Optional<EntityNameMatchResult> exactMatchResult = searchForExactEntityNameMatch(entityName);
+        java.util.Optional<EntityNameMatchResult> exactMatchResult = searchForExactEntityNameMatch(entityName);
         if(exactMatchResult.isPresent()) {
             return exactMatchResult;
         }
@@ -54,18 +53,18 @@ public class EntityNameMatcher {
         return searchForBestPartialEntityNameMatch(entityName);
     }
 
-    private Optional<EntityNameMatchResult> searchForExactEntityNameMatch(String entityName) {
+    private java.util.Optional<EntityNameMatchResult> searchForExactEntityNameMatch(String entityName) {
         // Base case.  Exact match, quoted or unquoted.
         if (entityName.equalsIgnoreCase(searchString)) {
-            return Optional.of(createExactMatchResultForString(entityName));
+            return java.util.Optional.of(createExactMatchResultForString(entityName));
         }
         if (EntityNameUtils.isQuoted(entityName) && entityName.substring(1, entityName.length() - 1).equalsIgnoreCase(searchString)) {
-            return Optional.of(createExactMatchResultForQuotedString(entityName));
+            return java.util.Optional.of(createExactMatchResultForQuotedString(entityName));
         }
-        return Optional.absent();
+        return java.util.Optional.empty();
     }
 
-    private Optional<EntityNameMatchResult> searchForBestPartialEntityNameMatch(String entityName) {
+    private java.util.Optional<EntityNameMatchResult> searchForBestPartialEntityNameMatch(String entityName) {
         final int prefixNameSeparatorIndex = entityName.indexOf(':');
         MatchIndexHelper matchIndexHelper = new MatchIndexHelper(prefixNameSeparatorIndex);
         for (int index = 0; index < entityName.length(); index++) {
@@ -95,14 +94,14 @@ public class EntityNameMatcher {
         return getEntityNameMatchResult(matchIndexHelper);
     }
 
-    private Optional<EntityNameMatchResult> getEntityNameMatchResult(MatchIndexHelper matchIndexHelper) {
+    private java.util.Optional<EntityNameMatchResult> getEntityNameMatchResult(MatchIndexHelper matchIndexHelper) {
         final EntityNameMatchType matchType = matchIndexHelper.getBestMatchType();
         if (matchType != EntityNameMatchType.NONE) {
             int matchIndex = matchIndexHelper.getBestMatchIndex();
-            return Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType, matchIndexHelper.getBestMatchPrefixNameMatchType()));
+            return java.util.Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType, matchIndexHelper.getBestMatchPrefixNameMatchType()));
         }
         else {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
     }
 

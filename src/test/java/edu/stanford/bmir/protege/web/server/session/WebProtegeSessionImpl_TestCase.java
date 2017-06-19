@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.session;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +9,8 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;

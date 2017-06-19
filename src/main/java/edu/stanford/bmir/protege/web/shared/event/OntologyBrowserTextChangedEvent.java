@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
-import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.HasChangedValue;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OntologyBrowserTextChangedEvent extends Event<OntologyBrowserTextChangedEventHandler> implements Serializable, HasChangedValue<String> {
 
-    public static final transient Event.Type<OntologyBrowserTextChangedEventHandler> TYPE = new Event.Type<OntologyBrowserTextChangedEventHandler>();
+    public static final transient Type<OntologyBrowserTextChangedEventHandler> TYPE = new Type<OntologyBrowserTextChangedEventHandler>();
 
     private OWLOntologyID ontologyID;
 
@@ -63,23 +64,23 @@ public class OntologyBrowserTextChangedEvent extends Event<OntologyBrowserTextCh
     }
 
     /**
-     * Returns the {@link com.google.web.bindery.event.shared.Event.Type} used to register this event, allowing an
-     * {@link com.google.web.bindery.event.shared.EventBus} to find handlers of the appropriate class.
+     * Returns the {@link Type} used to register this event, allowing an
+     * {@link EventBus} to find handlers of the appropriate class.
      * @return the type
      */
     @Override
-    public Event.Type<OntologyBrowserTextChangedEventHandler> getAssociatedType() {
+    public Type<OntologyBrowserTextChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     /**
      * Implemented by subclasses to to invoke their handlers in a type safe
-     * manner. Intended to be called by {@link com.google.web.bindery.event.shared.EventBus#fireEvent(
-     *com.google.web.bindery.event.shared.Event)} or
-     * {@link com.google.web.bindery.event.shared.EventBus#fireEventFromSource(com.google.web.bindery.event.shared.Event,
+     * manner. Intended to be called by {@link EventBus#fireEvent(
+     *Event)} or
+     * {@link EventBus#fireEventFromSource(Event,
      * Object)}.
      * @param handler handler
-     * @see com.google.web.bindery.event.shared.EventBus#dispatchEvent(com.google.web.bindery.event.shared.Event,
+     * @see EventBus#dispatchEvent(Event,
      *      Object)
      */
     @Override

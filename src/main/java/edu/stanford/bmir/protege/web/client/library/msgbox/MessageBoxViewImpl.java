@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -9,6 +8,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.Image;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

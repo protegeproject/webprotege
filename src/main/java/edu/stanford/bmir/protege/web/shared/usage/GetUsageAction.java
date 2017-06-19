@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.usage;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.AbstractHasProjectIdAndSubject;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,17 +19,16 @@ public class GetUsageAction extends AbstractHasProjectIdAndSubject<OWLEntity> im
 
     private static final int DEFAULT_PAGE_SIZE = 500;
 
+    @Nullable
     private UsageFilter usageFilter;
 
-    /**
-     * For serialization purposes only
-     */
+    @GwtSerializationConstructor
     private GetUsageAction() {
     }
 
     public GetUsageAction(OWLEntity subject, ProjectId projectId, Optional<UsageFilter> usageFilter) {
         super(subject, projectId);
-        this.usageFilter = usageFilter.orNull();
+        this.usageFilter = usageFilter.orElse(null);
     }
 
     public UsageFilter getUsageFilter() {

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -8,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge

@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.*;
+
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 19/05/2014
  */
-public abstract class OWLEntityItemParser<E extends OWLEntity> implements ItemTokenParser.ItemParser<E> {
+public abstract class OWLEntityItemParser<E extends OWLEntity> implements ItemTokenParser.ItemParser {
 
     public static final String IRI_START = "<";
 
@@ -24,10 +25,10 @@ public abstract class OWLEntityItemParser<E extends OWLEntity> implements ItemTo
         this.pm = pm;
     }
 
-    public Optional<Item<E>> parseItem(String content) {
+    public Optional<Item> parseItem(String content) {
         final Optional<IRI> iri = parseIRI(content);
         if(!iri.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         E entity = dataFactory.getOWLEntity(entityType, iri.get());
         return Optional.of(createItem(entity));
@@ -46,11 +47,11 @@ public abstract class OWLEntityItemParser<E extends OWLEntity> implements ItemTo
     private Optional<IRI> getIRIFromPrefixIRI(String content) {
         int colonIndex = content.indexOf(":");
         if (colonIndex == -1) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String prefixName = content.substring(0, colonIndex + 1);
         if (!pm.containsPrefixMapping(prefixName)) {
-            return Optional.absent();
+            return Optional.empty();
         }
         IRI iri = pm.getIRI(content);
         return Optional.of(iri);

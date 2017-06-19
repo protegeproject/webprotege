@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.renderer;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
@@ -64,7 +64,7 @@ public class ManchesterSyntaxKeywords {
     public Optional<ManchesterOWLSyntax> getKeyword(String manchesterSyntaxKeyword) {
         ManchesterOWLSyntax keyword = keywordMap.get(manchesterSyntaxKeyword);
         if(keyword == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(keyword);

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
-import com.google.common.base.Optional;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -18,6 +17,8 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.CSVRow;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -234,7 +235,7 @@ public class CSVGridViewImpl extends Composite implements CSVGridView {
 
         private int columnIndex;
 
-        private Optional<String> overridingText = Optional.absent();
+        private Optional<String> overridingText = Optional.empty();
 
         private CSVGridHeader(int columnIndex) {
             super(new TextCell());
@@ -246,7 +247,7 @@ public class CSVGridViewImpl extends Composite implements CSVGridView {
         }
 
         public void clearOverridingText() {
-            this.overridingText = Optional.absent();
+            this.overridingText = Optional.empty();
         }
 
         @Override

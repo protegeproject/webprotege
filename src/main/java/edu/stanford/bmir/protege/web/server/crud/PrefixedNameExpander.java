@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,18 +26,18 @@ public class PrefixedNameExpander {
         checkNotNull(suppliedName);
         int prefixNameSeparatorIndex = suppliedName.indexOf(':');
         if(prefixNameSeparatorIndex == -1) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String suppliedPrefixName = suppliedName.substring(0, prefixNameSeparatorIndex + 1);
         if(suppliedPrefixName.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(prefixNameSeparatorIndex + 1 >= suppliedName.length()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String prefix = prefixName2PrefixMap.get(suppliedPrefixName);
         if(prefix == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String suffix = suppliedName.substring(suppliedPrefixName.length());
         String fullIRI = prefix + suffix;

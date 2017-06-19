@@ -172,6 +172,6 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     private static OWLLiteral getLabellingLiteral(EntityShortForm shortForm, EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
-        return dataFactory.getOWLLiteral(shortForm.getShortForm(), context.getTargetLanguage().or(""));
+        return dataFactory.getOWLLiteral(shortForm.getShortForm(), context.getTargetLanguage().orElse(""));
     }
 }

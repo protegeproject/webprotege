@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -10,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.*;
 import org.semanticweb.owlapi.model.*;
+
+import java.util.Optional;
 
 
 /**
@@ -87,7 +88,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
 
     private Optional<OWLClassExpression> getColumnValueAsClassExpression(Project project, String value, OWLObjectProperty columnProperty, ColumnType columnType) {
         if(value.trim().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         OWLClassExpression superCls;
         if (columnType == ColumnType.CLASS) {
@@ -136,7 +137,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
             return Optional.of(filler);
         }
         catch (NumberFormatException e) {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

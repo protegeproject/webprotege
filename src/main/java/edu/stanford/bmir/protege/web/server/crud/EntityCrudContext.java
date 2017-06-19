@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -46,6 +47,6 @@ public class EntityCrudContext implements HasDataFactory {
     }
 
     public Optional<String> getTargetLanguage() {
-        return Optional.absent();
+        return Optional.empty();
     }
 }

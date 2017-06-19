@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -35,12 +35,12 @@ public class NullFreshEntitiesHandler implements FreshEntitiesHandler {
 
     @Override
     public <E extends OWLEntity> Optional<E> getRegisteredFreshEntity(String browserText, EntityType<E> entityType) {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override
     public <E extends OWLEntity> Optional<E> getRegisteredFreshEntity(String browserText) {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**

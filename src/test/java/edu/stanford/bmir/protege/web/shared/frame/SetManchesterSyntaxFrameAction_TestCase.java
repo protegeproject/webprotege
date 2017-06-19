@@ -44,8 +44,7 @@ public class SetManchesterSyntaxFrameAction_TestCase {
 
     private Set<OWLEntityData> freshEntities;
 
-    @Mock
-    private Optional<String> commitMessage;
+    private Optional<String> commitMessage = Optional.of("SomeString");
 
     @Before
     public void setUp() throws Exception {

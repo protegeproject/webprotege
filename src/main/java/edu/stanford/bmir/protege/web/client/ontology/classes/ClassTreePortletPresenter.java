@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ontology.classes;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -1333,11 +1332,11 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private Optional<OWLClass> toOWLClass(EntityData entityData) {
         if (entityData == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String name = entityData.getName();
         if (name == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         IRI iri = IRI.create(name);
         return Optional.of(DataFactory.getOWLClass(iri));

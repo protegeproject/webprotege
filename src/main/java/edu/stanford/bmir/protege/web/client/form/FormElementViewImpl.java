@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -9,6 +8,8 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -42,7 +43,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     @Override
     public Optional<FormElementId> getId() {
-        return Optional.fromNullable(formElementId);
+        return Optional.ofNullable(formElementId);
     }
 
     @Override

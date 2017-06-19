@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.usage;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -25,6 +24,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -51,7 +51,7 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private Optional<UsageFilter> filter = Optional.absent();
+    private Optional<UsageFilter> filter = Optional.empty();
 
     private final FilterView filterView;
 
@@ -120,12 +120,12 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
     @Override
-    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entityData) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         updateDisplayForSelectedEntity();
     }
 
     private void updateDisplayForSelectedEntity() {
-        final java.util.Optional<OWLEntity> sel = getSelectedEntity();
+        final Optional<OWLEntity> sel = getSelectedEntity();
         if(sel.isPresent()) {
             showUsageForEntity(sel.get());
         }
