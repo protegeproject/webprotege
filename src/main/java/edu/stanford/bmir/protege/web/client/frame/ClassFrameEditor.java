@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -186,7 +185,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
     @Override
     public Optional<LabelledFrame<ClassFrame>> getValue() {
         if(currentSubject == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             Set<OWLClassData> classesData = new HashSet<>();

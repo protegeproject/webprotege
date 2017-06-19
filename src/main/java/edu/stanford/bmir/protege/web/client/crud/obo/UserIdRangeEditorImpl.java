@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.crud.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -19,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -121,13 +121,13 @@ public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEdito
     @Override
     public Optional<UserIdRange> getValue() {
         if (userIdEditor.getText().trim().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(!getStart().isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(!getEnd().isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         long start = getStart().get();
         long end = getEnd().get();

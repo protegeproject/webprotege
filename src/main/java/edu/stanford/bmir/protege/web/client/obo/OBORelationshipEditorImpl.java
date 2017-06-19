@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -21,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -98,10 +98,10 @@ public class OBORelationshipEditorImpl extends Composite implements ValueEditor<
     @Override
     public Optional<OBORelationship> getValue() {
         if(!propertyField.getValue().isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(!valueField.getValue().isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(new OBORelationship((OWLObjectPropertyData) propertyField.getValue().get(), (OWLClassData) valueField.getValue().get()));
     }

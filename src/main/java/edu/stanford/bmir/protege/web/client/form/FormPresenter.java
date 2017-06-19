@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -24,6 +23,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -101,7 +101,7 @@ public class FormPresenter {
     private Optional<FormElementEditor> getFormElementEditor(FormElementDescriptor descriptor) {
         Optional<ValueEditorFactory<FormDataValue>> editorFactory = getValueEditorFactory(descriptor.getFieldDescriptor());
         if (!editorFactory.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(
                 new FormElementEditorImpl(
@@ -163,7 +163,7 @@ public class FormPresenter {
             for(CompositeFieldDescriptorEntry childDescriptor : descriptor.getChildDescriptors()) {
                 Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor());
                 if(!childEditorFactory.isPresent()) {
-                    return Optional.absent();
+                    return Optional.empty();
                 }
                 childDescriptorEntries.add(childDescriptor);
                 childEditorFactories.add(childEditorFactory.get());
@@ -184,7 +184,7 @@ public class FormPresenter {
             );
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

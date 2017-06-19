@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
-import com.google.common.base.Optional;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -40,7 +39,7 @@ public class ChangeEmailAddressDialogController extends WebProtegeOKCancelDialog
     }
 
     @Override
-    public Optional<EmailAddress> getData() {
+    public java.util.Optional<EmailAddress> getData() {
         return emailAddressEditor.getValue();
     }
 }

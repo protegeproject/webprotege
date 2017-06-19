@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ontology.annotations;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -20,10 +19,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -88,7 +84,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     public Optional<Set<PropertyAnnotationValue>> getValue() {
         Optional<PropertyValueList> valueList = editor.getValue();
         if(!valueList.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         Set<PropertyAnnotationValue> result = new HashSet<PropertyAnnotationValue>();
         for(PropertyAnnotationValue value : valueList.get().getAnnotationPropertyValues()) {

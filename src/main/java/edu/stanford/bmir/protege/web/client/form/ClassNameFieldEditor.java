@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -18,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Provider;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -38,12 +38,7 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
     public ClassNameFieldEditor(ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         editor = (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get();
         initWidget(ourUiBinder.createAndBindUi(this));
-        editor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                ValueChangeEvent.fire(ClassNameFieldEditor.this, getValue());
-            }
-        });
+        editor.addValueChangeHandler(event -> ValueChangeEvent.fire(ClassNameFieldEditor.this, getValue()));
         editor.setAutoSelectSuggestions(true);
         editor.setClassesAllowed(true);
     }
@@ -68,7 +63,7 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
     public Optional<FormDataValue> getValue() {
         Optional<OWLPrimitiveData> value = editor.getValue();
 //        if(!value.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
 //        }
 //        OWLPrimitiveData theValue = value.get();
 //        if(!(theValue instanceof OWLClassData)) {

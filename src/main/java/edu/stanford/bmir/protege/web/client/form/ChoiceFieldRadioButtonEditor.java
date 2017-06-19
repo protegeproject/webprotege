@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -19,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -93,7 +93,7 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
                 return Optional.of(descriptor.getValue());
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override

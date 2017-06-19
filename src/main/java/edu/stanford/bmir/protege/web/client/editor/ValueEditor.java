@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.HasDirty;
 import edu.stanford.bmir.protege.web.shared.HasWellFormed;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -25,6 +24,7 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,13 +47,13 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     @UiField(provided = true)
     DefaultLanguageEditor languageEditor;
 
-    private Optional<String> pattern = Optional.absent();
+    private Optional<String> pattern = Optional.empty();
 
-    private Optional<String> patternViolationErrorMessage = Optional.absent();
+    private Optional<String> patternViolationErrorMessage = Optional.empty();
 
-    private Optional<String> langPattern = Optional.absent();
+    private Optional<String> langPattern = Optional.empty();
 
-    private Optional<String> langPatternViolationErrorMessage = Optional.absent();
+    private Optional<String> langPatternViolationErrorMessage = Optional.empty();
 
     @Inject
     public StringFieldEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
@@ -141,7 +141,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     public Optional<FormDataValue> getValue() {
         Optional<OWLPrimitiveData> editedValue = editor.getValue();
         if(!editedValue.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
         return Optional.of(FormDataPrimitive.get(literalData.getLiteral()));

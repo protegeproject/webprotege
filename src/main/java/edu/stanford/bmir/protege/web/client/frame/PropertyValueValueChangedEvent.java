@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.shared.GwtEvent;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014

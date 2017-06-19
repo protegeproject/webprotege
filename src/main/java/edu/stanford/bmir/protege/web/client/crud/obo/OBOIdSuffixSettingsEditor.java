@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.crud.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -21,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

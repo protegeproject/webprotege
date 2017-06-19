@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -19,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -80,7 +80,7 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
     public Optional<FormDataValue> getValue() {
         int selIndex = comboBox.getSelectedIndex();
         if(selIndex < 1) {
-            return Optional.absent();
+            return Optional.empty();
         }
         FormDataValue selData = choiceDescriptors.get(selIndex - 1).getValue();
         return Optional.of(selData);

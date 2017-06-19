@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -14,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -93,7 +93,7 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
     public Optional<String> getValue() {
         String value = suggestBox.getText().trim();
         if(value.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(value);
     }

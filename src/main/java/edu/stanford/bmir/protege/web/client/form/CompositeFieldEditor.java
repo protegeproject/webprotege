@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -15,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-
+import java.util.Optional;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -102,7 +101,7 @@ public class CompositeFieldEditor extends Composite implements ValueEditor<FormD
 
         GWT.log("[CompositeFieldEditor] All values: " + childData);
         if(childData.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         FormDataObject theValue = new FormDataObject(childData);
         GWT.log("[CompositeFieldEditor] The value: " + theValue);

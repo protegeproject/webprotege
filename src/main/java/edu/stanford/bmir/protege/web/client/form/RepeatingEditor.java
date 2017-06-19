@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -12,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -41,7 +41,7 @@ public class RepeatingEditor implements ValueEditor<FormDataList> {
     public Optional<FormDataList> getValue() {
         Optional<List<FormDataValue>> value = delegate.getValue();
         if(!value.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(new FormDataList(value.get()));
     }

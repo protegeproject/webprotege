@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -26,6 +25,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -75,10 +75,10 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
             selectedItem = Optional.of(relationTypeField.getItemText(selIndex));
         }
         else {
-            selectedItem = Optional.absent();
+            selectedItem = Optional.empty();
         }
 
-        List<String> nextItems = new ArrayList<String>();
+        List<String> nextItems = new ArrayList<>();
         if(property.isPresent()) {
             OWLPrimitiveData primitiveData = property.get();
             final OWLEntity prop = (OWLEntity) primitiveData.getObject();
@@ -102,7 +102,7 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
             for(int i = 0; i < nextItems.size(); i++) {
                 String nextItem = nextItems.get(i);
                 relationTypeField.addItem(nextItem);
-                if(selectedItem.or("").equals(nextItem)) {
+                if(selectedItem.orElse("").equals(nextItem)) {
                     nextSelIndex = i;
                 }
             }
@@ -120,7 +120,7 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
         final int selectedIndex = relationTypeField.getSelectedIndex();
         String displayName = relationTypeField.getItemText(selectedIndex);
         if(displayName.trim().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(ColumnType.getColumnTypeFromDisplayName(displayName));

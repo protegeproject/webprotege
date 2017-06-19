@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;

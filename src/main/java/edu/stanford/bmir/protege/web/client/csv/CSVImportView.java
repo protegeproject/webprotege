@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

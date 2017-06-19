@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -31,6 +29,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.frame.State.ASSERTED;
@@ -55,7 +54,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     @UiField(provided = true)
     protected DefaultLanguageEditor languageField;
 
-    private Optional<PropertyValueDescriptor> currentValue = Optional.absent();
+    private Optional<PropertyValueDescriptor> currentValue = Optional.empty();
 
     private boolean dirty = false;
 
@@ -162,16 +161,12 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     @Override
     public Optional<OWLPropertyData> getPropertyFieldValue() {
-        return propertyField.getValue().transform(new Function<OWLPrimitiveData, OWLPropertyData>() {
-            @Nullable
-            @Override
-            public OWLPropertyData apply(@Nullable OWLPrimitiveData input) {
-                if (input instanceof OWLPropertyData) {
-                    return (OWLPropertyData) input;
-                }
-                else {
-                    return null;
-                }
+        return propertyField.getValue().map(input -> {
+            if (input instanceof OWLPropertyData) {
+                return (OWLPropertyData) input;
+            }
+            else {
+                return null;
             }
         });
     }
@@ -184,7 +179,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     @Override
     public void setValue(PropertyValueDescriptor propertyValue) {
         this.currentValue = Optional.of(propertyValue);
-        valueField.setPrimitiveDataPlaceholder(Optional.absent());
+        valueField.setPrimitiveDataPlaceholder(Optional.empty());
         if(propertyValue.getState() == ASSERTED) {
             propertyField.setValue(propertyValue.getProperty());
             valueField.setValue(propertyValue.getValue());
@@ -263,7 +258,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
                                                                state, false, augmentingAxioms));
             }
             else {
-                return Optional.absent();
+                return Optional.empty();
             }
         }
     }

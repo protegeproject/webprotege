@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -9,7 +8,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
@@ -17,6 +15,8 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -83,7 +83,7 @@ public class EmailAddressEditorImpl extends Composite implements EmailAddressEdi
             return Optional.of(new EmailAddress(emailAddressField.getText().trim()));
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

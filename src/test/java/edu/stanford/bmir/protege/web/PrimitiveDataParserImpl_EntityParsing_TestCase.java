@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.MockingUtils.*;
@@ -92,12 +92,13 @@ public class PrimitiveDataParserImpl_EntityParsing_TestCase {
 
     private void parseEntityData(OWLEntityData entityData) {
         lookupMap.put(entityData.getBrowserText(), entityData);
-        parser.parsePrimitiveData(entityData.getBrowserText(), Optional.absent(), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData(entityData.getBrowserText(),
+                                  java.util.Optional.empty(), primitiveTypes, primitiveDataParserCallback);
         verifyResult(entityData);
     }
 
     private void verifyResult(OWLEntityData entityData) {
-        Optional<OWLPrimitiveData> expectedData = Optional.of(entityData);
+        java.util.Optional<OWLPrimitiveData> expectedData = Optional.of(entityData);
         Mockito.verify(primitiveDataParserCallback).onSuccess(expectedData);
     }
 }

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
@@ -15,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import org.semanticweb.owlapi.model.EntityType;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**

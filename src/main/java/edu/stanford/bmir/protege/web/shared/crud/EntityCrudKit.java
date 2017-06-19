@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.io.Serializable;
+import java.util.Optional;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -77,15 +78,12 @@ public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> imple
 
     public abstract IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, S suffixSettings);
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("EntityCrudKit");
-        sb.append("(");
-        sb.append(getKitId());
-        sb.append(" DisplayName(");
-        sb.append(getDisplayName());
-        sb.append("))");
-        return sb.toString();
+        return toStringHelper("EntityCrudKit")
+                .addValue(kitId)
+                .add("displayName", displayName)
+                .toString();
     }
 }

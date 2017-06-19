@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

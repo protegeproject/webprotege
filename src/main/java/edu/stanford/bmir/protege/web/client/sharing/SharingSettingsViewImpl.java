@@ -121,7 +121,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
 
     @Override
     public List<SharingSetting> getSharingSettings() {
-        Optional<List<SharingSetting>> value = Optional.ofNullable(sharingSettingsListEditor.getValue().orNull());
+        Optional<List<SharingSetting>> value = Optional.ofNullable(sharingSettingsListEditor.getValue().orElse(null));
         if(value.isPresent()) {
             return value.get();
         }

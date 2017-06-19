@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
-import com.google.common.base.Optional;
-import com.google.googlejavaformat.Op;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -16,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -72,7 +71,7 @@ public class WebhookViewImpl extends Composite implements WebhookView {
     public Optional<String> getValue() {
         String payloadUrl = payloadUrlField.getText().trim();
         if(payloadUrl.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(payloadUrl);

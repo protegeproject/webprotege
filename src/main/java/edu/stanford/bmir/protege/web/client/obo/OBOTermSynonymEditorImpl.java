@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -19,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -116,9 +116,9 @@ public class OBOTermSynonymEditorImpl extends Composite implements OBOTermSynony
     public Optional<OBOTermSynonym> getValue() {
         final String synonymName = getSynonymName();
         if(synonymName.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
-        final List<OBOXRef> xrefs = xrefListField.getValue().or(Collections.emptyList());
+        final List<OBOXRef> xrefs = xrefListField.getValue().orElse(Collections.emptyList());
         return Optional.of(new OBOTermSynonym(xrefs, synonymName, getSynonymScope()));
     }
 

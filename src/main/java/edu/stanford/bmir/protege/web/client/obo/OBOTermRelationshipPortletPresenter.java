@@ -54,7 +54,7 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
         if(!(entity instanceof OWLClass)) {
             return;
         }
-        List<OBORelationship> relationships = editor.getValue().or(Collections.emptyList());
+        List<OBORelationship> relationships = editor.getValue().orElse(Collections.emptyList());
         getService().setRelationships(getProjectId(), (OWLClass) entity, new OBOTermRelationships(new HashSet<OBORelationship>(relationships)), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
     }
 

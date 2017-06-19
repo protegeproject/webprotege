@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -22,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
@@ -111,7 +111,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
     public Optional<PropertyValueList> getValue() {
         Optional<List<PropertyValueDescriptor>> value =  editor.getValue();
         if(!value.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         List<PropertyValue> propertyValues = Lists.newArrayList();
         for(PropertyValueDescriptor val : value.get()) {
