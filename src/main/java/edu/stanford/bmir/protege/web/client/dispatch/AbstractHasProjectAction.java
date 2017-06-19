@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class AbstractHasProjectAction<R extends Result> implements HasProjectAction<R> {
+public abstract class AbstractHasProjectAction<R extends Result> implements ProjectAction<R> {
 
     private ProjectId projectId;
 

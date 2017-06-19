@@ -8,6 +8,6 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public interface HasProjectAction<R extends Result> extends Action<R>, HasProjectId {
+public interface ProjectAction<R extends Result> extends Action<R>, HasProjectId {
 
 }

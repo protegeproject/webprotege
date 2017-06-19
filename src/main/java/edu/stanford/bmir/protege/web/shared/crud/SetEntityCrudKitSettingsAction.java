@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class SetEntityCrudKitSettingsAction implements HasProjectAction<SetEntityCrudKitSettingsResult> {
+public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCrudKitSettingsResult> {
 
     private ProjectId projectId;
 
