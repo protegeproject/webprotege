@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
-import com.google.gwt.user.client.ui.Focusable;
-
 import java.util.Optional;
 
 /**

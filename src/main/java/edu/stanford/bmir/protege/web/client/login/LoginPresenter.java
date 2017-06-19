@@ -21,7 +21,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

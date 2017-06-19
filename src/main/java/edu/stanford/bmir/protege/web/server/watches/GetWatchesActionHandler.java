@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;

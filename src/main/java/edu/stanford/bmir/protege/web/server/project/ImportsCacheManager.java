@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.inject.project.ImportsCacheDirectoryProvider;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ImportedOntologyMetadata;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;

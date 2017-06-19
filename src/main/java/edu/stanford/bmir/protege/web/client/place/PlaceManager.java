@@ -8,7 +8,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 
 /**

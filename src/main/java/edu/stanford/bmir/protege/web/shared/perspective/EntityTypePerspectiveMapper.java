@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;

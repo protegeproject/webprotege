@@ -18,7 +18,6 @@ import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

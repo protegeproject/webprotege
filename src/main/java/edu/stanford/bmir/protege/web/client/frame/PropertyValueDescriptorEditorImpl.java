@@ -26,7 +26,6 @@ import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;

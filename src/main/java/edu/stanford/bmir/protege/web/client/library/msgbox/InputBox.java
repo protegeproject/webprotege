@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
-import com.google.common.base.Optional;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 

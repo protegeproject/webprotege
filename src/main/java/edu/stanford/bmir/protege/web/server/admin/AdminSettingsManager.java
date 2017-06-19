@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.admin;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting;
@@ -11,11 +10,11 @@ import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting;
 import edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -27,9 +26,7 @@ import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedIn
 import static edu.stanford.bmir.protege.web.server.access.Subject.forGuestUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.ACCOUNT_CREATOR;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.PROJECT_CREATOR;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.PROJECT_UPLOADER;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.*;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
 import static edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS;

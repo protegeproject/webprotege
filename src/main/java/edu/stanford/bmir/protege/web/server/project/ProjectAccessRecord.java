@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
-
 import java.util.Date;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

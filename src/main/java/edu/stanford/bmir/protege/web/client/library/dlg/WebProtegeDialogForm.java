@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.ArrayList;

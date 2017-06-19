@@ -4,8 +4,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPages;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedHandler;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;
 import java.util.Optional;

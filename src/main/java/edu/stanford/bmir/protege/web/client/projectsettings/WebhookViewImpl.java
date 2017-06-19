@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**

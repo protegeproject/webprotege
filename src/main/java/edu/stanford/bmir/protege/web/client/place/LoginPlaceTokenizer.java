@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.place;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.PlaceTokenizer;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 
 /**

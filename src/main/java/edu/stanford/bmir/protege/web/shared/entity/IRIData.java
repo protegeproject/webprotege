@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.googlejavaformat.Op;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;

@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 
 import javax.annotation.Nonnull;
 
-
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 

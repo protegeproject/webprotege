@@ -8,7 +8,10 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
+import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesAction;
+import edu.stanford.bmir.protege.web.shared.issues.GetCommentedEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -16,19 +19,19 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.of;
-import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byEntity;
-import static edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData.byLastModified;
 import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.CLOSED;
 import static edu.stanford.bmir.protege.web.shared.issues.Status.OPEN;
 import static edu.stanford.bmir.protege.web.shared.pagination.PageRequest.requestPageWithSize;
-import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
 
 /**

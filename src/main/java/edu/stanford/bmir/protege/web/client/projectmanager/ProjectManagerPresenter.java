@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.projectmanager;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.user.client.rpc.core.java.util.*;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
@@ -21,10 +20,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.*;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
@@ -37,9 +33,7 @@ import static edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEven
 import static edu.stanford.bmir.protege.web.shared.project.AvailableProject.UNKNOWN;
 import static edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent.ON_PROJECT_SETTINGS_CHANGED;
 import static java.util.Arrays.asList;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.reverseOrder;
+import static java.util.Comparator.*;
 
 /**
  * Author: Matthew Horridge<br>

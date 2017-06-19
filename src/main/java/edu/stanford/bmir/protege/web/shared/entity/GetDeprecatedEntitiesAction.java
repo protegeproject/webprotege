@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
-
 import java.util.HashSet;
 import java.util.Set;
 

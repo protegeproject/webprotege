@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameAction;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.inject.Inject;
 

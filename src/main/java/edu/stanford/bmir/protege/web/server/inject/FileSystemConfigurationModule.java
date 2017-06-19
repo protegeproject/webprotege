@@ -16,7 +16,6 @@ import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchNotificationEmailTemplate;
 import edu.stanford.bmir.protege.web.server.webhook.CommentNotificationSlackTemplate;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import java.io.File;
 

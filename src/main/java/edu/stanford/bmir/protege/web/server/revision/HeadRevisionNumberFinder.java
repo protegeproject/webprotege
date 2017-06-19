@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFileProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -9,8 +8,6 @@ import org.semanticweb.binaryowl.BinaryOWLChangeLogHandler;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
 import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.binaryowl.chunk.SkipSetting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
@@ -19,10 +16,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.semanticweb.binaryowl.chunk.SkipSetting.SKIP_DATA;
 
 /**

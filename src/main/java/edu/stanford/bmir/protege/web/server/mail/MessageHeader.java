@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
 
 import javax.annotation.Nonnull;
 
