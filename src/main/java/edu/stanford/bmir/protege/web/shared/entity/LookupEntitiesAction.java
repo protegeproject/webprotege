@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/11/2013
  */
-public class LookupEntitiesAction implements HasProjectAction<LookupEntitiesResult> {
+public class LookupEntitiesAction implements ProjectAction<LookupEntitiesResult> {
 
     private ProjectId projectId;
 

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
 import edu.stanford.bmir.protege.web.shared.HasUserId;
-import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class AddWatchAction implements HasProjectAction<AddWatchResult>, HasUserId {
+public class AddWatchAction implements ProjectAction<AddWatchResult>, HasUserId {
 
     private Watch watch;
 

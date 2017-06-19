@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
 import edu.stanford.bmir.protege.web.shared.HasUserId;
-import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class GetWatchesAction implements HasProjectAction<GetWatchesResult>, HasUserId {
+public class GetWatchesAction implements ProjectAction<GetWatchesResult>, HasUserId {
 
     private ProjectId projectId;
 
