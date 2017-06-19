@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.user;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.InsertOneOptions;
 import com.mongodb.client.model.UpdateOptions;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;

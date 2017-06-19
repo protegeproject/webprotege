@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameAction;
-import org.semanticweb.owlapi.model.OWLDataProperty;
 
 import javax.inject.Inject;
 

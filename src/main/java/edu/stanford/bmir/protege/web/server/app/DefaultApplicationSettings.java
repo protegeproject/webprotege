@@ -1,14 +1,7 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
-import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
-
-import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS;
-import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED;
 
 /**
  * Matthew Horridge

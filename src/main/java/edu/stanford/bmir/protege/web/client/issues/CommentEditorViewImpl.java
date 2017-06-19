@@ -1,24 +1,18 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.gwtcodemirror.client.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionCallback;
+import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
+import edu.stanford.bmir.gwtcodemirror.client.GWTCodeMirror;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge

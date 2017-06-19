@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>

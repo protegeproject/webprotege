@@ -1,12 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.admin;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting;
-import edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting;
-import edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting;
-import edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;

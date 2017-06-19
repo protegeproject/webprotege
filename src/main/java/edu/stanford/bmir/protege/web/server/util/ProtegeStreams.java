@@ -1,20 +1,14 @@
 package edu.stanford.bmir.protege.web.server.util;
 
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
 import static org.semanticweb.owlapi.model.EntityType.*;
-import static org.semanticweb.owlapi.model.EntityType.DATATYPE;
-import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
  * Matthew Horridge

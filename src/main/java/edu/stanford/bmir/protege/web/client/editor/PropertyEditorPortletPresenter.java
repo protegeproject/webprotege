@@ -10,9 +10,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
-import static org.semanticweb.owlapi.model.EntityType.DATA_PROPERTY;
-import static org.semanticweb.owlapi.model.EntityType.OBJECT_PROPERTY;
+import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**
  * Matthew Horridge

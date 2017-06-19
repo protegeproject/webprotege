@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.server.webhook;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;

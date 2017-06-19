@@ -25,7 +25,10 @@ import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesView;
 import edu.stanford.bmir.protege.web.client.issues.CommentedEntitiesViewImpl;
-import edu.stanford.bmir.protege.web.client.login.*;
+import edu.stanford.bmir.protege.web.client.login.LoginView;
+import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
+import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
+import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
@@ -56,8 +59,6 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-
-import javax.inject.Singleton;
 
 /**
  * Author: Matthew Horridge<br>

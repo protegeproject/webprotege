@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Component;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeConfigurationChecker;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeSessionListener;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeConfigurationChecker;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeSessionListener;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationModule;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;

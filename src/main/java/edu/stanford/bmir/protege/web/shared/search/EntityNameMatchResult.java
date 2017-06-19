@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;

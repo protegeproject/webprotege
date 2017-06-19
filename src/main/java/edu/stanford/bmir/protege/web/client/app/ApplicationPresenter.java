@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.app;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

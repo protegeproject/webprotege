@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /**
  * Author: Matthew Horridge<br>

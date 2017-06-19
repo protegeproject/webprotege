@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.webhook;
 
 import com.mongodb.DuplicateKeyException;
-import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;

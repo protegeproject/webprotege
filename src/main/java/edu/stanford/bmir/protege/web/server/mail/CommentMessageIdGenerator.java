@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.CommentId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

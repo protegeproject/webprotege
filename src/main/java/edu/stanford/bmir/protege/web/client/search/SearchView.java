@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.search;
 
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
-import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
 
 import java.util.List;

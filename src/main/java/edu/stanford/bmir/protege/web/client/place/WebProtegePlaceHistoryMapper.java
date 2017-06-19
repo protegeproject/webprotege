@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsPlace
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlaceTokenizer;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**

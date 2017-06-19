@@ -9,17 +9,17 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWith
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.admin.*;
 import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
+import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsAction;
+import edu.stanford.bmir.protege.web.shared.admin.SetAdminSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_APPLICATION_SETTINGS;

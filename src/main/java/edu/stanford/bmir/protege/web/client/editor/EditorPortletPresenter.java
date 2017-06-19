@@ -11,7 +11,6 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;

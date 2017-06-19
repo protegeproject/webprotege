@@ -26,7 +26,6 @@ import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

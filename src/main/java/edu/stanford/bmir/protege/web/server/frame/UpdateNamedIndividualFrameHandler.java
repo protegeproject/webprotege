@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.inject.Inject;
 

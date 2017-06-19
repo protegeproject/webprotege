@@ -8,9 +8,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

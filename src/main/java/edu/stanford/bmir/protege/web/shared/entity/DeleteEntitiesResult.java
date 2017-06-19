@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-
 import java.util.HashSet;
 import java.util.Set;
 

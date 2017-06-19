@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
-import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.inject.ActiveProjectIdProvider;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
@@ -16,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;

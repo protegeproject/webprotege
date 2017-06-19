@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
-import com.google.gwt.user.client.ui.Focusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;

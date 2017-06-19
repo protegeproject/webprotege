@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
-
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.inject.Inject;
 

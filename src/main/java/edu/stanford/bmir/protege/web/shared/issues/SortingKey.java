@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
-import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
-
-import java.util.Comparator;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

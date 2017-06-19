@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
-import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,8 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
