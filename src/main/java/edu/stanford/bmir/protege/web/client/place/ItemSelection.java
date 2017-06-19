@@ -1,14 +1,15 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/05/2014
@@ -45,18 +46,18 @@ public class ItemSelection implements Iterable<Item<?>> {
         return items.contains(item);
     }
 
-    public java.util.Optional<Item<?>> getFirst() {
+    public Optional<Item<?>> getFirst() {
         if(items.isEmpty()) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
         else {
-            return java.util.Optional.of(items.get(0));
+            return Optional.of(items.get(0));
         }
     }
 
     public Optional<Item<?>> getLast() {
         if(items.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(items.get(items.size() - 1));
@@ -75,8 +76,8 @@ public class ItemSelection implements Iterable<Item<?>> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ItemSelection")
-                .addValue(items).toString();
+        return MoreObjects.toStringHelper("ItemSelection")
+                          .addValue(items).toString();
     }
 
     @Override
@@ -113,32 +114,32 @@ public class ItemSelection implements Iterable<Item<?>> {
         public Builder addEntity(OWLEntity entity) {
             entity.accept(new OWLEntityVisitor() {
                 @Override
-                public void visit(OWLClass cls) {
+                public void visit(@Nonnull OWLClass cls) {
                     items.add(new OWLClassItem(cls));
                 }
 
                 @Override
-                public void visit(OWLObjectProperty property) {
+                public void visit(@Nonnull OWLObjectProperty property) {
                     items.add(new OWLObjectPropertyItem(property));
                 }
 
                 @Override
-                public void visit(OWLDataProperty property) {
+                public void visit(@Nonnull OWLDataProperty property) {
                     items.add(new OWLDataPropertyItem(property));
                 }
 
                 @Override
-                public void visit(OWLNamedIndividual individual) {
+                public void visit(@Nonnull OWLNamedIndividual individual) {
                     items.add(new OWLNamedIndividualItem(individual));
                 }
 
                 @Override
-                public void visit(OWLDatatype datatype) {
+                public void visit(@Nonnull OWLDatatype datatype) {
 
                 }
 
                 @Override
-                public void visit(OWLAnnotationProperty property) {
+                public void visit(@Nonnull OWLAnnotationProperty property) {
                     items.add(new OWLAnnotationPropertyItem(property));
                 }
             });

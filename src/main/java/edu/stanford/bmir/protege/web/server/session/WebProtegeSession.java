@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.session;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -15,7 +16,7 @@ public interface WebProtegeSession {
      * @param attribute The attribute to get.  Not {@code null}.
      * @param <T> The type of the attribute value.
      * @return The optional attribute value.  Not {@code null}.
-     * @throws java.lang.NullPointerException if {@code attribute} is {@code null}.
+     * @throws NullPointerException if {@code attribute} is {@code null}.
      */
     <T> Optional<T> getAttribute(WebProtegeSessionAttribute<T> attribute);
 
@@ -24,7 +25,7 @@ public interface WebProtegeSession {
      * @param attribute The attribute to set.  Not {@code null}.
      * @param value The value to set.  Not {@code null}.
      * @param <T> The type of the value
-     * @throws java.lang.NullPointerException if any parameters are {@code null}.
+     * @throws NullPointerException if any parameters are {@code null}.
      */
     <T> void setAttribute(WebProtegeSessionAttribute<T> attribute, T value);
 
@@ -36,8 +37,8 @@ public interface WebProtegeSession {
 
     /**
      * Gets the user in this session.
-     * @return The {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user in this session.
-     * Not {@code null}.  If there is not a specific user in this session then the {@link edu.stanford.bmir.protege.web.shared.user.UserId}
+     * @return The {@link UserId} of the user in this session.
+     * Not {@code null}.  If there is not a specific user in this session then the {@link UserId}
      * of the guest user will be returned.
      */
     UserId getUserInSession();
@@ -45,7 +46,7 @@ public interface WebProtegeSession {
     /**
      * Sets the user in the session.
      * @param userId The userId.  Not {@code null}.
-     * @throws java.lang.NullPointerException if any parameters are {@code null}.
+     * @throws NullPointerException if any parameters are {@code null}.
      */
     void setUserInSession(UserId userId);
 

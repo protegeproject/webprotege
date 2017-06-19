@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,7 +42,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     protected Button newTabButton;
 
 
-    private Optional<PerspectiveId> highlightedPerspective = Optional.absent();
+    private Optional<PerspectiveId> highlightedPerspective = Optional.empty();
 
     private final List<PerspectiveId> displayedPerspectives = Lists.newArrayList();
 
@@ -78,8 +78,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     @UiHandler("tabBar")
     protected void handlePerspectiveLinkClicked(BeforeSelectionEvent<Integer> event) {
-        /**
-         * Veto the selection if it does not correspond to the highlighted link
+        /*
+          Veto the selection if it does not correspond to the highlighted link
          */
         PerspectiveId link = displayedPerspectives.get(event.getItem());
         if (!highlightedPerspective.equals(Optional.of(link))) {

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
@@ -18,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

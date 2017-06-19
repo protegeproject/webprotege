@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLClass;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge

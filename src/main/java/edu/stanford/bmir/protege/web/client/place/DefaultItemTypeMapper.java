@@ -72,13 +72,13 @@ public class DefaultItemTypeMapper implements ItemTokenParser.ItemTypeMapper {
     }
 
 
-    public <T> ItemTokenParser.ItemParser<T> getParser(String type) {
-        ItemTokenParser.ItemParser<T> parser = typeMapper.get(type);
+    public ItemTokenParser.ItemParser getParser(String type) {
+        ItemTokenParser.ItemParser parser = typeMapper.get(type);
         return parser;
     }
 
 
-    public <T> void setTypeParser(Item.Type<T> type, ItemTokenParser.ItemParser<T> parser) {
+    public void setTypeParser(Item.Type type, ItemTokenParser.ItemParser parser) {
         typeMapper.put(type.getName(), parser);
     }
 }

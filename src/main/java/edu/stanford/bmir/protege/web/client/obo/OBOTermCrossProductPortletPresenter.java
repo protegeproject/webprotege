@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -15,6 +14,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,7 +27,7 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
 
     private OBOTermCrossProductEditor editor;
 
-    private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
+    private Optional<OBOTermCrossProduct> pristineValue = Optional.empty();
 
     @Inject
     public OBOTermCrossProductPortletPresenter(OBOTermCrossProductEditor editor,
@@ -44,7 +44,7 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
 
     @Override
     protected void clearDisplay() {
-        pristineValue = Optional.absent();
+        pristineValue = Optional.empty();
         editor.clearValue();
     }
 

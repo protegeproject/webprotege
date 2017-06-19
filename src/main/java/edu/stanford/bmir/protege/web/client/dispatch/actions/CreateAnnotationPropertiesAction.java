@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**

@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.session;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,7 +39,7 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
     @SuppressWarnings("unchecked")
     public <T> Optional<T> getAttribute(WebProtegeSessionAttribute<T> attribute) {
         T value = (T) httpSession.getAttribute(attribute.getAttributeName());
-        return Optional.fromNullable(value);
+        return Optional.ofNullable(value);
     }
 
 
@@ -51,7 +52,7 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
 
     @Override
     public UserId getUserInSession() {
-        return getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER).or(UserId.getGuest());
+        return getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER).orElse(UserId.getGuest());
     }
 
     @Override

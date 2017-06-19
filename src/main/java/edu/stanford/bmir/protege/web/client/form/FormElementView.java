@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -11,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -27,7 +27,7 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
         for(OWLEntityData auxiliaryType : auxiliaryTypes) {
             this.auxiliaryTypes.add(Optional.of(auxiliaryType));
         }
-        this.auxiliaryTypes.add(Optional.absent());
+        this.auxiliaryTypes.add(Optional.empty());
     }
 
     @Override
@@ -67,6 +67,6 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
                 return Optional.of(new FreshEntitySuggestion(entityData, auxiliaryTypeHandler.getSuggestionText(entityData), augmentingAxioms));
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
@@ -18,6 +17,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.ADD_OR_REMOVE_PERSPECTIVE;
@@ -58,8 +58,8 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                 displayPlace((ProjectViewPlace) event.getNewPlace());
             }
         });
-        view.setPerspectiveLinkActivatedHandler(perspectiveId -> goToPlaceForPerspective(perspectiveId));
-        view.setAddBookMarkedPerspectiveLinkHandler(perspectiveId -> addNewPerspective(perspectiveId));
+        view.setPerspectiveLinkActivatedHandler(this::goToPlaceForPerspective);
+        view.setAddBookMarkedPerspectiveLinkHandler(this::addNewPerspective);
         view.setResetPerspectiveToDefaultStateHandler(perspectiveId -> eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId)));
         view.setAddViewHandler(perspectiveId -> eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId)));
     }
@@ -71,7 +71,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
             setLinkedPerspectives(perspectiveIds);
             displayPlace(place);
         });
-        perspectiveLinkManager.getBookmarkedPerspectives(perspectiveIds -> view.setBookmarkedPerspectives(perspectiveIds));
+        perspectiveLinkManager.getBookmarkedPerspectives(view::setBookmarkedPerspectives);
         view.setAddPerspectiveAllowed(false);
         view.setClosePerspectiveAllowed(false);
         view.setAddViewAllowed(false);
@@ -79,13 +79,11 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                                         canAddRemove -> {
                                             view.setClosePerspectiveAllowed(canAddRemove);
                                             view.setAddPerspectiveAllowed(canAddRemove);
-                                            view.setAddPerspectiveLinkRequestHandler(() -> handleCreateNewPerspective());
-                                            view.setRemovePerspectiveLinkHandler(perspectiveId -> handleRemoveLinkedPerspective(perspectiveId));
+                                            view.setAddPerspectiveLinkRequestHandler(this::handleCreateNewPerspective);
+                                            view.setRemovePerspectiveLinkHandler(this::handleRemoveLinkedPerspective);
                                         });
         permissionChecker.hasPermission(ADD_OR_REMOVE_VIEW,
-                                        canAddRemove -> {
-                                            view.setAddViewAllowed(canAddRemove);
-                                        });
+                                        view::setAddViewAllowed);
     }
 
     /**
@@ -175,7 +173,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private Optional<PerspectiveId> getCurrentPlacePerspectiveId() {
         Place currentPlace = placeController.getWhere();
         if(!(currentPlace instanceof ProjectViewPlace)) {
-            return Optional.absent();
+            return Optional.empty();
         }
         ProjectViewPlace projectViewPlace = (ProjectViewPlace) currentPlace;
         PerspectiveId currentPlacePerspective = projectViewPlace.getPerspectiveId();
@@ -183,7 +181,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
     private void handleCreateNewPerspective() {
-        createFreshPerspectiveRequestHandler.createFreshPerspective(perspectiveId -> addNewPerspective(perspectiveId));
+        createFreshPerspectiveRequestHandler.createFreshPerspective(this::addNewPerspective);
     }
 
     private void addNewPerspective(final PerspectiveId perspectiveId) {

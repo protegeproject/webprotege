@@ -1,17 +1,19 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
-import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
 
 /**
  * Matthew Horridge
@@ -26,9 +28,7 @@ public class GetChapSessionResult_TestCase {
 
     private GetChapSessionResult otherResult;
 
-
-    @Mock
-    private Optional<ChapSession> chapSession;
+    private Optional<ChapSession> chapSession = Optional.of(mock(ChapSession.class));
 
     @Before
     public void setUp() throws Exception {

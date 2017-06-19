@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -8,6 +7,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -22,7 +22,7 @@ public class MutableFreshEntitiesHandler implements FreshEntitiesHandler {
 
     /**
      * Gets the policy supported by this handler.
-     * @return The {@link edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesPolicy}.  Not {@code null}.
+     * @return The {@link FreshEntitiesPolicy}.  Not {@code null}.
      */
     @Override
     public FreshEntitiesPolicy getFreshEntitiesPolicy() {
@@ -63,7 +63,7 @@ public class MutableFreshEntitiesHandler implements FreshEntitiesHandler {
     public <E extends OWLEntity> Optional<E> getRegisteredFreshEntity(String browserText, EntityType<E> entityType) {
         E entity = (E) entitiesTable.get(browserText, entityType);
         if(entity == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(entity);
@@ -75,7 +75,7 @@ public class MutableFreshEntitiesHandler implements FreshEntitiesHandler {
     public <E extends OWLEntity> Optional<E> getRegisteredFreshEntity(String browserText) {
         final Collection<OWLEntity> values = entitiesTable.row(browserText).values();
         if(values == null || values.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         E entity = (E) values.iterator().next();
         return Optional.of(entity);

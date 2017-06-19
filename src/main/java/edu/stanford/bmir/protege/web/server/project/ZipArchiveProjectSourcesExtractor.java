@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.util.OntologyDocumentFileFilter;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
@@ -17,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge,
@@ -63,7 +63,7 @@ public class ZipArchiveProjectSourcesExtractor implements RawProjectSourcesExtra
                 return Optional.of(file);
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     private static class ExtractedZipArchiveProjectSources implements RawProjectSources {

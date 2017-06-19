@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
@@ -12,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -37,7 +37,7 @@ public class PortletChooserPresenter {
 
     public void show(final PortletSelectedHandler handler) {
         view.setAvailablePortlets(getPortletDescriptorList());
-        WebProtegeOKCancelDialogController<Optional<PortletId>> controller = new WebProtegeOKCancelDialogController<Optional<PortletId>>("Choose view") {
+        WebProtegeOKCancelDialogController<Optional<PortletId>> controller = new WebProtegeOKCancelDialogController<java.util.Optional<PortletId>>("Choose view") {
             @Override
             public Widget getWidget() {
                 return view.asWidget();
@@ -50,7 +50,7 @@ public class PortletChooserPresenter {
             }
 
             @Override
-            public Optional<PortletId> getData() {
+            public java.util.Optional<PortletId> getData() {
                 return view.getSelectedPortletId();
             }
         };

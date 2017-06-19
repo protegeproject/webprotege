@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.library.checkbox;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.CheckBox;
 import edu.stanford.bmir.protege.web.shared.entity.EntityTypeGroup;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,7 +18,7 @@ public class EntityTypeGroupCheckBox extends CheckBox {
     private EntityTypeGroup entityTypeGroup;
 
     public Optional<EntityTypeGroup> getEntityTypeGroup() {
-        return Optional.fromNullable(entityTypeGroup);
+        return Optional.ofNullable(entityTypeGroup);
     }
 
     public void setEntityTypeGroup(EntityTypeGroup entityTypeGroup) {

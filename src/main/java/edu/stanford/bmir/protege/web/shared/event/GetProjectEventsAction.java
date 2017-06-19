@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
@@ -9,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerant
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -52,7 +53,7 @@ public class GetProjectEventsAction implements HasProjectAction<GetProjectEvents
     @Override
     public Optional<String> handleInvocationException(InvocationException ex) {
         GWT.log("Could not retrieve events due to server connection problems.");
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override

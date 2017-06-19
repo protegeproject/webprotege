@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.renderer;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -17,6 +16,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
@@ -60,7 +60,7 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
     }
 
     @Override
-    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         if (entity.isPresent()) {
             dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entity.get()),
                                            new DispatchServiceCallback<GetEntityRenderingResult>() {

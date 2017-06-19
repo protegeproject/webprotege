@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -30,6 +31,7 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
         return super.getShortForm(ont);
     }
 
+    @Nonnull
     @Override
     public String getShortForm(IRI iri) {
         if (Optional.of(iri).equals(rootOntology.getOntologyID().getOntologyIRI())) {

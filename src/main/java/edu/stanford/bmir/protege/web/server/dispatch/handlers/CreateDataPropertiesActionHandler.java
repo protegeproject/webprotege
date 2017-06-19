@@ -45,7 +45,11 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
         return new FixedMessageChangeDescriptionGenerator<>(action.getBrowserTexts().size() == 1 ?
                                                                     String.format("Created data property %s as a sub-property of %s",
                                                                                   action.getBrowserTexts().iterator().next(),
-                                                                                  action.getParent().transform(p -> project.getRenderingManager().getBrowserText(p)).or("owl:topDataProperty"))
+                                                                                  action.getParent()
+                                                                                        .map(p -> project.getRenderingManager()
+                                                                                                         .getBrowserText(
+                                                                                                                 p))
+                                                                                        .orElse("owl:topDataProperty"))
                                                                     :
                                                                     "Created data properties");
     }

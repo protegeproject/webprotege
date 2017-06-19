@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge

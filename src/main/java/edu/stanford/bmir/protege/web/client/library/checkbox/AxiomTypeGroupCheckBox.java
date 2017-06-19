@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.library.checkbox;
 
-import com.google.common.base.Optional;
 import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.shared.DirectionEstimator;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -8,6 +7,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+
+import java.util.Optional;
 
 
 /**
@@ -56,7 +57,7 @@ public class AxiomTypeGroupCheckBox extends CheckBox {
     }
 
     public Optional<AxiomTypeGroup> getAxiomTypeGroup() {
-        return Optional.fromNullable(axiomTypeGroup);
+        return Optional.ofNullable(axiomTypeGroup);
     }
 
     public void setAxiomTypeGroup(AxiomTypeGroup axiomTypeGroup) {

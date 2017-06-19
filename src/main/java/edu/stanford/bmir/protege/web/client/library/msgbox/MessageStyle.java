@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
-import com.google.common.base.Optional;
 import com.google.gwt.resources.client.ImageResource;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -13,21 +15,22 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public enum MessageStyle {
 
-    PLAIN(Optional.<ImageResource>absent()),
+    PLAIN(Optional.empty()),
 
-    MESSAGE(Optional.of(BUNDLE.messageIcon())),
+    MESSAGE(java.util.Optional.of(BUNDLE.messageIcon())),
 
-    QUESTION(Optional.of(BUNDLE.questionIcon())),
+    QUESTION(java.util.Optional.of(BUNDLE.questionIcon())),
 
-    ALERT(Optional.of(BUNDLE.alertIcon()));
+    ALERT(java.util.Optional.of(BUNDLE.alertIcon()));
 
-    private Optional<ImageResource> image;
+    @Nullable
+    private ImageResource image;
 
     MessageStyle(Optional<ImageResource> image) {
-        this.image = image;
+        this.image = image.orElse(null);
     }
 
     public Optional<ImageResource> getImage() {
-        return image;
+        return Optional.ofNullable(image);
     }
 }

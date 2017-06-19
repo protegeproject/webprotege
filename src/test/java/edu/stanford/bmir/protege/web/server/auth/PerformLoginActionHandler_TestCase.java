@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
@@ -13,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -85,7 +86,7 @@ public class PerformLoginActionHandler_TestCase {
 
     @Test
     public void shouldFailOnTimeOut() {
-        when(sessionManager.retrieveChallengeMessage(chapSessionId)).thenReturn(Optional.absent());
+        when(sessionManager.retrieveChallengeMessage(chapSessionId)).thenReturn(Optional.empty());
         PerformLoginResult result = handler.execute(action, executionContext);
         assertThat(result.getResponse(), is(AuthenticationResponse.FAIL));
     }

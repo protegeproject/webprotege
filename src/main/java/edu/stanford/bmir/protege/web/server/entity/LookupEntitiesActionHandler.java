@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -63,7 +62,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         Set<OWLEntityDataMatch> matches = new TreeSet<>();
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         for(String shortForm : sfp.getShortForms()) {
-            Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
+            java.util.Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
             if(result.isPresent()) {
                 Set<OWLEntity> entities = sfp.getEntities(shortForm);
                 for(OWLEntity matchingEntity : entities) {
@@ -106,7 +105,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                     return Optional.of(new OWLClassData(cls, browserText));
                                 }
                                 else {
-                                    return Optional.absent();
+                                    return Optional.empty();
                                 }
                             }
 
@@ -116,7 +115,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                     return Optional.of(new OWLObjectPropertyData(property, browserText));
                                 }
                                 else {
-                                    return Optional.absent();
+                                    return Optional.empty();
                                 }
                             }
 
@@ -126,7 +125,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                     return Optional.of(new OWLDataPropertyData(property, browserText));
                                 }
                                 else {
-                                    return Optional.absent();
+                                    return Optional.empty();
                                 }
                             }
 
@@ -136,7 +135,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                     return Optional.of(new OWLNamedIndividualData(individual, browserText));
                                 }
                                 else {
-                                    return Optional.absent();
+                                    return Optional.empty();
                                 }
                             }
 
@@ -146,7 +145,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                     return Optional.of(new OWLDatatypeData(datatype, browserText));
                                 }
                                 else {
-                                    return Optional.absent();
+                                    return Optional.empty();
                                 }
                             }
 
@@ -156,7 +155,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                     return Optional.of(new OWLAnnotationPropertyData(property, browserText));
                                 }
                                 else {
-                                    return Optional.absent();
+                                    return Optional.empty();
                                 }
                             }
                         });

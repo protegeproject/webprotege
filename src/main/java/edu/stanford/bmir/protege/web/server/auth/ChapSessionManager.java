@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import edu.stanford.bmir.protege.web.shared.auth.ChapSession;
@@ -9,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.auth.Salt;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +35,7 @@ public class ChapSessionManager {
     }
 
     public Optional<ChapSession> retrieveChallengeMessage(ChapSessionId id) {
-        return Optional.fromNullable(messageCache.getIfPresent(id));
+        return Optional.ofNullable(messageCache.getIfPresent(id));
     }
 
     public ChapSession getSession(Salt salt) {

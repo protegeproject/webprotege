@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
-import com.google.common.base.Optional;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 

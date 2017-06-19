@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.dispatch.cache;
 
-import com.google.common.base.Optional;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
@@ -13,9 +12,11 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -30,7 +31,7 @@ public class ResultCache {
 
     private RemovalListener<Action<?>, Result> removalListener = new RemovalListener<Action<?>, Result>() {
         @Override
-        public void onRemoval(RemovalNotification<Action<?>, Result> notification) {
+        public void onRemoval(@Nonnull RemovalNotification<Action<?>, Result> notification) {
             Action<?> key = notification.getKey();
             if (key != null) {
             }
@@ -62,13 +63,13 @@ public class ResultCache {
     @SuppressWarnings("unchecked")
     public <A extends Action<R>, R extends Result> Optional<R> getCachedResult(A action) {
         if(!enabled) {
-            return Optional.absent();
+            return Optional.empty();
         }
         Result result = resultCache.getIfPresent(action);
         if(result != null) {
             GWT.log("[Result Cache] Found cached result for " + action + "  --> " + result);
         }
-        return Optional.fromNullable((R) result);
+        return Optional.ofNullable((R) result);
     }
 
     @SuppressWarnings("unchecked")

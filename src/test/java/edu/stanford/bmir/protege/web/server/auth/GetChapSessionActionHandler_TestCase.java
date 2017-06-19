@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.*;
@@ -10,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -60,8 +61,8 @@ public class GetChapSessionActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetChapSessionActionHandler(sessionManager, authenticationManager, logger);
-        when(authenticationManager.getSalt(userId)).thenReturn(Optional.of(salt));
-        when(authenticationManager.getSaltedPasswordDigest(userId)).thenReturn(Optional.of(saltedPasswordDigest));
+        when(authenticationManager.getSalt(userId)).thenReturn(java.util.Optional.of(salt));
+        when(authenticationManager.getSaltedPasswordDigest(userId)).thenReturn(java.util.Optional.of(saltedPasswordDigest));
         when(sessionManager.getSession(salt)).thenReturn(chapSession);
 
         when(chapSession.getId()).thenReturn(chapSessionId);
@@ -75,14 +76,14 @@ public class GetChapSessionActionHandler_TestCase {
     public void shouldReturnAbsentIfUserIsGuest() {
         when(userId.isGuest()).thenReturn(true);
         GetChapSessionResult result = handler.execute(action, mock(ExecutionContext.class));
-        assertThat(result.getChapSession(), is(Optional.<ChapSession>absent()));
+        assertThat(result.getChapSession(), is(Optional.<ChapSession>empty()));
     }
 
     @Test
     public void shouldReturnAbsentIfSaltIsAbsent() {
-        when(authenticationManager.getSalt(userId)).thenReturn(Optional.absent());
+        when(authenticationManager.getSalt(userId)).thenReturn(java.util.Optional.empty());
         GetChapSessionResult result = handler.execute(action, mock(ExecutionContext.class));
-        assertThat(result.getChapSession(), is(Optional.<ChapSession>absent()));
+        assertThat(result.getChapSession(), is(Optional.<ChapSession>empty()));
     }
 
     @Test

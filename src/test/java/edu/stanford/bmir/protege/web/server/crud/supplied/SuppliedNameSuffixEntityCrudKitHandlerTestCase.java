@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
@@ -21,6 +20,7 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
@@ -75,7 +75,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
-        when(crudContext.getTargetLanguage()).thenReturn(Optional.absent());
+        when(crudContext.getTargetLanguage()).thenReturn(Optional.empty());
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings);
     }

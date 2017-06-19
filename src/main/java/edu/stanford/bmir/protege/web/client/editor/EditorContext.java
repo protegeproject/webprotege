@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -59,10 +60,10 @@ public class EditorContext<T> {
     public <E extends OWLEntity> Optional<OWLEntityData> getSelectedEntityOfType(EntityType<E> entityType) {
         checkNotNull(entityType);
         if(!selectedEntityData.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(selectedEntityData.get().getEntity().getEntityType() != entityType) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(selectedEntityData.get());
     }

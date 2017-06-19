@@ -258,7 +258,7 @@ public class SendMailImpl implements SendMail {
      *
      * @param propertyName The property name. Not {@code null}.
      * @return The property value for the specified name.  If the property value is {@code null} or is not set
-     * then {@link com.google.common.base.Optional#absent()} will be returned.
+     * then {@link Optional#empty()} will be returned.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      */
     private Optional<String> getPropertyValue(String propertyName) {

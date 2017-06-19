@@ -1,14 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
+import java.util.Optional;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -94,7 +94,7 @@ public class ProjectId implements Serializable, IsSerializable {
 
     public static Optional<ProjectId> getFromNullable(String uuid) throws ProjectIdFormatException {
         if(uuid == null || uuid.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(get(uuid));
@@ -107,7 +107,7 @@ public class ProjectId implements Serializable, IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ProjectId").addValue(id).toString();
+        return toStringHelper("ProjectId").addValue(id).toString();
     }
 
     @Override

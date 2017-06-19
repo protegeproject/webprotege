@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -21,7 +22,7 @@ public class DeclarationParser {
 
     public Optional<OWLEntity> parseEntity(String declaration) {
         if(!declaration.endsWith(")")) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(declaration.startsWith(EntityType.CLASS.getName())) {
             return getEntity(declaration, EntityType.CLASS);
@@ -42,16 +43,16 @@ public class DeclarationParser {
             return getEntity(declaration, EntityType.DATATYPE);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
     private Optional<OWLEntity> getEntity(String declaration, EntityType<?> entityType) {
         if(!declaration.startsWith(entityType.getName() + "(")) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(!declaration.endsWith(")")) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String iriString = declaration.substring(entityType.getName().length() + 1, declaration.length() - 1);
         if(iriString.startsWith("<")) {

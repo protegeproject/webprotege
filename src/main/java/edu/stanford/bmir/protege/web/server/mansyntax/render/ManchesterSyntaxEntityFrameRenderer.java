@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -95,33 +96,39 @@ public class ManchesterSyntaxEntityFrameRenderer {
 
     private String getFrameClass(OWLEntity entity) {
         return entity.accept(new OWLEntityVisitorEx<String>() {
+            @Nonnull
             @Override
-            public String visit(OWLClass cls) {
+            public String visit(@Nonnull OWLClass cls) {
                 return "ms-class-frame";
             }
 
+            @Nonnull
             @Override
-            public String visit(OWLObjectProperty property) {
+            public String visit(@Nonnull OWLObjectProperty property) {
                 return "ms-objectproperty-frame";
             }
 
+            @Nonnull
             @Override
-            public String visit(OWLDataProperty property) {
+            public String visit(@Nonnull OWLDataProperty property) {
                 return "ms-dataproperty-frame";
             }
 
+            @Nonnull
             @Override
-            public String visit(OWLNamedIndividual individual) {
+            public String visit(@Nonnull OWLNamedIndividual individual) {
                 return "ms-individual-frame";
             }
 
+            @Nonnull
             @Override
-            public String visit(OWLDatatype datatype) {
+            public String visit(@Nonnull OWLDatatype datatype) {
                 return "ms-datatype-frame";
             }
 
+            @Nonnull
             @Override
-            public String visit(OWLAnnotationProperty property) {
+            public String visit(@Nonnull OWLAnnotationProperty property) {
                 return "ms-annotationproperty-frame";
             }
         });
@@ -144,31 +151,31 @@ public class ManchesterSyntaxEntityFrameRenderer {
         frameBlockTagRenderer.renderOpeningTag(builder);
         entity.accept(new OWLEntityVisitor() {
             @Override
-            public void visit(OWLClass cls) {
+            public void visit(@Nonnull OWLClass cls) {
                 writeClassFrameContent(cls, builder);
             }
 
             @Override
-            public void visit(OWLObjectProperty property) {
+            public void visit(@Nonnull OWLObjectProperty property) {
                 writeObjectPropertyFrameContent(property, builder);
             }
 
             @Override
-            public void visit(OWLDataProperty property) {
+            public void visit(@Nonnull OWLDataProperty property) {
                 writeDataPropertyFrameContent(property, builder);
             }
 
             @Override
-            public void visit(OWLNamedIndividual individual) {
+            public void visit(@Nonnull OWLNamedIndividual individual) {
                 writeNamedIndividualFrameContent(individual, builder);
             }
 
             @Override
-            public void visit(OWLDatatype datatype) {
+            public void visit(@Nonnull OWLDatatype datatype) {
             }
 
             @Override
-            public void visit(OWLAnnotationProperty property) {
+            public void visit(@Nonnull OWLAnnotationProperty property) {
                 writeAnnotationProperty(property, builder);
             }
         });
@@ -217,7 +224,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
                 break;
             }
             sectionTagRenderer.renderOpeningTag(builder);
-            renderSectionHeader(renderer.getSection(), builder, Optional.of(ontology));
+            renderSectionHeader(renderer.getSection(), builder, java.util.Optional.of(ontology));
             sectionBlockTagRenderer.renderOpeningTag(builder);
             List<I> sectionItemsList = Lists.newArrayList(sectionItems);
             for (Iterator<I> sectionItemIt = sectionItemsList.iterator(); sectionItemIt.hasNext(); ) {
@@ -261,7 +268,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
         if (!annotations.isEmpty()) {
             annotationsTagRenderer.renderOpeningTag(builder);
             if (nestedAnnotationStyle != NestedAnnotationStyle.COMPACT) {
-                renderSectionHeader(ManchesterOWLSyntax.ANNOTATIONS, builder, Optional.absent());
+                renderSectionHeader(ManchesterOWLSyntax.ANNOTATIONS, builder, java.util.Optional.empty());
             }
             annotationsBlockTagRenderer.renderOpeningTag(builder);
             for(OWLAnnotation annotation : annotations) {
@@ -293,7 +300,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
     }
 
 
-    private void renderSectionHeader(ManchesterOWLSyntax sectionKeyword, StringBuilder builder, Optional<OWLOntology> ont) {
+    private void renderSectionHeader(ManchesterOWLSyntax sectionKeyword, StringBuilder builder, java.util.Optional<OWLOntology> ont) {
         sectionKwTagRenderer.renderOpeningTag(builder);
         builder.append(sectionKeyword.keyword());
         sectionKwTagRenderer.renderClosingTag(builder);
@@ -315,7 +322,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
     private String getRendering(Object renderable, FrameSectionRenderer<?,?,?> renderer) {
         String rendering = "";
         if (renderable instanceof OWLObject) {
-            Optional<String> itemStyle = itemStyleProvider.getItemStyle(renderable);
+            java.util.Optional<String> itemStyle = itemStyleProvider.getItemStyle(renderable);
             if(itemStyle.isPresent()) {
                 rendering = "<span class=\"" + itemStyle.get() + "\">";
             }

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.user.UserRecord;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
@@ -10,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -35,11 +36,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         checkNotNull(email);
         checkNotNull(password);
         checkNotNull(salt);
-        java.util.Optional<UserRecord> existingRecord = repository.findOne(userId);
+        Optional<UserRecord> existingRecord = repository.findOne(userId);
         if(existingRecord.isPresent()) {
             throw new UserNameAlreadyExistsException(userId.getUserName());
         }
-        java.util.Optional<UserRecord> existingRecordByEmail = repository.findOneByEmailAddress(email.getEmailAddress());
+        Optional<UserRecord> existingRecordByEmail = repository.findOneByEmailAddress(email.getEmailAddress());
         if(existingRecordByEmail.isPresent()) {
             throw new UserEmailAlreadyExistsException(email.getEmailAddress());
         }
@@ -61,7 +62,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (userId.isGuest()) {
             return;
         }
-        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        Optional<UserRecord> record = repository.findOne(userId);
         if (!record.isPresent()) {
             return;
         }
@@ -79,11 +80,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     @Override
     public Optional<Salt> getSalt(UserId userId) {
         if(userId.isGuest()) {
-            return Optional.absent();
+            return Optional.empty();
         }
-        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        Optional<UserRecord> record = repository.findOne(userId);
         if(!record.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(record.get().getSalt());
     }
@@ -91,11 +92,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     @Override
     public Optional<SaltedPasswordDigest> getSaltedPasswordDigest(UserId userId) {
         if(userId.isGuest()) {
-            return Optional.absent();
+            return Optional.empty();
         }
-        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        Optional<UserRecord> record = repository.findOne(userId);
         if(record == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(record.get().getSaltedPasswordDigest());
     }

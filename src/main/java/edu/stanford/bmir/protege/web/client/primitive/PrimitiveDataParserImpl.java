@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -13,6 +12,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -78,7 +78,7 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
     }
 
     private void parseEntityDataIRIOrLiteral(final String trimmedContent, final java.util.Optional<String> lang, final Set<EntityType<?>> allowedEntityTypes, final Set<PrimitiveType> allowedTypes, final PrimitiveDataParserCallback callback) {
-        entityDataLookupHandler.lookupEntity(trimmedContent, allowedEntityTypes, new AsyncCallback<Optional<OWLEntityData>>() {
+        entityDataLookupHandler.lookupEntity(trimmedContent, allowedEntityTypes, new AsyncCallback<java.util.Optional<OWLEntityData>>() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.parsingFailure();

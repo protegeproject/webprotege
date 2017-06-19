@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ontology.properties;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -47,6 +46,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
@@ -202,23 +202,23 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             return getEntityDataFromTreeNode(selectedTreeNode);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
     private static Optional<OWLEntityData> getEntityDataFromTreeNode(TreeNode selectedTreeNode) {
         if (selectedTreeNode == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if (ANNOTATION_PROPERTIES_ROOT_NAME.equals(selectedTreeNode.getText())) {
-            return Optional.absent();
+            return Optional.empty();
         }
         Object userObject = selectedTreeNode.getUserObject();
         if (userObject instanceof EntityData) {
             return LegacyCompatUtil.toOWLEntityData((EntityData) userObject);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 
@@ -349,7 +349,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         }
         java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
         if (!selectedEntity.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(selectedEntity.get().getEntityType());
@@ -373,13 +373,13 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         if (!sel.isPresent()) {
             // Temp hack
             if (isAnnotationPropertiesRootSelected()) {
-                createSubProperties(Optional.absent(), createEntityInfo);
+                createSubProperties(Optional.empty(), createEntityInfo);
             }
             return;
         }
 
         if (isAnnotationPropertiesRootSelected()) {
-            createSubProperties(Optional.absent(), createEntityInfo);
+            createSubProperties(Optional.empty(), createEntityInfo);
             return;
         }
 
@@ -418,7 +418,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         return treePanel.getNodeById(ANNOTATION_PROPERTIES_TREE_NODE_ID);
     }
 
-    private void createSubProperties(Optional<OWLAnnotationProperty> parent, CreateEntityInfo createEntityInfo) {
+    private void createSubProperties(java.util.Optional<OWLAnnotationProperty> parent, CreateEntityInfo createEntityInfo) {
         CreateAnnotationPropertiesAction action = new CreateAnnotationPropertiesAction(getProjectId(),
                                                                                        createEntityInfo.getBrowserTexts(),
                                                                                        parent);

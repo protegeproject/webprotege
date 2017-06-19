@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Matthew Horridge

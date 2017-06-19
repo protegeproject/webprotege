@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -9,10 +8,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -98,7 +94,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                 return Optional.of(prefixName);
             }
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 
     private String expandBuiltInPrefix(String browserText) {

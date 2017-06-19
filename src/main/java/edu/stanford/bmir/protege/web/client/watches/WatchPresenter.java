@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.watches;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -16,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -50,12 +49,9 @@ public class WatchPresenter {
                 updateDialog(watches);
                 WebProtegeDialog<WatchTypeSelection> dlg = new WebProtegeDialog<>(controller);
                 dlg.show();
-                controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<WatchTypeSelection>() {
-                    @Override
-                    public void handleHide(WatchTypeSelection data, WebProtegeDialogCloser closer) {
-                        closer.hide();
-                        handleWatchTypeForEntity(data, forEntity);
-                    }
+                controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+                    closer.hide();
+                    handleWatchTypeForEntity(data, forEntity);
                 });
             }
         });
@@ -80,7 +76,8 @@ public class WatchPresenter {
     private void handleWatchTypeForEntity(final WatchTypeSelection type, final OWLEntity entity) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         Optional<Watch> watch = getWatchFromType(type, entity);
-        ImmutableSet<Watch> watches = ImmutableSet.copyOf(watch.asSet());
+        ImmutableSet<Watch> watches = ImmutableSet.copyOf(watch.isPresent() ? Collections.singleton(watch.get()) : Collections
+                .emptySet());
             dispatchServiceManager.execute(new SetEntityWatchesAction(projectId, userId, entity, watches), new DispatchServiceCallback<SetEntityWatchesResult>() {
                 @Override
                 public void handleSuccess(SetEntityWatchesResult setEntityWatchesResult) {
@@ -94,7 +91,7 @@ public class WatchPresenter {
     private Optional<Watch> getWatchFromType(final WatchTypeSelection type, final OWLEntity entity) {
         switch (type) {
             case NONE_SELECTED:
-                return Optional.absent();
+                return Optional.empty();
             case ENTITY_SELECTED:
                 return Optional.of(new Watch(loggedInUserProvider.getCurrentUserId(),
                                              entity,
@@ -104,7 +101,7 @@ public class WatchPresenter {
                                              entity,
                                              WatchType.BRANCH));
             default:
-                return Optional.absent();
+                return Optional.empty();
         }
     }
 }

@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 17/04/2014
@@ -20,23 +20,23 @@ public class IRIParser {
      * It must start with "&lt;", end with "&gt;" and the content between must be parsable into an IRI.
      * @param lexicalForm The lexical form.  Not {@code null}.
      * @return An IRI if the lexical form is that of a full IRI, otherwise
-     * {@link com.google.common.base.Optional#absent()}.
+     * {@link Optional#empty()}.
      */
-    public Optional<IRI> parseIRI(String lexicalForm) {
+    public java.util.Optional<IRI> parseIRI(String lexicalForm) {
         if(lexicalForm.length() < 3) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         if(!hasIriStartChar(lexicalForm)) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         if(!hasIriEndChar(lexicalForm)) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         String iriContent = lexicalForm.substring(1, lexicalForm.length() - 1);
         if(!isValidIriContent(iriContent)) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
-        return Optional.of(IRI.create(iriContent));
+        return java.util.Optional.of(IRI.create(iriContent));
     }
 
     private boolean hasIriEndChar(String lexicalForm) {

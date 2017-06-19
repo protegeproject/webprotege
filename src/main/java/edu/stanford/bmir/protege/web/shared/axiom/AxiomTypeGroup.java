@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.axiom;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
@@ -107,7 +106,7 @@ public enum AxiomTypeGroup {
 
     AxiomTypeGroup(String displayName, AxiomType... axiomTypes) {
         this.displayName = displayName;
-        this.owlrdfVocabulary = Optional.absent();
+        this.owlrdfVocabulary = Optional.empty();
         this.axiomTypes = wrapArray(axiomTypes);
     }
 

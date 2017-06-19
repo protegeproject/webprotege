@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.util.IdUtil;
@@ -10,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import org.semanticweb.owlapi.model.*;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -147,7 +148,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     private static OWLLiteral getLabellingLiteral(String suppliedName, EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
-        return dataFactory.getOWLLiteral(suppliedName, context.getTargetLanguage().or(""));
+        return dataFactory.getOWLLiteral(suppliedName, context.getTargetLanguage().orElse(""));
     }
 
 }

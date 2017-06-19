@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -16,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 

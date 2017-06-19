@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,7 +31,7 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
     }
 
     private Set<UsageReference> translate(Set<? extends OWLObject> subjects, OWLAxiom axiom) {
-        Set<UsageReference> result = new HashSet<UsageReference>();
+        Set<UsageReference> result = new HashSet<>();
         for(OWLObject subject : subjects) {
             result.addAll(translate(subject, axiom));
         }
@@ -37,7 +39,7 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
     }
 
     private Set<UsageReference> translate(OWLObject subject, OWLAxiom axiom) {
-        Optional<OWLEntity> axiomSubject = Optional.absent();
+        Optional<OWLEntity> axiomSubject = Optional.empty();
         if(subject instanceof OWLEntity) {
             axiomSubject = Optional.of((OWLEntity) subject);
         }
@@ -46,7 +48,8 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
                 return translate(usageOf, axiom);
             }
             else {
-                final Set<OWLEntity> entities = project.getRootOntology().getEntitiesInSignature((IRI) subject, true);
+                final Set<OWLEntity> entities = project.getRootOntology().getEntitiesInSignature((IRI) subject,
+                                                                                                 Imports.INCLUDED);
                 return translate(entities, axiom);
             }
 
@@ -64,133 +67,158 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
             subjectRendering = Optional.of(project.getRenderingManager().getBrowserText(axiomSubject.get()));
         }
         else {
-            subjectRendering = Optional.absent();
+            subjectRendering = Optional.empty();
         }
         return Collections.singleton(new UsageReference(axiom.getAxiomType(), rendering, axiomSubject, subjectRendering));
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSubClassOfAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSubClassOfAxiom axiom) {
         return translate(axiom.getSubClass(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLNegativeObjectPropertyAssertionAxiom axiom) {
         return translate(axiom.getSubject(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLAsymmetricObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLAsymmetricObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLReflexiveObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLReflexiveObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDisjointClassesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDisjointClassesAxiom axiom) {
         return translate((OWLEntity) null, axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDataPropertyDomainAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDataPropertyDomainAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLObjectPropertyDomainAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLObjectPropertyDomainAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLEquivalentObjectPropertiesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLEquivalentObjectPropertiesAxiom axiom) {
         return translate(axiom.getProperties(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLNegativeDataPropertyAssertionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLNegativeDataPropertyAssertionAxiom axiom) {
         return translate(axiom.getSubject(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDifferentIndividualsAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDifferentIndividualsAxiom axiom) {
         return translate((OWLEntity) null, axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDisjointDataPropertiesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDisjointDataPropertiesAxiom axiom) {
         return translate(axiom.getProperties(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDisjointObjectPropertiesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDisjointObjectPropertiesAxiom axiom) {
         return translate(axiom.getProperties(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLObjectPropertyRangeAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLObjectPropertyRangeAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLObjectPropertyAssertionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLObjectPropertyAssertionAxiom axiom) {
         return translate(axiom.getSubject(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLFunctionalObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLFunctionalObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSubObjectPropertyOfAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSubObjectPropertyOfAxiom axiom) {
         return translate(axiom.getSubProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDisjointUnionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDisjointUnionAxiom axiom) {
         return translate(axiom.getOWLClass(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDeclarationAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDeclarationAxiom axiom) {
         return translate(axiom.getEntity(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLAnnotationAssertionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLAnnotationAssertionAxiom axiom) {
         return translate(axiom.getSubject(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSymmetricObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSymmetricObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDataPropertyRangeAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDataPropertyRangeAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLFunctionalDataPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLFunctionalDataPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLEquivalentDataPropertiesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLEquivalentDataPropertiesAxiom axiom) {
         return translate(axiom.getProperties(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLClassAssertionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLClassAssertionAxiom axiom) {
         return translate(axiom.getIndividual(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLEquivalentClassesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLEquivalentClassesAxiom axiom) {
         if(axiom.containsNamedEquivalentClass()) {
             return translate(axiom.getNamedClasses(), axiom);
         }
@@ -200,73 +228,87 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
 
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDataPropertyAssertionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDataPropertyAssertionAxiom axiom) {
         return translate(axiom.getSubject(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLTransitiveObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLTransitiveObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLIrreflexiveObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSubDataPropertyOfAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSubDataPropertyOfAxiom axiom) {
         return translate(axiom.getSubProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLInverseFunctionalObjectPropertyAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSameIndividualAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSameIndividualAxiom axiom) {
         return translate(axiom.getIndividuals(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSubPropertyChainOfAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSubPropertyChainOfAxiom axiom) {
         return translate(axiom.getSuperProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLInverseObjectPropertiesAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLInverseObjectPropertiesAxiom axiom) {
         return translate(axiom.getProperties(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLHasKeyAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLHasKeyAxiom axiom) {
         return translate(axiom.getClassExpression(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLDatatypeDefinitionAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLDatatypeDefinitionAxiom axiom) {
         return translate(axiom.getDatatype(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(SWRLRule rule) {
+    public Set<UsageReference> visit(@Nonnull SWRLRule rule) {
         return translate(rule.getHead(), rule);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLSubAnnotationPropertyOfAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLSubAnnotationPropertyOfAxiom axiom) {
         return translate(axiom.getSubProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLAnnotationPropertyDomainAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLAnnotationPropertyDomainAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 
+    @Nonnull
     @Override
-    public Set<UsageReference> visit(OWLAnnotationPropertyRangeAxiom axiom) {
+    public Set<UsageReference> visit(@Nonnull OWLAnnotationPropertyRangeAxiom axiom) {
         return translate(axiom.getProperty(), axiom);
     }
 }

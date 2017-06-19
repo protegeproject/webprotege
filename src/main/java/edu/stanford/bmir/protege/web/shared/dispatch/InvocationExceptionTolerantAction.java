@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.InvocationException;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -9,7 +10,7 @@ import com.google.gwt.user.client.rpc.InvocationException;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/07/2013
  * <p>
- *     A marker interface for actions which can tolerate {@link com.google.gwt.user.client.rpc.InvocationException}
+ *     A marker interface for actions which can tolerate {@link InvocationException}
  *     exceptions (these exceptions arise when communication with the server is lost).
  * </p>
  */
