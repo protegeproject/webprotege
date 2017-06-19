@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -19,6 +18,7 @@ import org.semanticweb.owlapi.model.EntityType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,7 +35,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     private Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider;
 
-    private Optional<String> lastStyleName = Optional.absent();
+    private Optional<String> lastStyleName = Optional.empty();
     private final FlowPanel holder;
 
     @Inject

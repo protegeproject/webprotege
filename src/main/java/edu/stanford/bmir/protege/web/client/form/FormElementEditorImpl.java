@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -18,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -85,12 +86,7 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     @Override
     public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataList>> handler) {
-        return delegateEditor.addValueChangeHandler(new ValueChangeHandler<Optional<FormDataList>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<FormDataList>> event) {
-                ValueChangeEvent.fire(FormElementEditorImpl.this, getValue());
-            }
-        });
+        return delegateEditor.addValueChangeHandler(event -> ValueChangeEvent.fire(FormElementEditorImpl.this, getValue()));
     }
 
     @Override

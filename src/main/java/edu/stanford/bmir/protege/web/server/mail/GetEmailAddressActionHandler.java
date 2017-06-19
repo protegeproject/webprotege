@@ -31,22 +31,19 @@ public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddre
 
     @Override
     public RequestValidator getRequestValidator(GetEmailAddressAction action, RequestContext requestContext) {
-        return new RequestValidator() {
-            @Override
-            public RequestValidationResult validateAction() {
-                if(!requestContext.getUserId().isGuest()) {
-                    return RequestValidationResult.getValid();
-                }
-                else {
-                    return RequestValidationResult.getInvalid("Cannot get the email address of the guest user");
-                }
+        return () -> {
+            if(!requestContext.getUserId().isGuest()) {
+                return RequestValidationResult.getValid();
+            }
+            else {
+                return RequestValidationResult.getInvalid("Cannot get the email address of the guest user");
             }
         };
     }
 
     @Override
     public GetEmailAddressResult execute(GetEmailAddressAction action, ExecutionContext executionContext) {
-        Optional<EmailAddress> address = userDetailsManager.getEmail(action.getUserId()).map(e -> new EmailAddress(e));
-        return new GetEmailAddressResult(action.getUserId(), address.map(a -> com.google.common.base.Optional.of(a)).orElse(com.google.common.base.Optional.absent()));
+        Optional<EmailAddress> address = userDetailsManager.getEmail(action.getUserId()).map(EmailAddress::new);
+        return new GetEmailAddressResult(action.getUserId(), address);
     }
 }

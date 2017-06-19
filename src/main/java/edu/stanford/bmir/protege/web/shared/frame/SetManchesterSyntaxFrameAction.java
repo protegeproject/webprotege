@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -41,7 +41,7 @@ public class SetManchesterSyntaxFrameAction implements Action<SetManchesterSynta
         this.fromRendering = checkNotNull(fromRendering);
         this.toRendering = checkNotNull(toRendering);
         this.freshEntities = new HashSet<>(freshEntities);
-        this.commitMessage = checkNotNull(commitMessage).orNull();
+        this.commitMessage = checkNotNull(commitMessage).orElse(null);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SetManchesterSyntaxFrameAction implements Action<SetManchesterSynta
     }
 
     public Optional<String> getCommitMessage() {
-        return Optional.fromNullable(commitMessage);
+        return Optional.ofNullable(commitMessage);
     }
 
     public Set<OWLEntityData> getFreshEntities() {

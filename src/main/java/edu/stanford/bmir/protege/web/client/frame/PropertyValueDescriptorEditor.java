@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
@@ -15,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

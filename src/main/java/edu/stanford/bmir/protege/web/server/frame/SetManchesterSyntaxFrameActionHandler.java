@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
@@ -19,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014

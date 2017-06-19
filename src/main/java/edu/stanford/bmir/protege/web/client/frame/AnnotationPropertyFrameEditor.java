@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -29,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,7 +41,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AnnotationPropertyFrameEditor extends Composite implements EditorView<LabelledFrame<AnnotationPropertyFrame>>, HasEnabled {
 
-    private Optional<LabelledFrame<AnnotationPropertyFrame>> lastFrame = Optional.absent();
+    private Optional<LabelledFrame<AnnotationPropertyFrame>> lastFrame = Optional.empty();
 
     interface AnnotationPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, AnnotationPropertyFrameEditor> {
 
@@ -153,7 +153,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     @Override
     public Optional<LabelledFrame<AnnotationPropertyFrame>> getValue() {
         if(!lastFrame.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         final Set<OWLEntityData> domainsClasses = Sets.newHashSet();
         for(OWLPrimitiveData data : domains.getValue().get()) {

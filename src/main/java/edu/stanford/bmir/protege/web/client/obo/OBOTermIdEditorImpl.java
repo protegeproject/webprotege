@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -15,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -85,10 +85,10 @@ public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
     @Override
     public Optional<OBOTermId> getValue() {
         if(getId().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(getName().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         if(getNamespace().isEmpty()) {
             return Optional.of(new OBOTermId(getId(), getName()));

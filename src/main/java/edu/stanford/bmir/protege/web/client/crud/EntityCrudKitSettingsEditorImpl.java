@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.crud;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -30,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -74,7 +74,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         descriptors = new ArrayList<EntityCrudKit>(kitManager.getKits());
         for (EntityCrudKit descriptor : descriptors) {
             suffixSelectorListBox.addItem(descriptor.getDisplayName());
-            touchedEditors.add(Optional.absent());
+            touchedEditors.add(Optional.empty());
         }
         suffixSelectorListBox.setSelectedIndex(0);
         updateEditor(true);
@@ -124,7 +124,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     private Optional<EntityCrudKitSuffixSettingsEditor> updateEditor(boolean forceRefresh) {
         int selIndex = suffixSelectorListBox.getSelectedIndex();
         if (selIndex == -1) {
-            return Optional.absent();
+            return Optional.empty();
         }
         Optional<EntityCrudKitSuffixSettingsEditor> touchedEditor = touchedEditors.get(selIndex);
         EntityCrudKitSuffixSettingsEditor editor;
@@ -215,12 +215,12 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     public Optional<EntityCrudKitSettings<?>> getValue() {
         Optional<EntityCrudKitSuffixSettingsEditor> selEditor = updateEditor(false);
         if(!selEditor.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         EntityCrudKitSuffixSettingsEditor editor = selEditor.get();
         Optional<?> editedValue = editor.getValue();
         if(!editedValue.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) editedValue.get()));
     }

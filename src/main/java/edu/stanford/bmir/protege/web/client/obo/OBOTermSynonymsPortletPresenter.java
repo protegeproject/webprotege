@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -14,6 +13,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

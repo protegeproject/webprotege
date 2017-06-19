@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -15,6 +14,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -101,11 +102,11 @@ public class XRefEditorImpl extends Composite implements XRefEditor {
     public Optional<OBOXRef> getValue() {
         String databaseName = getDatabaseName();
         if(databaseName.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String databaseId = getDatabaseId();
         if(databaseId.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String description = getDescription();
         return Optional.of(new OBOXRef(databaseName, databaseId, description));

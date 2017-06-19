@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -18,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

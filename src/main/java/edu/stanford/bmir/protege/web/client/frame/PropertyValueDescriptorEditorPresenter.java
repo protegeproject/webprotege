@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -21,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
@@ -250,7 +250,7 @@ public class PropertyValueDescriptorEditorPresenter implements ValueEditor<Prope
         /**
          * Gets the policy supported by this handler.
          *
-         * @return The {@link edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesPolicy}.  Not {@code
+         * @return The {@link FreshEntitiesPolicy}.  Not {@code
          * null}.
          */
         @Override

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ontology.id;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -17,6 +16,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -81,7 +82,7 @@ public class OntologyIdViewImpl extends Composite implements OntologyIdView, Has
         }
         if (object.getOntologyIRI().isPresent()) {
             ontologyIRIField.setValue(object.getOntologyIRI().get().toString());
-            final Optional<IRI> versionIRI = object.getVersionIRI();
+            final com.google.common.base.Optional<IRI> versionIRI = object.getVersionIRI();
             if(versionIRI.isPresent()) {
                 versionIRIField.setValue(versionIRI.get().toString());
             }

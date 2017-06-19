@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -12,6 +11,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -34,7 +34,7 @@ public class FormData implements Serializable, IsSerializable {
     }
 
     public Optional<FormDataList> getFormElementData(FormElementId formElementId) {
-        return Optional.fromNullable(data.get(formElementId));
+        return Optional.ofNullable(data.get(formElementId));
     }
 
     public static Builder builder() {

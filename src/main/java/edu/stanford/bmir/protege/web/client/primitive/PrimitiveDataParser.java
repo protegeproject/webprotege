@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Set;
 public interface PrimitiveDataParser {
 
     /**
-     * Parses the specified string into {@link edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData}.
+     * Parses the specified string into {@link OWLPrimitiveData}.
      * @param text The string to be parsed.  Not {@code null}.
      * @param language The language tag.  Not {@code null}.
      * @param callback The callback to be notified of the result.  Not {@code null}.

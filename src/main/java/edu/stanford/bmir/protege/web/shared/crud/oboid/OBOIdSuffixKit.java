@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
-import com.google.common.base.Optional;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import org.semanticweb.owlapi.model.IRI;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -51,7 +52,7 @@ public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
             return Optional.of("OBO IRI prefixes should end with an underscore");
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

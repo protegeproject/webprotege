@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.user.client.ui.SuggestOracle;
@@ -14,6 +13,7 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import javax.inject.Inject;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -72,11 +72,11 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 //    }
 
     /**
-     * Generate a {@link com.google.gwt.user.client.ui.SuggestOracle.Response} based on a specific {@link
-     * com.google.gwt.user.client.ui.SuggestOracle.Request}. After the
-     * {@link com.google.gwt.user.client.ui.SuggestOracle.Response} is created, it is passed into
-     * {@link com.google.gwt.user.client.ui.SuggestOracle.Callback#onSuggestionsReady(com.google.gwt.user.client.ui.SuggestOracle.Request,
-     * com.google.gwt.user.client.ui.SuggestOracle.Response)}.
+     * Generate a {@link Response} based on a specific {@link
+     * Request}. After the
+     * {@link Response} is created, it is passed into
+     * {@link Callback#onSuggestionsReady(Request,
+     * Response)}.
      * @param request the request
      * @param callback the callback to use for the response
      */
@@ -139,7 +139,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         if(!allowedPrimitiveTypes.contains(PrimitiveType.LITERAL)) {
             return false;
         }
-        OWLLiteral lit = DataFactory.parseLiteral(request.getQuery(), Optional.absent());
+        OWLLiteral lit = DataFactory.parseLiteral(request.getQuery(), Optional.empty());
         return !(lit.getDatatype().isString() || lit.getDatatype().isRDFPlainLiteral());
     }
 
@@ -150,7 +150,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
     }
 
     /**
-     * Should {@link com.google.gwt.user.client.ui.SuggestOracle.Suggestion} display strings be treated as HTML? If true,
+     * Should {@link Suggestion} display strings be treated as HTML? If true,
      * this
      * all suggestions' display strings will be interpreted as HTML, otherwise as
      * text.

@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
-import com.google.common.base.Optional;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import org.semanticweb.owlapi.model.IRI;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -45,7 +46,7 @@ public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
             return Optional.of("It is recommended that your prefix ends with a forward slash i.e. <b>/</b> (or a #)");
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

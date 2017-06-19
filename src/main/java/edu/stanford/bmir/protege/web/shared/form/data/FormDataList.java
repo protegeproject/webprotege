@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -41,7 +37,7 @@ public class FormDataList extends FormDataValue {
 
     public Optional<FormDataValue> getFirst() {
         if(list.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         else {
             return Optional.of(list.get(0));
@@ -50,7 +46,7 @@ public class FormDataList extends FormDataValue {
 
     @Override
     public Optional<IRI> asIRI() {
-        return Optional.absent();
+        return Optional.empty();
     }
 //    @Override
 //    public Optional<OWLClassData> asOWLClassData() {

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.crud.supplied;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -15,6 +14,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
+
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

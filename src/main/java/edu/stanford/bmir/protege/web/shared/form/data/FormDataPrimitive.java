@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -10,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLObject;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,7 +48,7 @@ public class FormDataPrimitive extends FormDataValue {
             return Optional.of((IRI)primitive);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 //    private FormDataPrimitive(OWLEntityData entityData) {
@@ -90,7 +90,7 @@ public class FormDataPrimitive extends FormDataValue {
             return Optional.of((OWLLiteral) primitive);
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

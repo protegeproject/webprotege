@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
@@ -24,7 +23,7 @@ public class FormDataObject extends FormDataValue {
     }
 
     public Optional<FormDataValue> get(String key) {
-        return Optional.fromNullable(map.get(key));
+        return Optional.ofNullable(map.get(key));
     }
 
 //    @Override
@@ -34,7 +33,7 @@ public class FormDataObject extends FormDataValue {
 
     @Override
     public Optional<IRI> asIRI() {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override

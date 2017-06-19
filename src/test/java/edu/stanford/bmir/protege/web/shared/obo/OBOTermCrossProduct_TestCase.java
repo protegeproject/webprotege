@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.obo;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -11,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
@@ -41,7 +43,7 @@ public class OBOTermCrossProduct_TestCase {
 
     @Test
     public void shouldReturnSupplied_genus() {
-        MatcherAssert.assertThat(crossProduct.getGenus(), is(this.genus));
+        assertThat(crossProduct.getGenus(), is(this.genus));
     }
 
     @Test(expected = NullPointerException.class)
@@ -51,51 +53,51 @@ public class OBOTermCrossProduct_TestCase {
 
     @Test
     public void shouldReturnSupplied_relationships() {
-        MatcherAssert.assertThat(crossProduct.getRelationships(), is(this.relationships));
+        assertThat(crossProduct.getRelationships(), is(this.relationships));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        MatcherAssert.assertThat(crossProduct, is(crossProduct));
+        assertThat(crossProduct, is(crossProduct));
     }
 
     @Test
     public void shouldNotBeEqualToNull() {
-        MatcherAssert.assertThat(crossProduct.equals(null), is(false));
+        assertThat(crossProduct.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(crossProduct, is(new OBOTermCrossProduct(genus, relationships)));
+        assertThat(crossProduct, is(new OBOTermCrossProduct(genus, relationships)));
     }
 
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_relationships() {
-        MatcherAssert.assertThat(crossProduct, is(Matchers.not(new OBOTermCrossProduct(genus, mock(OBOTermRelationships.class)))));
+        assertThat(crossProduct, is(Matchers.not(new OBOTermCrossProduct(genus, mock(OBOTermRelationships.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(crossProduct.hashCode(), is(new OBOTermCrossProduct(genus, relationships).hashCode()));
+        assertThat(crossProduct.hashCode(), is(new OBOTermCrossProduct(genus, relationships).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        MatcherAssert.assertThat(crossProduct.toString(), startsWith("OBOTermCrossProduct"));
+        assertThat(crossProduct.toString(), startsWith("OBOTermCrossProduct"));
     }
 
     @Test
     public void shouldReturn_true_For_isEmpty() {
         when(relationships.isEmpty()).thenReturn(true);
-        MatcherAssert.assertThat(crossProduct.isEmpty(), is(true));
+        assertThat(crossProduct.isEmpty(), is(true));
     }
 
     @Test
     public void shouldReturn_false_For_isEmpty() {
         when(relationships.isEmpty()).thenReturn(false);
         when(genus.isPresent()).thenReturn(true);
-        MatcherAssert.assertThat(crossProduct.isEmpty(), is(false));
+        assertThat(crossProduct.isEmpty(), is(false));
     }
 
 }

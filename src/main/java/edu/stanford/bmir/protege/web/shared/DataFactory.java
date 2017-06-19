@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -11,6 +10,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -230,7 +230,7 @@ public class DataFactory {
      * @throws NullPointerException if {@code lexicalValue} is {@code null} or {@code language} is {@code null}.
      */
     public static OWLLiteral parseLiteral(String lexicalValue, Optional<String> language) {
-        String lang = language.or("");
+        String lang = language.orElse("");
         if (!lang.isEmpty()) {
             return DataFactory.getOWLLiteral(lexicalValue, lang);
         }

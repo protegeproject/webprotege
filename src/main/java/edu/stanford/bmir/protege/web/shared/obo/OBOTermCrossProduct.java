@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OBOTermCrossProduct implements Serializable {
 
-    private Optional<OWLClassData> genus;
+    @SuppressWarnings("GwtInconsistentSerializableClass")
+    @Nullable
+    private OWLClassData genus;
 
     private OBOTermRelationships relationships;
 
@@ -30,16 +34,16 @@ public class OBOTermCrossProduct implements Serializable {
     }
     
     public static OBOTermCrossProduct emptyOBOTermCrossProduct() {
-        return new OBOTermCrossProduct(Optional.absent(), new OBOTermRelationships(Collections.emptySet()));
+        return new OBOTermCrossProduct(Optional.empty(), new OBOTermRelationships(Collections.emptySet()));
     }
 
     public OBOTermCrossProduct(Optional<OWLClassData> genus, OBOTermRelationships relationships) {
-        this.genus = checkNotNull(genus);
+        this.genus = checkNotNull(genus).orElse(null);
         this.relationships = checkNotNull(relationships);
     }
 
     public Optional<OWLClassData> getGenus() {
-        return genus;
+        return Optional.ofNullable(genus);
     }
 
     public OBOTermRelationships getRelationships() {
@@ -47,7 +51,7 @@ public class OBOTermCrossProduct implements Serializable {
     }
     
     public boolean isEmpty() {
-        return !genus.isPresent() || relationships.isEmpty();
+        return genus != null || relationships.isEmpty();
     }
 
     @Override
@@ -64,13 +68,13 @@ public class OBOTermCrossProduct implements Serializable {
             return false;
         }
         OBOTermCrossProduct other = (OBOTermCrossProduct) obj;
-        return this.genus.equals(other.genus) && this.relationships.equals(other.relationships);
+        return Objects.equal(this.genus, other.genus) && this.relationships.equals(other.relationships);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("OBOTermCrossProduct")
+        return MoreObjects.toStringHelper("OBOTermCrossProduct")
                 .addValue(genus)
                 .addValue(relationships)
                 .toString();

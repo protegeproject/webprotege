@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ontology.annotations;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -22,10 +21,7 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.inject.Inject;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -38,7 +34,7 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
 
     private final AnnotationsView annotationsView;
 
-    private Optional<List<PropertyAnnotationValue>> lastSet = Optional.absent();
+    private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
     private final DispatchServiceManager dispatchServiceManager;
 

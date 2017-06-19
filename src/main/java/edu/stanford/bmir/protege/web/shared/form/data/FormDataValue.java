@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -20,7 +20,7 @@ public abstract class FormDataValue implements IsSerializable {
      * a literal.
      */
     public Optional<OWLLiteral> asLiteral() {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -33,7 +33,4 @@ public abstract class FormDataValue implements IsSerializable {
     public abstract Optional<IRI> asIRI();
 
     public abstract boolean isObject();
-
-
-//    public abstract Optional<OWLClassData> asOWLClassData();
 }

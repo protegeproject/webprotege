@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
@@ -24,6 +23,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
@@ -42,9 +42,9 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private ProjectId projectId;
 
-    private Optional<OWLEntity> currentSubject = Optional.absent();
+    private Optional<OWLEntity> currentSubject = Optional.empty();
 
-    private Optional<String> pristineValue = Optional.absent();
+    private Optional<String> pristineValue = Optional.empty();
 
     private Timer errorCheckTimer = new Timer() {
         @Override
@@ -115,7 +115,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     public void clearSubject() {
         editor.clearValue();
-        currentSubject = Optional.absent();
+        currentSubject = Optional.empty();
         freshEntities.clear();
     }
 
@@ -143,7 +143,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     @Override
     public OWLEntity getSubject() {
-        return currentSubject.orNull();
+        return currentSubject.orElse(null);
     }
 
 
@@ -196,7 +196,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     }
 
     private void applyChangesWithoutCommitMessage() {
-        applyChanges(Optional.absent(), false);
+        applyChanges(Optional.empty(), false);
     }
 
     private void applyChangesWithCommitMessage(String input) {

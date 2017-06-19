@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,6 +26,7 @@ import javax.inject.Inject;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.reducing;
@@ -127,7 +127,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
                                                    getWebhookSettings()));
         }
         else {
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

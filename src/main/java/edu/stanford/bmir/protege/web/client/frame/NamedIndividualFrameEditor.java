@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -30,10 +29,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -141,7 +137,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     public Optional<LabelledFrame<NamedIndividualFrame>> getValue() {
         GWT.log("[NamedIndividualFrameEditor] Get value: Dirty: " + isDirty() + " Edited frame: " + editedFrame);
        if(!editedFrame.isPresent()) {
-           return Optional.absent();
+           return Optional.empty();
        }
        PropertyValueList propertyValueList = assertions.getValue().get();
        Set<OWLClassData> rawTypes = getRawTypes();

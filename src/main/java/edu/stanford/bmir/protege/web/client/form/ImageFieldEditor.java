@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,6 +20,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import org.semanticweb.owlapi.model.IRI;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -44,7 +45,7 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
     @UiField
     HTMLPanel container;
 
-    private Optional<IRI> theIRI = Optional.absent();
+    private Optional<IRI> theIRI = Optional.empty();
 
     private boolean dirty = false;
 
@@ -97,10 +98,8 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
         InputBox.showDialog(
                 "Image URL",
                 false,
-                theIRI.transform(iri -> iri.toString()).or(""),
-                input -> {
-                    setEditedValue(input);
-                });
+                theIRI.map(IRI::toString).orElse(""),
+                this::setEditedValue);
     }
 
     private void setEditedValue(String editedValue) {
@@ -115,14 +114,14 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
 
     @Override
     public void clearValue() {
-        theIRI = Optional.absent();
+        theIRI = Optional.empty();
         dirty = false;
         updateUi();
     }
 
     @Override
     public Optional<FormDataValue> getValue() {
-        return theIRI.transform((iri) -> FormDataPrimitive.get(iri));
+        return theIRI.map(FormDataPrimitive::get);
     }
 
     @Override

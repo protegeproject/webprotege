@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -24,6 +23,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -97,16 +97,16 @@ public class OBOTermCrossProductEditorImpl extends Composite implements OBOTermC
     }
 
     @Override
-    public Optional<OBOTermCrossProduct> getValue() {
+    public java.util.Optional<OBOTermCrossProduct> getValue() {
         if(!genusField.getValue().isPresent()) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         if(!relationshipsField.getValue().isPresent()) {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
         final OWLClassData genus = (OWLClassData) genusField.getValue().get();
         final OBOTermRelationships relationships = new OBOTermRelationships(new HashSet<OBORelationship>(relationshipsField.getValue().get()));
-        return Optional.of(new OBOTermCrossProduct(Optional.of(genus), relationships));
+        return java.util.Optional.of(new OBOTermCrossProduct(Optional.of(genus), relationships));
     }
 
     @Override

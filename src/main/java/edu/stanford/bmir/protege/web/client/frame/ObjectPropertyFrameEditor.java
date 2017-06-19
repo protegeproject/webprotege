@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -58,7 +57,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private EntityDisplay entityDisplay = entityData -> {};
 
 
-    private Optional<LabelledFrame<ObjectPropertyFrame>> previouslySetValue = Optional.absent();
+    private Optional<LabelledFrame<ObjectPropertyFrame>> previouslySetValue = Optional.empty();
 
     interface ObjectPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, ObjectPropertyFrameEditor> {
 
@@ -159,7 +158,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         dirty = false;
         iriField.setValue("");
         annotations.clearValue();
-        previouslySetValue = Optional.absent();
+        previouslySetValue = Optional.empty();
         entityDisplay.setDisplayedEntity(java.util.Optional.empty());
     }
 

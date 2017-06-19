@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,6 +22,7 @@ public class GetEmailAddressResult implements Result {
 
     private UserId userId;
 
+    @Nullable
     private EmailAddress emailAddress;
 
     /**
@@ -36,7 +39,7 @@ public class GetEmailAddressResult implements Result {
      */
     public GetEmailAddressResult(UserId userId, Optional<EmailAddress> emailAddress) {
         this.userId = checkNotNull(userId);
-        this.emailAddress = checkNotNull(emailAddress).orNull();
+        this.emailAddress = checkNotNull(emailAddress).orElse(null);
     }
 
     /**
@@ -53,7 +56,7 @@ public class GetEmailAddressResult implements Result {
      * does not exist.  Not {@code null}.
      */
     public Optional<EmailAddress> getEmailAddress() {
-        return Optional.fromNullable(emailAddress);
+        return Optional.ofNullable(emailAddress);
     }
 
 

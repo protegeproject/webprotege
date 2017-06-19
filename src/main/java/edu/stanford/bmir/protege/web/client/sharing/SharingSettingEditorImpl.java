@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -18,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -87,7 +88,7 @@ public class SharingSettingEditorImpl extends Composite implements SharingSettin
     @Override
     public Optional<SharingSetting> getValue() {
         if(personIdField.getValue().trim().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(
                 new SharingSetting(new PersonId(personIdField.getText().trim()), SharingPermission.values()[permissionField.getSelectedIndex()])

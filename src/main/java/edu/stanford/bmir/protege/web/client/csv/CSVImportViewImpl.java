@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -17,12 +14,12 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.csv.*;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -175,38 +172,35 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
             );
             widget.addFocusHandler(new ColumnHighligherFocusHandler(i));
             final int colIndex = i;
-            widget.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
-                @Override
-                public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                    if(event.getValue().isPresent()) {
-                        csvGridView.setHeaderText(colIndex, event.getValue().get().getBrowserText());
-                        csvGridView.addColumnStyleName(colIndex, CSV_IMPORT_STYLE.importedColumn());
+            widget.addValueChangeHandler(event -> {
+                if(event.getValue().isPresent()) {
+                    csvGridView.setHeaderText(colIndex, event.getValue().get().getBrowserText());
+                    csvGridView.addColumnStyleName(colIndex, CSV_IMPORT_STYLE.importedColumn());
+                }
+                else {
+                    csvGridView.clearHeaderText(colIndex);
+                    csvGridView.removeColumnStyleName(colIndex, CSV_IMPORT_STYLE.importedColumn());
+                }
+                csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.classIcon());
+                csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.namedIndividualIcon());
+                csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.numberIcon());
+                csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.literalIcon());
+                if(widget.getColumnType().isPresent() && widget.getProperty().isPresent()) {
+                    final ColumnType columnType = widget.getColumnType().get();
+                    if (columnType.getPrimitiveType() == PrimitiveType.CLASS) {
+                        csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.classIcon());
+                    }
+                    else if(columnType.getPrimitiveType() == PrimitiveType.NAMED_INDIVIDUAL) {
+                        csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.namedIndividualIcon());
+                    }
+                    else if(columnType == ColumnType.DOUBLE || columnType == ColumnType.INTEGER) {
+                        csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.numberIcon());
                     }
                     else {
-                        csvGridView.clearHeaderText(colIndex);
-                        csvGridView.removeColumnStyleName(colIndex, CSV_IMPORT_STYLE.importedColumn());
+                        csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.literalIcon());
                     }
-                    csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.classIcon());
-                    csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.namedIndividualIcon());
-                    csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.numberIcon());
-                    csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.literalIcon());
-                    if(widget.getColumnType().isPresent() && widget.getProperty().isPresent()) {
-                        final ColumnType columnType = widget.getColumnType().get();
-                        if (columnType.getPrimitiveType() == PrimitiveType.CLASS) {
-                            csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.classIcon());
-                        }
-                        else if(columnType.getPrimitiveType() == PrimitiveType.NAMED_INDIVIDUAL) {
-                            csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.namedIndividualIcon());
-                        }
-                        else if(columnType == ColumnType.DOUBLE || columnType == ColumnType.INTEGER) {
-                            csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.numberIcon());
-                        }
-                        else {
-                            csvGridView.addTDStyleName(colIndex, CSV_IMPORT_STYLE.literalIcon());
-                        }
-                    }
-//                    csvGridView.setColumnBold(colIndex, event.getValue().isPresent());
                 }
+//                    csvGridView.setColumnBold(colIndex, event.getValue().isPresent());
             });
             flexTable.setWidget(i, 1, widget);
         }

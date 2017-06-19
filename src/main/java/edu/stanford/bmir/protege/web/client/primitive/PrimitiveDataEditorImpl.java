@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -32,10 +31,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -55,6 +51,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     public static final double PLACEHOLDER_ICON_OPACITY = 0.3;
 
+    private static final String WEB_PROTEGE_FORM_LAYOUT_EDITOR_INPUT = "web-protege-form-layout-editor-input";
+
     private final PrimitiveDataEditorSuggestOracle entitySuggestOracle;
 
     private final LanguageEditor languageEditor;
@@ -63,7 +61,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private FreshEntitiesHandler freshEntitiesHandler;
 
-    private Optional<OWLPrimitiveData> currentData = Optional.absent();
+    private Optional<OWLPrimitiveData> currentData = Optional.empty();
 
     private final Set<PrimitiveType> allowedTypes = Sets.newLinkedHashSet();
 
@@ -75,9 +73,9 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private String textPlaceholder = "";
 
-    private Optional<OWLPrimitiveData> primitiveDataPlaceholder = Optional.absent();
+    private Optional<OWLPrimitiveData> primitiveDataPlaceholder = Optional.empty();
 
-    private java.util.Optional<EntitySuggestion> selectedSuggestion = java.util.Optional.empty();
+    private Optional<EntitySuggestion> selectedSuggestion = Optional.empty();
 
     private final PlaceController placeController;
 
@@ -96,12 +94,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         entitySuggestOracle = suggestOracle;
         this.placeController = placeController;
         view = editorView;
-        view.asWidget().addStyleName("web-protege-form-layout-editor-input");
+        view.asWidget().addStyleName(WEB_PROTEGE_FORM_LAYOUT_EDITOR_INPUT);
         view.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
         view.setSuggestOracle(entitySuggestOracle);
         view.addSelectionHandler(event -> {
             EntitySuggestion suggestion = event.getSelectedItem();
-            selectedSuggestion = java.util.Optional.of(suggestion);
+            selectedSuggestion = Optional.of(suggestion);
             setCurrentData(Optional.of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
         });
         view.addValueChangeHandler(event -> handleValueChanged());
@@ -145,7 +143,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
-    public java.util.Optional<EntitySuggestion> getSelectedSuggestion() {
+    public Optional<EntitySuggestion> getSelectedSuggestion() {
         return selectedSuggestion;
     }
 
@@ -368,10 +366,10 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void clearValue() {
         view.setText("");
-        view.setPrimitiveDataStyleName(Optional.absent());
+        view.setPrimitiveDataStyleName(Optional.empty());
         languageEditor.setValue("");
         dirty = false;
-        setCurrentData(Optional.absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
+        setCurrentData(Optional.empty(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 
     @Override
@@ -501,7 +499,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         primitiveDataParser.parsePrimitiveData(trimmedText, languageEditor.getValue(), allowedTypes, new PrimitiveDataParserCallback() {
             @Override
             public void parsingFailure() {
-                setCurrentData(Optional.absent(), EventStrategy.FIRE_EVENTS);
+                setCurrentData(Optional.empty(), EventStrategy.FIRE_EVENTS);
                 showErrorLabel();
             }
 
@@ -535,7 +533,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             if (literal.hasLang()) {
                 lang = Optional.of(literal.getLang());
             } else {
-                lang = Optional.absent();
+                lang = Optional.empty();
             }
             if (!lang.equals(languageEditor.getValue())) {
                 return false;
@@ -757,12 +755,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             }
             if(selectedSuggestion.isPresent()) {
                 if(!selectedSuggestion.get().getReplacementString().equals(data.getBrowserText())) {
-                    selectedSuggestion = java.util.Optional.empty();
+                    selectedSuggestion = Optional.empty();
                 }
             }
         }
         else {
-            selectedSuggestion = java.util.Optional.empty();
+            selectedSuggestion = Optional.empty();
         }
         updateDisplayForCurrentData();
         if (eventStrategy == EventStrategy.FIRE_EVENTS) {
