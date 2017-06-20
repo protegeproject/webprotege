@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
@@ -26,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_OBJ
  * Stanford Center for Biomedical Informatics Research
  * 5 Oct 2016
  */
-public class GetEntityDiscussionThreadsHandler implements ActionHandler<GetEntityDiscussionThreadsAction, GetEntityDiscussionThreadsResult> {
+public class GetEntityDiscussionThreadsHandler implements ProjectActionHandler<GetEntityDiscussionThreadsAction, GetEntityDiscussionThreadsResult> {
 
     @Nonnull
     private final EntityDiscussionThreadRepository repository;

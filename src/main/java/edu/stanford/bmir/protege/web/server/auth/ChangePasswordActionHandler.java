@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
+import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 19/02/15
  */
-public class ChangePasswordActionHandler extends AuthenticatedActionHandler<ChangePasswordAction, ChangePasswordResult> {
+public class ChangePasswordActionHandler extends AuthenticatedActionHandler<ChangePasswordAction, ChangePasswordResult> implements ApplicationActionHandler<ChangePasswordAction, ChangePasswordResult> {
 
     private final AuthenticationManager authenticationManager;
 

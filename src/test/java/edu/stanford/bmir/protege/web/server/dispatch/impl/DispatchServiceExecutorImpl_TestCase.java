@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends Result> {
 
     @Mock
-    private ActionHandlerRegistry registry;
+    private ApplicationActionHandlerRegistry registry;
 
     @Mock
     private ActionHandler<A, R> actionHandler;
@@ -41,9 +42,12 @@ public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends
 
     private DispatchServiceExecutorImpl executor;
 
+    @Mock
+    private ProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
-        executor = new DispatchServiceExecutorImpl(registry);
+        executor = new DispatchServiceExecutorImpl(registry, projectManager);
         when(registry.getActionHandler(action)).thenReturn(actionHandler);
         when(actionHandler.getRequestValidator(action, requestContext)).thenReturn(requestValidator);
         when(requestValidator.validateAction()).thenReturn(RequestValidationResult.getValid());

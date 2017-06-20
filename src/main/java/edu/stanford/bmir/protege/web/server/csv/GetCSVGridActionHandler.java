@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
@@ -22,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2013
  */
-public class GetCSVGridActionHandler implements ActionHandler<GetCSVGridAction, GetCSVGridResult> {
+public class GetCSVGridActionHandler implements ApplicationActionHandler<GetCSVGridAction, GetCSVGridResult> {
 
     private final File uploadsDirectory;
 

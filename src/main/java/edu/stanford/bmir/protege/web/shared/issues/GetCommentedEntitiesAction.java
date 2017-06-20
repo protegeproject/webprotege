@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 7 Mar 2017
  */
-public class GetCommentedEntitiesAction implements Action<GetCommentedEntitiesResult>, HasProjectId {
+public class GetCommentedEntitiesAction implements ProjectAction<GetCommentedEntitiesResult> {
 
     private ProjectId projectId;
 

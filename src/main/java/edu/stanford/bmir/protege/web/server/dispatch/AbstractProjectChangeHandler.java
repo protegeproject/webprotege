@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
@@ -19,7 +20,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/02/2013
  */
-public abstract class AbstractProjectChangeHandler<T, A extends Action<R> & HasProjectId, R extends Result> extends AbstractHasProjectActionHandler<A, R> {
+public abstract class AbstractProjectChangeHandler<T, A extends ProjectAction<R> & HasProjectId, R extends Result> extends AbstractHasProjectActionHandler<A, R> {
 
     public AbstractProjectChangeHandler(ProjectManager projectManager, AccessManager accessManager) {
         super(projectManager, accessManager);

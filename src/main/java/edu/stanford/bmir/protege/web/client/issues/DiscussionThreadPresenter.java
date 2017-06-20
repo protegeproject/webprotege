@@ -195,7 +195,7 @@ public class DiscussionThreadPresenter implements HasDispose {
     private void handleDeleteComment(Comment comment) {
         showYesNoConfirmBox(messages.deleteCommentConfirmationBoxTitle(),
                             messages.deleteCommentConfirmationBoxText(),
-                            () -> dispatch.execute(deleteComment(comment.getId()), result -> {}));
+                            () -> dispatch.execute(deleteComment(projectId, comment.getId()), result -> {}));
     }
 
     private void handleCommentAdded(ThreadId threadId, Comment comment) {

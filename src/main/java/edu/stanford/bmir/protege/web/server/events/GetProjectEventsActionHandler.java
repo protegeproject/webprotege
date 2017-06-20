@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.project.Project;
@@ -14,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.events.ProjectEventList;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -27,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class GetProjectEventsActionHandler implements ActionHandler<GetProjectEventsAction, GetProjectEventsResult> {
+public class GetProjectEventsActionHandler implements ApplicationActionHandler<GetProjectEventsAction, GetProjectEventsResult> {
 
     public final WebProtegeLogger logger;
 

@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 
@@ -13,20 +15,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 Oct 2016
  */
-public class DeleteEntityCommentAction implements Action<DeleteEntityCommentResult> {
+public class DeleteEntityCommentAction implements ProjectAction<DeleteEntityCommentResult> {
+
+    private ProjectId projectId;
 
     private CommentId commentId;
 
-    public static DeleteEntityCommentAction deleteComment(@Nonnull CommentId commentId) {
-        return new DeleteEntityCommentAction(commentId);
+    public static DeleteEntityCommentAction deleteComment(@Nonnull ProjectId projectId,
+                                                          @Nonnull CommentId commentId) {
+        return new DeleteEntityCommentAction(projectId, commentId);
     }
 
-    public DeleteEntityCommentAction(@Nonnull CommentId commentId) {
+    public DeleteEntityCommentAction(@Nonnull ProjectId projectId,
+                                     @Nonnull CommentId commentId) {
         this.commentId = checkNotNull(commentId);
+        this.projectId = checkNotNull(projectId);
     }
 
     @GwtSerializationConstructor
     private DeleteEntityCommentAction() {
+    }
+
+    @Override
+    public ProjectId getProjectId() {
+        return projectId;
     }
 
     public CommentId getCommentId() {

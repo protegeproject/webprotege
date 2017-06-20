@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -19,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 9 May 2017
  */
-public class DeleteEntitiesAction implements Action<DeleteEntitiesResult>, HasProjectId {
+public class DeleteEntitiesAction implements ProjectAction<DeleteEntitiesResult> {
 
     private ProjectId projectId;
 

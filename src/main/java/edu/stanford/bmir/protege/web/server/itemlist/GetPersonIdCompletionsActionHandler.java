@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.itemlist;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsAction;
@@ -22,7 +19,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 12/05/15
  */
-public class GetPersonIdCompletionsActionHandler implements ActionHandler<GetPersonIdCompletionsAction, GetPossibleItemCompletionsResult<PersonId>> {
+public class GetPersonIdCompletionsActionHandler implements ApplicationActionHandler<GetPersonIdCompletionsAction, GetPossibleItemCompletionsResult<PersonId>> {
 
 
     private final UserDetailsManager userDetailsManager;

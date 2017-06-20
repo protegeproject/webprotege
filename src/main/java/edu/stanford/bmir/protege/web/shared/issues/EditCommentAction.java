@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 8 Oct 2016
  */
-public class EditCommentAction implements Action<EditCommentResult>, HasProjectId {
+public class EditCommentAction implements ProjectAction<EditCommentResult> {
 
     private ProjectId projectId;
 

@@ -15,7 +15,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/11/2013
  */
-public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddressAction, GetEmailAddressResult> {
+public class GetEmailAddressActionHandler implements ApplicationActionHandler<GetEmailAddressAction, GetEmailAddressResult> {
 
     private final UserDetailsManager userDetailsManager;
 

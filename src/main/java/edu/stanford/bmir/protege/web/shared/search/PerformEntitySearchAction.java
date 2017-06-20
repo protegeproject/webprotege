@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.search;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
-public class PerformEntitySearchAction implements Action<PerformEntitySearchResult>, HasProjectId {
+public class PerformEntitySearchAction implements ProjectAction<PerformEntitySearchResult>, HasProjectId {
 
     private ProjectId projectId;
 

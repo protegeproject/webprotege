@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
@@ -19,7 +16,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class GetEntityCrudKitsActionHandler implements ActionHandler<GetEntityCrudKitsAction, GetEntityCrudKitsResult> {
+public class GetEntityCrudKitsActionHandler implements ApplicationActionHandler<GetEntityCrudKitsAction, GetEntityCrudKitsResult> {
 
     @Inject
     public GetEntityCrudKitsActionHandler() {

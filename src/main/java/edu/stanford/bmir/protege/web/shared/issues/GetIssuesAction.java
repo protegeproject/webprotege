@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Objects;
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-public class GetIssuesAction implements Action<GetIssuesResult>, HasProjectId {
+public class GetIssuesAction implements ProjectAction<GetIssuesResult> {
 
     private ProjectId projectId;
 

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.annotation.Nonnull;
@@ -33,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * actually exists and fails if this isn't the case.
  * </p>
  */
-public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasProjectId, R extends Result> implements ActionHandler<A, R> {
+public abstract class AbstractHasProjectActionHandler<A extends ProjectAction<R> & HasProjectId, R extends Result> implements ProjectActionHandler<A, R> {
 
     private final ProjectManager projectManager;
 

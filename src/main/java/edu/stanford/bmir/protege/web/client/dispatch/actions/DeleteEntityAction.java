@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -12,7 +13,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public class DeleteEntityAction extends AbstractHasProjectIdAndSubject<OWLEntity> implements Action<DeleteEntityResult>, HasProjectId, HasSubject<OWLEntity> {
+public class DeleteEntityAction extends AbstractHasProjectIdAndSubject<OWLEntity> implements ProjectAction<DeleteEntityResult>, HasSubject<OWLEntity> {
 
     private DeleteEntityAction() {
     }

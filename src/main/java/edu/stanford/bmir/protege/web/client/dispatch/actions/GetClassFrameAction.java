@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -15,7 +16,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetClassFrameAction implements Action<GetClassFrameResult>, HasProjectId, HasSubject<OWLClass> {
+public class GetClassFrameAction implements ProjectAction<GetClassFrameResult>, HasProjectId, HasSubject<OWLClass> {
 
     private OWLClass subject;
 

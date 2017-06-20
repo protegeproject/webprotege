@@ -1,16 +1,17 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
+import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.webhook.CommentPostedSlackWebhookInvoker;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
@@ -25,28 +26,49 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_O
  * Stanford Center for Biomedical Informatics Research
  * 7 Oct 2016
  */
-public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<AddEntityCommentAction, AddEntityCommentResult> {
+public class AddEntityCommentHandler implements ProjectActionHandler<AddEntityCommentAction, AddEntityCommentResult> {
 
+    @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
+    private final HasGetRendering renderer;
+
+    @Nonnull
+    private final HasPostEvents<ProjectEvent<?>> eventManager;
+
+    @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
+    @Nonnull
     private final CommentNotificationEmailer notificationsEmailer;
 
+    @Nonnull
     private final CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker;
 
+    @Nonnull
     private final ProjectDetailsRepository projectDetailsRepository;
 
+    @Nonnull
+    private final AccessManager accessManager;
+
     @Inject
-    public AddEntityCommentHandler(@Nonnull ProjectManager projectManager,
-                                   @Nonnull AccessManager accessManager,
+    public AddEntityCommentHandler(@Nonnull ProjectId projectId,
+                                   @Nonnull HasGetRendering renderer,
+                                   @Nonnull HasPostEvents<ProjectEvent<?>> eventManager,
                                    @Nonnull EntityDiscussionThreadRepository repository,
                                    @Nonnull CommentNotificationEmailer notificationsEmailer,
                                    @Nonnull CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker,
-                                   @Nonnull ProjectDetailsRepository projectDetailsRepository) {
-        super(projectManager, accessManager);
-        this.repository = checkNotNull(repository);
-        this.notificationsEmailer = checkNotNull(notificationsEmailer);
-        this.commentPostedSlackWebhookInvoker = checkNotNull(commentPostedSlackWebhookInvoker);
-        this.projectDetailsRepository = checkNotNull(projectDetailsRepository);
+                                   @Nonnull ProjectDetailsRepository projectDetailsRepository,
+                                   @Nonnull AccessManager accessManager) {
+        this.projectId = projectId;
+        this.renderer = renderer;
+        this.eventManager = eventManager;
+        this.repository = repository;
+        this.notificationsEmailer = notificationsEmailer;
+        this.commentPostedSlackWebhookInvoker = commentPostedSlackWebhookInvoker;
+        this.projectDetailsRepository = projectDetailsRepository;
+        this.accessManager = accessManager;
     }
 
     @Override
@@ -55,13 +77,16 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
     }
 
     @Override
-    protected BuiltInAction getRequiredExecutableBuiltInAction() {
-        return CREATE_OBJECT_COMMENT;
+    public RequestValidator getRequestValidator(AddEntityCommentAction action, RequestContext requestContext) {
+        return new ProjectPermissionValidator(accessManager,
+                                              projectId,
+                                              requestContext.getUserId(),
+                                              CREATE_OBJECT_COMMENT.getActionId());
+
     }
 
     @Override
-    protected AddEntityCommentResult execute(@Nonnull AddEntityCommentAction action,
-                                             @Nonnull Project project,
+    public AddEntityCommentResult execute(@Nonnull AddEntityCommentAction action,
                                              @Nonnull ExecutionContext executionContext) {
         UserId createdBy = executionContext.getUserId();
         long createdAt = System.currentTimeMillis();
@@ -76,16 +101,16 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
                                       renderedComment);
         ThreadId threadId = action.getThreadId();
         repository.addCommentToThread(threadId, comment);
-        postCommentPostedEvent(project, threadId, comment);
+        postCommentPostedEvent(threadId, comment);
         repository.getThread(threadId);
         repository.getThread(threadId).ifPresent(thread -> {
-            notificationsEmailer.sendCommentPostedNotification(project.getProjectId(),
+            notificationsEmailer.sendCommentPostedNotification(projectId,
                                                                thread,
                                                                comment);
-            commentPostedSlackWebhookInvoker.invoke(project.getProjectId(),
-                                                    projectDetailsRepository.findOne(project.getProjectId()).map(
+            commentPostedSlackWebhookInvoker.invoke(projectId,
+                                                    projectDetailsRepository.findOne(projectId).map(
                                                             ProjectDetails::getDisplayName).orElse("Project"),
-                                                    project.getRenderingManager().getRendering(thread.getEntity()),
+                                                    renderer.getRendering(thread.getEntity()),
                                                     comment);
         });
 
@@ -97,25 +122,23 @@ public class AddEntityCommentHandler extends AbstractHasProjectActionHandler<Add
     /**
      * Post a {@link CommentPostedEvent} to the project event bus.
      *
-     * @param project  The project.
      * @param threadId The thread that the comment was added to.
      * @param comment  The comment that was added.
      */
-    private void postCommentPostedEvent(@Nonnull Project project,
-                                        @Nonnull ThreadId threadId,
+    private void postCommentPostedEvent(@Nonnull ThreadId threadId,
                                         @Nonnull Comment comment) {
         Optional<EntityDiscussionThread> thread = repository.getThread(threadId);
         thread.ifPresent(t -> {
-            OWLEntityData entityData = project.getRenderingManager().getRendering(t.getEntity());
-            int commentCount = repository.getCommentsCount(project.getProjectId(), t.getEntity());
-            int openCommentCount = repository.getOpenCommentsCount(project.getProjectId(), t.getEntity());
-            CommentPostedEvent event = new CommentPostedEvent(project.getProjectId(),
+            OWLEntityData entityData = renderer.getRendering(t.getEntity());
+            int commentCount = repository.getCommentsCount(projectId, t.getEntity());
+            int openCommentCount = repository.getOpenCommentsCount(projectId, t.getEntity());
+            CommentPostedEvent event = new CommentPostedEvent(projectId,
                                                               threadId,
                                                               comment,
                                                               Optional.of(entityData),
                                                               commentCount,
                                                               openCommentCount);
-            project.getEventManager().postEvent(event);
+            eventManager.postEvent(event);
 
         });
     }

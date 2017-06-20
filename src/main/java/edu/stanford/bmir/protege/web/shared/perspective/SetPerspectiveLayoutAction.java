@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.perspective;
 
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 28/02/16
  */
-public class SetPerspectiveLayoutAction implements Action<SetPerspectiveLayoutResult> {
+public class SetPerspectiveLayoutAction implements ProjectAction<SetPerspectiveLayoutResult> {
 
     private ProjectId projectId;
 

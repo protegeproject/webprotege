@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -14,7 +15,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Stanford Center for Biomedical Informatics Research
  * 18/02/16
  */
-public class SetPerspectivesAction implements Action<SetPerspectivesResult>, HasUserId, HasProjectId {
+public class SetPerspectivesAction implements ProjectAction<SetPerspectivesResult>, HasUserId, HasProjectId {
 
     private ProjectId projectId;
 

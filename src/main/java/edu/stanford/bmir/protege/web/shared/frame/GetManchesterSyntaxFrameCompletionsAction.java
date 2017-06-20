@@ -5,6 +5,7 @@ import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -14,7 +15,7 @@ import java.util.Set;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
  */
-public class GetManchesterSyntaxFrameCompletionsAction implements Action<GetManchesterSyntaxFrameCompletionsResult>, HasProjectId, HasSubject<OWLEntity>, HasFreshEntities {
+public class GetManchesterSyntaxFrameCompletionsAction implements ProjectAction<GetManchesterSyntaxFrameCompletionsResult>, HasSubject<OWLEntity>, HasFreshEntities {
 
     private ProjectId projectId;
 

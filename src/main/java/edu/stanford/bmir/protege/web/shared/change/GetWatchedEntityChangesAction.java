@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.change;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/02/15
  */
-public class GetWatchedEntityChangesAction implements Action<GetWatchedEntityChangesResult>, HasProjectId {
+public class GetWatchedEntityChangesAction implements ProjectAction<GetWatchedEntityChangesResult>, HasProjectId {
 
     private ProjectId projectId;
 
