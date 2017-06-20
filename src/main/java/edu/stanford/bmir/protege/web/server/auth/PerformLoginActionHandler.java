@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
+import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-public class PerformLoginActionHandler extends AuthenticatedActionHandler<PerformLoginAction, PerformLoginResult> {
+public class PerformLoginActionHandler extends AuthenticatedActionHandler<PerformLoginAction, PerformLoginResult> implements ApplicationActionHandler<PerformLoginAction, PerformLoginResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(PerformLoginActionHandler.class);
 

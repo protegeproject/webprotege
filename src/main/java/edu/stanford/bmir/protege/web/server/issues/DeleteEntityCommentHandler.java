@@ -14,7 +14,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 9 Oct 2016
  */
-public class DeleteEntityCommentHandler implements ActionHandler<DeleteEntityCommentAction, DeleteEntityCommentResult> {
+public class DeleteEntityCommentHandler implements ProjectActionHandler<DeleteEntityCommentAction, DeleteEntityCommentResult> {
 
     @Nonnull
     private final EntityDiscussionThreadRepository repository;

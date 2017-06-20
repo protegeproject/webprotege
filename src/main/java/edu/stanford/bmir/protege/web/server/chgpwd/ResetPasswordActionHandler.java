@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
@@ -26,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCod
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
-public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAction, ResetPasswordResult> {
+public class ResetPasswordActionHandler implements ApplicationActionHandler<ResetPasswordAction, ResetPasswordResult> {
 
 
     private final UserDetailsManager userDetailsManager;

@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
@@ -20,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/15
  */
-public class LogOutUserActionHandler implements ActionHandler<LogOutUserAction, LogOutUserResult> {
+public class LogOutUserActionHandler implements ApplicationActionHandler<LogOutUserAction, LogOutUserResult> {
 
     private final UserActivityManager userActivityManager;
 

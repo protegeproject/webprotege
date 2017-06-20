@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -12,7 +13,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetNamedIndividualFrameAction implements Action<GetNamedIndividualFrameResult>, HasProjectId, HasSubject<OWLNamedIndividual> {
+public class GetNamedIndividualFrameAction implements ProjectAction<GetNamedIndividualFrameResult>, HasSubject<OWLNamedIndividual> {
 
     private ProjectId projectId;
 

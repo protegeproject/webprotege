@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
@@ -12,7 +13,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class GetDataPropertyFrameAction implements Action<GetDataPropertyFrameResult>, HasProjectId, HasSubject<OWLDataProperty> {
+public class GetDataPropertyFrameAction implements ProjectAction<GetDataPropertyFrameResult>, HasSubject<OWLDataProperty> {
 
     private OWLDataProperty subject;
 

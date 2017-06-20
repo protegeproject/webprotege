@@ -4,10 +4,7 @@ import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -33,7 +30,7 @@ import static java.util.Collections.singleton;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class CreateNewProjectActionHandler implements ActionHandler<CreateNewProjectAction, CreateNewProjectResult> {
+public class CreateNewProjectActionHandler implements ApplicationActionHandler<CreateNewProjectAction, CreateNewProjectResult> {
 
     private final ProjectManager pm;
 

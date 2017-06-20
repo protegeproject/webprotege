@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
@@ -15,7 +12,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 18/02/16
  */
-public class SetPerspectivesActionHandler implements ActionHandler<SetPerspectivesAction, SetPerspectivesResult> {
+public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPerspectivesAction, SetPerspectivesResult> {
 
     private final PerspectivesManager perspectivesManager;
 

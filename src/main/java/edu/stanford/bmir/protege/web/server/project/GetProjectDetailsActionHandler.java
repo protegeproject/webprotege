@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsResult;
@@ -19,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 10/03/16
  */
-public class GetProjectDetailsActionHandler implements ActionHandler<GetProjectDetailsAction, GetProjectDetailsResult> {
+public class GetProjectDetailsActionHandler implements ApplicationActionHandler<GetProjectDetailsAction, GetProjectDetailsResult> {
 
     private final ProjectDetailsManager projectDetailsManager;
 

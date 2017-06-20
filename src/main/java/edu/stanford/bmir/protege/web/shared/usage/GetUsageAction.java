@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.usage;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.AbstractHasProjectIdAndSubject;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
-public class GetUsageAction extends AbstractHasProjectIdAndSubject<OWLEntity> implements Action<GetUsageResult> {
+public class GetUsageAction extends AbstractHasProjectIdAndSubject<OWLEntity> implements ProjectAction<GetUsageResult> {
 
     private static final int DEFAULT_PAGE_SIZE = 500;
 

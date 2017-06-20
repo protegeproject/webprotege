@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
@@ -19,7 +16,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-public class GetPerspectiveLayoutActionHandler implements ActionHandler<GetPerspectiveLayoutAction, GetPerspectiveLayoutResult> {
+public class GetPerspectiveLayoutActionHandler implements ProjectActionHandler<GetPerspectiveLayoutAction, GetPerspectiveLayoutResult> {
 
     private PerspectiveLayoutStore perspectiveLayoutStore;
 

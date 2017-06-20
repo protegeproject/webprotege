@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import static com.google.common.base.Objects.toStringHelper;

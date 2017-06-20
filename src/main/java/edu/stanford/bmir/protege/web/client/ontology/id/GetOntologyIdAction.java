@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ontology.id;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -10,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class GetOntologyIdAction implements Action<GetOntologyIdResult>, HasProjectId {
+public class GetOntologyIdAction implements ProjectAction<GetOntologyIdResult> {
 
     private ProjectId projectId;
 

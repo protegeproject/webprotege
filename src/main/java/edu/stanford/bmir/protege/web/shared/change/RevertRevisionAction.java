@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.change;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 19/03/15
  */
-public class RevertRevisionAction implements Action<RevertRevisionResult>, HasProjectId {
+public class RevertRevisionAction implements ProjectAction<RevertRevisionResult> {
 
     private RevisionNumber revisionNumber;
 

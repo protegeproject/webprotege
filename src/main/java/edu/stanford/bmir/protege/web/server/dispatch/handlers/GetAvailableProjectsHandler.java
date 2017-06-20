@@ -3,14 +3,12 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
 import edu.stanford.bmir.protege.web.server.user.UserActivityRecord;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
@@ -35,7 +33,7 @@ import static java.util.stream.Collectors.toList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 01/04/2013
  */
-public class GetAvailableProjectsHandler implements ActionHandler<GetAvailableProjectsAction, GetAvailableProjectsResult> {
+public class GetAvailableProjectsHandler implements ApplicationActionHandler<GetAvailableProjectsAction, GetAvailableProjectsResult> {
 
     private final ProjectPermissionsManager projectPermissionsManager;
 

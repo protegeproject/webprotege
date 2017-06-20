@@ -19,14 +19,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2013
  */
-public class ActionHandlerRegistryImpl implements ActionHandlerRegistry {
+public abstract class ActionHandlerRegistryImpl implements ActionHandlerRegistry {
 
     // NOT a concurrent map.  This is only written to in the constructor. At runtime it's essentially immutable and the
     // basic maps are safe for multiple readers
     private Map<Class<?>, ActionHandler<?, ?>> registry = new HashMap<Class<?>, ActionHandler<?, ?>>();
 
-    @Inject
-    public ActionHandlerRegistryImpl(Set<ActionHandler> handlers) {
+    public ActionHandlerRegistryImpl(Set<? extends ActionHandler> handlers) {
         for(ActionHandler<?, ?> actionHandler : handlers) {
             register(actionHandler);
         }

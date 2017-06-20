@@ -2,13 +2,14 @@ package edu.stanford.bmir.protege.web.shared.renderer;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
-public class GetEntityRenderingAction implements Action<GetEntityRenderingResult>, HasProjectId {
+public class GetEntityRenderingAction implements ProjectAction<GetEntityRenderingResult> {
 
     private OWLEntity entity;
 

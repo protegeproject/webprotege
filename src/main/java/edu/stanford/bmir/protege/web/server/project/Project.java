@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
+import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
 import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
@@ -135,6 +137,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     @Nonnull
     private final ProjectChangedWebhookInvoker projectChangedWebhookInvoker;
 
+    @Nonnull
+    private final ProjectActionHandlerRegistry actionHandlerRegistry;
+
     @Inject
     public Project(ProjectDocumentStore documentStore,
                    ProjectId projectId,
@@ -159,7 +164,8 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                    Provider<EventTranslatorManager> eventTranslatorManagerProvider,
                    Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider,
                    ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory,
-                   @Nonnull ProjectChangedWebhookInvoker projectChangedWebhookInvoker) {
+                   @Nonnull ProjectChangedWebhookInvoker projectChangedWebhookInvoker,
+                   @Nonnull ProjectActionHandlerRegistry actionHandlerRegistry) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -184,6 +190,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         this.changeDescriptionGeneratorFactory = changeDescriptionGeneratorFactory;
         this.projectDetailsRepository = projectDetailsRepository;
         this.projectChangedWebhookInvoker = projectChangedWebhookInvoker;
+        this.actionHandlerRegistry = actionHandlerRegistry;
     }
 
     public ProjectId getProjectId() {
@@ -294,6 +301,10 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         } finally {
             projectChangeReadLock.unlock();
         }
+    }
+
+    public ProjectActionHandlerRegistry getActionHanderRegistry() {
+        return actionHandlerRegistry;
     }
 
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,

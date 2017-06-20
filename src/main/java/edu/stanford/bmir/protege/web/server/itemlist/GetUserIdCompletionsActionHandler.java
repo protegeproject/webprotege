@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.itemlist;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsResult;
@@ -22,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12/05/15
  */
-public class GetUserIdCompletionsActionHandler implements ActionHandler<GetUserIdCompletionsAction, GetPossibleItemCompletionsResult<UserId>> {
+public class GetUserIdCompletionsActionHandler implements ApplicationActionHandler<GetUserIdCompletionsAction, GetPossibleItemCompletionsResult<UserId>> {
 
     private final UserDetailsManager userDetailsManager;
 

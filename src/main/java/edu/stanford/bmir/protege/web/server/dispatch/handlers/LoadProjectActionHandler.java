@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ProjectPermissionValidator;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
@@ -29,7 +26,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2013
  */
-public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction, LoadProjectResult> {
+public class LoadProjectActionHandler implements ApplicationActionHandler<LoadProjectAction, LoadProjectResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(LoadProjectActionHandler.class);
 

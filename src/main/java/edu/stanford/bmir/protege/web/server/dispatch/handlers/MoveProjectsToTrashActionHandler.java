@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
@@ -23,7 +20,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class MoveProjectsToTrashActionHandler implements ActionHandler<MoveProjectsToTrashAction, MoveProjectsToTrashResult> {
+public class MoveProjectsToTrashActionHandler implements ApplicationActionHandler<MoveProjectsToTrashAction, MoveProjectsToTrashResult> {
 
     private ProjectDetailsManager projectDetailsManager;
 

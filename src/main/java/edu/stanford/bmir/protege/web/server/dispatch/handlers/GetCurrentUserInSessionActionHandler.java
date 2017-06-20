@@ -5,10 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSes
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
@@ -24,7 +21,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2013
  */
-public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCurrentUserInSessionAction, GetCurrentUserInSessionResult> {
+public class GetCurrentUserInSessionActionHandler implements ApplicationActionHandler<GetCurrentUserInSessionAction, GetCurrentUserInSessionResult> {
 
     private final UserDetailsManager userDetailsManager;
 

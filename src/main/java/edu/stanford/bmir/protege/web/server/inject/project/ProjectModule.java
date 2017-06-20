@@ -9,6 +9,11 @@ import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
+import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataManager;
@@ -57,6 +62,7 @@ import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -67,7 +73,7 @@ import java.util.Set;
  *         A  module for a project.  The module ensures that any object graph contains project specific objects for the
  *         specified project (e.g. root ontology, short form provider etc.)
  */
-@Module
+@Module(includes = ProjectActionHandlersModule.class)
 public class ProjectModule {
 
     private final ProjectId projectId;
@@ -250,6 +256,11 @@ public class ProjectModule {
 
     @Provides
     public BrowserTextProvider provideBrowserTextProvider(RenderingManager renderingManager) {
+        return renderingManager;
+    }
+
+    @Provides
+    public HasGetRendering provideHasGetRendering(RenderingManager renderingManager) {
         return renderingManager;
     }
 
@@ -501,4 +512,8 @@ public class ProjectModule {
     List<AxiomType<?>> providesAxiomTypeList() {
         return DefaultAxiomTypeOrdering.get();
     }
+
+
+
+
 }

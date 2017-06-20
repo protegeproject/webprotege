@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.event;
 import com.google.common.base.Objects;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
@@ -17,7 +19,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class GetProjectEventsAction implements ProjectAction<GetProjectEventsResult>, InvocationExceptionTolerantAction {
+public class GetProjectEventsAction implements Action<GetProjectEventsResult>, InvocationExceptionTolerantAction, HasProjectId {
 
     private ProjectId projectId;
 

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.revision;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class GetRevisionSummariesAction implements Action<GetRevisionSummariesResult>, HasProjectId {
+public class GetRevisionSummariesAction implements ProjectAction<GetRevisionSummariesResult> {
 
     private ProjectId projectId;
 

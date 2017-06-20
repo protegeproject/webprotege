@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.admin;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermissionValidator;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsAction;
@@ -17,7 +14,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class GetAdminSettingsActionHandler implements ActionHandler<GetAdminSettingsAction, GetAdminSettingsResult> {
+public class GetAdminSettingsActionHandler implements ApplicationActionHandler<GetAdminSettingsAction, GetAdminSettingsResult> {
 
     private final AccessManager manager;
 

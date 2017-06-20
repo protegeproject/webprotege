@@ -66,479 +66,132 @@ import static dagger.Provides.Type.SET;
 public class ActionHandlersModule {
 
     @Provides(type = SET)
-    public ActionHandler provideGetAvailableProjectsHandler(GetAvailableProjectsHandler handler) {
+    public ApplicationActionHandler provideGetAvailableProjectsHandler(GetAvailableProjectsHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetProjectDetailsActionHandler(GetProjectDetailsActionHandler handler) {
+    public ApplicationActionHandler provideGetProjectDetailsActionHandler(GetProjectDetailsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideLoadProjectActionHandler(LoadProjectActionHandler handler) {
+    public ApplicationActionHandler provideLoadProjectActionHandler(LoadProjectActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideCreateNewProjectActionHandler(CreateNewProjectActionHandler handler) {
+    public ApplicationActionHandler provideCreateNewProjectActionHandler(CreateNewProjectActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetProjectEventsActionHandler(GetProjectEventsActionHandler handler) {
+    public ApplicationActionHandler provideGetProjectEventsActionHandler(GetProjectEventsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetProjectSettingsActionHandler(GetProjectSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetProjectSettingsActionHandler(SetProjectSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetClassFrameActionHandler(GetClassFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideUpdateClassFrameActionHandler(UpdateClassFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetObjectPropertyFrameActionHandler(
-            GetObjectPropertyFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideUpdateObjectPropertyFrameHandler(UpdateObjectPropertyFrameHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideUpdateDataPropertyFrameHandler(UpdateDataPropertyFrameHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetAnnotationPropertyFrameActionHandler(
-            GetAnnotationPropertyFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideUpdateAnnotationPropertyFrameActionHandler(
-            UpdateAnnotationPropertyFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetNamedIndividualFrameActionHandler(
-            GetNamedIndividualFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideUpdateNamedIndividualFrameHandler(UpdateNamedIndividualFrameHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetOntologyFramesActionHandler(GetOntologyFramesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetRootOntologyIdActionHandler(GetRootOntologyIdActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetOntologyAnnotationsActionHandler(
-            GetOntologyAnnotationsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetOntologyAnnotationsActionHandler(
-            SetOntologyAnnotationsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideDeleteEntityActionHandler(DeleteEntityActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateClassActionHandler(CreateClassActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateClassesActionHandler(CreateClassesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateObjectPropertyActionHandler(CreateObjectPropertyActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateDataPropertiesActionHandler(CreateDataPropertiesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateAnnotationPropertiesActionHandler(
-            CreateAnnotationPropertiesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateNamedIndividualsActionHandler(
-            CreateNamedIndividualsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideLookupEntitiesActionHandler(LookupEntitiesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideAddWatchActionHandler(AddWatchActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideRemoveWatchActionHandler(RemoveWatchActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetEntityWatchesActionHandler(SetEntityWatchesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetWatchesActionHandler(GetWatchesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetCurrentUserInSessionActionHandler(
+    public ApplicationActionHandler provideGetCurrentUserInSessionActionHandler(
             GetCurrentUserInSessionActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideSetEmailAddressActionHandler(SetEmailAddressActionHandler handler) {
+    public ApplicationActionHandler provideSetEmailAddressActionHandler(SetEmailAddressActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetEmailAddressActionHandler(GetEmailAddressActionHandler handler) {
+    public ApplicationActionHandler provideGetEmailAddressActionHandler(GetEmailAddressActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideMoveProjectsToTrashActionHandler(MoveProjectsToTrashActionHandler handler) {
+    public ApplicationActionHandler provideMoveProjectsToTrashActionHandler(MoveProjectsToTrashActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideRemoveProjectsFromTrashActionHandler(
+    public ApplicationActionHandler provideRemoveProjectsFromTrashActionHandler(
             RemoveProjectsFromTrashActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetCSVGridActionHandler(GetCSVGridActionHandler handler) {
+    public ApplicationActionHandler provideGetCSVGridActionHandler(GetCSVGridActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideImportCSVFileActionHandler(ImportCSVFileActionHandler handler) {
+    public ApplicationActionHandler provideResetPasswordActionHandler(ResetPasswordActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetUsageActionHandler(GetUsageActionHandler handler) {
+    public ApplicationActionHandler provideLogOutUserActionHandler(LogOutUserActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetIndividualsActionHandler(GetIndividualsActionHandler handler) {
+    public ApplicationActionHandler provideGetChapSessionActionHandler(GetChapSessionActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetEntityRenderingActionHandler(GetEntityRenderingActionHandler handler) {
+    public ApplicationActionHandler providePerformLoginActionHandler(PerformLoginActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetEntityDataActionHandler(GetEntityDataActionHandler handler) {
-        return handler;
-    }
-
-
-    @Provides(type = SET)
-    public ActionHandler provideGetDataPropertyFrameActionHandler(GetDataPropertyFrameActionHandler handler) {
+    public ApplicationActionHandler provideChangePasswordActionHandler(ChangePasswordActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetMetricsActionHandler(GetMetricsActionHandler handler) {
+    public ApplicationActionHandler provideCreateUserAccountActionHandler(CreateUserAccountActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
+    public ApplicationActionHandler provideGetPermissionsActionHandler(GetProjectPermissionsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideSetEntityCrudKitSettingsActionHandler(
-            SetEntityCrudKitSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetEntityCrudKitSettingsActionHandler(
-            GetEntityCrudKitSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetManchesterSyntaxFrameActionHandler(
-            GetManchesterSyntaxFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetManchesterSyntaxFrameActionHandler(
-            SetManchesterSyntaxFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCheckManchesterSyntaxFrameActionHandler(
-            CheckManchesterSyntaxFrameActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetManchesterSyntaxFrameCompletionsActionHandler(
-            GetManchesterSyntaxFrameCompletionsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideResetPasswordActionHandler(ResetPasswordActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetProjectSharingSettingsActionHandler(
-            GetProjectSharingSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetProjectSharingSettingsActionHandler(
-            SetProjectSharingSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideLogOutUserActionHandler(LogOutUserActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetChapSessionActionHandler(GetChapSessionActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler providePerformLoginActionHandler(PerformLoginActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideChangePasswordActionHandler(ChangePasswordActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateUserAccountActionHandler(CreateUserAccountActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetHeadRevisionNumberActionHandler(
-            GetHeadRevisionNumberActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetRevisionSummariesActionHandler(GetRevisionSummariesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetPermissionsActionHandler(GetProjectPermissionsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideComputeProjectMergeActionHandler(ComputeProjectMergeActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideMergeUploadedProjectActionHandler(MergeUploadedProjectActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetProjectChangesActionHandler(GetProjectChangesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetWatchedEntityChangesActionHandler(
-            GetWatchedEntityChangesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideRevertRevisionActionHandler(RevertRevisionActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetPersonIdCompletionsActionHandler(
+    public ApplicationActionHandler provideGetPersonIdCompletionsActionHandler(
             GetPersonIdCompletionsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetUserIdCompletionsActionHandler(GetUserIdCompletionsActionHandler handler) {
+    public ApplicationActionHandler provideGetUserIdCompletionsActionHandler(GetUserIdCompletionsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetPersonIdItemsActionHandler(GetPersonIdItemsActionHandler handler) {
+    public ApplicationActionHandler provideGetPersonIdItemsActionHandler(GetPersonIdItemsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetPerspectiveLayoutActionHandler(GetPerspectiveLayoutActionHandler handler) {
+    public ApplicationActionHandler provideGetSystemSettingsActionHandler(GetAdminSettingsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideSetPerspectiveLayoutActionHandler(SetPerspectiveLayoutActionHandler handler) {
+    public ApplicationActionHandler provideSetAdminSettingsActionHandler(SetAdminSettingsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideGetPerspectivesActionHandler(GetPerspectivesActionHandler handler) {
+    public ApplicationActionHandler providesRebuildPermissionsActionHandler(RebuildPermissionsActionHandler handler) {
         return handler;
     }
 
     @Provides(type = SET)
-    public ActionHandler provideSetPerspectivesActionHandler(SetPerspectivesActionHandler handler) {
+    public ApplicationActionHandler providesGetEntityCrudKitsActionHandler(GetEntityCrudKitsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
-    public ActionHandler provideGetFormDescriptorActionHander(GetFormDescriptorActionHander handler) {
-        return handler;
-    }
 
-    @Provides(type = SET)
-    public ActionHandler provideGetIssuesActionHandler(GetIssuesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetDiscussionThreadsActionHandler(GetEntityDiscussionThreadsHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideCreateEntityDiscussionThreadActionHandler(CreateEntityDiscussionThreadHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideAddEntityCommentActionHandler(AddEntityCommentHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideEditCommentAction(EditCommentActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideDeleteEntityCommentActionHandler(DeleteEntityCommentHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetDiscussionThreadStatusHandler(SetDiscussionThreadStatusHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetCommentedEntitiesActionHandler(GetCommentedEntitiesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideResetPerspectiveLayoutActionHandler(ResetPerspectiveLayoutActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideGetSystemSettingsActionHandler(GetAdminSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler provideSetAdminSettingsActionHandler(SetAdminSettingsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler providesRebuildPermissionsActionHandler(RebuildPermissionsActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler providesPerformEntitySearchActionHandler(PerformEntitySearchActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler providesDeleteEntitiesActionHandler(DeleteEntitiesActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
-    public ActionHandler providesGetDeprecatedEntitiesActionHandler(GetDeprecatedEntitiesActionHandler handler) {
-        return handler;
-    }
 }
