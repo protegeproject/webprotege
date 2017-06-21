@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -18,9 +19,8 @@ import javax.inject.Inject;
 public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandler<GetFormDescriptorAction, GetFormDescriptorResult> {
 
     @Inject
-    public GetFormDescriptorActionHander(ProjectManager projectManager,
-                                         AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager) {
+        super(accessManager);
     }
 
     @Override
@@ -28,8 +28,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         return GetFormDescriptorAction.class;
     }
 
-    @Override
-    protected GetFormDescriptorResult execute(GetFormDescriptorAction action, Project project, ExecutionContext executionContext) {
+    public GetFormDescriptorResult execute(GetFormDescriptorAction action, ExecutionContext executionContext) {
         throw new RuntimeException();
 //        return getDummy(action.getSubject(), project, project.getDataFactory());
     }

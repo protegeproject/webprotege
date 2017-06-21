@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -21,13 +23,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageReference>> {
 
-    private Project project;
+    @Nonnull
+    private final OWLEntity usageOf;
 
-    private OWLEntity usageOf;
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
 
-    public ReferencingAxiomVisitor(Project project, OWLEntity usageOf) {
-        this.project = checkNotNull(project);
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    public ReferencingAxiomVisitor(@Nonnull OWLEntity usageOf,
+                                   @Nonnull OWLOntology rootOntology,
+                                   @Nonnull RenderingManager renderingManager) {
         this.usageOf = checkNotNull(usageOf);
+        this.rootOntology = checkNotNull(rootOntology);
+        this.renderingManager = checkNotNull(renderingManager);
     }
 
     private Set<UsageReference> translate(Set<? extends OWLObject> subjects, OWLAxiom axiom) {
@@ -48,7 +59,7 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
                 return translate(usageOf, axiom);
             }
             else {
-                final Set<OWLEntity> entities = project.getRootOntology().getEntitiesInSignature((IRI) subject,
+                final Set<OWLEntity> entities = rootOntology.getEntitiesInSignature((IRI) subject,
                                                                                                  Imports.INCLUDED);
                 return translate(entities, axiom);
             }
@@ -60,11 +71,11 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
                 return translate((OWLEntity) predicate, axiom);
             }
         }
-        final String useageOfBrowserText = project.getRenderingManager().getBrowserText(usageOf);
-        String rendering = project.getRenderingManager().getHTMLBrowserText(axiom, Collections.singleton(useageOfBrowserText));
+        final String useageOfBrowserText = renderingManager.getBrowserText(usageOf);
+        String rendering = renderingManager.getHTMLBrowserText(axiom, Collections.singleton(useageOfBrowserText));
         Optional<String> subjectRendering;
         if(axiomSubject.isPresent()) {
-            subjectRendering = Optional.of(project.getRenderingManager().getBrowserText(axiomSubject.get()));
+            subjectRendering = Optional.of(renderingManager.getBrowserText(axiomSubject.get()));
         }
         else {
             subjectRendering = Optional.empty();

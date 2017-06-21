@@ -47,18 +47,21 @@ public class SetProjectSettingsActionHandler_TestCase {
     @Mock
     private AccessManager accessManager;
 
+    @Mock
+    private ProjectDetailsManager detailsManager;
+
     @Before
     public void setUp() throws Exception {
         when(psm.getProjectSettings(projectId)).thenReturn(projectSettings);
         when(projectSettings.getProjectId()).thenReturn(projectId);
         when(action.getProjectId()).thenReturn(projectId);
         when(action.getProjectSettings()).thenReturn(projectSettings);
-        handler = new SetProjectSettingsActionHandler(projectManager, psm, accessManager);
+        handler = new SetProjectSettingsActionHandler(accessManager, detailsManager);
     }
 
     @Test
     public void shouldSetProjectSettings() {
-        handler.execute(action, project, mock(ExecutionContext.class));
+        handler.execute(action, mock(ExecutionContext.class));
         verify(psm, times(1)).setProjectSettings(projectSettings);
     }
 }

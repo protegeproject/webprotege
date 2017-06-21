@@ -6,14 +6,16 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
@@ -34,10 +36,17 @@ import static java.util.Arrays.asList;
  */
 public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotation>, SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> {
 
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
     @Inject
-    public SetOntologyAnnotationsActionHandler(ProjectManager projectManager,
-                                               AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public SetOntologyAnnotationsActionHandler(@Nonnull AccessManager accessManager,
+                                               @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                               @Nonnull HasApplyChanges applyChanges,
+                                               @Nonnull @RootOntology OWLOntology rootOntology) {
+        super(accessManager, eventManager, applyChanges);
+        this.rootOntology = rootOntology;
     }
 
     @Override
@@ -52,7 +61,8 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     }
 
     @Override
-    protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action,
+                                                                             ExecutionContext executionContext) {
         final Set<PropertyAnnotationValue> fromAnnotations = action.getFromAnnotations();
         final Set<PropertyAnnotationValue> toAnnotations = action.getToAnnotations();
 
@@ -77,12 +87,16 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLAnnotation>> getChangeDescription(SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<Set<OWLAnnotation>>("Edited ontology annotations");
+    protected ChangeDescriptionGenerator<Set<OWLAnnotation>> getChangeDescription(SetOntologyAnnotationsAction action,
+                                                                                  ExecutionContext executionContext) {
+        return new FixedMessageChangeDescriptionGenerator<>("Edited ontology annotations");
     }
 
     @Override
-    protected SetOntologyAnnotationsResult createActionResult(ChangeApplicationResult<Set<OWLAnnotation>> changeApplicationResult, SetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        return new SetOntologyAnnotationsResult(project.getRootOntology().getAnnotations(), eventList);
+    protected SetOntologyAnnotationsResult createActionResult(ChangeApplicationResult<Set<OWLAnnotation>> changeApplicationResult,
+                                                              SetOntologyAnnotationsAction action,
+                                                              ExecutionContext executionContext,
+                                                              EventList<ProjectEvent<?>> eventList) {
+        return new SetOntologyAnnotationsResult(rootOntology.getAnnotations(), eventList);
     }
 }

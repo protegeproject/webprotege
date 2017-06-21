@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -29,12 +30,21 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
     @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
+    @Nonnull
+    private final EventManager<ProjectEvent<?>> eventManager;
+
+    @Nonnull
+    private final ProjectId projectId;
+
     @Inject
-    public SetDiscussionThreadStatusHandler(@Nonnull ProjectManager projectManager,
-                                            @Nonnull AccessManager accessManager,
-                                            @Nonnull EntityDiscussionThreadRepository repository) {
-        super(projectManager, accessManager);
+    public SetDiscussionThreadStatusHandler(@Nonnull AccessManager accessManager,
+                                            @Nonnull EntityDiscussionThreadRepository repository,
+                                            @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                            @Nonnull ProjectId projectId) {
+        super(accessManager);
         this.repository = repository;
+        this.eventManager = eventManager;
+        this.projectId = projectId;
     }
 
     @Override
@@ -49,21 +59,19 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
     }
 
     @Override
-    protected SetDiscussionThreadStatusResult execute(SetDiscussionThreadStatusAction action,
-                                                      Project project,
+    public SetDiscussionThreadStatusResult execute(SetDiscussionThreadStatusAction action,
                                                       ExecutionContext executionContext) {
-        EventTag fromTag = project.getEventManager().getCurrentTag();
+        EventTag fromTag = eventManager.getCurrentTag();
         ThreadId threadId = action.getThreadId();
         Status status = action.getStatus();
         Optional<EntityDiscussionThread> thread = repository.setThreadStatus(threadId, status);
-        int openComments = thread.map(t -> repository.getOpenCommentsCount(project.getProjectId(), t.getEntity())).orElse(-1);
-        ProjectId projectId = action.getProjectId();
-        project.getEventManager().postEvent(new DiscussionThreadStatusChangedEvent(projectId,
+        int openComments = thread.map(t -> repository.getOpenCommentsCount(projectId, t.getEntity())).orElse(-1);
+        eventManager.postEvent(new DiscussionThreadStatusChangedEvent(projectId,
                                                                                    threadId,
                                                                                    thread.map(EntityDiscussionThread::getEntity),
                                                                                    openComments,
                                                                                    status));
-        EventList<ProjectEvent<?>> eventList = project.getEventManager().getEventsFromTag(fromTag);
+        EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(fromTag);
         return new SetDiscussionThreadStatusResult(threadId, status, eventList);
     }
 }

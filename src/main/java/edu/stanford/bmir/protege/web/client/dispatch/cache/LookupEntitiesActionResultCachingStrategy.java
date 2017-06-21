@@ -46,7 +46,7 @@ public class LookupEntitiesActionResultCachingStrategy extends AbstractResultCac
 
     @Override
     public void registerEventHandlers() {
-        registerProjectEventHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
+        registerProjectEventHandler(ClassFrameChangedEvent.CLASS_FRAME_CHANGED, new ClassFrameChangedEventHandler() {
             @Override
             public void classFrameChanged(ClassFrameChangedEvent event) {
                 fireResultsInvalidatedEvent(event.getEntity());

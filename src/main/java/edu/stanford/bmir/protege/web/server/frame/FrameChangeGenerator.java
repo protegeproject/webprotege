@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,13 +34,19 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
 
     private final FrameTranslator<F, S> translator;
 
-    public FrameChangeGenerator(F from, F to, FrameTranslator<F, S> translator) {
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    public FrameChangeGenerator(F from, F to,
+                                FrameTranslator<F, S> translator,
+                                OWLOntology rootOntology) {
         this.from = from;
         this.to = to;
         this.translator = translator;
+        this.rootOntology = rootOntology;
     }
 
-    public List<OWLOntologyChange> createChanges(final OWLOntology rootOntology, Project project) {
+    public List<OWLOntologyChange> createChanges() {
         // TODO: Consider axiom annotations!
 
         // TODO: Three way merge incase the frame has been modified "externally" and is different from the original
@@ -49,7 +56,7 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
         // This looks like it is more complicated than necessary, however we need to consider the fact that
         // a frame may be generated from multiple axioms (note the minimal and maximal translation)
 
-        F serverFrame = translator.getFrame(to.getSubject(), rootOntology, project);
+        F serverFrame = translator.getFrame(to.getSubject());
         if (serverFrame.equals(to)) {
             // Nothing to do
             return Collections.emptyList();
@@ -135,9 +142,9 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
     }
 
     @Override
-    public OntologyChangeList<S> generateChanges(Project project, ChangeGenerationContext context) {
+    public OntologyChangeList<S> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<S> b = new OntologyChangeList.Builder<S>();
-        b.addAll(createChanges(project.getRootOntology(), project));
+        b.addAll(createChanges());
         return b.build(to.getSubject());
     }
 

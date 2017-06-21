@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.webhook.CommentPostedSlackWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,6 +35,9 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_O
 public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActionHandler<CreateEntityDiscussionThreadAction, CreateEntityDiscussionThreadResult> {
 
     @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
     @Nonnull
@@ -44,18 +49,30 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     @Nonnull
     private final CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker;
 
+    @Nonnull
+    private final EventManager<ProjectEvent<?>> eventManager;
+
+    @Nonnull
+    private final HasGetRendering renderer;
+
+
     @Inject
-    public CreateEntityDiscussionThreadHandler(@Nonnull ProjectManager projectManager,
-                                               @Nonnull ProjectDetailsRepository projectDetailsRepository,
-                                               @Nonnull AccessManager accessManager,
+    public CreateEntityDiscussionThreadHandler(@Nonnull AccessManager accessManager,
+                                               @Nonnull ProjectId projectId,
                                                @Nonnull EntityDiscussionThreadRepository repository,
+                                               @Nonnull ProjectDetailsRepository projectDetailsRepository,
                                                @Nonnull CommentNotificationEmailer notificationsEmailer,
-                                               @Nonnull CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker) {
-        super(projectManager, accessManager);
-        this.projectDetailsRepository = checkNotNull(projectDetailsRepository);
-        this.repository = checkNotNull(repository);
-        this.notificationsEmailer = checkNotNull(notificationsEmailer);
-        this.commentPostedSlackWebhookInvoker = checkNotNull(commentPostedSlackWebhookInvoker);
+                                               @Nonnull CommentPostedSlackWebhookInvoker commentPostedSlackWebhookInvoker,
+                                               @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                               @Nonnull HasGetRendering renderer) {
+        super(accessManager);
+        this.projectId = projectId;
+        this.repository = repository;
+        this.projectDetailsRepository = projectDetailsRepository;
+        this.notificationsEmailer = notificationsEmailer;
+        this.commentPostedSlackWebhookInvoker = commentPostedSlackWebhookInvoker;
+        this.eventManager = eventManager;
+        this.renderer = renderer;
     }
 
     @Override
@@ -70,8 +87,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
-                                                         Project project,
+    public CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
                                                          ExecutionContext executionContext) {
         String rawComment = action.getComment();
         CommentRenderer commentRenderer = new CommentRenderer();
@@ -91,27 +107,26 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                                                                    Status.OPEN,
                                                                    ImmutableList.of(comment));
         repository.saveThread(thread);
-        project.getEventManager().postEvent(new DiscussionThreadCreatedEvent(thread));
-        ProjectId projectId = project.getProjectId();
+        eventManager.postEvent(new DiscussionThreadCreatedEvent(thread));
         int commentCount = repository.getCommentsCount(projectId, entity);
         int openCommentCount = repository.getOpenCommentsCount(projectId, entity);
-        Optional<OWLEntityData> rendering = Optional.of(project.getRenderingManager().getRendering(entity));
-        project.getEventManager().postEvent(new CommentPostedEvent(projectId,
-                                                                   thread.getId(),
-                                                                   comment,
-                                                                   rendering,
-                                                                   commentCount,
-                                                                   openCommentCount));
+        Optional<OWLEntityData> rendering = Optional.of(renderer.getRendering(entity));
+        eventManager.postEvent(new CommentPostedEvent(projectId,
+                                                      thread.getId(),
+                                                      comment,
+                                                      rendering,
+                                                      commentCount,
+                                                      openCommentCount));
         notificationsEmailer.sendCommentPostedNotification(projectId,
                                                            thread,
                                                            comment);
-        commentPostedSlackWebhookInvoker.invoke(project.getProjectId(),
-                                                projectDetailsRepository.findOne(project.getProjectId()).map(
+        commentPostedSlackWebhookInvoker.invoke(projectId,
+                                                projectDetailsRepository.findOne(projectId).map(
                                                         ProjectDetails::getDisplayName).orElse("Project"),
-                                                project.getRenderingManager().getRendering(thread.getEntity()),
+                                                renderer.getRendering(thread.getEntity()),
                                                 comment);
 
-        List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), entity);
+        List<EntityDiscussionThread> threads = repository.findThreads(projectId, entity);
         return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));
     }
 }

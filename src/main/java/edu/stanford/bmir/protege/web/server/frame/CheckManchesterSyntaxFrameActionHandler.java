@@ -17,17 +17,25 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.List;
+
+import static edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseResult.CHANGED;
+import static edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseResult.UNCHANGED;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
 public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectActionHandler<CheckManchesterSyntaxFrameAction, CheckManchesterSyntaxFrameResult> {
 
+    @Nonnull
+    private final Provider<ManchesterSyntaxFrameParser> parserProvider;
+
     @Inject
-    public CheckManchesterSyntaxFrameActionHandler(@Nonnull ProjectManager projectManager,
-                                                   @Nonnull AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public CheckManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
+                                                   @Nonnull Provider<ManchesterSyntaxFrameParser> parserProvider) {
+        super(accessManager);
+        this.parserProvider = parserProvider;
     }
 
     @Nullable
@@ -37,16 +45,19 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectA
     }
 
     @Override
-    protected CheckManchesterSyntaxFrameResult execute(CheckManchesterSyntaxFrameAction action, Project project, ExecutionContext executionContext) {
+    public CheckManchesterSyntaxFrameResult execute(CheckManchesterSyntaxFrameAction action,
+                                                       ExecutionContext executionContext) {
 
-            ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(project.getManchesterSyntaxFrameParser());
+        ManchesterSyntaxFrameParser parser = parserProvider.get();
+        ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(
+                parser);
             try {
                 List<OWLOntologyChange> changeList = changeGenerator.generateChanges(action.getFrom(), action.getTo(), action);
                 if(changeList.isEmpty()) {
-                    return new CheckManchesterSyntaxFrameResult(ManchesterSyntaxFrameParseResult.UNCHANGED);
+                    return new CheckManchesterSyntaxFrameResult(UNCHANGED);
                 }
                 else {
-                    return new CheckManchesterSyntaxFrameResult(ManchesterSyntaxFrameParseResult.CHANGED);
+                    return new CheckManchesterSyntaxFrameResult(CHANGED);
                 }
             } catch (ParserException e) {
                 return new CheckManchesterSyntaxFrameResult(ManchesterSyntaxFrameParser.getParseError(e));

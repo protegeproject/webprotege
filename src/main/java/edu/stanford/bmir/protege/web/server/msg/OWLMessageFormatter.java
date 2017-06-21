@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.msg;
 
 import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import java.text.MessageFormat;
@@ -17,41 +18,41 @@ import java.util.List;
  */
 public class OWLMessageFormatter {
 
-    public static String formatMessage(String message, Project project, Object ... objects) {
-        Object [] primitiveFormattedObjects = formatToPrimitives(project, objects);
+    public static String formatMessage(String message, RenderingManager renderingManager, Object ... objects) {
+        Object [] primitiveFormattedObjects = formatToPrimitives(renderingManager, objects);
         return MessageFormat.format(message, primitiveFormattedObjects);
     }
 
 
-    private static Object [] formatToPrimitives(Project project, Object ... objects) {
+    private static Object [] formatToPrimitives(RenderingManager renderingManager, Object ... objects) {
         List<Object> result = new ArrayList<Object>(objects.length);
         for(Object obj : objects) {
-            Object formattedObj = formatToPrimitive(obj, project);
+            Object formattedObj = formatToPrimitive(obj, renderingManager);
             result.add(formattedObj);
         }
         return result.toArray();
     }
 
-    private static Object formatToPrimitive(Object o, Project project) {
+    private static Object formatToPrimitive(Object o, RenderingManager renderingManager) {
         if(o instanceof OWLObject) {
-            return project.getRenderingManager().getBrowserText((OWLObject) o);
+            return renderingManager.getBrowserText((OWLObject) o);
         }
         else if(o instanceof Collection<?>) {
-            return formatCollection((Collection<?>) o, project);
+            return formatCollection((Collection<?>) o, renderingManager);
         }
         else {
             return o;
         }
     }
 
-    private static String formatCollection(Collection<?> collection, Project project) {
+    private static String formatCollection(Collection<?> collection, RenderingManager renderingManager) {
         StringBuilder sb = new StringBuilder();
         for(Iterator<?> it = collection.iterator(); it.hasNext(); ) {
             if(!it.hasNext() && collection.size() > 1) {
                 sb.append(" and ");
             }
             Object o = it.next();
-            Object prim = formatToPrimitive(o, project);
+            Object prim = formatToPrimitive(o, renderingManager);
             sb.append(prim);
             if(it.hasNext()) {
                 sb.append(", ");

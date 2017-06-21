@@ -54,14 +54,14 @@ public class GetProjectSharingSettingsActionHandler_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetProjectSharingSettingsActionHandler(projectManager, settingsManager, accessManager);
+        handler = new GetProjectSharingSettingsActionHandler(settingsManager, accessManager);
         when(settingsManager.getProjectSharingSettings(projectId)).thenReturn(projectSharingSettings);
         when(action.getProjectId()).thenReturn(projectId);
     }
 
     @Test
     public void shouldReturnSharingSettings() {
-        GetProjectSharingSettingsResult result = handler.execute(action, project, executionContext);
+        GetProjectSharingSettingsResult result = handler.execute(action, executionContext);
         assertThat(result.getProjectSharingSettings(), is(projectSharingSettings));
     }
 

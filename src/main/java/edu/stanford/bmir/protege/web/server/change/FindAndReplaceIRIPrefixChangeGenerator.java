@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
@@ -26,28 +26,30 @@ public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerat
 
     private String toPrefix;
 
-    public FindAndReplaceIRIPrefixChangeGenerator(String fromPrefix, String toPrefix) {
+    private OWLOntology rootOntology;
+
+    public FindAndReplaceIRIPrefixChangeGenerator(String fromPrefix, String toPrefix, OWLOntology rootOntology) {
         this.fromPrefix = checkNotNull(fromPrefix);
         this.toPrefix = checkNotNull(toPrefix);
+        this.rootOntology = checkNotNull(rootOntology);
     }
 
     @Override
-    public OntologyChangeList<Void> generateChanges(Project project, ChangeGenerationContext context) {
+    public OntologyChangeList<Void> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
         Map<OWLEntity, IRI> renameMap = new HashMap<OWLEntity, IRI>();
-        for(OWLEntity entity : project.getRootOntology().getSignature(Imports.INCLUDED)) {
+        for(OWLEntity entity : rootOntology.getSignature(Imports.INCLUDED)) {
             if(!entity.isBuiltIn()) {
                 IRI iri = entity.getIRI();
                 String iriString = iri.toString();
                 if(iriString.startsWith(fromPrefix)) {
-                    StringBuilder sb = new StringBuilder(toPrefix);
-                    sb.append(iri.subSequence(fromPrefix.length(), iri.length()));
-                    IRI toIRI = IRI.create(sb.toString());
+                    IRI toIRI = IRI.create(toPrefix + iri.subSequence(fromPrefix.length(), iri.length()));
                     renameMap.put(entity, toIRI);
                 }
             }
         }
-        OWLEntityRenamer entityRenamer = new OWLEntityRenamer(project.getRootOntology().getOWLOntologyManager(), project.getRootOntology().getImportsClosure());
+        OWLEntityRenamer entityRenamer = new OWLEntityRenamer(rootOntology.getOWLOntologyManager(),
+                                                              rootOntology.getImportsClosure());
         List<OWLOntologyChange> changeList = entityRenamer.changeIRI(renameMap);
         builder.addAll(changeList);
         return builder.build();

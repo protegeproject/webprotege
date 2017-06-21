@@ -24,14 +24,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ResetPerspectiveLayoutActionHandler extends AbstractHasProjectActionHandler<ResetPerspectiveLayoutAction, ResetPerspectiveLayoutResult> {
 
+    @Nonnull
     private final PerspectiveLayoutStore store;
 
     @Inject
-    public ResetPerspectiveLayoutActionHandler(@Nonnull ProjectManager projectManager,
-                                               @Nonnull AccessManager accessManager,
+    public ResetPerspectiveLayoutActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull PerspectiveLayoutStore store) {
-        super(projectManager, accessManager);
-        this.store = checkNotNull(store);
+        super(accessManager);
+        this.store = store;
     }
 
     @Override
@@ -40,8 +40,7 @@ public class ResetPerspectiveLayoutActionHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected ResetPerspectiveLayoutResult execute(ResetPerspectiveLayoutAction action,
-                                                   Project project,
+    public ResetPerspectiveLayoutResult execute(ResetPerspectiveLayoutAction action,
                                                    ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
         PerspectiveId perspectiveId = action.getPerspectiveId();

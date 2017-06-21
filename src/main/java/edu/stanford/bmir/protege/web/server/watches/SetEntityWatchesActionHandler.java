@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.SetEntityWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Set;
 
@@ -23,12 +24,18 @@ import java.util.Set;
  */
 public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandler<SetEntityWatchesAction, SetEntityWatchesResult> {
 
-    @Inject
-    public SetEntityWatchesActionHandler(ProjectManager projectManager,
-                                         AccessManager accessManager) {
-        super(projectManager, accessManager);
-    }
+    private EventManager<ProjectEvent<?>> eventManager;
 
+    private WatchManager watchManager;
+
+    @Inject
+    public SetEntityWatchesActionHandler(@Nonnull AccessManager accessManager,
+                                         EventManager<ProjectEvent<?>> eventManager,
+                                         WatchManager watchManager) {
+        super(accessManager);
+        this.eventManager = eventManager;
+        this.watchManager = watchManager;
+    }
 
     @Override
     public Class<SetEntityWatchesAction> getActionClass() {
@@ -36,10 +43,8 @@ public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandl
     }
 
     @Override
-    protected SetEntityWatchesResult execute(SetEntityWatchesAction action, Project project, ExecutionContext executionContext) {
-        final EventManager<ProjectEvent<?>> eventManager = project.getEventManager();
+    public SetEntityWatchesResult execute(SetEntityWatchesAction action, ExecutionContext executionContext) {
         EventTag startTag = eventManager.getCurrentTag();
-        WatchManager watchManager = project.getWatchManager();
         UserId userId = action.getUserId();
         Set<Watch> watches = watchManager.getDirectWatches(action.getEntity(), userId);
         for(Watch watch : watches) {

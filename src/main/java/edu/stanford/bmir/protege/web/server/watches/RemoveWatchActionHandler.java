@@ -3,13 +3,16 @@ package edu.stanford.bmir.protege.web.server.watches;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -20,20 +23,28 @@ import javax.inject.Inject;
  */
 public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<RemoveWatchesAction, RemoveWatchesResult> {
 
+    @Nonnull
+    private final EventManager<ProjectEvent<?>> eventManager;
+
+    @Nonnull
+    private final WatchManager watchManager;
+
     @Inject
-    public RemoveWatchActionHandler(ProjectManager projectManager,
-                                    AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public RemoveWatchActionHandler(@Nonnull AccessManager accessManager,
+                                    @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                    @Nonnull WatchManager watchManager) {
+        super(accessManager);
+        this.eventManager = eventManager;
+        this.watchManager = watchManager;
     }
 
-
     @Override
-    protected RemoveWatchesResult execute(RemoveWatchesAction action, Project project, ExecutionContext executionContext) {
-        EventTag tag = project.getEventManager().getCurrentTag();
+    public RemoveWatchesResult execute(RemoveWatchesAction action, ExecutionContext executionContext) {
+        EventTag tag = eventManager.getCurrentTag();
         for(Watch watch : action.getWatches()) {
-            project.getWatchManager().removeWatch(watch);
+            watchManager.removeWatch(watch);
         }
-        return new RemoveWatchesResult(project.getEventManager().getEventsFromTag(tag));
+        return new RemoveWatchesResult(eventManager.getEventsFromTag(tag));
     }
 
     @Override

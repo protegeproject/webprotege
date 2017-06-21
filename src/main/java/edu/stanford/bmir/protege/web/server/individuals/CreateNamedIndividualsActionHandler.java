@@ -5,24 +5,26 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividu
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,10 +34,30 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
  */
 public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
 
+    @Nonnull
+    private final HasApplyChanges changeApplicator;
+
+    @Nonnull
+    private final RenderingManager renderer;
+
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     @Inject
-    public CreateNamedIndividualsActionHandler(ProjectManager projectManager,
-                                               AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public CreateNamedIndividualsActionHandler(@Nonnull AccessManager accessManager,
+                                               @Nonnull HasApplyChanges changeApplicator,
+                                               @Nonnull RenderingManager renderer,
+                                               @Nonnull @RootOntology OWLOntology rootOntology,
+                                               @Nonnull OWLDataFactory dataFactory) {
+        super(accessManager);
+        this.changeApplicator = changeApplicator;
+        this.renderer = renderer;
+        this.rootOntology = rootOntology;
+        this.dataFactory = dataFactory;
     }
 
     @Nonnull
@@ -45,20 +67,19 @@ public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected CreateNamedIndividualsResult execute(CreateNamedIndividualsAction action, Project project, ExecutionContext executionContext) {
-        Optional<OWLClass> type;
-        if(action.getType().isPresent()) {
-            type = Optional.of(action.getType().get());
-        }
-        else {
-            type = Optional.empty();
-        }
-        ChangeApplicationResult<Set<OWLNamedIndividual>> result = project.applyChanges(executionContext.getUserId(), new CreateIndividualsChangeListGenerator(action.getShortNames(), type), new FixedMessageChangeDescriptionGenerator<Set<OWLNamedIndividual>>("Created individuals"));
-        Set<OWLNamedIndividual> individuals = result.getSubject().get();
-        Set<OWLNamedIndividualData> individualData = new HashSet<OWLNamedIndividualData>();
-        for(OWLNamedIndividual individual : individuals) {
-            individualData.add(project.getRenderingManager().getRendering(individual));
-        }
+    public CreateNamedIndividualsResult execute(CreateNamedIndividualsAction action,
+                                                ExecutionContext executionContext) {
+        ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
+                                                                                                new CreateIndividualsChangeListGenerator(
+                                                                                                        action.getShortNames(),
+                                                                                                        action.getType(),
+                                                                                                        rootOntology,
+                                                                                                        dataFactory),
+                                                                                                new FixedMessageChangeDescriptionGenerator<>(
+                                                                                                        "Created individuals"));
+        Set<OWLNamedIndividualData> individualData = result.getSubject().orElse(emptySet()).stream()
+                                                           .map(renderer::getRendering)
+                                                           .collect(toSet());
         return new CreateNamedIndividualsResult(individualData);
     }
 

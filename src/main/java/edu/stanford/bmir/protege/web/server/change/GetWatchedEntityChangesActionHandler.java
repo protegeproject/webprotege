@@ -6,12 +6,15 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.watches.WatchManager;
+import edu.stanford.bmir.protege.web.server.watches.WatchedChangesManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesResult;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Set;
@@ -25,10 +28,19 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  */
 public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActionHandler<GetWatchedEntityChangesAction, GetWatchedEntityChangesResult> {
 
+    @Nonnull
+    private final WatchManager watchManager;
+
+    @Nonnull
+    private final WatchedChangesManager watchedChangesManager;
+
     @Inject
-    public GetWatchedEntityChangesActionHandler(ProjectManager projectManager,
-                                                AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetWatchedEntityChangesActionHandler(@Nonnull AccessManager accessManager,
+                                                @Nonnull WatchManager watchManager,
+                                                @Nonnull WatchedChangesManager watchedChangesManager) {
+        super(accessManager);
+        this.watchManager = watchManager;
+        this.watchedChangesManager = watchedChangesManager;
     }
 
     @Nullable
@@ -38,9 +50,9 @@ public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActi
     }
 
     @Override
-    protected GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, Project project, ExecutionContext executionContext) {
-        Set<Watch> watches = project.getWatchManager().getWatches(action.getUserId());
-        ImmutableList<ProjectChange> changes = project.getWatchedChangesManager().getProjectChangesForWatches(watches);
+    public GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, ExecutionContext executionContext) {
+        Set<Watch> watches = watchManager.getWatches(action.getUserId());
+        ImmutableList<ProjectChange> changes = watchedChangesManager.getProjectChangesForWatches(watches);
         return new GetWatchedEntityChangesResult(changes);
     }
 

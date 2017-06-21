@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.issues;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
@@ -11,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,12 +37,22 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
     @Nonnull
     private final EntityDiscussionThreadRepository repository;
 
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final HasGetRendering renderer;
+
     @Inject
-    public GetCommentedEntitiesActionHandler(@Nonnull ProjectManager projectManager,
-                                             AccessManager accessManager,
-                                             @Nonnull EntityDiscussionThreadRepository repository) {
-        super(projectManager, accessManager);
+    public GetCommentedEntitiesActionHandler(@Nonnull AccessManager accessManager,
+                                             @Nonnull EntityDiscussionThreadRepository repository,
+                                             @Nonnull OWLOntology rootOntology,
+                                             @Nonnull HasGetRendering renderer) {
+        super(accessManager);
         this.repository = repository;
+        this.rootOntology = rootOntology;
+        this.renderer = renderer;
     }
 
     @Override
@@ -48,8 +61,7 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected GetCommentedEntitiesResult execute(GetCommentedEntitiesAction action,
-                                                 Project project,
+    public GetCommentedEntitiesResult execute(GetCommentedEntitiesAction action,
                                                  ExecutionContext executionContext) {
         PageRequest request = action.getPageRequest();
         List<EntityDiscussionThread> allThreads = repository.getThreadsInProject(action.getProjectId());
@@ -61,7 +73,7 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
 
         List<CommentedEntityData> result = new ArrayList<>();
         commentsByEntity.forEach((entity, threads) -> {
-            if (project.getRootOntology().containsEntityInSignature(entity)) {
+            if (rootOntology.containsEntityInSignature(entity)) {
                 int totalThreadCount = threads.size();
                 int openThreadCount = (int) threads.stream()
                                                    .filter(thread -> thread.getStatus().isOpen())
@@ -77,7 +89,7 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
                                                           .map(Comment::getCreatedBy)
                                                           .collect(toList());
                 result.add(new CommentedEntityData(
-                        project.getRenderingManager().getRendering(entity),
+                        renderer.getRendering(entity),
                         totalThreadCount,
                         openThreadCount,
                         entityComments.size(),

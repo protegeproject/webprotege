@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
+import javax.inject.Inject;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/02/2014
  */
@@ -9,6 +11,7 @@ public class DataPropertyDataPropertyAncestorChecker implements HasHasAncestor<O
 
     private OWLObjectHierarchyProvider<OWLDataProperty> hierarchyProvider;
 
+    @Inject
     public DataPropertyDataPropertyAncestorChecker(OWLObjectHierarchyProvider<OWLDataProperty>
                                                            hierarchyProvider) {
         this.hierarchyProvider = hierarchyProvider;

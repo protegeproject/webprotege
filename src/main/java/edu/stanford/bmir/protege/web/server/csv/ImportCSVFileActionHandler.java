@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
@@ -17,14 +15,18 @@ import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.*;
+import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -34,14 +36,26 @@ import static java.util.Arrays.asList;
  */
 public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Integer,ImportCSVFileAction, ImportCSVFileResult> {
 
+    @Nonnull
     private final File uploadsDirectory;
 
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     @Inject
-    public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory,
-                                      ProjectManager projectManager,
-                                      AccessManager accessManager) {
-        super(projectManager, accessManager);
-        this.uploadsDirectory = checkNotNull(uploadsDirectory);
+    public ImportCSVFileActionHandler(@Nonnull AccessManager accessManager,
+                                      @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                      @Nonnull HasApplyChanges applyChanges,
+                                      @Nonnull @UploadsDirectory File uploadsDirectory,
+                                      @Nonnull @RootOntology OWLOntology rootOntology,
+                                      @Nonnull OWLDataFactory dataFactory) {
+        super(accessManager, eventManager, applyChanges);
+        this.uploadsDirectory = uploadsDirectory;
+        this.rootOntology = rootOntology;
+        this.dataFactory = dataFactory;
     }
 
     @Override
@@ -50,9 +64,13 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     }
 
     @Override
-    protected ChangeListGenerator<Integer> getChangeListGenerator(ImportCSVFileAction action, Project project, ExecutionContext executionContext) {
+    protected ChangeListGenerator<Integer> getChangeListGenerator(ImportCSVFileAction action,
+                                                                  ExecutionContext executionContext) {
         CSVGrid csvGrid = parseCSVGrid(action);
-        return new ImportCSVFileChangeListGenerator(action.getImportRootClass(), csvGrid, action.getDescriptor());
+        return new ImportCSVFileChangeListGenerator(action.getImportRootClass(),
+                                                    csvGrid, action.getDescriptor(),
+                                                    rootOntology,
+                                                    dataFactory);
     }
 
     private CSVGrid parseCSVGrid(ImportCSVFileAction action) {
@@ -70,18 +88,22 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Integer> getChangeDescription(ImportCSVFileAction action, Project project, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Integer> getChangeDescription(ImportCSVFileAction action,
+                                                                       ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>("Imported CSV File");
     }
 
     @Override
-    protected ImportCSVFileResult createActionResult(ChangeApplicationResult<Integer> changeApplicationResult, ImportCSVFileAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected ImportCSVFileResult createActionResult(ChangeApplicationResult<Integer> changeApplicationResult,
+                                                     ImportCSVFileAction action,
+                                                     ExecutionContext executionContext,
+                                                     EventList<ProjectEvent<?>> eventList) {
         return new ImportCSVFileResult(new EventList<ProjectEvent<?>>(EventTag.get(0), EventTag.get(1)), changeApplicationResult.getSubject().get());
     }
 
     @Nonnull
     @Override
     protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
-        return asList(EDIT_ONTOLOGY);
+        return singletonList(EDIT_ONTOLOGY);
     }
 }

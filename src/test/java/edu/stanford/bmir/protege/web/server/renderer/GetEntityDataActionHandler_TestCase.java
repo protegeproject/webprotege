@@ -55,15 +55,12 @@ public class GetEntityDataActionHandler_TestCase {
     private ExecutionContext executionContext;
 
     @Mock
-    private ProjectManager projectManager;
-
-    @Mock
     private AccessManager accessManager;
 
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetEntityDataActionHandler(projectManager, accessManager);
+        handler = new GetEntityDataActionHandler(accessManager, renderingManager);
 
         renderingMap = new HashMap<>();
         renderingMap.put(entity, entityData);
@@ -75,7 +72,7 @@ public class GetEntityDataActionHandler_TestCase {
 
     @Test
     public void shouldGetRendering() {
-        GetEntityDataResult result = handler.execute(action, project, executionContext);
+        GetEntityDataResult result = handler.execute(action, executionContext);
         assertThat(result.getEntityDataMap(), hasEntry(entity, entityData));
     }
 }

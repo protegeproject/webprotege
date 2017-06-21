@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -11,6 +12,9 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 /**
@@ -20,6 +24,34 @@ import java.util.*;
  * Date: 14/12/2012
  */
 public class NamedIndividualFrameTranslator implements EntityFrameTranslator<NamedIndividualFrame, OWLNamedIndividualData> {
+
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final RenderingManager rm;
+
+    @Nonnull
+    private final PropertyValueMinimiser propertyValueMinimiser;
+
+    @Nonnull
+    private final PropertyValueComparator propertyValueComparator;
+
+    @Nonnull
+    private final Provider<ClassFrameTranslator> translatorProvider;
+
+    @Inject
+    public NamedIndividualFrameTranslator(@Nonnull @RootOntology OWLOntology rootOntology,
+                                          @Nonnull RenderingManager rm,
+                                          @Nonnull PropertyValueMinimiser propertyValueMinimiser,
+                                          @Nonnull PropertyValueComparator propertyValueComparator,
+                                          @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
+        this.rootOntology = rootOntology;
+        this.rm = rm;
+        this.propertyValueMinimiser = propertyValueMinimiser;
+        this.propertyValueComparator = propertyValueComparator;
+        this.translatorProvider = translatorProvider;
+    }
 
     /**
      * Gets the entity type that this translator translates.
@@ -31,8 +63,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     @Override
-    public NamedIndividualFrame getFrame(OWLNamedIndividualData subject, OWLOntology rootOntology, Project project) {
-        return translateToNamedIndividualFrame(subject, rootOntology, project);
+    public NamedIndividualFrame getFrame(OWLNamedIndividualData subject) {
+        return translateToNamedIndividualFrame(subject);
     }
 
     @Override
@@ -40,9 +72,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         return translateToAxioms(frame.getSubject().getEntity(), frame, mode);
     }
 
-    private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividualData subject, OWLOntology rootOntology, Project project) {
-        RenderingManager rm = project.getRenderingManager();
-        Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity(), rootOntology);
+    private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividualData subject) {
+        Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity());
 
         NamedIndividualFrame.Builder builder = new NamedIndividualFrame.Builder(subject);
         for(OWLAxiom axiom : relevantAxioms) {
@@ -62,8 +93,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
             for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(subject.getEntity())) {
                 if(!ax.getClassExpression().isAnonymous()) {
                     OWLClass type = (OWLClass) ax.getClassExpression();
-                    ClassFrameTranslator classFrameTranslator = new ClassFrameTranslator();
-                    ClassFrame classFrame = classFrameTranslator.getFrame(rm.getRendering(type), rootOntology, project);
+                    ClassFrameTranslator classFrameTranslator = translatorProvider.get();
+                    ClassFrame classFrame = classFrameTranslator.getFrame(rm.getRendering(type));
                     for(PropertyValue propertyValue : classFrame.getPropertyValues()) {
                         // Bit yucky
                         if (!propertyValue.isAnnotation()) {
@@ -74,8 +105,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
             }
         }
 
-        propertyValues = new PropertyValueMinimiser().minimisePropertyValues(propertyValues, rootOntology, project);
-        Collections.sort(propertyValues, new PropertyValueComparator(project));
+        propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
+        Collections.sort(propertyValues, propertyValueComparator);
         builder.addPropertyValues(propertyValues);
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLSameIndividualAxiom sameIndividualAxiom : ont.getSameIndividualAxioms(subject.getEntity())) {
@@ -91,8 +122,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         return builder.build();
     }
 
-    private Set<OWLAxiom> getRelevantAxioms(OWLNamedIndividual subject, OWLOntology rootOntology) {
-        Set<OWLAxiom> relevantAxioms = new HashSet<OWLAxiom>();
+    private Set<OWLAxiom> getRelevantAxioms(OWLNamedIndividual subject) {
+        Set<OWLAxiom> relevantAxioms = new HashSet<>();
         for (OWLOntology ontology : rootOntology.getImportsClosure()) {
             relevantAxioms.addAll(ontology.getClassAssertionAxioms(subject));
             relevantAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getIRI()));
@@ -103,7 +134,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     private Set<OWLAxiom> translateToAxioms(OWLNamedIndividual subject, NamedIndividualFrame frame, Mode mode) {
-        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> result = new HashSet<>();
         for(OWLClassData cls : frame.getClasses()) {
             result.add(DataFactory.get().getOWLClassAssertionAxiom(cls.getEntity(), subject));
         }

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
@@ -15,8 +16,10 @@ import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 
@@ -28,14 +31,21 @@ import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
  */
 public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<GetClassFrameAction, GetClassFrameResult> {
 
-    public static final ClassFrameTranslator TRANSLATOR = new ClassFrameTranslator();
-
     private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final Provider<ClassFrameTranslator> translatorProvider;
+
     @Inject
-    public GetClassFrameActionHandler(ProjectManager projectManager,
-                                      AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
+                                      @Nonnull RenderingManager renderingManager,
+                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
+        super(accessManager);
+        this.renderingManager = renderingManager;
+        this.translatorProvider = translatorProvider;
     }
 
     /**
@@ -54,10 +64,11 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected GetClassFrameResult execute(GetClassFrameAction action, Project project, ExecutionContext executionContext) {
+    public GetClassFrameResult execute(GetClassFrameAction action, ExecutionContext executionContext) {
         FrameActionResultTranslator<ClassFrame, OWLClassData> translator = new FrameActionResultTranslator<>(
-                project.getRenderingManager().getRendering(action.getSubject()),
-                project, TRANSLATOR);
+                renderingManager,
+                translatorProvider.get(),
+                renderingManager.getRendering(action.getSubject()));
         LabelledFrame<ClassFrame> f = translator.doIT();
         logger.info(BROWSING,
                      "{} {} retrieved Class frame for {} ({})",

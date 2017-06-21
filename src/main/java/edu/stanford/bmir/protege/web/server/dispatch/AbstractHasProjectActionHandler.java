@@ -29,26 +29,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 21/02/2013
  * <p>
  * A skeleton handler for handling actions that pertain to projects (i.e. {@link Action}s that implement
- * {@link HasProjectId}.  Subclasses implement a specialised execute method which has a reference to the relevant
- * {@link Project} as a parameter.  Further more, the validation includes a check to see if the project
+ * {@link HasProjectId}. Further more, the validation includes a check to see if the project
  * actually exists and fails if this isn't the case.
  * </p>
  */
 public abstract class AbstractHasProjectActionHandler<A extends ProjectAction<R> & HasProjectId, R extends Result> implements ProjectActionHandler<A, R> {
 
-    private final ProjectManager projectManager;
-
+    @Nonnull
     private final AccessManager accessManager;
 
-    public AbstractHasProjectActionHandler(@Nonnull ProjectManager projectManager, AccessManager accessManager) {
-        this.projectManager = checkNotNull(projectManager);
+    public AbstractHasProjectActionHandler(@Nonnull AccessManager accessManager) {
         this.accessManager = checkNotNull(accessManager);
     }
-
-    public ProjectManager getProjectManager() {
-        return projectManager;
-    }
-
 
     @Override
     public final RequestValidator getRequestValidator(A action, RequestContext requestContext) {
@@ -121,22 +113,4 @@ public abstract class AbstractHasProjectActionHandler<A extends ProjectAction<R>
     protected RequestValidator getAdditionalRequestValidator(A action, RequestContext requestContext) {
         return NullValidator.get();
     }
-
-    @Override
-    final public R execute(A action, ExecutionContext executionContext) {
-        Project project = projectManager.getProject(action.getProjectId(), executionContext.getUserId());
-        return execute(action, project, executionContext);
-    }
-
-
-    /**
-     * Executes the specified action, against the specified project in the specified context.
-     *
-     * @param action           The action to be handled/executed
-     * @param project          The project that the action should be executed with respect to.
-     * @param executionContext The {@link ExecutionContext} that should be used to provide details such as the
-     *                         {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user who requested the action be executed.
-     * @return The result of the execution to be returned to the client.
-     */
-    protected abstract R execute(A action, Project project, ExecutionContext executionContext);
 }

@@ -51,22 +51,19 @@ public class GetProjectChangesActionHandler_TestCase {
     private ImmutableList<ProjectChange> projectChanges;
 
     @Mock
-    private ProjectManager projectManager;
-
-    @Mock
     private AccessManager accessManager;
 
     @Before
     public void setUp() throws Exception {
         when(action.getSubject()).thenReturn(subject);
-        handler = new GetProjectChangesActionHandler(projectManager, accessManager);
+        handler = new GetProjectChangesActionHandler(accessManager, changeManager);
         when(project.getProjectChangesManager()).thenReturn(changeManager);
         when(changeManager.getProjectChanges(subject)).thenReturn(projectChanges);
     }
 
     @Test
     public void shouldGetProjectChangesFromManager() {
-        GetProjectChangesResult result = handler.execute(action, project, context);
+        GetProjectChangesResult result = handler.execute(action, context);
         assertThat(result.getChanges(), is(projectChanges));
     }
 }

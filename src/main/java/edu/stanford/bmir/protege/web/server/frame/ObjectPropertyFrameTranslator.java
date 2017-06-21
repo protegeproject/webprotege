@@ -1,13 +1,16 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import org.openrdf.model.vocabulary.OWL;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,11 +23,22 @@ import java.util.Set;
  */
 public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectPropertyFrame, OWLObjectPropertyData> {
 
-    @Override
-    public ObjectPropertyFrame getFrame(OWLObjectPropertyData subject, OWLOntology rootOntology, Project project) {
-        RenderingManager rm = project.getRenderingManager();
-        Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
+    @Nonnull
+    private final RenderingManager rm;
 
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Inject
+    public ObjectPropertyFrameTranslator(@Nonnull RenderingManager rm,
+                                         @Nonnull @RootOntology OWLOntology rootOntology) {
+        this.rm = rm;
+        this.rootOntology = rootOntology;
+    }
+
+    @Override
+    public ObjectPropertyFrame getFrame(OWLObjectPropertyData subject) {
+        Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
         Set<OWLClassData> domains = new HashSet<>();
         Set<OWLClassData> ranges = new HashSet<>();
         Set<ObjectPropertyCharacteristic> characteristics = new HashSet<>();

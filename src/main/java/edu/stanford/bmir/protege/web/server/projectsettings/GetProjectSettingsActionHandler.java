@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -23,13 +24,18 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PRO
  */
 public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHandler<GetProjectSettingsAction, GetProjectSettingsResult> {
 
+
+    @Nonnull
+    private final ProjectId projectId;
+
     private final ProjectDetailsManager projectDetailsManager;
 
     @Inject
-    public GetProjectSettingsActionHandler(ProjectManager projectManager,
-                                           ProjectDetailsManager projectDetailsManager,
-                                           AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetProjectSettingsActionHandler(@Nonnull AccessManager accessManager,
+                                           @Nonnull ProjectId projectId,
+                                           ProjectDetailsManager projectDetailsManager) {
+        super(accessManager);
+        this.projectId = projectId;
         this.projectDetailsManager = projectDetailsManager;
     }
 
@@ -45,8 +51,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     }
 
     @Override
-    protected GetProjectSettingsResult execute(GetProjectSettingsAction action, Project project, ExecutionContext executionContext) {
-        ProjectId projectId = action.getProjectId();
+    public GetProjectSettingsResult execute(GetProjectSettingsAction action, ExecutionContext executionContext) {
         return new GetProjectSettingsResult(projectDetailsManager.getProjectSettings(projectId));
     }
 

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -21,10 +22,14 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  */
 public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectActionHandler<GetHeadRevisionNumberAction, GetHeadRevisionNumberResult> {
 
+    @Nonnull
+    private final RevisionManager revisionManager;
+
     @Inject
-    public GetHeadRevisionNumberActionHandler(ProjectManager projectManager,
-                                              AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetHeadRevisionNumberActionHandler(@Nonnull AccessManager accessManager,
+                                              @Nonnull RevisionManager revisionManager) {
+        super(accessManager);
+        this.revisionManager = revisionManager;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectAction
     }
 
     @Override
-    protected GetHeadRevisionNumberResult execute(GetHeadRevisionNumberAction action, Project project, ExecutionContext executionContext) {
-        return new GetHeadRevisionNumberResult(project.getRevisionNumber());
+    public GetHeadRevisionNumberResult execute(GetHeadRevisionNumberAction action, ExecutionContext executionContext) {
+        return new GetHeadRevisionNumberResult(revisionManager.getCurrentRevision());
     }
 }

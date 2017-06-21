@@ -15,7 +15,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  */
 public class ClassFrameChangedEvent extends EntityFrameChangedEvent<OWLClass, ClassFrameChangedEventHandler> {
 
-    public transient static final Event.Type<ClassFrameChangedEventHandler> TYPE = new Event.Type<ClassFrameChangedEventHandler>();
+    public transient static final Event.Type<ClassFrameChangedEventHandler> CLASS_FRAME_CHANGED = new Event.Type<ClassFrameChangedEventHandler>();
 
     public ClassFrameChangedEvent(OWLClass entity, ProjectId projectId, UserId userId) {
         super(entity, projectId, userId);
@@ -32,7 +32,7 @@ public class ClassFrameChangedEvent extends EntityFrameChangedEvent<OWLClass, Cl
      */
     @Override
     public Event.Type<ClassFrameChangedEventHandler> getAssociatedType() {
-        return TYPE;
+        return CLASS_FRAME_CHANGED;
     }
 
     /**

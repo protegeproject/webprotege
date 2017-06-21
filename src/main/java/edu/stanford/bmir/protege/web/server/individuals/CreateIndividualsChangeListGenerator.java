@@ -2,15 +2,18 @@ package edu.stanford.bmir.protege.web.server.individuals;
 
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,17 +23,27 @@ import java.util.Set;
  */
 public class CreateIndividualsChangeListGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLNamedIndividual, OWLClass> {
 
-    public CreateIndividualsChangeListGenerator(Set<String> browserTexts, Optional<OWLClass> parent) {
-        super(EntityType.NAMED_INDIVIDUAL, browserTexts, parent);
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Inject
+    public CreateIndividualsChangeListGenerator(@Nonnull Set<String> browserTexts,
+                                                @Nonnull Optional<OWLClass> parent,
+                                                @Nonnull OWLOntology rootOntology,
+                                                @Nonnull OWLDataFactory dataFactory) {
+        super(NAMED_INDIVIDUAL, browserTexts, parent, rootOntology, dataFactory);
+        this.dataFactory = checkNotNull(dataFactory);
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity, Project project, ChangeGenerationContext context, Optional<OWLClass> parent) {
+    protected Set<OWLAxiom> createParentPlacementAxioms(OWLNamedIndividual freshEntity,
+                                                        ChangeGenerationContext context,
+                                                        Optional<OWLClass> parent) {
         if(parent.isPresent() && !parent.get().isOWLThing()) {
-            return Collections.singleton(project.getDataFactory().getOWLClassAssertionAxiom(parent.get(), freshEntity));
+            return singleton(dataFactory.getOWLClassAssertionAxiom(parent.get(), freshEntity));
         }
         else {
-            return Collections.emptySet();
+            return emptySet();
         }
     }
 }

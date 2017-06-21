@@ -5,11 +5,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -20,9 +22,14 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  */
 public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHandler<GetEntityRenderingAction, GetEntityRenderingResult> {
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
-    public GetEntityRenderingActionHandler(ProjectManager projectManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetEntityRenderingActionHandler(@Nonnull AccessManager accessManager,
+                                           @Nonnull RenderingManager renderingManager) {
+        super(accessManager);
+        this.renderingManager = renderingManager;
     }
 
     @Override
@@ -37,11 +44,9 @@ public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHan
     }
 
     @Override
-    protected GetEntityRenderingResult execute(GetEntityRenderingAction action,
-                                               final Project project,
+    public GetEntityRenderingResult execute(GetEntityRenderingAction action,
                                                ExecutionContext executionContext) {
         OWLEntity entity = action.getEntity();
-        HasGetFrameRendering renderer = project.getRenderingManager();
-        return new GetEntityRenderingResult(renderer.getFrameRendering(entity));
+        return new GetEntityRenderingResult(renderingManager.getFrameRendering(entity));
     }
 }

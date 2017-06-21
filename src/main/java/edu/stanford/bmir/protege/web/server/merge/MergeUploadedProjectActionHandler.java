@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.*;
@@ -44,12 +45,21 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
 
     private final File uploadsDirectory;
 
+    @Nonnull
+    private final OWLOntology projectRootOntology;
+
+    @Nonnull
+    private final ChangeManager changeManager;
+
     @Inject
-    public MergeUploadedProjectActionHandler(ProjectManager projectManager,
-                                             @UploadsDirectory File uploadsDirectory,
-                                             AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public MergeUploadedProjectActionHandler(@Nonnull AccessManager accessManager,
+                                             @Nonnull @UploadsDirectory File uploadsDirectory,
+                                             @Nonnull @RootOntology OWLOntology projectRootOntology,
+                                             @Nonnull ChangeManager changeManager) {
+        super(accessManager);
         this.uploadsDirectory = uploadsDirectory;
+        this.projectRootOntology = projectRootOntology;
+        this.changeManager = changeManager;
     }
 
     @Nonnull
@@ -59,11 +69,10 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected MergeUploadedProjectResult execute(MergeUploadedProjectAction action, Project project, ExecutionContext executionContext) {
+    public MergeUploadedProjectResult execute(MergeUploadedProjectAction action, ExecutionContext executionContext) {
         try {
             DocumentId documentId = action.getUploadedDocumentId();
             final OWLOntology uploadedRootOntology = loadUploadedOntology(documentId);
-            final OWLOntology projectRootOntology = project.getRootOntology();
             ModifiedProjectOntologiesCalculator calculator = new ModifiedProjectOntologiesCalculator(
                     ImmutableSet.copyOf(projectRootOntology.getImportsClosure()),
                     ImmutableSet.copyOf(uploadedRootOntology.getImportsClosure()),
@@ -71,23 +80,23 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
 
             Set<OntologyDiff> ontologyDiffSet = calculator.getModifiedOntologyDiffs();
             List<OWLOntologyChange> changeList = new ArrayList<>();
-            HasGetOntologyById man = project.getRootOntology().getOWLOntologyManager();
+            HasGetOntologyById man = projectRootOntology.getOWLOntologyManager();
             for(OntologyDiff diff : ontologyDiffSet) {
                 OntologyDiff2OntologyChanges diff2Changes = new OntologyDiff2OntologyChanges();
                 List<OWLOntologyChange> changes = diff2Changes.getOntologyChangesFromDiff(diff, man);
                 changeList.addAll(changes);
             }
-            applyChanges(action.getCommitMessage(), project, changeList, executionContext);
+            applyChanges(action.getCommitMessage(), changeList, executionContext);
         } catch (IOException | OWLOntologyCreationException e) {
             throw new ActionExecutionException(e);
         }
         return new MergeUploadedProjectResult();
     }
 
-    private void applyChanges(String commitMessage, Project project, final List<OWLOntologyChange> changes, ExecutionContext executionContext) {
-        project.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Void>() {
+    private void applyChanges(String commitMessage, final List<OWLOntologyChange> changes, ExecutionContext executionContext) {
+        changeManager.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Void>() {
             @Override
-            public OntologyChangeList<Void> generateChanges(Project project, ChangeGenerationContext context) {
+            public OntologyChangeList<Void> generateChanges(ChangeGenerationContext context) {
                 OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
                 builder.addAll(changes);
                 return builder.build();

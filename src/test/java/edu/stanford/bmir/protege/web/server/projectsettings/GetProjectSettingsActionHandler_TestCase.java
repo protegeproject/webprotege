@@ -57,7 +57,7 @@ public class GetProjectSettingsActionHandler_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        actionHandler = new GetProjectSettingsActionHandler(projectManager, mdm, accessManager);
+        actionHandler = new GetProjectSettingsActionHandler(accessManager, projectId, mdm);
 
         when(action.getProjectId()).thenReturn(projectId);
         when(mdm.getProjectSettings(projectId)).thenReturn(projectSettings);
@@ -66,7 +66,7 @@ public class GetProjectSettingsActionHandler_TestCase {
 
     @Test
     public void shouldReturnSettings() {
-        GetProjectSettingsResult result = actionHandler.execute(action, project, executionContext);
+        GetProjectSettingsResult result = actionHandler.execute(action, executionContext);
         assertThat(result.getProjectSettings(), is(projectSettings));
     }
 }

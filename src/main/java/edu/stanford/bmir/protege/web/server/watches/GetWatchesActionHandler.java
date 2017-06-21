@@ -25,10 +25,14 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CH
  */
 public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<GetWatchesAction, GetWatchesResult> {
 
+    @Nonnull
+    private final WatchManager watchManager;
+
     @Inject
-    public GetWatchesActionHandler(ProjectManager projectManager,
-                                   AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetWatchesActionHandler(@Nonnull AccessManager accessManager,
+                                   @Nonnull WatchManager watchManager) {
+        super(accessManager);
+        this.watchManager = watchManager;
     }
 
     @Override
@@ -43,8 +47,7 @@ public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<Get
     }
 
     @Override
-    protected GetWatchesResult execute(GetWatchesAction action, Project project, ExecutionContext executionContext) {
-        WatchManager watchManager = project.getWatchManager();
+    public GetWatchesResult execute(GetWatchesAction action, ExecutionContext executionContext) {
         Set<Watch> watches = watchManager.getDirectWatches(action.getEntity(), action.getUserId());
         return new GetWatchesResult(watches);
     }

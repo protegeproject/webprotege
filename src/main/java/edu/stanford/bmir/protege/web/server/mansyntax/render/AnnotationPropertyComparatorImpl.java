@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Comparator;
 
 /**
@@ -10,11 +12,15 @@ import java.util.Comparator;
  */
 public class AnnotationPropertyComparatorImpl implements Comparator<OWLAnnotationProperty> {
 
-    private ShortFormProvider shortFormProvider;
+    @Nonnull
+    private final ShortFormProvider shortFormProvider;
 
+    @Nonnull
     private final IRIIndexProvider indexProvider;
 
-    public AnnotationPropertyComparatorImpl(ShortFormProvider shortFormProvider, IRIIndexProvider iriIndexProvider) {
+    @Inject
+    public AnnotationPropertyComparatorImpl(@Nonnull ShortFormProvider shortFormProvider,
+                                            @Nonnull IRIIndexProvider iriIndexProvider) {
         this.shortFormProvider = shortFormProvider;
         this.indexProvider = iriIndexProvider;
     }
