@@ -59,14 +59,11 @@ public class GetWatchedEntitiesActionHandler_TestCase {
     private ImmutableList<ProjectChange> projectChanges;
 
     @Mock
-    private ProjectManager projectManager;
-
-    @Mock
     private AccessManager accessManager;
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetWatchedEntityChangesActionHandler(projectManager, accessManager);
+        handler = new GetWatchedEntityChangesActionHandler(accessManager, watchManager, watchedChangesManager);
         when(action.getUserId()).thenReturn(userId);
         when(project.getWatchManager()).thenReturn(watchManager);
         when(watchManager.getWatches(userId)).thenReturn(watches);
@@ -76,7 +73,7 @@ public class GetWatchedEntitiesActionHandler_TestCase {
 
     @Test
     public void shouldGetChanges() {
-        GetWatchedEntityChangesResult result = handler.execute(action, project, context);
+        GetWatchedEntityChangesResult result = handler.execute(action, context);
         assertThat(result.getChanges(), is(projectChanges));
     }
 }

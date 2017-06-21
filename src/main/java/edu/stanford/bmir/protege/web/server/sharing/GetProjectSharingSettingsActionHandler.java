@@ -25,8 +25,8 @@ public class GetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
     private final ProjectSharingSettingsManager sharingSettingsManager;
 
     @Inject
-    public GetProjectSharingSettingsActionHandler(ProjectManager projectManager, ProjectSharingSettingsManager sharingSettingsManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager, AccessManager accessManager) {
+        super(accessManager);
         this.sharingSettingsManager = sharingSettingsManager;
     }
 
@@ -37,7 +37,7 @@ public class GetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
     }
 
     @Override
-    protected GetProjectSharingSettingsResult execute(GetProjectSharingSettingsAction action, Project project, ExecutionContext executionContext) {
+    public GetProjectSharingSettingsResult execute(GetProjectSharingSettingsAction action, ExecutionContext executionContext) {
         ProjectSharingSettings settings = sharingSettingsManager.getProjectSharingSettings(action.getProjectId());
         return new GetProjectSharingSettingsResult(settings);
     }

@@ -40,9 +40,6 @@ public class GetMetricsActionHandlerTestCase {
     protected ImmutableList<MetricValue> metricValues;
 
     @Mock
-    private ProjectManager projectManager;
-
-    @Mock
     private AccessManager accessManager;
 
 
@@ -54,8 +51,8 @@ public class GetMetricsActionHandlerTestCase {
 
     @Test
     public void shouldReturnMetricValues() {
-        GetMetricsActionHandler handler = new GetMetricsActionHandler(projectManager, accessManager);
-        GetMetricsResult result = handler.execute(new GetMetricsAction(projectId), project, mock(ExecutionContext.class));
+        GetMetricsActionHandler handler = new GetMetricsActionHandler(accessManager, metricsManager);
+        GetMetricsResult result = handler.execute(new GetMetricsAction(projectId), mock(ExecutionContext.class));
         assertThat(result.getMetricValues(), is(equalTo(metricValues)));
     }
 

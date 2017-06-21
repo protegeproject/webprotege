@@ -48,7 +48,7 @@ public class GetRevisionSummariesActionHandler_TestCase {
     private RevisionSummary summaryA, summaryB, summaryC;
 
     @Mock
-    private ProjectManager projectManager;
+    private RevisionManager revisionManager;
 
     @Mock
     private AccessManager accessManager;
@@ -59,14 +59,14 @@ public class GetRevisionSummariesActionHandler_TestCase {
         revisionSummaries.add(summaryA);
         revisionSummaries.add(summaryB);
         revisionSummaries.add(summaryC);
-        handler = new GetRevisionSummariesActionHandler(projectManager, accessManager);
+        handler = new GetRevisionSummariesActionHandler(accessManager, revisionManager);
         when(project.getChangeManager()).thenReturn(changeManager);
         when(changeManager.getRevisionSummaries()).thenReturn(revisionSummaries);
     }
 
     @Test
     public void shouldReturnRevisionSummaries() {
-        GetRevisionSummariesResult result = handler.execute(action, project, executionContext);
+        GetRevisionSummariesResult result = handler.execute(action, executionContext);
         assertThat(result.getRevisionSummaries(), contains(summaryA, summaryB, summaryC));
     }
 }

@@ -3,20 +3,20 @@ package edu.stanford.bmir.protege.web.client.renderer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
-import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent.CLASS_FRAME_CHANGED;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
@@ -43,7 +43,7 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(new ScrollPanel(html));
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ClassFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
+                                        CLASS_FRAME_CHANGED, event -> handleEntityChange(event.getEntity()));
         eventBus.addProjectEventHandler(getProjectId(),
                                         ObjectPropertyFrameChangedEvent.TYPE, event -> handleEntityChange(event.getEntity()));
         eventBus.addProjectEventHandler(getProjectId(),
@@ -63,12 +63,8 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         if (entity.isPresent()) {
             dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entity.get()),
-                                           new DispatchServiceCallback<GetEntityRenderingResult>() {
-                                               @Override
-                                               public void handleSuccess(GetEntityRenderingResult result) {
-                                                   html.setHTML(result.getRendering());
-                                               }
-                                           });
+                                           this,
+                                           result -> html.setHTML(result.getRendering()));
         }
     }
 

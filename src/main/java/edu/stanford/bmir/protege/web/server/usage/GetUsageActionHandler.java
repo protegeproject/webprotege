@@ -6,8 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -26,9 +29,25 @@ import java.util.Set;
  */
 public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUsageAction, GetUsageResult> {
 
+    @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
-    public GetUsageActionHandler(ProjectManager projectManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetUsageActionHandler(@Nonnull AccessManager accessManager,
+                                 @Nonnull ProjectId projectId,
+                                 @Nonnull @RootOntology OWLOntology rootOntology,
+                                 @Nonnull RenderingManager renderingManager) {
+        super(accessManager);
+        this.projectId = projectId;
+        this.rootOntology = rootOntology;
+        this.renderingManager = renderingManager;
     }
 
     @Override
@@ -43,16 +62,16 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
     }
 
     @Override
-    protected GetUsageResult execute(GetUsageAction action, Project project, ExecutionContext executionContext) {
+    public GetUsageResult execute(GetUsageAction action, ExecutionContext executionContext) {
         List<UsageReference> usage = new ArrayList<UsageReference>();
         final OWLEntity subject = action.getSubject();
-        ReferencingAxiomVisitor visitor = new ReferencingAxiomVisitor(project, subject);
+        ReferencingAxiomVisitor visitor = new ReferencingAxiomVisitor(subject, rootOntology, renderingManager);
         final UsageFilter usageFilter = action.getUsageFilter();
         int totalReferenceCount = 0;
         int counter = 0;
 
         final IRI subjectIRI = subject.getIRI();
-        for (OWLOntology ont : project.getRootOntology().getImportsClosure()) {
+        for (OWLOntology ont : rootOntology.getImportsClosure()) {
             Set<OWLAxiom> references = ont.getReferencingAxioms(subject);
             for (OWLAxiom reference : references) {
                 counter = processAxiom(reference, usageFilter, action, usage, visitor, counter);
@@ -103,7 +122,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
 
 
         Collections.sort(usage, new UsageReferenceComparator(subject));
-        return new GetUsageResult(project.getProjectId(), usage, totalReferenceCount);
+        return new GetUsageResult(projectId, usage, totalReferenceCount);
     }
 
     private int processAxiom(OWLAxiom reference, UsageFilter usageFilter, GetUsageAction action, List<UsageReference> result, ReferencingAxiomVisitor visitor, int counter) {

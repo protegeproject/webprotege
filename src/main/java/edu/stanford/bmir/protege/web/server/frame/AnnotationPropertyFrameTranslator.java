@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,33 +23,46 @@ import java.util.Set;
  */
 public class AnnotationPropertyFrameTranslator implements FrameTranslator<AnnotationPropertyFrame, OWLAnnotationPropertyData> {
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Inject
+    public AnnotationPropertyFrameTranslator(@Nonnull RenderingManager renderingManager,
+                                             @Nonnull OWLOntology rootOntology) {
+        this.renderingManager = renderingManager;
+        this.rootOntology = rootOntology;
+    }
+
     @Override
-    public AnnotationPropertyFrame getFrame(OWLAnnotationPropertyData subject, OWLOntology rootOntology, Project project) {
+    public AnnotationPropertyFrame getFrame(OWLAnnotationPropertyData subject) {
         Set<PropertyAnnotationValue> propertyValues = new HashSet<>();
         Set<OWLEntityData> domains = new HashSet<>();
         Set<OWLEntityData> ranges = new HashSet<>();
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getEntity().getIRI())) {
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {
-                    propertyValues.add(new PropertyAnnotationValue(project.getRenderingManager().getRendering(ax.getProperty()),
-                                                                   project.getRenderingManager().getRendering(ax.getValue()),
+                    propertyValues.add(new PropertyAnnotationValue(renderingManager.getRendering(ax.getProperty()),
+                                                                   renderingManager.getRendering(ax.getValue()),
                                                                    State.ASSERTED));
                 }
             }
             for(OWLAnnotationPropertyDomainAxiom ax : ont.getAnnotationPropertyDomainAxioms(subject.getEntity())) {
                 rootOntology.getEntitiesInSignature(ax.getDomain(), Imports.INCLUDED)
                         .stream()
-                        .map(e -> project.getRenderingManager().getRendering(e))
+                        .map(renderingManager::getRendering)
                         .forEach(domains::add);
             }
             for(OWLAnnotationPropertyRangeAxiom ax : ont.getAnnotationPropertyRangeAxioms(subject.getEntity())) {
                 rootOntology.getEntitiesInSignature(ax.getRange(), Imports.INCLUDED)
                         .stream()
-                        .map(e -> project.getRenderingManager().getRendering(e))
+                        .map(renderingManager::getRendering)
                         .forEach(ranges::add);
             }
         }
-        return new AnnotationPropertyFrame(project.getRenderingManager().getRendering(subject.getEntity()),
+        return new AnnotationPropertyFrame(renderingManager.getRendering(subject.getEntity()),
                                            propertyValues, domains, ranges);
     }
 

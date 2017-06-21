@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.HasHasAncestor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.util.regex.Pattern;
 
 /**
@@ -12,21 +13,19 @@ import java.util.regex.Pattern;
 public class StructuralPropertyValueSubsumptionChecker implements PropertyValueSubsumptionChecker {
 
 
-    private HasHasAncestor<OWLClass, OWLClass> classAncestorChecker;
+    private final HasHasAncestor<OWLClass, OWLClass> classAncestorChecker;
 
-    private HasHasAncestor<OWLObjectProperty, OWLObjectProperty> objectPropertyAncestorChecker;
+    private final HasHasAncestor<OWLObjectProperty, OWLObjectProperty> objectPropertyAncestorChecker;
 
-    private HasHasAncestor<OWLDataProperty, OWLDataProperty> dataPropertyAncestorChecker;
+    private final HasHasAncestor<OWLDataProperty, OWLDataProperty> dataPropertyAncestorChecker;
 
-    private HasHasAncestor<OWLNamedIndividual, OWLClass> individualClassAncestorChecker;
+    private final HasHasAncestor<OWLNamedIndividual, OWLClass> individualClassAncestorChecker;
 
+    @Inject
     public StructuralPropertyValueSubsumptionChecker(HasHasAncestor<OWLClass, OWLClass> classAncestorChecker,
-                                                     HasHasAncestor<OWLObjectProperty,
-                                                             OWLObjectProperty> objectPropertyAncestorChecker,
-                                                     HasHasAncestor<OWLDataProperty,
-                                                             OWLDataProperty> dataPropertyAncestorChecker,
-                                                     HasHasAncestor<OWLNamedIndividual,
-                                                             OWLClass> individualClassAncestorChecker) {
+                                                     HasHasAncestor<OWLObjectProperty, OWLObjectProperty> objectPropertyAncestorChecker,
+                                                     HasHasAncestor<OWLDataProperty, OWLDataProperty> dataPropertyAncestorChecker,
+                                                     HasHasAncestor<OWLNamedIndividual, OWLClass> individualClassAncestorChecker) {
         this.classAncestorChecker = classAncestorChecker;
         this.objectPropertyAncestorChecker = objectPropertyAncestorChecker;
         this.dataPropertyAncestorChecker = dataPropertyAncestorChecker;

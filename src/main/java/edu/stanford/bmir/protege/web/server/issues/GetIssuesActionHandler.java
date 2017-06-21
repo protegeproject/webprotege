@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,13 +24,14 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 
 //    private final IssueRepository repository;
 
+    @Nonnull
+    private final ProjectId projectId;
+
     @Inject
-    public GetIssuesActionHandler(ProjectManager projectManager,
-                                  @Nonnull AccessManager accessManager
-                                  //IssueRepository repository
-                                  ) {
-        super(projectManager, accessManager);
-//        this.repository = repository;
+    public GetIssuesActionHandler(@Nonnull AccessManager accessManager,
+                                  @Nonnull ProjectId projectId) {
+        super(accessManager);
+        this.projectId = projectId;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
     }
 
     @Override
-    protected GetIssuesResult execute(GetIssuesAction action, Project project, ExecutionContext executionContext) {
+    public GetIssuesResult execute(GetIssuesAction action, ExecutionContext executionContext) {
         // TODO: Should work out the issue number
 //        int issueNumber = repository.findOneByProjectIdOrderByNumberDesc(project.getProjectId())
 //                .map(i -> i.getNumber())
@@ -69,6 +71,6 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 //
 
 
-        return new GetIssuesResult(project.getProjectId(), new ArrayList<>());
+        return new GetIssuesResult(projectId, new ArrayList<>());
     }
 }

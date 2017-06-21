@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProv
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
@@ -25,6 +27,8 @@ import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,44 +46,61 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_A
  */
 public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHandler<ComputeProjectMergeAction, ComputeProjectMergeResult> {
 
+    private static final Logger logger = LoggerFactory.getLogger(ComputeProjectMergeActionHandler.class);
+
+    @Nonnull
+    @UploadsDirectory
     private final File uploadsDirectory;
 
+    @Nonnull
+    @RootOntology
+    private final OWLOntology projectRootOntology;
+
+    @Nonnull
+    private final Comparator<OWLAxiom> axiomComparator;
+
+    @Nonnull
+    private final ShortFormProvider shortFormProvider;
+
+    @Nonnull
+    private final HasLang hasLang;
+
     @Inject
-    public ComputeProjectMergeActionHandler(@UploadsDirectory File uploadsDirectory,
-                                            ProjectManager projectManager,
-                                            AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public ComputeProjectMergeActionHandler(@Nonnull AccessManager accessManager,
+                                            @Nonnull @UploadsDirectory File uploadsDirectory,
+                                            @Nonnull @RootOntology OWLOntology projectRootOntology,
+                                            @Nonnull Comparator<OWLAxiom> axiomComparator,
+                                            @Nonnull ShortFormProvider shortFormProvider,
+                                            @Nonnull HasLang lang) {
+        super(accessManager);
         this.uploadsDirectory = uploadsDirectory;
+        this.projectRootOntology = projectRootOntology;
+        this.axiomComparator = axiomComparator;
+        this.shortFormProvider = shortFormProvider;
+        this.hasLang = lang;
     }
 
     @Nonnull
     @Override
-    protected Iterable getRequiredExecutableBuiltInActions() {
+    protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
         return Arrays.asList(EDIT_ONTOLOGY, UPLOAD_AND_MERGE);
     }
 
     @Override
-    protected ComputeProjectMergeResult execute(ComputeProjectMergeAction action, final Project project, ExecutionContext executionContext) {
+    public ComputeProjectMergeResult execute(ComputeProjectMergeAction action, ExecutionContext executionContext) {
         try {
             DocumentId documentId = action.getProjectDocumentId();
 
             OWLOntology uploadedRootOntology = loadUploadedOntology(documentId);
-            OWLOntology projectRootOntology = project.getRootOntology();
 
             Set<OntologyDiff> diffs = computeDiff(uploadedRootOntology, projectRootOntology);
 
-            List<DiffElement<String, SafeHtml>> transformedDiff = renderDiff(
-                    project,
-                    projectRootOntology,
-                    uploadedRootOntology,
-                    project.getRenderingManager().getShortFormProvider(),
-                    project.getLang(),
-                    diffs);
+            List<DiffElement<String, SafeHtml>> transformedDiff = renderDiff(uploadedRootOntology, diffs);
 
             return new ComputeProjectMergeResult(transformedDiff);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("An error occurred whilst merging ontologies", e);
             throw new RuntimeException(e);
         }
     }
@@ -101,27 +122,16 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
         return importer.importRawProjectSources(rawProjectSources);
     }
 
-    private List<DiffElement<String, SafeHtml>> renderDiff(
-            Project project,
-            OWLOntology projectRootOntology,
-            OWLOntology uploadedRootOntology,
-            ShortFormProvider projectShortFormProvider,
-            String lang,
-            Set<OntologyDiff> diffs) {
+    private List<DiffElement<String, SafeHtml>> renderDiff(OWLOntology uploadedRootOntology, Set<OntologyDiff> diffs) {
 
-        final ShortFormProvider dualShortFormProvider = getShortFormProvider(
-                projectRootOntology,
-                uploadedRootOntology,
-                projectShortFormProvider,
-                lang);
+        final ShortFormProvider dualShortFormProvider = getShortFormProvider(uploadedRootOntology);
 
-        final OWLObjectRenderer renderer = getManchesterSyntaxObjectRenderer(
-                projectRootOntology,
-                uploadedRootOntology,
-                dualShortFormProvider);
+        final OWLObjectRenderer renderer = getManchesterSyntaxObjectRenderer(projectRootOntology,
+                                                                             uploadedRootOntology,
+                                                                             dualShortFormProvider);
 
         List<DiffElement<String, OWLAxiom>> diffElements = getDiffElements(diffs);
-        sortDiff(dualShortFormProvider, project, diffElements);
+        sortDiff(diffElements);
 
         // Transform from OWLAxiom to SafeHtml
         List<DiffElement<String, SafeHtml>> transformedDiff = new ArrayList<>();
@@ -147,9 +157,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
 
-    private void sortDiff(ShortFormProvider dualShortFormProvider, Project project, List<DiffElement<String, OWLAxiom>> diffElements) {
-        final Comparator<OWLAxiom> axiomComparator = getDefaultAxiomComparator(dualShortFormProvider, project);
-
+    private void sortDiff(List<DiffElement<String, OWLAxiom>> diffElements) {
 
         Collections.sort(diffElements, new Comparator<DiffElement<String, OWLAxiom>>() {
             @Override
@@ -180,13 +188,9 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
         return diffElements;
     }
 
-    private Comparator<OWLAxiom> getDefaultAxiomComparator(ShortFormProvider dualShortFormProvider,
-                                                           Project project) {
-
-        return project.getAxiomComparator();
-    }
-
-    private OWLObjectRenderer getManchesterSyntaxObjectRenderer(final OWLOntology projectRootOntology, final OWLOntology uploadedRootOntology, ShortFormProvider dualShortFormProvider) {
+    private OWLObjectRenderer getManchesterSyntaxObjectRenderer(final OWLOntology projectRootOntology,
+                                                                final OWLOntology uploadedRootOntology,
+                                                                ShortFormProvider dualShortFormProvider) {
         return new ManchesterSyntaxObjectRenderer(
                 dualShortFormProvider,
                 new EntityIRIChecker() {
@@ -216,10 +220,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
     private ShortFormProvider getShortFormProvider(
-            final OWLOntology projectRootOntology,
-            final OWLOntology uploadedRootOntology,
-            final ShortFormProvider projectShortFormProvider,
-            final String lang) {
+            final OWLOntology uploadedRootOntology) {
 
         final ShortFormProvider uploadedOntologyShortFormProvider = new WebProtegeShortFormProvider(
                 new WebProtegeIRIShortFormProvider(
@@ -227,7 +228,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                         new HasAnnotationAssertionAxiomsImpl(uploadedRootOntology), new HasLang() {
                     @Override
                     public String getLang() {
-                        return lang;
+                        return hasLang.getLang();
                     }
                 }
                 )
@@ -237,13 +238,16 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
             @Override
             public String getShortForm(OWLEntity owlEntity) {
                 if (owlEntity.isBuiltIn()) {
-                    return projectShortFormProvider.getShortForm(owlEntity);
-                } else if (projectRootOntology.containsEntityInSignature(owlEntity, true)) {
-                    return projectShortFormProvider.getShortForm(owlEntity);
-                } else if (uploadedRootOntology.containsEntityInSignature(owlEntity, true)) {
+                    return shortFormProvider.getShortForm(owlEntity);
+                }
+                else if (projectRootOntology.containsEntityInSignature(owlEntity, true)) {
+                    return shortFormProvider.getShortForm(owlEntity);
+                }
+                else if (uploadedRootOntology.containsEntityInSignature(owlEntity, true)) {
                     return uploadedOntologyShortFormProvider.getShortForm(owlEntity);
-                } else {
-                    return projectShortFormProvider.getShortForm(owlEntity);
+                }
+                else {
+                    return shortFormProvider.getShortForm(owlEntity);
                 }
             }
 

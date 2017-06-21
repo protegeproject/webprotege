@@ -8,9 +8,11 @@ import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
@@ -27,6 +29,7 @@ import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 
@@ -38,17 +41,38 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
+
     @Inject
-    public GetManchesterSyntaxFrameCompletionsActionHandler(ProjectManager projectManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetManchesterSyntaxFrameCompletionsActionHandler(@Nonnull AccessManager accessManager,
+                                                            @Nonnull RenderingManager renderingManager,
+                                                            @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
+                                                            @Nonnull @RootOntology OWLOntology rootOntology,
+                                                            @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
+        super(accessManager);
+        this.renderingManager = renderingManager;
+        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
+        this.rootOntology = rootOntology;
+        this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
     }
 
     @Override
-    protected GetManchesterSyntaxFrameCompletionsResult execute(GetManchesterSyntaxFrameCompletionsAction action, Project project, ExecutionContext executionContext) {
+    public GetManchesterSyntaxFrameCompletionsResult execute(GetManchesterSyntaxFrameCompletionsAction action, ExecutionContext executionContext) {
         String syntax = action.getSyntax();
         int from = action.getFrom();
         String triggerText = syntax.substring(0, from) + "\u0000";
-        ManchesterSyntaxFrameParser parser = project.getManchesterSyntaxFrameParser();
+        ManchesterSyntaxFrameParser parser = manchesterSyntaxFrameParserProvider.get();
         try {
             parser.parse(triggerText, action);
         } catch (ParserException e) {
@@ -72,13 +96,13 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
             String lastWordPrefix = syntax.substring(lastWordStartIndex, from).toLowerCase();
             List<AutoCompletionChoice> choices = Lists.newArrayList();
 
-            List<AutoCompletionChoice> entityChoices = getEntityAutocompletionChoices(action, project, e, fromPos, toPos, lastWordPrefix);
+            List<AutoCompletionChoice> entityChoices = getEntityAutocompletionChoices(action, e, fromPos, toPos, lastWordPrefix);
             choices.addAll(entityChoices);
 
             List<AutoCompletionChoice> expectedKeywordChoices = getKeywordAutoCompletionChoices(e, fromPos, toPos, lastWordPrefix);
             choices.addAll(expectedKeywordChoices);
 
-            List<AutoCompletionChoice> ontologyNameChoices = getNameOntologyAutocompletionChoices(project, e, fromPos, toPos, lastWordPrefix);
+            List<AutoCompletionChoice> ontologyNameChoices = getNameOntologyAutocompletionChoices(e, fromPos, toPos, lastWordPrefix);
             choices.addAll(ontologyNameChoices);
 
 
@@ -87,11 +111,11 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         return new GetManchesterSyntaxFrameCompletionsResult(AutoCompletionResult.emptyResult());
     }
 
-    private List<AutoCompletionChoice> getEntityAutocompletionChoices(GetManchesterSyntaxFrameCompletionsAction action, Project project, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
+    private List<AutoCompletionChoice> getEntityAutocompletionChoices(GetManchesterSyntaxFrameCompletionsAction action, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
         List<AutoCompletionMatch> matches = Lists.newArrayList();
         Set<EntityType<?>> expectedEntityTypes = Sets.newHashSet(ManchesterSyntaxFrameParser.getExpectedEntityTypes(e));
         if(!expectedEntityTypes.isEmpty()) {
-            BidirectionalShortFormProvider shortFormProvider = project.getRenderingManager().getShortFormProvider();
+            BidirectionalShortFormProvider shortFormProvider = renderingManager.getShortFormProvider();
             for(String shortForm : shortFormProvider.getShortForms()) {
                 EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
                 Optional<EntityNameMatchResult> match = entityNameMatcher.findIn(shortForm);
@@ -124,12 +148,11 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     }
 
-    private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(Project project, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
+    private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
         List<AutoCompletionChoice> choices = Lists.newArrayList();
         if(e.isOntologyNameExpected()) {
-            WebProtegeOntologyIRIShortFormProvider sfp = new WebProtegeOntologyIRIShortFormProvider(project.getRootOntology());
-            for(OWLOntology ont : project.getRootOntology().getImportsClosure()) {
-                String ontologyName = sfp.getShortForm(ont);
+            for(OWLOntology ont : rootOntology.getImportsClosure()) {
+                String ontologyName = ontologyIRIShortFormProvider.getShortForm(ont);
                 if(lastWordPrefix.isEmpty() || ontologyName.toLowerCase().startsWith(lastWordPrefix)) {
                     choices.add(new AutoCompletionChoice(ontologyName, ontologyName, "cm-ontology-list", fromPos, toPos));
                 }

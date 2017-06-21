@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.*;
+import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
+import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataManager;
 import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataProvider;
@@ -26,6 +28,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsI
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesWithIRIImpl;
+import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
@@ -389,8 +392,8 @@ public class ProjectModule {
     }
 
     @Provides
-    HasApplyChanges providesHasApplyChanges(Project project) {
-        return project;
+    HasApplyChanges providesHasApplyChanges(ChangeManager manager) {
+        return manager;
     }
 
 
@@ -442,7 +445,7 @@ public class ProjectModule {
     }
 
     @Provides
-    Comparator<? super OWLAnnotationProperty> providesAnnotationPropertyComparator(OWLObjectComparatorImpl impl) {
+    Comparator<? super OWLAnnotationProperty> providesAnnotationPropertyComparator(AnnotationPropertyComparatorImpl impl) {
         return impl;
     }
 
@@ -464,6 +467,11 @@ public class ProjectModule {
     @Provides
     Comparator<? super SWRLAtom> providesSWRLAtomComparator(OWLObjectComparatorImpl impl) {
         return impl;
+    }
+
+    @Provides
+    IRIIndexProvider provideIRIIndexProvider() {
+        return IRIIndexProvider.withDefaultAnnotationPropertyOrdering();
     }
 
     @Provides
@@ -512,6 +520,33 @@ public class ProjectModule {
     List<AxiomType<?>> providesAxiomTypeList() {
         return DefaultAxiomTypeOrdering.get();
     }
+
+    @Provides
+    PropertyValueSubsumptionChecker providePropertyValueSubsumptionChecker(StructuralPropertyValueSubsumptionChecker impl) {
+        return impl;
+    }
+    
+    @Provides
+    HasHasAncestor<OWLClass, OWLClass> provideClassClassHasAncestor(ClassClassAncestorChecker checker) {
+        return checker;
+    }
+    
+    @Provides
+    HasHasAncestor<OWLObjectProperty, OWLObjectProperty> provideObjectPropertyObjectPropertyHasAncestor(ObjectPropertyObjectPropertyAncestorChecker checker) {
+        return checker;
+    }
+
+
+    @Provides
+    HasHasAncestor<OWLDataProperty, OWLDataProperty> provideDataPropertyDataPropertyHasAncestor(DataPropertyDataPropertyAncestorChecker checker) {
+        return checker;
+    }
+
+    @Provides
+    HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(NamedIndividualClassAncestorChecker checker) {
+        return checker;
+    }
+
 
 
 

@@ -4,21 +4,19 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
-import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,14 +26,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
 
+    @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final PlaceUrl placeUrl;
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
     @Inject
-    public LookupEntitiesActionHandler(ProjectManager projectManager,
-                                       AccessManager accessManager,
-                                       PlaceUrl placeUrl) {
-        super(projectManager, accessManager);
-        this.placeUrl = checkNotNull(placeUrl);
+    public LookupEntitiesActionHandler(@Nonnull AccessManager accessManager,
+                                       @Nonnull ProjectId projectId,
+                                       @Nonnull PlaceUrl placeUrl,
+                                       @Nonnull RenderingManager renderingManager) {
+        super(accessManager);
+        this.projectId = projectId;
+        this.placeUrl = placeUrl;
+        this.renderingManager = renderingManager;
     }
 
     @Override
@@ -50,15 +58,14 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
     }
 
     @Override
-    protected LookupEntitiesResult execute(LookupEntitiesAction action, Project project, ExecutionContext executionContext) {
-        return new LookupEntitiesResult(lookupEntities(project, action.getEntityLookupRequest()));
+    public LookupEntitiesResult execute(LookupEntitiesAction action, ExecutionContext executionContext) {
+        return new LookupEntitiesResult(lookupEntities(action.getEntityLookupRequest()));
     }
 
 
 
-    private List<EntityLookupResult> lookupEntities(final Project project, final EntityLookupRequest entityLookupRequest) {
-        final RenderingManager rm = project.getRenderingManager();
-        BidirectionalShortFormProvider sfp = rm.getShortFormProvider();
+    private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
+        BidirectionalShortFormProvider sfp = renderingManager.getShortFormProvider();
         Set<OWLEntityDataMatch> matches = new TreeSet<>();
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         for(String shortForm : sfp.getShortForms()) {
@@ -66,7 +73,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
             if(result.isPresent()) {
                 Set<OWLEntity> entities = sfp.getEntities(shortForm);
                 for(OWLEntity matchingEntity : entities) {
-                    Optional<OWLEntityData> match = toOWLEntityData(matchingEntity, entityLookupRequest, rm);
+                    Optional<OWLEntityData> match = toOWLEntityData(matchingEntity, entityLookupRequest,
+                                                                    renderingManager);
                     if(match.isPresent()) {
                         EntityNameMatchResult resultValue = result.get();
                         matches.add(new OWLEntityDataMatch(match.get(), resultValue));
@@ -82,12 +90,12 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                 break;
             }
         }
-        List<EntityLookupResult> result = new ArrayList<EntityLookupResult>();
+        List<EntityLookupResult> result = new ArrayList<>();
         for(OWLEntityDataMatch match : matches) {
             OWLEntityData entityData = match.getEntityData();
             result.add(new EntityLookupResult(entityData,
                                               match.getMatchResult(),
-                                              placeUrl.getEntityUrl(project.getProjectId(), entityData.getEntity())));
+                                              placeUrl.getEntityUrl(projectId, entityData.getEntity())));
         }
         Collections.sort(result);
         if(result.size() >= entityLookupRequest.getSearchLimit()) {
@@ -99,7 +107,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
 
     private Optional<OWLEntityData> toOWLEntityData(OWLEntity matchingEntity, final EntityLookupRequest entityLookupRequest, final RenderingManager rm) {
         return matchingEntity.accept(new OWLEntityVisitorEx<Optional<OWLEntityData>>() {
-                            public Optional<OWLEntityData> visit(OWLClass cls) {
+                            @Nonnull
+                            public Optional<OWLEntityData> visit(@Nonnull OWLClass cls) {
                                 if(entityLookupRequest.isSearchType(EntityType.CLASS)) {
                                     String browserText = rm.getBrowserText(cls);
                                     return Optional.of(new OWLClassData(cls, browserText));
@@ -109,7 +118,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                 }
                             }
 
-                            public Optional<OWLEntityData> visit(OWLObjectProperty property) {
+                            @Nonnull
+                            public Optional<OWLEntityData> visit(@Nonnull OWLObjectProperty property) {
                                 if(entityLookupRequest.isSearchType(EntityType.OBJECT_PROPERTY)) {
                                     String browserText = rm.getBrowserText(property);
                                     return Optional.of(new OWLObjectPropertyData(property, browserText));
@@ -119,7 +129,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                 }
                             }
 
-                            public Optional<OWLEntityData> visit(OWLDataProperty property) {
+                            @Nonnull
+                            public Optional<OWLEntityData> visit(@Nonnull OWLDataProperty property) {
                                 if(entityLookupRequest.isSearchType(EntityType.DATA_PROPERTY)) {
                                     String browserText = rm.getBrowserText(property);
                                     return Optional.of(new OWLDataPropertyData(property, browserText));
@@ -129,7 +140,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                 }
                             }
 
-                            public Optional<OWLEntityData> visit(OWLNamedIndividual individual) {
+                            @Nonnull
+                            public Optional<OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
                                 if(entityLookupRequest.isSearchType(EntityType.NAMED_INDIVIDUAL)) {
                                     String browserText = rm.getBrowserText(individual);
                                     return Optional.of(new OWLNamedIndividualData(individual, browserText));
@@ -139,7 +151,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                 }
                             }
 
-                            public Optional<OWLEntityData> visit(OWLDatatype datatype) {
+                            @Nonnull
+                            public Optional<OWLEntityData> visit(@Nonnull OWLDatatype datatype) {
                                 if(entityLookupRequest.isSearchType(EntityType.DATATYPE)) {
                                     String browserText = rm.getBrowserText(datatype);
                                     return Optional.of(new OWLDatatypeData(datatype, browserText));
@@ -149,7 +162,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                                 }
                             }
 
-                            public Optional<OWLEntityData> visit(OWLAnnotationProperty property) {
+                            @Nonnull
+                            public Optional<OWLEntityData> visit(@Nonnull OWLAnnotationProperty property) {
                                 if(entityLookupRequest.isSearchType(EntityType.ANNOTATION_PROPERTY)) {
                                     String browserText = rm.getBrowserText(property);
                                     return Optional.of(new OWLAnnotationPropertyData(property, browserText));
@@ -181,7 +195,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         }
 
         @Override
-        public int compareTo(OWLEntityDataMatch owlEntityDataMatch) {
+        public int compareTo(@Nonnull OWLEntityDataMatch owlEntityDataMatch) {
             int diff = this.matchResult.compareTo(owlEntityDataMatch.matchResult);
             if(diff != 0) {
                 return diff;

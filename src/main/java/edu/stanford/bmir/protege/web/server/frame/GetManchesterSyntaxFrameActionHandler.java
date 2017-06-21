@@ -3,14 +3,17 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
+import edu.stanford.bmir.protege.web.server.shortform.WebProtegeBidirectionalShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxFrameRenderer;
+import org.semanticweb.owlapi.model.HasImportsClosure;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.StringWriter;
 
@@ -19,18 +22,34 @@ import java.io.StringWriter;
  */
 public class GetManchesterSyntaxFrameActionHandler extends AbstractHasProjectActionHandler<GetManchesterSyntaxFrameAction, GetManchesterSyntaxFrameResult> {
 
+    @Nonnull
+    @RootOntology
+    private final HasImportsClosure importsClosure;
+
+    @Nonnull
+    private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+
+    @Nonnull
+    private final WebProtegeBidirectionalShortFormProvider shortFormProvider;
+
     @Inject
-    public GetManchesterSyntaxFrameActionHandler(ProjectManager projectManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
+                                                 @Nonnull HasImportsClosure importsClosure,
+                                                 @Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
+                                                 @Nonnull WebProtegeBidirectionalShortFormProvider shortFormProvider) {
+        super(accessManager);
+        this.importsClosure = importsClosure;
+        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
+        this.shortFormProvider = shortFormProvider;
     }
 
     @Override
-    protected GetManchesterSyntaxFrameResult execute(GetManchesterSyntaxFrameAction action, final Project project, ExecutionContext executionContext) {
+    public GetManchesterSyntaxFrameResult execute(GetManchesterSyntaxFrameAction action,
+                                                     ExecutionContext executionContext) {
         StringWriter writer = new StringWriter();
-        final OWLOntology rootOntology = project.getRootOntology();
-        EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(project.getRenderingManager().getShortFormProvider());
-        final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(rootOntology.getImportsClosure(), writer, entityShortFormProvider);
-        frameRenderer.setOntologyIRIShortFormProvider(project.getRenderingManager().getOntologyIRIShortFormProvider());
+        EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(shortFormProvider);
+        final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer, entityShortFormProvider);
+        frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
         frameRenderer.setRenderExtensions(true);
 //        frameRenderer.setRenderOntologyLists(true);
 //        frameRenderer.setUseTabbing(true);

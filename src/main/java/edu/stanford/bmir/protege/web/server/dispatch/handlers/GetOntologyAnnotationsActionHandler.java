@@ -6,11 +6,14 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotati
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -26,10 +29,15 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  */
 public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, GetOntologyAnnotationsResult> {
 
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
     @Inject
-    public GetOntologyAnnotationsActionHandler(ProjectManager projectManager,
-                                               AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetOntologyAnnotationsActionHandler(@Nonnull AccessManager accessManager,
+                                               @Nonnull @RootOntology OWLOntology rootOntology) {
+        super(accessManager);
+        this.rootOntology = rootOntology;
     }
 
     @Override
@@ -44,8 +52,8 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, Project project, ExecutionContext executionContext) {
-        List<OWLAnnotation> result = new ArrayList<>(project.getRootOntology().getAnnotations());
+    public GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, ExecutionContext executionContext) {
+        List<OWLAnnotation> result = new ArrayList<>(rootOntology.getAnnotations());
         return new GetOntologyAnnotationsResult(ImmutableList.of());
     }
 

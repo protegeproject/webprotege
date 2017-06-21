@@ -1,13 +1,15 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.server.project.Project;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,14 +19,24 @@ import java.util.Set;
  */
 public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLAnnotationProperty, OWLAnnotationProperty> {
 
-    public CreateAnnotationPropertiesChangeGenerator(Set<String> browserTexts, Optional<OWLAnnotationProperty> parent) {
-        super(EntityType.ANNOTATION_PROPERTY, browserTexts, parent);
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Inject
+    public CreateAnnotationPropertiesChangeGenerator(@Nonnull Set<String> browserTexts,
+                                                     @Nonnull Optional<OWLAnnotationProperty> parent,
+                                                     @Nonnull OWLOntology rootOntology,
+                                                     @Nonnull OWLDataFactory dataFactory) {
+        super(ANNOTATION_PROPERTY, browserTexts, parent, rootOntology, dataFactory);
+        this.dataFactory = checkNotNull(dataFactory);
     }
 
     @Override
-    protected Set<OWLAxiom> createParentPlacementAxioms(OWLAnnotationProperty freshEntity, Project project, ChangeGenerationContext context, Optional<OWLAnnotationProperty> parent) {
+    protected Set<OWLAxiom> createParentPlacementAxioms(OWLAnnotationProperty freshEntity,
+                                                        ChangeGenerationContext context,
+                                                        Optional<OWLAnnotationProperty> parent) {
         if(parent.isPresent()) {
-            OWLAxiom ax = project.getDataFactory().getOWLSubAnnotationPropertyOfAxiom(freshEntity, parent.get());
+            OWLAxiom ax = dataFactory.getOWLSubAnnotationPropertyOfAxiom(freshEntity, parent.get());
             return Collections.singleton(ax);
         }
         else {

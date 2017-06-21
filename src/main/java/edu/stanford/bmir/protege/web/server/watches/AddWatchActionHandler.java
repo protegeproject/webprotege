@@ -27,9 +27,17 @@ import javax.inject.Inject;
  */
 public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWatchAction, AddWatchResult> {
 
+    private EventManager<ProjectEvent<?>> eventManager;
+
+    private WatchManager watchManager;
+
     @Inject
-    public AddWatchActionHandler(ProjectManager projectManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public AddWatchActionHandler(@Nonnull AccessManager accessManager,
+                                 EventManager<ProjectEvent<?>> eventManager,
+                                 WatchManager watchManager) {
+        super(accessManager);
+        this.eventManager = eventManager;
+        this.watchManager = watchManager;
     }
 
     @Override
@@ -50,10 +58,8 @@ public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWa
     }
 
     @Override
-    protected AddWatchResult execute(AddWatchAction action, Project project, ExecutionContext executionContext) {
-        final EventManager<ProjectEvent<?>> eventManager = project.getEventManager();
+    public AddWatchResult execute(AddWatchAction action, ExecutionContext executionContext) {
         EventTag startTag = eventManager.getCurrentTag();
-        WatchManager watchManager = project.getWatchManager();
         watchManager.addWatch(action.getWatch());
         return new AddWatchResult(eventManager.getEventsFromTag(startTag));
     }

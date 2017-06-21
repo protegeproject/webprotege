@@ -3,19 +3,21 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
-import edu.stanford.bmir.protege.web.server.change.CreateClassesChangeGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,10 +38,35 @@ import static java.util.stream.Collectors.toSet;
  */
 public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<CreateClassesAction, CreateClassesResult> {
 
+    @Nonnull
+    private final AssertedClassHierarchyProvider classHierarchyProvider;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final HasApplyChanges changeApplicator;
+
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
     @Inject
-    public CreateClassesActionHandler(ProjectManager projectManager,
-                                      AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public CreateClassesActionHandler(@Nonnull AccessManager accessManager,
+                                      @Nonnull AssertedClassHierarchyProvider classHierarchyProvider,
+                                      @Nonnull RenderingManager renderingManager,
+                                      @Nonnull HasApplyChanges changeApplicator,
+                                      @Nonnull OWLOntology rootOntology,
+                                      @Nonnull OWLDataFactory dataFactory) {
+        super(accessManager);
+        this.classHierarchyProvider = classHierarchyProvider;
+        this.renderingManager = renderingManager;
+        this.changeApplicator = changeApplicator;
+        this.rootOntology = rootOntology;
+        this.dataFactory = dataFactory;
     }
 
     @Override
@@ -54,26 +81,29 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected CreateClassesResult execute(CreateClassesAction action, Project project, ExecutionContext executionContext) {
-        Set<List<OWLClass>> paths = project.getClassHierarchyProvider().getPathsToRoot(action.getSuperClass());
+    public CreateClassesResult execute(CreateClassesAction action, ExecutionContext executionContext) {
+        Set<List<OWLClass>> paths = classHierarchyProvider.getPathsToRoot(action.getSuperClass());
         if(paths.isEmpty()) {
-            throw new IllegalStateException("Class does not exist in hierarchy: " + project.getRenderingManager().getBrowserText(action.getSuperClass()));
+            throw new IllegalStateException("Class does not exist in hierarchy: " + renderingManager
+                                                                                           .getBrowserText(action.getSuperClass()));
         }
         ObjectPath<OWLClass> pathToRoot = new ObjectPath<OWLClass>(paths.iterator().next());
 
-        final CreateClassesChangeGenerator gen = new CreateClassesChangeGenerator(action.getBrowserTexts(), Optional.of(action.getSuperClass()));
-        ChangeApplicationResult<Set<OWLClass>> result = project.applyChanges(executionContext.getUserId(), gen, createChangeText(project, action));
+        final CreateClassesChangeGenerator gen = new CreateClassesChangeGenerator(action.getBrowserTexts(),
+                                                                                  Optional.of(action.getSuperClass()),
+                                                                                  rootOntology,
+                                                                                  dataFactory);
+        ChangeApplicationResult<Set<OWLClass>> result = changeApplicator.applyChanges(executionContext.getUserId(), gen, createChangeText(action));
 
         Set<OWLClass> createdClasses = result.getSubject().get();
 
         Set<OWLClassData> classData = createdClasses.stream()
-                                                  .map(cls -> project.getRenderingManager().getRendering(cls))
+                                                  .map(cls -> renderingManager.getRendering(cls))
                                                   .collect(toSet());
-        return new CreateClassesResult(pathToRoot,
-                                       classData);
+        return new CreateClassesResult(pathToRoot, classData);
     }
 
-    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(Project project, CreateClassesAction action) {
+    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action) {
         action.getBrowserTexts();
         String msg;
         if(action.getBrowserTexts().size() > 1) {
@@ -82,6 +112,6 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
         else {
             msg = "Added {0} as a subclass of {1}";
         }
-        return new FixedMessageChangeDescriptionGenerator<>(OWLMessageFormatter.formatMessage(msg, project, action.getBrowserTexts(), action.getSuperClass()));
+        return new FixedMessageChangeDescriptionGenerator<>(OWLMessageFormatter.formatMessage(msg, renderingManager, action.getBrowserTexts(), action.getSuperClass()));
     }
 }

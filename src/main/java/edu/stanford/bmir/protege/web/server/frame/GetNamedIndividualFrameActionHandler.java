@@ -7,13 +7,13 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -28,14 +28,21 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  */
 public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActionHandler<GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
-    private static final NamedIndividualFrameTranslator TRANSLATOR = new NamedIndividualFrameTranslator();
-
     private static Logger logger = LoggerFactory.getLogger(GetNamedIndividualFrameActionHandler.class);
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final NamedIndividualFrameTranslator translator;
+
     @Inject
-    public GetNamedIndividualFrameActionHandler(ProjectManager projectManager,
-                                                AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetNamedIndividualFrameActionHandler(@Nonnull AccessManager accessManager,
+                                                @Nonnull RenderingManager renderingManager,
+                                                @Nonnull NamedIndividualFrameTranslator translator) {
+        super(accessManager);
+        this.renderingManager = renderingManager;
+        this.translator = translator;
     }
 
     /**
@@ -54,14 +61,11 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
     }
 
     @Override
-    protected GetNamedIndividualFrameResult execute(GetNamedIndividualFrameAction action,
-                                                    Project project,
+    public GetNamedIndividualFrameResult execute(GetNamedIndividualFrameAction action,
                                                     ExecutionContext executionContext) {
-        NamedIndividualFrameTranslator translator = new NamedIndividualFrameTranslator();
         NamedIndividualFrame frame = translator.getFrame(
-                project.getRenderingManager().getRendering(action.getSubject()),
-                project.getRootOntology(), project);
-        RenderingManager renderingManager = project.getRenderingManager();
+                renderingManager.getRendering(action.getSubject())
+        );
         String rendering = renderingManager.getShortForm(action.getSubject());
         LabelledFrame<NamedIndividualFrame> labelledFrame = new LabelledFrame<>(rendering, frame);
         logger.info(BROWSING,

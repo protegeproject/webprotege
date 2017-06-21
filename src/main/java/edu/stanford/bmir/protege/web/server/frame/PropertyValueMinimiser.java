@@ -9,25 +9,34 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/02/2014
  */
 public class PropertyValueMinimiser {
 
-    public List<PropertyValue> minimisePropertyValues(List<PropertyValue> propertyValues,
-                                                    OWLOntology ontology,
-                                                    Project project) {
+
+    @Nonnull
+    private final PropertyValueSubsumptionChecker subsumptionChecker;
+
+    @Inject
+    public PropertyValueMinimiser(@Nonnull PropertyValueSubsumptionChecker subsumptionChecker) {
+        this.subsumptionChecker = checkNotNull(subsumptionChecker);
+    }
+
+    public List<PropertyValue> minimisePropertyValues(List<PropertyValue> propertyValues) {
         List<PropertyValue> result = Lists.newArrayList(propertyValues);
         for (int i = 0; i < propertyValues.size(); i++) {
             for (int j = 0; j < propertyValues.size(); j++) {
                 if (i != j && result.get(i) != null && result.get(j) != null) {
                     PropertyValue propertyValueA = propertyValues.get(i);
                     PropertyValue propertyValueB = propertyValues.get(j);
-                    PropertyValueSubsumptionChecker subsumptionChecker = getPropertyValueSubsumptionChecker(ontology,
-                            project);
                     if (subsumptionChecker.isSubsumedBy(propertyValueA, propertyValueB)) {
                         // Don't show B because this is more specific!
                         result.set(j, null);
@@ -41,25 +50,5 @@ public class PropertyValueMinimiser {
             }
         }
         return result;
-    }
-
-    private PropertyValueSubsumptionChecker getPropertyValueSubsumptionChecker(OWLOntology ontology,
-                                                                               Project project) {
-        ClassClassAncestorChecker classAncestorChecker = new ClassClassAncestorChecker(project
-                .getClassHierarchyProvider());
-        ObjectPropertyObjectPropertyAncestorChecker objectPropertyAncestorChecker = new
-                ObjectPropertyObjectPropertyAncestorChecker(
-                project.getObjectPropertyHierarchyProvider());
-        DataPropertyDataPropertyAncestorChecker dataPropertyAncestorChecker = new
-                DataPropertyDataPropertyAncestorChecker(
-                project.getDataPropertyHierarchyProvider());
-        NamedIndividualClassAncestorChecker namedIndividualClassAncestorChecker = new
-                NamedIndividualClassAncestorChecker(
-                ontology,
-                classAncestorChecker);
-        return new StructuralPropertyValueSubsumptionChecker(classAncestorChecker,
-                objectPropertyAncestorChecker,
-                dataPropertyAncestorChecker,
-                namedIndividualClassAncestorChecker);
     }
 }

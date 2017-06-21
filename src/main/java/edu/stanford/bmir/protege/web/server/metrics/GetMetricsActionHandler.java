@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
@@ -22,9 +23,14 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  */
 public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<GetMetricsAction, GetMetricsResult> {
 
+    @Nonnull
+    private final OWLAPIProjectMetricsManager metricsManager;
+
     @Inject
-    public GetMetricsActionHandler(ProjectManager projectManager, AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetMetricsActionHandler(@Nonnull AccessManager accessManager,
+                                   @Nonnull OWLAPIProjectMetricsManager metricsManager) {
+        super(accessManager);
+        this.metricsManager = metricsManager;
     }
 
     @Nullable
@@ -34,8 +40,8 @@ public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<Get
     }
 
     @Override
-    protected GetMetricsResult execute(GetMetricsAction action, Project project, ExecutionContext executionContext) {
-        List<MetricValue> metrics = project.getMetricsManager().getMetrics();
+    public GetMetricsResult execute(GetMetricsAction action, ExecutionContext executionContext) {
+        List<MetricValue> metrics = metricsManager.getMetrics();
         return new GetMetricsResult(ImmutableList.copyOf(metrics));
     }
 

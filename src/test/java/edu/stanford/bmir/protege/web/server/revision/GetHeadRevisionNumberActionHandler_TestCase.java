@@ -40,20 +40,20 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     private RevisionNumber revisionNumber;
 
     @Mock
-    private ProjectManager projectManager;
+    private RevisionManager revisionManager;
 
     @Mock
     private AccessManager accessManager;
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetHeadRevisionNumberActionHandler(projectManager, accessManager);
+        handler = new GetHeadRevisionNumberActionHandler(accessManager, revisionManager);
         when(project.getRevisionNumber()).thenReturn(revisionNumber);
     }
 
     @Test
     public void shouldReturnProjectRevision() {
-        GetHeadRevisionNumberResult result = handler.execute(action, project, executionContext);
+        GetHeadRevisionNumberResult result = handler.execute(action, executionContext);
         assertThat(result.getRevisionNumber(), is(revisionNumber));
     }
 }

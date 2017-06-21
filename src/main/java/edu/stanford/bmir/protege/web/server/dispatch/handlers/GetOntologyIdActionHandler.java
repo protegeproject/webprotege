@@ -8,8 +8,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,15 +24,19 @@ import javax.inject.Inject;
  */
 public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetOntologyIdAction, GetOntologyIdResult> {
 
-    @Inject
-    public GetOntologyIdActionHandler(ProjectManager projectManager,
-                                      AccessManager accessManager) {
-        super(projectManager, accessManager);
+    @Nonnull
+    @RootOntology
+    private final OWLOntology rootOntology;
+
+    public GetOntologyIdActionHandler(@Nonnull AccessManager accessManager,
+                                      @Nonnull @RootOntology OWLOntology rootOntology) {
+        super(accessManager);
+        this.rootOntology = rootOntology;
     }
 
     @Override
-    protected GetOntologyIdResult execute(GetOntologyIdAction action, Project project, ExecutionContext executionContext) {
-        return new GetOntologyIdResult(project.getRootOntology().getOntologyID());
+    public GetOntologyIdResult execute(GetOntologyIdAction action, ExecutionContext executionContext) {
+        return new GetOntologyIdResult(rootOntology.getOntologyID());
     }
 
     @Nonnull

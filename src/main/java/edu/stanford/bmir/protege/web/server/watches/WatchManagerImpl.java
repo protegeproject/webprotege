@@ -61,7 +61,7 @@ public class WatchManagerImpl implements WatchManager {
     public void attach() {
         // Note, there is no need to keep hold of Handler Registrations here as these will be cleaned up and
         // terminated when the relevant project is disposed.
-        eventManager.addHandler(ClassFrameChangedEvent.TYPE, event -> {
+        eventManager.addHandler(ClassFrameChangedEvent.CLASS_FRAME_CHANGED, event -> {
             handleEntityFrameChanged(event.getEntity(), event.getUserId());
         });
         eventManager.addHandler(ObjectPropertyFrameChangedEvent.TYPE, event -> {

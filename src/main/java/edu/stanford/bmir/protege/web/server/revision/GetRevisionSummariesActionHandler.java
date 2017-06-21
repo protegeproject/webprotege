@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -20,10 +21,14 @@ import javax.inject.Inject;
  */
 public class GetRevisionSummariesActionHandler extends AbstractHasProjectActionHandler<GetRevisionSummariesAction, GetRevisionSummariesResult> {
 
+    @Nonnull
+    private final RevisionManager revisionManager;
+
     @Inject
-    public GetRevisionSummariesActionHandler(ProjectManager projectManager,
-                                             AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetRevisionSummariesActionHandler(@Nonnull AccessManager accessManager,
+                                             @Nonnull RevisionManager revisionManager) {
+        super(accessManager);
+        this.revisionManager = revisionManager;
     }
 
     @Nullable
@@ -33,8 +38,8 @@ public class GetRevisionSummariesActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected GetRevisionSummariesResult execute(GetRevisionSummariesAction action, Project project, ExecutionContext executionContext) {
-        return new GetRevisionSummariesResult(ImmutableList.copyOf(project.getChangeManager().getRevisionSummaries()));
+    public GetRevisionSummariesResult execute(GetRevisionSummariesAction action, ExecutionContext executionContext) {
+        return new GetRevisionSummariesResult(ImmutableList.copyOf(revisionManager.getRevisionSummaries()));
     }
 
     @Override

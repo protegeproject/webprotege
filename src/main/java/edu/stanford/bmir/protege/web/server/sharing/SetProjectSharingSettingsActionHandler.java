@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -22,12 +23,13 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHA
  */
 public class SetProjectSharingSettingsActionHandler extends AbstractHasProjectActionHandler<SetProjectSharingSettingsAction, SetProjectSharingSettingsResult> {
 
+    @Nonnull
     private final ProjectSharingSettingsManager sharingSettingsManager;
 
     @Inject
-    public SetProjectSharingSettingsActionHandler(ProjectManager projectManager, ProjectSharingSettingsManager sharingSettingsManager,
-                                                  AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public SetProjectSharingSettingsActionHandler(@Nonnull AccessManager accessManager,
+                                                  @Nonnull ProjectSharingSettingsManager sharingSettingsManager) {
+        super(accessManager);
         this.sharingSettingsManager = sharingSettingsManager;
     }
 
@@ -38,7 +40,7 @@ public class SetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
     }
 
     @Override
-    protected SetProjectSharingSettingsResult execute(SetProjectSharingSettingsAction action, Project project, ExecutionContext executionContext) {
+    public SetProjectSharingSettingsResult execute(SetProjectSharingSettingsAction action, ExecutionContext executionContext) {
         sharingSettingsManager.setProjectSharingSettings(action.getProjectSharingSettings());
         return new SetProjectSharingSettingsResult();
     }

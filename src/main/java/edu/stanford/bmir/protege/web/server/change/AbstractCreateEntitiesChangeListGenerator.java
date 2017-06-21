@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,11 +28,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEntity, P extends OWLEntity> implements ChangeListGenerator<Set<E>> {
 
-    private EntityType<E> entityType;
+    @Nonnull
+    private final EntityType<E> entityType;
 
-    private Set<String> browserTexts;
+    @Nonnull
+    private final Set<String> browserTexts;
 
-    private Optional<P> parent;
+    @Nonnull
+    private final Optional<P> parent;
+
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
 
 
     private static Map<String, String> builtInPrefixes = new HashMap<String, String>();
@@ -57,16 +66,22 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @param parent The parent entity.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public AbstractCreateEntitiesChangeListGenerator(EntityType<E> entityType, Set<String> browserTexts, Optional<P> parent) {
-        this.entityType = checkNotNull(entityType);
-        this.browserTexts = new HashSet<String>(checkNotNull(browserTexts));
-        this.parent = checkNotNull(parent);
+    public AbstractCreateEntitiesChangeListGenerator(@Nonnull EntityType<E> entityType,
+                                                     @Nonnull Set<String> browserTexts,
+                                                     @Nonnull Optional<P> parent,
+                                                     @Nonnull OWLOntology rootOntology,
+                                                     @Nonnull OWLDataFactory dataFactory) {
+        this.entityType = entityType;
+        this.browserTexts = browserTexts;
+        this.parent = parent;
+        this.rootOntology = rootOntology;
+        this.dataFactory = dataFactory;
     }
 
     @Override
-    public OntologyChangeList<Set<E>> generateChanges(Project project, ChangeGenerationContext context) {
-        OntologyChangeList.Builder<Set<E>> builder = new OntologyChangeList.Builder<Set<E>>();
-        Set<E> freshEntities = new HashSet<E>();
+    public OntologyChangeList<Set<E>> generateChanges(ChangeGenerationContext context) {
+        OntologyChangeList.Builder<Set<E>> builder = new OntologyChangeList.Builder<>();
+        Set<E> freshEntities = new HashSet<>();
         for (String bt : browserTexts) {
             String browserText = bt.trim();
             Optional<String> builtInPrefix = getBuiltInPrefix(browserText);
@@ -77,10 +92,10 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
             }
             else {
                 freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText);
-                builder.addAxiom(project.getRootOntology(), project.getDataFactory().getOWLDeclarationAxiom(freshEntity));
+                builder.addAxiom(rootOntology, dataFactory.getOWLDeclarationAxiom(freshEntity));
             }
-            for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, project, context, parent)) {
-                builder.addAxiom(project.getRootOntology(), axiom);
+            for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, context, parent)) {
+                builder.addAxiom(rootOntology, axiom);
             }
             freshEntities.add(freshEntity);
         }
@@ -119,13 +134,14 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     /**
      * Creates any extra axioms that are necessary to set up the "parent" association with the specified fresh entity.
      * @param freshEntity The fresh entity that was created. Not {@code null}.
-     * @param project The reference project that the changes take place in. Not {@code null}.
      * @param context The change generation context. Not {@code null}.
      * @param parent The optional parent. Not {@code null}.
      * @return A possibly empty set of axioms representing axioms that need to be added to the project ontologies to
      * associate the specified fresh entity with its optional parent.  Not {@code null}.
      */
-    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity, Project project, ChangeGenerationContext context, Optional<P> parent);
+    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity,
+                                                                 ChangeGenerationContext context,
+                                                                 Optional<P> parent);
 
 
 

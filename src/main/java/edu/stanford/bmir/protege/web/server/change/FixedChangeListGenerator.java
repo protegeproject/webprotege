@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class FixedChangeListGenerator<R> implements ChangeListGenerator<R> {
     }
 
     @Override
-    public OntologyChangeList<R> generateChanges(Project project, ChangeGenerationContext context) {
+    public OntologyChangeList<R> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<R> builder = new OntologyChangeList.Builder<R>();
         builder.addAll(fixedChangeList);
         return builder.build();

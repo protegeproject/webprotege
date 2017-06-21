@@ -5,8 +5,8 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OWLEntityRemover;
 
 import javax.annotation.Nonnull;
@@ -21,14 +21,19 @@ public class DeleteEntitiesChangeListGenerator implements ChangeListGenerator<Se
 
     private final Set<OWLEntity> entities;
 
-    public DeleteEntitiesChangeListGenerator(@Nonnull Set<OWLEntity> entities) {
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    public DeleteEntitiesChangeListGenerator(@Nonnull Set<OWLEntity> entities,
+                                             @Nonnull OWLOntology rootOntology) {
         this.entities = ImmutableSet.copyOf(entities);
+        this.rootOntology = rootOntology;
     }
 
     @Override
-    public OntologyChangeList<Set<OWLEntity>> generateChanges(Project project, ChangeGenerationContext context) {
+    public OntologyChangeList<Set<OWLEntity>> generateChanges(ChangeGenerationContext context) {
 
-        OWLEntityRemover entityRemover = new OWLEntityRemover(project.getRootOntology().getImportsClosure());
+        OWLEntityRemover entityRemover = new OWLEntityRemover(rootOntology.getImportsClosure());
         entities.forEach(entity -> entity.accept(entityRemover));
         return OntologyChangeList.<Set<OWLEntity>>builder().addAll(entityRemover.getChanges()).build(entities);
     }

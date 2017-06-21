@@ -3,21 +3,23 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.DeleteEntityChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
@@ -27,12 +29,24 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
+@ProjectSingleton
 public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLEntity, DeleteEntityAction, DeleteEntityResult> {
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final OWLOntology rootOntology;
+
     @Inject
-    public DeleteEntityActionHandler(ProjectManager projectManager,
-                                     AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public DeleteEntityActionHandler(@Nonnull AccessManager accessManager,
+                                     @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                     @Nonnull HasApplyChanges applyChanges,
+                                     @Nonnull RenderingManager renderingManager,
+                                     @Nonnull @RootOntology OWLOntology rootOntology) {
+        super(accessManager, eventManager, applyChanges);
+        this.renderingManager = renderingManager;
+        this.rootOntology = rootOntology;
     }
 
     @Override
@@ -47,17 +61,22 @@ public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLE
     }
 
     @Override
-    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(DeleteEntityAction action, Project project, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<OWLEntity>(getChangeDescription(action.getSubject(), project.getRenderingManager().getBrowserText(action.getSubject())));
+    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(DeleteEntityAction action,
+                                                                         ExecutionContext executionContext) {
+        return new FixedMessageChangeDescriptionGenerator<OWLEntity>(getChangeDescription(action.getSubject(), renderingManager.getBrowserText(action.getSubject())));
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(DeleteEntityAction action, Project project, ExecutionContext executionContext) {
-        return new DeleteEntityChangeListGenerator(action.getSubject());
+    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(DeleteEntityAction action,
+                                                                    ExecutionContext executionContext) {
+        return new DeleteEntityChangeListGenerator(action.getSubject(), rootOntology);
     }
 
     @Override
-    protected DeleteEntityResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult, DeleteEntityAction action, Project project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+    protected DeleteEntityResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult,
+                                                    DeleteEntityAction action,
+                                                    ExecutionContext executionContext,
+                                                    EventList<ProjectEvent<?>> eventList) {
         return new DeleteEntityResult(eventList);
     }
 

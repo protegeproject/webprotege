@@ -3,9 +3,11 @@ package edu.stanford.bmir.protege.web.server.individuals;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
@@ -13,14 +15,17 @@ import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.apache.commons.lang3.StringUtils;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
@@ -38,12 +43,27 @@ import static java.util.stream.Collectors.toList;
  */
 public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler<GetIndividualsAction, GetIndividualsResult> {
 
-    private Logger logger = LoggerFactory.getLogger(GetIndividualsActionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(GetIndividualsActionHandler.class);
+
+    @Nonnull
+    private final ProjectId projectId;
+
+
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
 
     @Inject
-    public GetIndividualsActionHandler(ProjectManager projectManager,
-                                       AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public GetIndividualsActionHandler(@Nonnull AccessManager accessManager,
+                                       @Nonnull ProjectId projectId,
+                                       @Nonnull @RootOntology OWLOntology rootOntology,
+                                       @Nonnull RenderingManager renderingManager) {
+        super(accessManager);
+        this.projectId = projectId;
+        this.rootOntology = rootOntology;
+        this.renderingManager = renderingManager;
     }
 
     @Nullable
@@ -53,15 +73,14 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
     }
 
     @Override
-    protected GetIndividualsResult execute(GetIndividualsAction action,
-                                           Project project,
+    public GetIndividualsResult execute(GetIndividualsAction action,
                                            ExecutionContext executionContext) {
         Stream<OWLNamedIndividual> stream;
         if (action.getType().isOWLThing()) {
-            stream = project.getRootOntology().getIndividualsInSignature(Imports.INCLUDED).stream();
+            stream = rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
         }
         else {
-            stream = project.getRootOntology().getImportsClosure().stream()
+            stream = rootOntology.getImportsClosure().stream()
                             .flatMap(o -> o.getClassAssertionAxioms(action.getType()).stream())
                             .map(OWLClassAssertionAxiom::getIndividual)
                             .filter(OWLIndividual::isNamed)
@@ -69,7 +88,7 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         }
         Counter counter = new Counter();
         List<OWLNamedIndividualData> individualsData = stream.peek(i -> counter.increment())
-                                                             .map(i -> project.getRenderingManager().getRendering(i))
+                                                             .map(renderingManager::getRendering)
                                                              .filter(i -> {
                                                                  String searchString = action.getFilterString();
                                                                  return searchString.isEmpty()
@@ -83,13 +102,13 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         PageRequest pageRequest = action.getPageRequest();
         Pager<OWLNamedIndividualData> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
         Page<OWLNamedIndividualData> page = pager.getPage(pageRequest.getPageNumber());
-        OWLClassData type = project.getRenderingManager().getRendering(action.getType());
+        OWLClassData type = renderingManager.getRendering(action.getType());
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",
-                    action.getProjectId(),
+                    projectId,
                     executionContext.getUserId(),
                     action.getType(),
-                    project.getRenderingManager().getRendering(action.getType()).getBrowserText());
+                    renderingManager.getRendering(action.getType()).getBrowserText());
         return new GetIndividualsResult(type, page, counter.getCount(), individualsData.size());
     }
 

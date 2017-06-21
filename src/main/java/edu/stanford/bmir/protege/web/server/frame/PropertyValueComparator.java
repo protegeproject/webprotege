@@ -9,7 +9,11 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import org.semanticweb.owlapi.model.HasLang;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Comparator;
 
 /**
@@ -24,15 +28,17 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
 
     public static final int BEFORE = -AFTER;
 
-    private Project project;
-    private AnnotationPropertyComparatorImpl annotationPropertyComparator;
+    @Nonnull
+    private final Comparator<? super OWLAnnotationProperty> annotationPropertyComparator;
 
-    public PropertyValueComparator(Project project) {
-        this.project = project;
-        this.annotationPropertyComparator = new AnnotationPropertyComparatorImpl(
-                project.getRenderingManager().getShortFormProvider(),
-                IRIIndexProvider.withDefaultAnnotationPropertyOrdering()
-        );
+    @Nonnull
+    private final HasLang hasLang;
+
+    @Inject
+    public PropertyValueComparator(@Nonnull Comparator<? super OWLAnnotationProperty> annotationPropertyComparator,
+                                   @Nonnull HasLang hasLang) {
+        this.annotationPropertyComparator = annotationPropertyComparator;
+        this.hasLang = hasLang;
     }
 
     @Override
@@ -90,7 +96,6 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
         else if(property2.isOWLAnnotationProperty()) {
             return AFTER;
         }
-        final RenderingManager rm = project.getRenderingManager();
         String prop1BrowserText = property1.getBrowserText();
         String prop2BrowserText = property2.getBrowserText();
         int delta = prop1BrowserText.compareToIgnoreCase(prop2BrowserText);
@@ -104,6 +109,6 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
     }
 
     private boolean isDefaultLanguage(OWLLiteralData lit) {
-        return lit.hasLang() && project.getLang().equals(lit.getLang());
+        return lit.hasLang() && hasLang.getLang().equals(lit.getLang());
     }
 }

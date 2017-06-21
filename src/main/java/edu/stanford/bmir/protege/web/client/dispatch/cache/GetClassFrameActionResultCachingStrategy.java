@@ -39,7 +39,7 @@ public class GetClassFrameActionResultCachingStrategy extends AbstractResultCach
 
     @Override
     public void registerEventHandlers() {
-        registerProjectEventHandler(ClassFrameChangedEvent.TYPE, event -> {
+        registerProjectEventHandler(ClassFrameChangedEvent.CLASS_FRAME_CHANGED, event -> {
             fireResultsInvalidatedEvent(event.getEntity());
         });
     }

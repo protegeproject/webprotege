@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
@@ -12,6 +12,8 @@ import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +25,21 @@ import java.util.Set;
  */
 public class DataPropertyFrameTranslator implements FrameTranslator<DataPropertyFrame, OWLDataPropertyData> {
 
+    @Nonnull
+    private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Inject
+    public DataPropertyFrameTranslator(@Nonnull OWLOntology rootOntology,
+                                       @Nonnull RenderingManager renderingManager) {
+        this.rootOntology = rootOntology;
+        this.renderingManager = renderingManager;
+    }
+
     @Override
-    public DataPropertyFrame getFrame(OWLDataPropertyData subject, OWLOntology rootOntology, Project project) {
+    public DataPropertyFrame getFrame(OWLDataPropertyData subject) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
         Set<OWLClassData> domains = new HashSet<>();
         Set<OWLDatatypeData> ranges = new HashSet<>();
@@ -33,12 +48,12 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
             for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject.getEntity())) {
                 if(!ax.getDomain().isAnonymous()) {
-                    domains.add(project.getRenderingManager().getRendering(ax.getDomain().asOWLClass()));
+                    domains.add(renderingManager.getRendering(ax.getDomain().asOWLClass()));
                 }
             }
             for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject.getEntity())) {
                 if(ax.getRange().isDatatype()) {
-                    ranges.add(project.getRenderingManager().getRendering(ax.getRange().asOWLDatatype()));
+                    ranges.add(renderingManager.getRendering(ax.getRange().asOWLDatatype()));
                 }
             }
             if(EntitySearcher.isFunctional(subject.getEntity(), ontology)) {
@@ -48,7 +63,8 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         Set<PropertyValue> propertyValues = new HashSet<>();
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED, project.getRenderingManager()));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED,
+                                                               renderingManager));
         }
 
         PropertyValueList pvl = new PropertyValueList(propertyValues);

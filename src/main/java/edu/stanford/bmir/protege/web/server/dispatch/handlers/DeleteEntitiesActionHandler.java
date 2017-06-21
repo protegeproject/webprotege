@@ -2,22 +2,23 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Joiner;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.DeleteEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collections;
@@ -30,10 +31,21 @@ import java.util.Set;
  */
 public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Set<OWLEntity>, DeleteEntitiesAction, DeleteEntitiesResult> {
 
+    @Nonnull
+    private final RenderingManager renderer;
+
+    @Nonnull
+    private final OWLOntology rootOntology;
+
     @Inject
-    public DeleteEntitiesActionHandler(ProjectManager projectManager,
-                                       AccessManager accessManager) {
-        super(projectManager, accessManager);
+    public DeleteEntitiesActionHandler(@Nonnull AccessManager accessManager,
+                                       @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                       @Nonnull HasApplyChanges applyChanges,
+                                       @Nonnull RenderingManager renderer,
+                                       @Nonnull OWLOntology rootOntology) {
+        super(accessManager, eventManager, applyChanges);
+        this.renderer = renderer;
+        this.rootOntology = rootOntology;
     }
 
     @Override
@@ -49,34 +61,32 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
 
     @Override
     protected ChangeListGenerator<Set<OWLEntity>> getChangeListGenerator(DeleteEntitiesAction action,
-                                                                         Project project,
                                                                          ExecutionContext executionContext) {
 
-        return new DeleteEntitiesChangeListGenerator(action.getEntities());
+        return new DeleteEntitiesChangeListGenerator(action.getEntities(),
+                                                     rootOntology);
     }
 
     @Override
     protected ChangeDescriptionGenerator<Set<OWLEntity>> getChangeDescription(DeleteEntitiesAction action,
-                                                                              Project project,
                                                                               ExecutionContext executionContext) {
         Set<OWLEntity> entities = action.getEntities();
         Joiner joiner = Joiner.on(", ").skipNulls();
         Object[] renderings = entities.stream()
-                                      .map(e -> getBrowserText(project, e))
+                                      .map(this::getBrowserText)
                                       .sorted()
                                       .toArray();
         String deletedEntitiesRendering = joiner.join(renderings);
         return new FixedMessageChangeDescriptionGenerator<>(String.format("Deleted %s", deletedEntitiesRendering));
     }
 
-    private static String getBrowserText(Project project, OWLEntity e) {
-        return project.getRenderingManager().getRendering(e).getBrowserText();
+    private String getBrowserText(OWLEntity e) {
+        return renderer.getRendering(e).getBrowserText();
     }
 
     @Override
     protected DeleteEntitiesResult createActionResult(ChangeApplicationResult<Set<OWLEntity>> changeApplicationResult,
                                                       DeleteEntitiesAction action,
-                                                      Project project,
                                                       ExecutionContext executionContext,
                                                       EventList<ProjectEvent<?>> eventList) {
         return new DeleteEntitiesResult(eventList,
