@@ -38,9 +38,6 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     private ProjectSharingSettings sharingSettings;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ProjectManager projectManager;
 
     @Mock

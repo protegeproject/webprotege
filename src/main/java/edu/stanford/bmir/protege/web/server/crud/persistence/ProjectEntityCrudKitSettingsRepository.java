@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.persistence;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.bson.Document;
 
@@ -19,9 +20,10 @@ import static edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntit
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/08/2013
  * <p>
- *     An interface to a repository for storing {@link ProjectEntityCrudKitSettings}.
+ * An interface to a repository for storing {@link ProjectEntityCrudKitSettings}.
  * </p>
  */
+@ProjectSingleton
 public class ProjectEntityCrudKitSettingsRepository {
 
     public static final String COLLECTION_NAME = "EntityCrudKitSettings";
@@ -41,13 +43,14 @@ public class ProjectEntityCrudKitSettingsRepository {
 
     @Nonnull
     public Optional<ProjectEntityCrudKitSettings> findOne(@Nonnull ProjectId projectId) {
-        return Optional.ofNullable(collection.find(withProjectId(projectId)).limit(1).first())
-                .map(d -> converter.fromDocument(d));
+        return Optional.ofNullable(collection.find(withProjectId(projectId))
+                                             .limit(1).first())
+                       .map(converter::fromDocument);
     }
 
     public void save(@Nonnull ProjectEntityCrudKitSettings settings) {
         collection.replaceOne(withProjectId(settings.getProjectId()),
-                             converter.toDocument(checkNotNull(settings)),
-                             new UpdateOptions().upsert(true));
+                              converter.toDocument(checkNotNull(settings)),
+                              new UpdateOptions().upsert(true));
     }
 }

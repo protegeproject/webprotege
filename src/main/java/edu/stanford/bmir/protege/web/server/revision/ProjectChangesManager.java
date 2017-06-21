@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShort
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * Stanford Center for Biomedical Informatics Research
  * 27/05/15
  */
+@ProjectSingleton
 public class ProjectChangesManager {
 
     public static final int DEFAULT_CHANGE_LIMIT = 50;

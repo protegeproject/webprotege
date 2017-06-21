@@ -11,6 +11,7 @@ import java.util.Set;
  * Stanford Center for Biomedical Informatics Research
  * 19 Jun 2017
  */
+@ProjectSingleton
 public class ProjectActionHandlerRegistry extends ActionHandlerRegistryImpl {
 
     @Inject

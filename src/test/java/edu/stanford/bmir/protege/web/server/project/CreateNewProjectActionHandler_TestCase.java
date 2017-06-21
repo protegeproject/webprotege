@@ -51,9 +51,6 @@ public class CreateNewProjectActionHandler_TestCase {
     private NewProjectSettings newProjectSettings;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ExecutionContext executionContext;
 
     @Mock
@@ -74,10 +71,8 @@ public class CreateNewProjectActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, projectSharingSettingsManager, accessManager);
-        when(projectManager.createNewProject(newProjectSettings)).thenReturn(project);
         when(executionContext.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("User_Name");
-        when(project.getProjectId()).thenReturn(projectId);
         when(projectDetailsManager.getProjectDetails(projectId)).thenReturn(projectDetails);
         when(requestContext.getUserId()).thenReturn(userId);
         setPermission(true);

@@ -44,9 +44,6 @@ public class GetProjectSettingsActionHandler_TestCase {
     private GetProjectSettingsAction action;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ExecutionContext executionContext;
 
     @Mock

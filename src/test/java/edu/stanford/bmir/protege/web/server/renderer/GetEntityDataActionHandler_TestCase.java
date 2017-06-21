@@ -37,9 +37,6 @@ public class GetEntityDataActionHandler_TestCase {
     @Mock
     private RenderingManager renderingManager;
 
-    @Mock
-    private Project project;
-
     private Map<OWLEntity, OWLEntityData> renderingMap;
 
     @Mock
@@ -64,7 +61,6 @@ public class GetEntityDataActionHandler_TestCase {
 
         renderingMap = new HashMap<>();
         renderingMap.put(entity, entityData);
-        when(project.getRenderingManager()).thenReturn(renderingManager);
         when(renderingManager.getRendering(Matchers.<Set<OWLEntity>>any())).thenReturn(renderingMap);
 
         when(action.getEntities()).thenReturn(ImmutableSet.of(entity));

@@ -41,9 +41,6 @@ public class GetProjectSharingSettingsActionHandler_TestCase {
     private GetProjectSharingSettingsAction action;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ExecutionContext executionContext;
 
     @Mock

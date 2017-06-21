@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesAction
 import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
@@ -22,7 +21,6 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingA
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
-import edu.stanford.bmir.protege.web.server.permissions.RebuildPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;

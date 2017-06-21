@@ -6,10 +6,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.*;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>

@@ -9,11 +9,6 @@ import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.change.matcher.*;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
-import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
-import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
@@ -29,7 +24,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureI
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesWithIRIImpl;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -65,7 +59,6 @@ import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;

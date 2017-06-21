@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import org.openrdf.model.vocabulary.OWL;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;

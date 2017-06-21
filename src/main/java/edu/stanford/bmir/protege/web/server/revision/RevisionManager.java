@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 02/06/15
  */
+@ProjectSingleton
 public interface RevisionManager extends HasGetRevisionSummary {
 
     /**

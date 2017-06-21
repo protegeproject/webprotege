@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -25,6 +26,7 @@ import static edu.stanford.bmir.protege.web.shared.watches.WatchType.BRANCH;
  * Stanford Center for Biomedical Informatics Research
  * 27/05/15
  */
+@ProjectSingleton
 public class WatchedChangesManager {
 
     private final OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider;

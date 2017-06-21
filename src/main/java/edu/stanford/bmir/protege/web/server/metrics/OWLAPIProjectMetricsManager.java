@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -28,6 +29,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
+@ProjectSingleton
 public class OWLAPIProjectMetricsManager {
 
     public final WebProtegeLogger logger;

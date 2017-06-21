@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import org.semanticweb.owlapi.model.*;

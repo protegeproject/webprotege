@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
@@ -45,8 +44,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         if(action instanceof ProjectAction) {
             ProjectAction projectAction = (ProjectAction) action;
             ProjectId projectId = projectAction.getProjectId();
-            Project project = projectManager.getProject(projectId, requestContext.getUserId());
-            ProjectActionHandlerRegistry actionHanderRegistry = project.getActionHanderRegistry();
+            ProjectActionHandlerRegistry actionHanderRegistry = projectManager.getActionHandlerRegistry(projectId);
             System.out.println("Got project action handler for project action: " + action.getClass().getSimpleName());
             actionHandler = actionHanderRegistry.getActionHandler(action);
         }
