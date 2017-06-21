@@ -1,13 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.Lists;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassClassAncestorChecker;
-import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyDataPropertyAncestorChecker;
-import edu.stanford.bmir.protege.web.server.hierarchy.NamedIndividualClassAncestorChecker;
-import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyObjectPropertyAncestorChecker;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

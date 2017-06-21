@@ -34,9 +34,6 @@ public class SetProjectSettingsActionHandler_TestCase {
     private ProjectSettings projectSettings;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ProjectId projectId;
 
     private SetProjectSettingsActionHandler handler;

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import java.util.Set;
  * Stanford Center for Biomedical Informatics Research
  * 16/03/16
  */
+@ProjectSingleton
 public class ReverseEngineeredChangeDescriptionGeneratorFactory {
 
     @Nonnull

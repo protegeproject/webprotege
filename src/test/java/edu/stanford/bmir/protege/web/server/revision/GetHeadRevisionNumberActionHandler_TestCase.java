@@ -31,9 +31,6 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     private GetHeadRevisionNumberAction action;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ExecutionContext executionContext;
 
     @Mock
@@ -48,7 +45,6 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetHeadRevisionNumberActionHandler(accessManager, revisionManager);
-        when(project.getRevisionNumber()).thenReturn(revisionNumber);
     }
 
     @Test

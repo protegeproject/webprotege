@@ -82,7 +82,7 @@ public class ProjectDownloader {
             @Nonnull RevisionNumber revisionNumber,
             @Nonnull OutputStream outputStream,
             @Nonnull DownloadFormat format) throws IOException, OWLOntologyStorageException {
-        RevisionManager revisionManager = project.getChangeManager();
+        RevisionManager revisionManager = project.getRevisionManager();
         OWLOntologyManager manager = revisionManager.getOntologyManagerForRevision(revisionNumber);
         OWLOntologyID rootOntologyId = project.getRootOntology().getOntologyID();
         Optional<OWLOntology> revisionRootOntology = getOntologyFromManager(manager, rootOntologyId);

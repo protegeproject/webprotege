@@ -31,9 +31,6 @@ public class GetMetricsActionHandlerTestCase {
     protected ProjectId projectId;
 
     @Mock
-    protected Project project;
-
-    @Mock
     protected OWLAPIProjectMetricsManager metricsManager;
 
     @Mock
@@ -45,7 +42,6 @@ public class GetMetricsActionHandlerTestCase {
 
     @Before
     public void setUp() {
-        when(project.getMetricsManager()).thenReturn(metricsManager);
         when(metricsManager.getMetrics()).thenReturn(metricValues);
     }
 

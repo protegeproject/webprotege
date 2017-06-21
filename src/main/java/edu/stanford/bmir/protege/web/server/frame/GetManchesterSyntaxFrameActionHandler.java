@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxFrameRenderer;
 import org.semanticweb.owlapi.model.HasImportsClosure;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
 import javax.annotation.Nonnull;

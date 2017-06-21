@@ -9,8 +9,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

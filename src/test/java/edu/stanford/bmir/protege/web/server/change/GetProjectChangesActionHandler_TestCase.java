@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.change;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesResult;
@@ -37,9 +35,6 @@ public class GetProjectChangesActionHandler_TestCase {
     private GetProjectChangesAction action;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ProjectChangesManager changeManager;
 
     @Mock
@@ -57,7 +52,6 @@ public class GetProjectChangesActionHandler_TestCase {
     public void setUp() throws Exception {
         when(action.getSubject()).thenReturn(subject);
         handler = new GetProjectChangesActionHandler(accessManager, changeManager);
-        when(project.getProjectChangesManager()).thenReturn(changeManager);
         when(changeManager.getProjectChanges(subject)).thenReturn(projectChanges);
     }
 

@@ -38,9 +38,6 @@ public class GetWatchedEntitiesActionHandler_TestCase {
     private GetWatchedEntityChangesAction action;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ExecutionContext context;
 
     @Mock
@@ -65,9 +62,7 @@ public class GetWatchedEntitiesActionHandler_TestCase {
     public void setUp() throws Exception {
         handler = new GetWatchedEntityChangesActionHandler(accessManager, watchManager, watchedChangesManager);
         when(action.getUserId()).thenReturn(userId);
-        when(project.getWatchManager()).thenReturn(watchManager);
         when(watchManager.getWatches(userId)).thenReturn(watches);
-        when(project.getWatchedChangesManager()).thenReturn(watchedChangesManager);
         when(watchedChangesManager.getProjectChangesForWatches(watches)).thenReturn(projectChanges);
     }
 

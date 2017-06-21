@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.revision;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
@@ -34,9 +33,6 @@ public class GetRevisionSummariesActionHandler_TestCase {
     private GetRevisionSummariesAction action;
 
     @Mock
-    private Project project;
-
-    @Mock
     private ExecutionContext executionContext;
 
     @Mock
@@ -60,7 +56,6 @@ public class GetRevisionSummariesActionHandler_TestCase {
         revisionSummaries.add(summaryB);
         revisionSummaries.add(summaryC);
         handler = new GetRevisionSummariesActionHandler(accessManager, revisionManager);
-        when(project.getChangeManager()).thenReturn(changeManager);
         when(changeManager.getRevisionSummaries()).thenReturn(revisionSummaries);
     }
 

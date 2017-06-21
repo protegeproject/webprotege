@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
@@ -21,11 +20,8 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.*;
-import java.util.Collections;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 /**

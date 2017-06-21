@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -12,6 +13,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -33,6 +36,10 @@ public class ProjectManager {
     }
 
 
+    @Nonnull
+    public ProjectActionHandlerRegistry getActionHandlerRegistry(@Nonnull ProjectId projectId) {
+        return projectCache.getActionHandlerRegistry(checkNotNull(projectId));
+    }
     
     public Project getProject(@Nonnull ProjectId projectId,
                               @Nonnull UserId requestingUser) throws ProjectDocumentNotFoundException {
