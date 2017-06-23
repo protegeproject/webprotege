@@ -4,49 +4,45 @@
 
     <ui:style>
         .cell-content {
-                box-sizing: border-box;
-                -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            line-height: 18px;
          }
 
         .xref-editor {
             width: 100%;
         }
-
-        .name-field {
-            display: inline-block;
-            width: 100%;
+        .xrefEditorHolder {
+            display: flex;
+            flex-direction: row;
         }
         .id-field {
-            display: inline-block;
-            width: 100%;
+            flex-grow: 0;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+        .name-field {
+            flex-grow: 1;
+            flex-shrink: 1;
+            box-sizing: border-box;
         }
         .description-field {
-            display: inline-block;
-            /*display: inline-block;*/
-            width: 100%;
-        }
-        .non-first-sib {
-            border-left: none;
+            flex-grow: 0;
+            flex-shrink: 1;
+            box-sizing: border-box;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.xref-editor}">
-        <table width="100%" cellspacing="0px" cellpadding="1px" style="border-collapse: collapse; table-layout: fixed;">
-            <colgroup>
-                <col width="80px"/>
-                <col width="120px"/>
-                <col width="*%"/>
-            </colgroup>
-            <tr>
-                <td>
-                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content} {style.name-field}"/>
-                </td>
-                <td>
-                    <text:PlaceholderTextBox ui:field="databaseIdField" placeholder="DB Id" addStyleNames="{style.cell-content} {style.id-field}"/>
-                </td>
-                <td>
-                    <text:PlaceholderTextBox ui:field="descriptionField" placeholder="Description" addStyleNames="{style.cell-content} {style.description-field} {style.non-first-sib}"/>
-                </td>
-            </tr>
-        </table>
+    <g:HTMLPanel addStyleNames="{style.xref-editor} web-protege-laf">
+            <div class="{style.xrefEditorHolder}">
+                <div class="{style.id-field}">
+                    <text:PlaceholderTextBox ui:field="databaseIdField" placeholder="DB Id" addStyleNames="{style.cell-content}"/>
+                </div>
+                <div class="{style.name-field}">
+                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content}"/>
+                </div>
+                <div class="{style.description-field}">
+                    <text:PlaceholderTextBox ui:field="descriptionField" placeholder="Description" addStyleNames="{style.cell-content}"/>
+                </div>
+            </div>
     </g:HTMLPanel>
 </ui:UiBinder>
