@@ -71,6 +71,7 @@ public class CreateNewProjectActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, projectSharingSettingsManager, accessManager);
+        when(projectManager.createNewProject(newProjectSettings)).thenReturn(projectId);
         when(executionContext.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("User_Name");
         when(projectDetailsManager.getProjectDetails(projectId)).thenReturn(projectDetails);
