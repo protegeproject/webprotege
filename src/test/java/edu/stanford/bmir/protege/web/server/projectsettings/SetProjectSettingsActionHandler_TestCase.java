@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
@@ -23,9 +24,6 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SetProjectSettingsActionHandler_TestCase {
-
-    @Mock
-    private ProjectDetailsManager psm;
 
     @Mock
     private SetProjectSettingsAction action;
@@ -47,18 +45,21 @@ public class SetProjectSettingsActionHandler_TestCase {
     @Mock
     private ProjectDetailsManager detailsManager;
 
+    @Mock
+    private ProjectDetails projectDetails;
+
     @Before
     public void setUp() throws Exception {
-        when(psm.getProjectSettings(projectId)).thenReturn(projectSettings);
         when(projectSettings.getProjectId()).thenReturn(projectId);
         when(action.getProjectId()).thenReturn(projectId);
         when(action.getProjectSettings()).thenReturn(projectSettings);
+        when(detailsManager.getProjectSettings(projectId)).thenReturn(projectSettings);
         handler = new SetProjectSettingsActionHandler(accessManager, detailsManager);
     }
 
     @Test
     public void shouldSetProjectSettings() {
         handler.execute(action, mock(ExecutionContext.class));
-        verify(psm, times(1)).setProjectSettings(projectSettings);
+        verify(detailsManager, times(1)).setProjectSettings(projectSettings);
     }
 }

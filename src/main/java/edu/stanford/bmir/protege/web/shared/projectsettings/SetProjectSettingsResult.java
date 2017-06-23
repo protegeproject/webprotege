@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.projectsettings;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -18,7 +20,7 @@ public class SetProjectSettingsResult implements Result {
 
     }
 
-    public SetProjectSettingsResult(ProjectSettings projectSettings) {
+    public SetProjectSettingsResult(@Nonnull ProjectSettings projectSettings) {
         this.projectSettings = checkNotNull(projectSettings);
     }
 

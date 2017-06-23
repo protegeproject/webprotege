@@ -36,11 +36,6 @@ public class GetRevisionSummariesActionHandler_TestCase {
     private ExecutionContext executionContext;
 
     @Mock
-    private RevisionManager changeManager;
-
-    private List<RevisionSummary> revisionSummaries;
-
-    @Mock
     private RevisionSummary summaryA, summaryB, summaryC;
 
     @Mock
@@ -51,12 +46,12 @@ public class GetRevisionSummariesActionHandler_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        revisionSummaries = new ArrayList<>();
+        List<RevisionSummary> revisionSummaries = new ArrayList<>();
         revisionSummaries.add(summaryA);
         revisionSummaries.add(summaryB);
         revisionSummaries.add(summaryC);
         handler = new GetRevisionSummariesActionHandler(accessManager, revisionManager);
-        when(changeManager.getRevisionSummaries()).thenReturn(revisionSummaries);
+        when(revisionManager.getRevisionSummaries()).thenReturn(revisionSummaries);
     }
 
     @Test

@@ -45,6 +45,7 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new GetHeadRevisionNumberActionHandler(accessManager, revisionManager);
+        when(revisionManager.getCurrentRevision()).thenReturn(revisionNumber);
     }
 
     @Test
