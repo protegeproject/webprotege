@@ -45,11 +45,9 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             ProjectAction projectAction = (ProjectAction) action;
             ProjectId projectId = projectAction.getProjectId();
             ProjectActionHandlerRegistry actionHanderRegistry = projectManager.getActionHandlerRegistry(projectId);
-            System.out.println("Got project action handler for project action: " + action.getClass().getSimpleName());
             actionHandler = actionHanderRegistry.getActionHandler(action);
         }
         else {
-            System.out.println("Got application action handler for application action: " + action.getClass().getSimpleName());
             actionHandler = handlerRegistry.getActionHandler(action);
         }
 
