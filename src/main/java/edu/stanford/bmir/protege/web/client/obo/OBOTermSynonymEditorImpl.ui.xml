@@ -36,7 +36,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main} web-protege-laf">
         <div class="{wp.style.formGroup} {style.synonymBlock}">
             <div class="{style.synonymTypeField}">
                 <g:Label text="Type" addStyleNames="{wp.style.formLabel}"/>

@@ -5,7 +5,7 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+    <g:HTMLPanel addStyleNames="web-protege-laf {wp.style.formMain}">
         <div class="{wp.style.formGroup}">
             <g:Label text="Definition" addStyleNames="{wp.style.formLabel}"/>
             <text:ExpandingTextBoxImpl ui:field="definitionField" width="100%" placeholder="Enter definition" anchorVisible="false"/>

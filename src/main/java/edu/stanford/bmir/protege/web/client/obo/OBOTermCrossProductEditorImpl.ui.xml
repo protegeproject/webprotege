@@ -16,29 +16,11 @@
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{wp.style.webProtegeLaf} {wp.style.formMain}">
+    <g:HTMLPanel addStyleNames="{wp.style.webProtegeLaf} web-protege-laf {wp.style.formMain}">
         <frame:PrimitiveDataEditorImpl ui:field="genusField" placeholder="Enter genus (class) name"
                                        addStyleNames="{style.cross-product-editor}"
                                        classesAllowed="true"/>
         <obo:OBOTermRelationshipEditor ui:field="relationshipsField"
                                        addStyleNames="{style.cross-product-editor}" enabled="true"/>
-
-        <!--<g:HTMLPanel>-->
-            <!--<table width="100%" cellpadding="0" cellspacing="0">-->
-                <!--<colgroup>-->
-                    <!--<col width="100%"/>-->
-                <!--</colgroup>-->
-                <!--<tr>-->
-                    <!--<td style="padding-bottom: 1px;">-->
-                        <!---->
-                    <!--</td>-->
-                <!--</tr>-->
-                <!--<tr>-->
-                    <!--<td>-->
-                    <!--</td>-->
-                <!--</tr>-->
-            <!--</table>-->
-        <!--</g:HTMLPanel>-->
-
     </g:HTMLPanel>
 </ui:UiBinder>
