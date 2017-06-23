@@ -31,23 +31,23 @@
         }
         .xrefsBlock {
             padding-top: 5px;
-            padding-bottom: 5px;
+            margin-left: 20px;
             margin-right: 20px;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} web-protege-laf">
-        <div class="{wp.style.formGroup} {style.synonymBlock}">
+        <div class="{style.synonymBlock}">
             <div class="{style.synonymTypeField}">
-                <g:Label text="Type" addStyleNames="{wp.style.formLabel}"/>
+                <!--<g:Label text="Type" addStyleNames="{wp.style.formLabel}"/>-->
                 <g:ListBox ui:field="synonymTypeField" visibleItemCount="1"/>
             </div>
             <div class="{style.synonymField}">
-                <g:Label text="Synonym" addStyleNames="{wp.style.formLabel}"/>
+                <!--<g:Label text="Synonym" addStyleNames="{wp.style.formLabel}"/>-->
                 <text:PlaceholderTextBox ui:field="synonymField" placeholder="Enter synonym"
                         addStyleNames="{style.textBoxStyle}"/>
-                <div class="{wp.style.formGroup} {style.xrefsBlock}">
-                    <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
+                <div class="{style.xrefsBlock}">
+                    <!--<g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>-->
                     <obo:XRefListEditor ui:field="xrefListField" enabled="true"/>
                 </div>
             </div>
