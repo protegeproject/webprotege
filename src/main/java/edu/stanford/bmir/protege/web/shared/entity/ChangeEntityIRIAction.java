@@ -47,6 +47,7 @@ public class ChangeEntityIRIAction implements ProjectAction<ChangeEntityIRIResul
         return theNewIri;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

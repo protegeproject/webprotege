@@ -36,6 +36,7 @@ public class DeleteEntityCommentAction implements ProjectAction<DeleteEntityComm
     private DeleteEntityCommentAction() {
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

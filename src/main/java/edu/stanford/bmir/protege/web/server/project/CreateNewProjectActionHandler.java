@@ -74,8 +74,7 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
             }
 
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
-            Project project = pm.createNewProject(newProjectSettings);
-            ProjectId projectId = project.getProjectId();
+            ProjectId projectId = pm.createNewProject(newProjectSettings);
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);
                 UserId userId = executionContext.getUserId();

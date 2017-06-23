@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,6 +39,7 @@ public class LookupEntitiesAction implements ProjectAction<LookupEntitiesResult>
      * Gets the {@link ProjectId} that identifies the project in which the lookup will be performed.
      * @return The {@link ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

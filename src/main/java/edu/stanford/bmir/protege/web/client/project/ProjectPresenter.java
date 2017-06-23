@@ -69,6 +69,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         this.perspectivePresenter = perspectivePresenter;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

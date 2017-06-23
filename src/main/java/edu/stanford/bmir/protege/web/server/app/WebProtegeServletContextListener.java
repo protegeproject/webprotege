@@ -37,9 +37,6 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("OntologyServiceImpl", servletComponent.getOntologyService())
                           .addMapping("/webprotege/ontology");
 
-            servletContext.addServlet("OBOTextEditorService", servletComponent.getOBOTextEditorService())
-                          .addMapping("/webprotege/obotexteditorservice");
-
             servletContext.addServlet("ProjectDownloadServlet", servletComponent.getFileDownloadServlet())
                           .addMapping("/download");
 

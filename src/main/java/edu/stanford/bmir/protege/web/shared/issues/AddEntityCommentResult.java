@@ -40,6 +40,7 @@ public class AddEntityCommentResult implements Result, HasProjectId {
     private AddEntityCommentResult() {
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

@@ -4,6 +4,8 @@ import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -23,6 +25,7 @@ public class ProjectMovedToTrashEvent extends WebProtegeEvent<ProjectMovedToTras
         this.projectId = projectId;
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

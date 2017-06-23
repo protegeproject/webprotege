@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -25,6 +27,7 @@ public class ProjectCreatedEvent extends Event<ProjectCreatedHandler> implements
     }
 
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectDetails.getProjectId();
     }

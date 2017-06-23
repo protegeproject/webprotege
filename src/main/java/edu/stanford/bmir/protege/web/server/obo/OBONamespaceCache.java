@@ -4,8 +4,11 @@ import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -22,7 +25,7 @@ public class OBONamespaceCache {
 
     public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
 
-    private Set<OBONamespace> namespaceCache = new HashSet<OBONamespace>();
+    private Set<OBONamespace> namespaceCache = new HashSet<>();
 
     private ReadWriteLock READ_WRITE_LOCK = new ReentrantReadWriteLock();
 
@@ -30,21 +33,23 @@ public class OBONamespaceCache {
 
     private Lock WRITE_LOCK = READ_WRITE_LOCK.writeLock();
 
-    private Project project;
+    @Nonnull
+    private final OWLOntology rootOntology;
 
-
-    public static OBONamespaceCache createCache(Project project) {
-        return new OBONamespaceCache(project);
+    private OBONamespaceCache(@Nonnull OWLOntology rootOntology) {
+        this.rootOntology = rootOntology;
     }
 
-    private OBONamespaceCache(Project project) {
-        this.project = project;
-        rebuildNamespaceCache();
+    @Nonnull
+    public static OBONamespaceCache get(@Nonnull OWLOntology rootOntology) {
+        OBONamespaceCache cache = new OBONamespaceCache(rootOntology);
+        cache.rebuildNamespaceCache();
+        return cache;
     }
 
     private void rebuildNamespaceCache() {
-        Set<OBONamespace> namespaces = new HashSet<OBONamespace>();
-        for(OWLAnnotation anno : project.getRootOntology().getAnnotations()) {
+        Set<OBONamespace> namespaces = new HashSet<>();
+        for(OWLAnnotation anno : rootOntology.getAnnotations()) {
             if(isNamespaceAnnotation(anno)) {
                 if(anno.getValue() instanceof OWLLiteral) {
                     OWLLiteral lit = (OWLLiteral) anno.getValue();
@@ -52,8 +57,8 @@ public class OBONamespaceCache {
                 }
             }
         }
-        for(OWLClass cls : project.getRootOntology().getClassesInSignature(true)) {
-            for(OWLAnnotationAssertionAxiom ax : EntitySearcher.getAnnotationAssertionAxioms(cls, project.getRootOntology())) {
+        for(OWLClass cls : rootOntology.getClassesInSignature(Imports.INCLUDED)) {
+            for(OWLAnnotationAssertionAxiom ax : EntitySearcher.getAnnotationAssertionAxioms(cls, rootOntology)) {
                 if(isNamespaceAnnotationProperty(ax)) {
                     if(ax.getValue() instanceof OWLLiteral) {
                         OWLLiteral lit = (OWLLiteral) ax.getValue();

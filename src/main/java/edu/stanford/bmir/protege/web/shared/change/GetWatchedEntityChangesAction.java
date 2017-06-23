@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,6 +31,7 @@ public class GetWatchedEntityChangesAction implements ProjectAction<GetWatchedEn
         this.userId = checkNotNull(userId);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

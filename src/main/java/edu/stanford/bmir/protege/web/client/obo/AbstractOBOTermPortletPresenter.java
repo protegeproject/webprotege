@@ -2,12 +2,11 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
-import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -18,22 +17,19 @@ import java.util.Optional;
  */
 public abstract class AbstractOBOTermPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-    private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
-
-    protected AbstractOBOTermPortletPresenter(SelectionModel selectionModel,
-                                              ProjectId projectId) {
+    protected AbstractOBOTermPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                              @Nonnull ProjectId projectId) {
         super(selectionModel, projectId);
-    }
-
-    public OBOTextEditorServiceAsync getService() {
-        return SERVICE;
     }
 
     @Override
     protected void handleBeforeSetEntity(Optional<? extends OWLEntity> existingEntity) {
-        if(existingEntity.isPresent() && isDirty()) {
-            commitChangesForEntity(existingEntity.get());
-        }
+        GWT.log("[AbstractOBOTermPortletPresenter] handleBeforeSetEntity: " + existingEntity);
+        existingEntity.ifPresent(entity -> {
+            if (isDirty()) {
+                commitChangesForEntity(entity);
+            }
+        });
     }
 
     @Override

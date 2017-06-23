@@ -3,22 +3,54 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+    <ui:style>
+        .termIdEditor {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+        .idField {
+            flex-grow: 0;
+            margin-right: 10px;
+        }
+        .nameField {
+            flex-grow: 1;
+        }
+        .namespaceField {
+            flex-grow: 0;
+            margin-left: 10px;
+        }
+        .nameTextBox {
+            width: 100%;
+        }
+        .generalField {
+            line-height: 20px;
+            height: 22px;
+            border: 1px solid #e0e0e0;
+            box-sizing: border-box;
+            padding-left: 2px;
+        }
+        .idTextBox {
+            width: 85px;
+        }
+    </ui:style>
 
-        <div class="{wp.style.formGroup}">
+    <g:HTMLPanel addStyleNames="{wp.style.formMain} {style.termIdEditor} webprotege-laf">
+
+        <div class="{wp.style.formGroup} {style.idField}">
             <g:Label text="Id" styleName="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="idField" enabled="false" width="100%"/>
+            <g:TextBox ui:field="idField" enabled="false" addStyleNames="{style.generalField} {style.idTextBox}"/>
         </div>
 
-        <div class="{wp.style.formGroup}">
+        <div class="{wp.style.formGroup} {style.nameField}">
             <g:Label text="Name" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="nameField" width="100%"/>
+            <g:TextBox ui:field="nameField" addStyleNames="{style.nameTextBox} {style.generalField}"/>
         </div>
 
 
-        <div class="{wp.style.formGroup}">
+        <div class="{wp.style.formGroup} {style.namespaceField}">
             <g:Label text="Namespace" addStyleNames="{wp.style.formLabel}"/>
-            <g:SuggestBox ui:field="namespaceField" width="100%"/>
+            <g:SuggestBox ui:field="namespaceField" addStyleNames="{style.generalField}"/>
         </div>
 
     </g:HTMLPanel>

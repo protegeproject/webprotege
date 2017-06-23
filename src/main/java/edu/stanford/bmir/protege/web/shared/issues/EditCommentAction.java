@@ -46,6 +46,7 @@ public class EditCommentAction implements ProjectAction<EditCommentResult> {
     private EditCommentAction() {
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

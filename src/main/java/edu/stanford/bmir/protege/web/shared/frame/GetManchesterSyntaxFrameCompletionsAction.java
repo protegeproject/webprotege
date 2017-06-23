@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -44,6 +45,7 @@ public class GetManchesterSyntaxFrameCompletionsAction implements ProjectAction<
         this.entityTypeSuggestLimit = entityTypeSuggestLimit;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

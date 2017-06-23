@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -34,6 +36,7 @@ public class GetDataPropertyFrameAction implements ProjectAction<GetDataProperty
         return subject;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

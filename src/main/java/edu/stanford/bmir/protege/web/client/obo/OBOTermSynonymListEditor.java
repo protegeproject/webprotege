@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -13,12 +15,8 @@ import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
  */
 public class OBOTermSynonymListEditor extends ValueListEditorImpl<OBOTermSynonym> {
 
+    @Inject
     public OBOTermSynonymListEditor() {
-        super(new ValueEditorFactory<OBOTermSynonym>() {
-            @Override
-            public ValueEditor<OBOTermSynonym> createEditor() {
-                return new OBOTermSynonymEditorImpl();
-            }
-        });
+        super(OBOTermSynonymEditorImpl::new);
     }
 }

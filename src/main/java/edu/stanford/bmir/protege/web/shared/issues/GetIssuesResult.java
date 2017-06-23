@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class GetIssuesResult implements Result, HasProjectId {
         this.issues = new ArrayList<>(issueCurClients);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

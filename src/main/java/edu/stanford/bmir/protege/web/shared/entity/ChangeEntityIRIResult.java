@@ -37,6 +37,7 @@ public class ChangeEntityIRIResult implements Result, HasProjectId {
         this.theNewEntity = checkNotNull(theNewEntity);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

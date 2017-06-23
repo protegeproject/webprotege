@@ -66,12 +66,6 @@ public class ClientProjectModule {
         return projectId;
     }
 
-
-    @Provides
-    OBOTermCrossProductEditor provideOboTermCrossProductEditor(OBOTermCrossProductEditorImpl editor) {
-        return editor;
-    }
-
     @Provides
     AnnotationsView provideAnnotationsView(AnnotationsViewImpl view) {
         return view;

@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -28,6 +30,7 @@ public class AddWatchAction implements ProjectAction<AddWatchResult>, HasUserId 
     private AddWatchAction() {
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

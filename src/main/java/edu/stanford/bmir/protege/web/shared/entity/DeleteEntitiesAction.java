@@ -36,6 +36,7 @@ public class DeleteEntitiesAction implements ProjectAction<DeleteEntitiesResult>
         this.projectId = checkNotNull(projectId);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

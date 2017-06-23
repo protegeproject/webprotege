@@ -50,6 +50,7 @@ public class DiscussionThreadStatusChangedEvent extends ProjectEvent<DiscussionT
     private DiscussionThreadStatusChangedEvent() {
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

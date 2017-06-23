@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -39,6 +40,7 @@ public abstract class AbstractHasProjectIdAndSubject<S> implements HasProjectId,
      * Get the {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.
      * @return The {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     final public ProjectId getProjectId() {
         return projectId;

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -48,6 +49,7 @@ public abstract class AbstractCreateEntityResult<E extends OWLEntity> implements
         return Optional.ofNullable(browserText2EntityMap.get(entity));
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

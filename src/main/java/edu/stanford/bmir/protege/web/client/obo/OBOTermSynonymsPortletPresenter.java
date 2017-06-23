@@ -1,19 +1,21 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermSynonymsAction;
+import edu.stanford.bmir.protege.web.shared.obo.SetOboTermSynonymsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,18 +26,32 @@ import java.util.Optional;
 @Portlet(id = "portlets.obo.TermSynonyms", title = "OBO Term Synonyms")
 public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPresenter {
 
-    private OBOTermSynonymListEditor editor;
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+
+    @Nonnull
+    private final OBOTermSynonymListEditor editor;
+
+    @Nonnull
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public OBOTermSynonymsPortletPresenter(SelectionModel selectionModel, ProjectId projectId) {
+    public OBOTermSynonymsPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                           @Nonnull ProjectId projectId,
+                                           @Nonnull DispatchServiceManager dispatch,
+                                           @Nonnull OBOTermSynonymListEditor editor,
+                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, projectId);
-        editor = new OBOTermSynonymListEditor();
-        editor.setEnabled(true);
+        this.dispatch = dispatch;
+        this.editor = editor;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(editor);
+        editor.setEnabled(false);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, editor::setEnabled);
     }
 
     @Override
@@ -45,11 +61,9 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        getService().getSynonyms(getProjectId(), entity, new AbstractWebProtegeAsyncCallback<Collection<OBOTermSynonym>>() {
-            public void onSuccess(Collection<OBOTermSynonym> result) {
-                editor.setValue(new ArrayList<>(result));
-            }
-        });
+        dispatch.execute(new GetOboTermSynonymsAction(getProjectId(), entity),
+                         this,
+                         result -> editor.setValue(result.getSynonyms()));
     }
 
     @Override
@@ -59,11 +73,10 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        Optional<List<OBOTermSynonym>> synonyms = editor.getValue();
-        if(!synonyms.isPresent()) {
-            return;
-        }
-        getService().setSynonyms(getProjectId(), entity, synonyms.get(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term synonyms have not been applied."));
+        editor.getValue().ifPresent(synonyms -> {
+            dispatch.execute(new SetOboTermSynonymsAction(getProjectId(), entity, synonyms),
+                             result -> {});
+        });
     }
 
     @Override

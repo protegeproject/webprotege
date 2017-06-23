@@ -50,7 +50,7 @@ public class OBOTermCrossProduct implements Serializable {
     }
     
     public boolean isEmpty() {
-        return genus != null || relationships.isEmpty();
+        return genus == null || relationships.isEmpty();
     }
 
     @Override

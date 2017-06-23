@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,6 +38,7 @@ public class ProjectViewPlace extends Place implements HasProjectId {
         return new Builder(projectId, perspectiveId);
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

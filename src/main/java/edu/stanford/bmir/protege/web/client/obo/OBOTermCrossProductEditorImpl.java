@@ -81,12 +81,15 @@ public class OBOTermCrossProductEditorImpl extends Composite implements OBOTermC
 
     @Override
     public void setValue(OBOTermCrossProduct object) {
+        GWT.log("Setting XP: " + object);
+        GWT.log("Empty: " + object.isEmpty());
         if (object.isEmpty()) {
             clearValue();
         }
         else {
+
             genusField.setValue(object.getGenus().get());
-            relationshipsField.setValue(new ArrayList<OBORelationship>(object.getRelationships().getRelationships()));
+            relationshipsField.setValue(new ArrayList<>(object.getRelationships().getRelationships()));
         }
     }
 

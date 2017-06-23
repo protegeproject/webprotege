@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
@@ -44,6 +46,7 @@ public class GetClassFrameAction implements ProjectAction<GetClassFrameResult>, 
      *
      * @return The {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

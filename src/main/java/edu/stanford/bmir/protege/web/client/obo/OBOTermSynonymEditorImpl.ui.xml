@@ -6,33 +6,51 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
-        .topBlock {
-            display: inline-block;
+        .main {
+            border: 5px solid #f0f0f0;
+            padding: 5px;
         }
-        .topBlockLeft {
-            padding-right: 20px;
+        .synonymBlock {
+            display: flex;
+            flex-direction: row;
         }
-        .textBox {
-            border: solid 1px silver !important;
+        .synonymTypeField {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
+        .synonymField {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .textBoxStyle {
+            line-height: 20px;
+            border-bottom: 1px solid #e0e0e0 !important;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .xrefsBlock {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            margin-right: 20px;
         }
     </ui:style>
 
-    <g:HTMLPanel>
-        <div class="{wp.style.formGroup}">
-            <div class="{style.topBlock} {style.topBlockLeft}">
-                <g:Label text="Synonym type" addStyleNames="{wp.style.formLabel}"/>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <div class="{wp.style.formGroup} {style.synonymBlock}">
+            <div class="{style.synonymTypeField}">
+                <g:Label text="Type" addStyleNames="{wp.style.formLabel}"/>
                 <g:ListBox ui:field="synonymTypeField" visibleItemCount="1"/>
             </div>
-            <div class="{style.topBlock}">
+            <div class="{style.synonymField}">
                 <g:Label text="Synonym" addStyleNames="{wp.style.formLabel}"/>
-                <text:PlaceholderTextBox ui:field="synonymField" placeholder="Enter synonym" visibleLength="100"
-                        addStyleNames="{style.textBox}"/>
+                <text:PlaceholderTextBox ui:field="synonymField" placeholder="Enter synonym"
+                        addStyleNames="{style.textBoxStyle}"/>
+                <div class="{wp.style.formGroup} {style.xrefsBlock}">
+                    <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
+                    <obo:XRefListEditor ui:field="xrefListField" enabled="true"/>
+                </div>
             </div>
-        </div>
-
-        <div class="{wp.style.formGroup}">
-            <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
-            <obo:XRefListEditor ui:field="xrefListField" enabled="true"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

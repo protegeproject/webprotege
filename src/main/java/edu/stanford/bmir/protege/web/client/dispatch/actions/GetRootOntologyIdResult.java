@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -33,6 +35,7 @@ public class GetRootOntologyIdResult implements Result, HasProjectId {
      *
      * @return The {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

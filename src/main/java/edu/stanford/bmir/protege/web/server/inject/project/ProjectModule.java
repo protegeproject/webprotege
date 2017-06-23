@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyCheck
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
+import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
@@ -538,6 +539,11 @@ public class ProjectModule {
     @Provides
     HasHasAncestor<OWLNamedIndividual, OWLClass> provideNamedIndividualClassHasAncestor(NamedIndividualClassAncestorChecker checker) {
         return checker;
+    }
+
+    @Provides
+    OBONamespaceCache providesOboNamespaceCache(@RootOntology OWLOntology rootOntology) {
+        return OBONamespaceCache.get(rootOntology);
     }
 
 

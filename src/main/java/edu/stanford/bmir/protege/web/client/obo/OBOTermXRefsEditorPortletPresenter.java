@@ -1,16 +1,19 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermXRefsAction;
+import edu.stanford.bmir.protege.web.shared.obo.SetOboTermXRefsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,19 +24,35 @@ import java.util.List;
 @Portlet(id = "portlets.obo.TermXRefs", title = "OBO Term XRefs")
 public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPresenter {
 
+
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+
+    @Nonnull
     private final XRefListEditor editor;
-    
+
+    @Nonnull
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
 
     @Inject
-    public OBOTermXRefsEditorPortletPresenter(SelectionModel selectionModel, ProjectId projectId) {
+    public OBOTermXRefsEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                              @Nonnull ProjectId projectId,
+                                              @Nonnull DispatchServiceManager dispatch,
+                                              @Nonnull XRefListEditor editor,
+                                              @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, projectId);
-        editor = new XRefListEditor();
-        editor.setEnabled(true);
+        this.dispatch = dispatch;
+        this.editor = editor;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(editor);
+        editor.setEnabled(false);
+        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY, editor::setEnabled);
+
     }
 
     @Override
@@ -43,19 +62,16 @@ public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPr
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        if(!editor.getValue().isPresent()) {
-            return;
-        }
-        getService().setXRefs(getProjectId(), entity, editor.getValue().get(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term XRefs have not been applied"));
+        editor.getValue().ifPresent(xrefs -> dispatch.execute(new SetOboTermXRefsAction(getProjectId(), entity, xrefs),
+                                                              result -> {
+                                                              }));
     }
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        getService().getXRefs(getProjectId(), entity, new AbstractWebProtegeAsyncCallback<List<OBOXRef>>() {
-            public void onSuccess(List<OBOXRef> result) {
-                editor.setValue(result);
-            }
-        });
+        dispatch.execute(new GetOboTermXRefsAction(getProjectId(), entity),
+                         this,
+                         result -> editor.setValue(result.getxRefs()));
     }
 
     @Override

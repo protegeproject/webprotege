@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -13,12 +15,8 @@ import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
  */
 public class XRefListEditor extends ValueListEditorImpl<OBOXRef> {
 
+    @Inject
     public XRefListEditor() {
-        super(new ValueEditorFactory<OBOXRef>() {
-            @Override
-            public ValueEditor<OBOXRef> createEditor() {
-                return new XRefEditorImpl();
-            }
-        });
+        super(XRefEditorImpl::new);
     }
 }

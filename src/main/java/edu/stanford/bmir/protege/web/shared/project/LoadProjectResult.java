@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -40,6 +42,7 @@ public class LoadProjectResult implements Result, HasUserId, HasProjectId {
         return userId;
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

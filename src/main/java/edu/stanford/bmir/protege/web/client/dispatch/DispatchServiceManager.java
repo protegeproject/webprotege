@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermIdAction;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
@@ -60,6 +61,8 @@ public class DispatchServiceManager {
     private int requestCount;
 
     private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<ProjectId, ResultCache>();
+
+
 
     private ResultCache getResultCache(ProjectId projectId, EventBus eventBus) {
         ResultCache resultCache = resultCacheMap.get(projectId);

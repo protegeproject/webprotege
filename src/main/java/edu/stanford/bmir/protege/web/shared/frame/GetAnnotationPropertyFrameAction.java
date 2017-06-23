@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -30,6 +32,7 @@ public class GetAnnotationPropertyFrameAction implements ProjectAction<GetAnnota
         return subject;
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

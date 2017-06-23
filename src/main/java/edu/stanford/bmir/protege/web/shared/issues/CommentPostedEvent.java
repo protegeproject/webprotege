@@ -66,6 +66,7 @@ public class CommentPostedEvent extends ProjectEvent<CommentPostedHandler> imple
         handler.handleCommentPosted(this);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

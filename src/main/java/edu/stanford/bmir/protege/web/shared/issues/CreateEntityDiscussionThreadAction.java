@@ -42,6 +42,7 @@ public class CreateEntityDiscussionThreadAction implements ProjectAction<CreateE
     public CreateEntityDiscussionThreadAction() {
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
