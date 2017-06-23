@@ -22,12 +22,12 @@
             box-sizing: border-box;
         }
         .name-field {
-            flex-grow: 1;
-            flex-shrink: 1;
+            flex-grow: 0;
+            flex-shrink: 0;
             box-sizing: border-box;
         }
         .description-field {
-            flex-grow: 0;
+            flex-grow: 1;
             flex-shrink: 1;
             box-sizing: border-box;
         }
