@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -13,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +29,8 @@ import java.util.Set;
  * Date: 14/06/2013
  */
 public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
+
+    private boolean enabled = true;
 
     interface OBOTermIdEditorImplUiBinder extends UiBinder<HTMLPanel, OBOTermIdEditorImpl> {
 
@@ -49,11 +56,15 @@ public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
     private Set<OBONamespace> namespaces = new HashSet<OBONamespace>();
 
 
+    @Inject
     public OBOTermIdEditorImpl() {
         namespaceField = new SuggestBox(new NamespaceSuggestOracle());
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+        namespaceField.addSelectionHandler(event -> {
+            dirty = true;
+        });
     }
 
     @Override
@@ -64,6 +75,18 @@ public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
     @Override
     public boolean isWellFormed() {
         return getValue().isPresent();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        nameField.setEnabled(enabled);
+        namespaceField.setEnabled(enabled);
     }
 
     @Override
@@ -134,8 +157,10 @@ public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
         return idField.getValue().trim();
     }
 
-
-
+    @UiHandler("nameField")
+    public void nameFieldChanged(ValueChangeEvent<String> event) {
+        dirty = true;
+    }
 
     private class NamespaceSuggestOracle extends SuggestOracle {
 

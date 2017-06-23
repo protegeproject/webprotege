@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
@@ -25,6 +27,7 @@ public class GetEntityRenderingAction implements ProjectAction<GetEntityRenderin
         this.entity = entity;
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

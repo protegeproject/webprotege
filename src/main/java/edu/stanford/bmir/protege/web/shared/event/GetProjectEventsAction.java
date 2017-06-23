@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -43,6 +44,7 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
         return sinceTag;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

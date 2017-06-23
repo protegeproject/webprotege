@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -26,6 +27,7 @@ public class GetIssuesAction implements ProjectAction<GetIssuesResult> {
         this.projectId = checkNotNull(projectId);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

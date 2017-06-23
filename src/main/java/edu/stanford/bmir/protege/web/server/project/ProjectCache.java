@@ -121,9 +121,6 @@ public class ProjectCache {
         }
     }
 
-
-
-
     public Project getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
         return getProjectInternal(projectId, AccessMode.NORMAL);
     }
@@ -185,13 +182,13 @@ public class ProjectCache {
         return projectIdInterner.intern(projectId);
     }
 
-    public Project getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
+    public ProjectId getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, OWLOntologyStorageException, IOException {
         ProjectId projectId = ProjectIdFactory.getFreshProjectId();
         if(newProjectSettings.hasSourceDocument()) {
             ProjectImporter importer = projectImporterFactory.getProjectImporter(projectId);
             importer.createProjectFromSources(newProjectSettings.getSourceDocumentId(), newProjectSettings.getProjectOwner());
         }
-        return getProjectInternal(projectId, AccessMode.NORMAL);
+        return getProjectInternal(projectId, AccessMode.NORMAL).getProjectId();
     }
 
     public void purge(ProjectId projectId) {

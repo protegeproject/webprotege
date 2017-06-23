@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.crud;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -32,6 +34,7 @@ public class SetEntityCrudKitSettingsAction implements ProjectAction<SetEntityCr
         this.prefixUpdateStrategy = prefixUpdateStrategy;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

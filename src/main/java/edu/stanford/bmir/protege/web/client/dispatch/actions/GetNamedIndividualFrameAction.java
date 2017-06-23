@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -37,6 +39,7 @@ public class GetNamedIndividualFrameAction implements ProjectAction<GetNamedIndi
      *
      * @return The {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

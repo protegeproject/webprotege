@@ -56,7 +56,7 @@ public class ProjectManager {
         return projectCache.isActive(projectId);
     }
     
-    public Project createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
+    public ProjectId createNewProject(@Nonnull NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
         return projectCache.getProject(newProjectSettings);
     }
 }

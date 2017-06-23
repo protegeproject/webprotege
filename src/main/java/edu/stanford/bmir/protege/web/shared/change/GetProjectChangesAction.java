@@ -37,6 +37,7 @@ public class GetProjectChangesAction implements ProjectAction<GetProjectChangesR
         this.subject = checkNotNull(subject).orElse(null);
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

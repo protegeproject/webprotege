@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class OBOTermDefinitionEditorImpl extends Composite implements OBOTermDef
 
     private boolean dirty = false;
 
-
+    @Inject
     public OBOTermDefinitionEditorImpl() {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

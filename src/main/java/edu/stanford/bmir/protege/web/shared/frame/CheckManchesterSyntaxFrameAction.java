@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +40,7 @@ public class CheckManchesterSyntaxFrameAction implements ProjectAction<CheckManc
         this.freshEntities = new HashSet<OWLEntityData>(freshEntities);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

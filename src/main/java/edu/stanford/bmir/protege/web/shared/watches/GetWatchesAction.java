@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -45,6 +47,7 @@ public class GetWatchesAction implements ProjectAction<GetWatchesResult>, HasUse
      * Gets the {@link ProjectId}.
      * @return The {@link ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

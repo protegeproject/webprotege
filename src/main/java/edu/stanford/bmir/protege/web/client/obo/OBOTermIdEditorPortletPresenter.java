@@ -1,20 +1,25 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
+import edu.stanford.bmir.protege.web.shared.obo.SetOboTermIdAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.Set;
+
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static edu.stanford.bmir.protege.web.shared.obo.GetOboNamespacesAction.getOboNamespaces;
+import static edu.stanford.bmir.protege.web.shared.obo.GetOboTermIdAction.getOboTermId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,27 +30,37 @@ import java.util.Set;
 @Portlet(id = "portlets.obo.TermId", title = "OBO Term Id")
 public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPresenter {
 
-    private OBOTermIdEditor editor;
+    @Nonnull
+    private final OBOTermIdEditor editor;
+
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+
+    @Nonnull
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public OBOTermIdEditorPortletPresenter(SelectionModel selectionModel, ProjectId projectId) {
+    public OBOTermIdEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                           @Nonnull ProjectId projectId,
+                                           @Nonnull OBOTermIdEditor editor,
+                                           @Nonnull DispatchServiceManager dispatchServiceManager,
+                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, projectId);
-//        setAutoScroll(false);
-        editor = new OBOTermIdEditorImpl();
-        getService().getNamespaces(getProjectId(), new AsyncCallback<Set<OBONamespace>>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.showMessage(caught.getMessage());
-            }
-
-            public void onSuccess(Set<OBONamespace> result) {
-                editor.setAvailableNamespaces(result);
-            }
-        });
+        this.editor = editor;
+        this.dispatch = dispatchServiceManager;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setWidget(editor.asWidget());
+        dispatch.execute(getOboNamespaces(getProjectId()),
+                         this,
+                         result -> {
+                             editor.setAvailableNamespaces(result.getNamespaces());
+                             portletUi.setWidget(editor);
+                             editor.setEnabled(false);
+                             permissionChecker.hasPermission(EDIT_ONTOLOGY, editor::setEnabled);
+                         });
     }
 
     @Override
@@ -55,21 +70,15 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        OBOTextEditorServiceAsync service = getService();
-        service.getTermId(getProjectId(), entity, new AsyncCallback<OBOTermId>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.showMessage(caught.getMessage());
-            }
-
-            public void onSuccess(OBOTermId result) {
-                editor.setValue(result);
-            }
-        });
+        dispatch.execute(getOboTermId(getProjectId(), entity),
+                         this,
+                         result -> editor.setValue(result.getTermId()));
 
     }
 
     @Override
     protected boolean isDirty() {
+        GWT.log("Is dirty: " + editor.isDirty());
         return editor.isDirty();
     }
 
@@ -77,12 +86,14 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
     protected void commitChangesForEntity(OWLEntity entity) {
         Optional<OBOTermId> editedTermId = editor.getValue();
         if (editedTermId.isPresent()) {
-            getService().setTermId(getProjectId(), entity, editedTermId.get(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term Id have not been applied."));
+            dispatch.execute(new SetOboTermIdAction(getProjectId(), entity, editedTermId.get()),
+                             result -> {
+                             });
         }
     }
 
     @Override
     protected String getTitlePrefix() {
-        return "Term ID Information";
+        return "OBO Term Id";
     }
 }

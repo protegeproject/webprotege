@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,6 +37,7 @@ public class UnknownProjectException extends RuntimeException implements Seriali
      * Get the {@link ProjectId} of the unknown project.
      * @return The {@link ProjectId}.  Not {@code null}.
      */
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

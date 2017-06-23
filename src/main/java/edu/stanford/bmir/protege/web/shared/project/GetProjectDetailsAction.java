@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,6 +25,7 @@ public class GetProjectDetailsAction implements Action<GetProjectDetailsResult>,
         this.projectId = checkNotNull(projectId);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

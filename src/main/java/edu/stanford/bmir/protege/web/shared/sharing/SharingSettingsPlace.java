@@ -4,6 +4,7 @@ import com.google.gwt.place.shared.Place;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public class SharingSettingsPlace extends Place implements HasProjectId {
         this.projectId = projectId;
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

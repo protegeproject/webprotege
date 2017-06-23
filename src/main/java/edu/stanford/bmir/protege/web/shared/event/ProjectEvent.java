@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.event;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -19,6 +21,7 @@ public abstract class ProjectEvent<H> extends WebProtegeEvent<H> implements HasP
     }
 
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return getSource();

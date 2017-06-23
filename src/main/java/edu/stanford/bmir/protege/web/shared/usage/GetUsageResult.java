@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -31,6 +32,7 @@ public class GetUsageResult implements Result, HasSignature, HasProjectId {
         this.totalUsageCount = totalUsageCount;
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

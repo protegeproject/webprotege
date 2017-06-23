@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,6 +32,7 @@ public class RevertRevisionResult implements Result, HasProjectId, HasEventList<
         this.eventList = checkNotNull(eventList);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

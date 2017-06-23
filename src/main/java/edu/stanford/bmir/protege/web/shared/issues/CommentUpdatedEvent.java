@@ -48,6 +48,7 @@ public class CommentUpdatedEvent extends ProjectEvent<CommentUpdatedHandler> imp
         handler.handleCommentUpdated(this);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

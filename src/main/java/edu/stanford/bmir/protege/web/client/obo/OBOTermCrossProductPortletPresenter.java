@@ -1,18 +1,18 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermCrossProductAction;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
+import edu.stanford.bmir.protege.web.shared.obo.SetOboTermCrossProductAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -25,16 +25,22 @@ import java.util.Optional;
 @Portlet(id = "portlets.obo.TermCrossProduct", title = "OBO Term Cross Product")
 public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletPresenter {
 
-    private OBOTermCrossProductEditor editor;
+    @Nonnull
+    private final OBOTermCrossProductEditor editor;
+
+    @Nonnull
+    private final DispatchServiceManager dispatch;
 
     private Optional<OBOTermCrossProduct> pristineValue = Optional.empty();
 
     @Inject
-    public OBOTermCrossProductPortletPresenter(OBOTermCrossProductEditor editor,
-                                               SelectionModel selectionModel,
-                                               ProjectId projectId) {
+    public OBOTermCrossProductPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                               @Nonnull ProjectId projectId,
+                                               @Nonnull OBOTermCrossProductEditor editor,
+                                               @Nonnull DispatchServiceManager dispatch) {
         super(selectionModel, projectId);
         this.editor = editor;
+        this.dispatch = dispatch;
     }
 
     @Override
@@ -54,16 +60,13 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
             editor.clearValue();
         }
         else {
-            getService().getCrossProduct(getProjectId(), (OWLClass) entity, new AsyncCallback<OBOTermCrossProduct>() {
-                public void onFailure(Throwable caught) {
-                    GWT.log(caught.getMessage(), caught);
-                }
-
-                public void onSuccess(OBOTermCrossProduct result) {
-                    pristineValue = Optional.of(result);
-                    editor.setValue(result);
-                }
-            });
+            dispatch.execute(new GetOboTermCrossProductAction(getProjectId(), entity.asOWLClass()),
+                             this,
+                             result -> {
+                                 pristineValue = Optional.of(result.getCrossProduct());
+                                 GWT.log("Got XP: " + result.getCrossProduct());
+                                 editor.setValue(result.getCrossProduct());
+                             });
         }
     }
 
@@ -80,22 +83,11 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
         if (!editor.getValue().isPresent()) {
             return;
         }
-        OBOTermCrossProduct crossProduct = editor.getValue().get();
-        getService().setCrossProduct(getProjectId(), (OWLClass) entity, crossProduct, new AsyncCallback<Void>() {
-            public void onFailure(Throwable caught) {
-                if (caught instanceof NotSignedInException) {
-                    MessageBox.showMessage(
-                            "You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");
-                }
-                else {
-                    MessageBox.showMessage(caught.getMessage());
-                    GWT.log(caught.getMessage(), caught);
-                }
-            }
-
-            public void onSuccess(Void result) {
-            }
-        });
+        editor.getValue()
+              .ifPresent(crossProduct -> dispatch.execute(new SetOboTermCrossProductAction(getProjectId(),
+                                                                                           entity.asOWLClass(),
+                                                                                           crossProduct),
+                                                          result -> {}));
     }
 
     @Override

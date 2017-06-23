@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -45,6 +46,7 @@ public class SetManchesterSyntaxFrameAction implements ProjectAction<SetManchest
         this.commitMessage = checkNotNull(commitMessage).orElse(null);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

@@ -1,18 +1,21 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
+import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermRelationshipsAction;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
+import edu.stanford.bmir.protege.web.shared.obo.SetOboTermRelationshipsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -24,16 +27,24 @@ import java.util.*;
  */
 @Portlet(id = "portlets.obo.TermRelationships", title = "OBO Term Relationships")
 public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletPresenter {
-    
+
+
+    @Nonnull
+    private final DispatchServiceManager dispatch;
+
+    @Nonnull
     private final OBOTermRelationshipEditor editor;
 
     private Optional<List<OBORelationship>> pristineValue = Optional.empty();
 
     @Inject
-    public OBOTermRelationshipPortletPresenter(OBOTermRelationshipEditor editor, ProjectId projectId, SelectionModel selectionModel) {
+    public OBOTermRelationshipPortletPresenter(@Nonnull SelectionModel selectionModel,
+                                               @Nonnull ProjectId projectId,
+                                               @Nonnull DispatchServiceManager dispatch,
+                                               @Nonnull OBOTermRelationshipEditor editor) {
         super(selectionModel, projectId);
+        this.dispatch = dispatch;
         this.editor = editor;
-        this.editor.setEnabled(true);
     }
 
     @Override
@@ -43,8 +54,8 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
 
     @Override
     protected boolean isDirty() {
-        boolean dirty = !editor.getValue().equals(pristineValue);
-        GWT.log("OBO Term Relationship Portlet: isDirty = " + dirty);
+        boolean dirty = editor.isDirty();
+        GWT.log("[OBOTermRelationshipPortletPresenter] isDirty = " + dirty);
         return dirty;
     }
 
@@ -54,7 +65,10 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
             return;
         }
         List<OBORelationship> relationships = editor.getValue().orElse(Collections.emptyList());
-        getService().setRelationships(getProjectId(), (OWLClass) entity, new OBOTermRelationships(new HashSet<OBORelationship>(relationships)), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
+        dispatch.execute(new SetOboTermRelationshipsAction(getProjectId(), entity,
+                                                           new OBOTermRelationships(Sets.newHashSet(relationships))),
+                         result -> {});
+
     }
 
     @Override
@@ -70,18 +84,13 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
             pristineValue = Optional.empty();
             return;
         }
-        getService().getRelationships(getProjectId(),  (OWLClass) current.get(), new AsyncCallback<OBOTermRelationships>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.showMessage(caught.getMessage());
-            }
-
-            public void onSuccess(OBOTermRelationships result) {
-                Set<OBORelationship> relationships = result.getRelationships();
-                List<OBORelationship> listOfRels = new ArrayList<OBORelationship>(relationships);
-                pristineValue = Optional.of(listOfRels);
-                editor.setValue(listOfRels);
-            }
-        });
+        dispatch.execute(new GetOboTermRelationshipsAction(getProjectId(), entity.asOWLClass()),
+                         this,
+                         result -> {
+                             List<OBORelationship> listOfRels = new ArrayList<>(result.getRelationships().getRelationships());
+                             pristineValue = Optional.of(listOfRels);
+                             editor.setValue(listOfRels);
+                         });
     }
 
     @Override

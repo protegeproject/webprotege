@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
 import dagger.Subcomponent;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
@@ -17,5 +18,8 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 @ProjectSingleton
 public interface ProjectComponent {
 
+    @Deprecated
     Project getProject();
+
+    ProjectActionHandlerRegistry getActionHandlerRegistry();
 }

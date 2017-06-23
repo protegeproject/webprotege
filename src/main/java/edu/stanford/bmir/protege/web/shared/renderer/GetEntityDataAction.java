@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -36,6 +37,7 @@ public class GetEntityDataAction implements ProjectAction<GetEntityDataResult> {
         this.entities = ImmutableSet.copyOf(checkNotNull(entities));
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,6 +42,7 @@ public class SetEntityWatchesAction implements ProjectAction<SetEntityWatchesRes
         this.watches = checkNotNull(watches);
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

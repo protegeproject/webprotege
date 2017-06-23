@@ -4,6 +4,8 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,6 +30,7 @@ public class LoadProjectAction implements Action<LoadProjectResult>, HasProjectI
         this.projectId = checkNotNull(projectId);
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.render.GetEntityRenderingA
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
+import edu.stanford.bmir.protege.web.server.obo.*;
 import edu.stanford.bmir.protege.web.server.perspective.*;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
@@ -37,6 +38,7 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermCrossProductAction;
 
 import static dagger.Provides.Type.SET;
 
@@ -397,4 +399,66 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler providesGetClassFrameActionHandler(GetClassFrameActionHandler handler) {
         return handler;
     }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboTermIdActionHandler(GetOboTermIdActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboTermDefinitionActionHandler(GetOboTermDefinitionActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboNamespacesActionHandler(GetOboNamespacesActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetOboTermIdActionHandler(SetOboTermIdActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetOboTermDefinitionActionHandler(SetOboTermDefinitionActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboTermRelationshipsActionHandler(GetOboTermRelationshipsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboTermCrossProductsActionHandler(GetOboTermCrossProductsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetOboTermCrossProductsActionHandler(SetOboTermCrossProductsActionHandler handler) {
+        return handler;
+    }
+
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboTermSynonymsActionHandler(GetOboTermSynonymsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetOboTermSynonymsActionHandler(SetOboTermSynonymsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetOboTermXRefsActionHandler(GetOboTermXRefsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetOboTermXRefsActionHandler(SetOboTermXRefsActionHandler handler) {
+        return handler;
+    }
+
 }

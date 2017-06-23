@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonymScope;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class OBOTermSynonymEditorImpl extends Composite implements OBOTermSynony
     private boolean dirty;
 
 
+    @Inject
     public OBOTermSynonymEditorImpl() {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
@@ -88,8 +90,6 @@ public class OBOTermSynonymEditorImpl extends Composite implements OBOTermSynony
         setDirty(true);
         ValueChangeEvent.fire(this, getValue());
     }
-
-
 
     @Override
     public boolean isWellFormed() {

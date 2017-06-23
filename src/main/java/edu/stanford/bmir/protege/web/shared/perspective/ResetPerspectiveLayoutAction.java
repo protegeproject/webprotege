@@ -43,6 +43,7 @@ public class ResetPerspectiveLayoutAction implements ProjectAction<ResetPerspect
         return new ResetPerspectiveLayoutAction(projectId, perspectiveId);
     }
 
+    @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;

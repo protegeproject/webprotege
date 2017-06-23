@@ -43,6 +43,7 @@ public class AddEntityCommentAction implements ProjectAction<AddEntityCommentRes
     private AddEntityCommentAction() {
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }

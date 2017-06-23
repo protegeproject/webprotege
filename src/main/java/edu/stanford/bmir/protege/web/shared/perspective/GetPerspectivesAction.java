@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -24,6 +26,7 @@ public class GetPerspectivesAction implements ProjectAction<GetPerspectivesResul
         this.userId = userId;
     }
 
+    @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
