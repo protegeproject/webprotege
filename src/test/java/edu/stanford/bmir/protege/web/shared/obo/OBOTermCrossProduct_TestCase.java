@@ -1,28 +1,29 @@
 
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import com.google.googlejavaformat.Op;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OBOTermCrossProduct_TestCase {
 
-    private OBOTermCrossProduct crossProduct;
+    private OBOTermCrossProduct oBOTermCrossProduct;
 
     private Optional<OWLClassData> genus = Optional.of(mock(OWLClassData.class));
 
@@ -30,12 +31,11 @@ public class OBOTermCrossProduct_TestCase {
     private OBOTermRelationships relationships;
 
     @Before
-    public void setUp()
-        throws Exception
-    {
-        crossProduct = new OBOTermCrossProduct(genus, relationships);
+    public void setUp() {
+        oBOTermCrossProduct = new OBOTermCrossProduct(genus, relationships);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_genus_IsNull() {
         new OBOTermCrossProduct(null, relationships);
@@ -43,9 +43,10 @@ public class OBOTermCrossProduct_TestCase {
 
     @Test
     public void shouldReturnSupplied_genus() {
-        assertThat(crossProduct.getGenus(), is(this.genus));
+        assertThat(oBOTermCrossProduct.getGenus(), is(this.genus));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_relationships_IsNull() {
         new OBOTermCrossProduct(genus, null);
@@ -53,43 +54,59 @@ public class OBOTermCrossProduct_TestCase {
 
     @Test
     public void shouldReturnSupplied_relationships() {
-        assertThat(crossProduct.getRelationships(), is(this.relationships));
+        assertThat(oBOTermCrossProduct.getRelationships(), is(this.relationships));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(crossProduct, is(crossProduct));
+        assertThat(oBOTermCrossProduct, is(oBOTermCrossProduct));
     }
 
     @Test
+    @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(crossProduct.equals(null), is(false));
+        assertThat(oBOTermCrossProduct.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(crossProduct, is(new OBOTermCrossProduct(genus, relationships)));
+        assertThat(oBOTermCrossProduct, is(new OBOTermCrossProduct(genus, relationships)));
     }
 
+    @Test
+    public void shouldNotBeEqualToOtherThatHasDifferent_genus() {
+        assertThat(oBOTermCrossProduct, is(not(new OBOTermCrossProduct(Optional.of(mock(OWLClassData.class)), relationships))));
+    }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_relationships() {
-        assertThat(crossProduct, is(Matchers.not(new OBOTermCrossProduct(genus, mock(OBOTermRelationships.class)))));
+        assertThat(oBOTermCrossProduct, is(not(new OBOTermCrossProduct(genus, mock(OBOTermRelationships.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(crossProduct.hashCode(), is(new OBOTermCrossProduct(genus, relationships).hashCode()));
+        assertThat(oBOTermCrossProduct.hashCode(), is(new OBOTermCrossProduct(genus, relationships).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(crossProduct.toString(), startsWith("OBOTermCrossProduct"));
+        assertThat(oBOTermCrossProduct.toString(), Matchers.startsWith("OBOTermCrossProduct"));
+    }
+
+    @Test
+    public void should_emptyOBOTermCrossProduct() {
+        assertThat(OBOTermCrossProduct.emptyOBOTermCrossProduct(), is(new OBOTermCrossProduct(Optional.empty(), new OBOTermRelationships(
+                Collections.emptySet()))));
     }
 
     @Test
     public void shouldReturn_true_For_isEmpty() {
-        when(relationships.isEmpty()).thenReturn(true);
-        assertThat(crossProduct.isEmpty(), is(true));
+        assertThat(OBOTermCrossProduct.emptyOBOTermCrossProduct().isEmpty(), is(true));
     }
+
+    @Test
+    public void shouldReturn_false_For_isEmpty() {
+        assertThat(oBOTermCrossProduct.isEmpty(), is(false));
+    }
+
 }
