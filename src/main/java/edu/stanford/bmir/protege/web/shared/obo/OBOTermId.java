@@ -1,6 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+
 import java.io.Serializable;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,21 +20,15 @@ public class OBOTermId implements Serializable {
     private String name;
     
     private String namespace;
-    
-    private OBOTermId() {
-        id = "";
-        name = "";
-        namespace = "";
-    }
 
-    public OBOTermId(String id, String name) {
-        this(id, name, "");
+    @GwtSerializationConstructor
+    private OBOTermId() {
     }
 
     public OBOTermId(String id, String name, String namespace) {
-        this.id = id;
-        this.name = name;
-        this.namespace = namespace;
+        this.id = checkNotNull(id);
+        this.name = checkNotNull(name);
+        this.namespace = checkNotNull(namespace);
     }
 
     public String getId() {
@@ -63,5 +62,15 @@ public class OBOTermId implements Serializable {
         }
         OBOTermId other = (OBOTermId) obj;
         return id.equals(other.id) && name.equals(other.name) && namespace.equals(other.namespace);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("OBOTermId")
+                .add("id", id)
+                .add("name", name)
+                .add("namespace", namespace)
+                .toString();
     }
 }
