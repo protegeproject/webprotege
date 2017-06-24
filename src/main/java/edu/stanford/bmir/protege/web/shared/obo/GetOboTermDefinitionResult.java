@@ -43,7 +43,7 @@ public class GetOboTermDefinitionResult implements Result {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return definition.hashCode();
     }
 
 
