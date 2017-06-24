@@ -13,15 +13,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21 Jun 2017
  */
-public class GetTermDefinitionResult implements Result {
+public class GetOboTermDefinitionResult implements Result {
 
     private OBOTermDefinition definition;
 
     @GwtSerializationConstructor
-    private GetTermDefinitionResult() {
+    private GetOboTermDefinitionResult() {
     }
 
-    public GetTermDefinitionResult(@Nonnull OBOTermDefinition definition) {
+    public GetOboTermDefinitionResult(@Nonnull OBOTermDefinition definition) {
         this.definition = checkNotNull(definition);
     }
 
@@ -34,10 +34,10 @@ public class GetTermDefinitionResult implements Result {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GetTermDefinitionResult)) {
+        if (!(obj instanceof GetOboTermDefinitionResult)) {
             return false;
         }
-        GetTermDefinitionResult other = (GetTermDefinitionResult) obj;
+        GetOboTermDefinitionResult other = (GetOboTermDefinitionResult) obj;
         return this.definition.equals(other.definition);
     }
 
@@ -49,7 +49,7 @@ public class GetTermDefinitionResult implements Result {
 
     @Override
     public String toString() {
-        return toStringHelper("GetTermDefinitionResult")
+        return toStringHelper("GetOboTermDefinitionResult")
                 .addValue(definition)
                 .toString();
     }

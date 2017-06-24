@@ -13,7 +13,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 21 Jun 2017
  */
-public class GetOboTermDefinitionActionHandler extends AbstractHasProjectActionHandler<GetTermDefinitionAction, GetTermDefinitionResult> {
+public class GetOboTermDefinitionActionHandler extends AbstractHasProjectActionHandler<GetOboTermDefinitionAction, GetOboTermDefinitionResult> {
 
     @Nonnull
     private final TermDefinitionManager termDefinitionManager;
@@ -26,13 +26,13 @@ public class GetOboTermDefinitionActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    public Class<GetTermDefinitionAction> getActionClass() {
-        return GetTermDefinitionAction.class;
+    public Class<GetOboTermDefinitionAction> getActionClass() {
+        return GetOboTermDefinitionAction.class;
     }
 
     @Override
-    public GetTermDefinitionResult execute(GetTermDefinitionAction action, ExecutionContext executionContext) {
-        return new GetTermDefinitionResult(termDefinitionManager.getTermDefinition(action.getTerm()));
+    public GetOboTermDefinitionResult execute(GetOboTermDefinitionAction action, ExecutionContext executionContext) {
+        return new GetOboTermDefinitionResult(termDefinitionManager.getTermDefinition(action.getTerm()));
     }
 
 

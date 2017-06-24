@@ -13,15 +13,15 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 21 Jun 2017
  */
-public class GetTermDefinitionAction extends AbstractHasProjectAction<GetTermDefinitionResult> {
+public class GetOboTermDefinitionAction extends AbstractHasProjectAction<GetOboTermDefinitionResult> {
 
     private OWLEntity term;
 
     @GwtSerializationConstructor
-    private GetTermDefinitionAction() {
+    private GetOboTermDefinitionAction() {
     }
 
-    public GetTermDefinitionAction(ProjectId projectId, OWLEntity term) {
+    public GetOboTermDefinitionAction(ProjectId projectId, OWLEntity term) {
         super(projectId);
         this.term = term;
     }
@@ -40,10 +40,10 @@ public class GetTermDefinitionAction extends AbstractHasProjectAction<GetTermDef
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GetTermDefinitionAction)) {
+        if (!(obj instanceof GetOboTermDefinitionAction)) {
             return false;
         }
-        GetTermDefinitionAction other = (GetTermDefinitionAction) obj;
+        GetOboTermDefinitionAction other = (GetOboTermDefinitionAction) obj;
         return this.term.equals(other.term)
                 && this.getProjectId().equals(other.getProjectId());
     }
@@ -51,7 +51,7 @@ public class GetTermDefinitionAction extends AbstractHasProjectAction<GetTermDef
 
     @Override
     public String toString() {
-        return toStringHelper("GetTermDefinitionAction")
+        return toStringHelper("GetOboTermDefinitionAction")
                 .addValue(getProjectId())
                 .addValue(term)
                 .toString();
