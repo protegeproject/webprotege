@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -23,7 +24,7 @@ public class GetOboTermDefinitionAction extends AbstractHasProjectAction<GetOboT
 
     public GetOboTermDefinitionAction(ProjectId projectId, OWLEntity term) {
         super(projectId);
-        this.term = term;
+        this.term = checkNotNull(term);
     }
 
     public OWLEntity getTerm() {
