@@ -114,7 +114,7 @@ public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
             return Optional.empty();
         }
         if(getNamespace().isEmpty()) {
-            return Optional.of(new OBOTermId(getId(), getName()));
+            return Optional.of(new OBOTermId(getId(), getName(), ""));
         }
         else {
             return Optional.of(new OBOTermId(getId(), getName(), getNamespace()));
