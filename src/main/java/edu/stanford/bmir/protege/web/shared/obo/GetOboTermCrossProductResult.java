@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -17,7 +18,7 @@ public class GetOboTermCrossProductResult implements Result {
     private OBOTermCrossProduct crossProduct;
 
     public GetOboTermCrossProductResult(@Nonnull OBOTermCrossProduct crossProduct) {
-        this.crossProduct = crossProduct;
+        this.crossProduct = checkNotNull(crossProduct);
     }
 
     @GwtSerializationConstructor
