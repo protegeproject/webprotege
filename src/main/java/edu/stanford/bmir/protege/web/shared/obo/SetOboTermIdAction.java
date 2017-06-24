@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -26,9 +27,9 @@ public class SetOboTermIdAction implements ProjectAction<SetOboTermIdResult> {
     public SetOboTermIdAction(@Nonnull ProjectId projectId,
                               @Nonnull OWLEntity entity,
                               @Nonnull OBOTermId oboTermId) {
-        this.projectId = projectId;
-        this.entity = entity;
-        this.oboTermId = oboTermId;
+        this.projectId = checkNotNull(projectId);
+        this.entity = checkNotNull(entity);
+        this.oboTermId = checkNotNull(oboTermId);
     }
 
     @GwtSerializationConstructor
