@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -28,9 +29,9 @@ public class SetOboTermCrossProductAction implements ProjectAction<SetOboTermCro
     public SetOboTermCrossProductAction(@Nonnull ProjectId projectId,
                                         @Nonnull OWLClass entity,
                                         @Nonnull OBOTermCrossProduct crossProduct) {
-        this.projectId = projectId;
-        this.entity = entity;
-        this.crossProduct = crossProduct;
+        this.projectId = checkNotNull(projectId);
+        this.entity = checkNotNull(entity);
+        this.crossProduct = checkNotNull(crossProduct);
     }
 
     @GwtSerializationConstructor
