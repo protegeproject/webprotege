@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.obo;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.obo.GetTermDefinitionAction;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermDefinitionAction;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermDefinitionAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -55,7 +55,7 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        dispatch.execute(new GetTermDefinitionAction(getProjectId(), entity),
+        dispatch.execute(new GetOboTermDefinitionAction(getProjectId(), entity),
                          this,
                          result -> editor.setValue(result.getDefinition()));
     }
