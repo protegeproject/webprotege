@@ -20,7 +20,7 @@ public class FormElementDescriptorSerializer implements JsonSerializer<FormEleme
         JsonObject object = new JsonObject();
         object.addProperty("id", descriptor.getId().getId());
         object.addProperty("label", descriptor.getLabel());
-        object.addProperty("fieldType", descriptor.getFieldDescriptor().getAssociatedFieldTypeId());
+        object.addProperty("fieldType", descriptor.getFieldDescriptor().getAssociatedType());
         JsonElement fieldDescriptorSerialization = jsonSerializationContext.serialize(descriptor.getFieldDescriptor());
         object.add("fieldDescriptor", fieldDescriptorSerialization);
         object.addProperty("repeatability", descriptor.getRepeatability().name());

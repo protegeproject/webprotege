@@ -27,7 +27,7 @@ public class Test {
         builder.addDescriptor(new FormElementDescriptor(
                 labelFieldId,
                 "Label",
-                new StringFieldDescriptor(
+                new TextFieldDescriptor(
                         "Enter label",
                         StringType.SIMPLE_STRING,
                         LineMode.SINGLE_LINE,
@@ -41,7 +41,7 @@ public class Test {
         builder.addDescriptor(new FormElementDescriptor(
                 altLabelFieldId,
                 "Synonyms",
-                new StringFieldDescriptor(
+                new TextFieldDescriptor(
                         "Enter synonym",
                         StringType.LANG_STRING,
                         LineMode.SINGLE_LINE,
@@ -55,7 +55,7 @@ public class Test {
         builder.addDescriptor(new FormElementDescriptor(
                 definitionFieldId,
                 "Definition",
-                new StringFieldDescriptor(
+                new TextFieldDescriptor(
                         "Enter label",
                         StringType.SIMPLE_STRING,
                         LineMode.SINGLE_LINE,
@@ -72,8 +72,8 @@ public class Test {
                         new ChoiceFieldDescriptor(
                                 ChoiceFieldType.COMBO_BOX,
                                 Arrays.asList(
-                                        new ChoiceDescriptor("In Production", FormDataPrimitive.get(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/InProduction")))),
-                                        new ChoiceDescriptor("Out of Production", FormDataPrimitive.get(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/NotInProduction")))))
+                                        ChoiceDescriptor.choice("In Production", FormDataPrimitive.get(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/InProduction")))),
+                                        ChoiceDescriptor.choice("Out of Production", FormDataPrimitive.get(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/NotInProduction")))))
                         ),
                         Repeatability.NON_REPEATABLE,
                         Required.REQUIRED
@@ -92,9 +92,9 @@ public class Test {
         List<ChoiceDescriptor> manufacturerChoices;
 //        if(project.getClassHierarchyProvider().getAncestors(entity.asOWLClass()).contains(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/R3boSgK0ZoXcizHloIAZhy")))) {
             manufacturerChoices = Arrays.asList(
-                    new ChoiceDescriptor("Boeing", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/Boeing")))),
-                    new ChoiceDescriptor("Airbus", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie")))),
-                    new ChoiceDescriptor("Lockheed", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie"))))
+                    ChoiceDescriptor.choice("Boeing", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/Boeing")))),
+                    ChoiceDescriptor.choice("Airbus", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie")))),
+                    ChoiceDescriptor.choice("Lockheed", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie"))))
             );
 //        }
 //        else {

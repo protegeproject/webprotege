@@ -43,7 +43,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 //        builder.addDescriptor(new FormElementDescriptor(
 //                labelFieldId,
 //                "Label",
-//                new StringFieldDescriptor(
+//                new TextFieldDescriptor(
 //                        "Enter label",
 //                        StringType.SIMPLE_STRING,
 //                        LineMode.SINGLE_LINE,
@@ -57,7 +57,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 //        builder.addDescriptor(new FormElementDescriptor(
 //                altLabelFieldId,
 //                "Synonyms",
-//                new StringFieldDescriptor(
+//                new TextFieldDescriptor(
 //                        "Enter synonym",
 //                        StringType.LANG_STRING,
 //                        LineMode.SINGLE_LINE,
@@ -71,7 +71,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 //        builder.addDescriptor(new FormElementDescriptor(
 //                definitionFieldId,
 //                "Definition",
-//                new StringFieldDescriptor(
+//                new TextFieldDescriptor(
 //                        "Enter label",
 //                        StringType.SIMPLE_STRING,
 //                        LineMode.SINGLE_LINE,
@@ -135,7 +135,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 //        childEntries.add(new CompositeFieldDescriptorEntry(
 //                new FormElementId("Designer.FirstName"),
 //                1, 1,
-//                new StringFieldDescriptor(
+//                new TextFieldDescriptor(
 //                        "Enter first name",
 //                        StringType.SIMPLE_STRING,
 //                        LineMode.SINGLE_LINE,
@@ -146,7 +146,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 //        childEntries.add(new CompositeFieldDescriptorEntry(
 //                new FormElementId("Designer.LastName"),
 //                1, 1,
-//                new StringFieldDescriptor(
+//                new TextFieldDescriptor(
 //                        "Enter last name",
 //                        StringType.SIMPLE_STRING,
 //                        LineMode.SINGLE_LINE,

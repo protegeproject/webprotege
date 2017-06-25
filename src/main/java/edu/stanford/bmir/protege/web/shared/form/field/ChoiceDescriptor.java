@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 
@@ -12,14 +14,19 @@ public class ChoiceDescriptor implements IsSerializable {
 
     private String label;
 
+    @JsonUnwrapped
     private FormDataValue value;
 
     private ChoiceDescriptor() {
     }
 
-    public ChoiceDescriptor(String label, FormDataValue value) {
+    private ChoiceDescriptor(String label, FormDataValue value) {
         this.label = label;
         this.value = value;
+    }
+
+    public static ChoiceDescriptor choice(String label, FormDataValue value) {
+        return new ChoiceDescriptor(label, value);
     }
 
     public String getLabel() {

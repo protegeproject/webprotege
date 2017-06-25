@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -32,5 +33,6 @@ public abstract class FormDataValue implements IsSerializable {
 
     public abstract Optional<IRI> asIRI();
 
+    @JsonIgnore
     public abstract boolean isObject();
 }

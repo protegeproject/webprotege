@@ -1,40 +1,56 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.collect.ImmutableSet;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
+@JsonTypeName(ClassNameFieldDescriptor.TYPE)
 public class ClassNameFieldDescriptor implements FormFieldDescriptor {
 
-    private static final String CLASS_NAME_FIELD = "ClassNameField";
+    protected static final String TYPE = "ClassName";
 
-    private Set<OWLClass> filteringSuperClasses = new HashSet<>();
+    private ImmutableSet<OWLClass> filteringSuperClasses;
 
-    private static String re;
+    private NodeType nodeType;
 
     private ClassNameFieldDescriptor() {
     }
 
-    public ClassNameFieldDescriptor(Set<OWLClass> filteringSuperClasses) {
-        this.filteringSuperClasses.addAll(filteringSuperClasses);
+    public ClassNameFieldDescriptor(@Nonnull Set<OWLClass> filteringSuperClasses,
+                                    @Nonnull NodeType nodeType) {
+        this.filteringSuperClasses = ImmutableSet.copyOf(filteringSuperClasses);
+        this.nodeType = checkNotNull(nodeType);
     }
 
     public static String getFieldTypeId() {
-        return CLASS_NAME_FIELD;
+        return TYPE;
     }
 
+    @Nonnull
     @Override
-    public String getAssociatedFieldTypeId() {
-        return CLASS_NAME_FIELD;
+    @JsonIgnore
+    public String getAssociatedType() {
+        return TYPE;
     }
 
+    @Nonnull
     public final Set<OWLClass> getFilteringSuperClasses() {
-        return new HashSet<>(filteringSuperClasses);
+        return filteringSuperClasses;
+    }
+
+    public NodeType getNodeType() {
+        return nodeType;
     }
 }

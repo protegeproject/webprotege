@@ -1,58 +1,79 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLObject;
 
-import java.util.Arrays;
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.singletonList;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
+
 public class FormDataPrimitive extends FormDataValue {
 
-
+    @JsonUnwrapped
     @SuppressWarnings("GwtInconsistentSerializableClass")
-    private OWLObject primitive;
+    private Object value;
 
+    @GwtSerializationConstructor
     private FormDataPrimitive() {
     }
 
-    private FormDataPrimitive(OWLEntity entity) {
-        primitive = checkNotNull(entity);
+    private FormDataPrimitive(@Nonnull OWLEntity entity) {
+        value = checkNotNull(entity);
     }
 
 
-    private FormDataPrimitive(OWLLiteral literal) {
-        primitive = checkNotNull(literal);
+    private FormDataPrimitive(@Nonnull OWLLiteral literal) {
+        value = checkNotNull(literal);
     }
 
 
-    private FormDataPrimitive(IRI iri) {
-        primitive = checkNotNull(iri);
+    private FormDataPrimitive(@Nonnull IRI iri) {
+        value = checkNotNull(iri);
+    }
+
+    private FormDataPrimitive(@Nonnull Number number) {
+        value = checkNotNull(number);
+    }
+
+    private FormDataPrimitive(@Nonnull Boolean b) {
+        value = checkNotNull(b);
+    }
+
+    private FormDataPrimitive(@Nonnull String string) {
+        value = checkNotNull(string);
+    }
+
+    @Nonnull
+    public Object getValue() {
+        return value;
     }
 
     @Override
     public Optional<IRI> asIRI() {
-        if(primitive instanceof IRI) {
-            return Optional.of((IRI)primitive);
+        if(value instanceof IRI) {
+            return Optional.of((IRI) value);
         }
         else {
             return Optional.empty();
         }
     }
 //    private FormDataPrimitive(OWLEntityData entityData) {
-//        this.primitive = entityData;
+//        this.value = entityData;
 //    }
 
     public static FormDataPrimitive get(OWLEntity entity) {
@@ -68,7 +89,7 @@ public class FormDataPrimitive extends FormDataValue {
     }
 
     public static FormDataPrimitive get(String plainString) {
-        return new FormDataPrimitive(DataFactory.getOWLLiteral(plainString));
+        return new FormDataPrimitive(plainString);
     }
 
     public static FormDataPrimitive get(String plainString, String lang) {
@@ -79,15 +100,32 @@ public class FormDataPrimitive extends FormDataValue {
         return new FormDataPrimitive(literal);
     }
 
+    public static FormDataPrimitive get(Number number) {
+        return new FormDataPrimitive(number);
+    }
+
+    public static FormDataPrimitive get(boolean b) {
+        return new FormDataPrimitive(b);
+    }
+
     @Override
     public List<FormDataValue> asList() {
-        return Arrays.asList(this);
+        return singletonList(this);
     }
 
     @Override
     public Optional<OWLLiteral> asLiteral() {
-        if(primitive instanceof OWLLiteral) {
-            return Optional.of((OWLLiteral) primitive);
+        if(value instanceof OWLLiteral) {
+            return Optional.of((OWLLiteral) value);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<OWLEntity> asEntity() {
+        if(value instanceof OWLEntity) {
+            return Optional.of((OWLEntity) value);
         }
         else {
             return Optional.empty();
@@ -96,8 +134,8 @@ public class FormDataPrimitive extends FormDataValue {
 
 //    @Override
 //    public Optional<OWLClassData> asOWLClassData() {
-//        if(primitive instanceof OWLClassData) {
-//            return Optional.of((OWLClassData) primitive);
+//        if(value instanceof OWLClassData) {
+//            return Optional.of((OWLClassData) value);
 //        }
 //        else {
 //            return Optional.absent();
@@ -106,7 +144,7 @@ public class FormDataPrimitive extends FormDataValue {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(primitive);
+        return Objects.hashCode(value);
     }
 
     @Override
@@ -118,7 +156,7 @@ public class FormDataPrimitive extends FormDataValue {
             return false;
         }
         FormDataPrimitive other = (FormDataPrimitive) obj;
-        return this.primitive.equals(other.primitive);
+        return this.value.equals(other.value);
     }
 
 
@@ -131,16 +169,16 @@ public class FormDataPrimitive extends FormDataValue {
 
 
     public String asString() {
-        if(primitive instanceof IRI) {
-            return "IRI(" + ((IRI) primitive).toQuotedString() + ")";
+        if(value instanceof IRI) {
+            return "IRI(" + ((IRI) value).toQuotedString() + ")";
         }
-        else if(primitive instanceof OWLLiteral) {
-            OWLLiteral literal = (OWLLiteral) primitive;
+        else if(value instanceof OWLLiteral) {
+            OWLLiteral literal = (OWLLiteral) value;
             return "Literal(" +
                     literal.toString() + ")";
         }
-        else if(primitive instanceof OWLEntity) {
-            return ((OWLEntity) primitive).getEntityType().getName() + "(" + ((OWLEntity) primitive).getIRI().toQuotedString() + ")";
+        else if(value instanceof OWLEntity) {
+            return ((OWLEntity) value).getEntityType().getName() + "(" + ((OWLEntity) value).getIRI().toQuotedString() + ")";
         }
         else {
             throw new RuntimeException("Unknown Type");

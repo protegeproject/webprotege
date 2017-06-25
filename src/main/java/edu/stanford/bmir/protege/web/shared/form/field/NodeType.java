@@ -3,14 +3,11 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 30/03/16
+ * 24 Jun 2017
  */
-public enum Repeatability {
+public enum NodeType {
 
-    NON_REPEATABLE,
+    ANY,
 
-    REPEATABLE_VERTICAL,
-
-    REPEATABLE_HORIZONTAL,
-
+    LEAF
 }

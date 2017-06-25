@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +32,9 @@ public class CompositeFieldDescriptor implements FormFieldDescriptor {
         return new ArrayList<>(childDescriptors);
     }
 
+    @Nonnull
     @Override
-    public String getAssociatedFieldTypeId() {
+    public String getAssociatedType() {
         return COMPOSITE_FIELD;
     }
 }

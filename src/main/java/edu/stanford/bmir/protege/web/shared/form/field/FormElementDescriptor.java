@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -21,22 +26,24 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     private Required required;
 
+    @GwtSerializationConstructor
     private FormElementDescriptor() {
     }
 
-    public FormElementDescriptor(FormElementId id,
-                                 String formLabel,
-                                 FormFieldDescriptor fieldDescriptor,
-                                 Repeatability repeatability,
-                                 Required required) {
-        this.id = id;
-        this.label = formLabel;
-        this.repeatability = repeatability;
-        this.fieldDescriptor = fieldDescriptor;
-        this.required = required;
+    public FormElementDescriptor(@Nonnull FormElementId id,
+                                 @Nonnull String formLabel,
+                                 @Nonnull FormFieldDescriptor fieldDescriptor,
+                                 @Nonnull Repeatability repeatability,
+                                 @Nonnull Required required) {
+        this.id = checkNotNull(id);
+        this.label = checkNotNull(formLabel);
+        this.repeatability = checkNotNull(repeatability);
+        this.fieldDescriptor = checkNotNull(fieldDescriptor);
+        this.required = checkNotNull(required);
     }
 
     @Override
+    @JsonUnwrapped
     public FormElementId getId() {
         return id;
     }

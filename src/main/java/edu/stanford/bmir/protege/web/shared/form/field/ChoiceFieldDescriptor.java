@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,33 +11,36 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
+@JsonTypeName(ChoiceFieldDescriptor.TYPE)
 public class ChoiceFieldDescriptor implements FormFieldDescriptor {
 
-    private static final String FIELD_TYPE_ID = "ChoiceField";
+    protected static final String TYPE = "Choice";
 
-    private ChoiceFieldType type;
+    private ChoiceFieldType widgetType;
 
     private List<ChoiceDescriptor> choiceDescriptors = new ArrayList<>();
 
     private ChoiceFieldDescriptor() {
     }
 
-    public ChoiceFieldDescriptor(ChoiceFieldType type, List<ChoiceDescriptor> choiceDescriptors) {
-        this.type = type;
+    public ChoiceFieldDescriptor(ChoiceFieldType widgetType, List<ChoiceDescriptor> choiceDescriptors) {
+        this.widgetType = widgetType;
         this.choiceDescriptors.addAll(choiceDescriptors);
     }
 
+    @Nonnull
     @Override
-    public String getAssociatedFieldTypeId() {
-        return FIELD_TYPE_ID;
+    public String getAssociatedType() {
+        return TYPE;
     }
 
-    public static String getFieldTypeId() {
-        return FIELD_TYPE_ID;
+    @Nonnull
+    public static String getType() {
+        return TYPE;
     }
 
-    public ChoiceFieldType getType() {
-        return type;
+    public ChoiceFieldType getWidgetType() {
+        return widgetType;
     }
 
     public List<ChoiceDescriptor> getChoiceDescriptors() {
