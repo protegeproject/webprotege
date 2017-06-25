@@ -111,10 +111,10 @@ public class FormPresenter {
     }
 
     private Optional<ValueEditorFactory<FormDataValue>> getValueEditorFactory(final FormFieldDescriptor formFieldDescriptor) {
-        if (formFieldDescriptor.getAssociatedFieldTypeId().equals(StringFieldDescriptor.getFieldTypeId())) {
+        if (formFieldDescriptor.getAssociatedType().equals(TextFieldDescriptor.getType())) {
             return Optional.of(
                     () -> {
-                        StringFieldDescriptor descriptor = (StringFieldDescriptor) formFieldDescriptor;
+                        TextFieldDescriptor descriptor = (TextFieldDescriptor) formFieldDescriptor;
                         StringFieldEditor stringFieldEditor = new StringFieldEditor(primitiveDataEditorProvider);
                         stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
                         stringFieldEditor.setLineMode(descriptor.getLineMode());
@@ -127,15 +127,15 @@ public class FormPresenter {
                     }
             );
         }
-        else if (formFieldDescriptor.getAssociatedFieldTypeId().equals(ChoiceFieldDescriptor.getFieldTypeId())) {
+        else if (formFieldDescriptor.getAssociatedType().equals(ChoiceFieldDescriptor.getType())) {
             return Optional.of(
                     () -> {
                         ChoiceFieldDescriptor descriptor = (ChoiceFieldDescriptor) formFieldDescriptor;
                         ChoiceFieldEditor editor;
-                        if (descriptor.getType() == ChoiceFieldType.RADIO_BUTTON) {
+                        if (descriptor.getWidgetType() == ChoiceFieldType.RADIO_BUTTON) {
                             editor = new ChoiceFieldRadioButtonEditor();
                         }
-                        else if (descriptor.getType() == ChoiceFieldType.CHECK_BOX) {
+                        else if (descriptor.getWidgetType() == ChoiceFieldType.CHECK_BOX) {
                             editor = new ChoiceFieldCheckBoxEditor();
                         }
                         else {
@@ -146,17 +146,17 @@ public class FormPresenter {
                     }
             );
         }
-        else if (formFieldDescriptor.getAssociatedFieldTypeId().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
+        else if (formFieldDescriptor.getAssociatedType().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
             return Optional.of(
                     () -> new ClassNameFieldEditor(projectId, primitiveDataEditorProvider)
             );
         }
-        else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(ImageFieldDescriptor.getFieldTypeId())) {
+        else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {
             return Optional.of(
                     () -> new ImageFieldEditor()
             );
         }
-        else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(CompositeFieldDescriptor.getFieldTypeId())) {
+        else if(formFieldDescriptor.getAssociatedType().equals(CompositeFieldDescriptor.getFieldTypeId())) {
             CompositeFieldDescriptor descriptor = (CompositeFieldDescriptor) formFieldDescriptor;
             List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
             List<CompositeFieldDescriptorEntry> childDescriptorEntries = new ArrayList<>();

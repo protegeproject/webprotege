@@ -5,6 +5,7 @@ import org.semanticweb.owlapi.model.IRI;
 import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static java.util.Collections.singletonList;
 
 /**
  * Matthew Horridge
@@ -38,7 +39,7 @@ public class FormDataObject extends FormDataValue {
 
     @Override
     public List<FormDataValue> asList() {
-        return Arrays.asList(this);
+        return singletonList(this);
     }
 
     @Override
