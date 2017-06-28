@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
@@ -50,4 +51,23 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
         return flexShrink;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(elementId, descriptor, flexGrow, flexShrink);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof CompositeFieldDescriptorEntry)) {
+            return false;
+        }
+        CompositeFieldDescriptorEntry other = (CompositeFieldDescriptorEntry) obj;
+        return this.elementId.equals(other.elementId)
+                && this.descriptor.equals(other.descriptor)
+                && this.flexGrow == other.flexGrow
+                && this.flexShrink == other.flexShrink;
+    }
 }

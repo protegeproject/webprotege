@@ -33,13 +33,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class StringFieldEditor extends Composite implements ValueEditor<FormDataValue> {
+public class TextFieldEditor extends Composite implements ValueEditor<FormDataValue> {
 
-    interface StringFieldEditorUiBinder extends UiBinder<HTMLPanel, StringFieldEditor> {
+    private StringType stringType = StringType.SIMPLE_STRING;
+
+    interface TextFieldEditorUiBinder extends UiBinder<HTMLPanel, TextFieldEditor> {
 
     }
 
-    private static StringFieldEditorUiBinder ourUiBinder = GWT.create(StringFieldEditorUiBinder.class);
+    private static TextFieldEditorUiBinder ourUiBinder = GWT.create(TextFieldEditorUiBinder.class);
 
     @UiField(provided = true)
     PrimitiveDataEditorImpl editor;
@@ -56,17 +58,14 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     private Optional<String> langPatternViolationErrorMessage = Optional.empty();
 
     @Inject
-    public StringFieldEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+    public TextFieldEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         this.editor = (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get();
         this.languageEditor = (DefaultLanguageEditor) editor.getLanguageEditor();
         initWidget(ourUiBinder.createAndBindUi(this));
         editor.setAllowedTypes(Collections.singleton(PrimitiveType.LITERAL));
-        editor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                validateInput();
-                ValueChangeEvent.fire(StringFieldEditor.this, getValue());
-            }
+        editor.addValueChangeHandler(event -> {
+            validateInput();
+            ValueChangeEvent.fire(TextFieldEditor.this, getValue());
         });
         editor.setFreshEntitiesSuggestStrategy(new NullFreshEntitySuggestStrategy());
         editor.setShowLinksForEntities(false);
@@ -110,6 +109,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
         else {
             languageEditor.setVisible(true);
         }
+        this.stringType = stringType;
     }
 
     public void setLineMode(LineMode lineMode) {
@@ -123,6 +123,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
 
     @Override
     public void setValue(FormDataValue object) {
+        GWT.log("[TextFieldEditor] " + object);
         Optional<OWLLiteral> primitive = object.asLiteral();
         if(!primitive.isPresent()) {
             clearValue();
@@ -144,7 +145,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
             return Optional.empty();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
-        return Optional.of(FormDataPrimitive.get(literalData.getLiteral()));
+        return Optional.of(FormDataPrimitive.get(literalData.getLiteral()).getSimplified());
     }
 
     @Override

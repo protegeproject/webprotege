@@ -16,7 +16,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class NonRepeatingEditor implements ValueEditor<FormDataList> {
+public class NonRepeatingEditor implements ValueEditor<FormDataValue> {
 
     private final ValueEditor<FormDataValue> delegate;
 
@@ -26,14 +26,8 @@ public class NonRepeatingEditor implements ValueEditor<FormDataList> {
     }
 
     @Override
-    public void setValue(FormDataList object) {
-        Optional<FormDataValue> first = object.getFirst();
-        if(first.isPresent()) {
-            delegate.setValue(first.get());
-        }
-        else {
-            delegate.clearValue();
-        }
+    public void setValue(FormDataValue object) {
+        delegate.setValue(object);
     }
 
     @Override
@@ -42,13 +36,8 @@ public class NonRepeatingEditor implements ValueEditor<FormDataList> {
     }
 
     @Override
-    public Optional<FormDataList> getValue() {
-        Optional<FormDataValue> value = delegate.getValue();
-        if(!value.isPresent()) {
-            return Optional.of(FormDataList.empty());
-        }
-        FormDataList delegateValue = new FormDataList(value.get());
-        return Optional.of(delegateValue);
+    public Optional<FormDataValue> getValue() {
+        return delegate.getValue();
     }
 
     @Override
@@ -62,13 +51,8 @@ public class NonRepeatingEditor implements ValueEditor<FormDataList> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataList>> handler) {
-        return new HandlerRegistration() {
-            @Override
-            public void removeHandler() {
-
-            }
-        };
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataValue>> handler) {
+        return () -> {};
     }
 
     @Override

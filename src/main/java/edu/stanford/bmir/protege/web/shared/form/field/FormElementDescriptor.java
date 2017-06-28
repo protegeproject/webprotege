@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
 
@@ -26,6 +27,8 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     private Required required;
 
+    private String help;
+
     @GwtSerializationConstructor
     private FormElementDescriptor() {
     }
@@ -34,12 +37,14 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
                                  @Nonnull String formLabel,
                                  @Nonnull FormFieldDescriptor fieldDescriptor,
                                  @Nonnull Repeatability repeatability,
-                                 @Nonnull Required required) {
+                                 @Nonnull Required required,
+                                 @Nonnull String help) {
         this.id = checkNotNull(id);
         this.label = checkNotNull(formLabel);
         this.repeatability = checkNotNull(repeatability);
         this.fieldDescriptor = checkNotNull(fieldDescriptor);
         this.required = checkNotNull(required);
+        this.help = checkNotNull(help);
     }
 
     @Override
@@ -63,5 +68,31 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     public FormFieldDescriptor getFieldDescriptor() {
         return fieldDescriptor;
+    }
+
+    public String getHelp() {
+        return help;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, label, repeatability, required, fieldDescriptor, help);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof FormElementDescriptor)) {
+            return false;
+        }
+        FormElementDescriptor other = (FormElementDescriptor) obj;
+        return this.id.equals(other.id)
+                && this.label.equals(other.label)
+                && this.repeatability.equals(other.repeatability)
+                && this.required.equals(other.required)
+                && this.fieldDescriptor.equals(other.fieldDescriptor)
+                && this.help.equals(other.help);
     }
 }

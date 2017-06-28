@@ -18,7 +18,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class RepeatingEditor implements ValueEditor<FormDataList> {
+public class RepeatingEditor implements ValueEditor<FormDataValue> {
 
     private ValueListEditor<FormDataValue> delegate;
 
@@ -28,8 +28,8 @@ public class RepeatingEditor implements ValueEditor<FormDataList> {
     }
 
     @Override
-    public void setValue(FormDataList object) {
-        delegate.setValue(object.getList());
+    public void setValue(FormDataValue object) {
+        delegate.setValue(object.asList());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class RepeatingEditor implements ValueEditor<FormDataList> {
     }
 
     @Override
-    public Optional<FormDataList> getValue() {
+    public Optional<FormDataValue> getValue() {
         Optional<List<FormDataValue>> value = delegate.getValue();
         if(!value.isPresent()) {
             return Optional.empty();
@@ -57,7 +57,7 @@ public class RepeatingEditor implements ValueEditor<FormDataList> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataList>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
         return new HandlerRegistration() {
             @Override
             public void removeHandler() {

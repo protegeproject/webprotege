@@ -17,6 +17,6 @@ public class FormDataPrimitiveSerializer implements JsonSerializer<FormDataPrimi
 
     @Override
     public JsonElement serialize(FormDataPrimitive primitive, Type type, JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(primitive.asString());
+        return new JsonPrimitive("");
     }
 }

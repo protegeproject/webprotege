@@ -61,9 +61,12 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
 
     @Override
     public void setValue(FormDataValue value) {
+        FormDataValue first = value.asList().get(0);
+
         int index = 1;
         for(ChoiceDescriptor descriptor : choiceDescriptors) {
-            if(descriptor.getValue().equals(value)) {
+            GWT.log("[ChoiceFieldComboBoxEditor] Set val: " + first + " Desc " + descriptor.getValue());
+            if(descriptor.getValue().equals(first)) {
                 comboBox.setSelectedIndex(index);
                 break;
             }

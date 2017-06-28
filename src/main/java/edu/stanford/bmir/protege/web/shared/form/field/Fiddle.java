@@ -6,7 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.stanford.bmir.protege.web.server.form.FormDataSerializer;
+import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -14,6 +21,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor.choice;
 import static edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldType.CHECK_BOX;
@@ -59,7 +70,8 @@ public class Fiddle {
                                                                                                              FormDataPrimitive
                                                                                                                      .get(44)))),
                                                                      NON_REPEATABLE,
-                                                                     REQUIRED);
+                                                                     REQUIRED,
+                                                                     "");
 
         FormElementDescriptor descriptor1 = new FormElementDescriptor(new FormElementId("Age"),
                                                                       "Age",
@@ -70,7 +82,8 @@ public class Fiddle {
                                                                                                       EXCLUSIVE),
                                                                                                 SLIDER),
                                                                       NON_REPEATABLE,
-                                                                      REQUIRED);
+                                                                      REQUIRED,
+                                                                      "");
 
         FormElementDescriptor descriptor2 = new FormElementDescriptor(new FormElementId("OtherElement"),
                                                                       "My other label",
@@ -80,7 +93,8 @@ public class Fiddle {
                                                                                               ".*",
                                                                                               ""),
                                                                       NON_REPEATABLE,
-                                                                      REQUIRED);
+                                                                      REQUIRED,
+                                                                      "");
 
         OWLClass owlThing = df.getOWLThing();
         FormElementDescriptor descriptor3 = new FormElementDescriptor(new FormElementId("Entity"),
@@ -89,7 +103,8 @@ public class Fiddle {
                                                                               owlThing),
                                                                                                    NodeType.LEAF),
                                                                       NON_REPEATABLE,
-                                                                      REQUIRED);
+                                                                      REQUIRED,
+                                                                      "");
 
 
         FormElementDescriptor descriptor4 = new FormElementDescriptor(new FormElementId("Ind Name"),
@@ -98,18 +113,33 @@ public class Fiddle {
                                                                               IRI.create(
                                                                                       "http://protege.stanford.edu/ClsA")))),
                                                                       NON_REPEATABLE,
-                                                                      OPTIONAL);
+                                                                      OPTIONAL,
+                                                                      "");
+        List<FormElementDescriptor> formElements = asList(descriptor, descriptor1, descriptor2, descriptor3, descriptor4);
+
+        FormDescriptor formDescriptor = new FormDescriptor(new FormId("MyForm"),
+                                                           formElements);
+
         try {
             ObjectMapper mapper = new ObjectMapper();
-
             SimpleModule module = new SimpleModule();
             module.addSerializer(OWLEntity.class, new EntitySerializer());
+            module.addSerializer(new FormDataSerializer());
             mapper.registerModule(module);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
             String s = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
-                    asList(descriptor, descriptor1, descriptor2, descriptor3, descriptor4)
+                    formDescriptor
             );
             System.out.println(s);
+
+            System.out.println("--------------------------");
+
+            Map<FormElementId, FormDataValue> map = new HashMap<>();
+            Map<String, FormDataValue> dataMap = new HashMap<>();
+            dataMap.put("Hello", FormDataPrimitive.get("World"));
+            map.put(new FormElementId("TheDetails"), new FormDataList(FormDataPrimitive.get("X")));
+            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new FormData(map));
+
 //            List<Object> d = mapper.readerFor(FormElementDescriptor.class).readValues(s).readAll();
 //            System.out.println(d);
         } catch (JsonProcessingException e) {

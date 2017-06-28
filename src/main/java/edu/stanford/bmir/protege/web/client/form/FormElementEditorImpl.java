@@ -20,6 +20,11 @@ import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection.COLUMN;
+import static edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection.ROW;
+import static edu.stanford.bmir.protege.web.shared.form.field.Repeatability.REPEATABLE_HORIZONTAL;
+import static edu.stanford.bmir.protege.web.shared.form.field.Repeatability.REPEATABLE_VERTICAL;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -38,18 +43,18 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
     @UiField
     SimplePanel editorHolder;
 
-    private final ValueEditor<FormDataList> delegateEditor;
+    private final ValueEditor<FormDataValue> delegateEditor;
 
     public FormElementEditorImpl(ValueEditorFactory<FormDataValue> editorFactory, Repeatability repeatability) {
         initWidget(ourUiBinder.createAndBindUi(this));
-        if(repeatability == Repeatability.REPEATABLE_HORIZONTAL || repeatability == Repeatability.REPEATABLE_VERTICAL) {
+        if(repeatability == REPEATABLE_HORIZONTAL || repeatability == REPEATABLE_VERTICAL) {
             ValueListFlexEditorImpl<FormDataValue> delegate = new ValueListFlexEditorImpl<>(editorFactory);
             delegateEditor = new RepeatingEditor(delegate);
-            if (repeatability == Repeatability.REPEATABLE_HORIZONTAL) {
-                delegate.setDirection(ValueListFlexEditorDirection.ROW);
+            if (repeatability == REPEATABLE_HORIZONTAL) {
+                delegate.setDirection(ROW);
             }
             else {
-                delegate.setDirection(ValueListFlexEditorDirection.COLUMN);
+                delegate.setDirection(COLUMN);
             }
         }
         else {
@@ -60,7 +65,7 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
 
     @Override
-    public void setValue(FormDataList value) {
+    public void setValue(FormDataValue value) {
         delegateEditor.setValue(value);
     }
 
@@ -70,7 +75,7 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
     }
 
     @Override
-    public Optional<FormDataList> getValue() {
+    public Optional<FormDataValue> getValue() {
         return delegateEditor.getValue();
     }
 
@@ -85,7 +90,7 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataList>> handler) {
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataValue>> handler) {
         return delegateEditor.addValueChangeHandler(event -> ValueChangeEvent.fire(FormElementEditorImpl.this, getValue()));
     }
 
