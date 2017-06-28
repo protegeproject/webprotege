@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.entity.GetDeprecatedEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.entity.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
+import edu.stanford.bmir.protege.web.server.form.SetFormDataActionHandler;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
@@ -458,6 +459,11 @@ public class ProjectActionHandlersModule {
 
     @Provides(type = SET)
     public ProjectActionHandler providesSetOboTermXRefsActionHandler(SetOboTermXRefsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetFormDataHandler(SetFormDataActionHandler handler) {
         return handler;
     }
 

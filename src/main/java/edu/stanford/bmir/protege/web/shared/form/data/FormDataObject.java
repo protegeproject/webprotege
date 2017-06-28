@@ -27,10 +27,9 @@ public class FormDataObject extends FormDataValue {
         return Optional.ofNullable(map.get(key));
     }
 
-//    @Override
-//    public Optional<OWLClassData> asOWLClassData() {
-//        return Optional.absent();
-//    }
+    public Map<String, FormDataValue> getMap() {
+        return map;
+    }
 
     @Override
     public Optional<IRI> asIRI() {

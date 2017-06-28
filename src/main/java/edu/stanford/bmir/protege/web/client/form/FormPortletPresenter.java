@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -34,6 +35,7 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
+        GWT.log("[FormPortletPresenter] handleAfterSetEntity " + entityData);
         if (entityData.isPresent()) {
             formPresenter.setSubject(entityData.get());
         }

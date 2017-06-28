@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
@@ -13,6 +14,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class FormDataList extends FormDataValue {
 
+    @JsonProperty
     private List<FormDataValue> list = new ArrayList<>();
 
     private FormDataList() {

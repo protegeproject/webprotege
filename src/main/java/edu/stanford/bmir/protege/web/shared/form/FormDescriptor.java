@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 
 import java.io.Serializable;
@@ -16,16 +18,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormDescriptor implements Serializable {
 
+    @JsonUnwrapped
     private FormId id;
 
-    private List<FormElementDescriptor> elementDescriptors;
+    private List<FormElementDescriptor> elements;
 
     private FormDescriptor() {
     }
 
     public FormDescriptor(FormId id, List<FormElementDescriptor> formElementDescriptors) {
         this.id = id;
-        this.elementDescriptors = new ArrayList<>(formElementDescriptors);
+        this.elements = new ArrayList<>(formElementDescriptors);
     }
 
     public static FormDescriptor empty() {
@@ -36,14 +39,31 @@ public class FormDescriptor implements Serializable {
         return id;
     }
 
-    public List<FormElementDescriptor> getFormElementDescriptors() {
-        return elementDescriptors;
+    public List<FormElementDescriptor> getElements() {
+        return elements;
     }
 
     public static Builder builder(FormId formId) {
         return new Builder(formId);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, elements);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof FormDescriptor)) {
+            return false;
+        }
+        FormDescriptor other = (FormDescriptor) obj;
+        return this.id.equals(other.id)
+                && this.elements.equals(other.elements);
+    }
 
     public static class Builder {
 

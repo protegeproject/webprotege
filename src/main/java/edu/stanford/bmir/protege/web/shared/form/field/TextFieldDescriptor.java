@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.base.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -77,5 +78,26 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
     @Nonnull
     public LineMode getLineMode() {
         return lineMode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(placeholder, stringType, pattern, patternViolationErrorMessage, lineMode);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof TextFieldDescriptor)) {
+            return false;
+        }
+        TextFieldDescriptor other = (TextFieldDescriptor) obj;
+        return this.placeholder.equals(other.placeholder)
+                && this.stringType.equals(other.stringType)
+                && this.pattern.equals(other.pattern)
+                && this.patternViolationErrorMessage.equals(other.patternViolationErrorMessage)
+                && this.lineMode.equals(other.lineMode);
     }
 }

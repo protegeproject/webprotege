@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.base.Objects;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -45,5 +46,23 @@ public class ChoiceFieldDescriptor implements FormFieldDescriptor {
 
     public List<ChoiceDescriptor> getChoiceDescriptors() {
         return new ArrayList<>(choiceDescriptors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(widgetType, choiceDescriptors);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof ChoiceFieldDescriptor)) {
+            return false;
+        }
+        ChoiceFieldDescriptor other = (ChoiceFieldDescriptor) obj;
+        return this.widgetType.equals(other.widgetType)
+                && this.choiceDescriptors.equals(other.choiceDescriptors);
     }
 }

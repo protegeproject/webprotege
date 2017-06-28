@@ -20,4 +20,21 @@ public class ImageFieldDescriptor implements FormFieldDescriptor {
     public static String getFieldTypeId() {
         return IMAGE_FIELD;
     }
+
+    @Override
+    public int hashCode() {
+        return 33;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof ImageFieldDescriptor)) {
+            return false;
+        }
+        ImageFieldDescriptor other = (ImageFieldDescriptor) obj;
+        return true;
+    }
 }

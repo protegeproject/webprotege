@@ -4,26 +4,22 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.shared.form.FormData;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
-import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorResult;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -40,6 +36,9 @@ public class FormPresenter {
 
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
 
+    @Nonnull
+    private Optional<OWLEntity> currentSubject = Optional.empty();
+
     @Inject
     public FormPresenter(DispatchServiceManager dispatchServiceManager, FormView formView, ProjectId projectId,
                          Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
@@ -55,47 +54,86 @@ public class FormPresenter {
     }
 
     public void setSubject(final OWLEntity entity) {
-        GWT.log("[FormPresenter] Displaying form data");
-
-        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, entity), new DispatchServiceCallback<GetFormDescriptorResult>() {
-            @Override
-            public void handleSuccess(GetFormDescriptorResult result) {
-                displayForm(result.getFormDescriptor(), result.getFormData(), entity);
+        checkNotNull(entity);
+        currentSubject.ifPresent(subject -> {
+            Map<FormElementId, FormDataValue> map = new HashMap<>();
+            GWT.log("[FormPresenter] Getting element views and data");
+            for(FormElementView view : formView.getElementViews()) {
+                try {
+                    Optional<FormElementId> elementId = view.getId();
+                    Optional<FormDataValue> value = view.getEditor().getValue();
+                    GWT.log("[FormPresenter] Looking at Form Element: " + elementId + "  Value: " + value);
+                    if(elementId.isPresent() && value.isPresent()) {
+                        map.put(elementId.get(), value.get());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            GWT.log("[FormPresenter] Sending form data to server");
+            FormData data = new FormData(map);
+            dispatchServiceManager.execute(new SetFormDataAction(projectId, subject, data),
+                                           result -> {});
 
-            @Override
-            public void handleErrorFinally(Throwable throwable) {
-
-            }
         });
+        currentSubject = Optional.of(entity);
+
+        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, entity),
+                                       result -> displayForm(result.getFormDescriptor(), result.getFormData(), entity));
     }
 
+    private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
 
     private void displayForm(FormDescriptor formDescriptor, FormData formData, final OWLEntity subject) {
-        for (FormElementView elementView : formView.getElementViews()) {
-            FormElementId elementId = elementView.getId().get();
-            Optional<FormDataList> elementData = elementView.getEditor().getValue();
-            GWT.log("FormData: " + elementId + " = " + elementData.toString());
-        }
-        formView.clear();
-        for (FormElementDescriptor elementDescriptor : formDescriptor.getFormElementDescriptors()) {
-            Optional<FormElementEditor> elementEditor = getFormElementEditor(elementDescriptor);
-            if (elementEditor.isPresent()) {
-                FormElementView elementView = new FormElementViewImpl();
-                elementView.setId(elementDescriptor.getId());
-                elementView.setFormLabel(elementDescriptor.getLabel());
-                elementView.setEditor(elementEditor.get());
-                Optional<FormDataList> data = formData.getFormElementData(elementDescriptor.getId());
-                if (data.isPresent()) {
-                    elementEditor.get().setValue(data.get());
-                }
-                else {
-                    elementEditor.get().clearValue();
-                }
+        if (!currentFormDescriptor.equals(Optional.of(formDescriptor))) {
+            GWT.log("[FormPresenter] Rebuilding form");
+            formView.clear();
+            for (FormElementDescriptor elementDescriptor : formDescriptor.getElements()) {
+                Optional<FormElementEditor> elementEditor = getFormElementEditor(elementDescriptor);
+                if (elementEditor.isPresent()) {
+                    try {
+                        FormElementView elementView = new FormElementViewImpl();
+                        elementView.setId(elementDescriptor.getId());
+                        elementView.setFormLabel(elementDescriptor.getLabel());
+                        elementView.setEditor(elementEditor.get());
+                        Optional<FormDataValue> data = formData.getFormElementData(elementDescriptor.getId());
+                        GWT.log("[FormPresenter] Data for element: " + elementDescriptor.getId() + " = " + data);
+                        if (data.isPresent()) {
+                            elementEditor.get().setValue(data.get());
+                        }
+                        else {
+                            elementEditor.get().clearValue();
+                        }
 
-                formView.addFormElementView(elementView);
+                        formView.addFormElementView(elementView);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
+        else {
+            formView.getElementViews().forEach(v -> {
+                Optional<FormElementId> theId = v.getId();
+                if(theId.isPresent()) {
+                    FormElementId id = theId.get();
+                    Optional<FormDataValue> formElementData = formData.getFormElementData(id);
+                    if(formElementData.isPresent()) {
+                        v.getEditor().setValue(formElementData.get());
+                    }
+                    else {
+                        v.getEditor().clearValue();
+                    }
+                }
+                else {
+                    v.getEditor().clearValue();
+                }
+
+            });
+
+        }
+        currentFormDescriptor = Optional.of(formDescriptor);
+
     }
 
     private Optional<FormElementEditor> getFormElementEditor(FormElementDescriptor descriptor) {
@@ -115,15 +153,15 @@ public class FormPresenter {
             return Optional.of(
                     () -> {
                         TextFieldDescriptor descriptor = (TextFieldDescriptor) formFieldDescriptor;
-                        StringFieldEditor stringFieldEditor = new StringFieldEditor(primitiveDataEditorProvider);
-                        stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
-                        stringFieldEditor.setLineMode(descriptor.getLineMode());
-                        stringFieldEditor.setStringType(descriptor.getStringType());
+                        TextFieldEditor textFieldEditor = new TextFieldEditor(primitiveDataEditorProvider);
+                        textFieldEditor.setPlaceholder(descriptor.getPlaceholder());
+                        textFieldEditor.setLineMode(descriptor.getLineMode());
+                        textFieldEditor.setStringType(descriptor.getStringType());
                         if (!descriptor.getPattern().isEmpty()) {
-                            stringFieldEditor.setPattern(descriptor.getPattern());
-                            stringFieldEditor.setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage());
+                            textFieldEditor.setPattern(descriptor.getPattern());
+                            textFieldEditor.setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage());
                         }
-                        return stringFieldEditor;
+                        return textFieldEditor;
                     }
             );
         }
