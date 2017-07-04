@@ -26,7 +26,7 @@ public class FormElementDescriptorDeserializer implements JsonDeserializer<FormE
             Repeatability repeatability = Repeatability.valueOf(repeatabilityValue);
             Required required = Required.valueOf(requiredValue);
             FormFieldDescriptor fieldDescriptor = jsonDeserializationContext.deserialize(jsonObject.getAsJsonObject("fieldDescriptor"), FormFieldDescriptor.class);
-            return new FormElementDescriptor(new FormElementId(id),  label, fieldDescriptor, repeatability, required, "");
+            return new FormElementDescriptor(FormElementId.get(id), label, fieldDescriptor, repeatability, required, "");
         } catch (IllegalArgumentException e) {
             throw new FormDescriptorParseException("Encountered "
                     + jsonObject.getAsJsonPrimitive("repeatability").getAsString()

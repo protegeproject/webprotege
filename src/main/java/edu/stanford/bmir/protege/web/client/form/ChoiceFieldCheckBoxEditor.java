@@ -39,14 +39,11 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
 
     private final Map<CheckBox, ChoiceDescriptor> checkBoxes = new HashMap<>();
 
+    private final List<FormDataValue> defaultChoices = new ArrayList<>();
+
     public ChoiceFieldCheckBoxEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        checkBoxValueChangedHandler = new ValueChangeHandler<Boolean>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event) {
-                ValueChangeEvent.fire(ChoiceFieldCheckBoxEditor.this, getValue());
-            }
-        };
+        checkBoxValueChangedHandler = event -> ValueChangeEvent.fire(ChoiceFieldCheckBoxEditor.this, getValue());
     }
 
     @Override
@@ -63,6 +60,13 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
+    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
+        this.defaultChoices.clear();
+        this.defaultChoices.addAll(defaultChoices);
+        selectDefaultChoices();
+    }
+
+    @Override
     public void setValue(FormDataValue value) {
         clearValue();
         for(FormDataValue data : value.asList()) {
@@ -71,6 +75,13 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
                     checkBox.setValue(true);
                 }
             }
+        }
+        selectDefaultChoices();
+    }
+
+    private void selectDefaultChoices() {
+        if (!defaultChoices.isEmpty()) {
+            setValue(new FormDataList(defaultChoices));
         }
     }
 

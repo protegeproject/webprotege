@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import edu.stanford.bmir.protege.web.server.access.RoleAssignment;
+import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveConverter;
+import edu.stanford.bmir.protege.web.server.form.FormDataValueConverter;
 import edu.stanford.bmir.protege.web.server.user.UserActivityRecord;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.Converters;
 import org.mongodb.morphia.mapping.Mapper;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -32,6 +35,7 @@ public class MorphiaProvider implements Provider<Morphia> {
 
     @Nonnull
     private final CommentIdConverter commentIdConverter;
+
 
     @Inject
     public MorphiaProvider(@Nonnull UserIdConverter userIdConverter,
@@ -60,7 +64,8 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(projectIdConverter);
         converters.addConverter(threadIdConverter);
         converters.addConverter(commentIdConverter);
-
+        converters.addConverter(new FormDataValueConverter(new OWLDataFactoryImpl(),
+                                                           entityConverter));
         morphia.map(EntityDiscussionThread.class);
         morphia.map(UserActivityRecord.class);
         morphia.map(RoleAssignment.class);

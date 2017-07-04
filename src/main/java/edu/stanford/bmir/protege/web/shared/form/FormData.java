@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.server.form.FormDataSerializer;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
@@ -21,9 +24,11 @@ import static com.google.common.base.Objects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 12/04/16
  */
+@JsonSerialize(keyUsing = FormDataSerializer.class)
 public class FormData implements Serializable, IsSerializable {
 
-    private Map<FormElementId, FormDataValue> data = new HashMap<>();
+    @JsonUnwrapped
+    private Map<String, FormDataValue> data = new HashMap<>();
 
     private FormData() {
     }
@@ -33,22 +38,40 @@ public class FormData implements Serializable, IsSerializable {
     }
 
     public FormData(Map<FormElementId, FormDataValue> data) {
-        this.data.putAll(data);
+        data.forEach((id, val) -> this.data.put(id.getId(), val));
     }
 
     public Map<FormElementId, FormDataValue> getData() {
-        return data;
+        Map<FormElementId, FormDataValue> result = new HashMap<>();
+        data.forEach((id, val) -> result.put(FormElementId.get(id), val));
+        return result;
     }
 
     @JsonIgnore
     public Optional<FormDataValue> getFormElementData(FormElementId formElementId) {
-        return Optional.ofNullable(data.get(formElementId));
+        return Optional.ofNullable(data.get(formElementId.getId()));
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
+    @Override
+    public int hashCode() {
+        return data.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof FormData)) {
+            return false;
+        }
+        FormData other = (FormData) obj;
+        return this.data.equals(other.data);
+    }
 
     public static class Builder {
 

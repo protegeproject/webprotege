@@ -6,6 +6,7 @@ import com.google.common.base.Objects;
 
 import javax.annotation.Nonnull;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -18,15 +19,15 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
 
     protected static final String TYPE = "Text";
 
-    private String placeholder;
+    private String placeholder = "";
 
-    private StringType stringType;
+    private StringType stringType = StringType.SIMPLE_STRING;
 
-    private LineMode lineMode;
+    private LineMode lineMode = LineMode.SINGLE_LINE;
 
-    private String pattern;
+    private String pattern = "";
 
-    private String patternViolationErrorMessage;
+    private String patternViolationErrorMessage = "";
 
     private TextFieldDescriptor() {
     }
@@ -99,5 +100,17 @@ public class TextFieldDescriptor implements FormFieldDescriptor {
                 && this.pattern.equals(other.pattern)
                 && this.patternViolationErrorMessage.equals(other.patternViolationErrorMessage)
                 && this.lineMode.equals(other.lineMode);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("TextFieldDescriptor")
+                .add("placeholder", placeholder)
+                .add("stringType", stringType)
+                .add("pattern", pattern)
+                .add("patternViolationErrorMessage", patternViolationErrorMessage)
+                .add("lineMode", lineMode)
+                .toString();
     }
 }

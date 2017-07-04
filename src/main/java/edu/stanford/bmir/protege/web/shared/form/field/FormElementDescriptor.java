@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
 import javax.annotation.Nonnull;
 import java.io.Serializable;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -19,15 +20,15 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
 
     private FormElementId id;
 
-    private String label;
+    private String label = "";
 
     private FormFieldDescriptor fieldDescriptor;
 
-    private Repeatability repeatability;
+    private Repeatability repeatability = Repeatability.NON_REPEATABLE;
 
-    private Required required;
+    private Required required = Required.REQUIRED;
 
-    private String help;
+    private String help = "";
 
     @GwtSerializationConstructor
     private FormElementDescriptor() {
@@ -94,5 +95,18 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
                 && this.required.equals(other.required)
                 && this.fieldDescriptor.equals(other.fieldDescriptor)
                 && this.help.equals(other.help);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("FormElementDescriptor")
+                .addValue(id)
+                .add("label", label)
+                .add("repeatable", repeatability)
+                .add("required", required)
+                .add("help", help)
+                .add("descriptor", fieldDescriptor)
+                .toString();
     }
 }

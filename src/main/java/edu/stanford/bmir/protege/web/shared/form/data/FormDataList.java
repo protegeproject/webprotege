@@ -1,17 +1,22 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.stanford.bmir.protege.web.server.form.FormDataListSerializer;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
+@JsonSerialize(using = FormDataListSerializer.class)
 public class FormDataList extends FormDataValue {
 
     @JsonProperty
@@ -25,7 +30,7 @@ public class FormDataList extends FormDataValue {
     }
 
     public FormDataList(List<FormDataValue> list) {
-        this.list.addAll(list);
+        this.list.addAll(checkNotNull(list));
     }
 
     @Override

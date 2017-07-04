@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.HasDeleteable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private ValueEditorFactory<O> valueEditorFactory;
 
-    private List<ValueEditor<O>> currentEditors = new ArrayList<ValueEditor<O>>();
+    private List<ValueEditor<O>> currentEditors = new ArrayList<>();
 
     private ValueChangeHandler<Optional<O>> valueChangeHandler;
 
@@ -206,6 +207,8 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         editor.addValueChangeHandler(valueChangeHandler);
         editorContainer.setDeleteButtonVisible(deleteVisible);
         editorContainer.setDeleteButtonEnabled(enabled);
+        editorContainer.setDeleteButtonClickedHandler(event -> handleDelete(editor));
+
 
         if(editor instanceof HasEnabled) {
             ((HasEnabled) editor).setEnabled(enabled);

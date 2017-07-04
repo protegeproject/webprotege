@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -63,6 +64,15 @@ public class FormDescriptor implements Serializable {
         FormDescriptor other = (FormDescriptor) obj;
         return this.id.equals(other.id)
                 && this.elements.equals(other.elements);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("FormDescriptor")
+                .addValue(id)
+                .addValue(elements)
+                .toString();
     }
 
     public static class Builder {

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.shared.HasDeleteable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 

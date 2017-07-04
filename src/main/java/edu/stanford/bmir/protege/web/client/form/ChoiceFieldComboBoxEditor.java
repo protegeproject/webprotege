@@ -38,6 +38,7 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
 
     private final List<ChoiceDescriptor> choiceDescriptors = new ArrayList<>();
 
+    private Optional<FormDataValue> defaultChoice = Optional.empty();
 
     public ChoiceFieldComboBoxEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -57,15 +58,29 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
             choiceDescriptors.add(descriptor);
             comboBox.addItem(descriptor.getLabel());
         }
+        selectDefaultChoice();
+    }
+
+    @Override
+    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
+        if(defaultChoices.isEmpty()) {
+            defaultChoice = Optional.empty();
+        }
+        else {
+            defaultChoice = Optional.of(defaultChoices.get(0));
+        }
+    }
+
+    private void selectDefaultChoice() {
+        comboBox.setSelectedIndex(0);
+        defaultChoice.ifPresent(this::setValue);
     }
 
     @Override
     public void setValue(FormDataValue value) {
         FormDataValue first = value.asList().get(0);
-
         int index = 1;
         for(ChoiceDescriptor descriptor : choiceDescriptors) {
-            GWT.log("[ChoiceFieldComboBoxEditor] Set val: " + first + " Desc " + descriptor.getValue());
             if(descriptor.getValue().equals(first)) {
                 comboBox.setSelectedIndex(index);
                 break;
@@ -76,7 +91,7 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
 
     @Override
     public void clearValue() {
-        comboBox.setSelectedIndex(0);
+        selectDefaultChoice();
     }
 
     @Override

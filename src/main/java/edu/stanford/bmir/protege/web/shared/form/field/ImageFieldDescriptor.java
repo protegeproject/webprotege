@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -7,18 +9,19 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 09/04/16
  */
+@JsonTypeName(ImageFieldDescriptor.TYPE)
 public class ImageFieldDescriptor implements FormFieldDescriptor {
 
-    private static final String IMAGE_FIELD = "ImageField";
+    protected static final String TYPE = "Image";
 
     @Nonnull
     @Override
     public String getAssociatedType() {
-        return IMAGE_FIELD;
+        return TYPE;
     }
 
     public static String getFieldTypeId() {
-        return IMAGE_FIELD;
+        return TYPE;
     }
 
     @Override

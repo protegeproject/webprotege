@@ -4,14 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.stanford.bmir.protege.web.server.form.FormDataSerializer;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import org.semanticweb.owlapi.model.IRI;
@@ -21,7 +18,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +28,14 @@ import static edu.stanford.bmir.protege.web.shared.form.field.LineMode.SINGLE_LI
 import static edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange.BoundType.EXCLUSIVE;
 import static edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange.BoundType.INCLUSIVE;
 import static edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange.range;
+import static edu.stanford.bmir.protege.web.shared.form.field.NumberFieldType.PLAIN;
 import static edu.stanford.bmir.protege.web.shared.form.field.NumberFieldType.SLIDER;
 import static edu.stanford.bmir.protege.web.shared.form.field.Repeatability.NON_REPEATABLE;
 import static edu.stanford.bmir.protege.web.shared.form.field.Required.OPTIONAL;
 import static edu.stanford.bmir.protege.web.shared.form.field.Required.REQUIRED;
 import static edu.stanford.bmir.protege.web.shared.form.field.StringType.SIMPLE_STRING;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 
 /**
@@ -50,7 +48,7 @@ public class Fiddle {
     public static void main(String[] args) {
         OWLDataFactory df = new OWLDataFactoryImpl();
 
-        FormElementDescriptor descriptor = new FormElementDescriptor(new FormElementId("HelloForm"),
+        FormElementDescriptor descriptor = new FormElementDescriptor(FormElementId.get("HelloForm"),
                                                                      "My Hello Form",
                                                                      new ChoiceFieldDescriptor(CHECK_BOX,
                                                                                                asList(choice(
@@ -68,24 +66,27 @@ public class Fiddle {
                                                                                                                      .get(df.getOWLThing())),
                                                                                                       choice("Tail Mounted Tri",
                                                                                                              FormDataPrimitive
-                                                                                                                     .get(44)))),
+                                                                                                                     .get(44))),
+                                                                                               emptyList()),
                                                                      NON_REPEATABLE,
                                                                      REQUIRED,
                                                                      "");
 
-        FormElementDescriptor descriptor1 = new FormElementDescriptor(new FormElementId("Age"),
+        FormElementDescriptor descriptor1 = new FormElementDescriptor(FormElementId.get("Age"),
                                                                       "Age",
                                                                       new NumberFieldDescriptor("###",
                                                                                                 range(1,
                                                                                                       INCLUSIVE,
                                                                                                       18,
                                                                                                       EXCLUSIVE),
-                                                                                                SLIDER),
+                                                                                                SLIDER,
+                                                                                                7,
+                                                                                                ""),
                                                                       NON_REPEATABLE,
                                                                       REQUIRED,
                                                                       "");
 
-        FormElementDescriptor descriptor2 = new FormElementDescriptor(new FormElementId("OtherElement"),
+        FormElementDescriptor descriptor2 = new FormElementDescriptor(FormElementId.get("OtherElement"),
                                                                       "My other label",
                                                                       new TextFieldDescriptor("Enter a name",
                                                                                               SIMPLE_STRING,
@@ -97,7 +98,7 @@ public class Fiddle {
                                                                       "");
 
         OWLClass owlThing = df.getOWLThing();
-        FormElementDescriptor descriptor3 = new FormElementDescriptor(new FormElementId("Entity"),
+        FormElementDescriptor descriptor3 = new FormElementDescriptor(FormElementId.get("Entity"),
                                                                       "My Entity",
                                                                       new ClassNameFieldDescriptor(singleton(
                                                                               owlThing),
@@ -107,7 +108,7 @@ public class Fiddle {
                                                                       "");
 
 
-        FormElementDescriptor descriptor4 = new FormElementDescriptor(new FormElementId("Ind Name"),
+        FormElementDescriptor descriptor4 = new FormElementDescriptor(FormElementId.get("Ind Name"),
                                                                       "Individual Name",
                                                                       new IndividualNameFieldDescriptor(singleton(df.getOWLClass(
                                                                               IRI.create(
@@ -115,7 +116,15 @@ public class Fiddle {
                                                                       NON_REPEATABLE,
                                                                       OPTIONAL,
                                                                       "");
-        List<FormElementDescriptor> formElements = asList(descriptor, descriptor1, descriptor2, descriptor3, descriptor4);
+        FormElementDescriptor descriptor5 = new FormElementDescriptor(FormElementId.get("Ind Name"),
+                                                                      "Individual Name",
+                                                                      new NumberFieldDescriptor("#.##", NumberFieldRange.all(), PLAIN, 7, ""),
+                                                                      NON_REPEATABLE,
+                                                                      OPTIONAL,
+                                                                      "");
+
+
+        List<FormElementDescriptor> formElements = asList(descriptor5);
 
         FormDescriptor formDescriptor = new FormDescriptor(new FormId("MyForm"),
                                                            formElements);
@@ -137,11 +146,11 @@ public class Fiddle {
             Map<FormElementId, FormDataValue> map = new HashMap<>();
             Map<String, FormDataValue> dataMap = new HashMap<>();
             dataMap.put("Hello", FormDataPrimitive.get("World"));
-            map.put(new FormElementId("TheDetails"), new FormDataList(FormDataPrimitive.get("X")));
+            map.put(FormElementId.get("TheDetails"), new FormDataList(FormDataPrimitive.get("X")));
             mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new FormData(map));
 
-//            List<Object> d = mapper.readerFor(FormElementDescriptor.class).readValues(s).readAll();
-//            System.out.println(d);
+            List<Object> d = mapper.readerFor(FormElementDescriptor.class).readValues(s).readAll();
+            System.out.println(d);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

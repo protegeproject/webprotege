@@ -103,7 +103,13 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
     }
 
     private void setEditedValue(String editedValue) {
-        Optional<IRI> newValue = Optional.of(IRI.create(editedValue));
+        Optional<IRI> newValue;
+        if(editedValue.trim().isEmpty()) {
+            newValue = Optional.empty();
+        }
+        else {
+            newValue = Optional.of(IRI.create(editedValue));
+        }
         if (!theIRI.equals(newValue)) {
             theIRI = newValue;
             imageField.setUrl(editedValue);

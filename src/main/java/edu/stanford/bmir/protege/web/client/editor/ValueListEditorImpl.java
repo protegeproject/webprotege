@@ -240,6 +240,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
     }
 
     private void handleDelete(ValueEditor<O> editor) {
+        GWT.log("Handle delete");
         Optional<List<O>> before = getValue();
         removeEditor(editor);
         ensureBlank();
