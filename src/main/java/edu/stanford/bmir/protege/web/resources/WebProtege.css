@@ -257,9 +257,9 @@ blockquote {
     height: 20px;
     border-radius: 10px;
     border: 1px solid transparent;
-    line-height: 18px;
     margin: 0;
     padding: 0;
+    cursor: pointer;
 }
 
 .deleteButton:hover {
@@ -268,4 +268,9 @@ blockquote {
 
 .deleteButton:focus {
     background-color: #0A5EA8;
+}
+
+.deleteButton:disabled {
+    background-color: #dddddd;
+    cursor: default;
 }
