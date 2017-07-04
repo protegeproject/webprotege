@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
+import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveConverter;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -24,8 +25,7 @@ public class RebuildPermissions {
                 new OWLEntityConverter(new OWLDataFactoryImpl()),
                 new ProjectIdConverter(),
                 new ThreadIdConverter(),
-                new CommentIdConverter()
-        );
+                new CommentIdConverter());
         Morphia morphia = morphiaProvider.get();
         Datastore datastore = morphia.createDatastore(mongoClient, "webprotege");
         AccessManager accessManager = new AccessManagerImpl(

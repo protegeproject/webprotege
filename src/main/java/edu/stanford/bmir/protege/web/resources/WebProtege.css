@@ -249,3 +249,23 @@ blockquote {
 .derivedInformation {
     background-color: #fffaf4;
 }
+
+.deleteButton {
+    background-color: #aaaaaa;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    line-height: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+.deleteButton:hover {
+    background-color: #e00000;
+}
+
+.deleteButton:focus {
+    background-color: #0A5EA8;
+}

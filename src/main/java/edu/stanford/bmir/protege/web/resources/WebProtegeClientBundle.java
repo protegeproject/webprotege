@@ -217,6 +217,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String commentIconInset();
 
         String derivedInformation();
+
+        String deleteButton();
     }
 
     interface WebProtegeButtons extends CssResource {

@@ -18,13 +18,20 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     protected static final String TYPE = "Number";
 
     @Nonnull
-    private String numberFormat;
+    private String numberFormat = "#######";
+
+    private int length = 6;
+
+    private String placeholder = "";
 
     @Nonnull
-    private NumberFieldRange range;
+    private NumberFieldRange range = NumberFieldRange.range(Double.MAX_VALUE,
+                                                          NumberFieldRange.BoundType.INCLUSIVE,
+                                                          Double.MAX_VALUE,
+                                                          NumberFieldRange.BoundType.INCLUSIVE);
 
     @Nonnull
-    private NumberFieldType widgetType;
+    private NumberFieldType widgetType = NumberFieldType.PLAIN;
 
     @GwtSerializationConstructor
     private NumberFieldDescriptor() {
@@ -32,10 +39,18 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
 
     public NumberFieldDescriptor(@Nonnull String numberFormat,
                                  @Nonnull NumberFieldRange range,
-                                 @Nonnull NumberFieldType widgetType) {
+                                 @Nonnull NumberFieldType widgetType,
+                                 int length,
+                                 @Nonnull String placeholder) {
         this.numberFormat = checkNotNull(numberFormat);
         this.range = checkNotNull(range);
         this.widgetType = checkNotNull(widgetType);
+        this.length = length;
+        this.placeholder = checkNotNull(placeholder);
+    }
+
+    public static String getTypeId() {
+        return TYPE;
     }
 
     @Nonnull
@@ -46,6 +61,14 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     @Nonnull
     public NumberFieldRange getRange() {
         return range;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
     }
 
     @Nonnull

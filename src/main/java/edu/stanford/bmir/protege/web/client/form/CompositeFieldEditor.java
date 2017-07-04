@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.HasDeleteable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
@@ -25,7 +26,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 12/04/16
  */
-public class CompositeFieldEditor extends Composite implements ValueEditor<FormDataValue> {
+public class CompositeFieldEditor extends Composite implements ValueEditor<FormDataValue>, HasDeleteable {
 
     interface CompositeFieldEditorUiBinder extends UiBinder<HTMLPanel, CompositeFieldEditor> {
 
@@ -54,6 +55,11 @@ public class CompositeFieldEditor extends Composite implements ValueEditor<FormD
         }
         holder.setEditor(childEditor);
         container.add(holder);
+    }
+
+    @Override
+    public boolean isDeleteable() {
+        return true;
     }
 
     @Override

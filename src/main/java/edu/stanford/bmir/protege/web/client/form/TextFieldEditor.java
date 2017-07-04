@@ -145,7 +145,13 @@ public class TextFieldEditor extends Composite implements ValueEditor<FormDataVa
             return Optional.empty();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
-        return Optional.of(FormDataPrimitive.get(literalData.getLiteral()).getSimplified());
+        if(stringType == StringType.SIMPLE_STRING) {
+            return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral()));
+        }
+        else {
+            return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral(), literalData.getLang()));
+        }
+
     }
 
     @Override

@@ -2,13 +2,18 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.library.button.DeleteButton;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -38,6 +43,8 @@ public class ValueListFlexEditorContainer<O> extends Composite implements HasEna
 
     @UiField
     DeleteButton deleteButton;
+
+    private ClickHandler deleteButtonClickHandler = event -> {};
 
     private boolean enabled = true;
 
@@ -89,4 +96,12 @@ public class ValueListFlexEditorContainer<O> extends Composite implements HasEna
 
     }
 
+    @UiHandler("deleteButton")
+    public void handleDeleteButtonClicked(ClickEvent event) {
+        deleteButtonClickHandler.onClick(event);
+    }
+
+    public void setDeleteButtonClickedHandler(ClickHandler deleteButtonClickHandler) {
+        this.deleteButtonClickHandler = checkNotNull(deleteButtonClickHandler);
+    }
 }

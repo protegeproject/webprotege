@@ -20,11 +20,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection.COLUMN;
-import static edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection.ROW;
-import static edu.stanford.bmir.protege.web.shared.form.field.Repeatability.REPEATABLE_HORIZONTAL;
-import static edu.stanford.bmir.protege.web.shared.form.field.Repeatability.REPEATABLE_VERTICAL;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -47,14 +42,14 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     public FormElementEditorImpl(ValueEditorFactory<FormDataValue> editorFactory, Repeatability repeatability) {
         initWidget(ourUiBinder.createAndBindUi(this));
-        if(repeatability == REPEATABLE_HORIZONTAL || repeatability == REPEATABLE_VERTICAL) {
+        if(repeatability == Repeatability.REPEATABLE_HORIZONTAL || repeatability == Repeatability.REPEATABLE_VERTICAL) {
             ValueListFlexEditorImpl<FormDataValue> delegate = new ValueListFlexEditorImpl<>(editorFactory);
             delegateEditor = new RepeatingEditor(delegate);
-            if (repeatability == REPEATABLE_HORIZONTAL) {
-                delegate.setDirection(ROW);
+            if (repeatability == Repeatability.REPEATABLE_HORIZONTAL) {
+                delegate.setDirection(ValueListFlexEditorDirection.ROW);
             }
             else {
-                delegate.setDirection(COLUMN);
+                delegate.setDirection(ValueListFlexEditorDirection.COLUMN);
             }
         }
         else {

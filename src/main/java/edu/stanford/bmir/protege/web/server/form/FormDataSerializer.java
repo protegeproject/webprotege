@@ -4,8 +4,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Matthew Horridge
@@ -21,13 +24,9 @@ public class FormDataSerializer extends StdSerializer<FormData> {
     @Override
     public void serialize(FormData value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
-        value.getData().forEach((k, v) -> {
-            try {
-                gen.writeObjectField(k.getId(), v);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        for(Map.Entry<FormElementId, FormDataValue> entry : value.getData().entrySet()) {
+            gen.writeObjectField(entry.getKey().getId(), entry.getValue());
+        }
         gen.writeEndObject();
     }
 }

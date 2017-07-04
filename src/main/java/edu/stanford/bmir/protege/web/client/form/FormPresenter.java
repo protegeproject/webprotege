@@ -179,7 +179,8 @@ public class FormPresenter {
                         else {
                             editor = new ChoiceFieldComboBoxEditor();
                         }
-                        editor.setChoices(descriptor.getChoiceDescriptors());
+                        editor.setChoices(descriptor.getChoices());
+                        editor.setDefaultChoices(descriptor.getDefaultChoices());
                         return editor;
                     }
             );
@@ -192,6 +193,19 @@ public class FormPresenter {
         else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {
             return Optional.of(
                     () -> new ImageFieldEditor()
+            );
+        }
+        else if(formFieldDescriptor.getAssociatedType().equals(NumberFieldDescriptor.getTypeId())) {
+            return Optional.of(
+                    () -> {
+                        NumberFieldDescriptor descriptor = (NumberFieldDescriptor) formFieldDescriptor;
+                        NumberFieldEditor editor = new NumberFieldEditor();
+                        editor.setFormat(descriptor.getNumberFormat());
+                        editor.setRange(descriptor.getRange());
+                        editor.setLength(descriptor.getLength());
+                        editor.setPlaceholder(descriptor.getPlaceholder());
+                        return editor;
+                    }
             );
         }
         else if(formFieldDescriptor.getAssociatedType().equals(CompositeFieldDescriptor.getFieldTypeId())) {

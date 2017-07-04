@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import edu.stanford.bmir.protege.web.server.user.UserRecord;
@@ -133,8 +134,7 @@ public class SetupTools {
                     new OWLEntityConverter(new OWLDataFactoryImpl()),
                     new ProjectIdConverter(),
                     new ThreadIdConverter(),
-                    new CommentIdConverter()
-            ).get();
+                    new CommentIdConverter()).get();
     }
 
     @Nonnull

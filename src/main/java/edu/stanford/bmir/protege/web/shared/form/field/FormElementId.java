@@ -1,15 +1,20 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import edu.stanford.bmir.protege.web.server.form.FormElementIdSerializer;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
+@JsonSerialize(using = FormElementIdSerializer.class)
 public class FormElementId implements Serializable {
 
     private String id;
@@ -17,8 +22,12 @@ public class FormElementId implements Serializable {
     private FormElementId() {
     }
 
-    public FormElementId(String id) {
-        this.id = id;
+    private FormElementId(String id) {
+        this.id = checkNotNull(id);
+    }
+
+    public static FormElementId get(String id) {
+        return new FormElementId(id);
     }
 
     public String getId() {

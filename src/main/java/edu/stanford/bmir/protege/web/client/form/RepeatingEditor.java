@@ -58,11 +58,8 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
-        return new HandlerRegistration() {
-            @Override
-            public void removeHandler() {
+        return () -> {
 
-            }
         };
     }
 

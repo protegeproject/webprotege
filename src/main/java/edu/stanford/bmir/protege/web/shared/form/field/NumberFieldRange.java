@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.google.common.collect.BoundType;
+import com.google.common.collect.Range;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge
@@ -10,13 +14,13 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
  */
 public class NumberFieldRange implements IsSerializable {
 
-    private Double lowerBound;
+    private Double lowerBound = Double.MIN_VALUE;
 
-    private BoundType lowerBoundType;
+    private BoundType lowerBoundType = BoundType.INCLUSIVE;
 
-    private Double upperBound;
+    private Double upperBound = Double.MAX_VALUE;
 
-    private BoundType upperBoundType;
+    private BoundType upperBoundType = BoundType.INCLUSIVE;
 
     private NumberFieldRange(double lowerBound,
                              BoundType lowerBoundType,
@@ -32,11 +36,20 @@ public class NumberFieldRange implements IsSerializable {
     private NumberFieldRange() {
     }
 
+
+
     public static NumberFieldRange range(double lowerBound,
                                          BoundType lowerBoundType,
                                          double upperBound,
                                          BoundType upperBoundType) {
         return new NumberFieldRange(lowerBound, lowerBoundType, upperBound, upperBoundType);
+    }
+
+    public static NumberFieldRange all() {
+        return new NumberFieldRange(Double.MIN_VALUE,
+                                    BoundType.INCLUSIVE,
+                                    Double.MAX_VALUE,
+                                    BoundType.INCLUSIVE);
     }
 
     public double getLowerBound() {
@@ -56,7 +69,43 @@ public class NumberFieldRange implements IsSerializable {
     }
 
     public enum BoundType {
-        INCLUSIVE,
-        EXCLUSIVE
+        INCLUSIVE(">=", "<="),
+        EXCLUSIVE(">", "<");
+
+        private String lowerSymbol;
+
+        private String upperSymbol;
+
+        BoundType(String lowerSymbol, String upperSymbol) {
+            this.lowerSymbol = lowerSymbol;
+            this.upperSymbol = upperSymbol;
+        }
+
+        public String getLowerSymbol() {
+            return lowerSymbol;
+        }
+
+        public String getUpperSymbol() {
+            return upperSymbol;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return toStringHelper("NumberFieldRange")
+                .add("lowerBound", lowerBound)
+                .add("lowerBoundType", lowerBoundType)
+                .add("upperBound", upperBound)
+                .add("upperBoundType", upperBoundType)
+                .toString();
+    }
+
+    public Range<Double> toRange() {
+        return Range.range(
+                this.getLowerBound(),
+                this.getLowerBoundType() == NumberFieldRange.BoundType.INCLUSIVE ? com.google.common.collect.BoundType.CLOSED : com.google.common.collect.BoundType.OPEN,
+                this.getUpperBound(),
+                this.getUpperBoundType() == NumberFieldRange.BoundType.INCLUSIVE ? com.google.common.collect.BoundType.CLOSED : com.google.common.collect.BoundType.OPEN
+        );
     }
 }

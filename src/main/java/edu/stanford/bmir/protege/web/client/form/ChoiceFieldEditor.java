@@ -15,4 +15,6 @@ import java.util.List;
 public interface ChoiceFieldEditor extends IsWidget, ValueEditor<FormDataValue> {
 
     void setChoices(List<ChoiceDescriptor> choices);
+
+    void setDefaultChoices(List<FormDataValue> defaultChoices);
 }

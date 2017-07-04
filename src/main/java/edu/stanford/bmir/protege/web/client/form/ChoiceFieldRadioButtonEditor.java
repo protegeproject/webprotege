@@ -42,14 +42,11 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
 
     private Map<RadioButton, ChoiceDescriptor> choiceButtons = new HashMap<>();
 
+    private Optional<FormDataValue> defaultChoice = Optional.empty();
+
     public ChoiceFieldRadioButtonEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        radioButtonValueChangedHandler = new ValueChangeHandler<Boolean>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event) {
-                ValueChangeEvent.fire(ChoiceFieldRadioButtonEditor.this, getValue());
-            }
-        };
+        radioButtonValueChangedHandler = event -> ValueChangeEvent.fire(ChoiceFieldRadioButtonEditor.this, getValue());
     }
 
     @Override
@@ -63,6 +60,22 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
             container.add(radioButton);
             choiceButtons.put(radioButton, descriptor);
         }
+        selectDefaultChoice();
+    }
+
+    @Override
+    public void setDefaultChoices(List<FormDataValue> defaultChoices) {
+        if(defaultChoices.isEmpty()) {
+            defaultChoice = Optional.empty();
+        }
+        else {
+            defaultChoice = Optional.of(defaultChoices.get(0));
+        }
+        selectDefaultChoice();
+    }
+
+    private void selectDefaultChoice() {
+        defaultChoice.ifPresent(this::setValue);
     }
 
     @Override
@@ -72,9 +85,6 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
             if(choiceDescriptor.getValue().equals(value)) {
                 radioButton.setValue(true);
             }
-            else {
-                radioButton.setValue(false);
-            }
         }
     }
 
@@ -83,6 +93,7 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
         for(RadioButton radioButton : choiceButtons.keySet()) {
             radioButton.setValue(false);
         }
+        selectDefaultChoice();
     }
 
     @Override

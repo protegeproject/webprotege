@@ -6,6 +6,8 @@ import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -54,5 +56,14 @@ public class ChoiceDescriptor implements IsSerializable {
         ChoiceDescriptor other = (ChoiceDescriptor) obj;
         return this.label.equals(other.label)
                 && this.value.equals(other.value);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("ChoiceDescriptor")
+                .add("label", label)
+                .add("value", value)
+                .toString();
     }
 }

@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveSerializer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import org.semanticweb.owlapi.model.IRI;
@@ -20,7 +22,7 @@ import static java.util.Collections.singletonList;
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
-
+@JsonSerialize(using = FormDataPrimitiveSerializer.class)
 public abstract class FormDataPrimitive extends FormDataValue {
 
     @GwtSerializationConstructor
@@ -37,9 +39,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         return new OWLEntityPrimitive(entity);
     }
 
-//    public static FormDataPrimitive get(OWLEntityData entityData) {
-//        return new FormDataPrimitive(entityData);
-//    }
+    public abstract boolean isString();
+
+    public abstract String getValueAsString();
+
+    public abstract boolean isNumber();
 
     public static FormDataPrimitive get(IRI iri) {
         return new IRIPrimitive(iri);
@@ -101,6 +105,12 @@ public abstract class FormDataPrimitive extends FormDataValue {
         return this.getValue().equals(other.getValue());
     }
 
+    public abstract double getValueAsDouble();
+
+    public abstract boolean isBoolean();
+
+    public abstract boolean getValueAsBoolean();
+
     public static class OWLEntityPrimitive extends FormDataPrimitive {
 
         @Nonnull
@@ -127,6 +137,36 @@ public abstract class FormDataPrimitive extends FormDataValue {
         @Override
         public FormDataPrimitive getSimplified() {
             return this;
+        }
+
+        @Override
+        public boolean isString() {
+            return false;
+        }
+
+        @Override
+        public String getValueAsString() {
+            throw new RuntimeException("Not a String");
+        }
+
+        @Override
+        public boolean isNumber() {
+            return false;
+        }
+
+        @Override
+        public double getValueAsDouble() {
+            throw new RuntimeException("Not a number");
+        }
+
+        @Override
+        public boolean isBoolean() {
+            return false;
+        }
+
+        @Override
+        public boolean getValueAsBoolean() {
+            throw new RuntimeException("Not a boolean");
         }
     }
 
@@ -156,14 +196,45 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public FormDataPrimitive getSimplified() {
             return this;
         }
+
+
+        @Override
+        public boolean isString() {
+            return false;
+        }
+
+        @Override
+        public String getValueAsString() {
+            throw new RuntimeException("Not a String");
+        }
+
+        @Override
+        public boolean isNumber() {
+            return false;
+        }
+
+        @Override
+        public double getValueAsDouble() {
+            throw new RuntimeException("Not a number");
+        }
+
+        @Override
+        public boolean isBoolean() {
+            return false;
+        }
+
+        @Override
+        public boolean getValueAsBoolean() {
+            throw new RuntimeException("Not a boolean");
+        }
     }
 
     public static class NumberPrimitive extends FormDataPrimitive {
 
-        private Number number;
+        private double number;
 
         public NumberPrimitive(Number number) {
-            this.number = number;
+            this.number = number.doubleValue();
         }
 
         private NumberPrimitive() {
@@ -176,7 +247,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
         @Override
         public Optional<OWLLiteral> asLiteral() {
-            return Optional.of(DataFactory.get().getOWLLiteral(number.doubleValue()));
+            return Optional.of(DataFactory.get().getOWLLiteral(number));
         }
 
         @Nonnull
@@ -196,6 +267,35 @@ public abstract class FormDataPrimitive extends FormDataValue {
             return toStringHelper("NumberPrimitive")
                     .addValue(number)
                     .toString();
+        }
+        @Override
+        public boolean isString() {
+            return false;
+        }
+
+        @Override
+        public String getValueAsString() {
+            throw new RuntimeException("Not a String");
+        }
+
+        @Override
+        public boolean isNumber() {
+            return true;
+        }
+
+        @Override
+        public double getValueAsDouble() {
+            return number;
+        }
+
+        @Override
+        public boolean isBoolean() {
+            return false;
+        }
+
+        @Override
+        public boolean getValueAsBoolean() {
+            throw new RuntimeException("Not a boolean");
         }
     }
 
@@ -239,6 +339,35 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public FormDataPrimitive getSimplified() {
             return this;
         }
+        @Override
+        public boolean isString() {
+            return true;
+        }
+
+        @Override
+        public String getValueAsString() {
+            return string;
+        }
+
+        @Override
+        public boolean isNumber() {
+            return false;
+        }
+
+        @Override
+        public double getValueAsDouble() {
+            throw new RuntimeException("Not a number");
+        }
+
+        @Override
+        public boolean isBoolean() {
+            return false;
+        }
+
+        @Override
+        public boolean getValueAsBoolean() {
+            throw new RuntimeException("Not a boolean");
+        }
     }
 
     public static class BooleanPrimitive extends FormDataPrimitive {
@@ -271,6 +400,35 @@ public abstract class FormDataPrimitive extends FormDataValue {
         @Override
         public FormDataPrimitive getSimplified() {
             return this;
+        }
+        @Override
+        public boolean isString() {
+            return false;
+        }
+
+        @Override
+        public String getValueAsString() {
+            throw new RuntimeException("Not a String");
+        }
+
+        @Override
+        public boolean isNumber() {
+            return false;
+        }
+
+        @Override
+        public double getValueAsDouble() {
+            throw new RuntimeException("Not a number");
+        }
+
+        @Override
+        public boolean isBoolean() {
+            return true;
+        }
+
+        @Override
+        public boolean getValueAsBoolean() {
+            return bool;
         }
     }
 
@@ -343,6 +501,37 @@ public abstract class FormDataPrimitive extends FormDataValue {
                 }
             }
             return this;
+        }
+
+
+        @Override
+        public boolean isString() {
+            return false;
+        }
+
+        @Override
+        public String getValueAsString() {
+            throw new RuntimeException("Not a String");
+        }
+
+        @Override
+        public boolean isNumber() {
+            return false;
+        }
+
+        @Override
+        public double getValueAsDouble() {
+            throw new RuntimeException("Not a number");
+        }
+
+        @Override
+        public boolean isBoolean() {
+            return false;
+        }
+
+        @Override
+        public boolean getValueAsBoolean() {
+            throw new RuntimeException("Not a boolean");
         }
     }
 }
