@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
@@ -22,9 +24,15 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
 
     private ValueListEditor<FormDataValue> delegate;
 
+    private HandlerManager handlerManager;
+
     public RepeatingEditor(ValueListEditor<FormDataValue> delegate) {
         this.delegate = delegate;
-        delegate.setEnabled(true);
+        this.handlerManager = new HandlerManager(this);
+        this.delegate.setEnabled(true);
+        this.delegate.addValueChangeHandler(event -> {
+           ValueChangeEvent.fire(this, getValue());
+        });
     }
 
     @Override
@@ -58,14 +66,12 @@ public class RepeatingEditor implements ValueEditor<FormDataValue> {
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
-        return () -> {
-
-        };
+        return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
     }
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
-        delegate.fireEvent(event);
+        handlerManager.fireEvent(event);
     }
 
     @Override

@@ -147,6 +147,6 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
 
     @Override
     public boolean isWellFormed() {
-        return true;
+        return getValue().isPresent();
     }
 }

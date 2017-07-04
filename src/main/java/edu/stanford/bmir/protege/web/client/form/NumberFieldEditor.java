@@ -100,6 +100,7 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
+        GWT.log("[NumberFieldEditor] addValueChangeHandler");
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
@@ -138,6 +139,8 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
         if(reformat()) {
             validate();
         }
+        GWT.log("[NumberFieldEditor] ValueChangeEvent");
+        ValueChangeEvent.fire(this, getValue());
     }
 
     @Override
