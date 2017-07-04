@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;
@@ -80,5 +81,26 @@ public class NumberFieldDescriptor implements FormFieldDescriptor {
     @Override
     public String getAssociatedType() {
         return TYPE;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(numberFormat, range, widgetType, length, placeholder);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof NumberFieldDescriptor)) {
+            return false;
+        }
+        NumberFieldDescriptor other = (NumberFieldDescriptor) obj;
+        return this.numberFormat.equals(other.numberFormat)
+                && this.range.equals(other.range)
+                && this.widgetType.equals(other.widgetType)
+                && this.length == other.length
+                && this.placeholder.equals(other.placeholder);
     }
 }

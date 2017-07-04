@@ -86,7 +86,7 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     @Override
     public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataValue>> handler) {
-        return delegateEditor.addValueChangeHandler(event -> ValueChangeEvent.fire(FormElementEditorImpl.this, getValue()));
+        return delegateEditor.addValueChangeHandler(handler);
     }
 
     @Override

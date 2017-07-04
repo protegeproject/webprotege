@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.Required;
 
 import java.util.Optional;
 
@@ -22,4 +23,9 @@ public interface FormElementView extends IsWidget {
 
     FormElementEditor getEditor();
 
+    void setRequiredValueNotPresentVisible(boolean visible);
+
+    void setRequired(Required required);
+
+    Required getRequired();
 }

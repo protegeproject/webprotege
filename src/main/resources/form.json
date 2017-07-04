@@ -87,6 +87,18 @@
       }
     },
 
+    {
+      "id" : "range",
+      "label" : "Max Range (nmi)",
+      "fieldDescriptor" : {
+        "type" : "Number",
+        "range" : {
+          "lowerBound" : 0,
+          "upperBound" : 20000
+        },
+        "numberFormat" : "##,###"
+      }
+    },
 
     {
       "id" : "synonyms",
@@ -108,24 +120,23 @@
         "widgetType": "RADIO_BUTTON",
         "choices": [
           {
-            "label": "Tail Mounted Twin Jet",
-            "value": "TailMountedTwinJet"
+            "label": "Wing Mounted Twin Jet",
+            "value": "WingMountedTwinJet"
           },
           {
             "label": "Wing Mounted Quad Jet",
             "value": "WingMountedQuad"
           },
           {
+            "label": "Tail Mounted Twin Jet",
+            "value": "TailMountedTwinJet"
+          },
+          {
             "label": "Tail Mounted Quad Jet",
             "value": "TailMountedQuad"
           },
-
           {
-            "label": "Wing Mounted Twin Jet",
-            "value": "WingMountedTwinJet"
-          },
-          {
-            "label": "Tail Mounted Tri",
+            "label": "Tail Mounted Tri Jet",
             "value": "TailMountedTriJet"
           }
         ]

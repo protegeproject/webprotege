@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -52,7 +53,8 @@ public class NonRepeatingEditor implements ValueEditor<FormDataValue> {
 
     @Override
     public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataValue>> handler) {
-        return () -> {};
+        GWT.log("[NonRepeatingEditor] addValueChangeHandler to " + delegate.getClass().getName());
+        return delegate.addValueChangeHandler(handler);
     }
 
     @Override

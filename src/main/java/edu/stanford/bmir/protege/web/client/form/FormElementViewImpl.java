@@ -7,9 +7,13 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.field.Required;
 
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -26,6 +30,8 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     private FormElementId formElementId = null;
 
+    private Required required = Required.OPTIONAL;
+
     @UiField
     Label label;
 
@@ -39,6 +45,26 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     @Override
     public void setId(FormElementId elementId) {
         formElementId = elementId;
+    }
+
+    @Override
+    public void setRequired(Required required) {
+        this.required = checkNotNull(required);
+    }
+
+    @Override
+    public Required getRequired() {
+        return required;
+    }
+
+    @Override
+    public void setRequiredValueNotPresentVisible(boolean visible) {
+        if(visible) {
+            label.getElement().getStyle().setColor("#ff0000");
+        }
+        else {
+            label.getElement().getStyle().clearColor();
+        }
     }
 
     @Override

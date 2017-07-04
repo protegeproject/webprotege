@@ -62,7 +62,6 @@ public class FormPresenter {
                 try {
                     Optional<FormElementId> elementId = view.getId();
                     Optional<FormDataValue> value = view.getEditor().getValue();
-                    GWT.log("[FormPresenter] Looking at Form Element: " + elementId + "  Value: " + value);
                     if(elementId.isPresent() && value.isPresent()) {
                         map.put(elementId.get(), value.get());
                     }
@@ -92,19 +91,41 @@ public class FormPresenter {
                 Optional<FormElementEditor> elementEditor = getFormElementEditor(elementDescriptor);
                 if (elementEditor.isPresent()) {
                     try {
+                        GWT.log("[FormPresenter] Creating form element for " + elementDescriptor.getId());
                         FormElementView elementView = new FormElementViewImpl();
                         elementView.setId(elementDescriptor.getId());
                         elementView.setFormLabel(elementDescriptor.getLabel());
-                        elementView.setEditor(elementEditor.get());
+                        FormElementEditor editor = elementEditor.get();
+                        GWT.log("[FormPresenter] Adding value changed handler for " + editor.getClass().getName());
+                        editor.addValueChangeHandler(event -> {
+                            GWT.log("[FormPresenter] Value changed in " + elementDescriptor.getId());
+                            if(elementDescriptor.getRequired() == Required.REQUIRED) {
+                                Optional<FormDataValue> val = editor.getValue();
+                                if(val.isPresent()) {
+                                    elementView.setRequiredValueNotPresentVisible(false);
+                                }
+                                else {
+                                    elementView.setRequiredValueNotPresentVisible(true);
+                                }
+                            }
+                        });
+                        elementView.setEditor(editor);
+                        elementView.setRequired(elementDescriptor.getRequired());
                         Optional<FormDataValue> data = formData.getFormElementData(elementDescriptor.getId());
-                        GWT.log("[FormPresenter] Data for element: " + elementDescriptor.getId() + " = " + data);
                         if (data.isPresent()) {
-                            elementEditor.get().setValue(data.get());
+                            editor.setValue(data.get());
                         }
                         else {
-                            elementEditor.get().clearValue();
+                            editor.clearValue();
                         }
-
+                        if(elementDescriptor.getRequired() == Required.REQUIRED) {
+                            if(editor.getValue().isPresent()) {
+                                elementView.setRequiredValueNotPresentVisible(false);
+                            }
+                            else {
+                                elementView.setRequiredValueNotPresentVisible(true);
+                            }
+                        }
                         formView.addFormElementView(elementView);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -123,6 +144,14 @@ public class FormPresenter {
                     }
                     else {
                         v.getEditor().clearValue();
+                    }
+                    if(v.getRequired() == Required.REQUIRED) {
+                        if(v.getEditor().getValue().isPresent()) {
+                            v.setRequiredValueNotPresentVisible(false);
+                        }
+                        else {
+                            v.setRequiredValueNotPresentVisible(true);
+                        }
                     }
                 }
                 else {

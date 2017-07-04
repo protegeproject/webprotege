@@ -33,7 +33,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class TextFieldEditor extends Composite implements ValueEditor<FormDataValue> {
+public class TextFieldEditor extends Composite implements FormElementEditor {
 
     private StringType stringType = StringType.SIMPLE_STRING;
 
@@ -145,6 +145,9 @@ public class TextFieldEditor extends Composite implements ValueEditor<FormDataVa
             return Optional.empty();
         }
         OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
+        if(literalData.getLiteral().getLiteral().trim().isEmpty()) {
+            return Optional.empty();
+        }
         if(stringType == StringType.SIMPLE_STRING) {
             return Optional.of(FormDataPrimitive.get(literalData.getLiteral().getLiteral()));
         }
