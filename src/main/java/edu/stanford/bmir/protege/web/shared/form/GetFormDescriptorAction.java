@@ -18,13 +18,16 @@ public class GetFormDescriptorAction implements ProjectAction<GetFormDescriptorR
 
     private ProjectId projectId;
 
+    private FormId formId;
+
     private OWLEntity subject;
 
     private GetFormDescriptorAction() {
     }
 
-    public GetFormDescriptorAction(ProjectId projectId, OWLEntity subject) {
+    public GetFormDescriptorAction(ProjectId projectId, FormId formId, OWLEntity subject) {
         this.projectId = projectId;
+        this.formId = formId;
         this.subject = subject;
     }
 
@@ -32,6 +35,10 @@ public class GetFormDescriptorAction implements ProjectAction<GetFormDescriptorR
     @Override
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    public FormId getFormId() {
+        return formId;
     }
 
     @Override

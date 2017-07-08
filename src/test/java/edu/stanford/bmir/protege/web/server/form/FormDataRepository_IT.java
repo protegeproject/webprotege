@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
@@ -59,6 +60,7 @@ public class FormDataRepository_IT {
         map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));
         FormData formData = new FormData(map);
         repository.store(projectId,
+                         new FormId("MyForm"),
                          entity,
                          formData);
     }
@@ -74,10 +76,12 @@ public class FormDataRepository_IT {
         map.put(FormElementId.get("TheList"), new FormDataList(Arrays.asList(FormDataPrimitive.get(1), FormDataPrimitive.get(2))));
         map.put(FormElementId.get("iri"), FormDataPrimitive.get(IRI.create("http://stuff.com")));
         FormData formData = new FormData(map);
+        FormId formId = new FormId("MyForm");
         repository.store(projectId,
+                         formId,
                          entity,
                          formData);
-        FormData fd = repository.get(projectId, entity);
+        FormData fd = repository.get(projectId, formId,  entity);
         assertThat(fd, Matchers.is(formData));
     }
 
