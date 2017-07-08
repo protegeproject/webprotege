@@ -50,6 +50,32 @@
       }
     },
 
+    {
+      "id" : "role",
+      "label" : "Role",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RADIO_BUTTON",
+        "choices" : [
+          {
+            "label" : "Passenger",
+            "value" : "Passenger"
+          },
+          {
+            "label" : "Freight",
+            "value" : "Cargo"
+          },
+          {
+            "label" : "Combi (Mixed Pax and Freight)",
+            "value" : "Combi"
+          },
+          {
+            "label" : "Convertible (Between Pax and Freight)",
+            "value" : "Convertible"
+          }
+        ]
+      }
+    },
 
     {
       "id" : "description",

@@ -18,14 +18,18 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
 
     private ProjectId projectId;
 
+    private FormId formId;
+
     private OWLEntity entity;
 
     private FormData formData;
 
     public SetFormDataAction(ProjectId projectId,
+                             FormId formId,
                              OWLEntity entity,
                              FormData formData) {
         this.projectId = projectId;
+        this.formId = formId;
         this.entity = entity;
         this.formData = formData;
     }
@@ -38,6 +42,10 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
     @Override
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    public FormId getFormId() {
+        return formId;
     }
 
     public OWLEntity getEntity() {

@@ -59,25 +59,28 @@ public class FormPresenter {
             Map<FormElementId, FormDataValue> map = new HashMap<>();
             GWT.log("[FormPresenter] Getting element views and data");
             for(FormElementView view : formView.getElementViews()) {
-                try {
+//                try {
                     Optional<FormElementId> elementId = view.getId();
                     Optional<FormDataValue> value = view.getEditor().getValue();
                     if(elementId.isPresent() && value.isPresent()) {
                         map.put(elementId.get(), value.get());
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
             GWT.log("[FormPresenter] Sending form data to server");
             FormData data = new FormData(map);
-            dispatchServiceManager.execute(new SetFormDataAction(projectId, subject, data),
+            dispatchServiceManager.execute(new SetFormDataAction(projectId,
+                                                                 new FormId("MyForm"),
+                                                                 subject,
+                                                                 data),
                                            result -> {});
 
         });
         currentSubject = Optional.of(entity);
 
-        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, entity),
+        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, new FormId("MyForm"), entity),
                                        result -> displayForm(result.getFormDescriptor(), result.getFormData(), entity));
     }
 

@@ -52,7 +52,7 @@ public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<Se
 
     @Override
     public SetFormDataResult execute(SetFormDataAction action, ExecutionContext executionContext) {
-        repository.store(projectId, action.getEntity(), action.getFormData());
+        repository.store(projectId, action.getFormId(), action.getEntity(), action.getFormData());
         System.out.println("Setting form data: " + action.getFormData());
 
 //        try {
