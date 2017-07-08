@@ -77,7 +77,6 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
             }
 
             URL url = GetFormDescriptorActionHander.class.getResource("/form.json");
-            System.out.println(url);
             InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/form.json");
 
             ObjectMapper mapper = new ObjectMapper();
@@ -96,7 +95,6 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
             is.close();
 
             FormData formData = formDataRepository.get(projectId, formId,  entity);
-            System.out.println("Got form data from repository for entity: " + entity + " ---> " + formData);
             return new GetFormDescriptorResult(
                     projectId,
                     entity,

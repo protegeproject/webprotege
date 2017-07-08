@@ -49,9 +49,7 @@ public class FormDataRepository {
                                          .field("formId").equal(formId)
                                          .field("formCollection").equal(entity.toString())
                                          .get();
-        System.out.println("Record: " + record);
         if (record == null) {
-            System.out.println("No form data found");
             return FormData.empty();
         }
         else {
