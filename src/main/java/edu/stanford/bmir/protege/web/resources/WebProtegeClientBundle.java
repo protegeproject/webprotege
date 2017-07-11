@@ -223,6 +223,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String derivedInformation();
 
         String deleteButton();
+
+        String errorBorder();
+
+        String noErrorBorder();
     }
 
     interface WebProtegeButtons extends CssResource {

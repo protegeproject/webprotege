@@ -282,3 +282,11 @@ blockquote {
 .noFocusBorder {
     border: 1px solid transparent;
 }
+
+.errorBorder {
+    border: 2px dashed #ff0000 !important;
+}
+
+.noErrorBorder {
+    border: 2px dashed transparent;
+}

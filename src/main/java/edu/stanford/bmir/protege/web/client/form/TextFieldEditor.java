@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.primitive.*;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
@@ -29,6 +30,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Matthew Horridge
@@ -112,17 +114,13 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
     }
 
     private void clearErrorBorder() {
-        Style style = editor.getElement().getStyle();
-        style.clearBorderColor();
-        style.clearBorderStyle();
-        style.clearBorderWidth();
+        editor.removeStyleName(BUNDLE.style().errorBorder());
+        editor.addStyleName(BUNDLE.style().noErrorBorder());
     }
 
     private void displayErrorBorder() {
-        Style style = editor.getElement().getStyle();
-        style.setBorderColor("#ff0000");
-        style.setBorderStyle(Style.BorderStyle.DASHED);
-        style.setBorderWidth(2, Style.Unit.PX);
+        editor.removeStyleName(BUNDLE.style().noErrorBorder());
+        editor.addStyleName(BUNDLE.style().errorBorder());
     }
 
     public void setStringType(StringType stringType) {
