@@ -227,6 +227,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String errorBorder();
 
         String noErrorBorder();
+
+        String selection();
+
+        String noSelection();
     }
 
     interface WebProtegeButtons extends CssResource {

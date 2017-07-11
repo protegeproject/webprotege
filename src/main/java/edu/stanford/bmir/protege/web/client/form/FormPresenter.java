@@ -208,6 +208,9 @@ public class FormPresenter {
                         else if (descriptor.getWidgetType() == ChoiceFieldType.CHECK_BOX) {
                             editor = new ChoiceFieldCheckBoxEditor();
                         }
+                        else if(descriptor.getWidgetType() == ChoiceFieldType.SEGMENTED) {
+                            editor = new ChoiceFieldSegmentedEditor();
+                        }
                         else {
                             editor = new ChoiceFieldComboBoxEditor();
                         }

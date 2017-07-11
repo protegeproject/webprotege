@@ -290,3 +290,12 @@ blockquote {
 .noErrorBorder {
     border: 2px dashed transparent;
 }
+
+.selection {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.noSelection {
+    background-color: white;
+}
