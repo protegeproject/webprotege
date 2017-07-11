@@ -16,5 +16,8 @@ public enum ChoiceFieldType {
     RADIO_BUTTON,
 
     @JsonProperty("ComboBox")
-    COMBO_BOX
+    COMBO_BOX,
+
+    @JsonProperty("Segmented")
+    SEGMENTED
 }
