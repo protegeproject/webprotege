@@ -31,6 +31,37 @@
     },
 
     {
+      "id" : "formula",
+      "label" : "Formula",
+      "fieldDescriptor" : {
+        "type" : "Text"
+      }
+    },
+
+    {
+      "id" : "structure",
+      "label" : "Structure",
+      "fieldDescriptor" : {
+        "type" : "Image"
+      }
+    },
+
+    {
+      "id" : "mass",
+      "label" : "Molar Mass (g/mol)",
+      "fieldDescriptor" : {
+        "type" : "Number",
+        "range" : {
+          "lowerBound" : 0,
+          "lowerBoundType" : "EXCLUSIVE"
+        },
+        "numberFormat" : "#.####"
+      }
+    },
+
+
+
+    {
       "id" : "charge",
       "label" : "Charge",
       "fieldDescriptor" : {
@@ -130,6 +161,14 @@
             "value" : "Tiny"
           }
         ]
+      }
+    },
+
+    {
+      "id" : "seeAlso",
+      "label" : "Wikipedia Page",
+      "fieldDescriptor" : {
+        "type" : "Text"
       }
     }
 
