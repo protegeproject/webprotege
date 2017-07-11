@@ -9,6 +9,9 @@
             width: auto;
             cursor: pointer;
         }
+        .focusPanel {
+            border: 1px solid transparent;
+        }
         .placeHolder {
             color: #c0c0c0;
             border: 2px dashed #d0d0d0;
@@ -26,7 +29,11 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" ui:field="container">
-        <g:Label ui:field="placeHolder" text="Drop images here or click to set image" addStyleNames="{style.placeHolder}"/>
-        <g:Image ui:field="imageField" addStyleNames="{style.image}"/>
+        <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
+            <g:HTMLPanel>
+                <g:Label ui:field="placeHolder" text="Drop images here or click to set image" addStyleNames="{style.placeHolder}"/>
+                <g:Image ui:field="imageField" addStyleNames="{style.image}"/>
+            </g:HTMLPanel>
+        </g:FocusPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
