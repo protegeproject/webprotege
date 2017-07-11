@@ -292,8 +292,8 @@ blockquote {
 }
 
 .selection {
-    background-color: dodgerblue;
-    color: white;
+    background-color: dodgerblue !important;
+    color: white !important;
 }
 
 .noSelection {
