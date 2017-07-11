@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -14,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorDirection;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
 
@@ -42,10 +40,10 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     public FormElementEditorImpl(ValueEditorFactory<FormDataValue> editorFactory, Repeatability repeatability) {
         initWidget(ourUiBinder.createAndBindUi(this));
-        if(repeatability == Repeatability.REPEATABLE_HORIZONTAL || repeatability == Repeatability.REPEATABLE_VERTICAL) {
+        if(repeatability == Repeatability.REPEATABLE_HORIZONTALLY || repeatability == Repeatability.REPEATABLE_VERTICALLY) {
             ValueListFlexEditorImpl<FormDataValue> delegate = new ValueListFlexEditorImpl<>(editorFactory);
             delegateEditor = new RepeatingEditor(delegate);
-            if (repeatability == Repeatability.REPEATABLE_HORIZONTAL) {
+            if (repeatability == Repeatability.REPEATABLE_HORIZONTALLY) {
                 delegate.setDirection(ValueListFlexEditorDirection.ROW);
             }
             else {

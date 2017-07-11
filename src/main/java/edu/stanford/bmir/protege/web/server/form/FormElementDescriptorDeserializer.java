@@ -30,7 +30,7 @@ public class FormElementDescriptorDeserializer implements JsonDeserializer<FormE
         } catch (IllegalArgumentException e) {
             throw new FormDescriptorParseException("Encountered "
                     + jsonObject.getAsJsonPrimitive("repeatability").getAsString()
-                    + " for the repeatability value.  Expected one of NON_REPEATABLE, REPEATABLE_HORIZONTAL, REPEATABLE_VERTICAL");
+                    + " for the repeatability value.  Expected one of NON_REPEATABLE, REPEATABLE_HORIZONTALLY, REPEATABLE_VERTICALLY");
         }
     }
 }

@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
@@ -56,6 +57,15 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
             container.add(checkBox);
             checkBox.getElement().getStyle().setDisplay(Style.Display.BLOCK);
             checkBox.addValueChangeHandler(checkBoxValueChangedHandler);
+            checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
+            checkBox.addFocusHandler(event -> {
+                checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
+                checkBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
+            });
+            checkBox.addBlurHandler(event -> {
+                checkBox.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
+                checkBox.removeStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
+            });
         }
     }
 

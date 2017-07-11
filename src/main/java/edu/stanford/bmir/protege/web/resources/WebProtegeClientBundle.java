@@ -166,6 +166,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String entityIcon();
 
+        String focusBorder();
+
+        String noFocusBorder();
+
         String webProtegeLaf();
 
         String formMain();

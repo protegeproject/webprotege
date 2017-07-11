@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -7,10 +9,13 @@ package edu.stanford.bmir.protege.web.shared.form.field;
  */
 public enum Repeatability {
 
+    @JsonProperty("NonRepeatable")
     NON_REPEATABLE,
 
-    REPEATABLE_VERTICAL,
+    @JsonProperty("RepeatableVertically")
+    REPEATABLE_VERTICALLY,
 
-    REPEATABLE_HORIZONTAL,
+    @JsonProperty("RepeatableHorizontally")
+    REPEATABLE_HORIZONTALLY,
 
 }

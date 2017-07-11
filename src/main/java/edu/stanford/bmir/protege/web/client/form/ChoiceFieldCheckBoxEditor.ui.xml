@@ -1,6 +1,16 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel ui:field="container">
+    <ui:style>
+        @external gwt-CheckBox;
+        .checkBoxContainer {
+            padding: 2px;
+        }
+        .checkBoxContainer .gwt-CheckBox {
+            margin: 0;
+            padding: 1px;
+        }
+    </ui:style>
+    <g:HTMLPanel ui:field="container" addStyleNames="{style.checkBoxContainer}">
 
     </g:HTMLPanel>
 </ui:UiBinder>

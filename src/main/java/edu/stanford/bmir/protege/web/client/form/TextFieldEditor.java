@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -76,6 +78,7 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
     }
 
     public void setPattern(String pattern) {
+        GWT.log("[TextFieldEditor] Pattern: " + pattern);
         this.pattern = Optional.of(checkNotNull(pattern));
     }
 
@@ -84,22 +87,42 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
     }
 
     private void validateInput() {
+        GWT.log("[TextFieldEditor] Validating input.");
+        GWT.log("[TextFieldEditor] Pattern: " + pattern);
         if(pattern.isPresent()) {
+
             RegExp regExp = RegExp.compile(pattern.get());
-            if(!regExp.test(editor.getText().trim())) {
+            String value = editor.getText().trim();
+            GWT.log("[TextFieldEditor] Value: " + value);
+            MatchResult mr = regExp.exec(value);
+            GWT.log("[TextFieldEditor] Match: " + mr);
+            if(mr == null) {
+                GWT.log("[TextFieldEditor] Input is not valid");
                 if (patternViolationErrorMessage.isPresent()) {
                     editor.setTitle(patternViolationErrorMessage.get());
                 }
+                displayErrorBorder();
             }
             else {
-                editor.getElement().getStyle().clearBorderColor();
+                GWT.log("[TextFieldEditor] Input is valid");
+                clearErrorBorder();
             }
 
         }
-        if(langPattern.isPresent()) {
+    }
 
-        }
+    private void clearErrorBorder() {
+        Style style = editor.getElement().getStyle();
+        style.clearBorderColor();
+        style.clearBorderStyle();
+        style.clearBorderWidth();
+    }
 
+    private void displayErrorBorder() {
+        Style style = editor.getElement().getStyle();
+        style.setBorderColor("#ff0000");
+        style.setBorderStyle(Style.BorderStyle.DASHED);
+        style.setBorderWidth(2, Style.Unit.PX);
     }
 
     public void setStringType(StringType stringType) {
@@ -130,12 +153,15 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
         }
         else {
             editor.setValue(new OWLLiteralData(primitive.get()));
+            validateInput();
         }
+
     }
 
     @Override
     public void clearValue() {
         editor.clearValue();
+        clearErrorBorder();
     }
 
     @Override

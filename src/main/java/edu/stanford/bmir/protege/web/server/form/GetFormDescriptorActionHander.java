@@ -76,8 +76,9 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
                 return new GetFormDescriptorResult(projectId, entity, FormDescriptor.empty(), FormData.empty());
             }
 
-            URL url = GetFormDescriptorActionHander.class.getResource("/form.json");
-            InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/form.json");
+            URL url = GetFormDescriptorActionHander.class.getResource("/amino-acid-form.json");
+            System.out.println(url);
+            InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/amino-acid-form.json");
 
             ObjectMapper mapper = new ObjectMapper();
             SimpleModule module = new SimpleModule();

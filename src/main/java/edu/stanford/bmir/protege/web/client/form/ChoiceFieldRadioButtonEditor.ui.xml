@@ -8,13 +8,8 @@
             padding: 2px;
         }
         .radioButtonContainer .gwt-RadioButton {
-            margin: 3px;
-        }
-        .radioButtonContainer label {
-            border: 1px solid transparent;
-        }
-        .radioButtonContainer label :focus {
-            border: 1px solid #0A5EA8;
+            margin: 0;
+            padding: 1px;
         }
     </ui:style>
     <g:HTMLPanel ui:field="container" addStyleNames="{style.radioButtonContainer}">
