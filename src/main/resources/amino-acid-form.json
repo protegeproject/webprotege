@@ -1,0 +1,138 @@
+{
+  "id" : "AminoAcidDetails",
+  "elements" : [
+
+    {
+      "id" : "longName",
+      "label" : "Long name",
+      "fieldDescriptor" : {
+        "type" : "Text"
+      },
+      "required" : "Optional"
+    },
+
+    {
+      "id" : "shortName",
+      "label" : "Short name",
+      "fieldDescriptor" : {
+        "type" : "Text",
+        "pattern" : "^([A-Z]|[a-z]){3}$",
+        "patternViolationErrorMessage" : "Short names should consist of three lower case letters e.g. ala"
+      }
+    },
+
+    {
+      "id" : "singleLetterName",
+      "label" : "Single letter name",
+      "fieldDescriptor" : {
+        "type" : "Text",
+        "pattern" : "^[A-Z]$"
+      }
+    },
+
+    {
+      "id" : "charge",
+      "label" : "Charge",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RadioButton",
+        "choices" : [
+          {
+            "label" : "Neutral",
+            "value" : "Neutral"
+          },
+          {
+            "label" : "Negative",
+            "value" : "Negative"
+          },
+          {
+            "label" : "Positive",
+            "value" : "Positive"
+          }
+        ]
+      }
+    },
+
+    {
+      "id" : "hydrophobicity",
+      "label" : "Hydrophobicity",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RadioButton",
+        "choices" : [
+          {
+            "label" : "Hydrophilic",
+            "value" : "Hydrophilic"
+          },
+          {
+            "label" : "Hydrophobic",
+            "value" : "Hydrophobic"
+          }
+        ]
+      }
+    },
+
+    {
+      "id" : "polarity",
+      "label" : "Polarity",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RadioButton",
+        "choices" : [
+          {
+            "label" : "Polar",
+            "value" : "Polar"
+          },
+          {
+            "label" : "Non-Polar",
+            "value" : "Non-Polar"
+          }
+        ]
+      }
+    },
+
+    {
+      "id" : "sideChainStructure",
+      "label" : "Side Chain Structure",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RadioButton",
+        "choices" : [
+          {
+            "label" : "Aromatic",
+            "value" : "Aromatic"
+          },
+          {
+            "label" : "Aliphatic",
+            "value" : "Aliphatic"
+          }
+        ]
+      }
+    },
+
+    {
+      "id" : "size",
+      "label" : "Size",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RadioButton",
+        "choices" : [
+          {
+            "label" : "Large",
+            "value" : "Large"
+          },
+          {
+            "label" : "Small",
+            "value" : "Small"
+          },
+          {
+            "label" : "Tiny",
+            "value" : "Tiny"
+          }
+        ]
+      }
+    }
+
+
+  ]
+}

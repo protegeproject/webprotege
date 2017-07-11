@@ -274,3 +274,11 @@ blockquote {
     background-color: #dddddd;
     cursor: default;
 }
+
+.focusBorder {
+    border: 1px solid #0A5EA8;
+}
+
+.noFocusBorder {
+    border: 1px solid transparent;
+}

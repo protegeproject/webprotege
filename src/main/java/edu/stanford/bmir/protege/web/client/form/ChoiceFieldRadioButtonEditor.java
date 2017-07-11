@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -10,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -56,7 +58,16 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
         nameCounter++;
         for(ChoiceDescriptor descriptor : choices) {
             RadioButton radioButton = new RadioButton("Choice" + nameCounter, new SafeHtmlBuilder().appendHtmlConstant(descriptor.getLabel()).toSafeHtml());
+            radioButton.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
             radioButton.addValueChangeHandler(radioButtonValueChangedHandler);
+            radioButton.addFocusHandler(event -> {
+                radioButton.addStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
+                radioButton.removeStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
+            });
+            radioButton.addBlurHandler(event -> {
+                radioButton.addStyleName(WebProtegeClientBundle.BUNDLE.style().noFocusBorder());
+                radioButton.removeStyleName(WebProtegeClientBundle.BUNDLE.style().focusBorder());
+            });
             container.add(radioButton);
             choiceButtons.put(radioButton, descriptor);
         }
