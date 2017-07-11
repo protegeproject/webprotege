@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Matthew Horridge
@@ -168,13 +170,15 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
     private void clearErrorMessage() {
         errorLabel.setText("");
         errorLabel.setVisible(false);
-        numberField.getElement().getStyle().clearBorderColor();
+        numberField.removeStyleName(BUNDLE.style().errorBorder());
+        numberField.addStyleName(BUNDLE.style().noErrorBorder());
     }
 
     private void displayErrorMessage(String errorMessage) {
         errorLabel.setText(errorMessage);
         errorLabel.setVisible(true);
-        numberField.getElement().getStyle().setBorderColor("#ff0000");
+        numberField.removeStyleName(BUNDLE.style().noErrorBorder());
+        numberField.addStyleName(BUNDLE.style().errorBorder());
     }
 
     private String formatRange() {
