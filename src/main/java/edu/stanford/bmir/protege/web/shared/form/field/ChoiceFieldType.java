@@ -18,6 +18,6 @@ public enum ChoiceFieldType {
     @JsonProperty("ComboBox")
     COMBO_BOX,
 
-    @JsonProperty("Segmented")
-    SEGMENTED
+    @JsonProperty("SegmentedButton")
+    SEGMENTED_BUTTON
 }
