@@ -3,16 +3,15 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -44,6 +43,9 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
 
     @UiField
     HTMLPanel container;
+
+    @UiField
+    FocusPanel focusPanel;
 
     private Optional<IRI> theIRI = Optional.empty();
 
@@ -92,6 +94,13 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
     @UiHandler("placeHolder")
     protected void handlePlaceHolderClicked(ClickEvent event) {
         showEditingDialog();
+    }
+
+    @UiHandler("focusPanel")
+    public void handleFocusPanelKeyUp(KeyUpEvent event) {
+        if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            showEditingDialog();
+        }
     }
 
     private void showEditingDialog() {
