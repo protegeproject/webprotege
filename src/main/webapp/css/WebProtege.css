@@ -432,20 +432,6 @@ ul.disc {
     white-space: normal !important;
 }
 
-.webprotege-revision-summary-style {
-    border-bottom: 1px dotted silver;
-    margin-bottom: 5px;
-    padding: 4px;
-}
-
-.webprotege-revision-summary-revision-number-style {
-    font-weight: 700;
-}
-
-.webprotege-revision-summary-userid-style {
-    font-weight: 400;
-}
-
 ul.x-menu-list {
     height: expression(this.scrollHeight>350?"350px":"auto");
     max-height: 350px;
@@ -473,26 +459,6 @@ ul.x-menu-list {
 
 .x-grid3-td-topic a:hover {
     text-decoration: underline;
-}
-
-.individualsView-Banner {
-    background-color: #606;
-    color: #FFF;
-    font-size: 11px;
-    font-weight: 700;
-    margin: 0 0 10px;
-    padding: 5px 0 5px 5px;
-    width: 100%;
-}
-
-.propertiesView-Banner {
-    background-color: #369;
-    color: #FFF;
-    font-size: 11px;
-    font-weight: 700;
-    margin: 0 0 10px;
-    padding: 5px 0 5px 5px;
-    width: 100%;
 }
 
 ::-webkit-input-placeholder {
@@ -528,7 +494,10 @@ ul.x-menu-list {
 }
 
 *.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly, .gwt-PasswordTextBox {
-    border: 1px solid #F0F0F0;
+    border-bottom: 1px solid #f0f0f0;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-top: 1px solid transparent;
     font-size: 12px;
     padding: 2px;
     line-height: 15px;
