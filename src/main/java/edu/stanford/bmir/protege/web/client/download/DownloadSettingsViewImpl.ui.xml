@@ -1,12 +1,13 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main-panel {
             padding: 20px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main-panel}">
-        <g:InlineLabel text="Download format: " addStyleNames="web-protege-form-label"/>
+        <g:InlineLabel text="Download format: " addStyleNames="{wp.style.formLabel}"/>
         <g:ListBox ui:field="formatListBox" visibleItemCount="1"/>
     </g:HTMLPanel>
 </ui:UiBinder>

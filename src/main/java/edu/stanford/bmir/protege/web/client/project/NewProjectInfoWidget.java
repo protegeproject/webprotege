@@ -27,8 +27,6 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
 
     public static final String PROJECT_DESCRIPTION_FIELD_NAME = "projectdescription";
 
-    public static final String ERROR_STYLE = "web-protege-error-background";
-
     private final TextBox projectNameTextBox;
 
     private final TextArea projectDescriptionTextArea;
