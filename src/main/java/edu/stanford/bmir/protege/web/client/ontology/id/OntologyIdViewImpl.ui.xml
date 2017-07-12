@@ -1,10 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:style>
-        .section-label {
-            text-align: left;
-        }
-    </ui:style>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <g:HTMLPanel styleName="web-protege-laf">
 
@@ -12,7 +8,7 @@
             <col width="100px" align="right"/>
             <tr>
                 <td align="right">
-                    <g:Label text="Ontology IRI" styleName="web-protege-form-label" addStyleNames="web-protege-form-layout-editor-input"/>
+                    <g:Label text="Ontology IRI" styleName="{wp.style.formLabel}" addStyleNames="web-protege-form-layout-editor-input"/>
                 </td>
                 <td valign="top">
                     <g:TextBox ui:field="ontologyIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
@@ -20,7 +16,7 @@
             </tr>
             <tr>
                 <td align="right">
-                    <g:Label text="Version IRI" addStyleNames="web-protege-form-label web-protege-form-layout-editor-input"/>
+                    <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
                 </td>
                 <td valign="top">
                     <g:TextBox ui:field="versionIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>

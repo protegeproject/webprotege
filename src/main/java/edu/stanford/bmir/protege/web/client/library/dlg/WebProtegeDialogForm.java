@@ -26,8 +26,6 @@ public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialF
 
     public static final String LABEL_SUFFIX = ":";
 
-    public static final String WEB_PROTEGE_VERTICAL_SPACER_STYLE_NAME = "web-protege-vertical-spacer";
-
     public static final String PLACEHOLDER_TEXT_ELEMENT_ATTRIBUTE_NAME = "placeholder";
 
     public static final int DEFAULT_TEXT_BOX_VISIBILE_LENGTH = 60;
@@ -219,18 +217,6 @@ public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialF
             initialFocusable.setFocus(true);
         }
         formTable.setCellSpacing(5);
-    }
-
-    public void addVerticalSpacer() {
-        int insertionRow = formTable.getRowCount();
-        SimplePanel labelSpacer = createSpacer();
-        formTable.setWidget(insertionRow, LABEL_COLUMN, labelSpacer);
-    }
-
-    private static SimplePanel createSpacer() {
-        SimplePanel spacer = new SimplePanel();
-        spacer.addStyleName(WEB_PROTEGE_VERTICAL_SPACER_STYLE_NAME);
-        return spacer;
     }
 
     /**
