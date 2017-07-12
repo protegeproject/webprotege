@@ -299,3 +299,7 @@ blockquote {
 .noSelection {
     background-color: white;
 }
+
+.errorLabel {
+    color: red;
+}
