@@ -228,6 +228,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String noErrorBorder();
 
+        String errorLabel();
+
         String selection();
 
         String noSelection();
