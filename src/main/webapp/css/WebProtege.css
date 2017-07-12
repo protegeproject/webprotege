@@ -15,80 +15,9 @@ a {
     border: none;
 }
 
-.white-bg {
-    background-color: #FFF;
-}
-
-.userName {
-    font-size: 70%;
-    font-weight: 700;
-    right: 5px;
-    text-align: right;
-    top: 5px;
-    vertical-align: top;
-}
-
-.restriction_table {
-    background-color: #FFF;
-}
-
-.gwt-ListBox {
-}
-
 ul.disc {
     list-style-type: disc;
     padding: 15px;
-}
-
-.menuBar {
-    cursor: pointer;
-    margin-top: -2px;
-    padding: 0;
-}
-
-.menuBar .gwt-MenuItem {
-    cursor: pointer;
-    margin-top: -2px;
-    padding: 0;
-}
-
-.menuBar .gwt-MenuItem-selected {
-    color: #DC7317;
-}
-
-.menuBar .gwt-MenuItem-visited {
-    cursor: pointer;
-    margin-top: -2px;
-    padding: 0;
-}
-
-.subMenuBar {
-    background-color: #FFF;
-    border: 1px solid #AAA;
-    color: #327BAA;
-    cursor: pointer;
-    font-size: 75%;
-    margin: 3px;
-    padding: 6px;
-    text-decoration: underline;
-}
-
-.subMenuBar .gwt-MenuItem-selected {
-    background-color: #327BAA;
-    color: #FFF;
-}
-
-.label {
-    color: #039;
-    font-size: 11px;
-    font-weight: 700;
-}
-
-.gwt-PopupPanel {
-    background-color: #CEDBEC;
-    border: 20px #329ab3;
-    padding: 3px;
-    z-index: 20;
 }
 
 ::-webkit-input-placeholder {
@@ -290,78 +219,14 @@ select {
     box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
 }
 
-.button-style {
-    background: linear-gradient(#fafafa, #eaeaea) repeat scroll 0 0 #cecece;
-    border: 1px solid #dddddd;
-    border-radius: 3px 3px 3px 3px;
-    color: #555555;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 5px 8px;
-    line-height: 16px;
-}
-
-.button-style:hover {
-    color: #444444;
-    box-shadow: 0 0 2px 1px rgba(150, 150, 150, 0.20);
-    border-color: #a7a7a7;
-}
-
-.button-style:active {
-    color: #444444;
-    box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
-    border-color: #a7a7a7;
-}
-
-.button-style:disabled {
-    box-shadow: none;
-    color: #b0b0b0;
-    background: #cecece;
-    border-color: #dddddd;
-}
-
-.delete-button {
-    width: 20px;
-    height: 20px;
-    padding: 0;
-}
-
-.button-style-red {
-    background: linear-gradient(#dd4545, #c80202) repeat scroll 0 0 #b72130;
-    border: 1px solid #b2151e;
-    border-radius: 3px 3px 3px 3px;
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    margin: 1px;
-    padding: 5px 8px;
-    line-height: 16px;
-}
-
-.button-style-red:hover {
-    box-shadow: 0 0 2px 1px rgba(150, 150, 150, 0.20);
-    border-color: #851418;
-}
-
-.button-style-red:active {
-    box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
-    border-color: #a7a7a7;
-}
-
 [asserted=false] textarea {
     color: #9d3600;
-
 }
 
 .error {
     border-bottom: solid #ff0000 2px;
     box-sizing: border-box;
     color: red !important;
-}
-
-.non-empty-metric {
 }
 
 .empty-metric {
@@ -377,16 +242,6 @@ select {
 .web-protege-table-row {
     padding: 5px;
     font-size: 12px;
-}
-
-.postit {
-    background: #fefcde;
-    padding: 15px;
-    font-size: 12px;
-    color: #000000;
-    width: 170px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    border-radius: 2px 2px 2px 2px;
 }
 
 .gwt-DialogBox {
@@ -420,27 +275,6 @@ select {
 .web-protege-dialog-button-bar {
     float: right;
     padding-top: 10px;
-}
-
-.web-protege-dialog-button-compact {
-    border-radius: 2px 2px 2px 2px;
-    cursor: default;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 0;
-    text-align: center;
-    color: rgba(50, 50, 50, 1.0);
-    border: 1px solid rgba(200, 200, 200, 1.0);
-    background-image: linear-gradient(top, #f5f5f5, #cccccc);
-}
-
-.web-protege-dialog-button-compact:hover {
-    border: 1px solid rgba(150, 150, 150, 1.0);
-    box-shadow: 0 0 2px 1px rgba(20, 20, 20, 0.2);
-}
-
-.web-protege-dialog-button-compact:active {
-    box-shadow: 0 0 1px 2px rgba(220, 220, 220, 1.0) inset;
 }
 
 .web-protege-label-description {
@@ -579,95 +413,6 @@ select {
     display: inline;
 }
 
-.web-protege-sidebar {
-    border-top: 1px solid #f1f1f1;
-    border-right-width: 8px;
-    border-bottom: 1px solid #f1f1f1;
-    border-left-width: 8px;
-
-}
-
-.web-protege-sidebar-item-base {
-    height: 40px;
-    cursor: pointer;
-}
-
-.web-protege-sidebar-item-base:hover {
-    background: #e8e8e8;
-    border-radius: 2px;
-}
-
-.web-protege-sidebar-item-selected {
-    color: #757575;
-    background: #d7e6fa;
-    border-radius: 2px;
-}
-
-.web-protege-sidebar-item-deselected {
-    color: #808080;
-    background: #ffffff;
-}
-
-.web-protege-sidebar-item-label {
-    width: 100%;
-    padding-left: 20px;
-    vertical-align: middle;
-    height: 34px;
-    line-height: 34px;
-    font-size: 14px;
-    position: relative;
-}
-
-.web-protege-annotated-radio-button-label {
-
-}
-
-.web-protege-annotated-radio-button-main-label {
-
-}
-
-.web-protege-annotated-radio-button-description-label {
-    font-size: 10px;
-    color: silver;
-}
-
-.web-protege-sharing-settings-visibility-selector-panel {
-
-}
-
-.web-protege-sharing-settings-visibility-summary-box {
-    padding-top: 12px;
-    padding-bottom: 15px;
-    color: #737373;
-}
-
-.web-protege-sharing-add-people {
-    background: rgba(245, 245, 245, 1.0);
-    border: 1px solid rgba(230, 230, 230, 1.0);
-    padding: 10px;
-}
-
-.web-protege-sharing-settings-list {
-    padding: 10px;
-}
-
-*.web-protege-property-grid table {
-    width: 100%;
-}
-
-*.web-protege-property-grid td {
-    vertical-align: top;
-}
-
-*.web-protege-property-grid * tr {
-    border-bottom: solid silver 1px;
-}
-
-.web-protege-property-grid-editor {
-    min-height: 1.3em;
-    width: 100%;
-}
-
 .web-protege-value-list {
 
 }
@@ -707,12 +452,6 @@ select {
 .cm-s-manchester-syntax span.cm-string {
     font-size: 12px;
 }
-
-/*.CodeMirror pre {*/
-/*font-size: 12px;*/
-/*line-height: 12px;*/
-/*height: 14px;*/
-/*}*/
 
 .CodeMirror pre {
     line-height: 16px;
@@ -896,23 +635,18 @@ td {
 }
 
 .ms-item-ce {
-    /*background: url("../../java/edu/stanford/bmir/protege/web/resources/class.png") no-repeat 0 -1px;*/
 }
 
 .ms-item-ind {
-    /*background: url("../images/tree/individual.png") no-repeat 0 -1px;*/
 }
 
 .ms-item-anno {
-    /*background: url("../images/tree/annotation-property.png") no-repeat 0 -1px;*/
 }
 
 .ms-item-prop {
-    /*background: url("../images/tree/property.png") no-repeat 0 -1px;*/
 }
 
 .ms-item-dr {
-    /*background: url("../images/tree/datatype.png") no-repeat 0 -1px;*/
 }
 
 .ms-literal p:only-child {
@@ -958,10 +692,6 @@ td {
     border-bottom: solid 2px dodgerblue;
     color: dodgerblue;
     outline: none 0;
-}
-
-.entityIcon {
-    color: magenta;
 }
 
 .gwt-CheckBox > label {

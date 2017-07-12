@@ -20,6 +20,9 @@
             height: 16px;
             width: 16px;
         }
+        .hint {
+            color: #909090;
+        }
     </ui:style>
 
     <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
@@ -38,8 +41,8 @@
 
         <div>
             <g:CheckBox ui:field="functionalCheckBox" text="{msg.frame_functional}"
-                        addStyleNames="web-protege-dialog-label {style.functional-label}"/>
-            <g:InlineLabel text="(single valued)" addStyleNames="web-protege-annotated-radio-button-description-label"/>
+                        addStyleNames="{wp.style.formLabel} {style.functional-label}"/>
+            <g:InlineLabel text="(single valued)" addStyleNames="{style.hint}"/>
         </div>
 
 

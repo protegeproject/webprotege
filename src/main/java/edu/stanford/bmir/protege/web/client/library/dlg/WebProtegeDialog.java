@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
-            button.addStyleName("button-style");
+            button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().button());
             button.setWidth("70px");
         }
         SimplePanel buttonBarWrapper = new SimplePanel();
