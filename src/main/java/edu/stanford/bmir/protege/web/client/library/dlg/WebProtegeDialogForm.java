@@ -193,14 +193,6 @@ public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialF
         }
         return radioButton;
     }
-    
-    public RadioButton addRadioButtonAnnotated(String label, String groupname, String radioButtonText, String annotation) {
-        RadioButton radioButton = addRadioButton(label, groupname, radioButtonText);
-        Widget annotationLabel = new HTML(annotation);
-        annotationLabel.addStyleName("web-protege-annotated-radio-button-description-label");
-        addWidget("", annotationLabel);
-        return radioButton;
-    }
 
     public void addWidget(String label, Widget widget) {
         int insertionRow = formTable.getRowCount();

@@ -283,6 +283,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String circularButton();
 
         String topBarButton();
+
+        String button();
     }
 
     interface WebProtegeDialog extends CssResource {
