@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -54,6 +55,9 @@ public class CommentNotificationEmailGenerator_TestCase {
     private OWLEntity entity;
 
     @Mock
+    private OWLEntityData entityData;
+
+    @Mock
     private Comment comment;
 
     @Mock
@@ -81,6 +85,8 @@ public class CommentNotificationEmailGenerator_TestCase {
         when(applicationNameSupplier.get()).thenReturn("TheAppName");
         when(placeUrl.getProjectUrl(any())).thenReturn("TheProjectUrl");
         when(placeUrl.getEntityUrl(any(), any())).thenReturn("TheEntityUrl");
+        when(entityData.getEntity()).thenReturn(entity);
+        when(entityData.getBrowserText()).thenReturn("TheBrowserText");
         templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         generator = new CommentNotificationEmailGenerator(templateFile,
                                                           templateEngine,
@@ -96,6 +102,6 @@ public class CommentNotificationEmailGenerator_TestCase {
     }
 
     private String populateTemplate() {
-        return generator.generateEmailBody("MyProject", thread, comment);
+        return generator.generateEmailBody("MyProject", entityData, thread, comment);
     }
 }

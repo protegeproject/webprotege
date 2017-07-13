@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.mail.MessageId;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -63,10 +64,11 @@ public class CommentNotificationEmailer {
     }
 
     public void sendCommentPostedNotification(@Nonnull ProjectId projectId,
+                                              @Nonnull OWLEntityData entityData,
                                               @Nonnull EntityDiscussionThread thread,
                                               @Nonnull Comment postedComment) {
         Collection<UserDetails> userDetails = getParticipantUserDetails(projectId, thread);
-        sendEmailToUsers(userDetails, projectId, thread, postedComment);
+        sendEmailToUsers(userDetails, projectId, entityData, thread, postedComment);
     }
 
     private Collection<UserDetails> getParticipantUserDetails(@Nonnull ProjectId projectId,
@@ -94,6 +96,7 @@ public class CommentNotificationEmailer {
 
     private void sendEmailToUsers(@Nonnull Collection<UserDetails> userDetails,
                                  @Nonnull ProjectId projectId,
+                                  @Nonnull OWLEntityData entityData,
                                  @Nonnull EntityDiscussionThread discussionThread,
                                  @Nonnull Comment postedComment) {
         List<String> emailAddresses = userDetails.stream()
@@ -115,14 +118,15 @@ public class CommentNotificationEmailer {
         sendMail.sendMail(
                 postedCommentMessageId,
                 emailAddresses,
-                formatSubjectLine(projectId, discussionThread, postedComment),
-                formatMessage(projectId, discussionThread, postedComment),
+                formatSubjectLine(projectId, entityData, discussionThread, postedComment),
+                formatMessage(projectId, entityData, discussionThread, postedComment),
                 messageHeaders.toArray(new MessageHeader [messageHeaders.size()]));
     }
 
 
 
     private String formatSubjectLine(@Nonnull ProjectId projectId,
+                                     @Nonnull OWLEntityData entityData,
                                      @Nonnull EntityDiscussionThread thread,
                                      @Nonnull Comment postedComment) {
         return String.format("[%s] Comment posted by %s",
@@ -131,10 +135,11 @@ public class CommentNotificationEmailer {
     }
 
     private String formatMessage(@Nonnull ProjectId projectId,
+                                 @Nonnull OWLEntityData entityData,
                                  @Nonnull EntityDiscussionThread thread,
                                  @Nonnull Comment postedComment) {
         String projectName = projectDetailsManager.getProjectDetails(projectId).getDisplayName();
-        return emailGenerator.generateEmailBody(projectName, thread, postedComment);
+        return emailGenerator.generateEmailBody(projectName, entityData, thread, postedComment);
     }
 
 }

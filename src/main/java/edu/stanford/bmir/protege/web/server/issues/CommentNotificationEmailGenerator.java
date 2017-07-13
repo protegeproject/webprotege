@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 
@@ -51,6 +52,7 @@ public class CommentNotificationEmailGenerator {
 
     @Nonnull
     public String generateEmailBody(@Nonnull String projectDisplayName,
+                                    @Nonnull OWLEntityData entityData,
                                     @Nonnull EntityDiscussionThread thread,
                                     @Nonnull Comment comment) {
         try {
@@ -62,6 +64,7 @@ public class CommentNotificationEmailGenerator {
                     TemplateObjectsBuilder.builder()
                                           .withApplicationName(applicationNameSupplier.get())
                                           .withProjectDisplayName(projectDisplayName)
+                                          .withEntity(entityData)
                                           .withProjectUrl(projectUrl)
                                           .with(ENTITY_URL, entityUrl)
                                           .with(THREAD, thread)
