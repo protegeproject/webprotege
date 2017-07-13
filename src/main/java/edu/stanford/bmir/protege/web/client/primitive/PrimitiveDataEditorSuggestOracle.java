@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
@@ -32,6 +33,8 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private FreshEntitySuggestStrategy freshEntityStrategy
             = new NullFreshEntitySuggestStrategy();
+
+    private Request lastRequest = null;
 
     @Inject
     public PrimitiveDataEditorSuggestOracle(EntitySuggestOracle delegate,
@@ -82,20 +85,22 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
      */
     @Override
     public void requestSuggestions(Request request, final Callback callback) {
-        delegate.requestSuggestions(request, new Callback() {
-            @Override
-            public void onSuggestionsReady(Request request, Response response) {
-                List<EntitySuggestion> suggestions = (List<EntitySuggestion>) response.getSuggestions();
-                if (shouldOfferCreateSuggestions(request, suggestions)) {
-                    suggestions.addAll(freshEntityStrategy.getSuggestions(request.getQuery(),
-                            getSuggestedTypesForQuery(request.getQuery())));
-                    callback.onSuggestionsReady(request, new Response(suggestions));
-                }
-                else {
-                    callback.onSuggestionsReady(request, response);
-                }
-
+        lastRequest = request;
+        delegate.requestSuggestions(request, (req, response) -> {
+            if(req != lastRequest) {
+                GWT.log("[PrimitiveDataEditorSuggestOracle] Ignoring stale request: " + request.getQuery());
+                return;
             }
+            List<EntitySuggestion> suggestions = (List<EntitySuggestion>) response.getSuggestions();
+            if (shouldOfferCreateSuggestions(req, suggestions)) {
+                suggestions.addAll(freshEntityStrategy.getSuggestions(req.getQuery(),
+                                                                      getSuggestedTypesForQuery(req.getQuery())));
+                callback.onSuggestionsReady(req, new Response(suggestions));
+            }
+            else {
+                callback.onSuggestionsReady(req, response);
+            }
+
         });
     }
 
