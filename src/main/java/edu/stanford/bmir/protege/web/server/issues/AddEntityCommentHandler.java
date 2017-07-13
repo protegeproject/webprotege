@@ -107,6 +107,7 @@ public class AddEntityCommentHandler implements ProjectActionHandler<AddEntityCo
         repository.getThread(threadId);
         repository.getThread(threadId).ifPresent(thread -> {
             notificationsEmailer.sendCommentPostedNotification(projectId,
+                                                               renderer.getRendering(thread.getEntity()),
                                                                thread,
                                                                comment);
             commentPostedSlackWebhookInvoker.invoke(projectId,

@@ -116,6 +116,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                                                       commentCount,
                                                       openCommentCount));
         notificationsEmailer.sendCommentPostedNotification(projectId,
+                                                           renderer.getRendering(thread.getEntity()),
                                                            thread,
                                                            comment);
         commentPostedSlackWebhookInvoker.invoke(projectId,

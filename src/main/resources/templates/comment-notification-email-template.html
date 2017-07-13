@@ -7,6 +7,9 @@
         .userName {
             font-weight: bold;
         }
+        .entityName {
+            font-weight: bold;
+        }
         .projectName {
             font-weight: bold;
         }
@@ -31,7 +34,7 @@
 <body>
 <div class="main">
     <div>
-        <span class="userName">{{comment.createdBy.userName}}</span> posted a comment in <span class="projectName">{{project.displayName}}</span>
+        <span class="userName">{{comment.createdBy.userName}}</span> posted a comment on <span class="entityName"><a href="{{{entity.url}}}">{{entity.browserText}}</a></span> in <span class="projectName">{{project.displayName}}</span>
     </div>
     <div class="comment">
         {{{comment.renderedBody}}}
