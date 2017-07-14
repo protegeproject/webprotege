@@ -1,289 +1,198 @@
 package edu.stanford.bmir.protege.web.client.form;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.shared.form.*;
+import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.form.field.Required.REQUIRED;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
+ * <p>
+ * Presents a form and its associated form data.
  */
 public class FormPresenter {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
+    @Nonnull
     private final FormView formView;
 
-    private final ProjectId projectId;
-
-    private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
+    @Nonnull
+    private final Provider<FormElementView> formElementViewProvider;
 
     @Nonnull
-    private Optional<OWLEntity> currentSubject = Optional.empty();
+    private final FormEditorFactory formEditorFactory;
+
+    @Nonnull
+    private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
+
 
     @Inject
-    public FormPresenter(DispatchServiceManager dispatchServiceManager, FormView formView, ProjectId projectId,
-                         Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.formView = formView;
-        this.projectId = projectId;
-        this.primitiveDataEditorProvider = primitiveDataEditorProvider;
+    public FormPresenter(@Nonnull FormView formView,
+                         @Nonnull FormEditorFactory formEditorFactory,
+                         @Nonnull Provider<FormElementView> formElementViewProvider) {
+        this.formView = checkNotNull(formView);
+        this.formElementViewProvider = checkNotNull(formElementViewProvider);
+        this.formEditorFactory = checkNotNull(formEditorFactory);
     }
 
-    public void start(AcceptsOneWidget container) {
+    /**
+     * Starts the form presenter.  The form will be placed into the specified container.
+     * @param container The container.
+     */
+    public void start(@Nonnull AcceptsOneWidget container) {
         ScrollPanel sp = new ScrollPanel(formView.asWidget());
         container.setWidget(sp);
     }
 
-    public void setSubject(final OWLEntity entity) {
-        checkNotNull(entity);
-        currentSubject.ifPresent(subject -> {
-            Map<FormElementId, FormDataValue> map = new HashMap<>();
-            GWT.log("[FormPresenter] Getting element views and data");
-            for(FormElementView view : formView.getElementViews()) {
-//                try {
-                    Optional<FormElementId> elementId = view.getId();
-                    Optional<FormDataValue> value = view.getEditor().getValue();
-                    if(elementId.isPresent() && value.isPresent()) {
-                        map.put(elementId.get(), value.get());
-                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-            }
-            GWT.log("[FormPresenter] Sending form data to server");
-            FormData data = new FormData(map);
-            dispatchServiceManager.execute(new SetFormDataAction(projectId,
-                                                                 new FormId("MyForm"),
-                                                                 subject,
-                                                                 data),
-                                           result -> {});
 
-        });
-        currentSubject = Optional.of(entity);
-
-        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, new FormId("MyForm"), entity),
-                                       result -> displayForm(result.getFormDescriptor(), result.getFormData(), entity));
-    }
-
-    private Optional<FormDescriptor> currentFormDescriptor = Optional.empty();
-
-    private void displayForm(FormDescriptor formDescriptor, FormData formData, final OWLEntity subject) {
+    /**
+     * Displays the specified form and the specified form data.
+     * @param formDescriptor The form to be displayed.
+     * @param formData The form data to be shown in the form.
+     */
+    public void displayForm(@Nonnull FormDescriptor formDescriptor,
+                            @Nonnull FormData formData) {
+        checkNotNull(formDescriptor);
+        checkNotNull(formData);
         if (!currentFormDescriptor.equals(Optional.of(formDescriptor))) {
-            GWT.log("[FormPresenter] Rebuilding form");
-            formView.clear();
-            for (FormElementDescriptor elementDescriptor : formDescriptor.getElements()) {
-                Optional<FormElementEditor> elementEditor = getFormElementEditor(elementDescriptor);
-                if (elementEditor.isPresent()) {
-                    try {
-                        GWT.log("[FormPresenter] Creating form element for " + elementDescriptor.getId());
-                        FormElementView elementView = new FormElementViewImpl();
-                        elementView.setId(elementDescriptor.getId());
-                        elementView.setFormLabel(elementDescriptor.getLabel());
-                        FormElementEditor editor = elementEditor.get();
-                        GWT.log("[FormPresenter] Adding value changed handler for " + editor.getClass().getName());
-                        editor.addValueChangeHandler(event -> {
-                            GWT.log("[FormPresenter] Value changed in " + elementDescriptor.getId());
-                            if(elementDescriptor.getRequired() == Required.REQUIRED) {
-                                Optional<FormDataValue> val = editor.getValue();
-                                if(val.isPresent()) {
-                                    elementView.setRequiredValueNotPresentVisible(false);
-                                }
-                                else {
-                                    elementView.setRequiredValueNotPresentVisible(true);
-                                }
-                            }
-                        });
-                        elementView.setEditor(editor);
-                        elementView.setRequired(elementDescriptor.getRequired());
-                        Optional<FormDataValue> data = formData.getFormElementData(elementDescriptor.getId());
-                        if (data.isPresent()) {
-                            editor.setValue(data.get());
-                        }
-                        else {
-                            editor.clearValue();
-                        }
-                        if(elementDescriptor.getRequired() == Required.REQUIRED) {
-                            if(editor.getValue().isPresent()) {
-                                elementView.setRequiredValueNotPresentVisible(false);
-                            }
-                            else {
-                                elementView.setRequiredValueNotPresentVisible(true);
-                            }
-                        }
-                        formView.addFormElementView(elementView);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            createFormAndSetFormData(formDescriptor, formData);
         }
         else {
-            formView.getElementViews().forEach(v -> {
-                Optional<FormElementId> theId = v.getId();
-                if(theId.isPresent()) {
-                    FormElementId id = theId.get();
-                    Optional<FormDataValue> formElementData = formData.getFormElementData(id);
-                    if(formElementData.isPresent()) {
-                        v.getEditor().setValue(formElementData.get());
-                    }
-                    else {
-                        v.getEditor().clearValue();
-                    }
-                    if(v.getRequired() == Required.REQUIRED) {
-                        if(formElementData.isPresent()) {
-                            v.setRequiredValueNotPresentVisible(false);
-                        }
-                        else {
-                            v.setRequiredValueNotPresentVisible(true);
-                        }
-                    }
-                }
-                else {
-                    v.getEditor().clearValue();
-                }
-
-            });
-
+            setFormData(formData);
         }
         currentFormDescriptor = Optional.of(formDescriptor);
-
     }
 
-    private Optional<FormElementEditor> getFormElementEditor(FormElementDescriptor descriptor) {
-        Optional<ValueEditorFactory<FormDataValue>> editorFactory = getValueEditorFactory(descriptor.getFieldDescriptor());
-        if (!editorFactory.isPresent()) {
-            return Optional.empty();
+    /**
+     * Gets the data that is held by the form being presented.  Only present values are
+     * returned.
+     *
+     * @return The {@link FormData} entered into the form.
+     */
+    @Nonnull
+    public FormData getFormData() {
+        Map<FormElementId, FormDataValue> dataMap = new HashMap<>();
+        for (FormElementView view : formView.getElementViews()) {
+            view.getId().ifPresent(id -> view.getEditor().getValue().ifPresent(
+                    v -> dataMap.put(id, v)
+            ));
         }
-        return Optional.of(
-                new FormElementEditorImpl(
-                        editorFactory.get(),
-                        descriptor.getRepeatability())
-        );
+        return new FormData(dataMap);
     }
 
-    private Optional<ValueEditorFactory<FormDataValue>> getValueEditorFactory(final FormFieldDescriptor formFieldDescriptor) {
-        if (formFieldDescriptor.getAssociatedType().equals(TextFieldDescriptor.getType())) {
-            return Optional.of(
-                    () -> {
-                        TextFieldDescriptor descriptor = (TextFieldDescriptor) formFieldDescriptor;
-                        TextFieldEditor textFieldEditor = new TextFieldEditor(primitiveDataEditorProvider);
-                        textFieldEditor.setPlaceholder(descriptor.getPlaceholder());
-                        textFieldEditor.setLineMode(descriptor.getLineMode());
-                        textFieldEditor.setStringType(descriptor.getStringType());
-                        if (!descriptor.getPattern().isEmpty()) {
-                            textFieldEditor.setPattern(descriptor.getPattern());
-                            textFieldEditor.setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage());
-                        }
-                        return textFieldEditor;
-                    }
-            );
+    /**
+     * Creates the form from scratch and fills in the specified form data.
+     *
+     * @param formDescriptor The descriptor that describes the form.
+     * @param formData       The form data to be filled into the form.
+     */
+    private void createFormAndSetFormData(@Nonnull FormDescriptor formDescriptor,
+                                          @Nonnull FormData formData) {
+        formView.clear();
+        for (FormElementDescriptor elementDescriptor : formDescriptor.getElements()) {
+            Optional<FormDataValue> dataValue = formData.getFormElementData(elementDescriptor.getId());
+            createFormEditor(elementDescriptor, dataValue);
         }
-        else if (formFieldDescriptor.getAssociatedType().equals(ChoiceFieldDescriptor.getType())) {
-            return Optional.of(
-                    () -> {
-                        ChoiceFieldDescriptor descriptor = (ChoiceFieldDescriptor) formFieldDescriptor;
-                        ChoiceFieldEditor editor;
-                        if (descriptor.getWidgetType() == ChoiceFieldType.RADIO_BUTTON) {
-                            editor = new ChoiceFieldRadioButtonEditor();
-                        }
-                        else if (descriptor.getWidgetType() == ChoiceFieldType.CHECK_BOX) {
-                            editor = new ChoiceFieldCheckBoxEditor();
-                        }
-                        else if(descriptor.getWidgetType() == ChoiceFieldType.SEGMENTED_BUTTON) {
-                            editor = new ChoiceFieldSegmentedEditor();
-                        }
-                        else {
-                            editor = new ChoiceFieldComboBoxEditor();
-                        }
-                        editor.setChoices(descriptor.getChoices());
-                        editor.setDefaultChoices(descriptor.getDefaultChoices());
-                        return editor;
-                    }
-            );
-        }
-        else if (formFieldDescriptor.getAssociatedType().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
-            return Optional.of(
-                    () -> {
-                        ClassNameFieldEditor editor = new ClassNameFieldEditor(projectId,
-                                                                                             dispatchServiceManager,
-                                                                                             primitiveDataEditorProvider);
-                        ClassNameFieldDescriptor classNameFieldDescriptor = (ClassNameFieldDescriptor) formFieldDescriptor;
-                        editor.setPlaceholder(classNameFieldDescriptor.getPlaceholder());
-                        return editor;
-                    }
-            );
-        }
-        else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {
-            return Optional.of(
-                    () -> new ImageFieldEditor()
-            );
-        }
-        else if(formFieldDescriptor.getAssociatedType().equals(NumberFieldDescriptor.getTypeId())) {
-            return Optional.of(
-                    () -> {
-                        NumberFieldDescriptor descriptor = (NumberFieldDescriptor) formFieldDescriptor;
-                        NumberFieldEditor editor = new NumberFieldEditor();
-                        editor.setFormat(descriptor.getNumberFormat());
-                        editor.setRange(descriptor.getRange());
-                        editor.setLength(descriptor.getLength());
-                        editor.setPlaceholder(descriptor.getPlaceholder());
-                        return editor;
-                    }
-            );
-        }
-        else if(formFieldDescriptor.getAssociatedType().equals(CompositeFieldDescriptor.getFieldTypeId())) {
-            CompositeFieldDescriptor descriptor = (CompositeFieldDescriptor) formFieldDescriptor;
-            List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
-            List<CompositeFieldDescriptorEntry> childDescriptorEntries = new ArrayList<>();
-            for(CompositeFieldDescriptorEntry childDescriptor : descriptor.getChildDescriptors()) {
-                Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor());
-                if(!childEditorFactory.isPresent()) {
-                    return Optional.empty();
+    }
+
+    private void setFormData(@Nonnull FormData formData) {
+        formView.getElementViews().forEach(view -> {
+            Optional<FormElementId> theId = view.getId();
+            if (theId.isPresent()) {
+                FormElementId id = theId.get();
+                Optional<FormDataValue> formElementData = formData.getFormElementData(id);
+                if (formElementData.isPresent()) {
+                    view.getEditor().setValue(formElementData.get());
                 }
-                childDescriptorEntries.add(childDescriptor);
-                childEditorFactories.add(childEditorFactory.get());
+                else {
+                    view.getEditor().clearValue();
+                }
+                updateRequiredValuePresent(view);
             }
-            return Optional.of(
-                    () -> {
-                        CompositeFieldEditor editor = new CompositeFieldEditor();
-                        for(int i = 0; i < childDescriptorEntries.size(); i++) {
-                            FormElementId childId = childDescriptorEntries.get(i).getElementId();
-                            ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
-                            ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
-                            double flexGrow = childDescriptorEntries.get(i).getFlexGrow();
-                            double flexShrink = childDescriptorEntries.get(i).getFlexShrink();
-                            editor.addChildEditor(childId, flexGrow, flexShrink, childEditor);
-                        }
-                        return editor;
-                    }
-            );
+            else {
+                view.getEditor().clearValue();
+            }
+        });
+    }
+
+    private void createFormEditor(@Nonnull FormElementDescriptor elementDescriptor,
+                                  @Nonnull Optional<FormDataValue> formData) {
+        Optional<FormElementEditor> elementEditor = createFormElementEditor(elementDescriptor);
+        if (!elementEditor.isPresent()) {
+            return;
+        }
+        FormElementEditor editor = elementEditor.get();
+
+        FormElementView elementView = formElementViewProvider.get();
+        elementView.setId(elementDescriptor.getId());
+        elementView.setFormLabel(elementDescriptor.getLabel());
+        elementView.setEditor(editor);
+        elementView.setRequired(elementDescriptor.getRequired());
+        // Update the required value missing display when the value changes
+        editor.addValueChangeHandler(event -> {
+            updateRequiredValuePresent(elementView);
+        });
+        if (formData.isPresent()) {
+            editor.setValue(formData.get());
         }
         else {
-            return Optional.empty();
+            editor.clearValue();
         }
+        updateRequiredValuePresent(elementView);
+        formView.addFormElementView(elementView);
+    }
+
+    /**
+     * Updates the specified view so that there is a visual indication if the value is required but not present.
+     *
+     * @param elementView The element view.
+     */
+    private void updateRequiredValuePresent(@Nonnull FormElementView elementView) {
+        if (elementView.getRequired() == REQUIRED) {
+            Optional<FormDataValue> val = elementView.getEditor().getValue();
+            if (val.isPresent()) {
+                elementView.setRequiredValueNotPresentVisible(false);
+            }
+            else {
+                elementView.setRequiredValueNotPresentVisible(true);
+            }
+        }
+    }
+
+    /**
+     * Creates an editor for the form element identified by the specified descriptor.
+     *
+     * @param descriptor The form element descriptor.
+     * @return An editor for the form element described by the descriptor.
+     */
+    @Nonnull
+    private Optional<FormElementEditor> createFormElementEditor(@Nonnull FormElementDescriptor descriptor) {
+        Optional<ValueEditorFactory<FormDataValue>> editorFactory = formEditorFactory.getValueEditorFactory(descriptor.getFieldDescriptor());
+        return editorFactory.map(valueEditorFactory -> new FormElementEditorImpl(
+                valueEditorFactory,
+                descriptor.getRepeatability()
+        ));
     }
 
     public void clear() {
-
+        formView.clear();
+        currentFormDescriptor = Optional.empty();
     }
 
     public IsWidget getView() {

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.Required;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,6 +39,7 @@ public class FormElementViewImpl extends Composite implements FormElementView {
     @UiField
     SimplePanel editorHolder;
 
+    @Inject
     public FormElementViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

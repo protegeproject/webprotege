@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -42,6 +43,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
 
     private final List<FormDataValue> defaultChoices = new ArrayList<>();
 
+    @Inject
     public ChoiceFieldCheckBoxEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
         checkBoxValueChangedHandler = event -> ValueChangeEvent.fire(ChoiceFieldCheckBoxEditor.this, getValue());
