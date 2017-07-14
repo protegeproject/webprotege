@@ -40,10 +40,6 @@ ul.disc {
     font-size: 12px;
 }
 
-.web-protege-100-percent-width {
-    width: 100%;
-}
-
 *.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
     border: 1px solid #e0e0e0;
     font-size: 12px;
@@ -233,17 +229,6 @@ select {
     color: #dadada;
 }
 
-.web-protege-table-cell {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    border-bottom: 1px solid silver;
-}
-
-.web-protege-table-row {
-    padding: 5px;
-    font-size: 12px;
-}
-
 .gwt-DialogBox {
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
@@ -277,13 +262,6 @@ select {
     padding-top: 10px;
 }
 
-.web-protege-label-description {
-    color: #b3b3b3;
-    font-size: 10px;
-    display: inline-block;
-    vertical-align: middle;
-}
-
 .gwt-RadioButton {
     display: block;
     height: 100%;
@@ -298,54 +276,11 @@ select {
     padding-left: 5px;
 }
 
-.web-protege-form-layout-editor-group {
-    display: block;
-}
-
 .web-protege-term-editor {
     border-top: 1px dotted silver;
     padding-top: 10px;
     padding-bottom: 5px;
     clear: both;
-}
-
-.web-protege-form-layout-editor-group-form {
-    display: inline-block;
-    vertical-align: top;
-    width: 69%;
-    overflow: visible;
-}
-
-.web-protege-form-layout-editor-group-sidebar {
-    display: inline-block;
-    vertical-align: top;
-    width: 30%;
-    float: right;
-}
-
-.web-protege-form-layout-labelled-editor {
-    display: block;
-    padding-top: 5px;
-    overflow: visible;
-}
-
-.web-protege-form-layout-label {
-    display: inline-block;
-    padding-right: 10px;
-    text-align: right;
-    vertical-align: top;
-    width: 15%;
-}
-
-.web-protege-form-layout-editor-input {
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.web-protege-form-layout-editor {
-    display: inline-block;
-    width: 80%;
-    overflow: visible;
 }
 
 .web-protege-form-layout-editor table {
@@ -369,48 +304,6 @@ select {
 
 .web-protege-form-layout-margin {
     margin: 1px;
-}
-
-.web-protege-drop-down {
-    display: inline;
-    color: #4779be;
-}
-
-.web-protege-drop-down-item {
-    background: white;
-}
-
-.web-protege-drop-down-item:hover {
-    background: #ecf4fd;
-}
-
-.web-protege-drop-down-item-selected {
-    background: #4779be;
-    color: white;
-}
-
-.web-protege-drop-down-item-selected:hover {
-    background: #4779be;
-    color: white;
-}
-
-.web-protege-drop-down-item-deselected {
-
-}
-
-.web-protege-drop-down-popup {
-    background: white;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
-    border: 1px solid #acacac;
-    font-size: 12px;
-}
-
-.web-protege-drop-down-content-holder {
-    display: inline;
-}
-
-.web-protege-drop-down-button-holder {
-    display: inline;
 }
 
 .web-protege-value-list {
