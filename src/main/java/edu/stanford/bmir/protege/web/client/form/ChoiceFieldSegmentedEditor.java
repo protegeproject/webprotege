@@ -87,7 +87,7 @@ public class ChoiceFieldSegmentedEditor extends Composite implements ChoiceField
                 setSelection(choice.getValue(), true);
             });
         }
-        segmentContainer.getElement().getStyle().setWidth(SEGMENT_SIZE * choices.size(), Style.Unit.PX);
+        segmentContainer.getElement().getStyle().setProperty("maxWidth", SEGMENT_SIZE * choices.size(), Style.Unit.PX);
         setDefaultChoiceSelected();
     }
 
