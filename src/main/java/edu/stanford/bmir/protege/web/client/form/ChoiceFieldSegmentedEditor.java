@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,7 @@ public class ChoiceFieldSegmentedEditor extends Composite implements ChoiceField
 
     private Optional<FormDataValue> defaultChoice = Optional.empty();
 
+    @Inject
     public ChoiceFieldSegmentedEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class CompositeFieldEditor extends Composite implements ValueEditor<FormD
     @UiField
     HTMLPanel container;
 
+    @Inject
     public CompositeFieldEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }

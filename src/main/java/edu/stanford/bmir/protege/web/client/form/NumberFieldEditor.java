@@ -26,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.NumberFieldRange;
 import org.apache.commons.lang.math.NumberRange;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -54,6 +55,7 @@ public class NumberFieldEditor extends Composite implements ValueEditor<FormData
     @UiField
     Label errorLabel;
 
+    @Inject
     public NumberFieldEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
         numberField.setVisibleLength(10);
