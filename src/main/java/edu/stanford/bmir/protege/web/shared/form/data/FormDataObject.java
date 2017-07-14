@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.stanford.bmir.protege.web.server.form.FormDataObjectSerializer;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.*;
 
@@ -36,6 +37,11 @@ public class FormDataObject extends FormDataValue {
 
     @Override
     public Optional<IRI> asIRI() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OWLEntity> asOWLEntity() {
         return Optional.empty();
     }
 

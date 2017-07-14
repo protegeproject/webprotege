@@ -128,6 +128,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
             return Optional.empty();
         }
 
+        @Override
+        public Optional<OWLEntity> asOWLEntity() {
+            return Optional.of(entity);
+        }
+
         @Nonnull
         @Override
         public Object getValue() {
@@ -168,6 +173,15 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public boolean getValueAsBoolean() {
             throw new RuntimeException("Not a boolean");
         }
+
+
+        @Override
+        public String toString() {
+            return toStringHelper("OWLEntityPrimitive")
+                    .add("type", entity.getEntityType().getName())
+                    .add("iri", entity.getIRI().toString())
+                    .toString();
+        }
     }
 
     public static class IRIPrimitive extends FormDataPrimitive {
@@ -179,6 +193,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         private IRIPrimitive() {
+        }
+
+        @Override
+        public Optional<OWLEntity> asOWLEntity() {
+            return Optional.empty();
         }
 
         @Override
@@ -238,6 +257,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         private NumberPrimitive() {
+        }
+
+        @Override
+        public Optional<OWLEntity> asOWLEntity() {
+            return Optional.empty();
         }
 
         @Override
@@ -312,6 +336,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         @Override
+        public Optional<OWLEntity> asOWLEntity() {
+            return Optional.empty();
+        }
+
+        @Override
         public Optional<IRI> asIRI() {
             return Optional.empty();
         }
@@ -382,6 +411,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         @Override
+        public Optional<OWLEntity> asOWLEntity() {
+            return Optional.empty();
+        }
+
+        @Override
         public Optional<IRI> asIRI() {
             return Optional.empty();
         }
@@ -441,6 +475,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         public LiteralPrimitive() {
+        }
+
+        @Override
+        public Optional<OWLEntity> asOWLEntity() {
+            return Optional.empty();
         }
 
         @Override

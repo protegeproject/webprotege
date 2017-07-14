@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.mongodb.MongoClient;
-import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveConverter;
+import edu.stanford.bmir.protege.web.server.form.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import org.mongodb.morphia.Morphia;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -25,7 +26,9 @@ public class MongoTestUtils {
                 new OWLEntityConverter(new OWLDataFactoryImpl()),
                 new ProjectIdConverter(),
                 new ThreadIdConverter(),
-                new CommentIdConverter()).get();
+                new CommentIdConverter(),
+                new CollectionIdConverter(),
+                new FormIdConverter()).get();
     }
 
 

@@ -45,6 +45,7 @@ public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHan
     public GetEntityRenderingResult execute(GetEntityRenderingAction action,
                                                ExecutionContext executionContext) {
         OWLEntity entity = action.getEntity();
-        return new GetEntityRenderingResult(renderingManager.getFrameRendering(entity));
+        return new GetEntityRenderingResult(renderingManager.getFrameRendering(entity),
+                                            renderingManager.getRendering(entity));
     }
 }

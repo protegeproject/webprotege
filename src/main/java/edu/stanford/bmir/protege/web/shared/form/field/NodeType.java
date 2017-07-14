@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -7,7 +9,9 @@ package edu.stanford.bmir.protege.web.shared.form.field;
  */
 public enum NodeType {
 
+    @JsonProperty("Any")
     ANY,
 
+    @JsonProperty("Leaf")
     LEAF
 }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
+import edu.stanford.bmir.protege.web.shared.form.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
@@ -46,6 +47,8 @@ public class FormDataRepository_IT {
 
     private Datastore datastore;
 
+    private CollectionId collectionId = CollectionId.get("The Collection {Some special \"chars\"}");
+
     @Before
     public void setUp() throws Exception {
         morphia = MongoTestUtils.createMorphia();
@@ -60,6 +63,7 @@ public class FormDataRepository_IT {
         map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));
         FormData formData = new FormData(map);
         repository.store(projectId,
+                         collectionId,
                          new FormId("MyForm"),
                          entity,
                          formData);
@@ -69,19 +73,28 @@ public class FormDataRepository_IT {
     public void shouldRetriveData() throws Exception {
         Map<FormElementId, FormDataValue> map = new HashMap<>();
         map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));
+        map.put(FormElementId.get("LastName"), FormDataPrimitive.get("Smith"));
+        map.put(FormElementId.get("Age"), FormDataPrimitive.get(62));
+        map.put(FormElementId.get("Tenure"), FormDataPrimitive.get(true));
         Map<String, FormDataValue> val = new HashMap<>();
-        val.put("Street", FormDataPrimitive.get("1788 Oak Creek Drive"));
+        val.put("Street", FormDataPrimitive.get("1265 Welch Road"));
+        val.put("City", FormDataPrimitive.get("Stanford"));
+        val.put("State", FormDataPrimitive.get("CA"));
+        val.put("Zip", FormDataPrimitive.get(94304));
         FormDataObject address = new FormDataObject(val);
         map.put(FormElementId.get("Address"), address);
-        map.put(FormElementId.get("TheList"), new FormDataList(Arrays.asList(FormDataPrimitive.get(1), FormDataPrimitive.get(2))));
-        map.put(FormElementId.get("iri"), FormDataPrimitive.get(IRI.create("http://stuff.com")));
+        map.put(FormElementId.get("Projects"), new FormDataList(
+                Arrays.asList(FormDataPrimitive.get("Protégé Project"),
+                              FormDataPrimitive.get("Bioportal"))));
+        map.put(FormElementId.get("Homepage"), FormDataPrimitive.get(IRI.create("http://www.stanford.edu/~johnsmith")));
         FormData formData = new FormData(map);
         FormId formId = new FormId("MyForm");
         repository.store(projectId,
+                         collectionId,
                          formId,
                          entity,
                          formData);
-        FormData fd = repository.get(projectId, formId,  entity);
+        FormData fd = repository.get(projectId, collectionId, formId,  entity);
         assertThat(fd, Matchers.is(formData));
     }
 
