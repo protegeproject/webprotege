@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import org.semanticweb.owlapi.model.IRI;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -51,6 +52,7 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
 
     private boolean dirty = false;
 
+    @Inject
     public ImageFieldEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
         updateUi();
