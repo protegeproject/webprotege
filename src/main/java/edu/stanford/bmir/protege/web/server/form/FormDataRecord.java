@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import edu.stanford.bmir.protege.web.shared.form.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
+
+import java.util.Map;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -14,10 +18,11 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 3 Jul 2017
  */
-@Entity(noClassnameStored = true)
+@Entity(noClassnameStored = true, value = "FormData")
 @Indexes(
         {
-                @Index(fields = {@Field("projectId"), @Field("formId"), @Field("formCollection")}, options = @IndexOptions(unique = true))
+                @Index(fields = {@Field("projectId"), @Field("collectionId"), @Field("formId"), @Field("id")},
+                       options = @IndexOptions(unique = true))
         }
 )
 public class FormDataRecord {
@@ -26,22 +31,34 @@ public class FormDataRecord {
     private final ProjectId projectId;
 
     @Nonnull
+    private final CollectionId collectionId;
+
+    @Nonnull
     private final FormId formId;
 
     @Nonnull
-    private String formCollection;
+    private final String subjectId;
 
     @Nonnull
-    private FormData formData;
+    private final FormData data;
+
 
     public FormDataRecord(@Nonnull ProjectId projectId,
+                          @Nonnull CollectionId collectionId,
                           @Nonnull FormId formId,
-                          @Nonnull String formCollection,
+                          @Nonnull String subjectId,
                           @Nonnull FormData formData) {
+        this.subjectId = subjectId;
         this.projectId = projectId;
         this.formId = formId;
-        this.formCollection = formCollection;
-        this.formData = formData;
+        this.collectionId = collectionId;
+        this.data = formData;
+
+    }
+
+    @Nonnull
+    public String getSubjectId() {
+        return subjectId;
     }
 
     @Nonnull
@@ -55,23 +72,22 @@ public class FormDataRecord {
     }
 
     @Nonnull
-    public String getFormCollection() {
-        return formCollection;
+    public CollectionId getCollectionId() {
+        return collectionId;
     }
 
     @Nonnull
-    public FormData getFormData() {
-        return formData;
+    public FormData getData() {
+        return data;
     }
-
 
     @Override
     public String toString() {
         return toStringHelper("FormDataRecord")
                 .addValue(projectId)
                 .addValue(formId)
-                .add("collection", formCollection)
-                .add("formData", formData)
+                .add("collection", collectionId)
+                .add("formData", data)
                 .toString();
     }
 }

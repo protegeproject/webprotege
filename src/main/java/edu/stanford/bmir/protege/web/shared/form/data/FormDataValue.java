@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.server.form.FormDataValueDeserializer;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.List;
@@ -37,4 +40,6 @@ public abstract class FormDataValue implements IsSerializable {
 
     @JsonIgnore
     public abstract boolean isObject();
+
+    public abstract Optional<OWLEntity> asOWLEntity();
 }

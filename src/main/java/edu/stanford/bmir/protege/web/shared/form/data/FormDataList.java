@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import edu.stanford.bmir.protege.web.server.form.FormDataListSerializer;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -52,13 +53,14 @@ public class FormDataList extends FormDataValue {
     }
 
     @Override
+    public Optional<OWLEntity> asOWLEntity() {
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<IRI> asIRI() {
         return Optional.empty();
     }
-//    @Override
-//    public Optional<OWLClassData> asOWLClassData() {
-//        return Optional.absent();
-//    }
 
     public List<FormDataValue> getList() {
         return new ArrayList<>(list);

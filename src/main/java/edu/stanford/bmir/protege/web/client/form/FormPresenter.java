@@ -149,7 +149,7 @@ public class FormPresenter {
                         v.getEditor().clearValue();
                     }
                     if(v.getRequired() == Required.REQUIRED) {
-                        if(v.getEditor().getValue().isPresent()) {
+                        if(formElementData.isPresent()) {
                             v.setRequiredValueNotPresentVisible(false);
                         }
                         else {
@@ -222,7 +222,14 @@ public class FormPresenter {
         }
         else if (formFieldDescriptor.getAssociatedType().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
             return Optional.of(
-                    () -> new ClassNameFieldEditor(projectId, primitiveDataEditorProvider)
+                    () -> {
+                        ClassNameFieldEditor editor = new ClassNameFieldEditor(projectId,
+                                                                                             dispatchServiceManager,
+                                                                                             primitiveDataEditorProvider);
+                        ClassNameFieldDescriptor classNameFieldDescriptor = (ClassNameFieldDescriptor) formFieldDescriptor;
+                        editor.setPlaceholder(classNameFieldDescriptor.getPlaceholder());
+                        return editor;
+                    }
             );
         }
         else if(formFieldDescriptor.getAssociatedType().equals(ImageFieldDescriptor.getFieldTypeId())) {

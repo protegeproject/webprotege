@@ -95,7 +95,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
             is.close();
 
-            FormData formData = formDataRepository.get(projectId, formId,  entity);
+            FormData formData = formDataRepository.get(projectId, CollectionId.get("Dummy Data"), formId,  entity);
             return new GetFormDescriptorResult(
                     projectId,
                     entity,

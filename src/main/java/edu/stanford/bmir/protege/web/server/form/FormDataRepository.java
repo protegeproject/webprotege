@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import edu.stanford.bmir.protege.web.shared.form.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -29,31 +30,34 @@ public class FormDataRepository {
         this.datastore = datastore;
     }
 
-    public void store(ProjectId projectId, FormId formId, OWLEntity entity, FormData formData) {
+    public void store(ProjectId projectId, CollectionId collectionId, FormId formId, OWLEntity entity, FormData formData) {
         Query<FormDataRecord> query = datastore.createQuery(FormDataRecord.class)
                                                .field("projectId").equal(projectId)
+                                               .field("collectionId").equal(collectionId)
                                                .field("formId").equal(formId)
-                                               .field("formCollection").equal(entity.toString());
+                                               .field("subjectId").equal(entity.toString());
         UpdateOperations<FormDataRecord> update = datastore.createUpdateOperations(FormDataRecord.class);
-        update.set("formData", formData);
+        update.set("data", formData);
         datastore.update(query, update, new UpdateOptions().upsert(true));
     }
 
 
     public FormData get(ProjectId projectId,
+                        CollectionId collectionId,
                         FormId formId,
                         OWLEntity entity) {
 
         FormDataRecord record = datastore.find(FormDataRecord.class)
                                          .field("projectId").equal(projectId)
+                                         .field("collectionId").equal(collectionId)
                                          .field("formId").equal(formId)
-                                         .field("formCollection").equal(entity.toString())
+                                         .field("subjectId").equal(entity.toString())
                                          .get();
         if (record == null) {
             return FormData.empty();
         }
         else {
-            return record.getFormData();
+            return record.getData();
         }
 
     }

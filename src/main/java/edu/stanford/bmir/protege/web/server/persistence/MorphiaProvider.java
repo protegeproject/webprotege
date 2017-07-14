@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import edu.stanford.bmir.protege.web.server.access.RoleAssignment;
-import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveConverter;
+import edu.stanford.bmir.protege.web.server.form.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.form.FormDataConverter;
 import edu.stanford.bmir.protege.web.server.form.FormDataValueConverter;
+import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.user.UserActivityRecord;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
 import org.mongodb.morphia.Morphia;
@@ -36,18 +38,28 @@ public class MorphiaProvider implements Provider<Morphia> {
     @Nonnull
     private final CommentIdConverter commentIdConverter;
 
+    @Nonnull
+    private final CollectionIdConverter collectionIdConverter;
+
+    @Nonnull
+    private final FormIdConverter formIdConverter;
+
 
     @Inject
     public MorphiaProvider(@Nonnull UserIdConverter userIdConverter,
                            @Nonnull OWLEntityConverter entityConverter,
                            @Nonnull ProjectIdConverter projectIdConverter,
                            @Nonnull ThreadIdConverter threadIdConverter,
-                           @Nonnull CommentIdConverter commentIdConverter) {
+                           @Nonnull CommentIdConverter commentIdConverter,
+                           @Nonnull CollectionIdConverter collectionIdConverter,
+                           @Nonnull FormIdConverter formIdConverter) {
         this.userIdConverter = userIdConverter;
         this.entityConverter = entityConverter;
         this.projectIdConverter = projectIdConverter;
         this.threadIdConverter = threadIdConverter;
         this.commentIdConverter = commentIdConverter;
+        this.collectionIdConverter = collectionIdConverter;
+        this.formIdConverter = formIdConverter;
     }
 
     @Override
@@ -64,8 +76,12 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(projectIdConverter);
         converters.addConverter(threadIdConverter);
         converters.addConverter(commentIdConverter);
-        converters.addConverter(new FormDataValueConverter(new OWLDataFactoryImpl(),
-                                                           entityConverter));
+        FormDataValueConverter formDataValueConverter = new FormDataValueConverter(new OWLDataFactoryImpl(),
+                                                               entityConverter);
+        converters.addConverter(formDataValueConverter);
+        converters.addConverter(new FormDataConverter(formDataValueConverter));
+        converters.addConverter(collectionIdConverter);
+        converters.addConverter(formIdConverter);
         morphia.map(EntityDiscussionThread.class);
         morphia.map(UserActivityRecord.class);
         morphia.map(RoleAssignment.class);

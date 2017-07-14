@@ -102,7 +102,7 @@ public class Fiddle {
                                                                       "My Entity",
                                                                       new ClassNameFieldDescriptor(singleton(
                                                                               owlThing),
-                                                                                                   NodeType.LEAF),
+                                                                                                   NodeType.LEAF, ""),
                                                                       NON_REPEATABLE,
                                                                       REQUIRED,
                                                                       "");

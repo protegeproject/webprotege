@@ -15,6 +15,11 @@
     width: 500px;
 }
 
+.dialog  .gwt-TextBox:focus {
+    border: 1px solid #4779be;
+    outline: none;
+}
+
 .dialog .gwt-TextBox {
     border: 1px solid #e0e0e0;
     line-height: 20px;
