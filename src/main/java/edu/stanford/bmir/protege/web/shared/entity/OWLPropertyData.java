@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLProperty;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,9 +10,14 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public abstract class OWLPropertyData extends OWLEntityData {
 
-    protected OWLPropertyData(OWLEntity entity, String browserText) {
+    protected OWLPropertyData(OWLProperty entity, String browserText) {
         super(entity, browserText);
     }
 
     public abstract boolean isOWLAnnotationProperty();
+
+    @Override
+    public OWLProperty getEntity() {
+        return (OWLProperty) super.getEntity();
+    }
 }
