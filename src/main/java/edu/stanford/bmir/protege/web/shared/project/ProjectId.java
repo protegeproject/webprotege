@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -25,14 +24,6 @@ public class ProjectId implements Serializable, IsSerializable {
     private String id = "";
 
     /**
-     * A regular expression that specifies a pattern for a UUID
-     */
-    public static final transient String UUID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-
-    private static final transient RegExp PROJECT_ID_REG_EXP = RegExp.compile(UUID_PATTERN);
-
-
-    /**
      * Default no-args constructor for GWT serialization purposes.
      */
     private ProjectId() {
@@ -41,37 +32,26 @@ public class ProjectId implements Serializable, IsSerializable {
     /**
      * Constructs a ProjectId.
      * @param id The lexical Id of the project.  Not <code>null</code>.  The specified id must be formatted according
-     * to the regular expression for project id.  See {@link #getIdRegExp()}
+     * to the regular expression for UUIDs.  See {@link UUIDUtil#getIdRegExp()}
      * @throws NullPointerException if the id parameter is <code>null</code>.
      */
     private ProjectId(String id) throws ProjectIdFormatException{
         this.id = checkFormat(checkNotNull(id));
     }
 
-    /**
-     * Get the regular expression that specifies the lexical format of {@link ProjectId}s.  The returned regular expression
-     * specifies a UUID format consisting of a series of characters from the range a-z0-9 separated by dashes.  The
-     * first block contains 8 characters, the second block 4 characters, the third block 4 characters, the fourth
-     * block 4 characters, and the fifth block 12 characters.  For example, cb88785a-bfc5-4299-9b5b-7920451aba06.
-     * @return The {@link RegExp} for project id lexical values.  Not {@code null}.
-     */
-    public static RegExp getIdRegExp() {
-        return PROJECT_ID_REG_EXP;
-    }
 
     public static boolean isWelFormedProjectId(String candidateId) {
-        return PROJECT_ID_REG_EXP.exec(checkNotNull(candidateId)) != null;
+        return UUIDUtil.checkFormat(candidateId);
     }
 
     /**
-     * Checks that the specified string matches the UUID pattern {@link #UUID_PATTERN}.
+     * Checks that the specified string matches the UUID pattern.
      * @param id The string to check.
      * @return The specified string.
      * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
      */
     private static String checkFormat(String id) throws ProjectIdFormatException {
-        MatchResult result = PROJECT_ID_REG_EXP.exec(id);
-        if(result == null) {
+        if(!UUIDUtil.checkFormat(id)) {
             throw new ProjectIdFormatException(id);
         }
         return id;
@@ -79,13 +59,13 @@ public class ProjectId implements Serializable, IsSerializable {
 
     /**
      * Gets a {@link ProjectId} based on the specified UUID string.  The string must be formatted as a UUID string
-     * according to the regular expression returned by {@link #getIdRegExp()}.  The pattern is specified by the
-     * {@link #UUID_PATTERN} constant.
+     * according to the regular expression returned by {@link UUIDUtil#getIdRegExp()}.  The pattern is specified by the
+     * {@link UUIDUtil#UUID_PATTERN} constant.
      * @param uuid The UUID lexical form that the project id will be based on.   The specified
-     * {@code uuid} must match the pattern specified by the {@link #UUID_PATTERN} pattern. Not {@code null}.
+     * {@code uuid} must match the pattern specified by the {@link UUIDUtil#UUID_PATTERN} pattern. Not {@code null}.
      * @return The {@link ProjectId} having the specified UUID.  Not {@code null}.
      * @throws  NullPointerException if {@code uuid} is {@code null}.
-     * @throws ProjectIdFormatException if {@code uuid} does not match the UUID pattern specified by {@link #UUID_PATTERN}.
+     * @throws ProjectIdFormatException if {@code uuid} does not match the UUID pattern specified by {@link UUIDUtil#UUID_PATTERN}.
      */
     public static ProjectId get(String uuid) throws ProjectIdFormatException {
         return new ProjectId(uuid);
