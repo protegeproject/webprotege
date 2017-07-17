@@ -13,13 +13,13 @@ import static org.hamcrest.Matchers.is;
 @RunWith(MockitoJUnitRunner.class)
 public class CollectionId_TestCase {
 
-    private static final String MY_COLLECTION = "My Collection";
+    private static final String THE_ID = "12345678-1234-1234-1234-123456789abc";
 
     private CollectionId collectionId;
 
     @Before
     public void setUp() {
-        collectionId = CollectionId.get(MY_COLLECTION);
+        collectionId = CollectionId.get(THE_ID);
     }
 
     @Test
@@ -35,12 +35,12 @@ public class CollectionId_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(collectionId, is(CollectionId.get(MY_COLLECTION)));
+        assertThat(collectionId, is(CollectionId.get(THE_ID)));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(collectionId.hashCode(), is(CollectionId.get(MY_COLLECTION).hashCode()));
+        assertThat(collectionId.hashCode(), is(CollectionId.get(THE_ID).hashCode()));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class CollectionId_TestCase {
 
     @Test
     public void should_getId() {
-        assertThat(collectionId.getId(), is(MY_COLLECTION));
+        assertThat(collectionId.getId(), is(THE_ID));
     }
 
 }

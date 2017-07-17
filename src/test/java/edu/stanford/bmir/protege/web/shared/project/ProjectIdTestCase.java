@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 import org.junit.Test;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static junit.framework.Assert.*;
 
@@ -54,7 +56,7 @@ public class ProjectIdTestCase {
 
     @Test
     public void getRegExpReturnsCorrectExpression() {
-        String regExp = ProjectId.getIdRegExp().getSource();
+        String regExp = UUIDUtil.getIdRegExp().getSource();
         assertEquals("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", regExp);
     }
 
