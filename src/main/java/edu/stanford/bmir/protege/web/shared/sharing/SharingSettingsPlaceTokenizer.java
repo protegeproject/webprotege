@@ -4,6 +4,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 
 /**
@@ -17,7 +18,7 @@ public class SharingSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<S
 
     private static final String SHARING = "/sharing";
 
-    private static final RegExp pattern = RegExp.compile(PROJECTS + "(" + ProjectId.UUID_PATTERN + ")" + SHARING);
+    private static final RegExp pattern = RegExp.compile(PROJECTS + "(" + UUIDUtil.UUID_PATTERN + ")" + SHARING);
 
     @Override
     public boolean matches(String token) {
