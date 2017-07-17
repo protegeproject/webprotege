@@ -41,7 +41,7 @@ public class ProjectId implements Serializable, IsSerializable {
 
 
     public static boolean isWelFormedProjectId(String candidateId) {
-        return UUIDUtil.checkFormat(candidateId);
+        return UUIDUtil.isWellFormed(candidateId);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ProjectId implements Serializable, IsSerializable {
      * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
      */
     private static String checkFormat(String id) throws ProjectIdFormatException {
-        if(!UUIDUtil.checkFormat(id)) {
+        if(!UUIDUtil.isWellFormed(id)) {
             throw new ProjectIdFormatException(id);
         }
         return id;

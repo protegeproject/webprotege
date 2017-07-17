@@ -24,7 +24,7 @@ public class UUIDUtil {
      * @return The specified string.
      * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
      */
-    public static boolean checkFormat(String id) {
+    public static boolean isWellFormed(String id) {
         MatchResult result = REG_EXP.exec(id);
         return result != null;
     }
