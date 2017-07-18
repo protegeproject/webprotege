@@ -31,6 +31,9 @@ public class CollectionDetails {
     private CollectionId collectionId;
 
     @Nonnull
+    private String displayName;
+
+    @Nonnull
     private String description;
 
     /**
@@ -38,13 +41,15 @@ public class CollectionDetails {
      * @param projectId The project to which the collection belongs.
      * @param collectionId The collection id.  The collection id is a human readable name for the collection e.g.
      *                     "Boeing Aircraft" or "Amino Acids" or "747 Models".
+     * @param displayName
      * @param description An optional description of the collection.  Use the empty string to indicate no name
      */
     public CollectionDetails(@Nonnull ProjectId projectId,
                              @Nonnull CollectionId collectionId,
-                             @Nonnull String description) {
+                             @Nonnull String displayName, @Nonnull String description) {
         this.projectId = checkNotNull(projectId);
         this.collectionId = checkNotNull(collectionId);
+        this.displayName = checkNotNull(displayName);
         this.description = checkNotNull(description);
     }
 
@@ -56,6 +61,11 @@ public class CollectionDetails {
     @Nonnull
     public CollectionId getCollectionId() {
         return collectionId;
+    }
+
+    @Nonnull
+    public String getDisplayName() {
+        return displayName;
     }
 
     @Nonnull
