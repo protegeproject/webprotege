@@ -46,6 +46,8 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private final FormDataRepository formDataRepository;
 
+    private final CollectionId dummyId = CollectionId.get("12345678-1234-1234-1234-123456789abc");
+
     @Inject
     public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
                                          ProjectId projectId,
@@ -95,7 +97,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
             is.close();
 
-            FormData formData = formDataRepository.get(projectId, CollectionId.get("Dummy Data"), formId,  entity);
+            FormData formData = formDataRepository.get(projectId, dummyId, formId,  entity);
             return new GetFormDescriptorResult(
                     projectId,
                     entity,

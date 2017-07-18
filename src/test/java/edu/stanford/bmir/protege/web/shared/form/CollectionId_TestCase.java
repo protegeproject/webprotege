@@ -22,6 +22,17 @@ public class CollectionId_TestCase {
         collectionId = CollectionId.get(THE_ID);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowRuntimeExceptionForInvalidId() {
+        CollectionId.get("InvalidId");
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionForNullId() {
+        CollectionId.get(null);
+    }
+
     @Test
     public void shouldBeEqualToSelf() {
         assertThat(collectionId, is(collectionId));
