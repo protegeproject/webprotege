@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
+
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,7 +39,7 @@ public class CollectionId implements IsSerializable {
      * @return The {@link CollectionId} for the specified UUID string.
      */
     public static CollectionId get(@Nonnull String uuid) {
-        if(!isWellFormed(uuid)) {
+        if(!isWellFormed(checkNotNull(uuid))) {
             throw new RuntimeException("Invalid UUID format: " + uuid);
         }
         return new CollectionId(uuid);
@@ -45,6 +48,11 @@ public class CollectionId implements IsSerializable {
     @Nonnull
     public String getId() {
         return id;
+    }
+
+    @GwtIncompatible
+    public static CollectionId createId() {
+        return CollectionId.get(UUID.randomUUID().toString());
     }
 
     @Override

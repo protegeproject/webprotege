@@ -4,6 +4,10 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.project.ProjectIdFormatException;
 
+import javax.annotation.Nonnull;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -24,8 +28,8 @@ public class UUIDUtil {
      * @return The specified string.
      * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
      */
-    public static boolean isWellFormed(String id) {
-        MatchResult result = REG_EXP.exec(id);
+    public static boolean isWellFormed(@Nonnull String id) {
+        MatchResult result = REG_EXP.exec(checkNotNull(id));
         return result != null;
     }
 
