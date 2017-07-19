@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.server.form.FormDataSerializer;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
@@ -24,7 +23,6 @@ import static com.google.common.base.Objects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 12/04/16
  */
-@JsonSerialize(keyUsing = FormDataSerializer.class)
 public class FormData implements Serializable, IsSerializable {
 
     @JsonUnwrapped

@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.server.form.FormDataPrimitiveSerializer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import org.semanticweb.owlapi.model.IRI;
@@ -23,7 +21,6 @@ import static java.util.Collections.singletonList;
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
-@JsonSerialize(using = FormDataPrimitiveSerializer.class)
 public abstract class FormDataPrimitive extends FormDataValue {
 
     @GwtSerializationConstructor
