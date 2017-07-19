@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -44,6 +45,8 @@ public abstract class FormDataPrimitive extends FormDataValue {
     public abstract String getValueAsString();
 
     public abstract boolean isNumber();
+
+    public abstract OWLObject toOWLObject();
 
     public static FormDataPrimitive get(IRI iri) {
         return new IRIPrimitive(iri);
@@ -182,6 +185,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
                     .add("iri", entity.getIRI().toString())
                     .toString();
         }
+
+        @Override
+        public OWLObject toOWLObject() {
+            return entity;
+        }
     }
 
     public static class IRIPrimitive extends FormDataPrimitive {
@@ -246,6 +254,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public boolean getValueAsBoolean() {
             throw new RuntimeException("Not a boolean");
         }
+
+        @Override
+        public OWLObject toOWLObject() {
+            return iri;
+        }
     }
 
     public static class NumberPrimitive extends FormDataPrimitive {
@@ -271,7 +284,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
         @Override
         public Optional<OWLLiteral> asLiteral() {
-            return Optional.of(DataFactory.get().getOWLLiteral(number));
+            return Optional.of(toOWLLiteral());
+        }
+
+        private OWLLiteral toOWLLiteral() {
+            return DataFactory.get().getOWLLiteral(number);
         }
 
         @Nonnull
@@ -321,6 +338,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public boolean getValueAsBoolean() {
             throw new RuntimeException("Not a boolean");
         }
+
+        @Override
+        public OWLObject toOWLObject() {
+            return toOWLLiteral();
+        }
     }
 
     public static class StringPrimitive extends FormDataPrimitive {
@@ -347,7 +369,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
         @Override
         public Optional<OWLLiteral> asLiteral() {
-            return Optional.of(DataFactory.get().getOWLLiteral(string));
+            return Optional.of(toOWLLiteral());
+        }
+
+        private OWLLiteral toOWLLiteral() {
+            return DataFactory.get().getOWLLiteral(string);
         }
 
         @Nonnull
@@ -397,6 +423,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public boolean getValueAsBoolean() {
             throw new RuntimeException("Not a boolean");
         }
+
+        @Override
+        public OWLObject toOWLObject() {
+            return toOWLLiteral();
+        }
     }
 
     public static class BooleanPrimitive extends FormDataPrimitive {
@@ -422,7 +453,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
         @Override
         public Optional<OWLLiteral> asLiteral() {
-            return Optional.of(DataFactory.getOWLLiteral(bool));
+            return Optional.of(toOWLLiteral());
+        }
+
+        private OWLLiteral toOWLLiteral() {
+            return DataFactory.getOWLLiteral(bool);
         }
 
         @Nonnull
@@ -463,6 +498,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         @Override
         public boolean getValueAsBoolean() {
             return bool;
+        }
+
+        @Override
+        public OWLObject toOWLObject() {
+            return toOWLLiteral();
         }
     }
 
@@ -571,6 +611,11 @@ public abstract class FormDataPrimitive extends FormDataValue {
         @Override
         public boolean getValueAsBoolean() {
             throw new RuntimeException("Not a boolean");
+        }
+
+        @Override
+        public OWLObject toOWLObject() {
+            return literal;
         }
     }
 }
