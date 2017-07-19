@@ -24,7 +24,7 @@ import java.util.Set;
  * implementations of method such as getAncestors, getDescendants etc.
  * which use other core methods.
  */
-public abstract class AbstractHierarchyProvider<N extends OWLObject> implements HierarchyProvider<N> {
+public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<N> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHierarchyProvider.class);
 
