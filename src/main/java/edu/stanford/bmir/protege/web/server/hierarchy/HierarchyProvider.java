@@ -10,7 +10,7 @@ import java.util.Set;
  * Stanford Center for Biomedical Informatics Research
  * 04/03/15
  */
-public interface HierarchyProvider<N extends OWLObject> extends HasGetAncestors<N> {
+public interface HierarchyProvider<N> extends HasGetAncestors<N> {
 
     /**
      * Gets the objects that represent the roots of the hierarchy.
