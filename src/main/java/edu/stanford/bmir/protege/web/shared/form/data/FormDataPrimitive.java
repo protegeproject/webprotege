@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -14,6 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive.BooleanPrimitive.BOOLEAN_FALSE_PRIMITIVE;
+import static edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive.BooleanPrimitive.BOOLEAN_TRUE_PRIMITIVE;
 import static java.util.Collections.singletonList;
 
 /**
@@ -27,47 +28,138 @@ public abstract class FormDataPrimitive extends FormDataValue {
     private FormDataPrimitive() {
     }
 
+    /**
+     * Gets the actual primitive value.  This could be a String, Number, OWLLiteral, OWLEntity or IRI.
+     * @return The primitive value.
+     */
     @Nonnull
     public abstract Object getValue();
 
-    @JsonIgnore
-    public abstract FormDataPrimitive getSimplified();
+    public abstract OWLObject toOWLObject();
 
-    public static FormDataPrimitive get(OWLEntity entity) {
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps an {@link OWLEntity}.
+     * @param entity The entity to be wrapped.
+     * @return The primitive that wraps the entity.
+     */
+    @Nonnull
+    public static FormDataPrimitive get(@Nonnull OWLEntity entity) {
         return new OWLEntityPrimitive(entity);
     }
 
-    public abstract boolean isString();
-
-    public abstract String getValueAsString();
-
-    public abstract boolean isNumber();
-
-    public abstract OWLObject toOWLObject();
-
-    public static FormDataPrimitive get(IRI iri) {
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps an {@link IRI}.
+     * @param iri The IRI to be wrapped.
+     * @return The primitive that wraps the IRI.
+     */
+    public static FormDataPrimitive get(@Nonnull IRI iri) {
         return new IRIPrimitive(iri);
     }
 
-    public static FormDataPrimitive get(String plainString) {
-        return new StringPrimitive(plainString);
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps a {@link String}.
+     * @param string The string to be wrapped.
+     * @return The primitive that wraps the string.
+     */
+    @Nonnull
+    public static FormDataPrimitive get(@Nonnull String string) {
+        return new StringPrimitive(string);
     }
 
-    public static FormDataPrimitive get(String plainString, String lang) {
-        return new LiteralPrimitive(DataFactory.getOWLLiteral(plainString, lang));
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps an {@link String} with an xml:lang.
+     * @param string The string to be wrapped.
+     * @param lang The lang.
+     * @return The primitive that wraps the string with the lang.
+     */
+    @Nonnull
+    public static FormDataPrimitive get(@Nonnull String string,
+                                        @Nonnull String lang) {
+        return new LiteralPrimitive(DataFactory.getOWLLiteral(string, lang));
     }
 
-    public static FormDataPrimitive get(OWLLiteral literal) {
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps an {@link OWLLiteral}.
+     * @param literal The {@link OWLLiteral} to be wrapped.
+     * @return The primitive that wraps the {@link OWLLiteral}.
+     */
+    @Nonnull
+    public static FormDataPrimitive get(@Nonnull OWLLiteral literal) {
         return new LiteralPrimitive(literal);
     }
 
-    public static FormDataPrimitive get(Number number) {
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps an {@link Number}.
+     * @param number The {@link Number} to be wrapped.
+     * @return The primitive that wraps the {@link Number}.
+     */
+    @Nonnull
+    public static FormDataPrimitive get(@Nonnull Number number) {
         return new NumberPrimitive(number);
     }
 
+    /**
+     * Gets a {@link FormDataPrimitive} that wraps an {@link boolean}.
+     * @param b The boolean to be wrapped.
+     * @return The primitive that wraps the boolean.
+     */
+    @Nonnull
     public static FormDataPrimitive get(boolean b) {
-        return new BooleanPrimitive(b);
+        if(b) {
+            return BOOLEAN_TRUE_PRIMITIVE;
+        }
+        else {
+            return BOOLEAN_FALSE_PRIMITIVE;
+        }
     }
+
+
+
+    /**
+     * Determines if this primitive wraps a String value.  This is true if the primitive was
+     * created with the factory method that takes a String value as a parameter.
+     * @return true if this primitive wraps a String value, otherwise false.
+     */
+    public abstract boolean isString();
+
+    /**
+     * Gets this primitive as a String.
+     * @return The String value of this primitive.
+     * @throws RuntimeException if this primitive does not wrap a {@link String}.
+     */
+    public abstract String getValueAsString();
+
+
+    /**
+     * Determines if this primitive wraps a Number value.  This is true if the primitive was
+     * created with the factory method that takes a Number value as a parameter.
+     * @return true if this primitive wraps a boolean value, otherwise false.
+     */
+    public abstract boolean isNumber();
+
+    /**
+     * Gets this primitive as a double.
+     * @return The double value of this primitive.
+     * @throws RuntimeException if this primitive does not wrap a {@link Number}.
+     */
+    public abstract double getValueAsDouble();
+
+    /**
+     * Determines if this primitive wraps a boolean value.  This is true if the primitive was
+     * created with the factory method that takes a boolean value as a parameter.
+     * @return true if this primitive wraps a boolean value, otherwise false.
+     */
+    public abstract boolean isBoolean();
+
+    /**
+     * Gets this primitive as boolean.
+     * @return The primitive as a boolean value.
+     * @throws RuntimeException if this primitive does not wrap a boolean value.
+     */
+    public abstract boolean getValueAsBoolean();
+
+
+
 
     @Override
     public List<FormDataValue> asList() {
@@ -87,7 +179,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
         return false;
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hashCode(getValue());
@@ -105,21 +196,16 @@ public abstract class FormDataPrimitive extends FormDataValue {
         return this.getValue().equals(other.getValue());
     }
 
-    public abstract double getValueAsDouble();
-
-    public abstract boolean isBoolean();
-
-    public abstract boolean getValueAsBoolean();
 
     public static class OWLEntityPrimitive extends FormDataPrimitive {
 
-        @Nonnull
         private OWLEntity entity;
 
         public OWLEntityPrimitive(@Nonnull OWLEntity entity) {
             this.entity = entity;
         }
 
+        @GwtSerializationConstructor
         private OWLEntityPrimitive() {
         }
 
@@ -137,11 +223,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
         @Override
         public Object getValue() {
             return entity;
-        }
-
-        @Override
-        public FormDataPrimitive getSimplified() {
-            return this;
         }
 
         @Override
@@ -197,6 +278,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
             this.iri = iri;
         }
 
+        @GwtSerializationConstructor
         private IRIPrimitive() {
         }
 
@@ -215,12 +297,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public Object getValue() {
             return iri;
         }
-
-        @Override
-        public FormDataPrimitive getSimplified() {
-            return this;
-        }
-
 
         @Override
         public boolean isString() {
@@ -266,6 +342,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
             this.number = number.doubleValue();
         }
 
+        @GwtSerializationConstructor
         private NumberPrimitive() {
         }
 
@@ -293,12 +370,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
         public Object getValue() {
             return number;
         }
-
-        @Override
-        public FormDataPrimitive getSimplified() {
-            return this;
-        }
-
 
         @Override
         public String toString() {
@@ -388,10 +459,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         @Override
-        public FormDataPrimitive getSimplified() {
-            return this;
-        }
-        @Override
         public boolean isString() {
             return true;
         }
@@ -429,12 +496,17 @@ public abstract class FormDataPrimitive extends FormDataValue {
 
     public static class BooleanPrimitive extends FormDataPrimitive {
 
+        protected static final BooleanPrimitive BOOLEAN_TRUE_PRIMITIVE = new BooleanPrimitive(true);
+
+        protected static final BooleanPrimitive BOOLEAN_FALSE_PRIMITIVE = new BooleanPrimitive(false);
+
         private Boolean bool;
 
         public BooleanPrimitive(Boolean bool) {
             this.bool = bool;
         }
 
+        @GwtSerializationConstructor
         private BooleanPrimitive() {
         }
 
@@ -463,10 +535,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
             return bool;
         }
 
-        @Override
-        public FormDataPrimitive getSimplified() {
-            return this;
-        }
         @Override
         public boolean isString() {
             return false;
@@ -511,6 +579,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
             this.literal = literal;
         }
 
+        @GwtSerializationConstructor
         public LiteralPrimitive() {
         }
 
@@ -543,42 +612,6 @@ public abstract class FormDataPrimitive extends FormDataValue {
                     .addValue(literal.getLang())
                     .toString();
         }
-
-        @Override
-        public FormDataPrimitive getSimplified() {
-            if(literal.isRDFPlainLiteral() && !literal.hasLang()) {
-                return FormDataPrimitive.get(literal.getLiteral());
-            }
-            if(literal.getDatatype().isString()) {
-                return FormDataPrimitive.get(literal.getLiteral());
-            }
-            if(literal.isBoolean()) {
-                return FormDataPrimitive.get(literal.parseBoolean());
-            }
-            if(literal.isDouble()) {
-                try {
-                    return FormDataPrimitive.get(literal.parseDouble());
-                } catch (NumberFormatException e) {
-                    return this;
-                }
-            }
-            if(literal.isInteger()) {
-                try {
-                    return FormDataPrimitive.get(literal.parseInteger());
-                } catch (NumberFormatException e) {
-                    return this;
-                }
-            }
-            if(literal.isFloat()) {
-                try {
-                    return FormDataPrimitive.get(literal.parseFloat());
-                } catch (NumberFormatException e) {
-                    return this;
-                }
-            }
-            return this;
-        }
-
 
         @Override
         public boolean isString() {
