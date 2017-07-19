@@ -20,7 +20,7 @@ import java.util.*;
  * Date: 17-Jan-2007<br><br>
  */
 @ProjectSingleton
-public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyProvider<OWLClass> {
+public class AssertedClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> {
 
     /*
      * It is not safe to set the collection of ontologies to a HashSet or TreeSet.

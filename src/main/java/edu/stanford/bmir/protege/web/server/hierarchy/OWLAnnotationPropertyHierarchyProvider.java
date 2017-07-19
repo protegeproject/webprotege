@@ -22,7 +22,7 @@ import java.util.Set;
  * Date: Apr 23, 2009<br><br>
  */
 @ProjectSingleton
-public class OWLAnnotationPropertyHierarchyProvider extends AbstractOWLObjectHierarchyProvider<OWLAnnotationProperty> {
+public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyProvider<OWLAnnotationProperty> {
 
     private OWLOntology rootOntology;
 

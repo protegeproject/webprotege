@@ -187,43 +187,43 @@ public class ProjectModule {
     }
 
     @Provides
-    public OWLObjectHierarchyProvider<OWLObjectProperty>
+    public HierarchyProvider<OWLObjectProperty>
     provideObjectPropertyHierarchyProvider(OWLObjectPropertyHierarchyProvider provider) {
         return provider;
     }
 
 
     @Provides
-    public OWLObjectHierarchyProvider<OWLDataProperty>
+    public HierarchyProvider<OWLDataProperty>
     provideDataPropertyHierarchyProvider(
             OWLDataPropertyHierarchyProvider provider) {
         return provider;
     }
 
     @Provides
-    public OWLObjectHierarchyProvider<OWLAnnotationProperty>
+    public HierarchyProvider<OWLAnnotationProperty>
     provideAnnotationPropertyHierarchyProvider(
             OWLAnnotationPropertyHierarchyProvider provider) {
         return provider;
     }
 
     @Provides
-    public HasGetAncestors<OWLClass> providesOWLClassAncestors(OWLObjectHierarchyProvider<OWLClass> hierarchyProvider) {
+    public HasGetAncestors<OWLClass> providesOWLClassAncestors(HierarchyProvider<OWLClass> hierarchyProvider) {
         return hierarchyProvider;
     }
     
     @Provides
-    public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(OWLObjectHierarchyProvider<OWLObjectProperty> hierarchyProvider) {
+    public HasGetAncestors<OWLObjectProperty> providesOWLObjectPropertyAncestors(HierarchyProvider<OWLObjectProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
     
     @Provides
-    public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(OWLObjectHierarchyProvider<OWLDataProperty> hierarchyProvider) {
+    public HasGetAncestors<OWLDataProperty> providesOWLDataPropertyAncestors(HierarchyProvider<OWLDataProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
 
     @Provides
-    public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(OWLObjectHierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
+    public HasGetAncestors<OWLAnnotationProperty> providesOWLAnnotationPropertyAncestors(HierarchyProvider<OWLAnnotationProperty> hierarchyProvider) {
         return hierarchyProvider;
     }
     
@@ -393,7 +393,7 @@ public class ProjectModule {
 
     @Provides
     @ProjectSingleton
-    OWLObjectHierarchyProvider<OWLClass> provideClassHierarchyProvider(AssertedClassHierarchyProvider provider) {
+    HierarchyProvider<OWLClass> provideClassHierarchyProvider(AssertedClassHierarchyProvider provider) {
         return provider;
     }
 

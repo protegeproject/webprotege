@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.server.revision.EntitiesByRevisionCache;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
@@ -29,13 +29,13 @@ import static edu.stanford.bmir.protege.web.shared.watches.WatchType.BRANCH;
 @ProjectSingleton
 public class WatchedChangesManager {
 
-    private final OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider;
+    private final HierarchyProvider<OWLClass> classHierarchyProvider;
 
-    private final OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider;
+    private final HierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider;
 
-    private final OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider;
+    private final HierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider;
 
-    private final OWLObjectHierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider;
+    private final HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider;
 
     private final HasImportsClosure rootOntologyImportsClosureProvider;
 
@@ -47,10 +47,10 @@ public class WatchedChangesManager {
 
     @Inject
     public WatchedChangesManager(ProjectChangesManager projectChangesManager,
-                                 OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider,
-                                 OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider,
-                                 OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider,
-                                 OWLObjectHierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider,
+                                 HierarchyProvider<OWLClass> classHierarchyProvider,
+                                 HierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider,
+                                 HierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider,
+                                 HierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider,
                                  HasImportsClosure rootOntologyImportsClosureProvider,
                                  RevisionManager changeManager,
                                  EntitiesByRevisionCache entitiesByRevisionCache) {
