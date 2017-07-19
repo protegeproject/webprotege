@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
@@ -34,7 +34,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private final ProjectId projectId;
 
-    private final AssertedClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     private final OWLDataFactory dataFactory;
 
@@ -45,7 +45,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
     @Inject
     public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
                                          ProjectId projectId,
-                                         AssertedClassHierarchyProvider classHierarchyProvider,
+                                         ClassHierarchyProvider classHierarchyProvider,
                                          OWLDataFactory dataFactory,
                                          CollectionElementDataRepository repository) {
         super(accessManager);

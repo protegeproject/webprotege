@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -37,7 +37,7 @@ import static java.util.stream.Collectors.toSet;
 public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<CreateClassesAction, CreateClassesResult> {
 
     @Nonnull
-    private final AssertedClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
     private final RenderingManager renderingManager;
@@ -54,7 +54,7 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
 
     @Inject
     public CreateClassesActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull AssertedClassHierarchyProvider classHierarchyProvider,
+                                      @Nonnull ClassHierarchyProvider classHierarchyProvider,
                                       @Nonnull RenderingManager renderingManager,
                                       @Nonnull HasApplyChanges changeApplicator,
                                       @Nonnull OWLOntology rootOntology,

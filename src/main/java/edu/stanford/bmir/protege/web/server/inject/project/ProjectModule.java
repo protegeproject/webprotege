@@ -393,7 +393,7 @@ public class ProjectModule {
 
     @Provides
     @ProjectSingleton
-    HierarchyProvider<OWLClass> provideClassHierarchyProvider(AssertedClassHierarchyProvider provider) {
+    HierarchyProvider<OWLClass> provideClassHierarchyProvider(ClassHierarchyProvider provider) {
         return provider;
     }
 

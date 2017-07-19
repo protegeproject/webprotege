@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.EventTranslatorManager;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -92,7 +92,7 @@ public class ChangeManager implements HasApplyChanges {
     private final ProjectDocumentStore documentStore;
 
     @Nonnull
-    private final AssertedClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
     private final OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
@@ -128,7 +128,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull OWLDataFactory dataFactory,
                          @Nonnull RenderingManager renderingManager,
                          @Nonnull ProjectDocumentStore documentStore,
-                         @Nonnull AssertedClassHierarchyProvider classHierarchyProvider,
+                         @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
                          @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider) {

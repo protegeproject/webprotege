@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
@@ -45,7 +45,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     private final RenderingManager renderingManager;
 
     @Nonnull
-    private final AssertedClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     @Inject
     public CreateClassActionHandler(@Nonnull AccessManager accessManager,
@@ -53,7 +53,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
                                     @Nonnull HasApplyChanges applyChanges,
                                     @Nonnull OWLOntology rootOntology,
                                     @Nonnull RenderingManager renderingManager,
-                                    @Nonnull AssertedClassHierarchyProvider classHierarchyProvider) {
+                                    @Nonnull ClassHierarchyProvider classHierarchyProvider) {
         super(accessManager, eventManager, applyChanges);
         this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
