@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -67,7 +67,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     private final OWLOntology ontology;
 
-    private final AssertedClassHierarchyProvider classHierarchyProvider;
+    private final ClassHierarchyProvider classHierarchyProvider;
 
     private final OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
 
@@ -110,7 +110,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
                    @SuppressWarnings("deprecation") LegacyEntityDataManager legacyEntityDataManager,
                    EventManager<ProjectEvent<?>> projectEventManager,
                    @RootOntology OWLOntology ontology,
-                   AssertedClassHierarchyProvider classHierarchyProvider,
+                   ClassHierarchyProvider classHierarchyProvider,
                    OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                    OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
                    OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
@@ -219,7 +219,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return watchedChangesManager;
     }
 
-    public AssertedClassHierarchyProvider getClassHierarchyProvider() {
+    public ClassHierarchyProvider getClassHierarchyProvider() {
         return classHierarchyProvider;
     }
 
