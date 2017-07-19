@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.form.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import edu.stanford.bmir.protege.web.server.persistence.*;

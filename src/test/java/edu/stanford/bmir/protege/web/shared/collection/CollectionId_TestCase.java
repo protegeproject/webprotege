@@ -1,6 +1,7 @@
 
-package edu.stanford.bmir.protege.web.shared.form;
+package edu.stanford.bmir.protege.web.shared.collection;
 
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

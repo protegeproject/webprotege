@@ -1,7 +1,8 @@
-package edu.stanford.bmir.protege.web.server.form;
+package edu.stanford.bmir.protege.web.shared.collection;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.form.CollectionId;
+import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.annotations.*;
 
@@ -22,26 +23,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
         @Index(fields = {@Field("projectId"), @Field("collectionId")},
                options = @IndexOptions(unique = true))
          })
-public class CollectionDetails {
+public class CollectionDetails implements IsSerializable {
 
-    @Nonnull
     private ProjectId projectId;
 
-    @Nonnull
     private CollectionId collectionId;
 
-    @Nonnull
     private String displayName;
 
-    @Nonnull
     private String description;
 
     /**
      * Creates a {@link CollectionDetails}.
      * @param projectId The project to which the collection belongs.
-     * @param collectionId The collection id.  The collection id is a human readable name for the collection e.g.
-     *                     "Boeing Aircraft" or "Amino Acids" or "747 Models".
-     * @param displayName
+     * @param collectionId The collection id.  The collection id is essentially a uuid for the collection.
+     * @param displayName The display name for the collection.
      * @param description An optional description of the collection.  Use the empty string to indicate no name
      */
     public CollectionDetails(@Nonnull ProjectId projectId,
@@ -51,6 +47,10 @@ public class CollectionDetails {
         this.collectionId = checkNotNull(collectionId);
         this.displayName = checkNotNull(displayName);
         this.description = checkNotNull(description);
+    }
+
+    @GwtSerializationConstructor
+    private CollectionDetails() {
     }
 
     @Nonnull

@@ -1,8 +1,7 @@
-package edu.stanford.bmir.protege.web.shared.form;
+package edu.stanford.bmir.protege.web.shared.collection;
 
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
 

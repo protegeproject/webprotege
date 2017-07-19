@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.form.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,18 +21,13 @@ import javax.inject.Inject;
 public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<SetFormDataAction, SetFormDataResult> {
 
     @Nonnull
-    private final FormDataRepository repository;
-
-    @Nonnull
-    private final ProjectId projectId;
+    private final CollectionElementDataRepository repository;
 
     @Inject
     public SetFormDataActionHandler(@Nonnull AccessManager accessManager,
-                                    @Nonnull FormDataRepository repository,
-                                    @Nonnull ProjectId projectId) {
+                                    @Nonnull CollectionElementDataRepository repository) {
         super(accessManager);
         this.repository = repository;
-        this.projectId = projectId;
     }
 
     @Override
@@ -40,7 +37,11 @@ public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<Se
 
     @Override
     public SetFormDataResult execute(SetFormDataAction action, ExecutionContext executionContext) {
-        repository.store(projectId, CollectionId.get("12345678-1234-1234-1234-123456789abc"), action.getFormId(), action.getEntity(), action.getFormData());
+        CollectionElementData data = new CollectionElementData(
+                CollectionId.get("12345678-1234-1234-1234-123456789abc"),
+                CollectionElementId.get(action.getEntity().toStringID()),
+                action.getFormData());
+        repository.save(data);
         return new SetFormDataResult();
     }
 }
