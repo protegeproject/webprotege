@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.server.form;
+package edu.stanford.bmir.protege.web.server.collection;
 
-import edu.stanford.bmir.protege.web.shared.form.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionDetails;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Collections;

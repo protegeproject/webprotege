@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.form;
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
-import edu.stanford.bmir.protege.web.shared.form.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;

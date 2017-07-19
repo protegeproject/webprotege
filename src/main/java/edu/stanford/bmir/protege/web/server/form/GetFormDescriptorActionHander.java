@@ -4,15 +4,17 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.*;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -22,14 +24,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static cern.clhep.Units.s;
-import static edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor.choice;
-import static edu.stanford.bmir.protege.web.shared.form.field.ChoiceFieldType.COMBO_BOX;
-import static java.util.Arrays.asList;
 
 /**
  * Matthew Horridge
@@ -44,7 +38,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private final OWLDataFactory dataFactory;
 
-    private final FormDataRepository formDataRepository;
+    private final CollectionElementDataRepository repository;
 
     private final CollectionId dummyId = CollectionId.get("12345678-1234-1234-1234-123456789abc");
 
@@ -52,12 +46,13 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
     public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
                                          ProjectId projectId,
                                          AssertedClassHierarchyProvider classHierarchyProvider,
-                                         OWLDataFactory dataFactory, FormDataRepository formDataRepository) {
+                                         OWLDataFactory dataFactory,
+                                         CollectionElementDataRepository repository) {
         super(accessManager);
         this.projectId = projectId;
         this.classHierarchyProvider = classHierarchyProvider;
         this.dataFactory = dataFactory;
-        this.formDataRepository = formDataRepository;
+        this.repository = repository;
     }
 
 
@@ -97,12 +92,13 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
             is.close();
 
-            FormData formData = formDataRepository.get(projectId, dummyId, formId,  entity);
+            CollectionElementId id = CollectionElementId.get(entity.toStringID());
+            CollectionElementData formData = repository.find(dummyId, id);
             return new GetFormDescriptorResult(
                     projectId,
                     entity,
                     d,
-                    formData
+                    formData.getFormData().orElse(FormData.empty())
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

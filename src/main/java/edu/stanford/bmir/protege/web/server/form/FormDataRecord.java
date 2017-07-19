@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import edu.stanford.bmir.protege.web.shared.form.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
-import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
-
-import java.util.Map;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 

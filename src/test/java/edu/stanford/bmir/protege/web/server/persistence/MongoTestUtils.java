@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.mongodb.MongoClient;
-import edu.stanford.bmir.protege.web.server.form.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import org.mongodb.morphia.Morphia;

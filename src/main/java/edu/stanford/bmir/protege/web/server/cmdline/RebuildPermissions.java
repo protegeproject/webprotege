@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
-import edu.stanford.bmir.protege.web.server.form.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import org.mongodb.morphia.Datastore;
