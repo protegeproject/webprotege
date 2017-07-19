@@ -28,7 +28,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     private final ProjectId projectId;
 
-    private final OWLObjectHierarchyProvider<T> hierarchyProvider;
+    private final HierarchyProvider<T> hierarchyProvider;
 
     private final EntityType<T> entityType;
 
@@ -39,7 +39,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     private Set<T> roots = new HashSet<T>();
 
-    public HierarchyChangeComputer(ProjectId projectId, EntityType<T> entityType, OWLObjectHierarchyProvider<T> hierarchyProvider, HierarchyId<T> hierarchyId) {
+    public HierarchyChangeComputer(ProjectId projectId, EntityType<T> entityType, HierarchyProvider<T> hierarchyProvider, HierarchyId<T> hierarchyId) {
         this.projectId = projectId;
         this.hierarchyProvider = hierarchyProvider;
         this.entityType = entityType;

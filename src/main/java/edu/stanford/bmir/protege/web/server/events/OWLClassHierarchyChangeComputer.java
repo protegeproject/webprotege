@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
@@ -20,7 +20,7 @@ import javax.inject.Inject;
 public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWLClass> {
 
     @Inject
-    public OWLClassHierarchyChangeComputer(ProjectId projectId, OWLObjectHierarchyProvider<OWLClass> hierarchyProvider) {
+    public OWLClassHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLClass> hierarchyProvider) {
         super(projectId, EntityType.CLASS, hierarchyProvider, HierarchyId.CLASS_HIERARCHY);
     }
 

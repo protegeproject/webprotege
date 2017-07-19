@@ -24,9 +24,9 @@ import java.util.Set;
  * implementations of method such as getAncestors, getDescendants etc.
  * which use other core methods.
  */
-public abstract class AbstractOWLObjectHierarchyProvider<N extends OWLObject> implements OWLObjectHierarchyProvider<N> {
+public abstract class AbstractHierarchyProvider<N extends OWLObject> implements HierarchyProvider<N> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractOWLObjectHierarchyProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractHierarchyProvider.class);
 
 
     private boolean fireEvents;
@@ -34,7 +34,7 @@ public abstract class AbstractOWLObjectHierarchyProvider<N extends OWLObject> im
     private List<OWLObjectHierarchyProviderListener<N>> listeners;
 
 
-    protected AbstractOWLObjectHierarchyProvider() {
+    protected AbstractHierarchyProvider() {
         listeners = new ArrayList<>();
         fireEvents = true;
     }
