@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.legacy;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -208,7 +208,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         List<SubclassEntityData> result = new ArrayList<SubclassEntityData>();
         Project project = getProject(projectName);
         LegacyEntityDataManager rm = project.getLegacyEntityDataManager();
-        AssertedClassHierarchyProvider hierarchyProvider = project.getClassHierarchyProvider();
+        ClassHierarchyProvider hierarchyProvider = project.getClassHierarchyProvider();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
 
         boolean checkForDeprecated = project.getRootOntology()

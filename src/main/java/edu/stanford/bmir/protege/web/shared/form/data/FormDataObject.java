@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import edu.stanford.bmir.protege.web.server.form.FormDataObjectSerializer;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -15,7 +14,6 @@ import static java.util.Collections.singletonList;
  * Stanford Center for Biomedical Informatics Research
  * 31/03/16
  */
-@JsonSerialize(using = FormDataObjectSerializer.class)
 public class FormDataObject extends FormDataValue {
 
     private Map<String, FormDataValue> map = new HashMap<>();

@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.apache.http.impl.entity.EntitySerializer;
+import org.semanticweb.binaryowl.owlobject.serializer.IRISerializer;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -80,12 +82,6 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
             ObjectMapper mapper = new ObjectMapper();
             SimpleModule module = new SimpleModule();
             module.addDeserializer(FormDataValue.class, new FormDataValueDeserializer(dataFactory));
-            module.addSerializer(new EntitySerializer());
-            module.addSerializer(new IRISerializer());
-            module.addSerializer(new LiteralSerializer());
-            module.addSerializer(new FormElementIdSerializer());
-            module.addSerializer(new FormDataSerializer());
-            module.addSerializer(new FormDataObjectSerializer());
             mapper.registerModule(module);
             mapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
             FormDescriptor d = mapper.readerFor(FormDescriptor.class).readValue(new BufferedInputStream(is));
