@@ -114,7 +114,10 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
     }
 
-
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
     /**
      * Determines if this primitive wraps a String value.  This is true if the primitive was

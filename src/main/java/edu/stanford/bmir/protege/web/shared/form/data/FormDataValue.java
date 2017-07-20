@@ -42,4 +42,14 @@ public abstract class FormDataValue implements IsSerializable {
     public abstract boolean isObject();
 
     public abstract Optional<OWLEntity> asOWLEntity();
+
+    /**
+     * Determines if this form data value is empty.
+     * @return true if this form data value is empty.  For {@link FormDataPrimitive} values this
+     * is false.  For {@link FormDataList} values this is true if the list is empty, or if all
+     * values of the list are empty, otherwise it is false.  For {@link FormDataObject} values this
+     * is true if the object does not have any fields, or if the fields are empty, otherwise it is
+     * false.
+     */
+    public abstract boolean isEmpty();
 }

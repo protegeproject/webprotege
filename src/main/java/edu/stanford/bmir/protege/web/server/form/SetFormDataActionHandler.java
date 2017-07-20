@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
+import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataResult;
 
@@ -37,10 +38,20 @@ public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<Se
 
     @Override
     public SetFormDataResult execute(SetFormDataAction action, ExecutionContext executionContext) {
-        CollectionElementData data = new CollectionElementData(
-                CollectionId.get("12345678-1234-1234-1234-123456789abc"),
-                CollectionElementId.get(action.getEntity().toStringID()),
-                action.getFormData());
+        FormData formData = action.getFormData();
+        CollectionElementData data = null;
+        if (formData.isEmpty()) {
+            data = new CollectionElementData(
+                    CollectionId.get("12345678-1234-1234-1234-123456789abc"),
+                    CollectionElementId.get(action.getEntity().toStringID()));
+        }
+        else {
+            data = new CollectionElementData(
+                    CollectionId.get("12345678-1234-1234-1234-123456789abc"),
+                    CollectionElementId.get(action.getEntity().toStringID()),
+                    formData);
+
+        }
         repository.save(data);
         return new SetFormDataResult();
     }
