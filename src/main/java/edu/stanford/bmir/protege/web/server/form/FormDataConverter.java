@@ -19,7 +19,7 @@ import java.util.Map;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jul 2017
  */
-public class FormDataConverter extends TypeSafeConverter<DBObject, FormData> implements SimpleValueConverter {
+public class FormDataConverter extends TypeSafeConverter<DBObject, FormData> {
 
     private final FormDataValueConverter valueConverter;
 
@@ -42,6 +42,9 @@ public class FormDataConverter extends TypeSafeConverter<DBObject, FormData> imp
     @Override
     public DBObject encodeObject(FormData value, MappedField optionalExtraInfo) {
         if(value == null) {
+            return null;
+        }
+        if(value.isEmpty()) {
             return null;
         }
         DBObject object = new BasicDBObject();
