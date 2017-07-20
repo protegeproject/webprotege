@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -362,7 +363,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         private OWLLiteral toOWLLiteral() {
-            return DataFactory.get().getOWLLiteral(number);
+            return DataFactory.get().getOWLLiteral(Double.toString(number), OWL2Datatype.XSD_DECIMAL);
         }
 
         @Nonnull
@@ -441,7 +442,7 @@ public abstract class FormDataPrimitive extends FormDataValue {
         }
 
         private OWLLiteral toOWLLiteral() {
-            return DataFactory.get().getOWLLiteral(string);
+            return DataFactory.get().getOWLLiteral(string, OWL2Datatype.XSD_STRING);
         }
 
         @Nonnull
