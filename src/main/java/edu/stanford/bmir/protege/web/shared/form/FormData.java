@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -35,14 +37,31 @@ public class FormData implements Serializable, IsSerializable {
         return new FormData(Collections.emptyMap());
     }
 
-    public FormData(Map<FormElementId, FormDataValue> data) {
-        data.forEach((id, val) -> this.data.put(id.getId(), val));
+    public FormData(@Nonnull Map<FormElementId, FormDataValue> data) {
+        checkNotNull(data);
+        data.forEach((id, val) -> {
+            checkNotNull(id);
+            checkNotNull(val);
+            this.data.put(id.getId(), val);
+        });
     }
 
     public Map<FormElementId, FormDataValue> getData() {
         Map<FormElementId, FormDataValue> result = new HashMap<>();
         data.forEach((id, val) -> result.put(FormElementId.get(id), val));
         return result;
+    }
+
+    public boolean isEmpty() {
+        if(data.isEmpty()) {
+            return true;
+        }
+        for(FormDataValue value : data.values()) {
+            if(!value.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @JsonIgnore

@@ -34,6 +34,19 @@ public class FormDataObject extends FormDataValue {
     }
 
     @Override
+    public boolean isEmpty() {
+        if(map.isEmpty()) {
+            return true;
+        }
+        for(FormDataValue value : map.values()) {
+            if(!value.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public Optional<IRI> asIRI() {
         return Optional.empty();
     }

@@ -28,8 +28,6 @@ public class CollectionElementData {
 
     public static final String ELEMENT_ID = "elementId";
 
-    public static final String FORM_ID = "formId";
-
     @Id
     @Property(COLLECTION_ID)
     private CollectionId collectionId;

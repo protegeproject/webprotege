@@ -41,9 +41,14 @@ public class FormDataConverter extends TypeSafeConverter<DBObject, FormData> imp
 
     @Override
     public DBObject encodeObject(FormData value, MappedField optionalExtraInfo) {
+        if(value == null) {
+            return null;
+        }
         DBObject object = new BasicDBObject();
         value.getData().forEach((formElementId, formDataValue) -> {
-            object.put(formElementId.getId(), valueConverter.encodeObject(formDataValue, optionalExtraInfo));
+            if (formDataValue != null) {
+                object.put(formElementId.getId(), valueConverter.encodeObject(formDataValue, optionalExtraInfo));
+            }
         });
         return object;
     }
