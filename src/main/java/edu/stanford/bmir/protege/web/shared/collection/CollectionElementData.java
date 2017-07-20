@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.shared.collection;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
-import edu.stanford.bmir.protege.web.shared.form.FormId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,35 +18,45 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 18 Jul 2017
  */
-@Entity(noClassnameStored = true, value = "CollectionEntries")
+@Entity(noClassnameStored = true, value = "CollectionData")
+@Indexes(
+        {
+                @Index(fields = {
+                        @Field(CollectionElementData.COLLECTION_ID),
+                        @Field(CollectionElementData.ELEMENT_ID)
+                }, options = @IndexOptions(unique = true))
+        }
+)
 public class CollectionElementData {
 
     public static final String COLLECTION_ID = "collectionId";
 
     public static final String ELEMENT_ID = "elementId";
 
-    @Id
+    public static final String FORM_DATA = "formData";
+
     @Property(COLLECTION_ID)
     private CollectionId collectionId;
 
     @Property(ELEMENT_ID)
-    private CollectionElementId element;
+    private CollectionElementId elementId;
 
     @Nullable
+    @Property(FORM_DATA)
     private FormData formData;
 
     public CollectionElementData(@Nonnull CollectionId collectionId,
-                                 @Nonnull CollectionElementId element,
+                                 @Nonnull CollectionElementId elementId,
                                  @Nonnull FormData formData) {
         this.collectionId = checkNotNull(collectionId);
-        this.element = checkNotNull(element);
+        this.elementId = checkNotNull(elementId);
         this.formData = checkNotNull(formData);
     }
 
     public CollectionElementData(@Nonnull CollectionId collectionId,
-                                 @Nonnull CollectionElementId element) {
+                                 @Nonnull CollectionElementId elementId) {
         this.collectionId = checkNotNull(collectionId);
-        this.element = checkNotNull(element);
+        this.elementId = checkNotNull(elementId);
         this.formData = null;
     }
 
@@ -63,8 +70,8 @@ public class CollectionElementData {
     }
 
     @Nonnull
-    public CollectionElementId getElement() {
-        return element;
+    public CollectionElementId getElementId() {
+        return elementId;
     }
 
     @Nonnull
@@ -74,7 +81,7 @@ public class CollectionElementData {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(collectionId, element, formData);
+        return Objects.hashCode(collectionId, elementId, formData);
     }
 
     @Override
@@ -87,7 +94,7 @@ public class CollectionElementData {
         }
         CollectionElementData other = (CollectionElementData) obj;
         return this.collectionId.equals(other.collectionId)
-                && this.element.equals(other.element)
+                && this.elementId.equals(other.elementId)
                 && Objects.equal(this.formData, other.formData);
     }
 
@@ -96,7 +103,7 @@ public class CollectionElementData {
     public String toString() {
         return toStringHelper("CollectionElementData")
                 .addValue(collectionId)
-                .addValue(element)
+                .addValue(elementId)
                 .addValue(formData)
                 .toString();
     }
