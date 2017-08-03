@@ -1,0 +1,36 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
+             xmlns:client="urn:import:com.google.gwt.user.cellview.client">
+    <ui:style>
+        .listViewContainer {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .elementList {
+            flex-grow: 1;
+            flex-shrink: 0;
+        }
+        .paginator {
+            flex-grow: 0;
+            flex-shrink: 0;
+            background-color: #f0f0f0;
+        }
+
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.listViewContainer}">
+        <g:ScrollPanel addStyleNames="{style.elementList}">
+            <client:CellList ui:field="elementList"/>
+        </g:ScrollPanel>
+
+        <g:HTMLPanel addStyleNames="{style.paginator}">
+            <pagination:PaginatorView ui:field="paginatorView"/>
+        </g:HTMLPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

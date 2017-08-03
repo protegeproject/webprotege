@@ -23,7 +23,8 @@ import java.util.List;
                 LoginPlaceTokenizer.class,
                 SignUpPlaceTokenizer.class,
                 SharingSettingsPlaceTokenizer.class,
-                AdminPlaceTokenizer.class
+                AdminPlaceTokenizer.class,
+                CollectionViewPlaceTokenizer.class
         })
 public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
 
@@ -37,6 +38,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new SharingSettingsPlaceTokenizer());
         tokenizers.add(new ProjectSettingsPlaceTokenizer());
         tokenizers.add(new AdminPlaceTokenizer());
+        tokenizers.add(new CollectionViewPlaceTokenizer());
     }
 
     @Override

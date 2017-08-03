@@ -3,9 +3,12 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .container {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="web-protege-laf">
+    <g:HTMLPanel addStyleNames="web-protege-laf {style.container}">
         <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.formMain} {style.container}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

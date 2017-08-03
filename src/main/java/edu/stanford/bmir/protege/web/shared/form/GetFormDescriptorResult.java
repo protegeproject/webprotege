@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
+import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -13,7 +15,11 @@ public class GetFormDescriptorResult implements Result {
 
     private ProjectId projectId;
 
-    private OWLEntity entity;
+    private CollectionId collectionId;
+
+    private CollectionElementId elementId;
+
+    private FormId formId;
 
     private FormDescriptor formDescriptor;
 
@@ -23,11 +29,15 @@ public class GetFormDescriptorResult implements Result {
     }
 
     public GetFormDescriptorResult(ProjectId projectId,
-                                   OWLEntity entity,
+                                   CollectionId collectionId,
+                                   CollectionElementId elementId,
+                                   FormId formId,
                                    FormDescriptor formDescriptor,
                                    FormData formData) {
         this.projectId = projectId;
-        this.entity = entity;
+        this.collectionId = collectionId;
+        this.elementId = elementId;
+        this.formId = formId;
         this.formDescriptor = formDescriptor;
         this.formData = formData;
     }
@@ -40,8 +50,16 @@ public class GetFormDescriptorResult implements Result {
         return projectId;
     }
 
-    public OWLEntity getEntity() {
-        return entity;
+    public CollectionId getCollectionId() {
+        return collectionId;
+    }
+
+    public CollectionElementId getElementId() {
+        return elementId;
+    }
+
+    public FormId getFormId() {
+        return formId;
     }
 
     public FormDescriptor getFormDescriptor() {

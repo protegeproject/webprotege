@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
+//@Portlet(id = "portlets.form", title = "Form", tooltip = "Displays a form")
 public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
 
 
@@ -72,16 +72,16 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     private void setSubject(@Nonnull final OWLEntity entity) {
         checkNotNull(entity);
         FormData formData = formPresenter.getFormData();
-        currentSubject.ifPresent(subject -> {
-            dispatchServiceManager.execute(new SetFormDataAction(projectId,
-                                                                 new FormId("MyForm"),
-                                                                 subject,
-                                                                 formData),
-                                           result -> {});
-        });
+//        currentSubject.ifPresent(subject -> {
+//            dispatchServiceManager.execute(new SetFormDataAction(projectId,
+//                                                                 new FormId("MyForm"),
+//                                                                 subject,
+//                                                                 formData),
+//                                           result -> {});
+//        });
         currentSubject = Optional.of(entity);
-        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, new FormId("MyForm"), entity),
-                                       result -> formPresenter.displayForm(result.getFormDescriptor(), result.getFormData()));
+//        dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, new FormId("MyForm"), entity),
+//                                       result -> formPresenter.displayForm(result.getFormDescriptor(), result.getFormData()));
     }
 
 }

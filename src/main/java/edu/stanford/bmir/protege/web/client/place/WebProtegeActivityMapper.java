@@ -7,6 +7,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.admin.AdminPresenter;
+import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
@@ -52,6 +53,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
 
     private Optional<ProjectPresenter> lastProjectPresenter = Optional.empty();
+
+    private Optional<CollectionPresenter> lastCollectionPresenter = Optional.empty();
 
     private Optional<UserId> lastUser = Optional.empty();
 
@@ -134,6 +137,13 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new SharingSettingsActivity(presenter, sharingSettingsPlace);
         }
 
+        if(place instanceof CollectionViewPlace) {
+            CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
+            CollectionPresenter collectionPresenter = getCollectionPresenter(collectionViewPlace);
+//            lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
+            return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
+        }
+
         return null;
     }
 
@@ -155,5 +165,20 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                 new ClientProjectModule(projectViewPlace.getProjectId()));
         return projectComponent.getProjectPresenter();
     }
+
+    private CollectionPresenter getCollectionPresenter(CollectionViewPlace place) {
+        if(lastCollectionPresenter.isPresent()) {
+            GWT.log("[WebProtegeActivityMapper] Reusing collection presenter");
+            return lastCollectionPresenter.get();
+        }
+        else {
+            GWT.log("[WebProtegeActivityMapper] Instantiating collection presenter");
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(new ClientProjectModule(place.getProjectId()));
+            CollectionPresenter collectionPresenter = projectComponent.getCollectionPresenter();
+            lastCollectionPresenter = Optional.of(collectionPresenter);
+            return collectionPresenter;
+        }
+    }
+
 
 }

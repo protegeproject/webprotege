@@ -42,8 +42,6 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private final CollectionElementDataRepository repository;
 
-    private final CollectionId dummyId = CollectionId.get("12345678-1234-1234-1234-123456789abc");
-
     @Inject
     public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
                                          ProjectId projectId,
@@ -64,17 +62,16 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
     }
 
     public GetFormDescriptorResult execute(GetFormDescriptorAction action, ExecutionContext executionContext) {
-        return getDummy(action.getFormId(),
-                        action.getSubject());
+        return getDummy(action.getCollectionId(),
+                        action.getFormId(),
+                        action.getElementId());
     }
 
 
-    private GetFormDescriptorResult getDummy(FormId formId, OWLEntity entity) {
+    private GetFormDescriptorResult getDummy(CollectionId collectionId,
+                                             FormId formId,
+                                             CollectionElementId elementId) {
         try {
-            if (!entity.isOWLClass()) {
-                return new GetFormDescriptorResult(projectId, entity, FormDescriptor.empty(), FormData.empty());
-            }
-
             URL url = GetFormDescriptorActionHander.class.getResource("/amino-acid-form.json");
             System.out.println(url);
             InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/amino-acid-form.json");
@@ -88,11 +85,12 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
             is.close();
 
-            CollectionElementId id = CollectionElementId.get(entity.toStringID());
-            CollectionElementData formData = repository.find(dummyId, id);
+            CollectionElementData formData = repository.find(collectionId, elementId);
             return new GetFormDescriptorResult(
                     projectId,
-                    entity,
+                    collectionId,
+                    elementId,
+                    formId,
                     d,
                     formData.getFormData().orElse(FormData.empty())
             );

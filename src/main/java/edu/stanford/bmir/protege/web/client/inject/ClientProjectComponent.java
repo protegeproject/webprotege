@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
 import dagger.Subcomponent;
+import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
@@ -27,4 +28,6 @@ public interface ClientProjectComponent {
     SharingSettingsPresenter getSharingSettingsPresenter();
 
     ProjectSettingsPresenter getProjectSettingsPresenter();
+
+    CollectionPresenter getCollectionPresenter();
 }
