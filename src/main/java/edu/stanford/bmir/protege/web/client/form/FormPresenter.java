@@ -56,8 +56,7 @@ public class FormPresenter {
      * @param container The container.
      */
     public void start(@Nonnull AcceptsOneWidget container) {
-        ScrollPanel sp = new ScrollPanel(formView.asWidget());
-        container.setWidget(sp);
+        container.setWidget(formView.asWidget());
     }
 
 

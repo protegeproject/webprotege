@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -18,19 +20,23 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
 
     private ProjectId projectId;
 
-    private FormId formId;
+    private CollectionId collectionId;
 
-    private OWLEntity entity;
+    private CollectionElementId elementId;
+
+    private FormId formId;
 
     private FormData formData;
 
     public SetFormDataAction(ProjectId projectId,
+                             CollectionId collectionId,
+                             CollectionElementId elementId,
                              FormId formId,
-                             OWLEntity entity,
                              FormData formData) {
         this.projectId = projectId;
+        this.collectionId = collectionId;
+        this.elementId = elementId;
         this.formId = formId;
-        this.entity = entity;
         this.formData = formData;
     }
 
@@ -48,20 +54,26 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
         return formId;
     }
 
-    public OWLEntity getEntity() {
-        return entity;
-    }
 
     public FormData getFormData() {
         return formData;
     }
 
+    public CollectionId getCollectionId() {
+        return collectionId;
+    }
+
+    public CollectionElementId getElementId() {
+        return elementId;
+    }
 
     @Override
     public String toString() {
         return toStringHelper("SetFormDataAction")
                 .addValue(projectId)
-                .addValue(entity)
+                .addValue(collectionId)
+                .addValue(elementId)
+                .addValue(formId)
                 .addValue(formData)
                 .toString();
     }

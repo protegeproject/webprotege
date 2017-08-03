@@ -42,13 +42,13 @@ public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<Se
         CollectionElementData data = null;
         if (formData.isEmpty()) {
             data = new CollectionElementData(
-                    CollectionId.get("12345678-1234-1234-1234-123456789abc"),
-                    CollectionElementId.get(action.getEntity().toStringID()));
+                    action.getCollectionId(),
+                    action.getElementId());
         }
         else {
             data = new CollectionElementData(
-                    CollectionId.get("12345678-1234-1234-1234-123456789abc"),
-                    CollectionElementId.get(action.getEntity().toStringID()),
+                    action.getCollectionId(),
+                    action.getElementId(),
                     formData);
 
         }
