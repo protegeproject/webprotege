@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.collection;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPages;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -14,18 +13,18 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 21 Jul 2017
  */
-public interface CollectionElementsListView extends IsWidget, HasPages {
+public interface CollectionItemListView extends IsWidget, HasPages {
 
     void setSelectionChangedHandler(@Nonnull SelectionChangedHandler handler);
 
-    void setSelection(@Nonnull CollectionElementId selection);
+    void setSelection(@Nonnull CollectionItem selection);
 
     void clearSelection();
 
     @Nonnull
-    Optional<CollectionElementId> getSelection();
+    Optional<CollectionItem> getSelection();
 
-    void setElements(@Nonnull List<CollectionElementId> elements);
+    void setElements(@Nonnull List<CollectionItem> elements);
 
     interface SelectionChangedHandler {
         void handleSelectionChanged();

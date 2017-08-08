@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.collection;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.function.Consumer;
 
 /**
@@ -10,7 +11,11 @@ import java.util.function.Consumer;
  * Stanford Center for Biomedical Informatics Research
  * 4 Aug 2017
  */
-public class AddCollectionElementPromptImpl implements AddCollectionElementPrompt {
+public class AddCollectionItemPromptImpl implements AddCollectionItemPrompt {
+
+    @Inject
+    public AddCollectionItemPromptImpl() {
+    }
 
     @Override
     public void showPrompt(@Nonnull Consumer<String> callback) {

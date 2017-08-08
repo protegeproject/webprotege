@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Aug 2017
  */
-public class GetCollectionElementsAction implements ProjectAction<GetCollectionElementsResult> {
+public class GetCollectionItemsAction implements ProjectAction<GetCollectionItemsResult> {
 
     private ProjectId projectId;
 
@@ -20,16 +20,16 @@ public class GetCollectionElementsAction implements ProjectAction<GetCollectionE
 
     private PageRequest pageRequest;
 
-    public GetCollectionElementsAction(ProjectId projectId,
-                                       CollectionId collectionId,
-                                       PageRequest pageRequest) {
+    public GetCollectionItemsAction(ProjectId projectId,
+                                    CollectionId collectionId,
+                                    PageRequest pageRequest) {
         this.projectId = projectId;
         this.collectionId = collectionId;
         this.pageRequest = pageRequest;
     }
 
     @GwtSerializationConstructor
-    private GetCollectionElementsAction() {
+    private GetCollectionItemsAction() {
     }
 
     @Nonnull

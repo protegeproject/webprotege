@@ -5,7 +5,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
-import edu.stanford.bmir.protege.web.server.collection.GetCollectionElementsActionHandler;
+import edu.stanford.bmir.protege.web.server.collection.GetCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
@@ -40,7 +40,6 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
-import edu.stanford.bmir.protege.web.shared.obo.GetOboTermCrossProductAction;
 
 import static dagger.Provides.Type.SET;
 
@@ -469,7 +468,7 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides(type = SET)
-    public ProjectActionHandler providesGetCollectionElementsActionHandler(GetCollectionElementsActionHandler handler) {
+    public ProjectActionHandler providesGetCollectionElementsActionHandler(GetCollectionItemsActionHandler handler) {
         return handler;
     }
 }

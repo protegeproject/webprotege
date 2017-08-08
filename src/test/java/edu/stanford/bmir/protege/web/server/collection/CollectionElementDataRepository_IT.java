@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.collection;
 
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
@@ -29,11 +29,11 @@ import static org.hamcrest.Matchers.is;
  */
 public class CollectionElementDataRepository_IT {
 
-    private CollectionElementDataRepository repository;
+    private CollectionItemDataRepository repository;
 
     private CollectionId collectionId = CollectionId.get("12345678-1234-1234-1234-123456789abc");
 
-    private CollectionElementId elementId = CollectionElementId.get("The Element Name");
+    private CollectionItem elementId = CollectionItem.get("The Element Name");
 
     private Datastore datastore;
 
@@ -42,14 +42,14 @@ public class CollectionElementDataRepository_IT {
         Morphia morphia = MongoTestUtils.createMorphia();
         MongoClient client = MongoTestUtils.createMongoClient();
         datastore = morphia.createDatastore(client, MongoTestUtils.getTestDbName());
-        repository = new CollectionElementDataRepositoryImpl(datastore);
+        repository = new CollectionItemDataRepositoryImpl(datastore);
         repository.ensureIndexes();
     }
 
     @Test
     public void shouldSaveEmptyCollectionElementData() {
-        repository.save(new CollectionElementData(collectionId, elementId));
-        assertThat(datastore.getCount(CollectionElementData.class), is(1L));
+        repository.save(new CollectionItemData(collectionId, elementId));
+        assertThat(datastore.getCount(CollectionItemData.class), is(1L));
     }
 
     @Test
@@ -57,12 +57,12 @@ public class CollectionElementDataRepository_IT {
         Map<FormElementId, FormDataValue> map = new HashMap<>();
         map.put(FormElementId.get("theElement"), FormDataPrimitive.get("theValue"));
         FormData formData = new FormData(map);
-        repository.save(new CollectionElementData(collectionId, elementId, formData));
+        repository.save(new CollectionItemData(collectionId, elementId, formData));
         Map<FormElementId, FormDataValue> map2 = new HashMap<>();
         map.put(FormElementId.get("theElement"), FormDataPrimitive.get("theNewValue"));
         FormData theNewformData = new FormData(map2);
-        repository.save(new CollectionElementData(collectionId, elementId, theNewformData));
-        assertThat(datastore.getCount(CollectionElementData.class), is(1L));
+        repository.save(new CollectionItemData(collectionId, elementId, theNewformData));
+        assertThat(datastore.getCount(CollectionItemData.class), is(1L));
     }
 
     @Test
@@ -70,13 +70,13 @@ public class CollectionElementDataRepository_IT {
         Map<FormElementId, FormDataValue> map = new HashMap<>();
         map.put(FormElementId.get("theElement"), FormDataPrimitive.get("theValue"));
         FormData formData = new FormData(map);
-        repository.save(new CollectionElementData(collectionId, elementId, formData));
-        assertThat(datastore.getCount(CollectionElementData.class), is(1L));
+        repository.save(new CollectionItemData(collectionId, elementId, formData));
+        assertThat(datastore.getCount(CollectionItemData.class), is(1L));
     }
 
     @Test
     public void shouldFindByCollectionId() {
-        CollectionElementData data = new CollectionElementData(collectionId, elementId);
+        CollectionItemData data = new CollectionItemData(collectionId, elementId);
         repository.save(data);
         assertThat(repository.find(collectionId), hasItem(data));
     }
@@ -86,7 +86,7 @@ public class CollectionElementDataRepository_IT {
         Map<FormElementId, FormDataValue> map = new HashMap<>();
         map.put(FormElementId.get("theElement"), FormDataPrimitive.get("theValue"));
         FormData formData = new FormData(map);
-        CollectionElementData data = new CollectionElementData(collectionId, elementId, formData);
+        CollectionItemData data = new CollectionItemData(collectionId, elementId, formData);
         repository.save(data);
         assertThat(repository.find(collectionId, elementId), is(data));
     }

@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -22,7 +21,7 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
 
     private CollectionId collectionId;
 
-    private CollectionElementId elementId;
+    private CollectionItem elementId;
 
     private FormId formId;
 
@@ -30,7 +29,7 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
 
     public SetFormDataAction(ProjectId projectId,
                              CollectionId collectionId,
-                             CollectionElementId elementId,
+                             CollectionItem elementId,
                              FormId formId,
                              FormData formData) {
         this.projectId = projectId;
@@ -63,7 +62,7 @@ public class SetFormDataAction implements ProjectAction<SetFormDataResult> {
         return collectionId;
     }
 
-    public CollectionElementId getElementId() {
+    public CollectionItem getElementId() {
         return elementId;
     }
 

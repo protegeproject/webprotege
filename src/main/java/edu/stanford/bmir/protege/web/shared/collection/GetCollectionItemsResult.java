@@ -5,30 +5,28 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
-import java.util.List;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 4 Aug 2017
  */
-public class GetCollectionElementsResult implements Result {
+public class GetCollectionItemsResult implements Result {
 
-    private Page<CollectionElementId> elementIdList;
+    private Page<CollectionItem> elementIdList;
 
     private PageRequest pageRequest;
 
-    public GetCollectionElementsResult(Page<CollectionElementId> elementIdList,
-                                       PageRequest pageRequest) {
+    public GetCollectionItemsResult(Page<CollectionItem> elementIdList,
+                                    PageRequest pageRequest) {
         this.elementIdList = elementIdList;
         this.pageRequest = pageRequest;
     }
 
     @GwtSerializationConstructor
-    private GetCollectionElementsResult() {
+    private GetCollectionItemsResult() {
     }
 
-    public Page<CollectionElementId> getElementIdPage() {
+    public Page<CollectionItem> getElementIdPage() {
         return elementIdList;
     }
 

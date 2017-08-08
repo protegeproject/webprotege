@@ -1,19 +1,15 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.place.CollectionViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.List;
 import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * Matthew Horridge
@@ -51,7 +47,7 @@ public class CollectionViewPlaceTokenizer implements WebProtegePlaceTokenizer<Co
         FormId formId = new FormId(result.getGroup(3));
         String selectionString = result.getGroup(5);
         GWT.log("[CollectionViewPlaceTokenizer] Selection string: " + selectionString);
-        Optional<CollectionElementId> selection = Optional.ofNullable(selectionString).map(CollectionElementId::get);
+        Optional<CollectionItem> selection = Optional.ofNullable(selectionString).map(CollectionItem::get);
         return new CollectionViewPlace(
                 projectId,
                 collectionId,
@@ -71,7 +67,7 @@ public class CollectionViewPlaceTokenizer implements WebProtegePlaceTokenizer<Co
         sb.append(place.getFormId().getId());
         place.getSelection().ifPresent(sel -> {
             sb.append(SELECTION);
-            sb.append(sel.getId());
+            sb.append(sel.getName());
         });
         return sb.toString();
     }

@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * Stanford Center for Biomedical Informatics Research
  * 4 Aug 2017
  */
-public interface AddCollectionElementPrompt {
+public interface AddCollectionItemPrompt {
 
     void showPrompt(@Nonnull Consumer<String> callback);
 }

@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepository;
-import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataResult;
@@ -21,11 +20,11 @@ import javax.inject.Inject;
 public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<SetFormDataAction, SetFormDataResult> {
 
     @Nonnull
-    private final CollectionElementDataRepository repository;
+    private final CollectionItemDataRepository repository;
 
     @Inject
     public SetFormDataActionHandler(@Nonnull AccessManager accessManager,
-                                    @Nonnull CollectionElementDataRepository repository) {
+                                    @Nonnull CollectionItemDataRepository repository) {
         super(accessManager);
         this.repository = repository;
     }
@@ -38,14 +37,14 @@ public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<Se
     @Override
     public SetFormDataResult execute(SetFormDataAction action, ExecutionContext executionContext) {
         FormData formData = action.getFormData();
-        CollectionElementData data = null;
+        CollectionItemData data = null;
         if (formData.isEmpty()) {
-            data = new CollectionElementData(
+            data = new CollectionItemData(
                     action.getCollectionId(),
                     action.getElementId());
         }
         else {
-            data = new CollectionElementData(
+            data = new CollectionItemData(
                     action.getCollectionId(),
                     action.getElementId(),
                     formData);

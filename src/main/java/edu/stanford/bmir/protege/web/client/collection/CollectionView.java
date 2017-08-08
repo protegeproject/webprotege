@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.collection;
 
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 
 import javax.annotation.Nonnull;
 
@@ -25,22 +22,22 @@ public interface CollectionView extends IsWidget, RequiresResize {
     @Nonnull
     AcceptsOneWidget getListContainer();
 
-    void setElementId(@Nonnull CollectionElementId id);
+    void setItem(@Nonnull CollectionItem id);
 
-    void setAddHandler(AddElementHandler handler);
+    void setAddItemHandler(AddItemHandler handler);
 
-    void setClearHandler(ClearElementDataHandler handler);
+    void setClearItemDataHandler(ClearItemDataHandler handler);
 
-    interface AddElementHandler {
-        void handleAddElement();
+    interface AddItemHandler {
+        void handleAddItem();
     }
 
-    interface DeleteElementHandler {
-        void handleDeleteElement(CollectionElementId elementId);
+    interface DeleteItemHandler {
+        void handleDeleteItem(CollectionItem elementId);
     }
 
-    interface ClearElementDataHandler {
-        void handleClearElementData();
+    interface ClearItemDataHandler {
+        void handleClearItemData();
     }
 
 }
