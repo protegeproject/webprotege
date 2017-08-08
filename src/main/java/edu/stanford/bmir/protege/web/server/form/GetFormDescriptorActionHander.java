@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
+import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementData;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
@@ -36,14 +37,14 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private final OWLDataFactory dataFactory;
 
-    private final CollectionElementDataRepositoryImpl repository;
+    private final CollectionItemDataRepository repository;
 
     @Inject
     public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
                                          ProjectId projectId,
                                          ClassHierarchyProvider classHierarchyProvider,
                                          OWLDataFactory dataFactory,
-                                         CollectionElementDataRepositoryImpl repository) {
+                                         CollectionItemDataRepository repository) {
         super(accessManager);
         this.projectId = projectId;
         this.classHierarchyProvider = classHierarchyProvider;
@@ -66,7 +67,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private GetFormDescriptorResult getDummy(CollectionId collectionId,
                                              FormId formId,
-                                             CollectionElementId elementId) {
+                                             CollectionItem elementId) {
         try {
             URL url = GetFormDescriptorActionHander.class.getResource("/amino-acid-form.json");
             System.out.println(url);
@@ -81,7 +82,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
             is.close();
 
-            CollectionElementData formData = repository.find(collectionId, elementId);
+            CollectionItemData formData = repository.find(collectionId, elementId);
             return new GetFormDescriptorResult(
                     projectId,
                     collectionId,

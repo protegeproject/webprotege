@@ -3,17 +3,15 @@ package edu.stanford.bmir.protege.web.shared.place;
 
 import java.util.Optional;
 
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,9 +34,9 @@ public class CollectionViewPlace_TestCase {
     private FormId formId;
 
     @Mock
-    private CollectionElementId theSel;
+    private CollectionItem theSel;
 
-    private Optional<CollectionElementId> selection;
+    private Optional<CollectionItem> selection;
 
     @Before
     public void setUp() {
@@ -123,7 +121,7 @@ public class CollectionViewPlace_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_selection() {
-        assertThat(collectionViewPlace, is(not(new CollectionViewPlace(projectId, collectionId, formId, Optional.of(mock(CollectionElementId.class))))));
+        assertThat(collectionViewPlace, is(not(new CollectionViewPlace(projectId, collectionId, formId, Optional.of(mock(CollectionItem.class))))));
     }
 
     @Test

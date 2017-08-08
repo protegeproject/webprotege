@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Matthew Horridge
@@ -17,7 +16,7 @@ public class GetFormDescriptorResult implements Result {
 
     private CollectionId collectionId;
 
-    private CollectionElementId elementId;
+    private CollectionItem elementId;
 
     private FormId formId;
 
@@ -30,7 +29,7 @@ public class GetFormDescriptorResult implements Result {
 
     public GetFormDescriptorResult(ProjectId projectId,
                                    CollectionId collectionId,
-                                   CollectionElementId elementId,
+                                   CollectionItem elementId,
                                    FormId formId,
                                    FormDescriptor formDescriptor,
                                    FormData formData) {
@@ -54,7 +53,7 @@ public class GetFormDescriptorResult implements Result {
         return collectionId;
     }
 
-    public CollectionElementId getElementId() {
+    public CollectionItem getElementId() {
         return elementId;
     }
 

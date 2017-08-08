@@ -1,27 +1,15 @@
 package edu.stanford.bmir.protege.web.client.collection;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.SelectionModel;
-import com.google.gwt.view.client.SingleSelectionModel;
 import edu.stanford.bmir.protege.web.client.list.ListBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
-import edu.stanford.bmir.protege.web.resources.WebProtegeCellListResources;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -35,40 +23,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21 Jul 2017
  */
-public class CollectionElementsListViewImpl extends Composite implements CollectionElementsListView {
+public class CollectionItemListViewImpl extends Composite implements CollectionItemListView {
 
     private final PaginatorPresenter paginatorPresenter;
 
     private SelectionChangedHandler selectionChangedHandler = () -> {};
 
-    interface CollectionElementsListViewImplUiBinder extends UiBinder<HTMLPanel, CollectionElementsListViewImpl> {
+    interface CollectionElementsListViewImplUiBinder extends UiBinder<HTMLPanel, CollectionItemListViewImpl> {
 
     }
 
     private static CollectionElementsListViewImplUiBinder ourUiBinder = GWT.create(
             CollectionElementsListViewImplUiBinder.class);
 
-//    private SingleSelectionModel<CollectionElementId> selectionModel = new SingleSelectionModel<>(CollectionElementId::getId);
+//    private SingleSelectionModel<CollectionItem> selectionModel = new SingleSelectionModel<>(CollectionItem::getId);
 
-//    private ListDataProvider<CollectionElementId> listDataProvider = new ListDataProvider<>();
+//    private ListDataProvider<CollectionItem> listDataProvider = new ListDataProvider<>();
 
     @UiField(provided = true)
-    ListBox<CollectionElementId, CollectionElementId> elementList;
+    ListBox<CollectionItem, CollectionItem> elementList;
 
     @UiField(provided = true)
     PaginatorView paginatorView;
 
     @Inject
-    public CollectionElementsListViewImpl(PaginatorPresenter paginatorPresenter) {
+    public CollectionItemListViewImpl(PaginatorPresenter paginatorPresenter) {
         this.paginatorPresenter = paginatorPresenter;
         paginatorView = this.paginatorPresenter.getView();
         elementList = new ListBox<>();
         initWidget(ourUiBinder.createAndBindUi(this));
         elementList.addSelectionHandler(event -> {
-            GWT.log("[CollectionElementsListViewImpl] Selection changed");
+            GWT.log("[CollectionItemListViewImpl] Selection changed");
             selectionChangedHandler.handleSelectionChanged();
         });
-        elementList.setRenderer(new CollectionElementRenderer());
+        elementList.setRenderer(new CollectionItemRenderer());
     }
 
     @Override
@@ -97,8 +85,8 @@ public class CollectionElementsListViewImpl extends Composite implements Collect
     }
 
     @Override
-    public void setSelection(@Nonnull CollectionElementId selection) {
-        GWT.log("[CollectionElementsListViewImpl] setSelection() to " + selection);
+    public void setSelection(@Nonnull CollectionItem selection) {
+        GWT.log("[CollectionItemListViewImpl] setSelection() to " + selection);
         elementList.setSelection(selection);
     }
 
@@ -109,13 +97,13 @@ public class CollectionElementsListViewImpl extends Composite implements Collect
 
     @Nonnull
     @Override
-    public Optional<CollectionElementId> getSelection() {
+    public Optional<CollectionItem> getSelection() {
         return elementList.getSelection();
     }
 
     @Override
-    public void setElements(@Nonnull List<CollectionElementId> elements) {
-        GWT.log("[CollectionElementsListViewImpl] setElements");
+    public void setElements(@Nonnull List<CollectionItem> elements) {
+        GWT.log("[CollectionItemListViewImpl] setElements");
         elementList.setListData(elements);
     }
 }

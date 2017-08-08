@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.common.base.Objects;
 import com.google.gwt.place.shared.Place;
-import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,12 +32,12 @@ public class CollectionViewPlace extends Place implements HasProjectId {
     private final FormId formId;
 
     @Nonnull
-    private final Optional<CollectionElementId> selection;
+    private final Optional<CollectionItem> selection;
 
     public CollectionViewPlace(@Nonnull ProjectId projectId,
                                @Nonnull CollectionId collectionId,
                                @Nonnull FormId formId,
-                               @Nonnull Optional<CollectionElementId> selection) {
+                               @Nonnull Optional<CollectionItem> selection) {
         this.projectId = checkNotNull(projectId);
         this.collectionId = checkNotNull(collectionId);
         this.formId = checkNotNull(formId);
@@ -62,7 +61,7 @@ public class CollectionViewPlace extends Place implements HasProjectId {
     }
 
     @Nonnull
-    public Optional<CollectionElementId> getSelection() {
+    public Optional<CollectionItem> getSelection() {
         return selection;
     }
 

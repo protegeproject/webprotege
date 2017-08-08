@@ -7,10 +7,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
 import edu.stanford.bmir.protege.web.client.app.NothingSelectedViewImpl;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.protege.widgetmap.client.*;
 import edu.stanford.protege.widgetmap.client.view.ViewHolder;
 import edu.stanford.protege.widgetmap.shared.node.*;
@@ -34,10 +33,10 @@ public class CollectionViewImpl extends Composite implements CollectionView {
     private final ViewHolder formHolder;
 
     @Nonnull
-    private AddElementHandler addElementHandler = () -> {};
+    private AddItemHandler addItemHandler = () -> {};
 
     @Nonnull
-    private ClearElementDataHandler clearElementDataHandler = () -> {};
+    private ClearItemDataHandler clearItemDataHandler = () -> {};
 
     interface CollectionViewImplUiBinder extends UiBinder<HTMLPanel, CollectionViewImpl> {
 
@@ -64,7 +63,7 @@ public class CollectionViewImpl extends Composite implements CollectionView {
         PortletUiImpl ui = new PortletUiImpl(new ForbiddenViewImpl(),
                                              new NothingSelectedViewImpl());
         ui.setWidget(formContainer);
-        ui.addPortletAction(new PortletAction("Clear", (action, event) -> clearElementDataHandler.handleClearElementData()));
+        ui.addPortletAction(new PortletAction("Clear", (action, event) -> clearItemDataHandler.handleClearItemData()));
         formHolder = new ViewHolder(ui, NodeProperties.emptyNodeProperties());
         formContainer.setWidth("100%");
         formContainer.setHeight("100%");
@@ -77,7 +76,7 @@ public class CollectionViewImpl extends Composite implements CollectionView {
                 PortletUiImpl widgets = new PortletUiImpl(new ForbiddenViewImpl(),
                                                           new NothingSelectedViewImpl());
                 widgets.setToolbarVisible(true);
-                widgets.addPortletAction(new PortletAction("Add", (action, event) -> addElementHandler.handleAddElement()));
+                widgets.addPortletAction(new PortletAction("Add", (action, event) -> addItemHandler.handleAddItem()));
                 widgets.setTitle("Amino Acids");
                 widgets.setWidget(listContainer);
                 ViewHolder viewHolder = new ViewHolder(widgets, terminalNode.getNodeProperties());
@@ -96,13 +95,13 @@ public class CollectionViewImpl extends Composite implements CollectionView {
     }
 
     @Override
-    public void setAddHandler(AddElementHandler handler) {
-        this.addElementHandler = checkNotNull(handler);
+    public void setAddItemHandler(AddItemHandler handler) {
+        this.addItemHandler = checkNotNull(handler);
     }
 
     @Override
-    public void setClearHandler(ClearElementDataHandler handler) {
-        this.clearElementDataHandler = checkNotNull(handler);
+    public void setClearItemDataHandler(ClearItemDataHandler handler) {
+        this.clearItemDataHandler = checkNotNull(handler);
     }
 
     @Override
@@ -116,8 +115,8 @@ public class CollectionViewImpl extends Composite implements CollectionView {
     }
 
     @Override
-    public void setElementId(@Nonnull CollectionElementId id) {
-        this.formHolder.setViewLabel(id.getId());
+    public void setItem(@Nonnull CollectionItem id) {
+        this.formHolder.setViewLabel(id.getName());
     }
 
     @Nonnull

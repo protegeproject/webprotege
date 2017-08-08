@@ -16,10 +16,7 @@ import edu.stanford.bmir.protege.web.client.admin.AdminViewImpl;
 import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
-import edu.stanford.bmir.protege.web.client.collection.CollectionElementsListView;
-import edu.stanford.bmir.protege.web.client.collection.CollectionElementsListViewImpl;
-import edu.stanford.bmir.protege.web.client.collection.CollectionView;
-import edu.stanford.bmir.protege.web.client.collection.CollectionViewImpl;
+import edu.stanford.bmir.protege.web.client.collection.*;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
@@ -381,7 +378,12 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    CollectionElementsListView provideCollectionElementsListView(CollectionElementsListViewImpl impl) {
+    CollectionItemListView provideCollectionElementsListView(CollectionItemListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AddCollectionItemPrompt providesAddCollectionItemPrompt(AddCollectionItemPromptImpl impl) {
         return impl;
     }
 }

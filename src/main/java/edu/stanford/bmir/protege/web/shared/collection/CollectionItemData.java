@@ -18,50 +18,50 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 18 Jul 2017
  */
-@Entity(noClassnameStored = true, value = "CollectionData")
+@Entity(noClassnameStored = true, value = "CollectionItemData")
 @Indexes(
         {
                 @Index(fields = {
-                        @Field(CollectionElementData.COLLECTION_ID),
-                        @Field(CollectionElementData.ELEMENT_ID)
+                        @Field(CollectionItemData.COLLECTION_ID),
+                        @Field(CollectionItemData.ITEM)
                 }, options = @IndexOptions(unique = true))
         }
 )
-public class CollectionElementData {
+public class CollectionItemData {
 
     public static final String COLLECTION_ID = "collectionId";
 
-    public static final String ELEMENT_ID = "elementId";
+    public static final String ITEM = "item";
 
     public static final String FORM_DATA = "formData";
 
     @Property(COLLECTION_ID)
     private CollectionId collectionId;
 
-    @Property(ELEMENT_ID)
-    private CollectionElementId elementId;
+    @Property(ITEM)
+    private CollectionItem item;
 
     @Nullable
     @Property(FORM_DATA)
     private FormData formData;
 
-    public CollectionElementData(@Nonnull CollectionId collectionId,
-                                 @Nonnull CollectionElementId elementId,
-                                 @Nonnull FormData formData) {
+    public CollectionItemData(@Nonnull CollectionId collectionId,
+                              @Nonnull CollectionItem item,
+                              @Nonnull FormData formData) {
         this.collectionId = checkNotNull(collectionId);
-        this.elementId = checkNotNull(elementId);
+        this.item = checkNotNull(item);
         this.formData = checkNotNull(formData);
     }
 
-    public CollectionElementData(@Nonnull CollectionId collectionId,
-                                 @Nonnull CollectionElementId elementId) {
+    public CollectionItemData(@Nonnull CollectionId collectionId,
+                              @Nonnull CollectionItem item) {
         this.collectionId = checkNotNull(collectionId);
-        this.elementId = checkNotNull(elementId);
+        this.item = checkNotNull(item);
         this.formData = null;
     }
 
     @GwtSerializationConstructor
-    private CollectionElementData() {
+    private CollectionItemData() {
     }
 
     @Nonnull
@@ -70,8 +70,8 @@ public class CollectionElementData {
     }
 
     @Nonnull
-    public CollectionElementId getElementId() {
-        return elementId;
+    public CollectionItem getItem() {
+        return item;
     }
 
     @Nonnull
@@ -81,7 +81,7 @@ public class CollectionElementData {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(collectionId, elementId, formData);
+        return Objects.hashCode(collectionId, item, formData);
     }
 
     @Override
@@ -89,21 +89,21 @@ public class CollectionElementData {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CollectionElementData)) {
+        if (!(obj instanceof CollectionItemData)) {
             return false;
         }
-        CollectionElementData other = (CollectionElementData) obj;
+        CollectionItemData other = (CollectionItemData) obj;
         return this.collectionId.equals(other.collectionId)
-                && this.elementId.equals(other.elementId)
+                && this.item.equals(other.item)
                 && Objects.equal(this.formData, other.formData);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("CollectionElementData")
+        return toStringHelper("CollectionItemData")
                 .addValue(collectionId)
-                .addValue(elementId)
+                .addValue(item)
                 .addValue(formData)
                 .toString();
     }

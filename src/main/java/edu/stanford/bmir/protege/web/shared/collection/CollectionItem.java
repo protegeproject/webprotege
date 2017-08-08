@@ -13,31 +13,31 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 18 Jul 2017
  */
-public class CollectionElementId implements IsSerializable {
+public class CollectionItem implements IsSerializable {
 
-    private String id;
+    private String name;
 
-    private CollectionElementId(@Nonnull String id) {
-        this.id = checkNotNull(id);
+    private CollectionItem(@Nonnull String name) {
+        this.name = checkNotNull(name);
     }
 
     @GwtSerializationConstructor
-    private CollectionElementId() {
+    private CollectionItem() {
     }
 
     @Nonnull
-    public static CollectionElementId get(@Nonnull String id) {
-        return new CollectionElementId(id);
+    public static CollectionItem get(@Nonnull String itemName) {
+        return new CollectionItem(itemName);
     }
 
     @Nonnull
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return name.hashCode();
     }
 
     @Override
@@ -45,18 +45,18 @@ public class CollectionElementId implements IsSerializable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CollectionElementId)) {
+        if (!(obj instanceof CollectionItem)) {
             return false;
         }
-        CollectionElementId other = (CollectionElementId) obj;
-        return this.id.equals(other.id);
+        CollectionItem other = (CollectionItem) obj;
+        return this.name.equals(other.name);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("CollectionElementId")
-                .addValue(id)
+        return toStringHelper("CollectionItem")
+                .addValue(name)
                 .toString();
     }
 }

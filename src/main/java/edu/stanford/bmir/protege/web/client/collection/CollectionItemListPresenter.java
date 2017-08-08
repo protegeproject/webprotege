@@ -8,17 +8,14 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
-import edu.stanford.bmir.protege.web.shared.collection.GetCollectionElementsAction;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
+import edu.stanford.bmir.protege.web.shared.collection.GetCollectionItemsAction;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.place.CollectionViewPlace;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,10 +26,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Presents a list of collection elements
  */
-public class CollectionElementsListPresenter implements Presenter {
+public class CollectionItemListPresenter implements Presenter {
 
     @Nonnull
-    private final CollectionElementsListView view;
+    private final CollectionItemListView view;
 
     @Nonnull
     private final PlaceController placeController;
@@ -41,14 +38,14 @@ public class CollectionElementsListPresenter implements Presenter {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public CollectionElementsListPresenter(@Nonnull CollectionElementsListView view,
-                                           @Nonnull PlaceController placeController,
-                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
+    public CollectionItemListPresenter(@Nonnull CollectionItemListView view,
+                                       @Nonnull PlaceController placeController,
+                                       @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.view = checkNotNull(view);
         this.placeController = checkNotNull(placeController);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view.setSelectionChangedHandler(() -> {
-            GWT.log("[CollectionElementsListPresenter] List notified me that the selection changed to " + view.getSelection());
+            GWT.log("[CollectionItemListPresenter] List notified me that the selection changed to " + view.getSelection());
             Place place = placeController.getWhere();
             if(place instanceof CollectionViewPlace) {
                 CollectionViewPlace viewPlace = (CollectionViewPlace) place;
@@ -58,7 +55,7 @@ public class CollectionElementsListPresenter implements Presenter {
                         viewPlace.getFormId(),
                         view.getSelection()
                 );
-                GWT.log("[CollectionElementsListPresenter] Next place " + nextPlace);
+                GWT.log("[CollectionItemListPresenter] Next place " + nextPlace);
                 placeController.goTo(nextPlace);
             }
         });
@@ -77,12 +74,12 @@ public class CollectionElementsListPresenter implements Presenter {
             return;
         }
         CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
-        dispatchServiceManager.execute(new GetCollectionElementsAction(collectionViewPlace.getProjectId(),
-                                                                       collectionViewPlace.getCollectionId(),
-                                                                       PageRequest.requestFirstPage()),
+        dispatchServiceManager.execute(new GetCollectionItemsAction(collectionViewPlace.getProjectId(),
+                                                                    collectionViewPlace.getCollectionId(),
+                                                                    PageRequest.requestFirstPage()),
                                        busy -> {},
                                        result -> {
-                                           Page<CollectionElementId> page = result.getElementIdPage();
+                                           Page<CollectionItem> page = result.getElementIdPage();
                                            view.setPageCount(page.getPageCount());
                                            view.setPageNumber(page.getPageNumber());
                                            view.setElements(page.getPageElements());

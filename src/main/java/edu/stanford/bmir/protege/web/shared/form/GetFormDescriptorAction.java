@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.form;
 
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
-import edu.stanford.bmir.protege.web.shared.HasSubject;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +22,7 @@ public class GetFormDescriptorAction implements ProjectAction<GetFormDescriptorR
 
     private FormId formId;
 
-    private CollectionElementId elementId;
+    private CollectionItem elementId;
 
     private GetFormDescriptorAction() {
     }
@@ -34,7 +30,7 @@ public class GetFormDescriptorAction implements ProjectAction<GetFormDescriptorR
     public GetFormDescriptorAction(ProjectId projectId,
                                    CollectionId collectionId,
                                    FormId formId,
-                                   CollectionElementId elementId) {
+                                   CollectionItem elementId) {
         this.projectId = checkNotNull(projectId);
         this.collectionId = checkNotNull(collectionId);
         this.formId = checkNotNull(formId);
@@ -55,7 +51,7 @@ public class GetFormDescriptorAction implements ProjectAction<GetFormDescriptorR
         return collectionId;
     }
 
-    public CollectionElementId getElementId() {
+    public CollectionItem getElementId() {
         return elementId;
     }
 }
