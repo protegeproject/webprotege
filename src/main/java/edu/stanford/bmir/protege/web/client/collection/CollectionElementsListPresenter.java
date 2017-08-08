@@ -1,17 +1,24 @@
 package edu.stanford.bmir.protege.web.client.collection;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.GetCollectionElementsAction;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.place.CollectionViewPlace;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
-import java.util.Arrays;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 21 Jul 2017
+ *
+ * Presents a list of collection elements
  */
 public class CollectionElementsListPresenter implements Presenter {
 
@@ -28,21 +37,18 @@ public class CollectionElementsListPresenter implements Presenter {
     @Nonnull
     private final PlaceController placeController;
 
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
     @Inject
-    public CollectionElementsListPresenter(@Nonnull CollectionElementsListView view, @Nonnull PlaceController placeController) {
+    public CollectionElementsListPresenter(@Nonnull CollectionElementsListView view,
+                                           @Nonnull PlaceController placeController,
+                                           @Nonnull DispatchServiceManager dispatchServiceManager) {
         this.view = checkNotNull(view);
         this.placeController = checkNotNull(placeController);
-    }
-
-    @Override
-    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        container.setWidget(view);
-        view.setElements(Arrays.asList(
-                CollectionElementId.get("Alanine"),
-                CollectionElementId.get("Glutamine"),
-                CollectionElementId.get("Histadine")
-        ));
-        view.setSelectionChangedHandler(() -> {
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.view.setSelectionChangedHandler(() -> {
+            GWT.log("[CollectionElementsListPresenter] List notified me that the selection changed to " + view.getSelection());
             Place place = placeController.getWhere();
             if(place instanceof CollectionViewPlace) {
                 CollectionViewPlace viewPlace = (CollectionViewPlace) place;
@@ -51,13 +57,46 @@ public class CollectionElementsListPresenter implements Presenter {
                         viewPlace.getCollectionId(),
                         viewPlace.getFormId(),
                         view.getSelection()
-                        );
+                );
+                GWT.log("[CollectionElementsListPresenter] Next place " + nextPlace);
                 placeController.goTo(nextPlace);
             }
         });
-        Place place = placeController.getWhere();
-        if(place instanceof CollectionViewPlace) {
-            ((CollectionViewPlace) place).getSelection().ifPresent(view::setSelection);
-        }
     }
+
+    @Override
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        container.setWidget(view);
+        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> displayCurrentPlace());
+        refresh();
+    }
+
+    public void refresh() {
+        Place place = placeController.getWhere();
+        if(!(place instanceof CollectionViewPlace)) {
+            return;
+        }
+        CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
+        dispatchServiceManager.execute(new GetCollectionElementsAction(collectionViewPlace.getProjectId(),
+                                                                       collectionViewPlace.getCollectionId(),
+                                                                       PageRequest.requestFirstPage()),
+                                       busy -> {},
+                                       result -> {
+                                           Page<CollectionElementId> page = result.getElementIdPage();
+                                           view.setPageCount(page.getPageCount());
+                                           view.setPageNumber(page.getPageNumber());
+                                           view.setElements(page.getPageElements());
+                                           collectionViewPlace.getSelection().ifPresent(view::setSelection);
+                                       });
+    }
+
+    private void displayCurrentPlace() {
+        Place place = placeController.getWhere();
+        if(!(place instanceof CollectionViewPlace)) {
+            return;
+        }
+        CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
+        collectionViewPlace.getSelection().ifPresent(view::setSelection);
+    }
+
 }

@@ -25,19 +25,7 @@ public interface CollectionElementsListView extends IsWidget, HasPages {
     @Nonnull
     Optional<CollectionElementId> getSelection();
 
-    void setAddElementHandler(@Nonnull AddElementHandler addElementHandler);
-
-    void setDeleteElementHandler(@Nonnull DeleteElementHandler deleteElementHandler);
-
     void setElements(@Nonnull List<CollectionElementId> elements);
-
-    interface AddElementHandler {
-        void handleAddElement();
-    }
-
-    interface DeleteElementHandler {
-        void handleDeleteElement(CollectionElementId elementId);
-    }
 
     interface SelectionChangedHandler {
         void handleSelectionChanged();

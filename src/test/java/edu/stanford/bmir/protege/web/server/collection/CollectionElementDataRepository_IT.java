@@ -42,7 +42,7 @@ public class CollectionElementDataRepository_IT {
         Morphia morphia = MongoTestUtils.createMorphia();
         MongoClient client = MongoTestUtils.createMongoClient();
         datastore = morphia.createDatastore(client, MongoTestUtils.getTestDbName());
-        repository = new CollectionElementDataRepository(datastore);
+        repository = new CollectionElementDataRepositoryImpl(datastore);
         repository.ensureIndexes();
     }
 

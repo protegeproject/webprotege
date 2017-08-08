@@ -1,6 +1,7 @@
 @external .gwt-TextBox;
 @external .gwt-PasswordTextBox;
 @external .gwt-Label;
+@external .gwt-Button;
 
 .dialog {
     padding-top: 20px;
@@ -46,6 +47,12 @@
     border: 1px solid #4779be;
     outline: none;
 }
+
+.dialog  .gwt-Button:focus {
+    border: 1px solid #4779be;
+    outline: none;
+}
+
 
 .dialog .gwt-Label {
     color: #606060;
