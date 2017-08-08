@@ -5,6 +5,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
+import edu.stanford.bmir.protege.web.server.collection.GetCollectionElementsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
@@ -467,4 +468,8 @@ public class ProjectActionHandlersModule {
         return handler;
     }
 
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetCollectionElementsActionHandler(GetCollectionElementsActionHandler handler) {
+        return handler;
+    }
 }

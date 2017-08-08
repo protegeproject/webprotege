@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
-             xmlns:client="urn:import:com.google.gwt.user.cellview.client">
+             xmlns:client="urn:import:com.google.gwt.user.cellview.client"
+             xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list">
     <ui:style>
         .listViewContainer {
             display: flex;
@@ -24,9 +25,9 @@
 
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.listViewContainer}">
-        <g:ScrollPanel addStyleNames="{style.elementList}">
-            <client:CellList ui:field="elementList"/>
-        </g:ScrollPanel>
+        <!--<g:ScrollPanel addStyleNames="{style.elementList}">-->
+            <list:ListBox ui:field="elementList" addStyleNames="{style.elementList}"/>
+        <!--</g:ScrollPanel>-->
 
         <g:HTMLPanel addStyleNames="{style.paginator}">
             <pagination:PaginatorView ui:field="paginatorView"/>

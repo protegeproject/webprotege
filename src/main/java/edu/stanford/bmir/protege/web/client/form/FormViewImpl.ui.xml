@@ -6,6 +6,7 @@
             width: 100%;
             height: 100%;
             box-sizing: border-box;
+            overflow: auto;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="web-protege-laf {style.container}">

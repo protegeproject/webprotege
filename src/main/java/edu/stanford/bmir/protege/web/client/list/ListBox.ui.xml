@@ -1,0 +1,33 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .listBox {
+            /*border: 1px solid cyan;*/
+            position: relative;
+        }
+        .focusPanel {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+        .contentHolder {
+        }
+        .contentHolder :hover {
+            background-color: #f0f0f0;
+        }
+        .contentHolder > * {
+            padding: 4px;
+            cursor: pointer;
+        }
+
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.listBox}">
+        <g:FocusPanel ui:field="focusPanel" addStyleNames="{style.focusPanel}">
+            <g:FlowPanel ui:field="contentHolder" addStyleNames="{style.contentHolder}"/>
+        </g:FocusPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

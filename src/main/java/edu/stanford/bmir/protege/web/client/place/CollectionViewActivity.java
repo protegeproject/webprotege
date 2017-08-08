@@ -42,7 +42,7 @@ public class CollectionViewActivity extends AbstractActivity {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(place);
+        return Objects.hashCode(presenter);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CollectionViewActivity extends AbstractActivity {
             return false;
         }
         CollectionViewActivity other = (CollectionViewActivity) obj;
-        return this.place.equals(other.place);
+        return this.presenter == other.presenter;
     }
 
 

@@ -26,4 +26,21 @@ public interface CollectionView extends IsWidget, RequiresResize {
     AcceptsOneWidget getListContainer();
 
     void setElementId(@Nonnull CollectionElementId id);
+
+    void setAddHandler(AddElementHandler handler);
+
+    void setClearHandler(ClearElementDataHandler handler);
+
+    interface AddElementHandler {
+        void handleAddElement();
+    }
+
+    interface DeleteElementHandler {
+        void handleDeleteElement(CollectionElementId elementId);
+    }
+
+    interface ClearElementDataHandler {
+        void handleClearElementData();
+    }
+
 }

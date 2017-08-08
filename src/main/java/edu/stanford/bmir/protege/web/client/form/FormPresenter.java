@@ -95,6 +95,13 @@ public class FormPresenter {
         return new FormData(dataMap);
     }
 
+    public void clearData() {
+        for(FormElementView view : formView.getElementViews()) {
+            view.getEditor().clearValue();
+            updateRequiredValuePresent(view);
+        }
+    }
+
     /**
      * Creates the form from scratch and fills in the specified form data.
      *
@@ -156,6 +163,8 @@ public class FormPresenter {
         updateRequiredValuePresent(elementView);
         formView.addFormElementView(elementView);
     }
+
+
 
     /**
      * Updates the specified view so that there is a visual indication if the value is required but not present.

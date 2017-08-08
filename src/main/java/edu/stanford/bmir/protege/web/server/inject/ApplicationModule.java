@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
+import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepository;
+import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
@@ -231,6 +233,13 @@ public class ApplicationModule {
     @Provides
     @ApplicationSingleton
     public SlackWebhookRepository provideSlackWebhookRepository(SlackWebhookRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return impl;
+    }
+
+    @Provides
+    @ApplicationSingleton
+    public CollectionElementDataRepository provideCollectionElementDataRepository(CollectionElementDataRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
     }

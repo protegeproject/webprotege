@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepository;
+import edu.stanford.bmir.protege.web.server.collection.CollectionElementDataRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
@@ -13,12 +13,8 @@ import edu.stanford.bmir.protege.web.shared.collection.CollectionElementId;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
-import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.apache.http.impl.entity.EntitySerializer;
-import org.semanticweb.binaryowl.owlobject.serializer.IRISerializer;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,14 +36,14 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     private final OWLDataFactory dataFactory;
 
-    private final CollectionElementDataRepository repository;
+    private final CollectionElementDataRepositoryImpl repository;
 
     @Inject
     public GetFormDescriptorActionHander(@Nonnull AccessManager accessManager,
                                          ProjectId projectId,
                                          ClassHierarchyProvider classHierarchyProvider,
                                          OWLDataFactory dataFactory,
-                                         CollectionElementDataRepository repository) {
+                                         CollectionElementDataRepositoryImpl repository) {
         super(accessManager);
         this.projectId = projectId;
         this.classHierarchyProvider = classHierarchyProvider;
