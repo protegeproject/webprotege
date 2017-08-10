@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.collection;
 
 import com.google.common.base.Objects;
-import com.mongodb.client.model.CollationAlternate;
-import edu.stanford.bmir.protege.web.server.TestIt;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import org.mongodb.morphia.annotations.*;
