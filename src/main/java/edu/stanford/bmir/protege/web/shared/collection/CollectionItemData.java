@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.collection;
 
 import com.google.common.base.Objects;
+import com.mongodb.client.model.CollationAlternate;
+import edu.stanford.bmir.protege.web.server.TestIt;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import org.mongodb.morphia.annotations.*;
@@ -24,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
                 @Index(fields = {
                         @Field(CollectionItemData.COLLECTION_ID),
                         @Field(CollectionItemData.ITEM)
-                }, options = @IndexOptions(unique = true))
+                }, options = @IndexOptions(unique = true, collation = @Collation(locale = "en", numericOrdering = true)))
         }
 )
 public class CollectionItemData {
