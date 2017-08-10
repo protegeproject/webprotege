@@ -64,9 +64,9 @@ ul.disc {
     height: 100%
 }
 
-*.web-protege-laf :focus {
-    border: 1px solid #4779be;
-    outline: none;
+:focus {
+    outline: #0A5EA8 solid 1px;
+    outline-offset: -1px;
 }
 
 *.web-protege-no-focus :focus {
