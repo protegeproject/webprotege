@@ -1,14 +1,20 @@
 package edu.stanford.bmir.protege.web.server.collection;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.model.Collation;
+import com.mongodb.client.model.Sorts;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import org.bson.Document;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.InsertOptions;
 import org.mongodb.morphia.UpdateOptions;
 import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.Sort;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;
@@ -64,6 +70,14 @@ public class CollectionItemDataRepositoryImpl implements CollectionItemDataRepos
     }
 
     @Override
+    public void create(CollectionId collectionId, List<CollectionItem> items) {
+        List<CollectionItemData> data = items.stream()
+                .map(item -> new CollectionItemData(collectionId, item))
+                .collect(toList());
+        datastore.save(data, new InsertOptions().continueOnError(true));
+    }
+
+    @Override
     @Nonnull
     public List<CollectionItemData> find(CollectionId collectionId) {
         return createQuery(collectionId).asList();
@@ -88,12 +102,17 @@ public class CollectionItemDataRepositoryImpl implements CollectionItemDataRepos
     public List<CollectionItem> list(@Nonnull CollectionId collectionId,
                                      int skip,
                                      int limit) {
-        return datastore.createQuery(CollectionItemData.class)
-                        .field(COLLECTION_ID).equal(collectionId)
-                        .asList(new FindOptions().limit(limit).skip(skip))
-                        .stream()
-                        .map(CollectionItemData::getItem)
-                        .collect(toList());
+        return datastore.getDB().getCollection("CollectionItemData")
+                 .find(new BasicDBObject(COLLECTION_ID, collectionId.getId()),
+                       new BasicDBObject(ITEM, 1))
+                 .setCollation(Collation.builder().locale("en").numericOrdering(true).build())
+                 .limit(limit)
+                 .skip(skip)
+                .toArray()
+                .stream()
+                .map(dbObject -> (String) dbObject.get(ITEM))
+                .map(CollectionItem::get)
+                .collect(toList());
     }
 
 
