@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.place.CollectionViewPlace;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -59,16 +61,36 @@ public class CollectionItemListPresenter implements Presenter {
                 placeController.goTo(nextPlace);
             }
         });
+        view.setPageNumberChangedHandler(pageNumber -> {
+            refresh(this::goToSelectedItem);
+
+        });
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         container.setWidget(view);
         eventBus.addHandler(PlaceChangeEvent.TYPE, event -> displayCurrentPlace());
-        refresh();
+        refresh(this::goToSelectedItem);
     }
 
-    public void refresh() {
+    void goToSelectedItem() {
+        view.getSelection().ifPresent(collectionItem -> {
+            Place place = placeController.getWhere();
+            if(!(place instanceof CollectionViewPlace)) {
+                return;
+            }
+            CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
+            placeController.goTo(new CollectionViewPlace(
+                    collectionViewPlace.getProjectId(),
+                    collectionViewPlace.getCollectionId(),
+                    collectionViewPlace.getFormId(),
+                    Optional.of(collectionItem)
+            ));
+        });
+    }
+
+    public void refresh(Runnable runnable) {
         Place place = placeController.getWhere();
         if(!(place instanceof CollectionViewPlace)) {
             return;
@@ -76,7 +98,7 @@ public class CollectionItemListPresenter implements Presenter {
         CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
         dispatchServiceManager.execute(new GetCollectionItemsAction(collectionViewPlace.getProjectId(),
                                                                     collectionViewPlace.getCollectionId(),
-                                                                    PageRequest.requestFirstPage()),
+                                                                    PageRequest.requestPage(view.getPageNumber())),
                                        busy -> {},
                                        result -> {
                                            Page<CollectionItem> page = result.getElementIdPage();
@@ -84,6 +106,7 @@ public class CollectionItemListPresenter implements Presenter {
                                            view.setPageNumber(page.getPageNumber());
                                            view.setElements(page.getPageElements());
                                            collectionViewPlace.getSelection().ifPresent(view::setSelection);
+                                           runnable.run();
                                        });
     }
 

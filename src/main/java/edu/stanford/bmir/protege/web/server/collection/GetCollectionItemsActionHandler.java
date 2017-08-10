@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.GetCollectionItemsAction;
 import edu.stanford.bmir.protege.web.shared.collection.GetCollectionItemsResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -38,13 +39,16 @@ public class GetCollectionItemsActionHandler extends AbstractHasProjectActionHan
 
     @Override
     public GetCollectionItemsResult execute(GetCollectionItemsAction action, ExecutionContext executionContext) {
+        PageRequest pageRequest = action.getPageRequest();
         List<CollectionItem> elementIdList = repository.list(action.getCollectionId(),
-                                                             action.getPageRequest().getSkip(),
-                                                             action.getPageRequest().getPageSize());
-        return new GetCollectionItemsResult(new Page<>(action.getPageRequest().getPageNumber(),
-                                                       1,
+                                                             pageRequest.getSkip(),
+                                                             pageRequest.getPageSize());
+        long totalItemsCount = repository.count(action.getCollectionId());
+        int pageCount = (int) (totalItemsCount / pageRequest.getPageSize()) + 1;
+        return new GetCollectionItemsResult(new Page<>(pageRequest.getPageNumber(),
+                                                       pageCount,
                                                        elementIdList,
                                                        elementIdList.size()),
-                                            action.getPageRequest());
+                                            pageRequest);
     }
 }

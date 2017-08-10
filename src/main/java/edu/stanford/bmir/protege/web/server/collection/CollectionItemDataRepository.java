@@ -30,4 +30,6 @@ public interface CollectionItemDataRepository extends Repository {
     List<CollectionItem> list(@Nonnull CollectionId collectionId,
                               int skip,
                               int limit);
+
+    void create(CollectionId collectionId, List<CollectionItem> items);
 }

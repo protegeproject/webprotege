@@ -4,12 +4,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.form.FormPresenter;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
+import edu.stanford.bmir.protege.web.shared.collection.CreateCollectionItemsAction;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.SetFormDataAction;
@@ -19,7 +21,11 @@ import edu.stanford.bmir.protege.web.shared.place.CollectionViewPlace;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -97,23 +103,26 @@ public class CollectionPresenter implements Presenter {
 
     private void handleAddCollectionItems() {
         current.ifPresent(subject -> {
-            addItemPromptProvider.get().showPrompt(itemName -> {
-                CollectionItem freshElementId = CollectionItem.get(itemName);
+            addItemPromptProvider.get().showPrompt(itemNamesString -> {
                 // Create Empty Data for the fresh item
-                dispatchServiceManager.execute(new SetFormDataAction(subject.getProjectId(),
-                                                                     subject.getCollectionId(),
-                                                                     freshElementId,
-                                                                     subject.getFormId(),
-                                                                     FormData.empty()),
+                List<String> itemNames = Arrays.stream(itemNamesString.split("\n"))
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+                if(itemNames.isEmpty()) {
+                    return;
+                }
+                CollectionItem freshItem = CollectionItem.get(itemNames.get(0));
+                dispatchServiceManager.execute(new CreateCollectionItemsAction(subject.getProjectId(),
+                                                                               subject.getCollectionId(),
+                                                                               itemNames),
                                                result -> {
                                                    placeController.goTo(new CollectionViewPlace(
                                                            subject.getProjectId(),
                                                            subject.getCollectionId(),
                                                            subject.getFormId(),
-                                                           Optional.of(freshElementId)
+                                                           Optional.of(freshItem)
                                                    ));
-                                                   listPresenter.refresh();
-                                                   GWT.log("[CollectionPresenter] Created element: " + freshElementId);
+                                                   listPresenter.refresh(() -> {});
                                                });
             });
         });

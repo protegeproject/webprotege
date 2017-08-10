@@ -5,6 +5,7 @@ import dagger.Provides;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
+import edu.stanford.bmir.protege.web.server.collection.CreateCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.collection.GetCollectionItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
@@ -38,6 +39,7 @@ import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.collection.CreateCollectionItemsAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
@@ -469,6 +471,11 @@ public class ProjectActionHandlersModule {
 
     @Provides(type = SET)
     public ProjectActionHandler providesGetCollectionElementsActionHandler(GetCollectionItemsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesCreateCollectionItemsActionHandler(CreateCollectionItemsActionHandler handler) {
         return handler;
     }
 }
