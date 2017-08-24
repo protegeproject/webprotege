@@ -22,7 +22,7 @@
         <div style="height: 10px;"/>
 
         <g:Label text="{msg.frame_classes}" addStyleNames="{wp.style.formLabel}"/>
-        <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="Enter a class name"/>
+        <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="{msg.frame_enterAClassName}"/>
 
         <div style="height: 15px;"/>
 

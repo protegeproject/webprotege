@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -20,6 +22,8 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
  */
 public class ProjectMenuPresenter implements HasDispose, Presenter {
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private final ProjectMenuView view;
 
     private final ShowProjectDetailsHandler showProjectDetailsHandler;
@@ -30,21 +34,21 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
-    private AbstractUiAction editProjectSettings = new AbstractUiAction("Settings") {
+    private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.settings()) {
         @Override
         public void execute(ClickEvent e) {
             showProjectDetailsHandler.handleShowProjectDetails();
         }
     };
 
-    private AbstractUiAction editNewEntitySettings = new AbstractUiAction("New entity settings") {
+    private AbstractUiAction editNewEntitySettings = new AbstractUiAction(MESSAGES.newEntitySettings()) {
         @Override
         public void execute(ClickEvent e) {
             showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
         }
     };
 
-    private AbstractUiAction uploadAndMerge = new AbstractUiAction("Upload and merge") {
+    private AbstractUiAction uploadAndMerge = new AbstractUiAction(MESSAGES.uploadAndMerge()) {
         @Override
         public void execute(ClickEvent e) {
             uploadAndMergeHandler.handleUploadAndMerge();

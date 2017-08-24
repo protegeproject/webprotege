@@ -2,7 +2,7 @@
 >
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field='value' type="edu.stanford.bmir.protege.web.client.issues.CommentedEntityDataRendering"/>
-
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
             border-bottom: 1px solid #f0f0f0;
@@ -59,10 +59,10 @@
                 </div>
                 <div class="{style.modifiedDetails}">
                     <div>
-                        Last comment <span class="{style.modifiedTime}"><ui:text from="{value.modifiedAt}"/></span>
+                        <ui:text from="{msg.comments_lastComment}"/> <span class="{style.modifiedTime}"><ui:text from="{value.modifiedAt}"/></span>
                     </div>
                     <div>
-                        by <ui:text from="{value.modifiedBy}"/>
+                        <ui:text from="{msg.comments_by}"/> <ui:text from="{value.modifiedBy}"/>
                     </div>
                 </div>
                 <div class="{style.badge}" style="background: {value.statusColor};">

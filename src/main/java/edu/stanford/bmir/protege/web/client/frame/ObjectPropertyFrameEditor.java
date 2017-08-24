@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
@@ -71,14 +72,16 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private Set<ObjectPropertyCharacteristic> characteristics = Sets.newHashSet();
 
     @Inject
-    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor,
+                                     Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
+                                     Messages messages) {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
-        domains.setPlaceholder("Enter class name");
+        domains.setPlaceholder(messages.frame_enterAClassName());
         ranges = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
-        ranges.setPlaceholder("Enter class name");
+        ranges.setPlaceholder(messages.frame_enterAClassName());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         add(rootElement);
     }

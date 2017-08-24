@@ -3,6 +3,7 @@
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
              xmlns:cellview="urn:import:com.google.gwt.user.cellview.client">
     <ui:import field="edu.stanford.bmir.protege.web.shared.issues.SortingKey.*"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .outer {
             display: flex;
@@ -29,8 +30,8 @@
     <g:HTMLPanel addStyleNames="{style.outer}">
         <g:HTMLPanel addStyleNames="{style.topBar}">
             <g:ListBox ui:field="sortingKey">
-                <g:item value="SORT_BY_ENTITY">Sort by Entity</g:item>
-                <g:item value="SORT_BY_LAST_MODIFIED">Sort by Last Updated</g:item>
+                <g:item value="SORT_BY_ENTITY"><ui:text from="{msg.sortByEntity}"/></g:item>
+                <g:item value="SORT_BY_LAST_MODIFIED"><ui:text from="{msg.sortByLastUpdated}"/></g:item>
             </g:ListBox>
         </g:HTMLPanel>
         <g:ScrollPanel width="100%" height="100%">

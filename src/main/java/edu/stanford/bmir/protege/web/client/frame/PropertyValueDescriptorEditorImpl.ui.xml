@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
 
@@ -33,13 +34,13 @@
         <table>
             <tr>
                 <td width="200px">
-                    <primitive:PrimitiveDataEditorImpl ui:field="propertyField" addStyleNames="{style.property-field}" placeholder="Enter property"/>
+                    <primitive:PrimitiveDataEditorImpl ui:field="propertyField" addStyleNames="{style.property-field}" placeholder="{msg.frame_enterProperty}"/>
                 </td>
                 <td width="100%">
-                    <primitive:PrimitiveDataEditorImpl ui:field="valueField" addStyleNames="{style.value-field}" placeholder="Enter value"/>
+                    <primitive:PrimitiveDataEditorImpl ui:field="valueField" addStyleNames="{style.value-field}" placeholder="{msg.frame_enterValue}"/>
                 </td>
                 <td width="4em">
-                    <primitive:DefaultLanguageEditor ui:field="languageField" addStyleNames="{style.language-field}" placeholder="lang"/>
+                    <primitive:DefaultLanguageEditor ui:field="languageField" addStyleNames="{style.language-field}" placeholder="{msg.frame_lang}"/>
                 </td>
             </tr>
         </table>

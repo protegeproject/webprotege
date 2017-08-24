@@ -5,6 +5,7 @@ import com.google.common.collect.Ordering;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
@@ -43,6 +44,8 @@ public class ChangeListViewPresenter {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    private final Messages messages;
+
     private boolean revertChangesVisible = false;
 
     private boolean downloadVisible = false;
@@ -52,13 +55,17 @@ public class ChangeListViewPresenter {
     private HasBusy hasBusy = busy -> {
     };
 
+
+
     @Inject
     public ChangeListViewPresenter(ChangeListView view,
                                    DispatchServiceManager dispatchServiceManager,
-                                   LoggedInUserProjectPermissionChecker permissionChecker) {
+                                   LoggedInUserProjectPermissionChecker permissionChecker,
+                                   Messages messages) {
         this.view = view;
         this.permissionChecker = permissionChecker;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.messages = messages;
     }
 
     public void setRevertChangesVisible(boolean revertChangesVisible) {
@@ -141,7 +148,7 @@ public class ChangeListViewPresenter {
             if (!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
                 previousTimeStamp = changeTimeStamp;
                 Date date = new Date(changeTimeStamp);
-                view.addSeparator("\u25C9   Changes on " + DateTimeFormat.getFormat("EEE, d MMM yyyy" ).format(date));
+                view.addSeparator("\u25C9   " + messages.change_changesOn() + " " + DateTimeFormat.getFormat("EEE, d MMM yyyy" ).format(date));
             }
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();

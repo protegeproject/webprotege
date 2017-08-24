@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
@@ -19,6 +21,8 @@ import java.util.List;
  */
 public class CreateEntityForm extends WebProtegeDialogForm {
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private ExpandingTextBox entityBrowserTextField;
 
     private EntityType<?> entityType;
@@ -31,7 +35,7 @@ public class CreateEntityForm extends WebProtegeDialogForm {
         entityBrowserTextField.setWidth("450px");
         entityBrowserTextField.setMode(mode);
         entityBrowserTextField.setAnchorVisible(false);
-        entityBrowserTextField.setPlaceholder("Enter one " + getTypeName() + " name per line (press CTRL+ENTER to accept and close dialog)");
+        entityBrowserTextField.setPlaceholder(MESSAGES.createEntityInstructions());
         addWidget("Name", entityBrowserTextField);
 
 //        entityBrowserTextField = addTextBox("Name", "Enter " + getTypeName() + " name", "", new WebProtegeDialogInlineValidator<ValueBoxBase<String>>() {

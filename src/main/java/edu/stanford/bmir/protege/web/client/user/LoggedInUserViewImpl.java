@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 
 import javax.inject.Inject;
@@ -29,26 +30,11 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
     private static LoggedInUserViewImplUiBinder ourUiBinder = GWT.create(LoggedInUserViewImplUiBinder.class);
 
 
-    private SignOutRequestHandler signOutRequestHandler = new SignOutRequestHandler() {
-        @Override
-        public void handleSignOutRequest() {
+    private SignOutRequestHandler signOutRequestHandler = () -> {};
 
-        }
-    };
+    private ChangeEmailAddressHandler changeEmailAddressHandler = () -> {};
 
-    private ChangeEmailAddressHandler changeEmailAddressHandler = new ChangeEmailAddressHandler() {
-        @Override
-        public void handleChangeEmailAddress() {
-
-        }
-    };
-
-    private ChangePasswordHandler changePasswordHandler = new ChangePasswordHandler() {
-        @Override
-        public void handleChangePassword() {
-
-        }
-    };
+    private ChangePasswordHandler changePasswordHandler = () -> {};
 
 
 
@@ -58,27 +44,14 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
 
     private final PopupMenu popupMenu = new PopupMenu();
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     @Inject
     public LoggedInUserViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        popupMenu.addItem("Sign Out", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                signOutRequestHandler.handleSignOutRequest();
-            }
-        });
-        popupMenu.addItem("Change email address", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                changeEmailAddressHandler.handleChangeEmailAddress();
-            }
-        });
-        popupMenu.addItem("Change password", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                changePasswordHandler.handleChangePassword();
-            }
-        });
+        popupMenu.addItem(MESSAGES.signOut(), event -> signOutRequestHandler.handleSignOutRequest());
+        popupMenu.addItem(MESSAGES.changeEmailAddress(), event -> changeEmailAddressHandler.handleChangeEmailAddress());
+        popupMenu.addItem(MESSAGES.changePassword(), event -> changePasswordHandler.handleChangePassword());
     }
 
     @UiHandler("loggedInUserButton")

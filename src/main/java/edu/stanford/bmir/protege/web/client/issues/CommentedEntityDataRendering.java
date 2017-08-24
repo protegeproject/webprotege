@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
+import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
 
@@ -19,6 +21,8 @@ class CommentedEntityDataRendering {
     private static final String RESOLVED_COLOR = "#090";
 
     private final CommentedEntityData data;
+
+    private static final Messages MESSAGES = GWT.create(Messages.class);
 
     public CommentedEntityDataRendering(@Nonnull CommentedEntityData data) {
         this.data = checkNotNull(data);
@@ -42,10 +46,10 @@ class CommentedEntityDataRendering {
     @Nonnull
     public String status() {
         if (data.getOpenThreadCount() > 0) {
-            return data.getOpenThreadCount() + " unresolved";
+            return data.getOpenThreadCount() + " " + MESSAGES.comments_unresolved();
         }
         else {
-            return "Resolved";
+            return MESSAGES.comments_resolved();
         }
     }
 

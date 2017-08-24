@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
@@ -41,6 +42,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class NamedIndividualFrameEditor extends SimplePanel implements ValueEditor<LabelledFrame<NamedIndividualFrame>>, HasEnabled, EditorView<LabelledFrame<NamedIndividualFrame>> {
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private java.util.Optional<LabelledFrame<NamedIndividualFrame>> editedFrame = java.util.Optional.empty();
 
     @UiField
@@ -72,9 +75,9 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
         assertions = assertionsEditor;
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
-        types.setPlaceholder("Enter class name");
+        types.setPlaceholder(MESSAGES.frame_enterAClassName());
         sameAs = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.NAMED_INDIVIDUAL);
-        sameAs.setPlaceholder("Enter individual name");
+        sameAs.setPlaceholder(MESSAGES.frame_enterIndividualName());
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);

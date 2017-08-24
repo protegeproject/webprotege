@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
 import javax.annotation.Nonnull;
@@ -14,6 +16,8 @@ import java.util.function.Consumer;
  */
 public class CommentEditorDialog {
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private final CommentEditorView view;
 
     @Inject
@@ -22,7 +26,7 @@ public class CommentEditorDialog {
     }
 
     void show(Consumer<String> handler) {
-        WebProtegeDialogController<String> controller = new WebProtegeOKCancelDialogController<String>("Comment") {
+        WebProtegeDialogController<String> controller = new WebProtegeOKCancelDialogController<String>(MESSAGES.editComment()) {
             @Override
             public Widget getWidget() {
                 return view.asWidget();

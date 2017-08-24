@@ -5,6 +5,19 @@ body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
     font-size: 12px;
 }
 
+.x-tree-node a {
+    color: inherit;
+}
+
+.x-tree-node a span {
+    color: inherit;
+}
+
+.x-tree-node .x-tree-selected {
+    color: white;
+    background-color: dodgerblue;
+}
+
 a {
     color: blue;
     cursor: pointer;

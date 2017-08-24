@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.about.AboutBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 
@@ -26,6 +27,8 @@ public class HelpViewImpl extends Composite implements HelpView {
 
     private static HelpViewImplUiBinder ourUiBinder = GWT.create(HelpViewImplUiBinder.class);
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     @UiField
     protected Button helpButton;
 
@@ -34,7 +37,7 @@ public class HelpViewImpl extends Composite implements HelpView {
     @Inject
     public HelpViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        popupMenu.addItem("About", event -> {
+        popupMenu.addItem(MESSAGES.about(), event -> {
             AboutBox box = new AboutBox();
             box.show();
         });

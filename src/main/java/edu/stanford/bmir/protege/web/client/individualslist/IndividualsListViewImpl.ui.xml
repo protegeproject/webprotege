@@ -4,6 +4,7 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress">
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
             display: flex;
@@ -33,7 +34,7 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
-        <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="Enter search string to filter list"/>
+        <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="{msg.enterSearchStringToFilterList}"/>
         <entitieslist:EntitiesListImpl ui:field="individualsList" addStyleNames="{style.individualsList}"/>
         <g:HTMLPanel addStyleNames="{style.bottomBar}">
             <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
