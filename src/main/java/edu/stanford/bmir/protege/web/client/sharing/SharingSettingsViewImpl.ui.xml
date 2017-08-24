@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
             padding-top: 50px;
@@ -44,13 +45,13 @@
 
     <g:HTMLPanel addStyleNames="{style.main} ">
         <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
-            <g:Label text="Sharing settings" addStyleNames="{wp.dialog.title}"/>
+            <g:Label text="{msg.sharing_sharingSettings}" addStyleNames="{wp.dialog.title}"/>
 
             <g:HTMLPanel addStyleNames="{wp.dialog.group}">
-                <g:CheckBox text="Link sharing enabled" ui:field="linkSharingEnabledCheckBox" addStyleNames="{style.linkSharingEnabledCheckBox}"/>
-                <span style="color: #808080">  (Sign-in required)</span>
+                <g:CheckBox text="{msg.sharing_linkSharingEnabled}" ui:field="linkSharingEnabledCheckBox" addStyleNames="{style.linkSharingEnabledCheckBox}"/>
+                <span style="color: #808080">  (<ui:text from="{msg.sharing_signInRequired}"/>)</span>
                 <g:HTMLPanel addStyleNames="{style.linkSharingPermissionSurround}" ui:field="linkSharingView">
-                    <g:InlineLabel text="Anyone with the link can "/>
+                    <g:InlineLabel text="{msg.sharing_anyoneWithTheLinkCan} "/>
                     <g:ListBox ui:field="linkSharingPermissionDropDown" visibleItemCount="1" addStyleNames="{wp.style.sharingDropDown}">
                     </g:ListBox>
                 </g:HTMLPanel>
@@ -58,7 +59,7 @@
             <g:HTMLPanel addStyleNames="{style.divider}"/>
 
             <g:HTMLPanel addStyleNames="{wp.dialog.group}">
-                Share with specific people:
+                <ui:text from="{msg.sharing_shareWithSpecificPeople}"/>:
                 <g:HTMLPanel addStyleNames="{style.verticalPadding}"/>
                 <editor:ValueListEditorImpl ui:field="sharingSettingsListEditor" addStyleNames="{style.list}" enabled="true"/>
             </g:HTMLPanel>
@@ -66,9 +67,9 @@
 
 
             <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
-                <g:Button ui:field="cancelButton" text="Cancel"
+                <g:Button ui:field="cancelButton" text="{msg.dialog_cancel}"
                           addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
-                <g:Button ui:field="applyButton" text="Apply"
+                <g:Button ui:field="applyButton" text="{msg.dialog_apply}"
                           addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>

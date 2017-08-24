@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
+import edu.stanford.bmir.protege.web.client.Messages;
+
+import static edu.stanford.protege.widgetmap.client.view.ViewHolder.MESSAGES;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,15 +14,20 @@ import com.google.gwt.user.client.ui.Button;
  * Date: 18/01/2012
  */
 public enum DialogButton {
-    
-    OK("OK"),
 
-    CANCEL("Cancel"),
+    OK((getMessages()).dialog_ok()),
 
-    YES("Yes"),
+    CANCEL(getMessages().dialog_cancel()),
 
-    NO("No");
-    
+    YES(getMessages().dialog_yes()),
+
+    NO(getMessages().dialog_no());
+
+    private static Messages getMessages() {
+        return (Messages) GWT.create(Messages.class);
+    }
+
+
     private String buttonName;
 
     DialogButton(String buttonName) {

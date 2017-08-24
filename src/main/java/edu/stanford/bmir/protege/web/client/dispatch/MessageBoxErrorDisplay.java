@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
 /**
@@ -11,6 +12,8 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
  * 20/02/15
  */
 public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
+
+    private static final Messages MESSAGES = GWT.create(Messages.class);
 
     private static boolean displayingError = false;
 
@@ -28,12 +31,12 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
 
     @Override
     public void displayPermissionDeniedErrorMessage() {
-        displayPermissionDeniedErrorMessage("You do not have permission to carry out the specified action." );
+        displayPermissionDeniedErrorMessage(MESSAGES.error_permissionError_msg());
     }
 
     @Override
     public void displayPermissionDeniedErrorMessage(String specificMessage) {
-        displayMessageBox("Permission denied" , specificMessage);
+        displayMessageBox(MESSAGES.error_permissionError_title() , specificMessage);
     }
 
     @Override
@@ -44,8 +47,8 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
     @Override
     public void displayIncompatibleRemoteServiceExceptionErrorMessage() {
         MessageBox.showMessage(
-                "Please refresh your browser" ,
-                "WebProtégé has been upgraded.  Please refresh your browser." );
+                MESSAGES.error_refreshBrowser() ,
+                MESSAGES.error_upgraded() );
     }
 
     @Override
@@ -55,20 +58,20 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
             StatusCodeException statusCodeException = (StatusCodeException) exception;
             if (statusCodeException.getStatusCode() != 0) {
                 displayMessageBox(statusCodeException.getStatusText(),
-                                  "WebProtégé has encountered an error. Please try again.<br>" +
-                                          "Status Code: " + statusCodeException.getStatusCode() + " (" + statusCodeException
+                                  MESSAGES.error_webProtegeHasEncounteredAnErrorPleaseTryAgain() + "<br>" +
+                                  MESSAGES.error_statusCode() + ": " + statusCodeException.getStatusCode() + " (" + statusCodeException
                                           .getStatusText() + ")"
                 );
             }
             else {
-                displayMessageBox("Connection Error" ,
-                                  "WebProtégé cannot connect to the server.  Please check your network connection." );
+                displayMessageBox(MESSAGES.error_connectionError_title() ,
+                                  MESSAGES.error_connectionError_msg());
             }
         }
         else {
             displayMessageBox(
-                    "Error" ,
-                    "An error has occurred.  Please refresh your browser and try again." );
+                    MESSAGES.error() ,
+                    MESSAGES.error_general() );
         }
 
     }

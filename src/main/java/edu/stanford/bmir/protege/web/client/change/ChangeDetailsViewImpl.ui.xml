@@ -3,6 +3,7 @@
              xmlns:diff="urn:import:edu.stanford.bmir.protege.web.client.diff"
              xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.library.timelabel"
 >
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <ui:style>
         .main {
@@ -119,9 +120,9 @@
             <div class="{style.author}">
                 <g:SimplePanel ui:field="authorUserIcon" addStyleNames="{style.userIcon}"/>
                 <g:InlineLabel ui:field="authorField"/>
-                authored
+                <ui:text from="{msg.change_authored}"/>
                 <g:InlineLabel ui:field="changeCountField"/>
-                changes
+                <ui:text from="{msg.change_changes}"/>
                 <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
             </div>
             <div class="{style.subjectsField}">

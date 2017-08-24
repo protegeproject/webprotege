@@ -106,10 +106,10 @@
 
                 </g:HTMLPanel>
                 <g:ListBox ui:field="sortByListBox">
-                    <g:item value="LAST_OPENED">Sort by Last Opened</g:item>
-                    <g:item value="LAST_MODIFIED">Sort by Last Modified</g:item>
-                    <g:item value="PROJECT_NAME">Sort by Project Name</g:item>
-                    <g:item value="OWNER">Sort by Owner</g:item>
+                    <g:item value="LAST_OPENED"><ui:text from="{msg.sortByLastOpened}"/></g:item>
+                    <g:item value="LAST_MODIFIED"><ui:text from="{msg.sortByLastModified}"/></g:item>
+                    <g:item value="PROJECT_NAME"><ui:text from="{msg.sortByProjectName}"/></g:item>
+                    <g:item value="OWNER"><ui:text from="{msg.sortByOwner}"/></g:item>
                 </g:ListBox>
             </g:HTMLPanel>
             <projectlist:AvailableProjectsListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>

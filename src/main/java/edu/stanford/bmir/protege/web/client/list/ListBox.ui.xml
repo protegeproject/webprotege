@@ -4,6 +4,10 @@
         .listBox {
             /*border: 1px solid cyan;*/
             position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         .focusPanel {
             position: absolute;

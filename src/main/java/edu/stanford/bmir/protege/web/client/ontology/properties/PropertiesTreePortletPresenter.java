@@ -12,6 +12,7 @@ import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.TreeSelectionModel;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
@@ -65,23 +66,26 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final PortletAction createAction = new PortletAction("Create", (action, event) -> onCreateProperty());
+    private final PortletAction createAction;
 
-    private final PortletAction deleteAction = new PortletAction("Delete", (action, event) -> onDeleteProperty());
+    private final PortletAction deleteAction;
+
 
     protected TreePanel treePanel;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+
+
     @Inject
     public PropertiesTreePortletPresenter(SelectionModel selectionModel,
                                           DispatchServiceManager dispatchServiceManager,
                                           ProjectId projectId,
-                                          LoggedInUserProjectPermissionChecker permissionChecker) {
+                                          LoggedInUserProjectPermissionChecker permissionChecker,
+                                          Messages messages) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
-
         treePanel = new TreePanel();
         treePanel.setAnimate(true);
 
@@ -99,21 +103,21 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             @Override
             public void onContextMenu(TreeNode node, EventObject e) {
                 PopupMenu contextMenu = new PopupMenu();
-                contextMenu.addItem("Show IRI", event -> {
+                contextMenu.addItem(messages.showIri(), event -> {
                     java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                     if (selectedEntity.isPresent()) {
                         String iri = selectedEntity.get().getIRI().toQuotedString();
-                        InputBox.showOkDialog("Property IRI", true, iri, input -> {
+                        InputBox.showOkDialog(messages.propertyIri(), true, iri, input -> {
                         });
                     }
                 });
-                contextMenu.addItem("Show direct link", event -> {
+                contextMenu.addItem(messages.showDirectLink(), event -> {
                     String location = Window.Location.getHref();
-                    InputBox.showOkDialog("Direct link", true, location, input -> {
+                    InputBox.showOkDialog(messages.directLink(), true, location, input -> {
                     });
                 });
                 contextMenu.addSeparator();
-                contextMenu.addItem("Refresh tree", event -> onRefresh());
+                contextMenu.addItem(messages.refreshTree(), event -> onRefresh());
                 contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
             }
         });
@@ -142,6 +146,8 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
                 }
             }
         });
+        createAction = new PortletAction(messages.create(), (action, event) -> onCreateProperty());
+        deleteAction = new PortletAction(messages.delete(), (action, event) -> onDeleteProperty());
     }
 
     @Override
@@ -151,28 +157,31 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         portletUi.setWidget(treePanel.asWidget());
         eventBus.addProjectEventHandler(getProjectId(),
                                         ObjectPropertyHierarchyParentAddedEvent.TYPE,
-                                        event -> handleRelationshipAdded(event));
+                                        this::handleRelationshipAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
                                         ObjectPropertyHierarchyParentRemovedEvent.TYPE,
-                                        event -> handleRelationshipRemoved(event));
+                                        this::handleRelationshipRemoved);
 
         eventBus.addProjectEventHandler(getProjectId(),
                                         DataPropertyHierarchyParentAddedEvent.TYPE,
-                                        event -> handleRelationshipAdded(event));
+                                        this::handleRelationshipAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
                                         AnnotationPropertyHierarchyParentAddedEvent.TYPE,
-                                        event -> handleRelationshipAdded(event));
+                                        this::handleRelationshipAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        HierarchyRootAddedEvent.TYPE, event -> handleRootAdded(event));
+                                        HierarchyRootAddedEvent.TYPE,
+                                        this::handleRootAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        HierarchyRootRemovedEvent.TYPE, event -> handleRootRemoved(event));
+                                        HierarchyRootRemovedEvent.TYPE,
+                                        this::handleRootRemoved);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED, event -> handleBrowserTextChanged(event));
+                                        BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED,
+                                        this::handleBrowserTextChanged);
 
         eventBus.addProjectEventHandler(getProjectId(),
                                         ON_PERMISSIONS_CHANGED,

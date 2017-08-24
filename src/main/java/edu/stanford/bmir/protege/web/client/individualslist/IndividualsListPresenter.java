@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
@@ -53,6 +54,8 @@ public class IndividualsListPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final Messages messages;
+
     private final IndividualsListView view;
 
     private final ActiveProjectIdProvider activeProjectIdProvider;
@@ -61,11 +64,9 @@ public class IndividualsListPresenter {
 
     private Optional<OWLClass> currentType = Optional.empty();
 
-    private final PortletAction createAction = new PortletAction("Create",
-                                                                 (action, event) -> handleCreateIndividuals());
+    private final PortletAction createAction;
 
-    private final PortletAction deleteAction = new PortletAction("Delete",
-                                                                 (action, event) -> handleDeleteIndividuals());
+    private final PortletAction deleteAction;
 
     private final Timer searchStringDelayTimer = new Timer() {
         @Override
@@ -82,11 +83,13 @@ public class IndividualsListPresenter {
                                     final SelectionModel selectionModel,
                                     ActiveProjectIdProvider projectIdProvider,
                                     DispatchServiceManager dispatchServiceManager,
-                                    LoggedInUserProjectPermissionChecker permissionChecker) {
+                                    LoggedInUserProjectPermissionChecker permissionChecker,
+                                    Messages messages) {
         this.activeProjectIdProvider = projectIdProvider;
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.messages = messages;
         view.addSelectionHandler(event -> {
             OWLNamedIndividualData selectedItem = event.getSelectedItem();
             if (selectedItem != null) {
@@ -98,6 +101,10 @@ public class IndividualsListPresenter {
             searchStringDelayTimer.schedule(SEARCH_DELAY);
         });
         view.setPageNumberChangedHandler(pageNumber -> updateList());
+        createAction = new PortletAction(messages.create(),
+                                         (action, event) -> handleCreateIndividuals());
+        deleteAction = new PortletAction(messages.delete(),
+                                         (action, event) -> handleDeleteIndividuals());
     }
 
     public void start(AcceptsOneWidget container) {

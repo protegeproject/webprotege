@@ -134,6 +134,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private final SearchDialogController searchDialogController;
 
+    private final Messages messages;
+
     @Inject
     public ClassTreePortletPresenter(SelectionModel selectionModel,
                                      WatchPresenter watchPresenter,
@@ -142,7 +144,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                      LoggedInUserProvider loggedInUserProvider,
                                      LoggedInUserProjectPermissionChecker permissionChecker,
                                      Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                     SearchDialogController searchDialogController) {
+                                     SearchDialogController searchDialogController,
+                                     Messages messages) {
         this(selectionModel,
              primitiveDataEditorProvider,
              watchPresenter,
@@ -150,7 +153,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
              loggedInUserProvider,
              projectId,
              permissionChecker,
-             searchDialogController);
+             searchDialogController,
+             messages);
     }
 
     private ClassTreePortletPresenter(SelectionModel selectionModel,
@@ -160,7 +164,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                       LoggedInUserProvider loggedInUserProvider,
                                       final ProjectId projectId,
                                       LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker,
-                                      SearchDialogController searchDialogController) {
+                                      SearchDialogController searchDialogController,
+                                      Messages messages) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -168,7 +173,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         this.watchPresenter = watchPresenter;
         this.primitiveDataEditorProvider = primitiveDataEditorProvider;
         this.searchDialogController = searchDialogController;
-
+        this.messages = messages;
 
         if (nodeListener == null) {
             //listener for click on the comment icon to display notes
@@ -178,21 +183,21 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                 public void onContextMenu(final Node node, EventObject e) {
                     treePanel.getSelectionModel().select((TreeNode) node);
                     PopupMenu contextMenu = new PopupMenu();
-                    contextMenu.addItem("Show IRI" , event -> {
+                    contextMenu.addItem(messages.showIri() , event -> {
                         java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                         if (selectedEntity.isPresent()) {
                             String iri = selectedEntity.get().getIRI().toQuotedString();
-                            InputBox.showOkDialog("Class IRI" , true, iri, input -> {
+                            InputBox.showOkDialog(messages.classIri() , true, iri, input -> {
                             });
                         }
                     });
-                    contextMenu.addItem("Show direct link" , event -> {
+                    contextMenu.addItem(messages.showDirectLink() , event -> {
                         String location = Window.Location.getHref();
-                        InputBox.showOkDialog("Direct link" , true, location, input -> {
+                        InputBox.showOkDialog(messages.directLink() , true, location, input -> {
                         });
                     });
                     contextMenu.addSeparator();
-                    contextMenu.addItem("Refresh tree" , event -> onRefresh());
+                    contextMenu.addItem(messages.refreshTree() , event -> onRefresh());
                     contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
                 }
             };
@@ -204,7 +209,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         portletUi.addPortletAction(createClassAction);
         portletUi.addPortletAction(deleteClassAction);
         portletUi.addPortletAction(watchClassAction);
-        portletUi.addPortletAction(new PortletAction("Search", (action, event) -> {
+        portletUi.addPortletAction(new PortletAction(messages.search(), (action, event) -> {
             searchDialogController.setEntityTypes(CLASS);
             WebProtegeDialog.showDialog(searchDialogController);
         }));
