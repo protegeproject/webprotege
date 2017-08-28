@@ -24,7 +24,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
                 @Index(fields = {
                         @Field(CollectionItemData.COLLECTION_ID),
                         @Field(CollectionItemData.ITEM)
-                }, options = @IndexOptions(unique = true, collation = @Collation(locale = "en", numericOrdering = true)))
+                }, options = @IndexOptions(unique = true
+//                                           collation = @Collation(locale = "en", numericOrdering = true)
+                ))
         }
 )
 public class CollectionItemData {
