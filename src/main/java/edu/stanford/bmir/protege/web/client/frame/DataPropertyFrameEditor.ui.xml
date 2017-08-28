@@ -42,7 +42,7 @@
         <div>
             <g:CheckBox ui:field="functionalCheckBox" text="{msg.frame_functional}"
                         addStyleNames="{wp.style.formLabel} {style.functional-label}"/>
-            <g:InlineLabel text="(single valued)" addStyleNames="{style.hint}"/>
+            <g:InlineLabel text="({msg.frame_singleValued})" addStyleNames="{style.hint}"/>
         </div>
 
 
