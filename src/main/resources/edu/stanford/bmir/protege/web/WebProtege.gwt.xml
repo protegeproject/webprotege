@@ -47,6 +47,7 @@
     <extend-property name="locale" values="en"/>
     <extend-property name="locale" values="de"/>
     <extend-property name="locale" values="sl"/>
+    <extend-property name="locale" values="pt"/>
 
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
