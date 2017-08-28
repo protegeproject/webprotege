@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
 import javax.annotation.Nonnull;
@@ -50,6 +51,8 @@ public class LoginViewImpl extends Composite implements LoginView {
     private ForgotPasswordHandler forgotPasswordHandler = () -> {};
 
     private SignUpForAccountHandler signUpForAccountHandler = () -> {};
+
+    private static final Messages MESSAGES = GWT.create(Messages.class);
 
     @Inject
     public LoginViewImpl() {
@@ -123,17 +126,17 @@ public class LoginViewImpl extends Composite implements LoginView {
 
     @Override
     public void showLoginFailedErrorMessage() {
-        MessageBox.showAlert("Unable to log in.  User name or password is incorrect.");
+        MessageBox.showAlert(MESSAGES.login_error());
     }
 
     @Override
     public void showUserNameRequiredErrorMessage() {
-        MessageBox.showAlert("Please enter your user name");
+        MessageBox.showAlert(MESSAGES.login_enterUserName());
     }
 
     @Override
     public void showPasswordRequiredErrorMessage() {
-        MessageBox.showAlert("Please enter your password");
+        MessageBox.showAlert(MESSAGES.login_enterPassword());
     }
 
     @Override
