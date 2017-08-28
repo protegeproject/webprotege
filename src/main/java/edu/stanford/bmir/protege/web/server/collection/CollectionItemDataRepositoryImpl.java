@@ -105,7 +105,8 @@ public class CollectionItemDataRepositoryImpl implements CollectionItemDataRepos
         return datastore.getDB().getCollection("CollectionItemData")
                  .find(new BasicDBObject(COLLECTION_ID, collectionId.getId()),
                        new BasicDBObject(ITEM, 1))
-                 .setCollation(Collation.builder().locale("en").numericOrdering(true).build())
+                        // Requires a later version of mongo db - disable for now.
+//                 .setCollation(Collation.builder().locale("en").numericOrdering(true).build())
                  .limit(limit)
                  .skip(skip)
                 .toArray()
