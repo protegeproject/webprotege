@@ -60,11 +60,6 @@ public class CollectionViewActivity_TestCase {
     }
 
     @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_place() {
-        assertThat(collectionViewActivity, is(Matchers.not(new CollectionViewActivity(presenter, Mockito.mock(CollectionViewPlace.class)))));
-    }
-
-    @Test
     public void shouldBeEqualToOtherHashCode() {
         assertThat(collectionViewActivity.hashCode(), is(new CollectionViewActivity(presenter, place).hashCode()));
     }

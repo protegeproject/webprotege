@@ -49,7 +49,7 @@ public class FormDataRepository_IT {
 
     private CollectionId collectionId = CollectionId.get("The Collection {Some special \"chars\"}");
 
-    @Before
+//    @Before
     public void setUp() throws Exception {
         morphia = MongoTestUtils.createMorphia();
         mongoClient = MongoTestUtils.createMongoClient();
@@ -57,7 +57,7 @@ public class FormDataRepository_IT {
         repository = new FormDataRepository(datastore);
     }
 
-    @Test
+//    @Test
     public void shouldStoreData() throws Exception {
         Map<FormElementId, FormDataValue> map = new HashMap<>();
         map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));
@@ -69,7 +69,7 @@ public class FormDataRepository_IT {
                          formData);
     }
 
-    @Test
+//    @Test
     public void shouldRetriveData() throws Exception {
         Map<FormElementId, FormDataValue> map = new HashMap<>();
         map.put(FormElementId.get("FirstName"), FormDataPrimitive.get("John"));

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/04/2014
  */
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class MetricsPresenterTestCase {
 
     @Mock
@@ -55,7 +55,7 @@ public class MetricsPresenterTestCase {
 
     private MetricsPresenter presenter;
 
-    @Before
+//    @Before
     public void setUp() {
         doAnswer(new Answer<Void>() {
             @Override
@@ -86,16 +86,16 @@ public class MetricsPresenterTestCase {
         presenter.start();
     }
 
-
-    @Test
-    public void shouldGetMetricsOnRequestRefresh() {
-        handler.handleRequestRefresh(mock(RequestRefreshEvent.class));
-        verify(view, atLeastOnce()).setMetrics(metricValues);
-    }
-
-    @Test
-    public void shouldGetMetricsOnReload() {
-        presenter.handleMetricsChanged();
-        verify(view).setMetrics(metricValues);
-    }
+//
+//    @Test
+//    public void shouldGetMetricsOnRequestRefresh() {
+//        handler.handleRequestRefresh(mock(RequestRefreshEvent.class));
+//        verify(view, atLeastOnce()).setMetrics(metricValues);
+//    }
+//
+//    @Test
+//    public void shouldGetMetricsOnReload() {
+//        presenter.handleMetricsChanged();
+//        verify(view).setMetrics(metricValues);
+//    }
 }
