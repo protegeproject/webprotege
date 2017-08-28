@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.change;
 
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -28,13 +29,15 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     private final ChangeListViewPresenter presenter;
 
-    private final PortletAction refreshAction = new PortletAction("Refresh", (action, event) -> reload());
+    private final PortletAction refreshAction;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
     private final FilterView filterView;
+
+    private final Messages messages;
 
     private final ChangeListView changeListView;
 
@@ -43,11 +46,13 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
                                           LoggedInUserProjectPermissionChecker permissionChecker,
                                           FilterView filterView,
                                           SelectionModel selectionModel,
-                                          ProjectId projectId) {
+                                          ProjectId projectId,
+                                          Messages messages) {
         super(selectionModel, projectId);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.filterView = filterView;
+        this.messages = messages;
         presenter.setDownloadVisible(true);
         changeListView = presenter.getView();
 
@@ -56,11 +61,12 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue()
                                                                                         .hasSetting(SHOW_DETAILS_FILTER,
                                                                                                     FilterSetting.ON)));
+        refreshAction = new PortletAction(messages.refresh(), (action, event) -> reload());
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setForbiddenMessage("You do not have permission to view changes in this project");
+        portletUi.setForbiddenMessage(messages.change_permissionDenied());
         portletUi.setWidget(changeListView.asWidget());
         portletUi.addPortletAction(refreshAction);
         portletUi.setToolbarVisible(true);

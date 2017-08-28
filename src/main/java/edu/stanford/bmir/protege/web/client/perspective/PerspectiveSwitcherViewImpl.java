@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TabBar;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -69,6 +70,8 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     private boolean addViewAllowed = true;
 
+    private static Messages messages = GWT.create(Messages.class);
+
     @Inject
     public PerspectiveSwitcherViewImpl(PerspectiveLinkFactory linkFactory) {
         this.linkFactory = linkFactory;
@@ -104,7 +107,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             popupMenu.addItem(action);
         }
         popupMenu.addSeparator();
-        popupMenu.addItem("Add blank tab\u2026",
+        popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
                           event -> addPerspectiveLinkRequestHandler.handleAddNewPerspectiveLinkRequest());
         popupMenu.showRelativeTo(newTabButton);
     }
@@ -128,16 +131,16 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
         });
         if (addViewAllowed) {
-            linkWidget.addActionHandler("Add view", event -> {
+            linkWidget.addActionHandler(messages.perspective_addView(), event -> {
                 if (addViewAllowed) {
                     addViewHandler.handleAddViewToPerspective(perspectiveId);
                 }
             });
         }
-        linkWidget.addActionHandler("Reset",
+        linkWidget.addActionHandler(messages.perspective_reset(),
                                     event -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveId));
         if (closePerspectiveAllowed) {
-            linkWidget.addActionHandler("Close",
+            linkWidget.addActionHandler(messages.perspective_close(),
                                         event -> {
                                             if (closePerspectiveAllowed) {
                                                 removePerspectiveLinkRequestHandler.handleRemovePerspectiveLinkRequest(perspectiveId);
