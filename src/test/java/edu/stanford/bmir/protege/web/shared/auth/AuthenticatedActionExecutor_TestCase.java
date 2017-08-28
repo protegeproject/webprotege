@@ -96,21 +96,17 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
         when(chapSession.getSalt()).thenReturn(salt);
         when(chapSession.getChallengeMessage()).thenReturn(challengeMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Object[] args = invocationOnMock.getArguments();
-                if (args[0] instanceof GetChapSessionAction) {
-                    DispatchServiceCallback<GetChapSessionResult> cb = (DispatchServiceCallback<GetChapSessionResult>) args[1];
-                    cb.onSuccess(chapSessionResult);
-                }
-                else if(args[1] instanceof PerformLoginAction) {
-                    DispatchServiceCallback<R> cb = (DispatchServiceCallback<R>) args[1];
-                    cb.onSuccess(result);
-                }
-                return null;
+        doAnswer(invocationOnMock -> {
+            Object[] args = invocationOnMock.getArguments();
+            if (args[0] instanceof GetChapSessionAction) {
+                DispatchServiceCallback<GetChapSessionResult> cb = (DispatchServiceCallback<GetChapSessionResult>) args[1];
+                cb.onSuccess(chapSessionResult);
             }
+            else if(args[1] instanceof PerformLoginAction) {
+                DispatchServiceCallback<R> cb = (DispatchServiceCallback<R>) args[1];
+                cb.onSuccess(result);
+            }
+            return null;
         }).when(dispatchServiceManager).execute(any(Action.class), any(DispatchServiceCallback.class));
 
         when(actionFactory.createAction(chapSessionId, userId, chapResponse)).thenReturn(action);
