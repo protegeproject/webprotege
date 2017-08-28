@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,8 +36,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectCache {
 
-    private final Interner<ProjectId> projectIdInterner;
+    private static final Logger logger = LoggerFactory.getLogger(ProjectCache.class);
 
+    private final Interner<ProjectId> projectIdInterner;
 
     private final ReadWriteLock projectMapReadWriteLoc = new ReentrantReadWriteLock();
 
@@ -67,16 +70,12 @@ public class ProjectCache {
      */
     private static final long DORMANT_PROJECT_TIME_MS = 3 * 60 * 1000;
 
-    private final WebProtegeLogger logger;
-
     private final ApplicationComponent applicationComponent;
 
     @Inject
     public ProjectCache(@Nonnull ApplicationComponent applicationComponent,
-                        @Nonnull ProjectImporterFactory projectImporterFactory,
-                        @Nonnull WebProtegeLogger logger) {
+                        @Nonnull ProjectImporterFactory projectImporterFactory) {
         this.applicationComponent = checkNotNull(applicationComponent);
-        this.logger = checkNotNull(logger);
         this.projectImporterFactory = checkNotNull(projectImporterFactory);
         Timer timer = new Timer(true);
         timer.schedule(new TimerTask() {
@@ -204,7 +203,7 @@ public class ProjectCache {
             final int projectsBeingAccessed = lastAccessMap.size();
             LAST_ACCESS_LOCK.writeLock().unlock();
             WRITE_LOCK.unlock();
-            logger.info("Purged project: %s.  %d projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
+            logger.info("Purged project: {}.  {} projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
         }
     }
 
