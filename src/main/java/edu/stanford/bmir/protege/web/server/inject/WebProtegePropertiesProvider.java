@@ -58,7 +58,7 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
     }
 
     private BufferedInputStream createBufferedInputStream() throws IOException {
-        Path stdConfigPath = Paths.get("etc", "webprotege", WEB_PROTEGE_PROPERTIES_FILE_NAME);
+        Path stdConfigPath = Paths.get("/etc", "webprotege", WEB_PROTEGE_PROPERTIES_FILE_NAME);
         if(Files.exists(stdConfigPath)) {
             logger.info("Found {} at {}", WEB_PROTEGE_PROPERTIES_FILE_NAME, stdConfigPath.toAbsolutePath());
             return new BufferedInputStream(Files.newInputStream(stdConfigPath));
