@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
 
-    <property resource="webprotege.properties"/>
-    <property name="logsdir" value="${logs.directory:-/var/log/webprotege}"/>
+    <!-- Choose the logs directory path based on operating system -->
+    <if condition='property("os.name").startsWith("Windows")'>
+        <then>
+            <!-- Windows gets \ProgramData\WebProtege\Logs-->
+            <property name="logsdir" value="${logs.directory:-/ProgramData/WebProtege/Logs}"/>
+        </then>
+        <else>
+            <!-- Everything else, e.g. MacOS and Linux gets /var/log/webprotege -->
+            <property name="logsdir" value="${logs.directory:-/var/log/webprotege}"/>
+        </else>
+    </if>
 
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">

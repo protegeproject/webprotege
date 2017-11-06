@@ -1,17 +1,15 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
+import edu.stanford.bmir.protege.web.server.filemanager.ConfigInputStreamSupplier;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -33,8 +31,12 @@ public class MailPropertiesProvider implements Provider<Properties> {
 
     private static Logger logger = LoggerFactory.getLogger(MailPropertiesProvider.class);
 
+    @Nonnull
+    private final ConfigInputStreamSupplier configInputStreamSupplier;
+
     @Inject
-    public MailPropertiesProvider() {
+    public MailPropertiesProvider(@Nonnull ConfigInputStreamSupplier configInputStreamSupplier) {
+        this.configInputStreamSupplier = checkNotNull(configInputStreamSupplier);
     }
 
     @Override
@@ -64,18 +66,7 @@ public class MailPropertiesProvider implements Provider<Properties> {
     }
 
     private BufferedInputStream createBufferedInputStream() throws IOException {
-        Path stdConfigPath = Paths.get("etc" , "webprotege" , MAIL_PROPERTIES_FILE_NAME);
-        if (Files.exists(stdConfigPath)) {
-            logger.info("Found {} at {}" , MAIL_PROPERTIES_FILE_NAME, stdConfigPath.toAbsolutePath());
-            return new BufferedInputStream(Files.newInputStream(stdConfigPath));
-        }
-        else {
-            logger.info("Loading {} from the class path" , MAIL_PROPERTIES_FILE_NAME);
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream(MAIL_PROPERTIES_FILE_NAME);
-            return new BufferedInputStream(inputStream);
-        }
-
+        return configInputStreamSupplier.getConfigFileInputStream(MAIL_PROPERTIES_FILE_NAME);
     }
 
     /**
