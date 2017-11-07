@@ -4,14 +4,18 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationServiceProvider;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
@@ -20,6 +24,9 @@ import edu.stanford.bmir.protege.web.shared.user.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_ACCOUNT;
 
 /**
  * Matthew Horridge
@@ -33,7 +40,11 @@ public class SignUpPresenter implements Presenter {
 
     private final SignUpView view;
 
+    private final ForbiddenView forbiddenView;
+
     private final PlaceController placeController;
+
+    private final LoggedInUserManager permissionChecker;
 
     private Optional<Place> continueTo = Optional.empty();
 
@@ -41,19 +52,28 @@ public class SignUpPresenter implements Presenter {
 
     @Inject
     public SignUpPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
+                           @Nonnull LoggedInUserManager permissionChecker,
                            @Nonnull SignUpView view,
+                           @Nonnull ForbiddenView forbiddenView,
                            @Nonnull PlaceController placeController) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.view = view;
-        this.placeController = placeController;
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.view = checkNotNull(view);
+        this.forbiddenView = checkNotNull(forbiddenView);
+        this.placeController = checkNotNull(placeController);
+        this.permissionChecker = checkNotNull(permissionChecker);
         view.setCancelHandler(event -> handleCancel());
         view.setSignUpHandler(event -> handleSignUp());
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        view.clear();
-        container.setWidget(view);
+        if(!permissionChecker.isAllowedApplicationAction(CREATE_ACCOUNT)) {
+            container.setWidget(forbiddenView);
+        }
+        else {
+            view.clear();
+            container.setWidget(view);
+        }
     }
 
     public void setBackTo(Place backTo) {
