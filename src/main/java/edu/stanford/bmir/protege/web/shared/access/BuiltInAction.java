@@ -18,7 +18,7 @@ public enum BuiltInAction {
 
     VIEW_ANY_USER_DETAILS,
 
-    DELETE_ANY_USER,
+    DELETE_ANY_ACCOUNT,
 
     RESET_ANY_USER_PASSWORD,
 
