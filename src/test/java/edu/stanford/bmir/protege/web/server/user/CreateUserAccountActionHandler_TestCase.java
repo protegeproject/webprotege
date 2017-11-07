@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
@@ -46,9 +47,12 @@ public class CreateUserAccountActionHandler_TestCase {
     @Mock
     private Salt salt;
 
+    @Mock
+    private AccessManager accessManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new CreateUserAccountActionHandler(authenticationManager);
+        handler = new CreateUserAccountActionHandler(accessManager, authenticationManager);
         when(action.getUserId()).thenReturn(userId);
         when(action.getEmailAddress()).thenReturn(emailAddress);
         when(action.getPasswordDigest()).thenReturn(saltedPasswordDigest);
