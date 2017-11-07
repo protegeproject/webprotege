@@ -1,1 +1,0 @@
-java -cp webprotege-lib.jar edu.stanford.bmir.protege.web.server.cmdline.SetupTools

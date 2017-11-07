@@ -5,6 +5,8 @@ import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.filemanager.ConfigDirectorySupplier;
+import edu.stanford.bmir.protege.web.server.filemanager.ConfigInputStreamSupplier;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
 import edu.stanford.bmir.protege.web.server.persistence.*;
@@ -109,17 +111,21 @@ public class SetupTools {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        Morphia morphia = getMorphia();
-        MongoClient mongoClient = getMongoClient();
-        Datastore datastore = morphia.createDatastore(mongoClient, DB_NAME);
-        MongoDatabase database = mongoClient.getDatabase(DB_NAME);
-        UserRecordRepository userRecordRepository = new UserRecordRepository(database, new UserRecordConverter());
-        SetupTools tools = new SetupTools(userRecordRepository,
-                                          new AccessManagerImpl(RoleOracleImpl.get(),
-                                                                datastore),
-                                          System.console());
-        tools.createAdministratorAccount();
+    public static void main(String[] args) {
+        try {
+            Morphia morphia = getMorphia();
+            MongoClient mongoClient = getMongoClient();
+            Datastore datastore = morphia.createDatastore(mongoClient, DB_NAME);
+            MongoDatabase database = mongoClient.getDatabase(DB_NAME);
+            UserRecordRepository userRecordRepository = new UserRecordRepository(database, new UserRecordConverter());
+            SetupTools tools = new SetupTools(userRecordRepository,
+                                              new AccessManagerImpl(RoleOracleImpl.get(),
+                                                                    datastore),
+                                              System.console());
+            tools.createAdministratorAccount();
+        } catch (IOException e) {
+            System.out.printf("An error occurred: %s %s\n", e.getClass().getSimpleName(), e.getMessage());
+        }
     }
 
     private static MongoClient getMongoClient() throws IOException {
@@ -142,7 +148,10 @@ public class SetupTools {
     @Nonnull
     private static WebProtegeProperties getWebProtegeProperties() throws IOException {
         Properties properties = new Properties(System.getProperties());
-        properties.load(new BufferedInputStream(SetupTools.class.getClass().getResourceAsStream("/webprotege.properties")));
-        return new WebProtegeProperties(properties);
+        ConfigInputStreamSupplier configInputStreamSupplier = new ConfigInputStreamSupplier(new ConfigDirectorySupplier());
+        try(BufferedInputStream bufferedInputStream = configInputStreamSupplier.getConfigFileInputStream(WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME)) {
+            properties.load(bufferedInputStream);
+            return new WebProtegeProperties(properties);
+        }
     }
 }
