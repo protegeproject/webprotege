@@ -22,7 +22,8 @@ public enum BuiltInRole {
 
     ACCOUNT_CREATOR(CREATE_ACCOUNT),
 
-    USER_ADMIN(VIEW_ANY_USER_DETAILS,
+    USER_ADMIN(ACCOUNT_CREATOR,
+               VIEW_ANY_USER_DETAILS,
                DELETE_ANY_USER,
                RESET_ANY_USER_PASSWORD),
 
