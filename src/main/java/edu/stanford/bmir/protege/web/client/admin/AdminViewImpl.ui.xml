@@ -43,11 +43,11 @@
                 <g:tab>
                     <g:header size='7'>Main Settings</g:header>
                     <g:HTMLPanel addStyleNames="{style.tabContent}">
-                        <g:Label text="Administrator Details" addStyleNames="{style.sectionHeading}"/>
+                        <g:Label text="System Details" addStyleNames="{style.sectionHeading}"/>
                         <g:HTMLPanel addStyleNames="{style.section}">
-                            <g:Label text="Admin email address"/>
+                            <g:Label text="System notification email address"/>
                             <text:PlaceholderTextBox ui:field="adminEmailAddressField"
-                                                     placeholder="Admin email address"/>
+                                                     placeholder="Email address for system notifications"/>
                         </g:HTMLPanel>
 
 
