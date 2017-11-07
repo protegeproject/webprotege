@@ -72,8 +72,8 @@ public class SetupTools {
 
         console.printf("You have successfully set up the administrator account.\n");
         console.printf("Please log into WebProtege using the user name and password that you specified.\n");
-        console.printf("You should complete your WebProtege setup by viewing the #admin page of your installation.  " +
-                               "If you have WebProtege running at https://my.domain.com/webprotege/WebProtege.jsp then the admin " +
+        console.printf("You should complete your WebProtege setup by viewing the #admin page of your installation.\n" +
+                               "If you have WebProtege running at https://my.domain.com/webprotege/WebProtege.jsp then the admin\n" +
                                "page can be found at https://my.domain.com/webprotege/WebProtege.jsp#admin\n");
     }
 
