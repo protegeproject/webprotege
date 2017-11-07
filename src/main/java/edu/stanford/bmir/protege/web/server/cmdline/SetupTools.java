@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.filemanager.ConfigDirectorySupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.ConfigInputStreamSupplier;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegePropertiesProvider;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import edu.stanford.bmir.protege.web.server.user.UserRecord;
 import edu.stanford.bmir.protege.web.server.user.UserRecordConverter;
@@ -147,11 +148,8 @@ public class SetupTools {
 
     @Nonnull
     private static WebProtegeProperties getWebProtegeProperties() throws IOException {
-        Properties properties = new Properties(System.getProperties());
         ConfigInputStreamSupplier configInputStreamSupplier = new ConfigInputStreamSupplier(new ConfigDirectorySupplier());
-        try(BufferedInputStream bufferedInputStream = configInputStreamSupplier.getConfigFileInputStream(WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME)) {
-            properties.load(bufferedInputStream);
-            return new WebProtegeProperties(properties);
-        }
+        WebProtegePropertiesProvider propertiesProvider = new WebProtegePropertiesProvider(configInputStreamSupplier);
+        return propertiesProvider.get();
     }
 }
