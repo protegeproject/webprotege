@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -64,15 +65,21 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
 
     @Override
     public RequestValidator getRequestValidator(CreateNewProjectAction action, RequestContext requestContext) {
-        return new ApplicationPermissionValidator(
-                accessManager,
-                requestContext.getUserId(),
-                CREATE_EMPTY_PROJECT);
+        return new CompositeRequestValidator(
+                new UserIsSignedInValidator(requestContext.getUserId()),
+                new ApplicationPermissionValidator(
+                        accessManager,
+                        requestContext.getUserId(),
+                        CREATE_EMPTY_PROJECT)
+        );
     }
 
     @Override
     public CreateNewProjectResult execute(CreateNewProjectAction action, ExecutionContext executionContext) {
         try {
+            if(!accessManager.hasPermission(forUser(executionContext.getUserId()), ApplicationResource.get(), CREATE_EMPTY_PROJECT)) {
+                throw new PermissionDeniedException("You do not have permission to create new projects");
+            }
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
             if(newProjectSettings.hasSourceDocument()) {
                 if(!accessManager.hasPermission(forUser(executionContext.getUserId()), ApplicationResource.get(), UPLOAD_PROJECT)) {
