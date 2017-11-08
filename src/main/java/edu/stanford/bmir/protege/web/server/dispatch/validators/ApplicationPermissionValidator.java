@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 
 /**
  * Matthew Horridge
@@ -42,7 +43,7 @@ public class ApplicationPermissionValidator implements RequestValidator {
 
     @Override
     public RequestValidationResult validateAction() {
-        if(accessManager.hasPermission(Subject.forUser(userId),
+        if(accessManager.hasPermission(forUser(userId),
                                            ApplicationResource.get(),
                                            actionId)) {
             return RequestValidationResult.getValid();
