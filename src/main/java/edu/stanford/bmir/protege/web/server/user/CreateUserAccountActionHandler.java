@@ -16,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_ACCOUNT;
 
 /**
  * Matthew Horridge
@@ -44,7 +45,7 @@ public class CreateUserAccountActionHandler implements ApplicationActionHandler<
 
     @Override
     public RequestValidator getRequestValidator(CreateUserAccountAction action, RequestContext requestContext) {
-        return new ApplicationPermissionValidator(accessManager, action.getUserId(), BuiltInAction.CREATE_ACCOUNT.getActionId());
+        return new ApplicationPermissionValidator(accessManager, requestContext.getUserId(), CREATE_ACCOUNT);
     }
 
     @Override
