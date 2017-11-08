@@ -195,31 +195,10 @@ public class DispatchServiceManager {
             signInRequiredHandler.handleSignInRequired();
             return;
         }
-        if (throwable instanceof PermissionDeniedException) {
-            // Try to determine if the user is logged in.  The session might have expired.
-            execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
-                @Override
-                public void handleSuccess(GetCurrentUserInSessionResult result) {
-                    if(result.getUserInSession().getUserDetails().getUserId().isGuest()) {
-                        signInRequiredHandler.handleSignInRequired();
-                    }
-                    else {
-                        callback.onFailure(throwable);
-                    }
-                }
-
-                @Override
-                public void handleErrorFinally(Throwable throwable) {
-                    callback.onFailure(throwable);
-                }
-            });
-        }
         // Skip handling for actions that do not care about errors
         if(action instanceof InvocationExceptionTolerantAction) {
             Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);
-            if(errorMessage.isPresent()) {
-                displayAlert(errorMessage.get());
-            }
+            errorMessage.ifPresent(this::displayAlert);
             return;
         }
         callback.onFailure(throwable);
