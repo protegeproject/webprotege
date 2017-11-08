@@ -95,16 +95,21 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                                                projectSettingsPlace.getNextPlace());
         }
         if(place instanceof LoginPlace) {
-            LoginPresenter presenter = loginPresenterProvider.get();
-            LoginPlace loginPlace = (LoginPlace) place;
-            Optional<Place> continueTo = loginPlace.getContinueTo();
-            if (continueTo.isPresent()) {
-                presenter.setNextPlace(continueTo.get());
+            if(!loggedInUserProvider.getCurrentUserId().isGuest()) {
+                Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
             else {
-                presenter.setNextPlace(new ProjectListPlace());
+                LoginPresenter presenter = loginPresenterProvider.get();
+                LoginPlace loginPlace = (LoginPlace) place;
+                Optional<Place> continueTo = loginPlace.getContinueTo();
+                if (continueTo.isPresent()) {
+                    presenter.setNextPlace(continueTo.get());
+                }
+                else {
+                    presenter.setNextPlace(new ProjectListPlace());
+                }
+                return new LoginActivity(presenter);
             }
-            return new LoginActivity(presenter);
         }
 
         if(place instanceof SignUpPlace) {
