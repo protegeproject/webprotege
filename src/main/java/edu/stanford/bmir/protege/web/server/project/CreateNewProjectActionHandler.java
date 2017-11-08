@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -24,6 +25,8 @@ import java.io.IOException;
 
 import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
 import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -61,19 +64,21 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
 
     @Override
     public RequestValidator getRequestValidator(CreateNewProjectAction action, RequestContext requestContext) {
-        return new UserIsSignedInValidator(requestContext.getUserId());
+        return new ApplicationPermissionValidator(
+                accessManager,
+                requestContext.getUserId(),
+                CREATE_EMPTY_PROJECT);
     }
 
     @Override
     public CreateNewProjectResult execute(CreateNewProjectAction action, ExecutionContext executionContext) {
         try {
-            if (!accessManager.hasPermission(forUser(executionContext.getUserId()),
-                                             ApplicationResource.get(),
-                                             BuiltInAction.CREATE_EMPTY_PROJECT.getActionId())) {
-                throw new PermissionDeniedException("You do not have permission to create new projects");
-            }
-
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
+            if(newProjectSettings.hasSourceDocument()) {
+                if(!accessManager.hasPermission(forUser(executionContext.getUserId()), ApplicationResource.get(), UPLOAD_PROJECT)) {
+                    throw new PermissionDeniedException("You do not have permission to upload projects");
+                }
+            }
             ProjectId projectId = pm.createNewProject(newProjectSettings);
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);

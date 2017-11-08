@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.Subject;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,12 @@ public class ApplicationPermissionValidator implements RequestValidator {
         this.accessManager = checkNotNull(accessManager);
         this.userId = checkNotNull(userId);
         this.actionId = checkNotNull(actionId);
+    }
+
+    public ApplicationPermissionValidator(@Nonnull AccessManager accessManager,
+                                          @Nonnull UserId userId,
+                                          @Nonnull BuiltInAction actionId) {
+        this(accessManager, userId, actionId.getActionId());
     }
 
     @Override
