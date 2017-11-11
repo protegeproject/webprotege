@@ -118,6 +118,7 @@ public class ClientApplicationModule {
     @Provides
     @ApplicationSingleton
     ActivityMapper provideActivityMapper(WebProtegeActivityMapper mapper) {
+        mapper.start();
         return mapper;
     }
 
@@ -128,7 +129,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
     ApplicationView provideApplicationView(ApplicationViewImpl applicationView) {
         return applicationView;
     }
@@ -158,7 +158,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
     SignUpView provideSignUpView(SignUpViewImpl signUpView) {
         return signUpView;
     }
@@ -194,13 +193,11 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
     TopBarView provideTopBarView(TopBarViewImpl impl) {
         return impl;
     }
 
     @Provides
-    @ApplicationSingleton
     ProjectManagerView provideProjectManagerView(ProjectManagerViewImpl impl) {
         return impl;
     }
@@ -231,37 +228,31 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
     LoginView provideLoginView(LoginViewImpl loginView) {
         return loginView;
     }
 
     @Provides
-    @ApplicationSingleton
     LogoutView provideLogoutView(LogoutViewImpl logoutView) {
         return logoutView;
     }
 
     @Provides
-    @ApplicationSingleton
     ResetPasswordView provideResetPasswordView(ResetPasswordViewImpl resetPasswordView) {
         return resetPasswordView;
     }
 
     @Provides
-    @ApplicationSingleton
     LoggedInUserView provideLoggedInUserView(LoggedInUserViewImpl loggedInUserView) {
         return loggedInUserView;
     }
 
     @Provides
-    @ApplicationSingleton
     HelpView provideHelpView(HelpViewImpl helpView) {
         return helpView;
     }
 
     @Provides
-    @ApplicationSingleton
     GoToHomeView provideGoToHomeView(GoToToHomeViewImpl goToToHomeView) {
         return goToToHomeView;
     }
@@ -272,7 +263,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    @ApplicationSingleton
     PerspectiveSwitcherView providePerspectiveSwitcherView(PerspectiveSwitcherViewImpl view) {
         return view;
     }

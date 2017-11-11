@@ -26,6 +26,5 @@ public class SignOutRequestHandlerImpl implements SignOutRequestHandler {
     @Override
     public void handleSignOutRequest() {
         loggedInUserManager.logOutCurrentUser();
-        placeController.goTo(new LoginPlace());
     }
 }
