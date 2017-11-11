@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationSe
 import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_A
  * Stanford Center for Biomedical Informatics Research
  * 19/02/16
  */
+@ApplicationSingleton
 public class SignUpPresenter implements Presenter {
 
 

@@ -6,8 +6,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.admin.AdminPresenter;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
@@ -50,6 +52,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final PlaceController placeController;
 
+    private final EventBus eventBus;
 
     private Optional<ProjectPresenter> lastProjectPresenter = Optional.empty();
 
@@ -64,7 +67,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                                     LoginPresenter loginPresenter,
                                     SignUpPresenter signUpPresenter,
                                     AdminPresenter adminPresenter,
-                                    PlaceController placeController) {
+                                    PlaceController placeController,
+                                    EventBus eventBus) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectManagerPresenter = projectListPresenter;
@@ -72,6 +76,15 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         this.loginPresenter = loginPresenter;
         this.adminPresenter = adminPresenter;
         this.placeController = placeController;
+        this.eventBus = eventBus;
+    }
+
+    public void start() {
+        GWT.log("[WebProtegeActivityMapper] Started activity mapper.");
+        eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> {
+            GWT.log("[WebProtegeActivityMapper] User logged out.  Going to the Login Place.");
+            placeController.goTo(new LoginPlace());
+        });
     }
 
     public Activity getActivity(final Place place) {

@@ -39,6 +39,5 @@ public class LogoutPresenter {
 
     private void doLogout() {
         loggedInUserManager.logOutCurrentUser();
-        placeController.goTo(new LoginPlace());
     }
 }
