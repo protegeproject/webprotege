@@ -41,9 +41,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final Provider<ProjectManagerPresenter> projectListPresenterProvider;
 
-    private final Provider<LoginPresenter> loginPresenterProvider;
+    private final LoginPresenter loginPresenter;
 
-    private final Provider<SignUpPresenter> signUpPresenterProvider;
+    private final SignUpPresenter signUpPresenter;
 
     private final AdminPresenter adminPresenter;
 
@@ -62,15 +62,15 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ClientApplicationComponent applicationComponent,
                                     Provider<ProjectManagerPresenter> projectListPresenterProvider,
-                                    Provider<LoginPresenter> loginPresenterProvider,
-                                    Provider<SignUpPresenter> signUpPresenterProvider,
+                                    LoginPresenter loginPresenter,
+                                    SignUpPresenter signUpPresenter,
                                     AdminPresenter adminPresenter,
                                     PlaceController placeController) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectListPresenterProvider = projectListPresenterProvider;
-        this.signUpPresenterProvider = signUpPresenterProvider;
-        this.loginPresenterProvider = loginPresenterProvider;
+        this.signUpPresenter = signUpPresenter;
+        this.loginPresenter = loginPresenter;
         this.adminPresenter = adminPresenter;
         this.placeController = placeController;
     }
@@ -79,10 +79,9 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         GWT.log("[WebProtegeActivityMapper] Map place: " + place);
         if(!(place instanceof LoginPlace) && !(place instanceof SignUpPlace) && loggedInUserProvider.getCurrentUserId().isGuest()) {
             GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
-            LoginPresenter presenter = loginPresenterProvider.get();
-            presenter.setNextPlace(place);
+            loginPresenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
-            return new LoginActivity(presenter);
+            return new LoginActivity(loginPresenter);
         }
         if(place instanceof AdminPlace) {
             return new AdminActivity(adminPresenter);
@@ -99,26 +98,22 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
             }
             else {
-                LoginPresenter presenter = loginPresenterProvider.get();
                 LoginPlace loginPlace = (LoginPlace) place;
                 Optional<Place> continueTo = loginPlace.getContinueTo();
                 if (continueTo.isPresent()) {
-                    presenter.setNextPlace(continueTo.get());
+                    loginPresenter.setNextPlace(continueTo.get());
                 }
                 else {
-                    presenter.setNextPlace(new ProjectListPlace());
+                    loginPresenter.setNextPlace(new ProjectListPlace());
                 }
-                return new LoginActivity(presenter);
+                return new LoginActivity(loginPresenter);
             }
         }
 
         if(place instanceof SignUpPlace) {
-            SignUpPresenter signUpPresenter = signUpPresenterProvider.get();
             SignUpPlace signUpPlace = (SignUpPlace) place;
             Optional<Place> continueTo = signUpPlace.getContinueTo();
-            if(continueTo.isPresent()) {
-                signUpPresenter.setContinueTo(continueTo.get());
-            }
+            continueTo.ifPresent(signUpPresenter::setContinueTo);
             return new SignUpActivity(signUpPresenter);
         }
 
