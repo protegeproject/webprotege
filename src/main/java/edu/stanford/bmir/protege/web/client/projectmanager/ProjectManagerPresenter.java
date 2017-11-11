@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedToTrashEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
@@ -206,9 +207,7 @@ public class ProjectManagerPresenter implements Presenter {
         dispatchServiceManager.execute(action, result -> {
             availableProjectsCache.setAvailableProjects(result.getDetails());
             applyFilters();
-            if (selectId.isPresent()) {
-                projectManagerView.setSelectedProject(selectId.get());
-            }
+            selectId.ifPresent(projectManagerView::setSelectedProject);
         });
     }
 

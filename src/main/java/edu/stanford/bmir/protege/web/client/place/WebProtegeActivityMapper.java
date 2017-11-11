@@ -27,7 +27,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.Optional;
 
 /**
@@ -39,7 +38,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final ClientApplicationComponent applicationComponent;
 
-    private final Provider<ProjectManagerPresenter> projectListPresenterProvider;
+    private final ProjectManagerPresenter projectManagerPresenter;
 
     private final LoginPresenter loginPresenter;
 
@@ -61,14 +60,14 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     @Inject
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ClientApplicationComponent applicationComponent,
-                                    Provider<ProjectManagerPresenter> projectListPresenterProvider,
+                                    ProjectManagerPresenter projectListPresenter,
                                     LoginPresenter loginPresenter,
                                     SignUpPresenter signUpPresenter,
                                     AdminPresenter adminPresenter,
                                     PlaceController placeController) {
         this.applicationComponent = applicationComponent;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.projectListPresenterProvider = projectListPresenterProvider;
+        this.projectManagerPresenter = projectListPresenter;
         this.signUpPresenter = signUpPresenter;
         this.loginPresenter = loginPresenter;
         this.adminPresenter = adminPresenter;
@@ -118,7 +117,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         }
 
         if(place instanceof ProjectListPlace) {
-            return new ProjectListActivity(projectListPresenterProvider.get());
+            return new ProjectListActivity(projectManagerPresenter);
         }
 
         if(place instanceof ProjectViewPlace) {
@@ -137,12 +136,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new SharingSettingsActivity(presenter, sharingSettingsPlace);
         }
 
-        if(place instanceof CollectionViewPlace) {
-            CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
-            CollectionPresenter collectionPresenter = getCollectionPresenter(collectionViewPlace);
-//            lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
-            return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
-        }
+//        if(place instanceof CollectionViewPlace) {
+//            CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
+//            CollectionPresenter collectionPresenter = getCollectionPresenter(collectionViewPlace);
+////            lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
+//            return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
+//        }
 
         return null;
     }
