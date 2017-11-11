@@ -10,12 +10,10 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationServiceProvider;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
@@ -44,7 +42,7 @@ public class SignUpPresenter implements Presenter {
 
     private final PlaceController placeController;
 
-    private final LoggedInUserManager permissionChecker;
+    private final LoggedInUserManager loggedInUserManager;
 
     private Optional<Place> continueTo = Optional.empty();
 
@@ -52,7 +50,7 @@ public class SignUpPresenter implements Presenter {
 
     @Inject
     public SignUpPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
-                           @Nonnull LoggedInUserManager permissionChecker,
+                           @Nonnull LoggedInUserManager loggedInUserManager,
                            @Nonnull SignUpView view,
                            @Nonnull ForbiddenView forbiddenView,
                            @Nonnull PlaceController placeController) {
@@ -60,14 +58,14 @@ public class SignUpPresenter implements Presenter {
         this.view = checkNotNull(view);
         this.forbiddenView = checkNotNull(forbiddenView);
         this.placeController = checkNotNull(placeController);
-        this.permissionChecker = checkNotNull(permissionChecker);
+        this.loggedInUserManager = checkNotNull(loggedInUserManager);
         view.setCancelHandler(event -> handleCancel());
         view.setSignUpHandler(event -> handleSignUp());
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        if(!permissionChecker.isAllowedApplicationAction(CREATE_ACCOUNT)) {
+        if(!loggedInUserManager.isAllowedApplicationAction(CREATE_ACCOUNT)) {
             container.setWidget(forbiddenView);
         }
         else {
@@ -143,8 +141,7 @@ public class SignUpPresenter implements Presenter {
             @Override
             public void handleSuccess(CreateUserAccountResult createUserAccountResult) {
                 MessageBox.showMessage("Registration complete",
-                        "You have successfully registered.  " +
-                                "Please sign in on the next page");
+                        "You have successfully registered.");
                 goToNextPlace();
             }
 
@@ -178,17 +175,20 @@ public class SignUpPresenter implements Presenter {
         if(continueTo.isPresent()) {
             placeController.goTo(continueTo.get());
         }
-        else {
+        else if(loggedInUserManager.getCurrentUserId().isGuest()) {
+            // Take guests back to the login place so that they can sign in
             placeController.goTo(new LoginPlace());
         }
     }
 
 
     private void handleCancel() {
+        view.clear();
         if(backTo.isPresent()) {
             placeController.goTo(backTo.get());
         }
-        else {
+        else if(loggedInUserManager.getCurrentUserId().isGuest()) {
+            // Take guests back to the login place
             placeController.goTo(new LoginPlace());
         }
     }
