@@ -25,7 +25,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main} ">
         <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
-            <g:Label text="Sign Up for Account" addStyleNames="{wp.dialog.title}"/>
+            <g:Label text="Create Account" addStyleNames="{wp.dialog.title}"/>
 
             <g:Label text="User name"/>
             <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Harry Potter"/>
@@ -49,7 +49,7 @@
             <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
                 <g:Button ui:field="cancelButton" text="Cancel"
                           addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
-                <g:Button ui:field="signInButton" text="Sign Up"
+                <g:Button ui:field="signInButton" text="Create Account"
                           addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
