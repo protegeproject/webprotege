@@ -22,8 +22,7 @@ public class ApplicationSettingsManager_IT {
 
     private final ApplicationSettings applicationSettings = new ApplicationSettings(
             "TheApplicationName" ,
-            "TheApplicationLogoUrl" ,
-            "TheAdminEmailAddress" ,
+            "TheSystemNotificationEmailAddress" ,
             new ApplicationLocation(
                     "TheScheme" ,
                     "TheHost" ,

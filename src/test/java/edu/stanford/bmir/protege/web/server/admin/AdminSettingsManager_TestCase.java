@@ -35,9 +35,7 @@ public class AdminSettingsManager_TestCase {
 
     public static final String THE_APP_NAME = "TheAppName";
 
-    public static final String THE_LOGO_URL = "TheLogoUrl";
-
-    public static final String THE_ADMIN_EMAIL_ADDRESS = "TheAdminEmailAddress";
+    public static final String THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS = "TheSystemNotificationEmailAddress";
 
     private AdminSettingsManager manager;
 
@@ -59,8 +57,7 @@ public class AdminSettingsManager_TestCase {
                                            applicationSettingsManager);
 
         when(applicationSettings.getApplicationName()).thenReturn(THE_APP_NAME);
-        when(applicationSettings.getCustomLogoUrl()).thenReturn(THE_LOGO_URL);
-        when(applicationSettings.getAdminEmailAddress()).thenReturn(THE_ADMIN_EMAIL_ADDRESS);
+        when(applicationSettings.getSystemNotificationEmailAddress()).thenReturn(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS);
         when(applicationSettings.getApplicationLocation()).thenReturn(applicationLocation);
         when(applicationSettingsManager.getApplicationSettings()).thenReturn(applicationSettings);
     }
@@ -69,8 +66,7 @@ public class AdminSettingsManager_TestCase {
     public void shouldGetApplicationSettings() {
         AdminSettings adminSettings = manager.getAdminSettings();
         assertThat(adminSettings.getApplicationName(), is(THE_APP_NAME));
-        assertThat(adminSettings.getCustomLogoUrl(), is(THE_LOGO_URL));
-        assertThat(adminSettings.getAdminEmailAddress().getEmailAddress(), is(THE_ADMIN_EMAIL_ADDRESS));
+        assertThat(adminSettings.getSystemNotificationEmailAddress().getEmailAddress(), is(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS));
         assertThat(adminSettings.getApplicationLocation(), is(applicationLocation));
     }
 

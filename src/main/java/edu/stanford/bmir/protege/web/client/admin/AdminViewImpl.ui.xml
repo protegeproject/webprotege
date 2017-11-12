@@ -46,7 +46,7 @@
                         <g:Label text="System Details" addStyleNames="{style.sectionHeading}"/>
                         <g:HTMLPanel addStyleNames="{style.section}">
                             <g:Label text="System notification email address"/>
-                            <text:PlaceholderTextBox ui:field="adminEmailAddressField"
+                            <text:PlaceholderTextBox ui:field="systemNotificationEmailAddressField"
                                                      placeholder="Email address for system notifications"/>
                         </g:HTMLPanel>
 

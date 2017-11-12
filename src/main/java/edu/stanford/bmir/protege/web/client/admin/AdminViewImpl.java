@@ -34,7 +34,7 @@ public class AdminViewImpl extends Composite implements AdminView {
     TextBox applicationLogoField;
 
     @UiField
-    TextBox adminEmailAddressField;
+    TextBox systemNotificationEmailAddressField;
 
     @UiField
     CheckBox accountCreationEnabledCheckBox;
@@ -118,24 +118,13 @@ public class AdminViewImpl extends Composite implements AdminView {
 
     @Nonnull
     @Override
-    public String getApplicationLogo() {
-        return applicationLogoField.getText().trim();
+    public String getSystemNotificationEmailAddress() {
+        return systemNotificationEmailAddressField.getText().trim();
     }
 
     @Override
-    public void setApplicationLogo(@Nonnull String applicationLogo) {
-        applicationLogoField.setText(applicationLogo.trim());
-    }
-
-    @Nonnull
-    @Override
-    public String getAdminEmailAddress() {
-        return adminEmailAddressField.getText().trim();
-    }
-
-    @Override
-    public void setAdminEmailAddress(@Nonnull String adminEmailAddress) {
-        adminEmailAddressField.setText(adminEmailAddress.trim());
+    public void setSystemNotificationEmailAddress(@Nonnull String emailAddress) {
+        systemNotificationEmailAddressField.setText(emailAddress.trim());
     }
 
     @Override

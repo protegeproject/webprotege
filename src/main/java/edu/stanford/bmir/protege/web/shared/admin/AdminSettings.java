@@ -22,9 +22,7 @@ public class AdminSettings implements IsSerializable {
 
     private String applicationName;
 
-    private String customLogoUrl;
-
-    private EmailAddress adminEmailAddress;
+    private EmailAddress systemNotificationEmailAddress;
 
 
     private ApplicationLocation applicationLocation;
@@ -51,8 +49,7 @@ public class AdminSettings implements IsSerializable {
     }
 
     public AdminSettings(@Nonnull String applicationName,
-                         @Nonnull String customLogoUrl,
-                         @Nonnull EmailAddress adminEmailAddress,
+                         @Nonnull EmailAddress systemNotificationEmailAddress,
                          @Nonnull ApplicationLocation applicationLocation,
                          @Nonnull AccountCreationSetting accountCreationSetting,
                          @Nonnull List<UserId> accountCreators,
@@ -63,8 +60,7 @@ public class AdminSettings implements IsSerializable {
                          @Nonnull NotificationEmailsSetting notificationEmailsSetting,
                          long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
-        this.customLogoUrl = checkNotNull(customLogoUrl);
-        this.adminEmailAddress = checkNotNull(adminEmailAddress);
+        this.systemNotificationEmailAddress = checkNotNull(systemNotificationEmailAddress);
         this.applicationLocation = checkNotNull(applicationLocation);
         this.accountCreationSetting = checkNotNull(accountCreationSetting);
         this.accountCreators = checkNotNull(accountCreators);
@@ -82,13 +78,8 @@ public class AdminSettings implements IsSerializable {
     }
 
     @Nonnull
-    public String getCustomLogoUrl() {
-        return customLogoUrl;
-    }
-
-    @Nonnull
-    public EmailAddress getAdminEmailAddress() {
-        return adminEmailAddress;
+    public EmailAddress getSystemNotificationEmailAddress() {
+        return systemNotificationEmailAddress;
     }
 
     @Nonnull
@@ -140,8 +131,7 @@ public class AdminSettings implements IsSerializable {
     public int hashCode() {
         return Objects.hashCode(
                 applicationName,
-                customLogoUrl,
-                adminEmailAddress,
+                systemNotificationEmailAddress,
                 applicationLocation,
                 accountCreationSetting,
                 accountCreators,
@@ -164,8 +154,7 @@ public class AdminSettings implements IsSerializable {
         }
         AdminSettings other = (AdminSettings) obj;
         return this.applicationName.equals(other.applicationName)
-                && this.customLogoUrl.equals(other.customLogoUrl)
-                && this.adminEmailAddress.equals(other.adminEmailAddress)
+                && this.systemNotificationEmailAddress.equals(other.systemNotificationEmailAddress)
                 && this.applicationLocation.equals(other.applicationLocation)
                 && this.accountCreationSetting == other.accountCreationSetting
                 && this.accountCreators.equals(other.accountCreators)
@@ -182,8 +171,7 @@ public class AdminSettings implements IsSerializable {
     public String toString() {
         return toStringHelper("AdminSettings" )
                 .add("name", applicationName)
-                .add("logo", customLogoUrl)
-                .add("adminEmail", adminEmailAddress)
+                .add("systemNotificationEmail", systemNotificationEmailAddress)
                 .addValue(applicationLocation)
                 .addValue(accountCreationSetting)
                 .add("accountCreators", accountCreators)

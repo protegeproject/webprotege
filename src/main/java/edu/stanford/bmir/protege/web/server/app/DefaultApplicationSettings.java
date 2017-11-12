@@ -12,7 +12,6 @@ public class DefaultApplicationSettings {
 
     public static final String DEFAULT_APPLICATION_NAME = "WebProtégé";
 
-    public static final String NO_CUSTOM_LOGO = "";
 
     public static final String EMPTY_EMAIL_ADDRESS = "";
 
@@ -28,7 +27,6 @@ public class DefaultApplicationSettings {
 
     private static final ApplicationSettings DEFAULT_SETTINGS = new ApplicationSettings(
             DEFAULT_APPLICATION_NAME,
-            NO_CUSTOM_LOGO,
             EMPTY_EMAIL_ADDRESS,
             new ApplicationLocation(DEFAULT_SCHEME,
                                     DEFAULT_HOST,

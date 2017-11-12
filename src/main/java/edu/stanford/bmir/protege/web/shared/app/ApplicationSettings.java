@@ -30,10 +30,7 @@ public class ApplicationSettings {
     private final String applicationName;
 
     @Nonnull
-    private final String customLogoUrl;
-
-    @Nonnull
-    private final String adminEmailAddress;
+    private final String systemNotificationEmailAddress;
 
     @Nonnull
     private final ApplicationLocation applicationLocation;
@@ -41,13 +38,11 @@ public class ApplicationSettings {
     private final long maxUploadSize;
 
     public ApplicationSettings(@Nonnull String applicationName,
-                               @Nonnull String customLogoUrl,
-                               @Nonnull String adminEmailAddress,
+                               @Nonnull String systemNotificationEmailAddress,
                                @Nonnull ApplicationLocation applicationLocation,
                                long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
-        this.customLogoUrl = checkNotNull(customLogoUrl);
-        this.adminEmailAddress = checkNotNull(adminEmailAddress);
+        this.systemNotificationEmailAddress = checkNotNull(systemNotificationEmailAddress);
         this.applicationLocation = checkNotNull(applicationLocation);
         this.maxUploadSize = maxUploadSize;
     }
@@ -62,22 +57,12 @@ public class ApplicationSettings {
     }
 
     /**
-     * Gets a URL that points to an image to be used for the application logo.
-     * @return A string representing the URL.  May be empty, in which case, the default
-     * WebProtege logo will be used.
-     */
-    @Nonnull
-    public String getCustomLogoUrl() {
-        return customLogoUrl;
-    }
-
-    /**
      * Gets the administrator's email address.
      * @return A string representing the admins email address.  May be empty.
      */
     @Nonnull
-    public String getAdminEmailAddress() {
-        return adminEmailAddress;
+    public String getSystemNotificationEmailAddress() {
+        return systemNotificationEmailAddress;
     }
 
     /**
@@ -100,8 +85,7 @@ public class ApplicationSettings {
     @Override
     public int hashCode() {
         return Objects.hashCode(applicationName,
-                                customLogoUrl,
-                                adminEmailAddress,
+                systemNotificationEmailAddress,
                                 applicationLocation,
                                 maxUploadSize);
     }
@@ -116,8 +100,7 @@ public class ApplicationSettings {
         }
         ApplicationSettings other = (ApplicationSettings) obj;
         return this.applicationName.equals(other.applicationName)
-                && this.customLogoUrl.equals(other.customLogoUrl)
-                && this.adminEmailAddress.equals(other.adminEmailAddress)
+                && this.systemNotificationEmailAddress.equals(other.systemNotificationEmailAddress)
                 && this.applicationLocation.equals(other.applicationLocation)
                 && this.maxUploadSize == other.maxUploadSize;
     }
@@ -127,8 +110,7 @@ public class ApplicationSettings {
     public String toString() {
         return toStringHelper("ApplicationSettings" )
                 .addValue(applicationName)
-                .add("logo", customLogoUrl)
-                .add("adminEmail", adminEmailAddress)
+                .add("systemNotificationEmail", systemNotificationEmailAddress)
                 .addValue(applicationLocation)
                 .toString();
     }
