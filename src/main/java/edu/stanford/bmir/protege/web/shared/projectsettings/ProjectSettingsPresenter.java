@@ -58,6 +58,7 @@ public class ProjectSettingsPresenter {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.busyView = checkNotNull(busyView);
         this.eventBus = checkNotNull(eventBus);
+        view.setCancelButtonVisible(false);
     }
 
     public ProjectId getProjectId() {
@@ -69,10 +70,12 @@ public class ProjectSettingsPresenter {
                                            container,
                                            () -> displaySettings(container));
         view.setApplyChangesHandler(this::applySettings);
+        view.setCancelChangesHandler(this::cancelChanges);
     }
 
     public void setNextPlace(Optional<Place> nextPlace) {
         this.nextPlace = nextPlace;
+        view.setCancelButtonVisible(nextPlace.isPresent());
     }
 
     private void displaySettings(AcceptsOneWidget container) {
@@ -94,10 +97,17 @@ public class ProjectSettingsPresenter {
                 @Override
                 public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
                     eventBus.fireEvent(new ProjectSettingsChangedEvent(data).asGWTEvent());
-                    nextPlace.ifPresent(placeController::goTo);
+                    goToNextPlaceIfPresent();
                 }
             });
         });
+    }
 
+    private void cancelChanges() {
+        goToNextPlaceIfPresent();
+    }
+
+    private void goToNextPlaceIfPresent() {
+        nextPlace.ifPresent(placeController::goTo);
     }
 }

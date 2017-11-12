@@ -10,10 +10,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -55,6 +52,9 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     protected HasClickHandlers applyButton;
 
     @UiField
+    protected Button cancelButton;
+
+    @UiField
     TextBox slackPayloadUrl;
 
     @UiField(provided = true)
@@ -62,11 +62,14 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     private ApplyChangesHandler applyChangesHandler = () -> {};
 
-    private java.util.Optional<ProjectSettings> pristineValue = java.util.Optional.empty();
+    private CancelChangedHandler cancelChangesHandler = () -> {};
+
+
+    private Optional<ProjectSettings> pristineValue = Optional.empty();
 
     @Inject
     public ProjectSettingsViewImpl() {
-        webhooks = new ValueListEditorImpl<>(() -> new WebhookViewImpl());
+        webhooks = new ValueListEditorImpl<>(WebhookViewImpl::new);
         webhooks.setEnabled(true);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
@@ -77,9 +80,24 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
         applyChangesHandler.handleApplyChanges();
     }
 
+    @UiHandler("cancelButton")
+    protected void handleCancelButtonClicked(ClickEvent event) {
+        cancelChangesHandler.handleCancelChanges();
+    }
+
+    @Override
+    public void setCancelButtonVisible(boolean visible) {
+        cancelButton.setVisible(visible);
+    }
+
     @Override
     public void setApplyChangesHandler(@Nonnull ApplyChangesHandler applyChangesHandler) {
         this.applyChangesHandler = checkNotNull(applyChangesHandler);
+    }
+
+    @Override
+    public void setCancelChangesHandler(@Nonnull CancelChangedHandler cancelChangesHandler) {
+        this.cancelChangesHandler = checkNotNull(cancelChangesHandler);
     }
 
     @Override
@@ -93,13 +111,13 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     }
 
     @Override
-    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-        return java.util.Optional.of(() -> displayNameField.setFocus(true));
+    public Optional<HasRequestFocus> getInitialFocusable() {
+        return Optional.of(() -> displayNameField.setFocus(true));
     }
 
     @Override
     public void setValue(ProjectSettings object) {
-        pristineValue = java.util.Optional.of(object);
+        pristineValue = Optional.of(object);
         displayNameField.setText(object.getProjectDisplayName());
         descriptionField.setText(object.getProjectDescription());
         slackPayloadUrl.setText(object.getSlackIntegrationSettings().getPayloadUrl());
@@ -112,7 +130,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     @Override
     public void clearValue() {
-        pristineValue = java.util.Optional.empty();
+        pristineValue = Optional.empty();
         displayNameField.setText("");
         descriptionField.setText("");
     }
