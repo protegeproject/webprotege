@@ -81,8 +81,7 @@ public class AdminPresenter implements Presenter {
 
     private void displaySettings(AdminSettings adminSettings) {
         view.setApplicationName(adminSettings.getApplicationName());
-        view.setApplicationLogo(adminSettings.getCustomLogoUrl());
-        view.setAdminEmailAddress(adminSettings.getAdminEmailAddress().getEmailAddress());
+        view.setSystemNotificationEmailAddress(adminSettings.getSystemNotificationEmailAddress().getEmailAddress());
         view.setAccountCreationAllowed(adminSettings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED);
         view.setProjectCreationAllowed(adminSettings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED);
         view.setProjectUploadAllowed(adminSettings.getProjectUploadSetting() == PROJECT_UPLOAD_ALLOWED);
@@ -112,8 +111,7 @@ public class AdminPresenter implements Presenter {
     private void applySettings() {
         AdminSettings adminSettings = new AdminSettings(
                 view.getApplicationName(),
-                view.getApplicationLogo(),
-                new EmailAddress(view.getAdminEmailAddress()),
+                new EmailAddress(view.getSystemNotificationEmailAddress()),
                 new ApplicationLocation(view.getScheme().name().toLowerCase(),
                                         getHostNameFromView(),
                                         getPathFromView(),

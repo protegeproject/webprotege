@@ -21,14 +21,9 @@ public interface AdminView extends IsWidget {
     void setApplicationName(@Nonnull String applicationName);
 
     @Nonnull
-    String getApplicationLogo();
+    String getSystemNotificationEmailAddress();
 
-    void setApplicationLogo(@Nonnull String applicationLogo);
-
-    @Nonnull
-    String getAdminEmailAddress();
-
-    void setAdminEmailAddress(@Nonnull String adminEmailAddress);
+    void setSystemNotificationEmailAddress(@Nonnull String emailAddress);
 
     boolean isAccountCreationAllowed();
 

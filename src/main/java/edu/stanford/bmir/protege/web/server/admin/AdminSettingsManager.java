@@ -97,8 +97,7 @@ public class AdminSettingsManager {
             }
             return new AdminSettings(
                     appSettings.getApplicationName(),
-                    appSettings.getCustomLogoUrl(),
-                    new EmailAddress(appSettings.getAdminEmailAddress()),
+                    new EmailAddress(appSettings.getSystemNotificationEmailAddress()),
                     appSettings.getApplicationLocation(),
                     accountCreationSetting,
                     ImmutableList.of(),
@@ -119,8 +118,7 @@ public class AdminSettingsManager {
             writeLock.lock();
             ApplicationSettings applicationSettings = new ApplicationSettings(
                     adminSettings.getApplicationName(),
-                    adminSettings.getCustomLogoUrl(),
-                    adminSettings.getAdminEmailAddress().getEmailAddress(),
+                    adminSettings.getSystemNotificationEmailAddress().getEmailAddress(),
                     adminSettings.getApplicationLocation(),
                     adminSettings.getMaxUploadSize()
             );

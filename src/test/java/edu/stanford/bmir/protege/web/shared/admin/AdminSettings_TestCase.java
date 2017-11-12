@@ -27,10 +27,8 @@ public class AdminSettings_TestCase {
 
     private String applicationName = "The applicationName";
 
-    private String customLogoUrl = "The customLogoUrl";
-
     @Mock
-    private EmailAddress adminEmailAddress;
+    private EmailAddress systemNotificationEmailAddress;
 
     @Mock
     private ApplicationLocation applicationLocation;
@@ -58,8 +56,7 @@ public class AdminSettings_TestCase {
     public void setUp()
             throws Exception {
         adminSettings = new AdminSettings(applicationName,
-                                          customLogoUrl,
-                                          adminEmailAddress,
+                                          systemNotificationEmailAddress,
                                           applicationLocation,
                                           accountCreationSetting,
                                           accountCreators,
@@ -75,8 +72,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationName_IsNull() {
         new AdminSettings(null,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           accountCreators,
@@ -95,31 +91,8 @@ public class AdminSettings_TestCase {
 
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_customLogoUrl_IsNull() {
+    public void shouldThrowNullPointerExceptionIf_systemNotificationEmailAddress_IsNull() {
         new AdminSettings(applicationName,
-                          null,
-                          adminEmailAddress,
-                          applicationLocation,
-                          accountCreationSetting,
-                          accountCreators,
-                          projectCreationSetting,
-                          projectCreators,
-                          projectUploadSetting,
-                          projectUploaders,
-                          notificationEmailsSetting,
-                          maxUploadSize);
-    }
-
-    @Test
-    public void shouldReturnSupplied_customLogoUrl() {
-        assertThat(adminSettings.getCustomLogoUrl(), is(this.customLogoUrl));
-    }
-
-    @SuppressWarnings("ConstantConditions" )
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_adminEmailAddress_IsNull() {
-        new AdminSettings(applicationName,
-                          customLogoUrl,
                           null,
                           applicationLocation,
                           accountCreationSetting,
@@ -133,16 +106,15 @@ public class AdminSettings_TestCase {
     }
 
     @Test
-    public void shouldReturnSupplied_adminEmailAddress() {
-        assertThat(adminSettings.getAdminEmailAddress(), is(this.adminEmailAddress));
+    public void shouldReturnSupplied_systemNotificationEmailAddress() {
+        assertThat(adminSettings.getSystemNotificationEmailAddress(), is(this.systemNotificationEmailAddress));
     }
 
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationLocation_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           null,
                           accountCreationSetting,
                           accountCreators,
@@ -163,8 +135,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_accountCreationSetting_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           null,
                           accountCreators,
@@ -185,8 +156,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_accountCreators_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           null,
@@ -207,8 +177,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectCreationSetting_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           accountCreators,
@@ -229,8 +198,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectCreators_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           accountCreators,
@@ -251,8 +219,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectUploadSetting_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           accountCreators,
@@ -273,8 +240,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectUploaders_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           accountCreators,
@@ -295,8 +261,7 @@ public class AdminSettings_TestCase {
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_notificationEmailsSetting_IsNull() {
         new AdminSettings(applicationName,
-                          customLogoUrl,
-                          adminEmailAddress,
+                          systemNotificationEmailAddress,
                           applicationLocation,
                           accountCreationSetting,
                           accountCreators,
@@ -333,8 +298,7 @@ public class AdminSettings_TestCase {
     public void shouldBeEqualToOther() {
         assertThat(adminSettings,
                    is(new AdminSettings(applicationName,
-                                        customLogoUrl,
-                                        adminEmailAddress,
+                                        systemNotificationEmailAddress,
                                         applicationLocation,
                                         accountCreationSetting,
                                         accountCreators,
@@ -350,8 +314,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationName() {
         assertThat(adminSettings,
                    is(not(new AdminSettings("String-c8a90a1d-4357-4486-846a-963795f4ff23" ,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -364,27 +327,9 @@ public class AdminSettings_TestCase {
     }
 
     @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_customLogoUrl() {
+    public void shouldNotBeEqualToOtherThatHasDifferent_systemNotificationEmailAddress() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            "String-fdc1d7b6-0cd2-4694-8b79-301f2cd31248" ,
-                                            adminEmailAddress,
-                                            applicationLocation,
-                                            accountCreationSetting,
-                                            accountCreators,
-                                            projectCreationSetting,
-                                            projectCreators,
-                                            projectUploadSetting,
-                                            projectUploaders,
-                                            notificationEmailsSetting,
-                                            maxUploadSize))));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_adminEmailAddress() {
-        assertThat(adminSettings,
-                   is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
                                             mock(EmailAddress.class),
                                             applicationLocation,
                                             accountCreationSetting,
@@ -401,8 +346,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationLocation() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             mock(ApplicationLocation.class),
                                             accountCreationSetting,
                                             accountCreators,
@@ -418,8 +362,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_accountCreationSetting() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             AccountCreationSetting.ACCOUNT_CREATION_ALLOWED,
                                             accountCreators,
@@ -435,8 +378,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_accountCreators() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             Collections.singletonList(mock(UserId.class)),
@@ -452,8 +394,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_projectCreationSetting() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -469,8 +410,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_projectCreators() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -486,8 +426,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_projectUploadSetting() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -503,8 +442,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_projectUploaders() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -520,8 +458,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_notificationEmailsSetting() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -537,8 +474,7 @@ public class AdminSettings_TestCase {
     public void shouldNotBeEqualToOtherThatHasDifferent_maxUploadSize() {
         assertThat(adminSettings,
                    is(not(new AdminSettings(applicationName,
-                                            customLogoUrl,
-                                            adminEmailAddress,
+                                            systemNotificationEmailAddress,
                                             applicationLocation,
                                             accountCreationSetting,
                                             accountCreators,
@@ -554,8 +490,7 @@ public class AdminSettings_TestCase {
     public void shouldBeEqualToOtherHashCode() {
         assertThat(adminSettings.hashCode(),
                    is(new AdminSettings(applicationName,
-                                        customLogoUrl,
-                                        adminEmailAddress,
+                                        systemNotificationEmailAddress,
                                         applicationLocation,
                                         accountCreationSetting,
                                         accountCreators,

@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.app;
 
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,23 +16,26 @@ import static org.hamcrest.Matchers.is;
 public class ApplicationSettings_TestCase {
 
     private ApplicationSettings applicationSettings;
+
     private String applicationName = "The applicationName";
-    private String customLogoUrl = "The customLogoUrl";
-    private String adminEmailAddress = "The adminEmailAddress";
+
+    private String systemNotificationEmailAddress = "The SystemNotificationEmailAddress";
+
     @Mock
     private ApplicationLocation applicationLocation;
+
     private long maxUploadSize = 1L;
 
     @Before
     public void setUp()
     {
-        applicationSettings = new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize);
+        applicationSettings = new ApplicationSettings(applicationName, systemNotificationEmailAddress, applicationLocation, maxUploadSize);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationName_IsNull() {
-        new ApplicationSettings(null, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize);
+        new ApplicationSettings(null, systemNotificationEmailAddress, applicationLocation, maxUploadSize);
     }
 
     @Test
@@ -43,30 +45,19 @@ public class ApplicationSettings_TestCase {
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_customLogoUrl_IsNull() {
-        new ApplicationSettings(applicationName, null, adminEmailAddress, applicationLocation, maxUploadSize);
+    public void shouldThrowNullPointerExceptionIf_systemNotificationEmailAddress_IsNull() {
+        new ApplicationSettings(applicationName, null, applicationLocation, maxUploadSize);
     }
 
     @Test
-    public void shouldReturnSupplied_customLogoUrl() {
-        assertThat(applicationSettings.getCustomLogoUrl(), is(this.customLogoUrl));
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_adminEmailAddress_IsNull() {
-        new ApplicationSettings(applicationName, customLogoUrl, null, applicationLocation, maxUploadSize);
-    }
-
-    @Test
-    public void shouldReturnSupplied_adminEmailAddress() {
-        assertThat(applicationSettings.getAdminEmailAddress(), is(this.adminEmailAddress));
+    public void shouldReturnSupplied_systemNotificationEmailAddress() {
+        assertThat(applicationSettings.getSystemNotificationEmailAddress(), is(this.systemNotificationEmailAddress));
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_applicationLocation_IsNull() {
-        new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, null, maxUploadSize);
+        new ApplicationSettings(applicationName, systemNotificationEmailAddress, null, maxUploadSize);
     }
 
     @Test
@@ -92,37 +83,32 @@ public class ApplicationSettings_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(applicationSettings, is(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize)));
+        assertThat(applicationSettings, is(new ApplicationSettings(applicationName, systemNotificationEmailAddress, applicationLocation, maxUploadSize)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationName() {
-        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings("String-59344631-c3b4-4d9b-9091-e4cf31570afe", customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings("String-59344631-c3b4-4d9b-9091-e4cf31570afe", systemNotificationEmailAddress, applicationLocation, maxUploadSize))));
     }
-
+    
     @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_customLogoUrl() {
-        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, "String-9cdcccb5-5a5e-4191-8864-77c6257dde2a", adminEmailAddress, applicationLocation, maxUploadSize))));
-    }
-
-    @Test
-    public void shouldNotBeEqualToOtherThatHasDifferent_adminEmailAddress() {
-        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, customLogoUrl, "String-05b955de-a3d7-4444-bef7-032fd22c0bb1", applicationLocation, maxUploadSize))));
+    public void shouldNotBeEqualToOtherThatHasDifferent_systemNotificationEmailAddress() {
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, "String-05b955de-a3d7-4444-bef7-032fd22c0bb1", applicationLocation, maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_applicationLocation() {
-        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, Mockito.mock(ApplicationLocation.class), maxUploadSize))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, systemNotificationEmailAddress, Mockito.mock(ApplicationLocation.class), maxUploadSize))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_maxUploadSize() {
-        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, 2L))));
+        assertThat(applicationSettings, is(Matchers.not(new ApplicationSettings(applicationName, systemNotificationEmailAddress, applicationLocation, 2L))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(applicationSettings.hashCode(), is(new ApplicationSettings(applicationName, customLogoUrl, adminEmailAddress, applicationLocation, maxUploadSize).hashCode()));
+        assertThat(applicationSettings.hashCode(), is(new ApplicationSettings(applicationName, systemNotificationEmailAddress, applicationLocation, maxUploadSize).hashCode()));
     }
 
     @Test
