@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,7 +46,7 @@ public class GoToToHomeViewImpl extends Composite implements GoToHomeView {
 
 
     @Override
-    public void addGoToHomeHandler(GoToHomeHandler handler) {
+    public void setGoToHomeHandler(@Nonnull GoToHomeHandler handler) {
         this.goToHomeHandler = checkNotNull(handler);
     }
 }
