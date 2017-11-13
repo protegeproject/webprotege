@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * An object that holds application settings.
  */
-@Entity(cap = @CappedAt(count = 1L))
+@Entity(cap = @CappedAt(count = 1L), noClassnameStored = true)
 public class ApplicationSettings {
 
     public static final String ID = "ApplicationSettings";
