@@ -64,10 +64,10 @@ public class TopBarPresenter implements HasDispose {
                       @Nonnull EventBus eventBus,
                       @Nonnull ProjectViewPlace place) {
         container.setWidget(view);
-        goToHomePresenter.start(view.getGoToHomeWidgetContainer(), eventBus);
+        goToHomePresenter.start(view.getGoToHomeContainer(), eventBus);
         projectMenuPresenter.start(view.getProjectMenuContainer(), eventBus);
-        loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer(), eventBus);
-        helpPresenter.start(view.getHelpWidgetContainer(), eventBus);
+        loggedInUserPresenter.start(view.getLoggedInUserContainer(), eventBus);
+        helpPresenter.start(view.getHelpContainer(), eventBus);
         sharingButtonPresenter.start(view.getSharingSettingsContainer(), eventBus);
         activeProjectManager.getActiveProjectDetails(projectDetails -> {
             String displayName = projectDetails.map(ProjectDetails::getDisplayName).orElse("");

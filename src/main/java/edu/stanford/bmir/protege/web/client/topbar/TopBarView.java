@@ -16,7 +16,7 @@ public interface TopBarView extends IsWidget {
 
     void clearProjectTitle();
 
-    AcceptsOneWidget getGoToHomeWidgetContainer();
+    AcceptsOneWidget getGoToHomeContainer();
 
     void addToLeft(IsWidget widget);
 
@@ -28,8 +28,8 @@ public interface TopBarView extends IsWidget {
 
     AcceptsOneWidget getSharingSettingsContainer();
 
-    AcceptsOneWidget getLoggedInUserWidgetContainer();
+    AcceptsOneWidget getLoggedInUserContainer();
 
-    AcceptsOneWidget getHelpWidgetContainer();
+    AcceptsOneWidget getHelpContainer();
 
 }
