@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.app;
 
 import com.google.common.base.Objects;
+import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.CappedAt;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -30,6 +31,7 @@ public class ApplicationSettings {
     private final String applicationName;
 
     @Nonnull
+    @AlsoLoad("adminEmailAddress")
     private final String systemNotificationEmailAddress;
 
     @Nonnull
