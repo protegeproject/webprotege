@@ -223,7 +223,7 @@ public class AdminViewImpl extends Composite implements AdminView {
     @Override
     protected void onAttach() {
         super.onAttach();
-        tabPanel.setSize("500px", "500px");
+        tabPanel.setSize("500px", "550px");
         tabPanel.onResize();
     }
 }

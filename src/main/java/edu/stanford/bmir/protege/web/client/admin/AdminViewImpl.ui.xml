@@ -31,6 +31,7 @@
         .tabContent {
             padding: 10px;
             padding-left: 20px;
+            overflow: auto;
         }
 
     </ui:style>
@@ -45,6 +46,8 @@
                     <g:HTMLPanel addStyleNames="{style.tabContent}">
                         <g:Label text="System Details" addStyleNames="{style.sectionHeading}"/>
                         <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:Label text="Application name"/>
+                            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
                             <g:Label text="System notification email address"/>
                             <text:PlaceholderTextBox ui:field="systemNotificationEmailAddressField"
                                                      placeholder="Email address for system notifications"/>
@@ -75,17 +78,17 @@
                     </g:HTMLPanel>
                 </g:tab>
 
-                <g:tab>
-                    <g:header size='7'>Appearance</g:header>
-                    <g:HTMLPanel addStyleNames="{style.tabContent}">
-                        <g:Label text="Name" addStyleNames="{style.sectionHeading}"/>
-                        <g:HTMLPanel addStyleNames="{style.section}">
-                            <g:Label text="Application name"/>
-                            <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
-                        </g:HTMLPanel>
+                <!--<g:tab>-->
+                    <!--<g:header size='7'>Appearance</g:header>-->
+                    <!--<g:HTMLPanel addStyleNames="{style.tabContent}">-->
+                        <!--<g:Label text="Name" addStyleNames="{style.sectionHeading}"/>-->
+                        <!--<g:HTMLPanel addStyleNames="{style.section}">-->
+                            <!--<g:Label text="Application name"/>-->
+                            <!--<text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>-->
+                        <!--</g:HTMLPanel>-->
 
-                    </g:HTMLPanel>
-                </g:tab>
+                    <!--</g:HTMLPanel>-->
+                <!--</g:tab>-->
 
                 <g:tab>
                     <g:header size='7'>Global Permissions</g:header>
