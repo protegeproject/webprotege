@@ -233,6 +233,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String selection();
 
         String noSelection();
+
+        String helpText();
     }
 
     interface WebProtegeButtons extends CssResource {
