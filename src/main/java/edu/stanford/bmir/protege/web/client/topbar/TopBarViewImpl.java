@@ -45,7 +45,7 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     protected HasText projectTitle;
 
     @Override
-    public AcceptsOneWidget getGoToHomeWidgetContainer() {
+    public AcceptsOneWidget getGoToHomeContainer() {
         return homeContainer;
     }
 
@@ -84,12 +84,12 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     }
 
     @Override
-    public AcceptsOneWidget getLoggedInUserWidgetContainer() {
+    public AcceptsOneWidget getLoggedInUserContainer() {
         return loggedInUserContainer;
     }
 
     @Override
-    public AcceptsOneWidget getHelpWidgetContainer() {
+    public AcceptsOneWidget getHelpContainer() {
         return helpContainer;
     }
 }
