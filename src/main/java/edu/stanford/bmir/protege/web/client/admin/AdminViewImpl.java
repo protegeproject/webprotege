@@ -31,9 +31,6 @@ public class AdminViewImpl extends Composite implements AdminView {
     TextBox applicationNameField;
 
     @UiField
-    TextBox applicationLogoField;
-
-    @UiField
     TextBox systemNotificationEmailAddressField;
 
     @UiField

@@ -76,13 +76,10 @@
                 <g:tab>
                     <g:header size='7'>Appearance</g:header>
                     <g:HTMLPanel addStyleNames="{style.tabContent}">
-                        <g:Label text="Name and Logo" addStyleNames="{style.sectionHeading}"/>
+                        <g:Label text="Name" addStyleNames="{style.sectionHeading}"/>
                         <g:HTMLPanel addStyleNames="{style.section}">
                             <g:Label text="Application name"/>
                             <text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>
-                            <g:Label text="Application logo Url"/>
-                            <text:PlaceholderTextBox ui:field="applicationLogoField"
-                                                     placeholder="Application Logo Url"/>
                         </g:HTMLPanel>
 
                     </g:HTMLPanel>
