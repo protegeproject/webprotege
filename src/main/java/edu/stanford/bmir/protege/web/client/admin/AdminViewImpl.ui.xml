@@ -52,7 +52,9 @@
 
 
                         <g:Label text="Application URL" addStyleNames="{style.sectionHeading}"/>
-
+                        <div class="{wp.style.helpText}">The application URL is the URL that users use to access WebProtégé.  If you have
+                            something like an Apache HTTP Server sitting in-front of Tomcat then this may be different to
+                        the Tomcat URL.  Note that the Path and Port fields are optional.  The Host field is mandatory.</div>
                         <g:HTMLPanel addStyleNames="{style.section}">
                             <g:Label text="Scheme"/>
                             <g:ListBox ui:field="applicationSchemeField">

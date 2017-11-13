@@ -303,3 +303,9 @@ blockquote {
 .errorLabel {
     color: red;
 }
+
+.helpText {
+    font-size: 11px;
+    color: #707070;
+    font-weight: 300;
+}
