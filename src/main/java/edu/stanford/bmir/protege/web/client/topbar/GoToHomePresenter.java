@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -17,16 +19,29 @@ import javax.inject.Inject;
  */
 public class GoToHomePresenter implements HasDispose, Presenter {
 
+    @Nonnull
     private final GoToHomeView view;
 
+    @Nonnull
+    private final PlaceController placeController;
+
     @Inject
-    public GoToHomePresenter(GoToHomeView view, final PlaceController placeController) {
-        this.view = view;
-        view.addGoToHomeHandler(() -> placeController.goTo(new ProjectListPlace()));
+    public GoToHomePresenter(@Nonnull GoToHomeView view,
+                             @Nonnull PlaceController placeController) {
+        this.view = checkNotNull(view);
+        this.placeController = checkNotNull(placeController);
     }
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        this.view.setGoToHomeHandler(this::goToProjectListPlace);
         container.setWidget(view);
+    }
+
+    /**
+     * Causes the URL to change to the project list
+     */
+    private void goToProjectListPlace() {
+        placeController.goTo(new ProjectListPlace());
     }
 
     public void dispose() {
