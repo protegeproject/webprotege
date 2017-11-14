@@ -95,6 +95,8 @@
     flex-grow: 0;
     display: inline-block;
     min-width: 100px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .wp-cancel-button:hover {
@@ -106,6 +108,8 @@
     flex-grow: 0;
     display: inline-block;
     min-width: 100px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .wp-accept-button:hover {

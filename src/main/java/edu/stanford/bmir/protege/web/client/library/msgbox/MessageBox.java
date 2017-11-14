@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 /**
  * Author: Matthew Horridge<br>
@@ -131,7 +132,7 @@ public class MessageBox {
 
     public static void showYesNoConfirmBox(String mainMessage, String subMessage, final YesNoHandler handler) {
         final MessageBoxView messageBoxView = createMessageBox(MessageStyle.QUESTION, mainMessage, subMessage);
-        final WebProtegeYesNoDialogController<Void> controller = new WebProtegeYesNoDialogController<Void>(DLG_TITLE) {
+        final WebProtegeDialogController<Void> controller = new WebProtegeDialogController<Void>(DLG_TITLE, Arrays.asList(DialogButton.YES, DialogButton.NO), DialogButton.NO, DialogButton.YES) {
             @Override
             public Widget getWidget() {
                 return messageBoxView.asWidget();
