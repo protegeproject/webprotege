@@ -60,6 +60,9 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     @UiField(provided = true)
     ValueListEditorImpl<String> webhooks;
 
+    @UiField
+    Label projectTitle;
+
     private ApplyChangesHandler applyChangesHandler = () -> {};
 
     private CancelChangedHandler cancelChangesHandler = () -> {};
@@ -73,6 +76,11 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
         webhooks.setEnabled(true);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+    }
+
+    @Override
+    public void setProjectTitle(@Nonnull String projectTitle) {
+        this.projectTitle.setText(checkNotNull(projectTitle));
     }
 
     @UiHandler("applyButton")

@@ -9,8 +9,8 @@ import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -35,6 +35,8 @@ public class ProjectSettingsPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final ActiveProjectManager activeProjectManager;
+
     private final BusyView busyView;
 
     private final EventBus eventBus;
@@ -48,11 +50,13 @@ public class ProjectSettingsPresenter {
                                     @Nonnull ProjectSettingsView view,
                                     @Nonnull PermissionScreener permissionScreener,
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
+                                    @Nonnull ActiveProjectManager activeProjectManager,
                                     @Nonnull BusyView busyView,
                                     @Nonnull EventBus eventBus,
                                     @Nonnull PlaceController placeController) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
+        this.activeProjectManager = checkNotNull(activeProjectManager);
         this.placeController = checkNotNull(placeController);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -65,12 +69,16 @@ public class ProjectSettingsPresenter {
         return projectId;
     }
 
+
+
+
     public void start(AcceptsOneWidget container) {
         permissionScreener.checkPermission(EDIT_PROJECT_SETTINGS.getActionId(),
                                            container,
                                            () -> displaySettings(container));
         view.setApplyChangesHandler(this::applySettings);
         view.setCancelChangesHandler(this::cancelChanges);
+
     }
 
     public void setNextPlace(Optional<Place> nextPlace) {
@@ -86,6 +94,9 @@ public class ProjectSettingsPresenter {
                                            view.setValue(result.getProjectSettings());
                                            container.setWidget(view);
                                        });
+        activeProjectManager.getActiveProjectDetails(projectDetails -> {
+            projectDetails.ifPresent(details -> view.setProjectTitle(details.getDisplayName()));
+        });
     }
 
 
