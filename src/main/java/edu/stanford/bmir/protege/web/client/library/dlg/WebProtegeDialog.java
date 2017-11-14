@@ -82,7 +82,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
-            if(dlgButton == DialogButton.OK || dlgButton == DialogButton.YES) {
+            if(dlgButton == controller.getDefaultButton()) {
                 button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().acceptButton());
             }
             else {

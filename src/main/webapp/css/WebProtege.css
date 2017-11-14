@@ -252,10 +252,10 @@ select {
 
 .gwt-DialogBox .Caption {
     background-color: white;
-    color: black;
+    color: #505050;
     cursor: default;
-    font-size: 16px;
-    font-weight: normal;
+    font-size: 18px;
+    font-weight: 600;
     line-height: 24px;
     margin: 0 0 16px;
 }
