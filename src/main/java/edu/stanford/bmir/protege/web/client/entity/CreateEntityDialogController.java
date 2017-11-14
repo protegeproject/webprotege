@@ -22,13 +22,9 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
         for(WebProtegeDialogValidator validator : form.getDialogValidators()) {
             addDialogValidator(validator);
         }
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
-            @Override
-            public void handleHide(CreateEntityInfo data, WebProtegeDialogCloser closer) {
-                handler.handleCreateEntity(data);
-                closer.hide();
-
-            }
+        setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            handler.handleCreateEntity(data);
+            closer.hide();
         });
     }
 

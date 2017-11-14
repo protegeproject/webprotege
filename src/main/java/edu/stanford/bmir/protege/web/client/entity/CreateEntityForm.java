@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -36,17 +37,9 @@ public class CreateEntityForm extends WebProtegeDialogForm {
         entityBrowserTextField.setMode(mode);
         entityBrowserTextField.setAnchorVisible(false);
         entityBrowserTextField.setPlaceholder(MESSAGES.createEntityInstructions());
-        addWidget("Name", entityBrowserTextField);
-
-//        entityBrowserTextField = addTextBox("Name", "Enter " + getTypeName() + " name", "", new WebProtegeDialogInlineValidator<ValueBoxBase<String>>() {
-//            @Override
-//            public InlineValidationResult getValidation(ValueBoxBase<String> widget) {
-//                return widget.getText().trim().isEmpty() ? InlineValidationResult.getInvalid("Name must not be empty") : InlineValidationResult.getValid();
-//            }
-//        });
-//        entityBrowserTextField.setVisibleLength(60);
-
+        addWidget("", entityBrowserTextField);
     }
+
 
     public List<String> getEntityBrowserText() {
         String enteredText = entityBrowserTextField.getText().trim();
@@ -59,28 +52,7 @@ public class CreateEntityForm extends WebProtegeDialogForm {
         return result;
     }
 
-    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-        return java.util.Optional.of(() -> entityBrowserTextField.setFocus(true));
-    }
-
-    private String getTypeName() {
-        if(entityType.equals(EntityType.CLASS)) {
-            return "class";
-        }
-        else if(entityType.equals(EntityType.OBJECT_PROPERTY)) {
-            return "object property";
-        }
-        else if(entityType.equals(EntityType.DATA_PROPERTY)) {
-            return "data property";
-        }
-        else if(entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
-            return "annotation property";
-        }
-        else if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
-            return "individual";
-        }
-        else {
-            return "a datatype";
-        }
+    public Optional<HasRequestFocus> getInitialFocusable() {
+        return Optional.of(() -> entityBrowserTextField.setFocus(true));
     }
 }
