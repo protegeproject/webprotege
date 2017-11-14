@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,8 @@ public interface SharingSettingsView extends IsWidget {
     interface CancelHandler {
         void handleCancel();
     }
+
+    void setProjectTitle(@Nonnull String projectTitle);
 
     void setLinkSharingPermission(Optional<SharingPermission> sharingPermission);
 
