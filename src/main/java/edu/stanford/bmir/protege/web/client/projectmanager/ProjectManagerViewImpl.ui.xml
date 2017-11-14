@@ -9,18 +9,27 @@
         .main {
             display: flex;
             flex-direction: column;
-            margin: 5px;
             color: #606060;
         }
 
         .topBar {
             flex-grow: 0;
             flex-shrink: 0;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 5px;
-            margin-bottom: 5px;
-            padding-left: 10px;
+            display: flex;
+            align-items: baseline;
         }
+
+        .title {
+            flex-grow: 1;
+            padding-left: 5px;
+        }
+
+
+        .loggedInUserView {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
 
         .projectList {
             display: flex;
@@ -35,10 +44,6 @@
             padding: 10px;
             flex-grow: 0;
             flex-shrink: 0;
-        }
-
-        .loggedInUserView {
-            float: right;
         }
 
         .listView {
@@ -80,11 +85,9 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
 
-        <g:HTMLPanel addStyleNames="{style.topBar}">
+        <g:HTMLPanel addStyleNames="{style.topBar} {wp.laf.topBar}">
+            <g:Label text="{msg.projects}" addStyleNames="{style.title} {wp.laf.topBarTitle}"/>
             <g:SimplePanel ui:field="loggedInUserButton" addStyleNames="{style.loggedInUserView}"/>
-            <h1>
-                <g:Label text="{msg.projects}"/>
-            </h1>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.projectList}">
             <g:HTMLPanel addStyleNames="{style.sideBar}">
