@@ -71,7 +71,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
      * @return A list of the buttons.
      */
     public List<DialogButton> getButtons() {
-        return new ArrayList<DialogButton>(buttons);
+        return new ArrayList<>(buttons);
     }
 
     /**

@@ -1,6 +1,6 @@
 
 /* Various button styles */
-.btn, .btn-a, .btn-b, .btn-c, .btn-d {
+.wp-button-base, .wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
     border: none;
     letter-spacing: .1em;
     border-radius: 2px;
@@ -18,11 +18,11 @@
     cursor: pointer;
 }
 
-.btn {
+.wp-button-base {
     background: #959ea7;
 }
 
-.btn:hover {
+.wp-button-base:hover {
     color: #fff;
     background: #415161;
 }
@@ -31,111 +31,35 @@
     display: inline-block;
 }
 
-.btn-b {
-    background: #db5e33;
+
+.wp-button-primary {
+    background: #6c1a91;
 }
 
-.btn-b:hover {
-    background: #bc4d26;
+.wp-button-primary:hover {
+    background: #501c70;
 }
 
-.btn-b:disabled {
+.wp-button-primary:disabled {
     background: lightgray;
     cursor: default;
 }
 
-.btn-e {
-    background: #6c1a91;
+
+.wp-button-secondary {
+    background: #db5e33;
 }
 
-.btn-e:hover {
-    background: #501c70;
+.wp-button-secondary:hover {
+    background: #bc4d26;
 }
 
-.btn-c {
-    background: rgb(0,0,0);
-    background: rgba(0,0,0,.2);
-    border: 2px solid #fff;
-    line-height: 46px !important;
+.wp-button-secondary:disabled {
+    background: lightgray;
+    cursor: default;
 }
 
-.btn-c:hover {
-    background: rgb(0,0,0);
-    background: rgba(0,0,0,.5);
-}
-
-.btn-d {
-    background: #fff;
-    border: 2px solid #959ea7;
-    transition: all .15s ease-in-out;
-    -moz-transition: all .15s ease-in-out;
-    -webkit-transition: all .15s ease-in-out;
-}
-
-.btn-d:hover {
-    background: inherit;
-    border: 2px solid #2c3e50;
-    color: #db5e33;
-}
-
-/* Begin Button Sizes */
-.btn-small {
-    height: 22px;
-    line-height: 22px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
-}
-
-.btn-med {
-    height: 40px;
-    line-height: 38px;
-    padding: 0 20px;
-    color: #2c3e50;
-    margin-top: 20px;
-}
-
-.btn-lg {
-    height: 48px;
-    line-height: 50px;
-    font-size: 14px;
-}
-
-.btn-xl {
-    line-height: inherit;
-    height: auto;
-    padding: 15px 0 10px 25px;
-}
-
-.btn-inline {
-    padding: 0 20px;
-}
-
-.btn-icon, .btn-icon-alt {
-    text-align: left;
-    text-transform: none;
-    font-weight: 300;
-    letter-spacing: 0;
-    color: rgb(255,255,255);
-    color: rgba(255,255,255,.6);
-}
-
-.btn-icon:hover, .btn-icon-alt:hover {
-    color: rgb(255,255,255);
-    color: rgba(255,255,255,.6);
-}
-
-.btn-icon h4, .btn-icon-alt {
-    font-family: "Proxima Nova", sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0;
-    margin: 0;
-    color: #fff;
-}
-
-
-.toolbarButton {
+.wp-ToolBar-button {
     border: solid transparent 1px;
     color: #464646;
     height: 20px;
@@ -148,76 +72,42 @@
     color: dodgerblue;
 }
 
-.toolbarButton:hover:enabled {
+.wp-ToolBar-button:hover:enabled {
     border: solid 1px #464646;
     background: #707070;
     color: #ffffff;
 }
 
-.toolbarButton:active:enabled {
+.wp-ToolBar-button:active:enabled {
     border: solid 1px #464646;
     background: #424242;
     color: #ffffff;
 }
 
-.toolbarButton:disabled {
+.wp-ToolBar-button:disabled {
     color: #aaaaaa;
     cursor: default;
     border: solid transparent 1px;
 }
 
-.circularButton {
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    border: solid 2px #686868;
+
+.wp-cancel-button {
+    flex-grow: 0;
+    display: inline-block;
+    min-width: 100px;
 }
 
-.button {
-    background: linear-gradient(#fafafa, #eaeaea) repeat scroll 0 0 #cecece;
-    border: 1px solid #dddddd;
-    border-radius: 3px 3px 3px 3px;
-    color: #555555;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 5px 8px;
-    line-height: 16px;
+.wp-cancel-button:hover {
+    background-color: #737c85;
 }
 
-.button:hover {
-    color: #444444;
-    box-shadow: 0 0 2px 1px rgba(150, 150, 150, 0.20);
-    border-color: #a7a7a7;
+.wp-accept-button {
+    background: #6c1a91;
+    flex-grow: 0;
+    display: inline-block;
+    min-width: 100px;
 }
 
-.button:active {
-    color: #444444;
-    box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
-    border-color: #a7a7a7;
-}
-
-.button:disabled {
-    box-shadow: none;
-    color: #b0b0b0;
-    background: #cecece;
-    border-color: #dddddd;
-}
-
-.button-base {
-    border: none;
-    letter-spacing: .1em;
-    border-radius: 2px;
-    /*height: 38px;*/
-    /*line-height: 40px;*/
-    /*color: #fff;*/
-    padding: 0;
-    transition: background-color .15s ease-in-out;
-    -moz-transition: background-color .15s ease-in-out;
-    -webkit-transition: background-color .15s ease-in-out;
-    text-transform: uppercase;
-    display: block;
-    padding-left: 20px;
-    padding-right: 20px;
-    cursor: pointer;
+.wp-accept-button:hover {
+    background: #501c70;
 }

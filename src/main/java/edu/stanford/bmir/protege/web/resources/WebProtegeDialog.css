@@ -76,19 +76,6 @@
     font-weight: 500;
 }
 
-.cancelButton {
-    flex-grow: 0;
-}
-
-.acceptButton {
-    background: #6c1a91;
-    flex-grow: 0;
-}
-
-.acceptButton:hover {
-    background: #501c70;
-}
-
 .dialog .title {
     font-size: 18px;
     font-weight: 600;

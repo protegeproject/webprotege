@@ -90,7 +90,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
-                  addStyleNames="{style.signup} {wp.buttons.btn} {wp.buttons.btnB}"/>
+                  addStyleNames="{style.signup} {wp.buttons.secondary}"/>
         <g:HTMLPanel addStyleNames="{style.center}">
             <g:HTMLPanel addStyleNames="{style.logoContainer}">
                 <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>
@@ -106,7 +106,7 @@
                 <g:PasswordTextBox ui:field="passwordField" visibleLength="30"/>
                 <div style="height: 20px;"/>
                 <g:Button ui:field="signInButton" text="{msg.signIn}"
-                          addStyleNames="{wp.buttons.btn} {wp.buttons.btnE} {style.signin}"/>
+                          addStyleNames="{wp.buttons.primary} {style.signin}"/>
                 <g:HTMLPanel addStyleNames="{style.bottomBar}">
                     <g:Anchor text="{msg.forgotUserNameOrPassword}" ui:field="forgotPasswordButton"
                               addStyleNames="{style.forgotPasswordButton}"/>
@@ -128,7 +128,8 @@
             </p>
             <p>
                 <a href="html/privacy.html" target="_blank">
-                    Privacy Policy</a>.<a href="html/termsofuse.html" target="_blank">Terms of Use</a>
+                    Privacy Policy</a>.
+                <a href="html/termsofuse.html" target="_blank">Terms of Use</a>
             </p>
 
 

@@ -82,8 +82,12 @@ public final class WebProtegeDialog<D> extends DialogBox {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
-            button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().button());
-            button.setWidth("70px");
+            if(dlgButton == DialogButton.OK || dlgButton == DialogButton.YES) {
+                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().acceptButton());
+            }
+            else {
+                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().cancelButton());
+            }
         }
         SimplePanel buttonBarWrapper = new SimplePanel();
         buttonBarWrapper.setWidget(buttonBar);

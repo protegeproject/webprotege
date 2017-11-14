@@ -12,7 +12,7 @@ import java.util.List;
  */
 public abstract class WebProtegeOKCancelDialogController<D> extends WebProtegeDialogController<D> {
 
-    public static final List<DialogButton> BUTTONS = Collections.unmodifiableList(Arrays.asList(DialogButton.OK, DialogButton.CANCEL));
+    public static final List<DialogButton> BUTTONS = Collections.unmodifiableList(Arrays.asList(DialogButton.CANCEL, DialogButton.OK));
 
     public static final DialogButton DEFAULT_BUTTON = DialogButton.OK;
 
