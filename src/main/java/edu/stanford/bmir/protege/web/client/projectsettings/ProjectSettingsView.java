@@ -23,6 +23,8 @@ public interface ProjectSettingsView extends IsWidget, HasInitialFocusable, Valu
         void handleCancelChanges();
     }
 
+    void setProjectTitle(@Nonnull String projectTitle);
+
     void setApplyChangesHandler(@Nonnull ApplyChangesHandler applyChangesHandler);
 
     void setCancelChangesHandler(@Nonnull CancelChangedHandler cancelChangesHandler);

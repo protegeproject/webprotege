@@ -3,6 +3,7 @@
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <ui:style>
         .main {
@@ -24,16 +25,20 @@
             padding-left: 20px;
         }
 
+        .dialog {
+            margin-top: 50px;
+        }
+
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{wp.laf.topBar}">
-            <g:Label text="Project Settings" addStyleNames="{wp.laf.topBarTitle}"/>
+            <g:Label ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
         </g:HTMLPanel>
 
 
-        <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
-
+        <g:HTMLPanel addStyleNames="{wp.dialog.dialog} {style.dialog}">
+            <g:Label text="{msg.projectSettings_title}" addStyleNames="{wp.dialog.title}"/>
             <g:HTMLPanel addStyleNames="{wp.dialog.content}">
                 <g:TabLayoutPanel ui:field="tabPanel" barUnit='EM' barHeight='3' addStyleNames="{style.tabPanel}">
 
