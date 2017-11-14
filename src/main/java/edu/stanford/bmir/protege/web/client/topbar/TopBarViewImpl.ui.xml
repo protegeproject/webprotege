@@ -4,8 +4,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
-            padding-top: 1px;
-            background: #f0f0f0;
             height: 24px;
             display: flex;
             flex-direction: row;
@@ -25,31 +23,19 @@
         .inline {
             display: inline-block;
         }
-        .logo {
-            width: 20px;
-            height: 20px;
-            display: inline;
-            padding-left: 1px;
-        }
         .splitter {
-            width: 1px;
-            background: #c8c8c8;
             align-self: stretch;
             margin-top: 3px;
             margin-bottom: 3px;
             margin-left: 8px;
             margin-right: 8px;
         }
-        .projectTitle {
-            font-weight: 400;
-        }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
-            <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo} {style.leftItem} {style.inline}"/>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar}">
             <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
-            <g:HTMLPanel addStyleNames="{style.splitter}  {style.leftItem}"/>
-            <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {style.projectTitle}"/>
+            <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
+            <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>
             <g:HTMLPanel addStyleNames="{style.inline} {style.middlePadding}"/>
             <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
             <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}  {style.rightItem}"/>

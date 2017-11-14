@@ -3,6 +3,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <g:HTMLPanel>
-        <g:Button ui:field="projectMenuButton" text="{msg.project}" addStyleNames="{wp.buttons.btn} {wp.buttons.topBarButton}"/>
+        <g:Button ui:field="projectMenuButton" text="{msg.project}" addStyleNames="{wp.laf.topBarButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

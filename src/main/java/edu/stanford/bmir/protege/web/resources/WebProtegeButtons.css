@@ -173,20 +173,6 @@
     border: solid 2px #686868;
 }
 
-.topBarButton {
-    height: 22px;
-    line-height: 22px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
-    text-transform: none;
-    letter-spacing: normal;
-    background: none;
-    color: #505050;
-}
-
-
-
 .button {
     background: linear-gradient(#fafafa, #eaeaea) repeat scroll 0 0 #cecece;
     border: 1px solid #dddddd;
@@ -216,4 +202,22 @@
     color: #b0b0b0;
     background: #cecece;
     border-color: #dddddd;
+}
+
+.button-base {
+    border: none;
+    letter-spacing: .1em;
+    border-radius: 2px;
+    /*height: 38px;*/
+    /*line-height: 40px;*/
+    /*color: #fff;*/
+    padding: 0;
+    transition: background-color .15s ease-in-out;
+    -moz-transition: background-color .15s ease-in-out;
+    -webkit-transition: background-color .15s ease-in-out;
+    text-transform: uppercase;
+    display: block;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
 }
