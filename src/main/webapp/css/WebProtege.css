@@ -703,3 +703,28 @@ td {
     -webkit-animation-delay: 0.41666666666666663s;
     animation-delay: 0.41666666666666663s;
 }
+
+/* Externalised application styles */
+
+.wp-TopBar {
+    background: #f0f0f0;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.wp-TopBar-title {
+    font-weight: 600;
+}
+
+.wp-TopBar-separator {
+    width: 1px;
+    background: #c8c8c8;
+}
+.wp-TopBar-button {
+    color: #505050;
+    background-color: transparent;
+}
+.wp-TopBar-button:hover {
+    background-color: #505050;
+    color: white;
+}

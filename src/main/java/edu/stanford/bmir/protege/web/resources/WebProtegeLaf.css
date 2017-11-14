@@ -1,0 +1,20 @@
+@external wp-TopBar, wp-TopBar-title, wp-TopBar-separator, wp-TopBar-button;
+
+.wp-TopBar {
+}
+
+.wp-TopBar-title {
+}
+
+.wp-TopBar-separator {
+}
+
+.wp-TopBar-button {
+    border: none;
+    line-height: 18px;
+    height: 22px;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+}

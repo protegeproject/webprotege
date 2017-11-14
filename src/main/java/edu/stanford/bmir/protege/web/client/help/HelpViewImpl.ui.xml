@@ -3,6 +3,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <g:HTMLPanel>
-        <g:Button ui:field="helpButton" addStyleNames="{wp.buttons.btn} {wp.buttons.topBarButton}" text="{msg.help} &#x25be;"/>
+        <g:Button ui:field="helpButton" addStyleNames="{wp.laf.topBarButton}" text="{msg.help} &#x25be;"/>
     </g:HTMLPanel>
 </ui:UiBinder>

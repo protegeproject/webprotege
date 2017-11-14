@@ -146,6 +146,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtege.css")
     WebProtegeCss style();
 
+    @Source("WebProtegeLaf.css")
+    WebProtegeLaf laf();
+
     @Source("WebProtegeButtons.css")
     WebProtegeButtons buttons();
 
@@ -237,6 +240,21 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String helpText();
     }
 
+    interface WebProtegeLaf extends CssResource {
+
+        @ClassName("wp-TopBar")
+        String topBar();
+
+        @ClassName("wp-TopBar-title")
+        String topBarTitle();
+
+        @ClassName("wp-TopBar-separator")
+        String topBarSeparator();
+
+        @ClassName("wp-TopBar-button")
+        String topBarButton();
+    }
+
     interface WebProtegeButtons extends CssResource {
 
         @ClassName("btn-med")
@@ -251,6 +269,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("btn-icon-alt")
         String btnIconAlt();
 
+        @ClassName("button-base")
+        String buttonBase();
 
         String btn();
 
@@ -283,8 +303,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String toolbarButtonSelected();
 
         String circularButton();
-
-        String topBarButton();
 
         String button();
     }
