@@ -704,10 +704,15 @@ td {
 
 .wp-TopBar {
     background-color: #f0f0f0;
-    padding-left: 5px;
     padding-top: 1px;
     padding-bottom: 2px;
     margin-bottom: 5px;
+    background-image: url("../images/protege-blender.png");
+    background-repeat: no-repeat;
+    background-size: 30px;
+    padding-left: 30px;
+    background-position: 1px 1px;
+    min-height: 25px;
 }
 
 .wp-TopBar-title {
@@ -727,7 +732,6 @@ td {
     background-color: #505050;
     color: white;
 }
-
 
 .wp-login-logo {
     width: 200px;
