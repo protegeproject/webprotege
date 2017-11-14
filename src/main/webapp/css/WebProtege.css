@@ -704,6 +704,7 @@ td {
 
 .wp-TopBar {
     background-color: #f0f0f0;
+    padding-left: 5px;
     padding-top: 1px;
     padding-bottom: 2px;
     margin-bottom: 5px;
@@ -711,6 +712,7 @@ td {
 
 .wp-TopBar-title {
     font-weight: 600;
+    font-size: 18px;
 }
 
 .wp-TopBar-separator {

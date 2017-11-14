@@ -8,20 +8,25 @@
             flex-direction: row;
             align-items: center;
         }
+
         .leftItem {
             flex-grow: 0;
             flex-shrink: 0;
         }
+
         .middlePadding {
             flex-grow: 1;
         }
+
         .rightItem {
             flex-grow: 0;
             flex-shrink: 0;
         }
+
         .inline {
             display: inline-block;
         }
+
         .splitter {
             align-self: stretch;
             margin-top: 3px;
@@ -32,13 +37,14 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar}">
-            <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
-            <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
-            <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>
-            <g:HTMLPanel addStyleNames="{style.inline} {style.middlePadding}"/>
-            <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
-            <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
-            <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
-            <g:SimplePanel ui:field="helpContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+
+        <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>
+        <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
+        <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
+        <g:HTMLPanel addStyleNames="{style.inline} {style.middlePadding}"/>
+        <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+        <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+        <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+        <g:SimplePanel ui:field="helpContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
