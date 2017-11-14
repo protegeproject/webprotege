@@ -727,3 +727,13 @@ td {
     background-color: #505050;
     color: white;
 }
+
+
+.wp-login-logo {
+    width: 200px;
+    height: 200px;
+    background: url("../images/protege-blender.png") no-repeat;
+    background-size: contain;
+    position: relative;
+    left: -20px;
+}

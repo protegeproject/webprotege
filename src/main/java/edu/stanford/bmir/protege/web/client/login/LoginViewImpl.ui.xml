@@ -5,6 +5,9 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
+
+        @external .wp-login-logo;
+
         .main {
             overflow: auto;
         }
@@ -48,18 +51,17 @@
             padding-right: 0;
         }
 
-        .logoContainer {
-            width: 200px;
+        .wp-login-logo {
             margin-left: auto;
             margin-right: auto;
         }
 
-        .logo {
-            width: 200px;
-            height: auto;
-            position: relative;
-            left: -20px;
-        }
+        /*.logo {*/
+            /*width: 200px;*/
+            /*height: auto;*/
+            /*position: relative;*/
+            /*left: -20px;*/
+        /*}*/
 
         .signup {
             float: right;
@@ -92,8 +94,8 @@
         <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
                   addStyleNames="{style.signup} {wp.buttons.secondary}"/>
         <g:HTMLPanel addStyleNames="{style.center}">
-            <g:HTMLPanel addStyleNames="{style.logoContainer}">
-                <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>
+            <g:HTMLPanel addStyleNames="{style.wp-login-logo}">
+                <!--<g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>-->
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{style.message}">
                 <g:Label text="{msg.signInToContinue}"/>
