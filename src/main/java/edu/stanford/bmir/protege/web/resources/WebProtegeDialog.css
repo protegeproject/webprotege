@@ -14,12 +14,31 @@
     margin-left: auto;
     margin-right: auto;
     width: 500px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
+
+.content {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+}
+
+.buttonBar {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
 
 .dialog .gwt-TextBox {
     border: 1px solid #e0e0e0;
     line-height: 20px;
-    background: #ffffff;
+    background-color: #ffffff;
     padding: 2px;
     font-size: 12px;
     width: 100%;
@@ -30,7 +49,7 @@
 .dialog .gwt-PasswordTextBox {
     border: 1px solid #e0e0e0;
     line-height: 20px;
-    background: #ffffff;
+    background-color: #ffffff;
     padding: 2px;
     font-size: 12px;
     width: 100%;
@@ -43,15 +62,6 @@
     padding-bottom: 4px;
     padding-top: 10px;
     font-weight: 500;
-}
-
-.buttonBar {
-    padding-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
 }
 
 .cancelButton {
@@ -71,6 +81,8 @@
     font-size: 16px;
     padding-bottom: 30px;
     padding-top: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .group {

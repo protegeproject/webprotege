@@ -313,6 +313,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String title();
 
+        String content();
+
         String group();
 
         String buttonBar();

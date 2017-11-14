@@ -5,72 +5,97 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
-            padding-top: 50px;
-        }
-
-        .message {
-            width: 180px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-top: 20px;
-            padding-bottom: 15px;
-            font-size: 14px;
+            display: flex;
+            flex-direction: column;
         }
 
         .verticalPadding {
             height: 10px;
         }
+
         .list {
             min-height: 40px;
         }
+
         .linkSharingEnabledCheckBox {
 
         }
+
         .linkSharingEnabledCheckBox label {
             padding-left: 5px;
         }
+
         .linkSharingPermissionSurround {
             padding: 2px;
             padding-left: 22px;
         }
+
         .divider {
             margin-top: 10px;
             border-bottom: 1px solid #e0e0e0;
             margin-bottom: 20px;
         }
+
         .main input {
             background-color: white;
+        }
+
+        .dialogContainer {
+            display: flex;
+            flex-grow: 1;
+            flex-shrink: 1;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            overflow: hidden;
+        }
+
+        .dialogBox {
+        }
+
+        .topBar {
+            flex-grow: 0;
+            flex-shrink: 0;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} ">
-        <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
-            <g:Label text="{msg.sharing_sharingSettings}" addStyleNames="{wp.dialog.title}"/>
+        <g:HTMLPanel addStyleNames="{wp.laf.topBar} {style.topBar}">
+            <g:InlineLabel ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.dialogContainer}">
+            <g:HTMLPanel addStyleNames="{wp.dialog.dialog} {style.dialogBox}">
+                <g:Label text="{msg.sharing_sharingSettings}" addStyleNames="{wp.dialog.title}"/>
 
-            <g:HTMLPanel addStyleNames="{wp.dialog.group}">
-                <g:CheckBox text="{msg.sharing_linkSharingEnabled}" ui:field="linkSharingEnabledCheckBox" addStyleNames="{style.linkSharingEnabledCheckBox}"/>
-                <span style="color: #808080">  (<ui:text from="{msg.sharing_signInRequired}"/>)</span>
-                <g:HTMLPanel addStyleNames="{style.linkSharingPermissionSurround}" ui:field="linkSharingView">
-                    <g:InlineLabel text="{msg.sharing_anyoneWithTheLinkCan} "/>
-                    <g:ListBox ui:field="linkSharingPermissionDropDown" visibleItemCount="1" addStyleNames="{wp.style.sharingDropDown}">
-                    </g:ListBox>
+                <g:HTMLPanel addStyleNames="{wp.dialog.content}">
+                    <g:HTMLPanel addStyleNames="{wp.dialog.group}">
+                        <g:CheckBox text="{msg.sharing_linkSharingEnabled}" ui:field="linkSharingEnabledCheckBox"
+                                    addStyleNames="{style.linkSharingEnabledCheckBox}"/>
+                        <span style="color: #808080">(<ui:text from="{msg.sharing_signInRequired}"/>)
+                        </span>
+                        <g:HTMLPanel addStyleNames="{style.linkSharingPermissionSurround}" ui:field="linkSharingView">
+                            <g:InlineLabel text="{msg.sharing_anyoneWithTheLinkCan} "/>
+                            <g:ListBox ui:field="linkSharingPermissionDropDown" visibleItemCount="1"
+                                       addStyleNames="{wp.style.sharingDropDown}">
+                            </g:ListBox>
+                        </g:HTMLPanel>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{style.divider}"/>
+
+                    <g:HTMLPanel addStyleNames="{wp.dialog.group}">
+                        <ui:text from="{msg.sharing_shareWithSpecificPeople}"/>:
+                        <g:HTMLPanel addStyleNames="{style.verticalPadding}"/>
+                        <editor:ValueListEditorImpl ui:field="sharingSettingsListEditor" addStyleNames="{style.list}"
+                                                    enabled="true"/>
+                    </g:HTMLPanel>
                 </g:HTMLPanel>
-            </g:HTMLPanel>
-            <g:HTMLPanel addStyleNames="{style.divider}"/>
-
-            <g:HTMLPanel addStyleNames="{wp.dialog.group}">
-                <ui:text from="{msg.sharing_shareWithSpecificPeople}"/>:
-                <g:HTMLPanel addStyleNames="{style.verticalPadding}"/>
-                <editor:ValueListEditorImpl ui:field="sharingSettingsListEditor" addStyleNames="{style.list}" enabled="true"/>
-            </g:HTMLPanel>
 
 
-
-            <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
-                <g:Button ui:field="cancelButton" text="{msg.dialog_cancel}"
-                          addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
-                <g:Button ui:field="applyButton" text="{msg.dialog_apply}"
-                          addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
+                <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
+                    <g:Button ui:field="cancelButton" text="{msg.dialog_cancel}"
+                              addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
+                    <g:Button ui:field="applyButton" text="{msg.dialog_apply}"
+                              addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
+                </g:HTMLPanel>
             </g:HTMLPanel>
         </g:HTMLPanel>
 

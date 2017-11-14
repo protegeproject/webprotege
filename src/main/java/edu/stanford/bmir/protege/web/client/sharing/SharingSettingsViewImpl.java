@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +51,9 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
     @UiField
     HTMLPanel linkSharingView;
 
+    @UiField
+    Label projectTitle;
+
     private ApplyChangesHandler applyChangesHandler = () -> {};
 
     private CancelHandler cancelHandler = () -> {};
@@ -82,14 +86,16 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
     }
 
 
+    @Override
+    public void setProjectTitle(@Nonnull String projectTitle) {
+        this.projectTitle.setText(checkNotNull(projectTitle.trim()));
+    }
 
     @Override
     public void setLinkSharingPermission(Optional<SharingPermission> sharingPermission) {
         linkSharingEnabledCheckBox.setValue(sharingPermission.isPresent());
         updateLinkSharingPanel();
-        if (sharingPermission.isPresent()) {
-            linkSharingPermissionDropDown.setSelectedIndex(sharingPermission.get().ordinal());
-        }
+        sharingPermission.ifPresent(permission -> linkSharingPermissionDropDown.setSelectedIndex(permission.ordinal()));
     }
 
     private void updateLinkSharingPanel() {
