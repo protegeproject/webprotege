@@ -257,54 +257,31 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeButtons extends CssResource {
 
-        @ClassName("btn-med")
-        String btnMed();
+        @ClassName("wp-button-base")
+        String base();
 
-        @ClassName("btn-small")
-        String btnSmall();
+        @ClassName("wp-button-primary")
+        String primary();
 
-        @ClassName("btn-icon")
-        String btnIcon();
-
-        @ClassName("btn-icon-alt")
-        String btnIconAlt();
-
-        @ClassName("button-base")
-        String buttonBase();
-
-        String btn();
-
-        @ClassName("btn-xl")
-        String btnXl();
-
-        @ClassName("btn-a")
-        String btnA();
-
-        @ClassName("btn-b")
-        String btnB();
-
-        @ClassName("btn-c")
-        String btnC();
-
-        @ClassName("btn-lg")
-        String btnLg();
+        @ClassName("wp-button-secondary")
+        String secondary();
 
         @ClassName("btn-inline")
         String btnInline();
 
-        @ClassName("btn-d")
-        String btnD();
 
-        @ClassName("btn-e")
-        String btnE();
-
+        @ClassName("wp-ToolBar-button")
         String toolbarButton();
 
         String toolbarButtonSelected();
 
-        String circularButton();
+        @ClassName("wp-cancel-button")
+        String cancelButton();
 
-        String button();
+        @ClassName("wp-accept-button")
+        String acceptButton();
+
+//        String button();
     }
 
     interface WebProtegeDialog extends CssResource {
@@ -318,10 +295,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String group();
 
         String buttonBar();
-
-        String cancelButton();
-
-        String acceptButton();
 
         String errorLabel();
 

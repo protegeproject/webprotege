@@ -92,9 +92,9 @@
 
                 <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
                     <g:Button ui:field="cancelButton" text="{msg.dialog_cancel}"
-                              addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
+                              addStyleNames="{wp.buttons.cancelButton}"/>
                     <g:Button ui:field="applyButton" text="{msg.dialog_apply}"
-                              addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
+                              addStyleNames="{wp.buttons.acceptButton}"/>
                 </g:HTMLPanel>
             </g:HTMLPanel>
         </g:HTMLPanel>
