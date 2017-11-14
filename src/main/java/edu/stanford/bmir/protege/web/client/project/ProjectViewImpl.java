@@ -28,10 +28,10 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
 
 
     @UiField
-    protected SimpleLayoutPanel topBar;
+    protected SimplePanel topBar;
 
     @UiField
-    protected SimpleLayoutPanel perspectiveLinkBarViewContainer;
+    protected SimplePanel perspectiveLinkBarViewContainer;
 
     @UiField(provided = true)
     protected SimpleLayoutPanel perspectiveViewContainer = new SimpleLayoutPanel() {
@@ -74,12 +74,6 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
 
     @Override
     public void onResize() {
-        LayoutUtil.setBounds(this, 0, 0, 0, 0);
-        LayoutUtil.setFill(topBar, 0, 35);
-        LayoutUtil.setFill(perspectiveLinkBarViewContainer, 36, 24);
-        LayoutUtil.setBounds(perspectiveViewContainer, 60, 0, 0, 0);
-        topBar.onResize();
-        perspectiveLinkBarViewContainer.onResize();
         perspectiveViewContainer.onResize();
     }
 }

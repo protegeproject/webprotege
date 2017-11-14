@@ -4,42 +4,33 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            /*width: 400px;*/
-            /*height: 400px;*/
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 5px;
+            margin-top: 3px;
+            border-bottom: solid 1px #f1f1f1;
             overflow: hidden;
         }
-
+        .tabBarContainer {
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: hidden;
+        }
         .linkTabBar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
             white-space: nowrap;
             font-size: 12px;
             font-weight: normal;
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
         }
-
         .newTabButton {
-            position: absolute;
-            right: 0;
-            top: 0;
+            flex-grow: 0;
+            flex-shrink: 0;
             margin-right: 5px;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
+    <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
+        <g:SimplePanel addStyleNames="{style.tabBarContainer}">
+            <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
+        </g:SimplePanel>
         <g:Button ui:field="newTabButton" text="{msg.addTab}" addStyleNames="{style.newTabButton} {wp.laf.topBarButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

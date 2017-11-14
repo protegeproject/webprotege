@@ -577,10 +577,6 @@ td {
     /*	border-top: 1px dotted #f4f4f4;*/
 }
 
-.gwt-TabBar {
-    margin-bottom: 5px;
-    border-bottom: solid 1px #f1f1f1;
-}
 
 .gwt-TabBar .gwt-TabBarItem {
     padding: 2px;
@@ -707,9 +703,10 @@ td {
 /* Externalised application styles */
 
 .wp-TopBar {
-    background: #f0f0f0;
+    background-color: #f0f0f0;
     padding-top: 1px;
-    padding-bottom: 1px;
+    padding-bottom: 2px;
+    margin-bottom: 5px;
 }
 
 .wp-TopBar-title {
