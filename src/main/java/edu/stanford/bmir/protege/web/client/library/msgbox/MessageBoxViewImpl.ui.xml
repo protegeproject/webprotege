@@ -19,8 +19,6 @@
             box-sizing: border-box;
         }
         .main-message-style {
-            font-weight: bold;
-            font-size: 14px;
             padding-bottom: 5px;
             word-break: normal;
         }
@@ -43,7 +41,7 @@
                 <td valign="top"><g:Image resource="{wp.alertIcon}" ui:field="iconImage"/></td>
                 <td valign="top">
                     <g:HTMLPanel addStyleNames="{style.message-block}">
-                        <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style}"/>
+                        <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style} {wp.dialog.title}"/>
                         <g:HTML ui:field="messageLabel" addStyleNames="{style.sub-message-style}"/>
                     </g:HTMLPanel>
                 </td>
