@@ -725,12 +725,12 @@ td {
     background: #c8c8c8;
 }
 .wp-TopBar-button {
+    font-weight: 400;
     background-color: transparent;
     color: inherit;
 }
 .wp-TopBar-button:hover {
-    background-color: #505050;
-    color: white;
+    color: #101010;
 }
 
 .wp-login-logo {
