@@ -7,6 +7,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -27,6 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * changes then an {@link ActiveProjectChangedEvent}
  * is fired on the event bus.
  */
+@ApplicationSingleton
 public class ActiveProjectManagerImpl implements ActiveProjectManager {
 
     private final EventBus eventBus;
@@ -78,8 +80,6 @@ public class ActiveProjectManagerImpl implements ActiveProjectManager {
                 projectDetailsConsumer.accept(Optional.empty());
             }
         }
-
-
     }
 
     private void handlePlaceChange() {

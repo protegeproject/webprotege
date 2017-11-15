@@ -52,6 +52,8 @@ public class WebProtege implements EntryPoint {
         WidgetMapClientBundle.BUNDLE.style().ensureInjected();
 
         ApplicationPresenter applicationPresenter = WebProtegeClientInjector.get().getApplicationPresenter();
+        applicationPresenter.start();
+
         ApplicationView applicationView = applicationPresenter.getApplicationView();
 
         RootLayoutPanel.get().add(applicationView);
