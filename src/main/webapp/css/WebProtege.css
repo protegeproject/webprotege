@@ -735,7 +735,7 @@ td {
 
 .wp-login-logo {
     width: 200px;
-    height: 200px;
+    height: 160px;
     background: url("../images/protege-blender.png") no-repeat;
     background-size: contain;
 }
