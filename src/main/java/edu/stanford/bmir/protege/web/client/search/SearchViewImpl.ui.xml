@@ -28,6 +28,7 @@
 
         .main strong {
             background-color: #ffea8b;
+            color: #000;
         }
         .searchSummaryLabel {
             padding-top: 10px;

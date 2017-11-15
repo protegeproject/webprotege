@@ -22,7 +22,7 @@
             padding-top: 1px;
         }
         .main .searchedIri {
-            color: #707070;
+            color: #707070 !important;
             padding-bottom: 5px;
         }
     </ui:style>
