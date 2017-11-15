@@ -591,8 +591,8 @@ td {
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {
-    border-bottom: solid 2px dodgerblue;
-    color: dodgerblue;
+    border-bottom: solid 2px #8a21b9;
+    color: #8a21b9;
     outline: none 0;
 }
 
