@@ -3,6 +3,12 @@ body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
     font-weight: 300;
     color: #505050;
     font-size: 12px;
+
+    --selectedItemBackground: #116cd6;
+    --selectedItemColor: #fff;
+
+    --selectedMenuItemBackground: #116cd6;
+    --selectedMenuItemColor: white;
 }
 
 .x-tree-node a {
@@ -14,8 +20,8 @@ body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
 }
 
 .x-tree-node .x-tree-selected {
-    color: white;
-    background-color: #116cd6;
+    color: var(--selectedItemColor);
+    background-color: var(--selectedItemBackground);
 }
 
 a {
@@ -110,8 +116,8 @@ ul.disc {
 }
 
 .gwt-SuggestBoxPopup .item-selected {
-    color: #ffffff;
-    background: #116cd6;
+    color: var(--selectedMenuItemColor);
+    background: var(--selectedMenuItemBackground);
 }
 
 .gwt-SuggestBoxPopup .item .new-keyword {
@@ -121,8 +127,8 @@ ul.disc {
 }
 
 .gwt-SuggestBoxPopup .item-selected .new-keyword {
-    color: white;
-    background: #116cd6;
+    color: var(--selectedMenuItemColor);
+    background: var(--selectedMenuItemBackground);
     font-weight: bold;
 }
 
