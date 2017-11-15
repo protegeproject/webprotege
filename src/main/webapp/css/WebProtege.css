@@ -1,14 +1,16 @@
-body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-    font-weight: 300;
-    color: #505050;
-    font-size: 12px;
-
+body {
     --selectedItemBackground: #116cd6;
     --selectedItemColor: #fff;
 
     --selectedMenuItemBackground: #116cd6;
     --selectedMenuItemColor: white;
+}
+
+body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    color: #505050;
+    font-size: 12px;
 }
 
 .x-tree-node a {
@@ -211,8 +213,8 @@ select {
 }
 
 .gwt-MenuItem-selected {
-    color: #ffffff;
-    background: #4779be;
+    color: var(--selectedMenuItemColor);
+    background: var(--selectedMenuItemBackground);
 }
 
 .gwt-PopupPanel {
