@@ -23,7 +23,6 @@
         .modifiedDetails {
             flex-grow: 1;
             padding-left: 10px;
-            color: #757575;
         }
 
         .entityName {
