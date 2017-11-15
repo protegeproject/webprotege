@@ -2,20 +2,18 @@
 /* Various button styles */
 .wp-button-base, .wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
     border: none;
-    letter-spacing: .1em;
     border-radius: 2px;
     height: 38px;
-    line-height: 40px;
+    line-height: 38px;
     color: #fff;
-    padding: 0;
-    transition: background-color .15s ease-in-out;
-    -moz-transition: background-color .15s ease-in-out;
-    -webkit-transition: background-color .15s ease-in-out;
-    text-transform: uppercase;
+    transition: background-color 0.15s ease-in-out;
+    -moz-transition: background-color 0.15s ease-in-out;
+    -webkit-transition: background-color 0.15s ease-in-out;
     display: block;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 0 20px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 300;
 }
 
 .wp-button-base {
