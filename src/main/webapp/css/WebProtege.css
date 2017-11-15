@@ -716,8 +716,8 @@ td {
 }
 
 .wp-TopBar-title {
-    font-weight: 600;
-    font-size: 18px;
+    font-weight: 300;
+    font-size: 21px;
 }
 
 .wp-TopBar-separator {
@@ -738,6 +738,4 @@ td {
     height: 200px;
     background: url("../images/protege-blender.png") no-repeat;
     background-size: contain;
-    position: relative;
-    left: -20px;
 }
