@@ -37,10 +37,7 @@ import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.perspective.*;
-import edu.stanford.bmir.protege.web.client.place.PlaceHistoryHandlerProvider;
-import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
-import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityMapper;
-import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
+import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -62,6 +59,7 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 /**
  * Author: Matthew Horridge<br>
@@ -376,4 +374,10 @@ public class ClientApplicationModule {
     AddCollectionItemPrompt providesAddCollectionItemPrompt(AddCollectionItemPromptImpl impl) {
         return impl;
     }
+
+    @Provides
+    WindowTitleUpdater providesWindowTitleUpdater(WindowTitleUpdaterImpl impl) {
+        return impl;
+    }
+
 }

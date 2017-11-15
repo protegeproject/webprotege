@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChangedHandler> {
 
-    public static final transient Event.Type<ActiveProjectChangedHandler> TYPE = new Event.Type<ActiveProjectChangedHandler>();
+    public static final transient Event.Type<ActiveProjectChangedHandler> ACTIVE_PROJECT_CHANGED = new Event.Type<ActiveProjectChangedHandler>();
 
     private ProjectId projectId;
 
@@ -47,7 +47,7 @@ public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChan
 
     @Override
     public Event.Type<ActiveProjectChangedHandler> getAssociatedType() {
-        return TYPE;
+        return ACTIVE_PROJECT_CHANGED;
     }
 
     @Override
