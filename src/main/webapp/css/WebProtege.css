@@ -15,7 +15,7 @@ body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
 
 .x-tree-node .x-tree-selected {
     color: white;
-    background-color: dodgerblue;
+    background-color: #4779be;
 }
 
 a {
@@ -206,7 +206,7 @@ select {
 
 .gwt-MenuItem-selected {
     color: #ffffff;
-    background: #0055aa;
+    background: #4779be;
 }
 
 .gwt-PopupPanel {
