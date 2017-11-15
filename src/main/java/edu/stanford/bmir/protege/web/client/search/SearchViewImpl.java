@@ -254,8 +254,8 @@ public class SearchViewImpl extends Composite implements SearchView, HasAcceptKe
     private void highlightSelectedIndex() {
         if (-1 < selectedIndex && selectedIndex < list.getWidgetCount()) {
             Element element = list.getWidget(selectedIndex).getElement();
-            element.getStyle().setBackgroundColor("#116cd6");
-            element.getStyle().setColor("#fff");
+            element.getStyle().setBackgroundColor("var(--selectedItemBackground)");
+            element.getStyle().setColor("var(--selectedItemColor)");
             element.scrollIntoView();
         }
     }
