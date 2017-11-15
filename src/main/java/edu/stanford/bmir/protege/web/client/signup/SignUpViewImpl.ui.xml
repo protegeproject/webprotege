@@ -28,7 +28,7 @@
             <g:Label text="Create Account" addStyleNames="{wp.dialog.title}"/>
 
             <g:Label text="User name"/>
-            <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Harry Potter"/>
+            <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Jane Doe"/>
             <g:Label ui:field="userNameErrorLabel" text="Please specify a user name" addStyleNames="{wp.dialog.errorLabel}"/>
 
             <g:Label text="Email address"/>
