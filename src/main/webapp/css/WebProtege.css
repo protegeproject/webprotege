@@ -725,8 +725,8 @@ td {
     background: #c8c8c8;
 }
 .wp-TopBar-button {
-    color: #505050;
     background-color: transparent;
+    color: inherit;
 }
 .wp-TopBar-button:hover {
     background-color: #505050;
