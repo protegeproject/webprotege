@@ -61,14 +61,6 @@ ul.disc {
     color: rgba(200, 200, 200, 1.0);
 }
 
-[contenteditable=true] {
-    border: 1px solid silver;
-    font-size: 12px;
-    padding: 2px;
-    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
-    height: 100%
-}
-
 :focus {
     outline: #0A5EA8 solid 1px;
     outline-offset: -1px;
