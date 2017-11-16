@@ -14,12 +14,12 @@
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="Digit count" addStyleNames="{wp.style.dlgLabel}"/>
+            <g:Label text="Digit count"/>
             <g:TextBox ui:field="totalDigitsEditor"/>
         </div>
         <div style="height: 10px;"/>
 
-        <g:Label text="User specific ranges" addStyleNames="{wp.style.dlgLabel}"/>
+        <g:Label text="User specific ranges"/>
 
         <g:ScrollPanel width="500px" height="200px">
             <editor:ValueListEditorImpl ui:field="userRangeTable" enabled="true" addStyleNames="{style.userRangeList}"/>

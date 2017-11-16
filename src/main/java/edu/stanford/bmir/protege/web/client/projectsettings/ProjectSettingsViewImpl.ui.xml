@@ -46,12 +46,12 @@
                         <g:header size='7'>Main Settings</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
                             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                                <g:Label text="Display name" addStyleNames="{wp.style.dlgLabel}"/>
+                                <g:Label text="Display name"/>
                                 <g:TextBox ui:field="displayNameField" visibleLength="60"/>
                             </g:HTMLPanel>
 
                             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                                <g:Label text="Description" addStyleNames="{wp.style.dlgLabel}"/>
+                                <g:Label text="Description"/>
                                 <g:TextArea ui:field="descriptionField" visibleLines="5" width="100%"/>
                             </g:HTMLPanel>
                         </g:HTMLPanel>
@@ -62,7 +62,7 @@
                         <g:header size='7'>Slack Integration</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
                             <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-                                <g:Label text="Slack Webhook Url" addStyleNames="{wp.style.dlgLabel}"/>
+                                <g:Label text="Slack Webhook Url"/>
                                 <g:TextBox ui:field="slackPayloadUrl" visibleLength="60"/>
                             </g:HTMLPanel>
                         </g:HTMLPanel>
@@ -71,7 +71,7 @@
                     <g:tab>
                         <g:header size='7'>Webhooks</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
-                            <g:Label text="Payload Urls" addStyleNames="{wp.style.dlgLabel}"/>
+                            <g:Label text="Payload Urls"/>
                             <editor:ValueListEditorImpl ui:field="webhooks"/>
                         </g:HTMLPanel>
                     </g:tab>
