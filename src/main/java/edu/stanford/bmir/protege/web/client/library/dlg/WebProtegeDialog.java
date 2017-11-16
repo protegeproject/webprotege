@@ -25,8 +25,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
     public static final boolean MODAL = true;
 
-    private static final String WEB_PROTEGE_LAF = "web-protege-laf";
-
     private static final String WEB_PROTEGE_DIALOG_MAIN_PANEL = "web-protege-dialog-main-panel";
 
     private static final String WEB_PROTEGE_DIALOG_BUTTON_BAR = "web-protege-dialog-button-bar";
@@ -47,7 +45,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
         setText(controller.getTitle());
         mainPanel = new FlowPanel();
         setWidget(mainPanel);
-        addStyleName(WEB_PROTEGE_LAF);
         mainPanel.addStyleName(WEB_PROTEGE_DIALOG_MAIN_PANEL);
 
         Widget contentWidget = controller.getWidget();

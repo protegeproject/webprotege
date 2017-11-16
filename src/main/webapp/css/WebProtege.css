@@ -72,6 +72,27 @@ ul.disc {
     border: none;
 }
 
+.gwt-TextBox {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background-color: #ffffff;
+    padding: 2px;
+}
+
+.textarea {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background-color: #ffffff;
+    padding: 2px;
+}
+
+.gwt-PasswordTextBox {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background-color: #ffffff;
+    padding: 2px;
+}
+
 .gwt-SuggestBox, .gwt-SuggestBox [disabled] {
     border: 1px solid #f0f0f0;
     font-size: 12px;

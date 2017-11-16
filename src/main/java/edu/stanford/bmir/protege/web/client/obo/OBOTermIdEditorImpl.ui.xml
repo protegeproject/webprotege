@@ -35,7 +35,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="web-protege-laf {wp.style.formMain} {style.termIdEditor}">
+    <g:HTMLPanel addStyleNames="{wp.style.formMain} {style.termIdEditor}">
 
         <div class="{wp.style.formGroup} {style.idField}">
             <g:Label text="Id" styleName="{wp.style.formLabel}"/>

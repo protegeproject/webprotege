@@ -25,7 +25,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
+    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>

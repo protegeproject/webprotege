@@ -39,7 +39,7 @@
         }
     </ui:style>
     <g:HTMLPanel width="450px" height="650px" styleName="{style.main-panel}">
-        <div class="web-protege-laf">
+        <div>
             <g:HTMLPanel addStyleNames="{style.check-box-panel}">
                 <div style="padding-left: 15px;">
                     <g:CheckBox ui:field="showDefiningAxiomsCheckBox" text="Show defining axioms"

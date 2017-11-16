@@ -32,7 +32,7 @@
             box-sizing: border-box;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.xref-editor} web-protege-laf">
+    <g:HTMLPanel addStyleNames="{style.xref-editor}">
             <div class="{style.xrefEditorHolder}">
                 <div class="{style.id-field}">
                     <text:PlaceholderTextBox ui:field="databaseIdField" placeholder="DB Id" addStyleNames="{style.cell-content}"/>
