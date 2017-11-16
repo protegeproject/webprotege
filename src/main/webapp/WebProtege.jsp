@@ -92,7 +92,7 @@
                 userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.<String>empty());
             }
         }
-        Set<ActionId> allowedApplicationActions = new HashSet(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));
+        Set<ActionId> allowedApplicationActions = new HashSet<ActionId>(getAccessManager().getActionClosure(Subject.forUser(userId), ApplicationResource.get()));
         userInSession = new UserInSession(userDetails, allowedApplicationActions);
         ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
                 .writeVariableDeclaration(userInSession, out);
