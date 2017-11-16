@@ -61,22 +61,6 @@ ul.disc {
     color: rgba(200, 200, 200, 1.0);
 }
 
-*.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
-    border: 1px solid #e0e0e0;
-    font-size: 12px;
-    padding: 2px;
-    line-height: 15px;
-    color: #000000;
-}
-
-*.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly, .gwt-PasswordTextBox {
-    border: 1px solid transparent;
-    border-bottom-color: #f0f0f0;
-    font-size: 12px;
-    padding: 2px;
-    line-height: 15px;
-}
-
 [contenteditable=true] {
     border: 1px solid silver;
     font-size: 12px;
