@@ -82,21 +82,7 @@ ul.disc {
     font-weight: 500;
 }
 
-.gwt-TextBox {
-    border: 1px solid #e0e0e0;
-    line-height: 20px;
-    background-color: #ffffff;
-    padding: 2px;
-}
-
-.textarea {
-    border: 1px solid #e0e0e0;
-    line-height: 20px;
-    background-color: #ffffff;
-    padding: 2px;
-}
-
-.gwt-PasswordTextBox {
+.gwt-TextBox, textarea, .gwt-PasswordTextBox {
     border: 1px solid #e0e0e0;
     line-height: 20px;
     background-color: #ffffff;
