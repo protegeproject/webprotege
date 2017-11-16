@@ -6,8 +6,13 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotati
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -31,11 +36,21 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
     @RootOntology
     private final OWLOntology rootOntology;
 
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final PropertyValueComparator propertyValueComparator;
+
     @Inject
     public GetOntologyAnnotationsActionHandler(@Nonnull AccessManager accessManager,
-                                               @Nonnull @RootOntology OWLOntology rootOntology) {
+                                               @Nonnull @RootOntology OWLOntology rootOntology,
+                                               @Nonnull RenderingManager renderingManager,
+                                               @Nonnull PropertyValueComparator propertyValueComparator) {
         super(accessManager);
         this.rootOntology = rootOntology;
+        this.renderingManager = renderingManager;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     @Override
@@ -52,7 +67,16 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
     @Override
     public GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, ExecutionContext executionContext) {
         List<OWLAnnotation> result = new ArrayList<>(rootOntology.getAnnotations());
-        return new GetOntologyAnnotationsResult(ImmutableList.of());
+        ImmutableList.Builder<PropertyAnnotationValue> annotationValues = ImmutableList.builder();
+        result.stream()
+                .map(annotation -> new PropertyAnnotationValue(
+                        renderingManager.getRendering(annotation.getProperty()),
+                        renderingManager.getRendering(annotation.getValue()),
+                        State.ASSERTED
+                ))
+                .sorted(propertyValueComparator)
+                .forEach(annotationValues::add);
+        return new GetOntologyAnnotationsResult(annotationValues.build());
     }
 
 }

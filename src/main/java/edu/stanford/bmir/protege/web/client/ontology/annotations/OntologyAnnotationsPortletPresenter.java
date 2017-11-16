@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ontology.annotations;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
@@ -19,22 +20,21 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import javax.inject.Inject;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY_ANNOTATIONS;
+
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 05/07/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 05/07/2013
  */
 @Portlet(id = "portlets.OntologyAnnotations", title = "Ontology Annotations")
 public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private final AnnotationsView annotationsView;
 
-    private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
-
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
     @Inject
     public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
@@ -50,45 +50,52 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
         portletUi.setWidget(new ScrollPanel(annotationsView.asWidget()));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        OntologyFrameChangedEvent.TYPE, event -> updateView());
+                OntologyFrameChangedEvent.TYPE, event -> updateView());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
-                                        event -> updateState());
-        updateState();
-        updateView();
-
+                PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
+                event -> updateState());
+        permissionChecker.hasPermission(BuiltInAction.VIEW_PROJECT, permission -> {
+            portletUi.setForbiddenVisible(!permission);
+            if (permission) {
+                updateState();
+                updateView();
+            }
+        });
     }
 
     private void updateView() {
         dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()),
-                                       result -> {
-                                           List<PropertyAnnotationValue> object = result.getAnnotations();
-                                           if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
-                                               lastSet = Optional.of(object);
-                                               annotationsView.setValue(new LinkedHashSet<>(object));
-                                           }
-                                       });
+                result -> {
+                    LinkedHashSet<PropertyAnnotationValue> object = new LinkedHashSet<>(result.getAnnotations());
+                    if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
+                        lastSet = Optional.of(new ArrayList<>(object));
+                        annotationsView.setValue(object);
+                    }
+                });
     }
 
 
     private void updateState() {
         annotationsView.setEnabled(false);
-        permissionChecker.hasPermission(BuiltInAction.EDIT_ONTOLOGY_ANNOTATIONS,
-                                        canEdit -> annotationsView.setEnabled(canEdit));
+        permissionChecker.hasPermission(EDIT_ONTOLOGY_ANNOTATIONS, annotationsView::setEnabled);
     }
 
     private void handleOntologyAnnotationsChanged() {
-        if(!annotationsView.isDirty()) {
+        GWT.log("[OntologyAnnotationsPortletPresenter] Ontology annotations changed");
+        if (!annotationsView.isDirty()) {
+            GWT.log("[OntologyAnnotationsPortletPresenter] Ontology annotations are not dirty");
             return;
         }
-        if(!annotationsView.isWellFormed()) {
+        if (!annotationsView.isWellFormed()) {
+            GWT.log("[OntologyAnnotationsPortletPresenter] Ontology annotations are not dirty");
             return;
         }
         Optional<Set<PropertyAnnotationValue>> annotations = annotationsView.getValue();
         if (annotations.isPresent() && lastSet.isPresent()) {
             dispatchServiceManager.execute(
                     new SetOntologyAnnotationsAction(getProjectId(), new HashSet<>(lastSet.get()), annotations.get()),
-                    result-> {});
+                    result -> {
+                    });
         }
     }
 }
