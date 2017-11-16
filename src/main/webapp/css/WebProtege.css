@@ -61,14 +61,6 @@ ul.disc {
     color: rgba(200, 200, 200, 1.0);
 }
 
-*.web-protege-laf *:after, *:before {
-    box-sizing: border-box;
-}
-
-.web-protege-laf {
-    font-size: 12px;
-}
-
 *.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
     border: 1px solid #e0e0e0;
     font-size: 12px;
