@@ -90,7 +90,7 @@
 }
 
 .dialog .errorLabel {
-    color: #af0002;
+    color: literal("var(--errorLabelColor)");
     display: none;
     padding: 0;
 }

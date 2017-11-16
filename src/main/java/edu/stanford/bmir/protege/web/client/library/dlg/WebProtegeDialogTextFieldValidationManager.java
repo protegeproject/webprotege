@@ -41,7 +41,7 @@ public class WebProtegeDialogTextFieldValidationManager {
             }
         });
 
-        errorLabel.addStyleName("web-protege-red-foreground");
+        errorLabel.addStyleName("var(--errorLabelColor)");
         errorLabel.setText("");
         errorLabel.setVisible(false);
     }

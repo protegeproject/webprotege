@@ -12,6 +12,8 @@
     --inlayPanelBackground: #f0f0f0;
 
     --viewToolbarBackground: #f0f0f0;
+
+    --errorLabelColor: #af0002;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
@@ -112,10 +114,6 @@ ul.disc {
 
 .web-protege-entity-match-substring {
     font-weight: bold;
-}
-
-.web-protege-red-foreground {
-    color: red;
 }
 
 * .web-protege-error-label > * a:link {
