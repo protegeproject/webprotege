@@ -132,11 +132,6 @@ ul.disc {
     padding: 2px;
 }
 
-.empty-icon-inset {
-    padding-left: 22px !important;
-    background-color: inherit;
-}
-
 .gwt-ToggleButton {
     display: inline-block;
 }

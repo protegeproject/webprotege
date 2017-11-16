@@ -176,7 +176,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
         @Override
         public void render(Context context, E value, SafeHtmlBuilder safeHtmlBuilder) {
             StringBuilder sb = new StringBuilder();
-            String cssClassName = value.accept(CSS_CLASS_NAME_VISITOR, "empty-icon-inset");
+            String cssClassName = value.accept(CSS_CLASS_NAME_VISITOR, BUNDLE.style().emptyIconInset());
             sb.append("<div class=\"").append(cssClassName).append("\" style=\"line-height: 20px;\">");
             renderer.render(value, sb);
             sb.append("</div>");
