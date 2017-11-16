@@ -21,6 +21,17 @@ body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
     font-size: 12px;
 }
 
+a {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+ul.disc {
+    list-style-type: disc;
+    padding: 15px;
+}
+
 .x-tree-node a {
     color: inherit;
 }
@@ -34,19 +45,8 @@ body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
     background-color: var(--selectedItemBackground);
 }
 
-a {
-    color: blue;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
 .x-panel-body-noheader, .x-panel-mc .x-panel-body {
     border: none;
-}
-
-ul.disc {
-    list-style-type: disc;
-    padding: 15px;
 }
 
 ::-webkit-input-placeholder {
