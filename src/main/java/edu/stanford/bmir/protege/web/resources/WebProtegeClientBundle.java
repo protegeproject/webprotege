@@ -200,6 +200,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String individualIconInset();
 
+        String emptyIconInset();
+
         String linkIconInset();
 
         String iriIconInset();

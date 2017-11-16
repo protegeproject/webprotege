@@ -163,6 +163,11 @@
     padding-left: 22px !important;
 }
 
+.emptyIconInset {
+    padding-left: 22px !important;
+}
+
+
 .linkIconInset {
     background-image: linkIconUrl;
     background-repeat: no-repeat;
