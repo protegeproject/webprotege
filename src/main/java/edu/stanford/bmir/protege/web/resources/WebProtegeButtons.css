@@ -14,6 +14,7 @@
     cursor: pointer;
     font-size: 16px;
     font-weight: 300;
+    letter-spacing: 0.02em;
 }
 
 .wp-button-base {
