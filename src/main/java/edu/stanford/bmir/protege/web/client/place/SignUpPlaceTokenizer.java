@@ -7,11 +7,11 @@ package edu.stanford.bmir.protege.web.client.place;
  */
 public class SignUpPlaceTokenizer implements WebProtegePlaceTokenizer<SignUpPlace> {
 
-    private static final String SIGNUP = "signup";
+    private static final String ACCOUNTS_NEW = "accounts/new";
 
     @Override
     public boolean matches(String token) {
-        return SIGNUP.equals(token);
+        return ACCOUNTS_NEW.equals(token);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class SignUpPlaceTokenizer implements WebProtegePlaceTokenizer<SignUpPlac
 
     @Override
     public String getToken(SignUpPlace place) {
-        return SIGNUP;
+        return ACCOUNTS_NEW;
     }
 }
