@@ -174,16 +174,6 @@ select {
     color: #9d3600;
 }
 
-/*.error {*/
-    /*border-bottom: solid #ff0000 2px;*/
-    /*box-sizing: border-box;*/
-    /*color: red !important;*/
-/*}*/
-
-.empty-metric {
-    color: #dadada;
-}
-
 .gwt-DialogBox {
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);

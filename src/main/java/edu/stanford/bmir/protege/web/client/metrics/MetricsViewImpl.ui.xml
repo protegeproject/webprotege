@@ -3,11 +3,15 @@
              xmlns:cell="urn:import:com.google.gwt.user.cellview.client">
 
     <ui:style>
+        @external .empty-metric;
         .dirtyLabel {
             background-color: #fffac8;
             color: #666666;
             min-height: 16px;
             font-size: 12px;
+        }
+        .empty-metric {
+            color: #dadada;
         }
     </ui:style>
     <g:HTMLPanel>
