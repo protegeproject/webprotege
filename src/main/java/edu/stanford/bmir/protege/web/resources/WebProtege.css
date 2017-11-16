@@ -52,11 +52,8 @@
 }
 
 .formLabel {
-    color: #000000;
     font-weight: bold;
-    font-size: 12px;
     padding-bottom: 2px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .dlgLabel {
