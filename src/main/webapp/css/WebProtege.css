@@ -221,13 +221,6 @@ select {
     padding-left: 5px;
 }
 
-.web-protege-term-editor {
-    border-top: 1px dotted silver;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    clear: both;
-}
-
 .web-protege-form-layout-editor table {
     width: 100%;
 }
