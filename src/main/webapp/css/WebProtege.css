@@ -14,6 +14,8 @@
     --viewToolbarBackground: #f0f0f0;
 
     --errorLabelColor: #af0002;
+
+    --outline: #0A5EA8 solid 1px;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
@@ -64,7 +66,7 @@ ul.disc {
 }
 
 :focus {
-    outline: #0A5EA8 solid 1px;
+    outline: var(--outline);
     outline-offset: -1px;
 }
 
@@ -298,6 +300,10 @@ select {
 
 .CodeMirror pre {
     line-height: 16px;
+}
+
+.CodeMirror-focused {
+    outline: var(--outline);
 }
 
 .ms-axiom-kw {
