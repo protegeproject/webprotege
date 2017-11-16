@@ -3,6 +3,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
+        @external .gwt-TabBar, .gwt-TabBarItem, .gwt-TabBarItem-selected;
         .main {
             display: flex;
             flex-direction: row;
@@ -26,6 +27,26 @@
             flex-shrink: 0;
             margin-right: 5px;
         }
+
+        .main .gwt-TabBar .gwt-TabBarItem {
+            padding: 2px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: #464646;
+            border-bottom: solid transparent 2px;
+            outline-style: none;
+            outline-width: 0;
+        }
+
+        .main .gwt-TabBar .gwt-TabBarItem-selected {
+            border-bottom: solid 2px literal("var(--selectedPerspectiveLinkColor)");
+            color: literal("var(--selectedPerspectiveLinkColor)");
+            outline: none 0;
+        }
+
+
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" debugId="PerspectiveSwitcher">
         <g:SimplePanel addStyleNames="{style.tabBarContainer}">
