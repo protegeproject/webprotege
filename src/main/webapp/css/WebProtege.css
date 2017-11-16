@@ -122,15 +122,6 @@ ul.disc {
     padding: 2px;
 }
 
-*.web-protege-laf * .gwt-RichTextArea, .gwt-RichTextArea-readonly {
-    border: 1px solid #f0f0f0;
-    font-size: 12px;
-    padding: 2px;
-    line-height: 15px;
-    color: #000000;
-    margin: 0;
-}
-
 select {
     border: 1px solid silver;
     box-shadow: 0 0 3px 1px #f0f0f0 inset;
