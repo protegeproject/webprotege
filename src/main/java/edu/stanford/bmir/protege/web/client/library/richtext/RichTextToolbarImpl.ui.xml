@@ -4,6 +4,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
+        @external gwt-ToggleButton;
         .bar-style {
             /*padding: 2px*/
         }
@@ -46,6 +47,32 @@
         }
         .gwt-ToggleButton div {
             vertical-align: center;
+        }
+
+        .gwt-ToggleButton {
+            display: inline-block;
+        }
+
+        .gwt-ToggleButton-up {
+            border: #e6e6e6 solid 1px;
+            background: #fafafa;
+        }
+
+        .gwt-ToggleButton-down {
+            background: none repeat scroll 0 0 #f1f1f1;
+            border: 1px solid #a8a8a8;
+            box-shadow: 0 0 2px 2px #dfdfdf inset;
+        }
+
+        .gwt-ToggleButton-up-hovering {
+            border: #e6e6e6 solid 1px;
+            box-shadow: 0 0 5px 2px #676767;
+        }
+
+        .gwt-ToggleButton-down-hovering {
+            background: none repeat scroll 0 0 #f1f1f1;
+            border: 1px solid #bdbdbd;
+            box-shadow: 0 0 2px 2px #dfdfdf inset;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.bar-style}">
