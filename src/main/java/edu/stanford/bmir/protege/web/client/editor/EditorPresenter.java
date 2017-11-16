@@ -27,6 +27,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
+import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
@@ -89,8 +91,8 @@ public class EditorPresenter implements HasDispose {
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
 
         handlerRegistrationManager.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updatePermissionBasedItems());
-        handlerRegistrationManager.registerHandler(UserLoggedInEvent.ON_USER_LOGGED_IN, event -> updatePermissionBasedItems());
-        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> updatePermissionBasedItems());
+        handlerRegistrationManager.registerHandler(ON_USER_LOGGED_IN, event -> updatePermissionBasedItems());
+        handlerRegistrationManager.registerHandler(ON_USER_LOGGED_OUT, event -> updatePermissionBasedItems());
     }
 
     public HandlerRegistration addEditorContextChangedHandler(EditorContextChangedHandler handler) {
@@ -111,9 +113,7 @@ public class EditorPresenter implements HasDispose {
     }
 
     public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext) {
-        if (lastEditorState.isPresent()) {
-            unbindPrevious(lastEditorState.get());
-        }
+        lastEditorState.ifPresent(this::unbindPrevious);
         if (editorContext.isPresent()) {
             bindNext(editorContext.get());
         }
