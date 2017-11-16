@@ -72,6 +72,13 @@ ul.disc {
     border: none;
 }
 
+.gwt-DialogBox .gwt-Label {
+    color: #606060;
+    padding-bottom: 4px;
+    padding-top: 10px;
+    font-weight: 500;
+}
+
 .gwt-TextBox {
     border: 1px solid #e0e0e0;
     line-height: 20px;
@@ -195,7 +202,6 @@ select {
 }
 
 .gwt-DialogBox .Caption {
-    background-color: white;
     color: #505050;
     cursor: default;
     font-size: 18px;
@@ -205,12 +211,6 @@ select {
 }
 
 .web-protege-dialog-main-panel {
-    font-size: 12px;
-}
-
-.web-protege-dialog-label {
-    color: #4779be;
-    text-align: right;
     font-size: 12px;
 }
 

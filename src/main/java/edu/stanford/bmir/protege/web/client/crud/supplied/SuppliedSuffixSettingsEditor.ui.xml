@@ -5,7 +5,7 @@
 
     <g:HTMLPanel>
         <g:HTMLPanel>
-            <g:Label text="Spaces" addStyleNames="{wp.style.dlgLabel}"/>
+            <g:Label text="Spaces"/>
             <g:ListBox ui:field="whiteSpaceTreatmentListBox" visibleItemCount="1"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
