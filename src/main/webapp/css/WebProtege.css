@@ -1,11 +1,15 @@
 :root {
     --selectedItemBackground: #116cd6;
-    --selectedItemColor: #fff;
+    --selectedItemColor: white;
 
     --selectedMenuItemBackground: #116cd6;
     --selectedMenuItemColor: white;
 
     --selectedPerspectiveLinkColor: #116cd6;
+
+    --topBar-background: #f0f0f0;
+
+    --inlayPanelBackground: #f0f0f0;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
@@ -713,7 +717,7 @@ td {
 /* Externalised application styles */
 
 .wp-TopBar {
-    background-color: #f0f0f0;
+    background-color: var(--topBar-background);
     padding-top: 1px;
     padding-bottom: 2px;
     margin-bottom: 5px;

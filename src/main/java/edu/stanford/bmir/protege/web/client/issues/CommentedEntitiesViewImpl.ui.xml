@@ -16,14 +16,14 @@
         .topBar {
             flex-grow: 0;
             flex-shrink: 0;
-            background: #f0f0f0;
+            background: literal("var(--inlayPanelBackground)");
             padding-top: 2px;
             padding-bottom: 2px;
         }
         .bottomBar {
             flex-grow: 0;
             flex-shrink: 0;
-            background: #f0f0f0;
+            background: literal("var(--inlayPanelBackground)");
         }
 
     </ui:style>
