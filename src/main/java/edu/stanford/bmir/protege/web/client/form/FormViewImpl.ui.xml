@@ -9,7 +9,7 @@
             overflow: auto;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="web-protege-laf {style.container}">
+    <g:HTMLPanel addStyleNames="{style.container}">
         <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.formMain} {style.container}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
