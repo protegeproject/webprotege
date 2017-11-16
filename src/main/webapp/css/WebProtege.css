@@ -10,6 +10,8 @@
     --topBar-background: #f0f0f0;
 
     --inlayPanelBackground: #f0f0f0;
+
+    --viewToolbarBackground: #f0f0f0;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {

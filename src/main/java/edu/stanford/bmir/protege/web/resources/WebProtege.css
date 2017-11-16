@@ -202,7 +202,7 @@
 }
 
 .portletToolbar {
-    background: #f1f1f1;
+    background: literal("var(--viewToolbarBackground)");
 }
 
 .inTrash {
