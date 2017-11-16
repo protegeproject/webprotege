@@ -139,15 +139,6 @@ select {
     padding: 1px;
 }
 
-.web-protege-highlighted-table-column {
-    background: #f3f3ff
-}
-
-.web-protege-mapped-table-column {
-    font-weight: bold !important;
-    background: #efffef;
-}
-
 .gwt-MenuBar-vertical {
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
