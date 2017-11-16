@@ -1,9 +1,11 @@
-body {
+:root {
     --selectedItemBackground: #116cd6;
     --selectedItemColor: #fff;
 
     --selectedMenuItemBackground: #116cd6;
     --selectedMenuItemColor: white;
+
+    --selectedPerspectiveLinkColor: #116cd6;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
@@ -599,8 +601,8 @@ td {
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {
-    border-bottom: solid 2px #8a21b9;
-    color: #8a21b9;
+    border-bottom: solid 2px var(--selectedPerspectiveLinkColor);
+    color: var(--selectedPerspectiveLinkColor);
     outline: none 0;
 }
 
