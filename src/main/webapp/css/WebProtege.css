@@ -199,6 +199,11 @@ select {
     margin: 0 0 16px;
 }
 
+.gwt-PopupPanelGlass {
+    background-color: black;
+    opacity: 0.4;
+}
+
 .web-protege-dialog-main-panel {
     font-size: 12px;
 }
