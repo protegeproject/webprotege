@@ -40,7 +40,8 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding-left: 10px;
+            padding-right: 20px;
             flex-grow: 0;
             flex-shrink: 0;
         }
@@ -54,8 +55,8 @@
         .filterPanel {
             display: flex;
             flex-direction: column;
-            padding: 10px;
-            padding-top: 50px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
         .checkBoxHolder {
@@ -91,7 +92,7 @@
         <g:HTMLPanel addStyleNames="{style.projectList}">
             <g:HTMLPanel addStyleNames="{style.sideBar}">
                 <g:Button ui:field="createProjectButton" text="{msg.createProject}" enabled="false" addStyleNames="{wp.buttons.buttonPrimary}"/>
-                <div style="height: 10px;"/>
+                <div style="height: 50px;"/>
                 <g:HTMLPanel addStyleNames="{style.filterPanel}">
                     <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
                         <g:CheckBox ui:field="ownedByMeCheckBox" text="{msg.ownedByMe}" addStyleNames="{style.checkBox}"/>
