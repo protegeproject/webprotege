@@ -1,21 +1,24 @@
 :root {
-    --selectedItemBackground: #116cd6;
-    --selectedItemColor: white;
+    --selectedItem-background-color: #116cd6;
+    --selectedItem-color: white;
 
-    --selectedMenuItemBackground: #116cd6;
-    --selectedMenuItemColor: white;
+    --selectedMenuItem-background-color: #116cd6;
+    --selectedMenuItem-color: white;
 
-    --selectedPerspectiveLinkColor: #116cd6;
+    --selectedPerspectiveLink-color: #116cd6;
 
-    --topBar-background: #f0f0f0;
+    --topBar-background-color: #f0f0f0;
 
-    --inlayPanelBackground: #f0f0f0;
+    --inlayPanel-background-color: #f0f0f0;
 
-    --viewToolbarBackground: #f0f0f0;
+    --viewToolbar-background-color: #f0f0f0;
 
-    --errorLabelColor: #af0002;
+    --errorLabel-color: #af0002;
 
     --outline: #0A5EA8 solid 1px;
+
+    --widgetmap-view-header-font-weight: 400;
+    --widgetmap-view-header-padding-left: 3px;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
@@ -45,8 +48,8 @@ ul.disc {
 }
 
 .x-tree-node .x-tree-selected {
-    color: var(--selectedItemColor);
-    background-color: var(--selectedItemBackground);
+    color: var(--selectedItem-color);
+    background-color: var(--selectedItem-background-color);
 }
 
 .x-panel-body-noheader, .x-panel-mc .x-panel-body {
@@ -113,8 +116,8 @@ ul.disc {
 }
 
 .gwt-SuggestBoxPopup .item-selected {
-    color: var(--selectedMenuItemColor);
-    background: var(--selectedMenuItemBackground);
+    color: var(--selectedMenuItem-color);
+    background: var(--selectedMenuItem-background-color);
 }
 
 .gwt-SuggestBoxPopup .item .new-keyword {
@@ -124,8 +127,8 @@ ul.disc {
 }
 
 .gwt-SuggestBoxPopup .item-selected .new-keyword {
-    color: var(--selectedMenuItemColor);
-    background: var(--selectedMenuItemBackground);
+    color: var(--selectedMenuItem-color);
+    background: var(--selectedMenuItem-background-color);
     font-weight: bold;
 }
 
@@ -155,8 +158,8 @@ select {
 }
 
 .gwt-MenuItem-selected {
-    color: var(--selectedMenuItemColor);
-    background: var(--selectedMenuItemBackground);
+    color: var(--selectedMenuItem-color);
+    background: var(--selectedMenuItem-background-color);
 }
 
 .gwt-PopupPanel {
@@ -625,7 +628,7 @@ td {
 /* Externalised application styles */
 
 .wp-TopBar {
-    background-color: var(--topBar-background);
+    background-color: var(--topBar-background-color);
     padding-top: 1px;
     padding-bottom: 2px;
     margin-bottom: 5px;
