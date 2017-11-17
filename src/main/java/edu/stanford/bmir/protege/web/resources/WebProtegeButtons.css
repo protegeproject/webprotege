@@ -1,10 +1,8 @@
 
 /* Various button styles */
-.wp-button, .wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
+.wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
     border: none;
     border-radius: 2px;
-    height: 2.4em;
-    line-height: 2.4em;
     color: #fff;
     transition: background-color 0.15s ease-in-out;
     -moz-transition: background-color 0.15s ease-in-out;
@@ -15,21 +13,12 @@
     font-size: 16px;
     font-weight: 400;
     letter-spacing: 0.02em;
-    background-color: #959ea7;
 }
-
-.wp-button:hover {
-    color: #fff;
-    background-color: #415161;
-}
-
-.btn-inline {
-    display: inline-block;
-}
-
 
 .wp-button-primary {
     background-color: #6c1a91;
+    height: 2.4em;
+    line-height: 2.4em;
 }
 
 .wp-button-primary:hover {
@@ -41,9 +30,10 @@
     cursor: default;
 }
 
-
 .wp-button-secondary {
     background-color: #db5e33;
+    height: 2.4em;
+    line-height: 2.4em;
 }
 
 .wp-button-secondary:hover {
@@ -91,8 +81,9 @@
     flex-grow: 0;
     display: inline-block;
     min-width: 100px;
-    height: 30px;
-    line-height: 30px;
+    height: 1.8em;
+    line-height: 1.8em;
+    background-color: #959ea7;
 }
 
 .wp-cancel-button:hover {
@@ -104,8 +95,8 @@
     flex-grow: 0;
     display: inline-block;
     min-width: 100px;
-    height: 30px;
-    line-height: 30px;
+    height: 1.8em;
+    line-height: 1.8em;
 }
 
 .wp-accept-button:hover {
