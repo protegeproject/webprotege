@@ -632,12 +632,12 @@ td {
     padding-top: 1px;
     padding-bottom: 2px;
     margin-bottom: 5px;
-    background-image: url("../images/protege-blender.png");
+    background-image: url("../images/protege-blender.svg");
     background-repeat: no-repeat;
-    background-size: 30px;
-    padding-left: 30px;
+    background-size: 2.2em;
+    padding-left: 3em;
     background-position: 1px 1px;
-    min-height: 25px;
+    min-height: 2.3em;
 }
 
 .wp-TopBar-title {
@@ -661,6 +661,6 @@ td {
 .wp-login-logo {
     width: 200px;
     height: 160px;
-    background: url("../images/protege-blender.png") no-repeat;
+    background: url("../images/protege-blender.svg") no-repeat;
     background-size: contain;
 }
