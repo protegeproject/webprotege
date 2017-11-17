@@ -27,13 +27,13 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
 
     private DialogButton escapeButton;
 
-    private final List<WebProtegeDialogValidator> dialogValidators = new ArrayList<WebProtegeDialogValidator>();
+    private final List<WebProtegeDialogValidator> dialogValidators = new ArrayList<>();
 
-    private final List<WebProtegeDialogButtonHandler<D>> buttonHandlers = new ArrayList<WebProtegeDialogButtonHandler<D>>();
+    private final List<WebProtegeDialogButtonHandler<D>> buttonHandlers = new ArrayList<>();
 
     protected WebProtegeDialogController(String title, List<DialogButton> buttons, DialogButton defaultButton, DialogButton escapeButton) {
         this.title = title;
-        this.buttons = new ArrayList<DialogButton>(buttons);
+        this.buttons = new ArrayList<>(buttons);
         this.defaultButton = defaultButton;
         this.escapeButton = escapeButton;
         initialiseHandlerList();
