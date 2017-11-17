@@ -209,8 +209,14 @@ select {
 }
 
 .web-protege-dialog-button-bar {
-    float: right;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
     padding-top: 20px;
+}
+
+.web-protege-dialog-button-bar button+button {
+    margin-left: 5px;
 }
 
 .gwt-RadioButton {
