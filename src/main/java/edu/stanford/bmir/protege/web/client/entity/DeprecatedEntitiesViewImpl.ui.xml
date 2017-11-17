@@ -17,7 +17,7 @@
         }
         .paginatorHolder {
             flex-grow: 0;
-            background-color: literal("var(--inlayPanelBackground)");
+            background-color: literal("var(--inlayPanel-background-color)");
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.container}">

@@ -41,7 +41,7 @@ public class WebProtegeDialogTextFieldValidationManager {
             }
         });
 
-        errorLabel.addStyleName("var(--errorLabelColor)");
+        errorLabel.addStyleName("var(--errorLabel-color)");
         errorLabel.setText("");
         errorLabel.setVisible(false);
     }

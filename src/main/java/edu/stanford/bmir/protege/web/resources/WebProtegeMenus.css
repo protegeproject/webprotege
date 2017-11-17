@@ -30,8 +30,8 @@
 }
 
 .popupMenuItem:hover {
-    background: literal("var(--selectedMenuItemBackground)");
-    color: literal("var(--selectedMenuItemColor)");
+    background: literal("var(--selectedMenuItem-background-color)");
+    color: literal("var(--selectedMenuItem-color)");
 }
 
 .popupMenuItemDisabled {

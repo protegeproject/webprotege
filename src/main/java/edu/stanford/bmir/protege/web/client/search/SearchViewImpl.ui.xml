@@ -40,7 +40,7 @@
             height: 100%;
         }
         .paginator {
-            background-color: literal("var(--inlayPanelBackground)");
+            background-color: literal("var(--inlayPanel-background-color)");
         }
     </ui:style>
 

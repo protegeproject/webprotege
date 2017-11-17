@@ -195,7 +195,7 @@
 }
 
 .portletToolbar {
-    background: literal("var(--viewToolbarBackground)");
+    background: literal("var(--viewToolbar-background-color)");
 }
 
 .inTrash {

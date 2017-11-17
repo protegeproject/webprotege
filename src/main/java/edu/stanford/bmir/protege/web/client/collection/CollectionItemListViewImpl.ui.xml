@@ -20,7 +20,7 @@
         .paginator {
             flex-grow: 0;
             flex-shrink: 0;
-            background-color: literal("var(--inlayPanelBackground)");
+            background-color: literal("var(--inlayPanel-background-color)");
         }
 
     </ui:style>
