@@ -3,8 +3,8 @@
 .wp-button-base, .wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
     border: none;
     border-radius: 2px;
-    height: 38px;
-    line-height: 38px;
+    height: 2.4em;
+    line-height: 2.4em;
     color: #fff;
     transition: background-color 0.15s ease-in-out;
     -moz-transition: background-color 0.15s ease-in-out;
@@ -13,17 +13,14 @@
     padding: 0 20px;
     cursor: pointer;
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 0.02em;
-}
-
-.wp-button-base {
-    background: #959ea7;
+    background-color: #959ea7;
 }
 
 .wp-button-base:hover {
     color: #fff;
-    background: #415161;
+    background-color: #415161;
 }
 
 .btn-inline {
@@ -32,29 +29,29 @@
 
 
 .wp-button-primary {
-    background: #6c1a91;
+    background-color: #6c1a91;
 }
 
 .wp-button-primary:hover {
-    background: #501c70;
+    background-color: #501c70;
 }
 
 .wp-button-primary:disabled {
-    background: lightgray;
+    background-color: lightgray;
     cursor: default;
 }
 
 
 .wp-button-secondary {
-    background: #db5e33;
+    background-color: #db5e33;
 }
 
 .wp-button-secondary:hover {
-    background: #bc4d26;
+    background-color: #bc4d26;
 }
 
 .wp-button-secondary:disabled {
-    background: lightgray;
+    background-color: lightgray;
     cursor: default;
 }
 
@@ -73,13 +70,13 @@
 
 .wp-ToolBar-button:hover:enabled {
     border: solid 1px #464646;
-    background: #707070;
+    background-color: #707070;
     color: #ffffff;
 }
 
 .wp-ToolBar-button:active:enabled {
     border: solid 1px #464646;
-    background: #424242;
+    background-color: #424242;
     color: #ffffff;
 }
 
@@ -103,7 +100,7 @@
 }
 
 .wp-accept-button {
-    background: #6c1a91;
+    background-color: #6c1a91;
     flex-grow: 0;
     display: inline-block;
     min-width: 100px;
@@ -112,5 +109,5 @@
 }
 
 .wp-accept-button:hover {
-    background: #501c70;
+    background-color: #501c70;
 }

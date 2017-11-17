@@ -32,6 +32,13 @@
 
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
+
+    <script type="text/javascript" language="javascript" src="js/ext/adapter/ext/ext-base.js"></script>
+
+    <script type="text/javascript" language="javascript" src="js/ext/ext-all.js"></script>
+
+
+
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
 
     <script>
@@ -42,12 +49,6 @@
 
 
     <script type="text/javascript" language="javascript" src="webprotege/webprotege.nocache.js"></script>
-
-    <script type="text/javascript" language="javascript" src="js/ext/adapter/ext/ext-base.js"></script>
-
-    <script type="text/javascript" language="javascript" src="js/ext/ext-all.js"></script>
-
-
 
     ${application.analytics}
 </head>
