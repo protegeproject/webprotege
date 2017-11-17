@@ -1,6 +1,6 @@
 
 /* Various button styles */
-.wp-button-base, .wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
+.wp-button, .wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
     border: none;
     border-radius: 2px;
     height: 2.4em;
@@ -18,7 +18,7 @@
     background-color: #959ea7;
 }
 
-.wp-button-base:hover {
+.wp-button:hover {
     color: #fff;
     background-color: #415161;
 }
