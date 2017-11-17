@@ -190,7 +190,7 @@ select {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
     border: 1px solid #acacac;
     /*padding: 20px;*/
-    z-index: 10;
+    /*z-index: 10;*/
 }
 
 .gwt-DialogBox .dialogTop {
