@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.project.NewProjectDialogController;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.project.CreateNewProjectDialogController;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -21,10 +18,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHandler {
 
     @Nonnull
-    private final Provider<NewProjectDialogController> dialogController;
+    private final Provider<CreateNewProjectDialogController> dialogController;
 
     @Inject
-    public CreateProjectRequestHandlerImpl(@Nonnull Provider<NewProjectDialogController> dialogController) {
+    public CreateProjectRequestHandlerImpl(@Nonnull Provider<CreateNewProjectDialogController> dialogController) {
         this.dialogController = checkNotNull(dialogController);
     }
 
