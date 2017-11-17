@@ -254,18 +254,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeButtons extends CssResource {
 
-        @ClassName("wp-button")
-        String base();
-
         @ClassName("wp-button-primary")
         String primary();
 
         @ClassName("wp-button-secondary")
         String secondary();
-
-        @ClassName("btn-inline")
-        String btnInline();
-
 
         @ClassName("wp-ToolBar-button")
         String toolbarButton();
@@ -278,7 +271,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-accept-button")
         String acceptButton();
 
-//        String button();
     }
 
     interface WebProtegeDialog extends CssResource {
