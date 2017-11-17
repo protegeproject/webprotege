@@ -254,7 +254,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeButtons extends CssResource {
 
-        @ClassName("wp-button-base")
+        @ClassName("wp-button")
         String base();
 
         @ClassName("wp-button-primary")
