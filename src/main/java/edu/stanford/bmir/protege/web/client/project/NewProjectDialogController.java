@@ -16,6 +16,11 @@ import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,86 +32,32 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
 
     public static final String TITLE = "Create project";
 
-    private final DispatchServiceManager dispatchServiceManager;
+    @Nonnull
+    private final CreateNewProjectPresenter presenter;
 
-    private NewProjectInfoWidget widget = new NewProjectInfoWidget();
-
-    private final EventBus eventBus;
-
-    private final LoggedInUserProvider loggedInUserProvider;
-
-    public NewProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
+    @Inject
+    public NewProjectDialogController(@Nonnull CreateNewProjectPresenter projectPresenter) {
         super(TITLE);
-        this.eventBus = eventBus;
-        this.loggedInUserProvider = loggedInUserProvider;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.widget = new NewProjectInfoWidget();
-        for(WebProtegeDialogValidator validator : widget.getDialogValidators()) {
-            addDialogValidator(validator);
-        }
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<NewProjectInfo>() {
-            public void handleHide(NewProjectInfo data, WebProtegeDialogCloser closer) {
-                handleCreateNewProject(data);
-                closer.hide();
+        this.presenter = checkNotNull(projectPresenter);
+        setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            if(presenter.validate()) {
+                presenter.submitCreateProjectRequest(closer::hide);
             }
         });
     }
 
-    private void handleCreateNewProject(NewProjectInfo data) {
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        if(userId.isGuest()) {
-            throw new RuntimeException("User is guest.  Guest users are not allowed to create projects.");
-        }
-        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, data.getProjectName(), data.getProjectDescription());
-        dispatchServiceManager.execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
-            @Override
-            public String getProgressDisplayTitle() {
-                return "Creating project";
-            }
-
-            @Override
-            public String getProgressDisplayMessage() {
-                return "Please wait.";
-            }
-
-            @Override
-            public void handleSuccess(CreateNewProjectResult result) {
-                eventBus.fireEvent(new ProjectCreatedEvent(result.getProjectDetails()));
-            }
-
-            @Override
-            public void handleExecutionException(Throwable cause) {
-                if (cause instanceof NotSignedInException) {
-                    MessageBox.showMessage("You must be signed in to create new projects");
-                }
-                else if (cause instanceof ProjectAlreadyRegisteredException) {
-                    ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) cause;
-                    String projectName = ex.getProjectId().getId();
-                    MessageBox.showMessage("The project name " + projectName + " is already registered.  Please try a different name.");
-                }
-                else if (cause instanceof ProjectDocumentExistsException) {
-                    ProjectDocumentExistsException ex = (ProjectDocumentExistsException) cause;
-                    String projectName = ex.getProjectId().getId();
-                    MessageBox.showMessage("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
-                }
-                else {
-                    MessageBox.showMessage(cause.getMessage());
-                }
-            }
-        });
-    }
-
-
+    @Override
     public Widget getWidget() {
-        return widget;
+        presenter.start();
+        return presenter.getView().asWidget();
     }
 
     @Nonnull
-    public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-        return widget.getInitialFocusable();
+    public Optional<HasRequestFocus> getInitialFocusable() {
+        return presenter.getView().getInitialFocusable();
     }
 
     public NewProjectInfo getData() {
-        return widget.getNewProjectInfo();
+        return presenter.getNewProjectInfo();
     }
 }

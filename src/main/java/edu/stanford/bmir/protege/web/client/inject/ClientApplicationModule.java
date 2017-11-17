@@ -326,11 +326,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    UploadProjectRequestHandler provideUploadProjectRequestHandler(UploadProjectRequestHandlerImpl impl) {
-        return impl;
-    }
-
-    @Provides
     CommentedEntitiesView provideCommentedEntitiesView(CommentedEntitiesViewImpl impl) {
         return impl;
     }
@@ -380,4 +375,8 @@ public class ClientApplicationModule {
         return impl;
     }
 
+    @Provides
+    CreateNewProjectView providesCreateNewProjectView(CreateNewProjectViewImpl impl) {
+        return impl;
+    }
 }

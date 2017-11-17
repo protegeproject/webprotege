@@ -164,7 +164,7 @@ public class ProjectCache {
     private ProjectComponent getProjectInjector(ProjectId projectId) {
         ProjectComponent projectComponent = projectId2ProjectComponent.get(projectId);
         if (projectComponent == null) {
-            logger.info("Request for unloaded project %s.", projectId.getId());
+            logger.info("Request for unloaded project {}.", projectId.getId());
             projectComponent = applicationComponent.getProjectComponent(new ProjectModule(projectId));
             projectId2ProjectComponent.put(projectId, projectComponent);
         }

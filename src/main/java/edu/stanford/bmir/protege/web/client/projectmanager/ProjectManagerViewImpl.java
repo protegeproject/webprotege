@@ -38,9 +38,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     protected Button createProjectButton;
 
     @UiField
-    protected Button uploadProjectButton;
-
-    @UiField
     SimplePanel loggedInUserButton;
 
     @UiField
@@ -58,8 +55,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
 
     private CreateProjectRequestHandler createProjectRequestHandler = () -> {};
 
-    private UploadProjectRequestHandler uploadProjectRequestHandler = () -> {};
-
     private ViewFilterChangedHandler viewFilterChangedHandler = () -> {};
 
     @Inject
@@ -68,7 +63,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         setCreateProjectEnabled(false);
-        setUploadProjectEnabled(false);
     }
 
     @Override
@@ -88,11 +82,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @Override
     public void setCreateProjectEnabled(boolean enabled) {
         createProjectButton.setEnabled(enabled);
-    }
-
-    @Override
-    public void setUploadProjectEnabled(boolean enabled) {
-        uploadProjectButton.setEnabled(enabled);
     }
 
     @Override
@@ -138,11 +127,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
         createProjectRequestHandler.handleCreateProjectRequest();
     }
 
-    @UiHandler("uploadProjectButton")
-    protected void handleUploadProject(ClickEvent clickEvent) {
-        uploadProjectRequestHandler.handleUploadProjectRequest();
-    }
-
     @UiHandler("sharedWithMeCheckBox")
     protected void handleSharedWithMeCheckBoxClicked(ClickEvent event) {
         viewFilterChangedHandler.handleViewFilterChanged();
@@ -161,11 +145,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @Override
     public void setCreateProjectRequestHandler(CreateProjectRequestHandler handler) {
         this.createProjectRequestHandler = handler;
-    }
-
-    @Override
-    public void setUploadProjectRequestHandler(UploadProjectRequestHandler handler) {
-        this.uploadProjectRequestHandler = handler;
     }
 
     @Override
