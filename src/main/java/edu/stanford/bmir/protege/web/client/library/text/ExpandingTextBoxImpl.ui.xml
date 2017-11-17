@@ -3,7 +3,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
 
-        textarea, pre {
+        textarea pre {
             margin: 0;
             padding: 0;
             outline: 0;
