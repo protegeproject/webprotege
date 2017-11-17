@@ -26,7 +26,7 @@
     border-collapse: collapse;
     text-align: left;
     color: #ffffff;
-    background: #9F9F9F;
+    background-color: #9F9F9F;
     font-size: 12px;
     text-shadow: none;
     font-weight: bold;
@@ -75,7 +75,7 @@
 }
 
 .dataGridEvenRow {
-    /*background: #ffffff;*/
+    /*background-color: #ffffff;*/
     background: none;
     border: none;;
     border-bottom: #f1f1f1 1px solid;
@@ -85,7 +85,7 @@
 }
 
 .dataGridOddRow {
-    /*background: #ffffff;*/
+    /*background-color: #ffffff;*/
     background: none;
     border: none;
     border-bottom: #f1f1f1 1px solid;

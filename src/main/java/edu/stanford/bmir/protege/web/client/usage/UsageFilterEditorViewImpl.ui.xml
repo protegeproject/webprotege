@@ -5,7 +5,7 @@
         .check-box-panel {
             padding-top: 5px;
             padding-left: 5px;
-            background: #ffffff;
+            background-color: #ffffff;
         }
         .checkBox {
             display: block;
@@ -29,7 +29,7 @@
         }
         .main-panel {
             padding: 10px;
-            background: #ffffff;
+            background-color: #ffffff;
         }
         .select-link {
             color: #0000ff;

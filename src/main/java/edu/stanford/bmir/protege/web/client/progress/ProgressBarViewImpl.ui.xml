@@ -8,7 +8,7 @@
         .progress-panel {
             width: 400px;
             padding: 30px;
-            background: #ffffff;
+            background-color: #ffffff;
         }
 
         .title-style {

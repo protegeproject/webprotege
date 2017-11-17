@@ -12,7 +12,7 @@
 }
 
 .popupMenuInner {
-    background: #ffffff;
+    background-color: #ffffff;
     box-sizing: border-box;
 }
 
@@ -35,12 +35,12 @@
 }
 
 .popupMenuItemDisabled {
-    background: #ffffff;
+    background-color: #ffffff;
     color: #e0e0e0;
 }
 
 .popupMenuItemDisabled:hover {
-    background: #ffffff;
+    background-color: #ffffff;
     color: #e0e0e0;
 }
 

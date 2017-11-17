@@ -9,7 +9,7 @@
             padding-bottom: 2px;
         }
         .main:hover {
-            background: #f0f0f0;
+            background-color: #f0f0f0;
         }
         .icon {
             display: inline-block;
