@@ -1,18 +1,19 @@
-
-/* Various button styles */
-.wp-button-primary, .wp-button-secondary, .wp-accept-button, .wp-cancel-button {
+.wp-button-primary, .wp-button-alternate, .wp-button-accept, .wp-button-cancel {
     border: none;
     border-radius: 2px;
-    color: #fff;
-    transition: background-color 0.15s ease-in-out;
-    -moz-transition: background-color 0.15s ease-in-out;
-    -webkit-transition: background-color 0.15s ease-in-out;
-    display: block;
     padding: 0 20px;
-    cursor: pointer;
+
     font-size: 16px;
     font-weight: 400;
     letter-spacing: 0.02em;
+
+    color: #fff;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease-in-out;
+    -moz-transition: background-color 0.15s ease-in-out;
+    -webkit-transition: background-color 0.15s ease-in-out;
+
 }
 
 .wp-button-primary {
@@ -30,22 +31,47 @@
     cursor: default;
 }
 
-.wp-button-secondary {
+.wp-button-alternate {
     background-color: #db5e33;
     height: 2.4em;
     line-height: 2.4em;
 }
 
-.wp-button-secondary:hover {
+.wp-button-alternate:hover {
     background-color: #bc4d26;
 }
 
-.wp-button-secondary:disabled {
+.wp-button-alternate:disabled {
     background-color: lightgray;
     cursor: default;
 }
 
-.wp-ToolBar-button {
+.wp-button-cancel {
+    flex-grow: 0;
+    min-width: 100px;
+    height: 1.8em;
+    line-height: 1.8em;
+    background-color: #959ea7;
+}
+
+.wp-button-cancel:hover {
+    background-color: #737c85;
+}
+
+.wp-button-accept {
+    background-color: #6c1a91;
+    flex-grow: 0;
+    min-width: 100px;
+    height: 1.8em;
+    line-height: 1.8em;
+}
+
+.wp-button-accept:hover {
+    background-color: #501c70;
+}
+
+
+.wp-button-toolbar {
     border: solid transparent 1px;
     color: #464646;
     height: 20px;
@@ -54,51 +80,25 @@
     cursor: pointer;
 }
 
-.toolbarButtonSelected {
+.wp-button-toolbar-selected {
     color: dodgerblue;
 }
 
-.wp-ToolBar-button:hover:enabled {
+.wp-button-toolbar:hover:enabled {
     border: solid 1px #464646;
     background-color: #707070;
     color: #ffffff;
 }
 
-.wp-ToolBar-button:active:enabled {
+.wp-button-toolbar:active:enabled {
     border: solid 1px #464646;
     background-color: #424242;
     color: #ffffff;
 }
 
-.wp-ToolBar-button:disabled {
+.wp-button-toolbar:disabled {
     color: #aaaaaa;
     cursor: default;
     border: solid transparent 1px;
 }
 
-
-.wp-cancel-button {
-    flex-grow: 0;
-    display: inline-block;
-    min-width: 100px;
-    height: 1.8em;
-    line-height: 1.8em;
-    background-color: #959ea7;
-}
-
-.wp-cancel-button:hover {
-    background-color: #737c85;
-}
-
-.wp-accept-button {
-    background-color: #6c1a91;
-    flex-grow: 0;
-    display: inline-block;
-    min-width: 100px;
-    height: 1.8em;
-    line-height: 1.8em;
-}
-
-.wp-accept-button:hover {
-    background-color: #501c70;
-}

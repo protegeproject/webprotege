@@ -3,6 +3,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <g:HTMLPanel>
-        <g:Button ui:field="logoutButton" addStyleNames="{wp.buttons.toolbarButton}" text="{msg.signOut}"/>
+        <g:Button ui:field="logoutButton" addStyleNames="{wp.buttons.buttonToolbar}" text="{msg.signOut}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

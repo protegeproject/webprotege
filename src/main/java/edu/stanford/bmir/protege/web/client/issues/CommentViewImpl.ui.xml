@@ -118,13 +118,13 @@
         <g:HTMLPanel addStyleNames="{style.buttonBar}">
             <g:Button text="{msg.replyToComment}" ui:field="replyButton"
                       visible="false"
-                      addStyleNames="{wp.buttons.toolbarButton} {style.replyButton}"/>
+                      addStyleNames="{wp.buttons.buttonToolbar} {style.replyButton}"/>
             <g:Button text="{msg.editComment}" ui:field="editButton"
                       visible="false"
-                      addStyleNames="{wp.buttons.toolbarButton} {style.editButton}"/>
+                      addStyleNames="{wp.buttons.buttonToolbar} {style.editButton}"/>
             <g:Button text="{msg.deleteComment}" ui:field="deleteButton"
                       visible="false"
-                      addStyleNames="{wp.buttons.toolbarButton} {style.deleteButton}"/>
+                      addStyleNames="{wp.buttons.buttonToolbar} {style.deleteButton}"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

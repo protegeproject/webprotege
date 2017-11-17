@@ -23,7 +23,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.inner}">
             <g:HTMLPanel addStyleNames="{style.statusLabelHolder}">
-                <g:Button ui:field="statusLabel" addStyleNames="{style.statusLabel} {wp.buttons.toolbarButton}"/>
+                <g:Button ui:field="statusLabel" addStyleNames="{style.statusLabel} {wp.buttons.buttonToolbar}"/>
             </g:HTMLPanel>
             <g:FlowPanel ui:field="commentViewContainer"/>
         </g:HTMLPanel>
