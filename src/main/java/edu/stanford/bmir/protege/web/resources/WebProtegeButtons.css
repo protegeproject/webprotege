@@ -85,13 +85,11 @@
 }
 
 .wp-button-toolbar:hover:enabled {
-    border: solid 1px #464646;
     background-color: #707070;
     color: #ffffff;
 }
 
 .wp-button-toolbar:active:enabled {
-    border: solid 1px #464646;
     background-color: #424242;
     color: #ffffff;
 }
@@ -99,6 +97,5 @@
 .wp-button-toolbar:disabled {
     color: #aaaaaa;
     cursor: default;
-    border: solid transparent 1px;
 }
 
