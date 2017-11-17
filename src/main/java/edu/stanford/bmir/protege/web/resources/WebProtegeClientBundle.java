@@ -255,22 +255,22 @@ public interface WebProtegeClientBundle extends ClientBundle {
     interface WebProtegeButtons extends CssResource {
 
         @ClassName("wp-button-primary")
-        String primary();
+        String buttonPrimary();
 
-        @ClassName("wp-button-secondary")
-        String secondary();
+        @ClassName("wp-button-alternate")
+        String buttonAlternate();
 
-        @ClassName("wp-ToolBar-button")
-        String toolbarButton();
+        @ClassName("wp-button-cancel")
+        String buttonCancel();
 
-        String toolbarButtonSelected();
+        @ClassName("wp-button-accept")
+        String buttonAccept();
 
-        @ClassName("wp-cancel-button")
-        String cancelButton();
+        @ClassName("wp-button-toolbar")
+        String buttonToolbar();
 
-        @ClassName("wp-accept-button")
-        String acceptButton();
-
+        @ClassName("wp-button-toolbar-selected")
+        String buttonToolbarSelected();
     }
 
     interface WebProtegeDialog extends CssResource {

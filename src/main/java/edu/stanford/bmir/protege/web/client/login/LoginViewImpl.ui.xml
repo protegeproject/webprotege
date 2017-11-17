@@ -85,7 +85,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
-                  addStyleNames="{style.signup} {wp.buttons.secondary}"/>
+                  addStyleNames="{style.signup} {wp.buttons.buttonAlternate}"/>
         <g:HTMLPanel addStyleNames="{style.center}">
             <g:HTMLPanel addStyleNames="{style.wp-login-logo}"/>
             <g:HTMLPanel addStyleNames="{style.message}">
@@ -99,7 +99,7 @@
                 <g:PasswordTextBox ui:field="passwordField" visibleLength="30"/>
                 <div style="height: 20px;"/>
                 <g:Button ui:field="signInButton" text="{msg.signIn}"
-                          addStyleNames="{wp.buttons.primary} {style.signin}"/>
+                          addStyleNames="{wp.buttons.buttonPrimary} {style.signin}"/>
                 <g:HTMLPanel addStyleNames="{style.bottomBar}">
                     <g:Anchor text="{msg.forgotUserNameOrPassword}" ui:field="forgotPasswordButton"
                               addStyleNames="{style.forgotPasswordButton}"/>

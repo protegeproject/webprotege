@@ -80,10 +80,10 @@ public final class WebProtegeDialog<D> extends DialogBox {
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
             if(dlgButton == controller.getDefaultButton()) {
-                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().acceptButton());
+                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().buttonAccept());
             }
             else {
-                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().cancelButton());
+                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().buttonCancel());
             }
         }
         SimplePanel buttonBarWrapper = new SimplePanel();
