@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
@@ -30,14 +31,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CreateNewProjectDialogController extends WebProtegeOKCancelDialogController<NewProjectInfo> {
 
-    public static final String TITLE = "Create project";
-
     @Nonnull
     private final CreateNewProjectPresenter presenter;
 
     @Inject
-    public CreateNewProjectDialogController(@Nonnull CreateNewProjectPresenter projectPresenter) {
-        super(TITLE);
+    public CreateNewProjectDialogController(@Nonnull CreateNewProjectPresenter projectPresenter,
+                                            @Nonnull Messages messages) {
+        super(messages.createProject());
         this.presenter = checkNotNull(projectPresenter);
         setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
             if(presenter.validate()) {
