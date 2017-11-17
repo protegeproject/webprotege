@@ -19,7 +19,7 @@
             flex-grow: 0;
             flex-shrink: 0;
             padding: 3px;
-            border-top: 1px solid literal("var(--inlayPanelBackground)");
+            border-top: 1px solid literal("var(--inlayPanel-background-color)");
             padding-right: 10px;
         }
         .individualsList {
@@ -28,7 +28,7 @@
             overflow: auto;
         }
         .bottomBar {
-            background-color: literal("var(--inlayPanelBackground)");
+            background-color: literal("var(--inlayPanel-background-color)");
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

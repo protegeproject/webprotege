@@ -9,8 +9,8 @@
     }
 
     .cellListSelectedItem {
-        color: literal("var(--selectedItemColor)");
-        background: literal("var(--selectedItemBackground)");
+        color: literal("var(--selectedItem-color)");
+        background: literal("var(--selectedItem-background-color)");
     }
 
     .cellListWidget {
