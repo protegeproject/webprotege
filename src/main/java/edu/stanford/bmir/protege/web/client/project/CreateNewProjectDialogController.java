@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/01/2012
  */
-public class NewProjectDialogController extends WebProtegeOKCancelDialogController<NewProjectInfo> {
+public class CreateNewProjectDialogController extends WebProtegeOKCancelDialogController<NewProjectInfo> {
 
     public static final String TITLE = "Create project";
 
@@ -36,7 +36,7 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
     private final CreateNewProjectPresenter presenter;
 
     @Inject
-    public NewProjectDialogController(@Nonnull CreateNewProjectPresenter projectPresenter) {
+    public CreateNewProjectDialogController(@Nonnull CreateNewProjectPresenter projectPresenter) {
         super(TITLE);
         this.presenter = checkNotNull(projectPresenter);
         setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
