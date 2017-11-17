@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,11 +41,11 @@ public class MessageBoxViewImpl extends Composite implements MessageBoxView {
     }
 
     public void setMessageStyle(MessageStyle messageStyle) {
-        Optional<ImageResource> imageResource = messageStyle.getImage();
-        if(imageResource.isPresent()) {
+        Optional<DataResource> res = messageStyle.getImage();
+        res.ifPresent(dataResource -> {
             iconImage.getElement().getStyle().setOpacity(1);
-            iconImage.setResource(imageResource.get());
-        }
+            iconImage.setUrl(dataResource.getSafeUri().asString());
+        });
     }
 
     @Override

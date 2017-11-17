@@ -106,14 +106,17 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("user.png")
     ImageResource userIcon();
 
-    @Source("alert-icon.png")
-    ImageResource alertIcon();
+    @Source("alert-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource alertIcon();
 
-    @Source("message-icon.png")
-    ImageResource messageIcon();
+    @Source("message-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource messageIcon();
 
-    @Source("question-icon.png")
-    ImageResource questionIcon();
+    @Source("question-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource questionIcon();
 
     @Source("numbered-list.png")
     ImageResource numberedListIcon();
