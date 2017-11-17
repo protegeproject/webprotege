@@ -189,17 +189,36 @@ select {
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
     border: 1px solid #acacac;
-    padding: 20px;
+    /*padding: 20px;*/
     z-index: 10;
 }
 
+.gwt-DialogBox .dialogTop {
+    background-color: #f0f0f0;
+    background-image: url(../images/protege-blender.svg);
+    background-repeat: no-repeat;
+    background-size: 30px;
+    background-position-y: 2px;
+    background-position-x: 1px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
 .gwt-DialogBox .Caption {
+    padding-left: 35px;
     color: #505050;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-right: 10px;
     cursor: default;
     font-size: 18px;
     font-weight: 600;
     line-height: 24px;
-    margin: 0 0 16px;
+    min-width: 400px;
+    min-height: 1.4em;
+}
+
+.gwt-DialogBox .dialogMiddleCenter {
+    padding: 20px;
 }
 
 .gwt-PopupPanelGlass {
