@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
+import com.google.gwt.resources.client.DataResource;
 import com.google.gwt.resources.client.ImageResource;
 
 import javax.annotation.Nullable;
@@ -17,20 +18,20 @@ public enum MessageStyle {
 
     PLAIN(Optional.empty()),
 
-    MESSAGE(java.util.Optional.of(BUNDLE.messageIcon())),
+    MESSAGE(Optional.empty()),
 
-    QUESTION(java.util.Optional.of(BUNDLE.questionIcon())),
+    QUESTION(Optional.of(BUNDLE.questionIcon())),
 
-    ALERT(java.util.Optional.of(BUNDLE.alertIcon()));
+    ALERT(Optional.of(BUNDLE.alertIcon()));
 
     @Nullable
-    private ImageResource image;
+    private transient DataResource image;
 
-    MessageStyle(Optional<ImageResource> image) {
+    MessageStyle(Optional<DataResource> image) {
         this.image = image.orElse(null);
     }
 
-    public Optional<ImageResource> getImage() {
+    public Optional<DataResource> getImage() {
         return Optional.ofNullable(image);
     }
 }
