@@ -1,13 +1,13 @@
 .displayNameColumn {
-    background: #E0FFE0;
+    background-color: #E0FFE0;
 }
 
 .highlightedColumn {
-    background: #d4edfb;
+    background-color: #d4edfb;
 }
 
 .importedColumn {
-    /*background: #E0FFE0;*/
+    /*background-color: #E0FFE0;*/
 }
 
 .classIcon {

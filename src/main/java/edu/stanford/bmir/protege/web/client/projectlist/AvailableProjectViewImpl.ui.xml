@@ -14,7 +14,7 @@
             align-items: baseline;
         }
         .main:hover {
-            background: #f0f0f0;
+            background-color: #f0f0f0;
         }
         .displayNameCol {
             width: 400px;

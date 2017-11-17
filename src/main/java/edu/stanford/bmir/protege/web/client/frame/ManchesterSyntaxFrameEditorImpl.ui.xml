@@ -25,7 +25,7 @@
             right: 0;
             bottom: 0;
             z-index: 3;
-            /*background: #fffac8;*/
+            /*background-color: #fffac8;*/
             /*border: 1px solid #fff089;*/
             background-color: #FFFDEA;
             border: 1px solid #FFFCE7;

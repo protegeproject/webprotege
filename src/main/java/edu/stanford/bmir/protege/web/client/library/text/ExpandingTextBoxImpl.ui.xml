@@ -13,7 +13,7 @@
         .expandingarea {
             position: relative;
             /*border: solid 1px #00ffff;*/
-            /*background: #fff;*/
+            /*background-color: #fff;*/
         }
 
         .expandingarea > textarea,

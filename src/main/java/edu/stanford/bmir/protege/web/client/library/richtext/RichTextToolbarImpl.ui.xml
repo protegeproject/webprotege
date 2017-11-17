@@ -19,7 +19,7 @@
 
             padding: 2px;
             border: #e6e6e6 solid 1px;
-            background: #FAFAFA;
+            background-color: #FAFAFA;
 
             box-sizing: border-box;
 
@@ -55,7 +55,7 @@
 
         .gwt-ToggleButton-up {
             border: #e6e6e6 solid 1px;
-            background: #fafafa;
+            background-color: #fafafa;
         }
 
         .gwt-ToggleButton-down {

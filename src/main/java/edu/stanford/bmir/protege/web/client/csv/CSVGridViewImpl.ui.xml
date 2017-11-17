@@ -7,12 +7,12 @@
             background-color: white;
         }
         .outer .web-protege-highlighted-table-column {
-            background: #f3f3ff
+            background-color: #f3f3ff
         }
 
         .outer .web-protege-mapped-table-column {
             font-weight: bold !important;
-            background: #efffef;
+            background-color: #efffef;
         }
     </ui:style>
     <g:HTMLPanel width="100%" addStyleNames="{style.outer}">

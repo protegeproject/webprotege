@@ -72,7 +72,7 @@
 }
 
 .dataGridEvenRow {
-    background: #ffffff;
+    background-color: #ffffff;
     border: none;;
     border-bottom: #f1f1f1 1px solid;
     color: #000000;
@@ -81,7 +81,7 @@
 }
 
 .dataGridOddRow {
-    background: #ffffff;
+    background-color: #ffffff;
     border: none;
     border-bottom: #f1f1f1 1px solid;
     color: #000000;
@@ -90,8 +90,8 @@
 }
 
 .dataGridHoveredRow {
-    background: #eee;
-    background: #eaeaea;
+    background-color: #eee;
+    background-color: #eaeaea;
     border: none;;
     border-bottom: #f1f1f1 1px solid;
 }
@@ -120,12 +120,12 @@
     border-bottom: #f1f1f1 1px solid;
     padding-top: 7px;
     padding-bottom: 7px;
-    /*background: #ffffff;*/
+    /*background-color: #ffffff;*/
 }
 
 .dataGridOddRowCell {
     /*border: 2px solid #f3f7fb;*/
-    /*background: #ffffff;*/
+    /*background-color: #ffffff;*/
     border: none;
     border-bottom: #f1f1f1 1px solid;
     padding-top: 7px;

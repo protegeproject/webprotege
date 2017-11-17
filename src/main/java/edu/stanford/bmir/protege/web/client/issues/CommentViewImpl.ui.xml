@@ -72,7 +72,7 @@
         .body .user-mention {
             font-weight: 500;
             color: #434b5d;
-            background: #ffffcc;
+            background-color: #ffffcc;
             padding-left: 2px;
             padding-right: 2px;
         }
