@@ -91,7 +91,7 @@ public class CommentedEntitiesPresenter {
 
     private void handleCommentPosted(CommentPostedEvent event) {
         event.getEntity().ifPresent(entityData -> {
-            if(currentEntites.contains(entityData.getEntity())) {
+            if(!currentEntites.contains(entityData.getEntity())) {
                 reload();
             }
         });
