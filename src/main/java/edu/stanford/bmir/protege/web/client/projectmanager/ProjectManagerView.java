@@ -15,7 +15,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-public interface ProjectManagerView extends HasCreateProjectRequestHandler, HasUploadProjectRequestHandler, HasSelectionHandlers<ProjectId>, HasViewCategoryChangedHandler, IsWidget {
+public interface ProjectManagerView extends HasCreateProjectRequestHandler, HasSelectionHandlers<ProjectId>, HasViewCategoryChangedHandler, IsWidget {
 
     void setSelectedProject(ProjectId projectId);
 
@@ -24,8 +24,6 @@ public interface ProjectManagerView extends HasCreateProjectRequestHandler, HasU
     void addAvailableProject(AvailableProject availableProject);
 
     void setCreateProjectEnabled(boolean enabled);
-
-    void setUploadProjectEnabled(boolean enabled);
 
     void setViewFilters(List<ProjectManagerViewFilter> viewFilters);
 

@@ -55,8 +55,6 @@ public class ProjectManagerPresenter implements Presenter {
 
     private final CreateProjectRequestHandler createProjectRequestHandler;
 
-    private final UploadProjectRequestHandler uploadProjectRequestHandler;
-
     private final Map<ProjectManagerViewFilter, AvailableProjectFilter> viewCat2Filter = new HashMap<>();
 
     private AvailableProjectFilter currentFilter = new AvailableProjectOrFilter(Collections.emptyList());
@@ -70,14 +68,12 @@ public class ProjectManagerPresenter implements Presenter {
                                    @Nonnull DispatchServiceManager dispatchServiceManager,
                                    @Nonnull LoggedInUserManager loggedInUserManager,
                                    @Nonnull LoggedInUserPresenter loggedInUserPresenter,
-                                   @Nonnull CreateProjectRequestHandler createProjectRequestHandler,
-                                   @Nonnull UploadProjectRequestHandler uploadProjectRequestHandler) {
+                                   @Nonnull CreateProjectRequestHandler createProjectRequestHandler) {
         this.projectManagerView = projectManagerView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserManager = loggedInUserManager;
         this.loggedInUserPresenter = loggedInUserPresenter;
         this.createProjectRequestHandler = createProjectRequestHandler;
-        this.uploadProjectRequestHandler = uploadProjectRequestHandler;
 
         viewCat2Filter.put(OWNED_BY_ME,
                            p -> !p.isInTrash() && p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
@@ -104,7 +100,6 @@ public class ProjectManagerPresenter implements Presenter {
         eventBus.addHandler(ON_PROJECT_SETTINGS_CHANGED, event -> reloadFromServer());
 
         projectManagerView.setCreateProjectRequestHandler(createProjectRequestHandler);
-        projectManagerView.setUploadProjectRequestHandler(uploadProjectRequestHandler);
 
         loggedInUserPresenter.start(projectManagerView.getLoggedInUserButton(), eventBus);
         container.setWidget(projectManagerView);
@@ -225,7 +220,6 @@ public class ProjectManagerPresenter implements Presenter {
 
     private void updateView() {
         projectManagerView.setCreateProjectEnabled(loggedInUserManager.isAllowedApplicationAction(CREATE_EMPTY_PROJECT));
-        projectManagerView.setUploadProjectEnabled(loggedInUserManager.isAllowedApplicationAction(UPLOAD_PROJECT));
         reloadFromServer();
     }
 
