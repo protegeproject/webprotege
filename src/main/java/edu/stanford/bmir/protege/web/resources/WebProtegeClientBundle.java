@@ -110,13 +110,13 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();
 
-    @Source("message-icon.svg")
-    @DataResource.MimeType("image/svg+xml")
-    DataResource messageIcon();
-
     @Source("question-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource questionIcon();
+
+    @Source("message-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource messageIcon();
 
     @Source("numbered-list.png")
     ImageResource numberedListIcon();

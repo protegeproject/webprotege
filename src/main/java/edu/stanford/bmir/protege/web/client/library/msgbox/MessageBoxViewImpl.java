@@ -46,6 +46,9 @@ public class MessageBoxViewImpl extends Composite implements MessageBoxView {
             iconImage.getElement().getStyle().setOpacity(1);
             iconImage.setUrl(dataResource.getSafeUri().asString());
         });
+        if(!res.isPresent()) {
+            iconImage.getElement().getStyle().setOpacity(0);
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REVERT_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHANGES;
 
@@ -196,9 +198,13 @@ public class ChangeListViewPresenter {
 
     private void startRevertChangesWorkflow(final ProjectChange projectChange) {
         String subMessage = messages.change_revertChangesInRevisionQuestion();
-        MessageBox.showYesNoConfirmBox(messages.change_revertChangesQuestion(),
+        MessageBox.showConfirmBox(
+                messages.change_revertChangesQuestion(),
                 subMessage,
-                () -> revertChanges(projectChange));
+                CANCEL,
+                DialogButton.get(messages.change_revert()),
+                () -> revertChanges(projectChange),
+                CANCEL);
     }
 
     private void revertChanges(ProjectChange projectChange) {
