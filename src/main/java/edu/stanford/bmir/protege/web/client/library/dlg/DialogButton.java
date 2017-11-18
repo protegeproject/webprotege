@@ -18,6 +18,8 @@ import static edu.stanford.protege.widgetmap.client.view.ViewHolder.MESSAGES;
  */
 public final class DialogButton {
 
+    private static Messages messages = GWT.create(Messages.class);
+
     public static final DialogButton OK = new DialogButton((getMessages()).dialog_ok());
 
     public static final DialogButton CANCEL = new DialogButton(getMessages().dialog_cancel());
@@ -30,8 +32,12 @@ public final class DialogButton {
 
     public static final DialogButton DELETE = new DialogButton(getMessages().delete());
 
+    public static final DialogButton CLOSE = new DialogButton(getMessages().dialog_close());
+
+    public static final DialogButton SELECT = new DialogButton(getMessages().dialog_select());
+
     public static Messages getMessages() {
-        return (Messages) GWT.create(Messages.class);
+        return messages;
     }
 
 

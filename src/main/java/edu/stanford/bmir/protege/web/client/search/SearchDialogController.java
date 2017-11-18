@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -13,12 +14,16 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CLOSE;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.SELECT;
+import static java.util.Arrays.asList;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
-public class SearchDialogController extends WebProtegeOKCancelDialogController<Optional<OWLEntityData>> {
+public class SearchDialogController extends WebProtegeDialogController<Optional<OWLEntityData>> {
 
     private final SearchPresenter searchPresenter;
 
@@ -26,14 +31,14 @@ public class SearchDialogController extends WebProtegeOKCancelDialogController<O
 
     @Inject
     public SearchDialogController(SearchPresenter searchPresenter, SelectionModel selectionModel) {
-        super("Search");
+        super("Search", asList(CLOSE, SELECT), SELECT, CLOSE);
         this.searchPresenter = searchPresenter;
         this.selectionModel = selectionModel;
-        setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+        setDialogButtonHandler(SELECT, (data, closer) -> {
             data.ifPresent(this::selectEntity);
             closer.hide();
         });
-        setDialogButtonHandler(DialogButton.CANCEL, (data, closer) -> {
+        setDialogButtonHandler(CLOSE, (data, closer) -> {
             GWT.log("CANCEL");
             closer.hide();
         });
