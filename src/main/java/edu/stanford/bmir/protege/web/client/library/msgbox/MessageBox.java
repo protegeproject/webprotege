@@ -7,7 +7,12 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.library.dlg.*;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.YES;
+import static java.util.Arrays.asList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -132,7 +137,7 @@ public class MessageBox {
 
     public static void showYesNoConfirmBox(String mainMessage, String subMessage, final YesNoHandler handler) {
         final MessageBoxView messageBoxView = createMessageBox(MessageStyle.QUESTION, mainMessage, subMessage);
-        final WebProtegeDialogController<Void> controller = new WebProtegeDialogController<Void>(DLG_TITLE, Arrays.asList(DialogButton.YES, DialogButton.NO), DialogButton.NO, DialogButton.YES) {
+        final WebProtegeDialogController<Void> controller = new WebProtegeDialogController<Void>(DLG_TITLE, asList(YES, NO), NO, YES) {
             @Override
             public Widget getWidget() {
                 return messageBoxView.asWidget();
@@ -140,8 +145,8 @@ public class MessageBox {
 
             @Nonnull
             @Override
-            public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-                return java.util.Optional.empty();
+            public Optional<HasRequestFocus> getInitialFocusable() {
+                return Optional.empty();
             }
 
             @Override
@@ -149,14 +154,48 @@ public class MessageBox {
                 return RETURN;
             }
         };
-        controller.setDialogButtonHandler(DialogButton.YES, (data, closer) -> {
+        controller.setDialogButtonHandler(YES, (data, closer) -> {
             closer.hide();
             handler.handleYes();
         });
-        controller.setDialogButtonHandler(DialogButton.NO, (data, closer) -> {
+        controller.setDialogButtonHandler(NO, (data, closer) -> {
             closer.hide();
             handler.handleNo();
 
+        });
+        WebProtegeDialog<Void> dlg = createDialog(controller);
+        dlg.show();
+        scheduleCentering(dlg);
+    }
+
+    public static void showConfirmBox(String mainMessage, String subMessage,
+                                      DialogButton escapeButton, DialogButton acceptButton,
+                                      Runnable acceptHandler, DialogButton defaultButton) {
+        final MessageBoxView messageBoxView = createMessageBox(MessageStyle.QUESTION, mainMessage, subMessage);
+        List<DialogButton> buttonList = asList(
+                escapeButton,
+                acceptButton
+        );
+        final WebProtegeDialogController<Void> controller = new WebProtegeDialogController<Void>(DLG_TITLE, buttonList, defaultButton, escapeButton) {
+            @Override
+            public Widget getWidget() {
+                return messageBoxView.asWidget();
+            }
+
+            @Nonnull
+            @Override
+            public Optional<HasRequestFocus> getInitialFocusable() {
+                return Optional.empty();
+            }
+
+            @Override
+            public Void getData() {
+                return RETURN;
+            }
+        };
+        controller.setDialogButtonHandler(acceptButton, (data, closer) -> {
+            closer.hide();
+            acceptHandler.run();
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.show();

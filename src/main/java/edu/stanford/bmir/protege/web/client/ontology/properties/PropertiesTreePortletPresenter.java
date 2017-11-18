@@ -49,6 +49,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
@@ -56,8 +59,8 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
 @Portlet(id = "portlets.PropertyHierarchy",
-         title = "Property Hierarchy",
-         tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
+        title = "Property Hierarchy",
+        tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
 public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPresenter {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";
@@ -69,13 +72,9 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
     private final PortletAction createAction;
 
     private final PortletAction deleteAction;
-
-
-    protected TreePanel treePanel;
-
     private final LoggedInUserProjectPermissionChecker permissionChecker;
-
-
+    private final Messages messages;
+    protected TreePanel treePanel;
 
     @Inject
     public PropertiesTreePortletPresenter(SelectionModel selectionModel,
@@ -88,6 +87,8 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         this.permissionChecker = permissionChecker;
         treePanel = new TreePanel();
         treePanel.setAnimate(true);
+        this.messages = messages;
+
 
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
@@ -150,42 +151,58 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         deleteAction = new PortletAction(messages.delete(), (action, event) -> onDeleteProperty());
     }
 
+    private static Optional<OWLEntityData> getEntityDataFromTreeNode(TreeNode selectedTreeNode) {
+        if (selectedTreeNode == null) {
+            return Optional.empty();
+        }
+        if (ANNOTATION_PROPERTIES_ROOT_NAME.equals(selectedTreeNode.getText())) {
+            return Optional.empty();
+        }
+        Object userObject = selectedTreeNode.getUserObject();
+        if (userObject instanceof EntityData) {
+            return LegacyCompatUtil.toOWLEntityData((EntityData) userObject);
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addPortletAction(createAction);
         portletUi.addPortletAction(deleteAction);
         portletUi.setWidget(treePanel.asWidget());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ObjectPropertyHierarchyParentAddedEvent.TYPE,
-                                        this::handleRelationshipAdded);
+                ObjectPropertyHierarchyParentAddedEvent.TYPE,
+                this::handleRelationshipAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ObjectPropertyHierarchyParentRemovedEvent.TYPE,
-                                        this::handleRelationshipRemoved);
+                ObjectPropertyHierarchyParentRemovedEvent.TYPE,
+                this::handleRelationshipRemoved);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        DataPropertyHierarchyParentAddedEvent.TYPE,
-                                        this::handleRelationshipAdded);
+                DataPropertyHierarchyParentAddedEvent.TYPE,
+                this::handleRelationshipAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        AnnotationPropertyHierarchyParentAddedEvent.TYPE,
-                                        this::handleRelationshipAdded);
+                AnnotationPropertyHierarchyParentAddedEvent.TYPE,
+                this::handleRelationshipAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        HierarchyRootAddedEvent.TYPE,
-                                        this::handleRootAdded);
+                HierarchyRootAddedEvent.TYPE,
+                this::handleRootAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        HierarchyRootRemovedEvent.TYPE,
-                                        this::handleRootRemoved);
+                HierarchyRootRemovedEvent.TYPE,
+                this::handleRootRemoved);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED,
-                                        this::handleBrowserTextChanged);
+                BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED,
+                this::handleBrowserTextChanged);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
-                                        event -> updateButtonStates());
+                ON_PERMISSIONS_CHANGED,
+                event -> updateButtonStates());
 
         updateButtonStates();
 
@@ -209,22 +226,6 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         if (tsm instanceof DefaultSelectionModel) {
             TreeNode selectedTreeNode = ((DefaultSelectionModel) tsm).getSelectedNode();
             return getEntityDataFromTreeNode(selectedTreeNode);
-        }
-        else {
-            return Optional.empty();
-        }
-    }
-
-    private static Optional<OWLEntityData> getEntityDataFromTreeNode(TreeNode selectedTreeNode) {
-        if (selectedTreeNode == null) {
-            return Optional.empty();
-        }
-        if (ANNOTATION_PROPERTIES_ROOT_NAME.equals(selectedTreeNode.getText())) {
-            return Optional.empty();
-        }
-        Object userObject = selectedTreeNode.getUserObject();
-        if (userObject instanceof EntityData) {
-            return LegacyCompatUtil.toOWLEntityData((EntityData) userObject);
         }
         else {
             return Optional.empty();
@@ -372,8 +373,8 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             return;
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(),
-                                                                     createEntityInfo -> handleCreateProperty(
-                                                                             createEntityInfo)));
+                createEntityInfo -> handleCreateProperty(
+                        createEntityInfo), messages));
     }
 
     private void handleCreateProperty(final CreateEntityInfo createEntityInfo) {
@@ -429,22 +430,22 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
 
     private void createSubProperties(java.util.Optional<OWLAnnotationProperty> parent, CreateEntityInfo createEntityInfo) {
         CreateAnnotationPropertiesAction action = new CreateAnnotationPropertiesAction(getProjectId(),
-                                                                                       createEntityInfo.getBrowserTexts(),
-                                                                                       parent);
+                createEntityInfo.getBrowserTexts(),
+                parent);
         createSubProperties(action);
     }
 
     private void createSubProperties(OWLDataProperty property, CreateEntityInfo createEntityInfo) {
         CreateDataPropertiesAction action = new CreateDataPropertiesAction(getProjectId(),
-                                                                           createEntityInfo.getBrowserTexts(),
-                                                                           Optional.of(property));
+                createEntityInfo.getBrowserTexts(),
+                Optional.of(property));
         createSubProperties(action);
     }
 
     private void createSubProperties(OWLObjectProperty property, CreateEntityInfo createEntityInfo) {
         CreateObjectPropertiesAction action = new CreateObjectPropertiesAction(getProjectId(),
-                                                                               createEntityInfo.getBrowserTexts(),
-                                                                               Optional.of(property));
+                createEntityInfo.getBrowserTexts(),
+                Optional.of(property));
         createSubProperties(action);
     }
 
@@ -479,23 +480,22 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
 
     protected void onDeleteProperty() {
 
-        java.util.Optional<OWLEntity> selection = getSelectedEntity();
-
+        Optional<OWLEntity> selection = getSelectedEntity();
         if (!selection.isPresent()) {
             return;
         }
-
         final OWLEntity entity = selection.get();
-
         if (!(entity instanceof OWLProperty)) {
             // Better safe than sorry
             return;
         }
-
         String subMessage = "Are you sure you want to delete the selected property ?";
-        MessageBox.showYesNoConfirmBox("Delete selected property?",
-                                       subMessage,
-                                       () -> deleteProperty((OWLProperty) entity));
+        MessageBox.showConfirmBox(
+                "Delete Property",
+                subMessage,
+                CANCEL, DELETE,
+                () -> deleteProperty((OWLProperty) entity),
+                CANCEL);
     }
 
 
@@ -505,7 +505,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             return;
         }
         dispatchServiceManager.execute(new DeleteEntityAction(propertyEntity, getProjectId()),
-                                       new DeletePropertyHandler(propertyEntity));
+                new DeletePropertyHandler(propertyEntity));
     }
 
     private TreeNode getDirectChild(TreeNode parentNode, String childId) {
@@ -554,9 +554,9 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         createAction.setEnabled(false);
         deleteAction.setEnabled(false);
         permissionChecker.hasPermission(CREATE_PROPERTY,
-                                        hasPermission -> createAction.setEnabled(hasPermission));
+                hasPermission -> createAction.setEnabled(hasPermission));
         permissionChecker.hasPermission(DELETE_PROPERTY,
-                                        hasPermission -> deleteAction.setEnabled(hasPermission));
+                hasPermission -> deleteAction.setEnabled(hasPermission));
     }
 
     public void setTreeNodeIcon(TreeNode node) {
@@ -578,9 +578,9 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
 
     public void getSubProperties(final String propName, final boolean getSubpropertiesOfSubproperties) {
         OntologyServiceManager.getInstance()
-                              .getSubproperties(getProjectId(),
-                                                propName,
-                                                new GetSubproperties(propName, getSubpropertiesOfSubproperties));
+                .getSubproperties(getProjectId(),
+                        propName,
+                        new GetSubproperties(propName, getSubpropertiesOfSubproperties));
     }
 
     protected TreeNode createTreeNode(EntityData entityData) {
@@ -601,14 +601,42 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         int localAnnotationsCount = entityData.getLocalAnnotationsCount();
         if (localAnnotationsCount > 0) {
             text = text + "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon()
-                                                                       .getSafeUri()
-                                                                       .asString() + "\" />" + " " + localAnnotationsCount;
+                    .getSafeUri()
+                    .asString() + "\" />" + " " + localAnnotationsCount;
         }
         int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
             text = text + " chd: " + childrenAnnotationsCount;
         }
         return text;
+    }
+
+    private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
+        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.of(entity)),
+                new DispatchServiceCallback<GetEntityDataResult>() {
+                    @Override
+                    public void handleSuccess(GetEntityDataResult result) {
+                        node.setText(result.getEntityDataMap().get(entity).getBrowserText());
+                    }
+                });
+    }
+
+    private PropertyEntityData createEntityDataPlaceholder(OWLEntity child) {
+        String browserText = "";
+        final PropertyEntityData entityData = new PropertyEntityData(child.getIRI().toString(),
+                browserText,
+                Collections.emptySet());
+        final EntityType<?> entityType = child.getEntityType();
+        if (entityType == EntityType.OBJECT_PROPERTY) {
+            entityData.setPropertyType(PropertyType.OBJECT);
+        }
+        else if (entityType == EntityType.DATA_PROPERTY) {
+            entityData.setPropertyType(PropertyType.DATATYPE);
+        }
+        else {
+            entityData.setPropertyType(PropertyType.ANNOTATION);
+        }
+        return entityData;
     }
 
     /*
@@ -708,34 +736,6 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             GWT.log("Delete successfully property ", null);
             onPropertyDeleted(new EntityData(entity.toStringID()));
         }
-    }
-
-    private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
-        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.of(entity)),
-                                       new DispatchServiceCallback<GetEntityDataResult>() {
-                                           @Override
-                                           public void handleSuccess(GetEntityDataResult result) {
-                                               node.setText(result.getEntityDataMap().get(entity).getBrowserText());
-                                           }
-                                       });
-    }
-
-    private PropertyEntityData createEntityDataPlaceholder(OWLEntity child) {
-        String browserText = "";
-        final PropertyEntityData entityData = new PropertyEntityData(child.getIRI().toString(),
-                                                                     browserText,
-                                                                     Collections.emptySet());
-        final EntityType<?> entityType = child.getEntityType();
-        if (entityType == EntityType.OBJECT_PROPERTY) {
-            entityData.setPropertyType(PropertyType.OBJECT);
-        }
-        else if (entityType == EntityType.DATA_PROPERTY) {
-            entityData.setPropertyType(PropertyType.DATATYPE);
-        }
-        else {
-            entityData.setPropertyType(PropertyType.ANNOTATION);
-        }
-        return entityData;
     }
 
 
