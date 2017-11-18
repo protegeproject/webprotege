@@ -6,7 +6,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -45,8 +44,10 @@ public class WindowTitleUpdaterImpl implements WindowTitleUpdater {
         GWT.log("[WindowTitleUpdaterImpl] Active project changed");
         activeProjectManager.getActiveProjectDetails(projectDetails -> {
             GWT.log("[WindowTitleUpdaterImpl] Active project details: " + projectDetails);
-            String windowTitle = projectDetails.map(ProjectDetails::getDisplayName).orElse(defaultWindowTitle);
-            Window.setTitle(windowTitle + " – " + defaultWindowTitle);
+            String windowTitle;
+            windowTitle = projectDetails.map(details -> details.getDisplayName() + " – " + defaultWindowTitle)
+                                        .orElse(defaultWindowTitle);
+            Window.setTitle(windowTitle);
         });
     }
 }
