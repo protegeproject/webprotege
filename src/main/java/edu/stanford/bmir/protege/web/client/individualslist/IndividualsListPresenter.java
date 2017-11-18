@@ -4,10 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.inject.ActiveProjectIdProvider;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
@@ -35,16 +33,15 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.client.ui.NumberFormatter.format;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_INDIVIDUAL;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 12/09/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 12/09/2013
  */
 public class IndividualsListPresenter {
 
@@ -61,21 +58,16 @@ public class IndividualsListPresenter {
     private final ActiveProjectIdProvider activeProjectIdProvider;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
-
-    private Optional<OWLClass> currentType = Optional.empty();
-
     private final PortletAction createAction;
-
     private final PortletAction deleteAction;
-
+    private Optional<OWLClass> currentType = Optional.empty();
+    private EntityDisplay entityDisplay = entityData -> {
+    };
     private final Timer searchStringDelayTimer = new Timer() {
         @Override
         public void run() {
             updateList();
         }
-    };
-
-    private EntityDisplay entityDisplay = entityData -> {
     };
 
     @Inject
@@ -102,9 +94,9 @@ public class IndividualsListPresenter {
         });
         view.setPageNumberChangedHandler(pageNumber -> updateList());
         createAction = new PortletAction(messages.create(),
-                                         (action, event) -> handleCreateIndividuals());
+                (action, event) -> handleCreateIndividuals());
         deleteAction = new PortletAction(messages.delete(),
-                                         (action, event) -> handleDeleteIndividuals());
+                (action, event) -> handleDeleteIndividuals());
     }
 
     public void start(AcceptsOneWidget container) {
@@ -138,10 +130,10 @@ public class IndividualsListPresenter {
     private void updateList() {
         ProjectId projectId = activeProjectIdProvider.get();
         GetIndividualsAction action = new GetIndividualsAction(projectId,
-                                                               currentType.orElse(DataFactory.getOWLThing()),
-                                                               view.getSearchString(),
-                                                               Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
-                                                                                                           PAGE_SIZE)));
+                currentType.orElse(DataFactory.getOWLThing()),
+                view.getSearchString(),
+                Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
+                        PAGE_SIZE)));
         dispatchServiceManager.execute(action, view, result -> {
             view.setListData(result.getIndividuals());
             view.setStatusMessageVisible(true);
@@ -172,22 +164,20 @@ public class IndividualsListPresenter {
     }
 
     private void handleCreateIndividuals() {
-        WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.NAMED_INDIVIDUAL, createEntityInfo -> {
+        CreateEntityDialogController controller = new CreateEntityDialogController(EntityType.NAMED_INDIVIDUAL, createEntityInfo -> {
             final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
             ProjectId projectId = activeProjectIdProvider.get();
             dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts),
-                                           new DispatchServiceCallback<CreateNamedIndividualsResult>() {
-                                               @Override
-                                               public void handleSuccess(CreateNamedIndividualsResult result) {
-                                                   Set<OWLNamedIndividualData> individuals = result.getIndividuals();
-                                                   view.addListData(individuals);
-                                                   if (!individuals.isEmpty()) {
-                                                       OWLNamedIndividualData next = individuals.iterator().next();
-                                                       view.setSelectedIndividual(next);
-                                                   }
-                                               }
-                                           });
-        }));
+                    result -> {
+                        Set<OWLNamedIndividualData> individuals = result.getIndividuals();
+                        view.addListData(individuals);
+                        if (!individuals.isEmpty()) {
+                            OWLNamedIndividualData next = individuals.iterator().next();
+                            view.setSelectedIndividual(next);
+                        }
+                    });
+        }, messages);
+        WebProtegeDialog.showDialog(controller);
     }
 
     private void handleDeleteIndividuals() {
@@ -198,16 +188,18 @@ public class IndividualsListPresenter {
         String subMessage;
         String title;
         if (sel.size() == 1) {
-            title = "Delete individual?";
+            title = "Delete Individual";
             subMessage = "Are you sure you want to delete " + sel.iterator().next().getBrowserText() + "?";
         }
         else {
-            title = "Delete individuals?";
+            title = "Delete Iindividuals";
             subMessage = "Are you sure you want to delete " + sel.size() + " individuals?";
         }
-        MessageBox.showYesNoConfirmBox(title,
-                                       subMessage,
-                                       this::deleteSelectedIndividuals);
+        MessageBox.showConfirmBox(title,
+                subMessage,
+                CANCEL, DELETE,
+                this::deleteSelectedIndividuals,
+                CANCEL);
     }
 
 
@@ -215,11 +207,11 @@ public class IndividualsListPresenter {
         Collection<OWLNamedIndividualData> selection = view.getSelectedIndividuals();
         ProjectId projectId = activeProjectIdProvider.get();
         Set<OWLEntity> entities = view.getSelectedIndividuals().stream()
-                                      .map(OWLNamedIndividualData::getEntity)
-                                      .collect(toSet());
+                .map(OWLNamedIndividualData::getEntity)
+                .collect(toSet());
         dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, entities),
-                                       view,
-                                       result -> updateList());
+                view,
+                result -> updateList());
     }
 
     private void updateButtonStates() {

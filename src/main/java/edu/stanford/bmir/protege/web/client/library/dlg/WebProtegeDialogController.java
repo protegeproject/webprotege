@@ -4,9 +4,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -29,7 +27,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
 
     private final List<WebProtegeDialogValidator> dialogValidators = new ArrayList<>();
 
-    private final List<WebProtegeDialogButtonHandler<D>> buttonHandlers = new ArrayList<>();
+    private final Map<DialogButton, WebProtegeDialogButtonHandler<D>> buttonHandlers = new LinkedHashMap<>();
 
     protected WebProtegeDialogController(String title, List<DialogButton> buttons, DialogButton defaultButton, DialogButton escapeButton) {
         this.title = title;
@@ -40,18 +38,21 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
     }
 
     private void initialiseHandlerList() {
-        for (DialogButton button : DialogButton.values()) {
-            buttonHandlers.add(new DefaultWebProtegeDialogButtonHandler<D>());
+        for (DialogButton button : buttons) {
+            buttonHandlers.put(button, new DefaultWebProtegeDialogButtonHandler<>());
         }
     }
 
     public void setDialogButtonHandler(DialogButton button, WebProtegeDialogButtonHandler<D> buttonHandler) {
-        buttonHandlers.set(button.ordinal(), buttonHandler);
+        if(!buttonHandlers.containsKey(button)) {
+            throw new IllegalArgumentException("Dialog does not contain button: " + button);
+        }
+        buttonHandlers.put(button, buttonHandler);
     }
 
 
-    public List<WebProtegeDialogButtonHandler<D>> getButtonHandlers() {
-        return new ArrayList<WebProtegeDialogButtonHandler<D>>(buttonHandlers);
+    public Optional<WebProtegeDialogButtonHandler<D>> getButtonHandler(DialogButton button) {
+        return Optional.ofNullable(buttonHandlers.get(button));
     }
 
     /**

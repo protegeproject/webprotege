@@ -79,7 +79,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
-            if(dlgButton == controller.getDefaultButton()) {
+            if(dlgButton.equals(controller.getDefaultButton())) {
                 button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().buttonAccept());
             }
             else {
@@ -154,8 +154,9 @@ public final class WebProtegeDialog<D> extends DialogBox {
                 }
             }
         }
-        WebProtegeDialogButtonHandler<D> buttonHandler = controller.getButtonHandlers().get(button.ordinal());
-        buttonHandler.handleHide(controller.getData(), WebProtegeDialog.this::hide);
+        controller.getButtonHandler(button).ifPresent(buttonHandler -> {
+            buttonHandler.handleHide(controller.getData(), WebProtegeDialog.this::hide);
+        });
     }
 
     private void displayContentsInvalidMessage(String message) {
