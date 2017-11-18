@@ -189,8 +189,8 @@ select {
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
     border: 1px solid #acacac;
-    /*padding: 20px;*/
-    /*z-index: 10;*/
+    /** This z-index is needed because our dialogs appear below the text in the codemirror text area without it **/
+    z-index: 10;
 }
 
 .gwt-DialogBox .dialogTop {
