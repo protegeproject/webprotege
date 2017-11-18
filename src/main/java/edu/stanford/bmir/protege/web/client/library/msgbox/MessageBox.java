@@ -227,8 +227,8 @@ public class MessageBox {
 
             @Nonnull
             @Override
-            public java.util.Optional<HasRequestFocus> getInitialFocusable() {
-                return java.util.Optional.empty();
+            public Optional<HasRequestFocus> getInitialFocusable() {
+                return Optional.empty();
             }
 
             @Override

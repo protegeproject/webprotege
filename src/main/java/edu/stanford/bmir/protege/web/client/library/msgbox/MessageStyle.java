@@ -18,7 +18,7 @@ public enum MessageStyle {
 
     PLAIN(Optional.empty()),
 
-    MESSAGE(Optional.empty()),
+    MESSAGE(Optional.of(BUNDLE.messageIcon())),
 
     QUESTION(Optional.of(BUNDLE.questionIcon())),
 

@@ -39,7 +39,7 @@
                 <col width="*" valign="top"/>
             </colgroup>
             <tr>
-                <td valign="top"><g:Image url="{wp.alertIcon.getSafeUri.asString}" ui:field="iconImage" width="120px"/></td>
+                <td valign="top"><g:Image url="{wp.messageIcon.getSafeUri.asString}" ui:field="iconImage" width="120px"/></td>
                 <td valign="top">
                     <g:HTMLPanel addStyleNames="{style.message-block}">
                         <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style} {wp.dialog.title}"/>
