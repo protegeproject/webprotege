@@ -49,9 +49,8 @@ public class GetProjectEventsAction_CustomFieldSerializer extends CustomFieldSer
 
     public static GetProjectEventsAction instantiate(SerializationStreamReader streamReader) throws SerializationException {
         String projectName = streamReader.readString();
-        String userName = streamReader.readString();
         int ordinal = streamReader.readInt();
-        return new GetProjectEventsAction(EventTag.get(ordinal), ProjectId.get(projectName), UserId.getUserId(userName));
+        return new GetProjectEventsAction(EventTag.get(ordinal), ProjectId.get(projectName));
     }
 
 
@@ -72,7 +71,6 @@ public class GetProjectEventsAction_CustomFieldSerializer extends CustomFieldSer
 
     public static void serialize(SerializationStreamWriter streamWriter, GetProjectEventsAction instance) throws SerializationException {
         streamWriter.writeString(instance.getProjectId().getId());
-        streamWriter.writeString(instance.getUserId().getUserName());
         streamWriter.writeInt(instance.getSinceTag().getOrdinal());
     }
 
