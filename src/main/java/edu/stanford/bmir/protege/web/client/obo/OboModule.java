@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.webprotege.shared.annotations.PortletModule;
 
 /**

@@ -1,20 +1,15 @@
 package edu.stanford.bmir.protege.web.server.collection;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.model.Collation;
-import com.mongodb.client.model.Sorts;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import org.bson.Document;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.InsertOptions;
 import org.mongodb.morphia.UpdateOptions;
-import org.mongodb.morphia.query.FindOptions;
 import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.Sort;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.annotation.Nonnull;

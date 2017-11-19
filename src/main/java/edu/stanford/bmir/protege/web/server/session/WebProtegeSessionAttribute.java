@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.session;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -43,8 +44,8 @@ public class WebProtegeSessionAttribute<T> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("WebProtegeSessionAttribute")
-                .addValue(attributeName)
-                .toString();
+        return MoreObjects.toStringHelper("WebProtegeSessionAttribute")
+                          .addValue(attributeName)
+                          .toString();
     }
 }

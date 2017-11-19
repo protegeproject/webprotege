@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.collection;
 
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
-import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
+import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
 
 import javax.annotation.Nonnull;
 import java.util.List;

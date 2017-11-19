@@ -78,7 +78,6 @@ import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_U
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;

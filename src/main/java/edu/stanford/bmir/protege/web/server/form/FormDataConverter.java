@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.persistence.TypeSafeConverter;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
-import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.mapping.MappedField;
 
 import javax.annotation.Nonnull;

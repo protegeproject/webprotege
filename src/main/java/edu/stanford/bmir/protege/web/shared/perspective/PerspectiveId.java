@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
@@ -49,7 +49,7 @@ public class PerspectiveId implements IsSerializable, Serializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("PerspectiveId")
-                .addValue(id).toString();
+        return MoreObjects.toStringHelper("PerspectiveId")
+                          .addValue(id).toString();
     }
 }

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

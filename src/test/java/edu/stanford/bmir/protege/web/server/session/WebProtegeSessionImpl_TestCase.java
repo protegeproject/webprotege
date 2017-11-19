@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;

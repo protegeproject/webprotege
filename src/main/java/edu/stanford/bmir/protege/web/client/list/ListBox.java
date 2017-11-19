@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.list;
 
 import com.google.common.base.Objects;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static cern.clhep.Units.s;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;

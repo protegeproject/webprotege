@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.chgpwd;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,7 +45,7 @@ public class ResetPasswordData implements IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ResetPasswordData").addValue(emailAddress).toString();
+        return MoreObjects.toStringHelper("ResetPasswordData").addValue(emailAddress).toString();
     }
 
 }

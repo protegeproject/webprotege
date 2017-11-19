@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 import java.io.Serializable;
 
@@ -71,9 +71,9 @@ public class EntityCrudKitSettings<S extends EntityCrudKitSuffixSettings> implem
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("EntityCrudKitSettings")
-                .add("prefixSettings", prefixSettings)
-                .add("suffixSettings", suffixSettings)
-                .toString();
+        return MoreObjects.toStringHelper("EntityCrudKitSettings")
+                          .add("prefixSettings", prefixSettings)
+                          .add("suffixSettings", suffixSettings)
+                          .toString();
     }
 }

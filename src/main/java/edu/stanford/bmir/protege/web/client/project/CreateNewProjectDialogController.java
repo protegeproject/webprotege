@@ -1,24 +1,13 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.dlg.*;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.projectmanager.ProjectCreatedEvent;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
-import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeOKCancelDialogController;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.chgpwd;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -46,6 +46,6 @@ public class ResetPasswordResult implements Result {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ResetPasswordResult").addValue(resultCode).toString();
+        return MoreObjects.toStringHelper("ResetPasswordResult").addValue(resultCode).toString();
     }
 }

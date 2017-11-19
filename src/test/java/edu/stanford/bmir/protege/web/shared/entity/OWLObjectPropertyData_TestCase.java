@@ -1,9 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +11,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import static edu.stanford.bmir.protege.web.shared.PrimitiveType.OBJECT_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 
 @RunWith(value = MockitoJUnitRunner.class)
 public class OWLObjectPropertyData_TestCase {

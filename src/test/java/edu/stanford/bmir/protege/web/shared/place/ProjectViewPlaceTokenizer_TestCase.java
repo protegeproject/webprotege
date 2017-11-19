@@ -1,15 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
-import edu.stanford.bmir.protege.web.client.place.Item;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.junit.Before;
-import org.junit.Test;
 import org.semanticweb.owlapi.model.IRI;
-
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * Matthew Horridge

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -47,9 +48,9 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("PropertyValueList")
-                .addValue(propertyValues)
-                .toString();
+        return MoreObjects.toStringHelper("PropertyValueList")
+                          .addValue(propertyValues)
+                          .toString();
     }
 
     public Set<PropertyValue> getPropertyValues() {

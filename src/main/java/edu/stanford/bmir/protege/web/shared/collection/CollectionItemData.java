@@ -7,7 +7,6 @@ import org.mongodb.morphia.annotations.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

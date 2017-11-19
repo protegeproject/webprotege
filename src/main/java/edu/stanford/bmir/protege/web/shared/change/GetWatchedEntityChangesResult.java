@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -46,8 +47,8 @@ public class GetWatchedEntityChangesResult implements Result {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("GetWatchedEntityChangesResult")
-                .addValue(changes)
-                .toString();
+        return MoreObjects.toStringHelper("GetWatchedEntityChangesResult")
+                          .addValue(changes)
+                          .toString();
     }
 }

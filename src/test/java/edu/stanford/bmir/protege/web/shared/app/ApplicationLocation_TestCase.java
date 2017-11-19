@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.app;
 
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

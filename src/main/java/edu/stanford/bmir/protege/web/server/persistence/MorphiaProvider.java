@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import edu.stanford.bmir.protege.web.server.access.RoleAssignment;
-import edu.stanford.bmir.protege.web.server.collection.CollectionItemConverter;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
+import edu.stanford.bmir.protege.web.server.collection.CollectionItemConverter;
 import edu.stanford.bmir.protege.web.server.form.FormDataConverter;
 import edu.stanford.bmir.protege.web.server.form.FormDataValueConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;

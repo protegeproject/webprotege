@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;

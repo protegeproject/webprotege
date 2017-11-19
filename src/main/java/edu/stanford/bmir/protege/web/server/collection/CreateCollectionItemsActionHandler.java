@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.collection.CreateCollectionItemsResu
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;

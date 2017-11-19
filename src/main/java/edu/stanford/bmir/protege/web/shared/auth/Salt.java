@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.io.BaseEncoding;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -48,8 +48,8 @@ public class Salt implements IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("Salt")
-                .addValue(BaseEncoding.base16().lowerCase().encode(bytes))
-                .toString();
+        return MoreObjects.toStringHelper("Salt")
+                          .addValue(BaseEncoding.base16().lowerCase().encode(bytes))
+                          .toString();
     }
 }

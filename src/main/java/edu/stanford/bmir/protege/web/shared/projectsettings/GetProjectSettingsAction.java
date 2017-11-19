@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -42,8 +43,8 @@ public class GetProjectSettingsAction extends AbstractHasProjectAction<GetProjec
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("GetProjectSettingsAction")
-                .addValue(getProjectId())
-                .toString();
+        return MoreObjects.toStringHelper("GetProjectSettingsAction")
+                          .addValue(getProjectId())
+                          .toString();
     }
 }

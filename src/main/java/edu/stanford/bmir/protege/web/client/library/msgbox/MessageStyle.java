@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.library.msgbox;
 
 import com.google.gwt.resources.client.DataResource;
-import com.google.gwt.resources.client.ImageResource;
 
 import javax.annotation.Nullable;
 import java.util.Optional;

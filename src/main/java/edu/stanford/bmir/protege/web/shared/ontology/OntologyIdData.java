@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.ontology;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.entity.ObjectData;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -33,10 +34,10 @@ public class OntologyIdData extends ObjectData<OWLOntologyID> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("OntologyIdData")
-                .addValue(getObject())
-                .addValue(browserText)
-                .toString();
+        return MoreObjects.toStringHelper("OntologyIdData")
+                          .addValue(getObject())
+                          .addValue(browserText)
+                          .toString();
     }
 
     @Override

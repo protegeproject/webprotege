@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.session;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -44,9 +44,9 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("WebProtegeSession")
-                .addValue(httpSession)
-                .toString();
+        return MoreObjects.toStringHelper("WebProtegeSession")
+                          .addValue(httpSession)
+                          .toString();
     }
 
     @Override

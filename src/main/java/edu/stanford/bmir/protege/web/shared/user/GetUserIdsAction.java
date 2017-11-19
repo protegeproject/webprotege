@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 /**
@@ -26,7 +26,7 @@ public class GetUserIdsAction implements Action<GetUserIdsResult> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("GetUserIdsAction")
-                .toString();
+        return MoreObjects.toStringHelper("GetUserIdsAction")
+                          .toString();
     }
 }

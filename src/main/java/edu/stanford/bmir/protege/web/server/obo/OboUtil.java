@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.server.project.Project;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.obolibrary.oboformat.parser.OBOFormatConstants;
 import org.semanticweb.owlapi.model.*;

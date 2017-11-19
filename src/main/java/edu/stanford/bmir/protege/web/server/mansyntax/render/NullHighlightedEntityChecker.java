@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Singleton;
@@ -41,7 +41,7 @@ public class NullHighlightedEntityChecker implements HighlightedEntityChecker {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("NullHighlightedEntityChecker")
-                .toString();
+        return MoreObjects.toStringHelper("NullHighlightedEntityChecker")
+                          .toString();
     }
 }

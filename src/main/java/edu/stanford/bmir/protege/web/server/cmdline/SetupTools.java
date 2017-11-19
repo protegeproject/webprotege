@@ -23,12 +23,10 @@ import org.mongodb.morphia.Morphia;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedInputStream;
 import java.io.Console;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

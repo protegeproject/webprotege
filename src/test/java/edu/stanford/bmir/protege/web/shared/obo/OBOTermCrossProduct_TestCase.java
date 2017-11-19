@@ -1,19 +1,16 @@
 
 package edu.stanford.bmir.protege.web.shared.obo;
 
-import java.util.Collections;
-import java.util.Optional;
-
-import com.google.googlejavaformat.Op;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

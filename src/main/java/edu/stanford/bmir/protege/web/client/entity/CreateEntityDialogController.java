@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.client.entity;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogController;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogValidator;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;

@@ -4,7 +4,6 @@ import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
-
 import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
