@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -69,7 +69,7 @@ public class ClassFrameChangedEvent extends EntityFrameChangedEvent<OWLClass, Cl
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ClassFrameChangedEvent")
-                .addValue(getEntity()).toString();
+        return MoreObjects.toStringHelper("ClassFrameChangedEvent")
+                          .addValue(getEntity()).toString();
     }
 }

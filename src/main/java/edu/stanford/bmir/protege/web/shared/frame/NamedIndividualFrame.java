@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -112,12 +112,12 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("NamedIndividualFrame")
-                .addValue(subject)
-                .add("types", namedTypes)
-                .addValue(propertyValueList)
-                .add("sameIndividuals", sameIndividuals)
-                .toString();
+        return MoreObjects.toStringHelper("NamedIndividualFrame")
+                          .addValue(subject)
+                          .add("types", namedTypes)
+                          .addValue(propertyValueList)
+                          .add("sameIndividuals", sameIndividuals)
+                          .toString();
     }
 
     public static class Builder {

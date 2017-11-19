@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

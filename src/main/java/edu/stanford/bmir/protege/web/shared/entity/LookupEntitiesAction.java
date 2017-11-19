@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -73,8 +73,8 @@ public class LookupEntitiesAction implements ProjectAction<LookupEntitiesResult>
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("LookupEntitiesAction")
-                .addValue(projectId)
-                .addValue(entityLookupRequest).toString();
+        return MoreObjects.toStringHelper("LookupEntitiesAction")
+                          .addValue(projectId)
+                          .addValue(entityLookupRequest).toString();
     }
 }

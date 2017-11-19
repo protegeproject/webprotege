@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.chgpwd;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,6 +45,6 @@ public class ResetPasswordAction implements Action<ResetPasswordResult> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ResetPasswordAction").addValue(resetPasswordData).toString();
+        return MoreObjects.toStringHelper("ResetPasswordAction").addValue(resetPasswordData).toString();
     }
 }

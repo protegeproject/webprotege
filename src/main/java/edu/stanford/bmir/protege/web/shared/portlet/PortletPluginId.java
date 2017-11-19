@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.portlet;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,7 +40,7 @@ public class PortletPluginId {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("PortletPluginId")
-                .addValue(id).toString();
+        return MoreObjects.toStringHelper("PortletPluginId")
+                          .addValue(id).toString();
     }
 }

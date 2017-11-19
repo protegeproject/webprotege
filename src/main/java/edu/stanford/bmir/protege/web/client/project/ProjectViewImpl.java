@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveImpl;
-import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 
 import javax.inject.Inject;
 

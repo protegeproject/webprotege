@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
@@ -129,11 +129,11 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("EntityLookupRequest")
-                .add("searchString", searchString)
-                .add("searchType", searchType)
-                .add("searchedEntityTypes", searchedEntityTypes)
-                .add("searchLimit", searchLimit).toString();
+        return MoreObjects.toStringHelper("EntityLookupRequest")
+                          .add("searchString", searchString)
+                          .add("searchType", searchType)
+                          .add("searchedEntityTypes", searchedEntityTypes)
+                          .add("searchLimit", searchLimit).toString();
     }
 
 

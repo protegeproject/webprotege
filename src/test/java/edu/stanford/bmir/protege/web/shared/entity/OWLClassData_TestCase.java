@@ -7,9 +7,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.PrimitiveType;
 
-import static edu.stanford.bmir.protege.web.shared.PrimitiveType.*;
+import static edu.stanford.bmir.protege.web.shared.PrimitiveType.CLASS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

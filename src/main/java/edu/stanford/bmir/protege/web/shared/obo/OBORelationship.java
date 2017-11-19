@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -49,10 +50,10 @@ public class OBORelationship implements Serializable, Comparable<OBORelationship
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("OBORelationship")
-                .addValue(relation)
-                .addValue(value)
-                .toString();
+        return MoreObjects.toStringHelper("OBORelationship")
+                          .addValue(relation)
+                          .addValue(value)
+                          .toString();
     }
 
     @Override

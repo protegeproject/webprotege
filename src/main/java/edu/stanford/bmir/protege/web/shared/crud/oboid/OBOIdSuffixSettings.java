@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
@@ -80,9 +80,9 @@ public class OBOIdSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("OBOIdSuffixSettings")
-                .add("totalDigits", totalDigits)
-                .add("userRanges", userIdRanges)
-                .toString();
+        return MoreObjects.toStringHelper("OBOIdSuffixSettings")
+                          .add("totalDigits", totalDigits)
+                          .add("userRanges", userIdRanges)
+                          .toString();
     }
 }

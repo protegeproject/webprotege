@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
@@ -120,8 +120,8 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("UserId")
-                .addValue(userName)
-                .toString();
+        return MoreObjects.toStringHelper("UserId")
+                          .addValue(userName)
+                          .toString();
     }
 }

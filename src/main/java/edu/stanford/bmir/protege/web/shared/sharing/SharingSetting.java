@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
@@ -60,10 +61,10 @@ public class SharingSetting implements Comparable<SharingSetting>, Serializable 
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("UserSharingSetting")
-                .addValue(personId)
-                .addValue(sharingPermission)
-                .toString();
+        return MoreObjects.toStringHelper("UserSharingSetting")
+                          .addValue(personId)
+                          .addValue(sharingPermission)
+                          .toString();
     }
 
     @Override

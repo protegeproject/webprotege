@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.place;
 
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
-import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;

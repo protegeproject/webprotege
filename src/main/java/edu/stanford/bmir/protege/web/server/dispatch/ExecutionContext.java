@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -54,8 +54,8 @@ public class ExecutionContext implements HasUserId {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ExecutionContext")
-                .add("session", session)
-                .toString();
+        return MoreObjects.toStringHelper("ExecutionContext")
+                          .add("session", session)
+                          .toString();
     }
 }

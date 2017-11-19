@@ -22,7 +22,6 @@ import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PR
 import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**

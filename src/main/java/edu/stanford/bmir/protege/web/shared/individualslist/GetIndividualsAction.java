@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.individualslist;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -106,8 +106,8 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("GetIndividualsAction")
-                .add("type", type)
-                .addValue(pageRequest).toString();
+        return MoreObjects.toStringHelper("GetIndividualsAction")
+                          .add("type", type)
+                          .addValue(pageRequest).toString();
     }
 }

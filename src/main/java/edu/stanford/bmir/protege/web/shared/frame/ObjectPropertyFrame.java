@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -158,13 +158,13 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("ObjectPropertyFrame")
-                .addValue(subject)
-                .add("annotations", annotationValues)
-                .add("domains", domains)
-                .add("ranges", ranges)
-                .add("inverses", inverses)
-                .add("characteristics", characteristics)
-                .toString();
+        return MoreObjects.toStringHelper("ObjectPropertyFrame")
+                          .addValue(subject)
+                          .add("annotations", annotationValues)
+                          .add("domains", domains)
+                          .add("ranges", ranges)
+                          .add("inverses", inverses)
+                          .add("characteristics", characteristics)
+                          .toString();
     }
 }

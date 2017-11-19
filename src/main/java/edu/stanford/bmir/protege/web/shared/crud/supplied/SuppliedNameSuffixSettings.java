@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.supplied;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
@@ -46,8 +46,8 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("SuppliedNameSuffixSettings")
-                .add("whiteSpaceTreatment", whiteSpaceTreatment)
-                .toString();
+        return MoreObjects.toStringHelper("SuppliedNameSuffixSettings")
+                          .add("whiteSpaceTreatment", whiteSpaceTreatment)
+                          .toString();
     }
 }

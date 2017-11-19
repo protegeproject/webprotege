@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
@@ -57,9 +58,9 @@ public class GetProjectSettingsResult implements Result {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("GetProjectSettingsResult")
-                .addValue(projectSettings)
-                .toString();
+        return MoreObjects.toStringHelper("GetProjectSettingsResult")
+                          .addValue(projectSettings)
+                          .toString();
     }
 }
 

@@ -3,7 +3,8 @@ package edu.stanford.bmir.protege.web.server.obo;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.shared.obo.*;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermDefinitionAction;
+import edu.stanford.bmir.protege.web.shared.obo.GetOboTermDefinitionResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

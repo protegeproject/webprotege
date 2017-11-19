@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.server.form;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import edu.stanford.bmir.protege.web.server.persistence.TypeSafeConverter;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
@@ -11,8 +8,6 @@ import org.mongodb.morphia.converters.SimpleValueConverter;
 import org.mongodb.morphia.mapping.MappedField;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.inject.Inject;
 

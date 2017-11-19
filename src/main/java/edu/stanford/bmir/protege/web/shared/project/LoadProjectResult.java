@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
@@ -54,9 +55,9 @@ public class LoadProjectResult implements Result, HasUserId, HasProjectId {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("LoadProjectResult")
-                .addValue(getProjectId())
-                .toString();
+        return MoreObjects.toStringHelper("LoadProjectResult")
+                          .addValue(getProjectId())
+                          .toString();
     }
 
     @Override

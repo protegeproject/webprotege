@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.HasIRIPrefix;
 
 import java.io.Serializable;
@@ -32,7 +32,7 @@ public class EntityCrudKitPrefixSettings implements HasIRIPrefix, Serializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("EntityCrudKitPrefixSettings")
-                .addValue(iriPrefix).toString();
+        return MoreObjects.toStringHelper("EntityCrudKitPrefixSettings")
+                          .addValue(iriPrefix).toString();
     }
 }

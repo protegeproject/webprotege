@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
@@ -38,8 +38,8 @@ public class UUIDSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("UUIDSuffixSettings")
-                .toString();
+        return MoreObjects.toStringHelper("UUIDSuffixSettings")
+                          .toString();
     }
 
 }

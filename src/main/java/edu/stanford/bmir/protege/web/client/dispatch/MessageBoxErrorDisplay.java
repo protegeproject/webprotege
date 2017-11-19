@@ -6,8 +6,6 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 
-import static edu.stanford.protege.widgetmap.client.view.ViewHolder.MESSAGES;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

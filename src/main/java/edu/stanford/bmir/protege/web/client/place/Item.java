@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 19/05/2014
@@ -56,9 +56,9 @@ public abstract class Item<T> {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("Item")
-                .add("type", getAssociatedType().getName())
-                .addValue(item).toString();
+        return MoreObjects.toStringHelper("Item")
+                          .add("type", getAssociatedType().getName())
+                          .addValue(item).toString();
     }
 
 
@@ -85,7 +85,7 @@ public abstract class Item<T> {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper("Item.Type")
+            return MoreObjects.toStringHelper("Item.Type")
                     .addValue(hashCode)
                     .add("name", name).toString();
         }

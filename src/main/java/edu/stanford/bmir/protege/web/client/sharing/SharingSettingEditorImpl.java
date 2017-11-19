@@ -21,8 +21,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.sharing.SharingPermission.MANAGE;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

@@ -14,8 +14,6 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.Matchers;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 import org.semanticweb.owlapi.model.IRI;

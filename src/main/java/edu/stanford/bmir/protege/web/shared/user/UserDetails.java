@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
@@ -116,10 +117,10 @@ public class UserDetails implements Serializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("UserDetails")
-                .addValue(userId)
-                .add("displayName", displayName)
-                .add("emailAddress", Optional.ofNullable(emailAddress).orElse(""))
-                .toString();
+        return MoreObjects.toStringHelper("UserDetails")
+                          .addValue(userId)
+                          .add("displayName", displayName)
+                          .add("emailAddress", Optional.ofNullable(emailAddress).orElse(""))
+                          .toString();
     }
 }

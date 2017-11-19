@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.shared.user;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge

@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.List;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge

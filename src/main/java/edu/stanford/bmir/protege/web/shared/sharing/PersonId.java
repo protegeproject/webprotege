@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -40,9 +41,9 @@ public class PersonId implements Serializable, IsSerializable, Comparable<Person
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("PersonId")
-                .addValue(id)
-                .toString();
+        return MoreObjects.toStringHelper("PersonId")
+                          .addValue(id)
+                          .toString();
     }
 
     @Override

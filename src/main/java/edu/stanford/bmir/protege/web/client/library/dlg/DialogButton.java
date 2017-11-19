@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static edu.stanford.protege.widgetmap.client.view.ViewHolder.MESSAGES;
 
 /**
  * Author: Matthew Horridge<br>

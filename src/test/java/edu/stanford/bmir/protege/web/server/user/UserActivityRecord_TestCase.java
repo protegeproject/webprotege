@@ -1,8 +1,6 @@
 
 package edu.stanford.bmir.protege.web.server.user;
 
-import java.util.List;
-
 import edu.stanford.bmir.protege.web.server.project.RecentProjectRecord;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Matchers;
@@ -11,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;

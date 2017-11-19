@@ -10,7 +10,9 @@ import edu.stanford.bmir.protege.web.client.app.NothingSelectedViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
-import edu.stanford.protege.widgetmap.client.*;
+import edu.stanford.protege.widgetmap.client.WidgetMapPanel;
+import edu.stanford.protege.widgetmap.client.WidgetMapPanelManager;
+import edu.stanford.protege.widgetmap.client.WidgetMapRootWidget;
 import edu.stanford.protege.widgetmap.client.view.ViewHolder;
 import edu.stanford.protege.widgetmap.shared.node.*;
 

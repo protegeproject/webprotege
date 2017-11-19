@@ -6,7 +6,9 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.jvnet.mock_javamail.Mailbox;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -23,9 +25,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.jvnet.mock_javamail.Mailbox;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/05/2014

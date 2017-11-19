@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
-import org.semanticweb.owlapi.model.OWLObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

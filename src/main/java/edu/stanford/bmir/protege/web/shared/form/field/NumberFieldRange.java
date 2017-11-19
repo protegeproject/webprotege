@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;

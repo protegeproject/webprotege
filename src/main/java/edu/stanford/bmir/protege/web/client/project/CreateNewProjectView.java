@@ -1,18 +1,10 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
-import edu.stanford.bmir.protege.web.client.library.dlg.ValidationState;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogForm;
-import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogValidator;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

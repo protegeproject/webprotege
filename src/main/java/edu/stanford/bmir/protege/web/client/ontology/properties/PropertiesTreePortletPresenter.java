@@ -51,7 +51,6 @@ import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;

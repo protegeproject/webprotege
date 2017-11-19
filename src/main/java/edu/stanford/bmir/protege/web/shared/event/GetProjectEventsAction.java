@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
-import com.google.common.base.Objects;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Author: Matthew Horridge<br>
@@ -62,9 +62,9 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("GetProjectEventsAction")
-                .addValue(projectId)
-                .addValue(userId)
-                .add("since", sinceTag).toString();
+        return toStringHelper("GetProjectEventsAction")
+                          .addValue(projectId)
+                          .addValue(userId)
+                          .add("since", sinceTag).toString();
     }
 }

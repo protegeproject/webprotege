@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.cmdline;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;

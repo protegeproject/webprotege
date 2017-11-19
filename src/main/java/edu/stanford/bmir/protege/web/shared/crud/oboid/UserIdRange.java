@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
@@ -53,10 +53,10 @@ public class UserIdRange implements Serializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("UserIdRange")
-                .add("userId", userId)
-                .add("start", start)
-                .add("end", end)
-                .toString();
+        return MoreObjects.toStringHelper("UserIdRange")
+                          .add("userId", userId)
+                          .add("start", start)
+                          .add("end", end)
+                          .toString();
     }
 }

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -131,9 +131,9 @@ public class NewProjectSettings implements IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("NewProjectSettings")
-                .addValue(projectOwner)
-                .add("DisplayName", displayName)
-                .add("Description", projectDescription).toString();
+        return MoreObjects.toStringHelper("NewProjectSettings")
+                          .addValue(projectOwner)
+                          .add("DisplayName", displayName)
+                          .add("Description", projectDescription).toString();
     }
 }

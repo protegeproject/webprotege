@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.io.BaseEncoding;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -53,8 +53,8 @@ public class SaltedPasswordDigest implements IsSerializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper("SaltedPasswordDigest")
-                .addValue(BaseEncoding.base16().lowerCase().encode(digest))
-                .toString();
+        return MoreObjects.toStringHelper("SaltedPasswordDigest")
+                          .addValue(BaseEncoding.base16().lowerCase().encode(digest))
+                          .toString();
     }
 }
