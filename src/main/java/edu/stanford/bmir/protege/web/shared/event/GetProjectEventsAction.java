@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.common.base.Objects;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.InvocationException;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
@@ -7,12 +8,12 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,8 +25,6 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
 
     private ProjectId projectId;
 
-    private UserId userId;
-
     private EventTag sinceTag;
 
     /**
@@ -34,10 +33,10 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
     private GetProjectEventsAction() {
     }
 
-    public GetProjectEventsAction(EventTag sinceTag, ProjectId projectId, UserId userId) {
-        this.sinceTag = sinceTag;
-        this.projectId = projectId;
-        this.userId = userId;
+    public GetProjectEventsAction(@Nonnull EventTag sinceTag,
+                                  @Nonnull ProjectId projectId) {
+        this.sinceTag = checkNotNull(sinceTag);
+        this.projectId = checkNotNull(projectId);
     }
 
     public EventTag getSinceTag() {
@@ -50,10 +49,6 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
         return projectId;
     }
 
-    public UserId getUserId() {
-        return userId;
-    }
-
     @Override
     public Optional<String> handleInvocationException(InvocationException ex) {
         GWT.log("Could not retrieve events due to server connection problems.");
@@ -61,10 +56,27 @@ public class GetProjectEventsAction implements Action<GetProjectEventsResult>, I
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hashCode(sinceTag, projectId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof GetProjectEventsAction)) {
+            return false;
+        }
+        GetProjectEventsAction other = (GetProjectEventsAction) obj;
+        return this.sinceTag.equals(other.sinceTag)
+                && this.projectId.equals(other.projectId);
+    }
+
+    @Override
     public String toString() {
         return toStringHelper("GetProjectEventsAction")
                           .addValue(projectId)
-                          .addValue(userId)
                           .add("since", sinceTag).toString();
     }
 }
