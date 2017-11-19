@@ -33,7 +33,11 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{wp.laf.topBar}">
-            <g:Label ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
+            <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarIcon}"/>
+            <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
+                <g:Label ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
+            </g:HTMLPanel>
+
         </g:HTMLPanel>
 
 

@@ -650,19 +650,23 @@ td {
 .wp-TopBar {
     background-color: var(--topBar-background-color);
     padding-top: 1px;
-    padding-bottom: 2px;
-    margin-bottom: 5px;
+    padding-bottom: 1px;
+}
+
+.wp-TopBar-icon {
+    --wp-TopBar-icon-size: 2em;
     background-image: url("../images/protege-blender.svg");
     background-repeat: no-repeat;
-    background-size: 2.2em;
-    padding-left: 3em;
-    background-position: 1px 1px;
-    min-height: 2.3em;
+    background-size: var(--wp-TopBar-icon-size);
+    width: var(--wp-TopBar-icon-size);
+    height: var(--wp-TopBar-icon-size);
+    margin-left: 2px;
+    margin-right: 0.5em;
 }
 
 .wp-TopBar-title {
     font-weight: 300;
-    font-size: 21px;
+    font-size: 1.8em;
 }
 
 .wp-TopBar-separator {
