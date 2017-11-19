@@ -677,6 +677,8 @@ td {
     font-weight: 400;
     background-color: transparent;
     color: inherit;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 .wp-TopBar-button:hover {
     color: #101010;

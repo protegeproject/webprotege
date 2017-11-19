@@ -82,7 +82,8 @@
     background: transparent;
     cursor: pointer;
     font-weight: 400;
-    padding: 0 0;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .wp-button-toolbar-selected {
