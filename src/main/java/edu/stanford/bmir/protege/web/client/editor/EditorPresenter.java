@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
@@ -191,8 +192,8 @@ public class EditorPresenter implements HasDispose {
                 valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
                 final Widget editorWidget = editorView.asWidget();
                 editorHolder.setWidget(editorWidget);
-                setEditorState(value, editorCtx, editorManager);
                 updatePermissionBasedItems();
+                setEditorState(value, editorCtx, editorManager);
             });
         }
         else {
@@ -212,6 +213,7 @@ public class EditorPresenter implements HasDispose {
 
 
     public void updatePermissionBasedItems() {
+        GWT.log("[EditorPresenter] Updating permission based items");
         if (editorHolder.getWidget() instanceof HasEnabled) {
             final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
             hasEnabled.setEnabled(false);

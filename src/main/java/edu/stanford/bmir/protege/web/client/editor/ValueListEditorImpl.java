@@ -171,6 +171,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
                 deleteButton.setVisible(enabled);
             }
         }
+        ensureBlank();
     }
 
     @Override
