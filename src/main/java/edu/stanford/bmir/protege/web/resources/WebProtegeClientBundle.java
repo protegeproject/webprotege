@@ -245,6 +245,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-TopBar")
         String topBar();
 
+        @ClassName("wp-TopBar-icon")
+        String topBarIcon();
+
+        @ClassName("wp-TopBar-content")
+        String topBarContent();
+
         @ClassName("wp-TopBar-title")
         String topBarTitle();
 

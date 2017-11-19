@@ -1,6 +1,23 @@
-@external wp-TopBar, wp-TopBar-title, wp-TopBar-separator, wp-TopBar-button;
+@external wp-TopBar, wp-TopBar-icon, wp-TopBar-title, wp-TopBar-separator, wp-TopBar-button;
 
 .wp-TopBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.wp-TopBar-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.wp-TopBar-content {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .wp-TopBar-title {

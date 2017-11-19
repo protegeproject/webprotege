@@ -60,6 +60,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main} ">
         <g:HTMLPanel addStyleNames="{wp.laf.topBar} {style.topBar}">
+            <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarIcon}"/>
             <g:InlineLabel ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.dialogContainer}">
