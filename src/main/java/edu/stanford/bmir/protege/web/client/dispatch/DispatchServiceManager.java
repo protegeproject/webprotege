@@ -56,7 +56,7 @@ public class DispatchServiceManager {
 
     private int requestCount;
 
-    private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<ProjectId, ResultCache>();
+    private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<>();
 
 
 
@@ -144,27 +144,16 @@ public class DispatchServiceManager {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public void onSuccess(DispatchServiceResultContainer result) {
-            // TODO: Fix
             if(action instanceof HasProjectId) {
                 ResultCache resultCache = getResultCache(((HasProjectId) action).getProjectId(), eventBus);
                 resultCache.cacheResult((Action<R>) action, (R) result.getResult());
             }
-            // TODO: CACHE RENDERERABLES
-//            cacheRenderables(result.getResult());
             dispatchEvents(result.getResult());
             delegate.onSuccess(result.getResult());
         }
-
     }
-
-//
-//    private void cacheRenderables(Object result) {
-//        if (result instanceof HasBrowserTextMap) {
-//            BrowserTextMap browserTextMap = ((HasBrowserTextMap) result).getBrowserTextMap();
-//            renderingManager.registerEntityData(browserTextMap.getOWLEntityData());
-//        }
-//    }
 
     private void dispatchEvents(Object result) {
         if(result instanceof HasEventList<?>) {
@@ -173,7 +162,6 @@ public class DispatchServiceManager {
             List<? extends WebProtegeEvent<?>> events = eventList.getEvents();
             // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
             // TODO: more than once!
-
             for(WebProtegeEvent<?> event : events) {
                 GWT.log("[DISPATCH] Dispatching event (" + event.toDebugString() + ")");
                 if(event.getSource() != null) {
