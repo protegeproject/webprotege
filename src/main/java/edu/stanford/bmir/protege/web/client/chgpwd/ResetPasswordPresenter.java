@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -12,22 +13,31 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCode;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
  */
 public class ResetPasswordPresenter {
 
-    private DispatchServiceManager dispatchService;
+    @Nonnull
+    private final DispatchServiceManager dispatchService;
 
-    private ResetPasswordView view;
+    @Nonnull
+    private final Provider<ResetPasswordDialogController> resetPasswordDialogController;
+
+    @Nonnull
+    private final Messages messages;
 
     @Inject
-    public ResetPasswordPresenter(
-            DispatchServiceManager dispatchService, ResetPasswordView view) {
+    public ResetPasswordPresenter(@Nonnull DispatchServiceManager dispatchService,
+                                  @Nonnull Provider<ResetPasswordDialogController> resetPasswordDialogController,
+                                  @Nonnull Messages messages) {
         this.dispatchService = dispatchService;
-        this.view = view;
+        this.resetPasswordDialogController = resetPasswordDialogController;
+        this.messages = messages;
     }
 
     public void resetPassword() {
@@ -35,13 +45,10 @@ public class ResetPasswordPresenter {
     }
 
     private void showDialog() {
-        ResetPasswordDialogController controller = new ResetPasswordDialogController(view);
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ResetPasswordData>() {
-            @Override
-            public void handleHide(ResetPasswordData data, WebProtegeDialogCloser closer) {
-                closer.hide();
-                resetPassword(data);
-            }
+        ResetPasswordDialogController controller = resetPasswordDialogController.get();
+        controller.setDialogButtonHandler(DialogButton.get(messages.password_resetPassword()), (data, closer) -> {
+            closer.hide();
+            resetPassword(data);
         });
         WebProtegeDialog<ResetPasswordData> dlg = new WebProtegeDialog<ResetPasswordData>(controller);
         dlg.setVisible(true);
