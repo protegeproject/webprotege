@@ -688,3 +688,10 @@ td {
     background: url("../images/protege-blender.svg") no-repeat;
     background-size: contain;
 }
+
+.wp-TopBar-home-icon {
+    background: url("../images/home-icon.svg") no-repeat;
+    background-size: 16px;
+    width: 16px;
+    height: 14px;
+}

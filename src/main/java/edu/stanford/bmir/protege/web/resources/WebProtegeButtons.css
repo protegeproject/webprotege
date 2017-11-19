@@ -1,7 +1,6 @@
 .wp-button-primary, .wp-button-alternate, .wp-button-accept, .wp-button-cancel {
     border: none;
     border-radius: 2px;
-    padding: 0 20px;
 
     font-size: 16px;
     font-weight: 400;
@@ -20,6 +19,7 @@
     background-color: #6c1a91;
     height: 2.4em;
     line-height: 2.4em;
+    padding: 0 20px;
 }
 
 .wp-button-primary:hover {
@@ -35,6 +35,7 @@
     background-color: #db5e33;
     height: 2.4em;
     line-height: 2.4em;
+    padding: 0 20px;
 }
 
 .wp-button-alternate:hover {
@@ -52,6 +53,7 @@
     height: 1.8em;
     line-height: 1.8em;
     background-color: #959ea7;
+    padding: 0 20px;
 }
 
 .wp-button-cancel:hover {
@@ -64,6 +66,7 @@
     min-width: 100px;
     height: 1.8em;
     line-height: 1.8em;
+    padding: 0 20px;
 }
 
 .wp-button-accept:hover {
@@ -79,6 +82,7 @@
     background: transparent;
     cursor: pointer;
     font-weight: 400;
+    padding: 0 0;
 }
 
 .wp-button-toolbar-selected {

@@ -143,6 +143,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgCommentSmallFilledIcon();
 
+    @Source("home-icon.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource homeIcon();
+
     @Source("WebProtege.css")
     WebProtegeCss style();
 
@@ -259,6 +263,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-TopBar-button")
         String topBarButton();
+
+        @ClassName("wp-TopBar-home-icon")
+        String topBarHomeIcon();
     }
 
     interface WebProtegeButtons extends CssResource {

@@ -1,4 +1,4 @@
-@external wp-TopBar, wp-TopBar-icon, wp-TopBar-title, wp-TopBar-separator, wp-TopBar-button;
+@external wp-TopBar, wp-TopBar-icon, wp-TopBar-title, wp-TopBar-separator, wp-TopBar-button, wp-TopBar-home-icon;
 
 .wp-TopBar {
     display: flex;
@@ -31,7 +31,9 @@
     line-height: 18px;
     height: 22px;
     cursor: pointer;
-    padding-left: 10px;
-    padding-right: 10px;
     font-size: 12px;
+}
+
+.wp-TopBar-home-icon {
+
 }

@@ -4,12 +4,22 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
+        @external .wp-home-button;
         .main {
-            display: inline-block;
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+        }
+        .wp-home-button {
+
+        }
+        .icon {
+            width: 14px;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.laf.topBarButton} {style.main}" text="{msg.home}"/>
+        <g:HTMLPanel addStyleNames="{wp.laf.topBarHomeIcon}"/>
+        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.laf.topBarButton} {style.wp-home-button}" text="{msg.home}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
