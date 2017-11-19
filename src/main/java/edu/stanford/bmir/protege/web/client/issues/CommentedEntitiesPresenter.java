@@ -35,9 +35,7 @@ import static edu.stanford.bmir.protege.web.shared.pagination.PageRequest.reques
 import static java.util.stream.Collectors.toList;
 
 /**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 7 Mar 2017
+ * Matthew Horridge Stanford Center for Biomedical Informatics Research 7 Mar 2017
  */
 public class CommentedEntitiesPresenter {
 
@@ -55,7 +53,8 @@ public class CommentedEntitiesPresenter {
 
     private final List<CommentedEntityData> pageElements = new ArrayList<>();
 
-    private HasBusy hasBusy = busy -> {};
+    private HasBusy hasBusy = busy -> {
+    };
 
     @Inject
     public CommentedEntitiesPresenter(@Nonnull ProjectId projectId,
@@ -84,17 +83,13 @@ public class CommentedEntitiesPresenter {
     }
 
     private void handleBrowserTextChanged(BrowserTextChangedEvent event) {
-        if(currentEntites.contains(event.getEntity())) {
+        if (currentEntites.contains(event.getEntity())) {
             reload();
         }
     }
 
     private void handleCommentPosted(CommentPostedEvent event) {
-        event.getEntity().ifPresent(entityData -> {
-            if(!currentEntites.contains(entityData.getEntity())) {
-                reload();
-            }
-        });
+        event.getEntity().ifPresent(entityData -> reload());
     }
 
     private void handleStatusChanged(DiscussionThreadStatusChangedEvent event) {
