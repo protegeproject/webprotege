@@ -11,7 +11,7 @@
             align-items: baseline;
         }
         .wp-home-button {
-
+            padding-left: 0.2em;
         }
     </ui:style>
 
