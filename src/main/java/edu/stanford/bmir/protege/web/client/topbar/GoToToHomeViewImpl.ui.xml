@@ -13,9 +13,6 @@
         .wp-home-button {
 
         }
-        .icon {
-            width: 14px;
-        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
