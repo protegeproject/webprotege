@@ -48,9 +48,9 @@
             </g:HTMLPanel>
             <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
                 <g:Button ui:field="cancelButton" text="Cancel"
-                          addStyleNames="{wp.buttons.buttonCancel}"/>
+                          addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.escapeButton}"/>
                 <g:Button ui:field="signInButton" text="Create Account"
-                          addStyleNames="{wp.buttons.buttonAccept}"/>
+                          addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.acceptButton}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
 

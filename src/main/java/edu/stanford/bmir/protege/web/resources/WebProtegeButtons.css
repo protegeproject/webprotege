@@ -16,7 +16,7 @@
     -webkit-transition: background-color 0.15s ease-in-out;
 }
 
-.wp-btn-accept, .wp-btn-cancel {
+.wp-btn-accept {
     border: none;
     border-radius: 2px;
 
@@ -36,6 +36,14 @@
 .wp-btn--page {
     height: 2.4em;
     line-height: 2.4em;
+    padding: 0 20px;
+}
+
+.wp-btn--dialog {
+    flex-grow: 0;
+    min-width: 100px;
+    height: 1.8em;
+    line-height: 1.8em;
     padding: 0 20px;
 }
 
@@ -65,18 +73,15 @@
     cursor: default;
 }
 
-.wp-btn-cancel {
-    flex-grow: 0;
-    min-width: 100px;
-    height: 1.8em;
-    line-height: 1.8em;
+.wp-btn--escape {
     background-color: #959ea7;
-    padding: 0 20px;
 }
 
-.wp-btn-cancel:hover {
+.wp-btn--escape:hover {
     background-color: #737c85;
 }
+
+
 
 .wp-btn-accept {
     background-color: #6c1a91;
@@ -90,6 +95,7 @@
 .wp-btn-accept:hover {
     background-color: #501c70;
 }
+
 
 
 .wp-btn-toolbar {
