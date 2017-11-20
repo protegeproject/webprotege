@@ -34,14 +34,9 @@ public class GoToToHomeViewImpl extends Composite implements GoToHomeView {
     @UiField
     protected HasClickHandlers goToHomeButton;
 
-    @UiField
-    HTMLPanel goToHomeIcon;
-
     @Inject
     public GoToToHomeViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        goToHomeIcon.sinkEvents(Event.ONCLICK);
-        goToHomeIcon.addHandler(event -> goToHomeHandler.handleGoToHome(), ClickEvent.getType());
     }
 
     @UiHandler("goToHomeButton")

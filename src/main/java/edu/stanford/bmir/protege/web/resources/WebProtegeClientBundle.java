@@ -257,12 +257,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-top-bar__separator")
         String topBarSeparator();
 
-        @ClassName("wp-top-bar__button")
-        String topBarButton();
-
-        @ClassName("wp-top-bar__home-icon")
-        String topBarHomeIcon();
-
         @ClassName("wp-toolbar")
         String toolbar();
     }
@@ -318,11 +312,20 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
 
 
+        @ClassName("wp-top-bar__btn")
+        String topBarButton();
+
+        @ClassName("wp-top-bar__btn--home")
+        String topBarHomeButton();
+
+
+
         @ClassName("wp-toolbar__btn")
         String toolbarButton();
 
         @ClassName("wp-toolbar__btn--highlighted")
         String highlightedToolbarButton();
+
 
 
         @ClassName("wp-btn-delete")

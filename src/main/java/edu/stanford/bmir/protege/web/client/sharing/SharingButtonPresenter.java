@@ -48,7 +48,7 @@ public class SharingButtonPresenter implements HasDispose, Presenter {
         this.placeController = placeController;
         this.permissionChecker = permissionChecker;
         button = new Button(MESSAGES.share(), (ClickHandler) event -> goToSharingSettingsPlace());
-        button.asWidget().addStyleName(BUNDLE.laf().topBarButton());
+        button.asWidget().addStyleName(BUNDLE.buttons().topBarButton());
     }
 
     /**

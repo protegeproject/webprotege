@@ -26,18 +26,6 @@
 .wp-top-bar__separator {
 }
 
-.wp-top-bar__button {
-    border: none;
-    line-height: 18px;
-    height: 22px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.wp-top-bar__home-icon {
-
-}
-
 .wp-toolbar {
     background-color: literal("var(--viewToolbar-background-color)");
     padding-bottom: 1px;
