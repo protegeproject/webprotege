@@ -1,3 +1,5 @@
+@external wp-*;
+
 .wp-button-primary, .wp-button-alternate, .wp-button-accept, .wp-button-cancel {
     border: none;
     border-radius: 2px;
@@ -105,3 +107,6 @@
     cursor: default;
 }
 
+.wp-AddTabButton {
+
+}
