@@ -1,6 +1,6 @@
 @external wp-*;
 
-.wp-button-primary, .wp-button-alternate, .wp-button-accept, .wp-button-cancel {
+.wp-btn-primary, .wp-btn-alternate, .wp-btn-accept, .wp-btn-cancel {
     border: none;
     border-radius: 2px;
 
@@ -17,39 +17,39 @@
 
 }
 
-.wp-button-primary {
+.wp-btn-primary {
     background-color: #6c1a91;
     height: 2.4em;
     line-height: 2.4em;
     padding: 0 20px;
 }
 
-.wp-button-primary:hover {
+.wp-btn-primary:hover {
     background-color: #501c70;
 }
 
-.wp-button-primary:disabled {
+.wp-btn-primary:disabled {
     background-color: lightgray;
     cursor: default;
 }
 
-.wp-button-alternate {
+.wp-btn-alternate {
     background-color: #db5e33;
     height: 2.4em;
     line-height: 2.4em;
     padding: 0 20px;
 }
 
-.wp-button-alternate:hover {
+.wp-btn-alternate:hover {
     background-color: #bc4d26;
 }
 
-.wp-button-alternate:disabled {
+.wp-btn-alternate:disabled {
     background-color: lightgray;
     cursor: default;
 }
 
-.wp-button-cancel {
+.wp-btn-cancel {
     flex-grow: 0;
     min-width: 100px;
     height: 1.8em;
@@ -58,11 +58,11 @@
     padding: 0 20px;
 }
 
-.wp-button-cancel:hover {
+.wp-btn-cancel:hover {
     background-color: #737c85;
 }
 
-.wp-button-accept {
+.wp-btn-accept {
     background-color: #6c1a91;
     flex-grow: 0;
     min-width: 100px;
@@ -71,12 +71,12 @@
     padding: 0 20px;
 }
 
-.wp-button-accept:hover {
+.wp-btn-accept:hover {
     background-color: #501c70;
 }
 
 
-.wp-button-toolbar {
+.wp-btn-toolbar {
     border: solid transparent 1px;
     color: #464646;
     height: 20px;
@@ -88,25 +88,25 @@
     padding-right: 5px;
 }
 
-.wp-button-toolbar-selected {
+.wp-btn-toolbar-selected {
     color: dodgerblue;
 }
 
-.wp-button-toolbar:hover:enabled {
+.wp-btn-toolbar:hover:enabled {
     background-color: #707070;
     color: #ffffff;
 }
 
-.wp-button-toolbar:active:enabled {
+.wp-btn-toolbar:active:enabled {
     background-color: #424242;
     color: #ffffff;
 }
 
-.wp-button-toolbar:disabled {
+.wp-btn-toolbar:disabled {
     color: #aaaaaa;
     cursor: default;
 }
 
-.wp-AddTabButton {
+.wp-btn-add-tab {
 
 }

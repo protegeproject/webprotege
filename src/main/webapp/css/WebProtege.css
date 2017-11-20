@@ -698,12 +698,12 @@ td {
     background-size: contain;
 }
 
-.wp-AddTabButton {
+.wp-btn-add-tab {
     border: none;
     background-color: transparent;
 }
 
-.wp-AddTabButton:hover {
+.wp-btn-add-tab:hover {
     background-color: #505050;
     color: white;
     cursor: pointer;
