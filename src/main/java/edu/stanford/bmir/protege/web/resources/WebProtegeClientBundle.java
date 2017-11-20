@@ -288,9 +288,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--primary")
         String primaryButton();
 
-
-        @ClassName("wp-btn-alternate")
-        String buttonAlternate();
+        /**
+         * An alternate button on a page or on a dialog
+         */
+        @ClassName("wp-btn--alternate")
+        String alternateButton();
 
         @ClassName("wp-btn-cancel")
         String buttonCancel();

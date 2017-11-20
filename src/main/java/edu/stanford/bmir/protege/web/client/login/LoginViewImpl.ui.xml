@@ -59,8 +59,6 @@
         .signup {
             float: right;
             margin: 3px;
-            padding-right: 20px;
-            padding-left: 20px;
         }
 
         .signin {
@@ -85,7 +83,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
-                  addStyleNames="{style.signup} {wp.buttons.buttonAlternate}"/>
+                  addStyleNames="{style.signup} {wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.alternateButton}"/>
         <g:HTMLPanel addStyleNames="{style.center}">
             <g:HTMLPanel addStyleNames="{style.wp-login-logo}"/>
             <g:HTMLPanel addStyleNames="{style.message}">

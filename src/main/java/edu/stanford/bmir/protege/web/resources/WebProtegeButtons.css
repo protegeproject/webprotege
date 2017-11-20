@@ -16,7 +16,7 @@
     -webkit-transition: background-color 0.15s ease-in-out;
 }
 
-.wp-btn-alternate, .wp-btn-accept, .wp-btn-cancel {
+.wp-btn-accept, .wp-btn-cancel {
     border: none;
     border-radius: 2px;
 
@@ -52,18 +52,15 @@
     cursor: default;
 }
 
-.wp-btn-alternate {
+.wp-btn--alternate {
     background-color: #db5e33;
-    height: 2.4em;
-    line-height: 2.4em;
-    padding: 0 20px;
 }
 
-.wp-btn-alternate:hover {
+.wp-btn--alternate:hover {
     background-color: #bc4d26;
 }
 
-.wp-btn-alternate:disabled {
+.wp-btn--alternate:disabled {
     background-color: lightgray;
     cursor: default;
 }
