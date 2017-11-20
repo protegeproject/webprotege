@@ -9,9 +9,16 @@
             flex-direction: row;
             align-items: baseline;
         }
+        .homeIcon {
+            width: 16px;
+        }
+        .homeButton {
+            padding-left: 2px;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.topBarButton} {wp.buttons.topBarHomeButton}" text="{msg.home}"/>
+        <g:Image url="{wp.homeIcon.getSafeUri.asString}" addStyleNames="{style.homeIcon}"/>
+        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.topBarButton} {style.homeButton}" text="{msg.home}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

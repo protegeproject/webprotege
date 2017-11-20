@@ -16,14 +16,21 @@
     --errorLabel-color: #af0002;
 
     --outline: #94c0ed solid 2px;
-    /*--outline: #0A5EA8 solid 1px;*/
 
     --widgetmap-view-header-font-weight: 400;
     --widgetmap-view-header-padding-left: 3px;
+
+
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    /* Originally had Helvetica Neue with a font-weight of 300, but this is really thin
+       on Chrome.  It looks like this is a bug with Chrome -
+       https://bugs.chromium.org/p/chromium/issues/detail?id=645642.  Changing to Helvetica for now.
+    */
+    font-family: Helvetica, Arial, sans-serif;
     font-weight: 300;
     color: #505050;
     font-size: 12px;
@@ -714,11 +721,4 @@ td {
     border: none;
     line-height: 18px;
     cursor: pointer;
-}
-
-.wp-top-bar__btn--home {
-    background: url("../images/home-icon.svg") no-repeat;
-    background-size: 15px;
-    padding-left: 20px;
-    background-position-y: 1.5px;
 }

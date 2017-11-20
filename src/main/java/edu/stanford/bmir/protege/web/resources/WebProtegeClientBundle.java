@@ -315,10 +315,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-top-bar__btn")
         String topBarButton();
 
-        @ClassName("wp-top-bar__btn--home")
-        String topBarHomeButton();
-
-
 
         @ClassName("wp-toolbar__btn")
         String toolbarButton();
