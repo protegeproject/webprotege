@@ -27,6 +27,6 @@
 }
 
 .wp-toolbar {
-    background-color: literal("var(--viewToolbar-background-color)");
+    background-color: literal("var(--view-toolbar--background-color)");
     padding-bottom: 1px;
 }
