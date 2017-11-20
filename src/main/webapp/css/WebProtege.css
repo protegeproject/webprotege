@@ -657,7 +657,7 @@ td {
 .wp-top-bar {
     background-color: var(--topBar-background-color);
     padding-top: 1px;
-    padding-bottom: 1px;
+    padding-bottom: 2px;
 }
 
 .wp-top-bar__logo {
@@ -673,7 +673,7 @@ td {
 
 .wp-top-bar__title {
     font-weight: 300;
-    font-size: 1.8em;
+    font-size: 1.4em;
 }
 
 .wp-top-bar__separator {
@@ -689,13 +689,6 @@ td {
 }
 .wp-top-bar__btn:hover {
     color: #101010;
-}
-
-.wp-top-bar__home-icon {
-    background: url("../images/home-icon.svg") no-repeat;
-    background-size: 16px;
-    width: 16px;
-    height: 14px;
 }
 
 .wp-login-logo {
