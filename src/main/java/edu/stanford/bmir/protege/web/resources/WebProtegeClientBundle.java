@@ -283,6 +283,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String pageButton();
 
         /**
+         * A button that appears on a dialog popup
+         */
+        @ClassName("wp-btn--dialog")
+        String dialogButton();
+
+        /**
          * The primary button on a page or on a dialog
          */
         @ClassName("wp-btn--primary")
@@ -294,11 +300,20 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--alternate")
         String alternateButton();
 
-        @ClassName("wp-btn-cancel")
-        String buttonCancel();
+        /**
+         * A button to clear/cancel/return-from the current state.  For example
+         * a dialog "Cancel" button, or a "Clear" form button
+         */
+        @ClassName("wp-btn--escape")
+        String escapeButton();
 
+        /**
+         * A button to accept/apply the current state.  For example
+         * a dialog "OK" button, or an "Apply" form button
+         */
         @ClassName("wp-btn-accept")
-        String buttonAccept();
+        String acceptButton();
+
 
         @ClassName("wp-btn-toolbar")
         String buttonToolbar();

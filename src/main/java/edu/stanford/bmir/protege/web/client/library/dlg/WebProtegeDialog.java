@@ -6,12 +6,12 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Author: Matthew Horridge<br>
@@ -79,11 +79,15 @@ public final class WebProtegeDialog<D> extends DialogBox {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
+            // Base style for buttons
+            button.addStyleName(BUNDLE.buttons().button());
+            // Style for dialog buttons
+            button.addStyleName(BUNDLE.buttons().dialogButton());
             if(dlgButton.equals(controller.getDefaultButton())) {
-                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().buttonAccept());
+                button.addStyleName(BUNDLE.buttons().acceptButton());
             }
             else {
-                button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().buttonCancel());
+                button.addStyleName(BUNDLE.buttons().escapeButton());
             }
         }
         SimplePanel buttonBarWrapper = new SimplePanel();
