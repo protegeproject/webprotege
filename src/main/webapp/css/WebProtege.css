@@ -697,3 +697,14 @@ td {
     width: 16px;
     height: 14px;
 }
+
+.wp-AddTabButton {
+    border: none;
+    background-color: transparent;
+}
+
+.wp-AddTabButton:hover {
+    background-color: #505050;
+    color: white;
+    cursor: pointer;
+}

@@ -287,6 +287,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-button-toolbar-selected")
         String buttonToolbarSelected();
+
+        @ClassName("wp-AddTabButton")
+        String addTabButton();
     }
 
     interface WebProtegeDialog extends CssResource {
