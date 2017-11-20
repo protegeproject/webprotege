@@ -270,25 +270,25 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeButtons extends CssResource {
 
-        @ClassName("wp-button-primary")
+        @ClassName("wp-btn-primary")
         String buttonPrimary();
 
-        @ClassName("wp-button-alternate")
+        @ClassName("wp-btn-alternate")
         String buttonAlternate();
 
-        @ClassName("wp-button-cancel")
+        @ClassName("wp-btn-cancel")
         String buttonCancel();
 
-        @ClassName("wp-button-accept")
+        @ClassName("wp-btn-accept")
         String buttonAccept();
 
-        @ClassName("wp-button-toolbar")
+        @ClassName("wp-btn-toolbar")
         String buttonToolbar();
 
-        @ClassName("wp-button-toolbar-selected")
+        @ClassName("wp-btn-toolbar-selected")
         String buttonToolbarSelected();
 
-        @ClassName("wp-AddTabButton")
+        @ClassName("wp-btn-add-tab")
         String addTabButton();
     }
 
