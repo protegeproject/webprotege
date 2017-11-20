@@ -41,8 +41,8 @@
         }
 
         .main .gwt-TabBar .gwt-TabBarItem-selected {
-            border-bottom: solid 2px literal("var(--selectedTab-color)");
-            color: literal("var(--selectedTab-color)");
+            border-bottom: solid 2px literal("var(--selected-tab--color)");
+            color: literal("var(--selected-tab--color)");
             outline: none 0;
         }
 

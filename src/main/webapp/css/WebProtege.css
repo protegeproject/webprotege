@@ -1,19 +1,19 @@
 :root {
-    --selectedItem-background-color: #116cd6;
-    --selectedItem-color: white;
+    --selected-item--background-color: #116cd6;
+    --selected-item--color: white;
 
-    --selectedMenuItem-background-color: #116cd6;
-    --selectedMenuItem-color: white;
+    --selected-menu-item--background-color: #116cd6;
+    --selected-menu-item--color: white;
 
-    --selectedTab-color: #116cd6;
+    --selected-tab--color: #116cd6;
 
-    --topBar-background-color: #f0f0f0;
+    --topbar--background-color: #f0f0f0;
 
-    --inlayPanel-background-color: #f0f0f0;
+    --inlay-panel--background-color: #f0f0f0;
 
-    --viewToolbar-background-color: #f0f0f0;
+    --view-toolbar--background-color: #f0f0f0;
 
-    --errorLabel-color: #af0002;
+    --error--color: #af0002;
 
     --outline: #94c0ed solid 2px;
 
@@ -52,8 +52,8 @@ ul.disc {
 }
 
 .x-tree-node .x-tree-selected {
-    color: var(--selectedItem-color);
-    background-color: var(--selectedItem-background-color);
+    color: var(--selected-item--color);
+    background-color: var(--selected-item--background-color);
 }
 
 .x-panel-body-noheader, .x-panel-mc .x-panel-body {
@@ -120,8 +120,8 @@ ul.disc {
 }
 
 .gwt-SuggestBoxPopup .item-selected {
-    color: var(--selectedMenuItem-color);
-    background: var(--selectedMenuItem-background-color);
+    color: var(--selected-menu-item--color);
+    background: var(--selected-menu-item--background-color);
 }
 
 .gwt-SuggestBoxPopup .item .new-keyword {
@@ -131,8 +131,8 @@ ul.disc {
 }
 
 .gwt-SuggestBoxPopup .item-selected .new-keyword {
-    color: var(--selectedMenuItem-color);
-    background: var(--selectedMenuItem-background-color);
+    color: var(--selected-menu-item--color);
+    background: var(--selected-menu-item--background-color);
     font-weight: bold;
 }
 
@@ -162,8 +162,8 @@ select {
 }
 
 .gwt-MenuItem-selected {
-    color: var(--selectedMenuItem-color);
-    background: var(--selectedMenuItem-background-color);
+    color: var(--selected-menu-item--color);
+    background: var(--selected-menu-item--background-color);
 }
 
 .gwt-PopupPanel {
@@ -651,7 +651,7 @@ td {
 /* Externalised application styles */
 
 .wp-top-bar {
-    background-color: var(--topBar-background-color);
+    background-color: var(--topbar--background-color);
     padding-top: 1px;
     padding-bottom: 2px;
 }
@@ -710,4 +710,163 @@ td {
     border: none;
     line-height: 18px;
     cursor: pointer;
+}
+
+.wp-btn {
+    border: none;
+    border-radius: 2px;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease-in-out;
+    -moz-transition: background-color 0.15s ease-in-out;
+    -webkit-transition: background-color 0.15s ease-in-out;
+}
+
+.wp-btn--page {
+    height: 2.4em;
+    line-height: 2.4em;
+    padding: 0 20px;
+    min-width: 8em;
+
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+.wp-btn--page-small {
+    background-color: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.wp-btn--page-small:hover {
+    background-color: #505050;
+    color: #fff;
+}
+
+.wp-btn--dialog {
+    flex-grow: 0;
+    min-width: 100px;
+    height: 1.8em;
+    line-height: 1.8em;
+    padding: 0 20px;
+
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+.wp-btn--primary {
+    color: #fff;
+    background-color: #6c1a91;
+}
+
+.wp-btn--primary:hover {
+    background-color: #501c70;
+}
+
+.wp-btn--primary:disabled {
+    background-color: lightgray;
+    cursor: default;
+}
+
+.wp-btn--alternate {
+    color: #fff;
+    background-color: #db5e33;
+}
+
+.wp-btn--alternate:hover {
+    background-color: #bc4d26;
+}
+
+.wp-btn--alternate:disabled {
+    background-color: lightgray;
+    cursor: default;
+}
+
+.wp-btn--escape {
+    color: #fff;
+    background-color: #959ea7;
+}
+
+.wp-btn--escape:hover {
+    background-color: #737c85;
+}
+
+.wp-btn--accept {
+    color: #fff;
+    background-color: #6c1a91;
+}
+
+.wp-btn--accept:hover {
+    background-color: #501c70;
+}
+
+.wp-toolbar__btn {
+    border: none;
+    color: #505050;
+    height: 20px;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 400;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 2px;
+}
+
+.wp-toolbar__btn--highlighted {
+    color: dodgerblue;
+}
+
+.wp-toolbar__btn:hover:enabled {
+    background-color: #707070;
+    color: #ffffff;
+}
+
+.wp-toolbar__btn:active:enabled {
+    background-color: #424242;
+    color: #ffffff;
+}
+
+.wp-toolbar__btn:disabled {
+    color: #aaaaaa;
+    cursor: default;
+}
+
+.wp-btn-add-tab {
+    font-weight: 400;
+}
+
+
+.wp-btn-delete {
+    background-color: #aaaaaa;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.wp-btn-delete:hover {
+    background-color: #e00000;
+}
+
+.wp-btn-delete:focus {
+    background-color: #e00000;
+    outline-offset: 0;
+}
+
+.wp-btn-delete:disabled {
+    background-color: #dddddd;
+    cursor: default;
+}
+
+.wp-top-bar__btn {
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
