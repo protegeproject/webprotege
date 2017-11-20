@@ -1,4 +1,4 @@
-@external wp-TopBar, wp-TopBar-icon, wp-TopBar-title, wp-TopBar-separator, wp-TopBar-button, wp-TopBar-home-icon;
+@external wp-*;
 
 .wp-TopBar {
     display: flex;
