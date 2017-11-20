@@ -246,25 +246,25 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeLaf extends CssResource {
 
-        @ClassName("wp-TopBar")
+        @ClassName("wp-top-bar")
         String topBar();
 
-        @ClassName("wp-TopBar-icon")
+        @ClassName("wp-top-bar__logo")
         String topBarIcon();
 
-        @ClassName("wp-TopBar-content")
+        @ClassName("wp-top-bar__content")
         String topBarContent();
 
-        @ClassName("wp-TopBar-title")
+        @ClassName("wp-top-bar__title")
         String topBarTitle();
 
-        @ClassName("wp-TopBar-separator")
+        @ClassName("wp-top-bar__separator")
         String topBarSeparator();
 
-        @ClassName("wp-TopBar-button")
+        @ClassName("wp-top-bar__button")
         String topBarButton();
 
-        @ClassName("wp-TopBar-home-icon")
+        @ClassName("wp-top-bar__home-icon")
         String topBarHomeIcon();
     }
 

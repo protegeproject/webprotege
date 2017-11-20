@@ -1,18 +1,18 @@
 @external wp-*;
 
-.wp-TopBar {
+.wp-top-bar {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.wp-TopBar-icon {
+.wp-top-bar__logo {
     display: inline-block;
     flex-shrink: 0;
     flex-grow: 0;
 }
 
-.wp-TopBar-content {
+.wp-top-bar__content {
     display: flex;
     flex-direction: row;
     align-items: baseline;
@@ -20,13 +20,13 @@
     flex-shrink: 1;
 }
 
-.wp-TopBar-title {
+.wp-top-bar__title {
 }
 
-.wp-TopBar-separator {
+.wp-top-bar__separator {
 }
 
-.wp-TopBar-button {
+.wp-top-bar__button {
     border: none;
     line-height: 18px;
     height: 22px;
@@ -34,6 +34,6 @@
     font-size: 12px;
 }
 
-.wp-TopBar-home-icon {
+.wp-top-bar__home-icon {
 
 }
