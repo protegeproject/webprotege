@@ -15,6 +15,10 @@
 <%@ page import="java.util.Optional" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.HashSet" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.filemanager.FileContents" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.filemanager.StyleCustomizationFileManager" %>
+<%@ page import="org.slf4j.Logger" %>
+<%@ page import="org.slf4j.LoggerFactory" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -43,6 +47,12 @@
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
 
+    <style>
+        <%
+            injectStyleCustomization(out);
+        %>
+    </style>
+
     <script>
         <%
             writeUserInSession(session, out);
@@ -62,6 +72,8 @@
 </html>
 
 <%!
+    private final StyleCustomizationFileManager styleCustomizationFileManager = new StyleCustomizationFileManager();
+
     private ApplicationComponent getWebProtegeComponent() {
         ServletContext context = getServletConfig().getServletContext();
         return (ApplicationComponent) context.getAttribute(ApplicationComponent.class.getName());
@@ -75,6 +87,23 @@
     private AccessManager getAccessManager() {
         ApplicationComponent component = getWebProtegeComponent();
         return component.getAccessManager();
+    }
+
+    private void injectStyleCustomization(JspWriter writer) throws IOException {
+        String styleCustomization = getStyleCustomization();
+        if(!styleCustomization.isEmpty()) {
+            writer.println();
+            writer.println("/* Custom styles that override the default WebProtege styles */");
+            writer.println();
+            writer.println(styleCustomization);
+            writer.println();
+            writer.println("/* End of custom styles */");
+            writer.println();
+        }
+    }
+
+    private String getStyleCustomization() {
+        return styleCustomizationFileManager.getStyleCustomization();
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {
@@ -100,5 +129,4 @@
         ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
                 .writeVariableDeclaration(userInSession, out);
     }
-
 %>
