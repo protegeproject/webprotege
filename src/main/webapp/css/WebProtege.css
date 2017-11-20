@@ -647,13 +647,13 @@ td {
 
 /* Externalised application styles */
 
-.wp-TopBar {
+.wp-top-bar {
     background-color: var(--topBar-background-color);
     padding-top: 1px;
     padding-bottom: 1px;
 }
 
-.wp-TopBar-icon {
+.wp-top-bar__logo {
     --wp-TopBar-icon-size: 2em;
     background-image: url("../images/protege-blender.svg");
     background-repeat: no-repeat;
@@ -664,24 +664,31 @@ td {
     margin-right: 0.5em;
 }
 
-.wp-TopBar-title {
+.wp-top-bar__title {
     font-weight: 300;
     font-size: 1.8em;
 }
 
-.wp-TopBar-separator {
+.wp-top-bar__separator {
     width: 1px;
     background: #c8c8c8;
 }
-.wp-TopBar-button {
+.wp-top-bar__button {
     font-weight: 400;
     background-color: transparent;
     color: inherit;
     padding-left: 10px;
     padding-right: 10px;
 }
-.wp-TopBar-button:hover {
+.wp-top-bar__button:hover {
     color: #101010;
+}
+
+.wp-top-bar__home-icon {
+    background: url("../images/home-icon.svg") no-repeat;
+    background-size: 16px;
+    width: 16px;
+    height: 14px;
 }
 
 .wp-login-logo {
@@ -689,13 +696,6 @@ td {
     height: 160px;
     background: url("../images/protege-blender.svg") no-repeat;
     background-size: contain;
-}
-
-.wp-TopBar-home-icon {
-    background: url("../images/home-icon.svg") no-repeat;
-    background-size: 16px;
-    width: 16px;
-    height: 14px;
 }
 
 .wp-AddTabButton {
