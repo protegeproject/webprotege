@@ -41,8 +41,8 @@
         }
 
         .main .gwt-TabBar .gwt-TabBarItem-selected {
-            border-bottom: solid 2px literal("var(--selectedPerspectiveLink-color)");
-            color: literal("var(--selectedPerspectiveLink-color)");
+            border-bottom: solid 2px literal("var(--selectedTab-color)");
+            color: literal("var(--selectedTab-color)");
             outline: none 0;
         }
 
@@ -52,6 +52,6 @@
         <g:SimplePanel addStyleNames="{style.tabBarContainer}">
             <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
         </g:SimplePanel>
-        <g:Button ui:field="newTabButton" text="{msg.addTab}" addStyleNames="{style.newTabButton} {wp.laf.topBarButton}"/>
+        <g:Button ui:field="newTabButton" text="{msg.addTab}" addStyleNames="{style.newTabButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
