@@ -321,8 +321,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-toolbar__btn")
         String toolbarButton();
 
-        @ClassName("wp-toolbar__btn--selected")
-        String buttonToolbarSelected();
+        @ClassName("wp-toolbar__btn--highlighted")
+        String highlightedToolbarButton();
 
 
         @ClassName("wp-btn-delete")

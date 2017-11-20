@@ -40,4 +40,5 @@
 
 .wp-toolbar {
     background-color: literal("var(--viewToolbar-background-color)");
+    padding-bottom: 1px;
 }

@@ -91,18 +91,18 @@
 }
 
 .wp-toolbar__btn {
-    border: solid transparent 1px;
-    color: #464646;
+    border: none;
+    color: #505050;
     height: 20px;
-    margin: 1px;
     background: transparent;
     cursor: pointer;
     font-weight: 400;
     padding-left: 5px;
     padding-right: 5px;
+    border-radius: 2px;
 }
 
-.wp-toolbar__btn--selected {
+.wp-toolbar__btn--highlighted {
     color: dodgerblue;
 }
 
