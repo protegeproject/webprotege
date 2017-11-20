@@ -4,11 +4,6 @@
     border: none;
     border-radius: 2px;
 
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-
-    color: #fff;
     cursor: pointer;
 
     transition: background-color 0.15s ease-in-out;
@@ -21,6 +16,21 @@
     line-height: 2.4em;
     padding: 0 20px;
     min-width: 8em;
+
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+.wp-btn--page-small {
+    background-color: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.wp-btn--page-small:hover {
+    background-color: #505050;
+    color: #fff;
 }
 
 .wp-btn--dialog {
@@ -29,9 +39,14 @@
     height: 1.8em;
     line-height: 1.8em;
     padding: 0 20px;
+
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
 }
 
 .wp-btn--primary {
+    color: #fff;
     background-color: #6c1a91;
 }
 
@@ -45,6 +60,7 @@
 }
 
 .wp-btn--alternate {
+    color: #fff;
     background-color: #db5e33;
 }
 
@@ -58,6 +74,7 @@
 }
 
 .wp-btn--escape {
+    color: #fff;
     background-color: #959ea7;
 }
 

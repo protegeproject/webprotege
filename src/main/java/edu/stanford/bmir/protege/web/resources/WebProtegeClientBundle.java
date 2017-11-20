@@ -281,6 +281,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--page")
         String pageButton();
 
+        @ClassName("wp-btn--page-small")
+        String smallPageButton();
+
         /**
          * A button that appears on a dialog popup
          */
