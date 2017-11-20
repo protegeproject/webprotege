@@ -20,7 +20,7 @@ public class DeleteButton extends Button {
 
     public DeleteButton() {
         super(TEXT);
-        addStyleName(WebProtegeClientBundle.BUNDLE.style().deleteButton());
+        addStyleName(WebProtegeClientBundle.BUNDLE.buttons().deleteButton());
         setTitle(MESSAGES.delete());
     }
 }
