@@ -99,7 +99,7 @@
                 <g:PasswordTextBox ui:field="passwordField" visibleLength="30"/>
                 <div style="height: 20px;"/>
                 <g:Button ui:field="signInButton" text="{msg.signIn}"
-                          addStyleNames="{wp.buttons.buttonPrimary} {style.signin}"/>
+                          addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.primaryButton} {style.signin}"/>
                 <g:HTMLPanel addStyleNames="{style.bottomBar}">
                     <g:Anchor text="{msg.forgotUserNameOrPassword}" ui:field="forgotPasswordButton"
                               addStyleNames="{style.forgotPasswordButton}"/>
