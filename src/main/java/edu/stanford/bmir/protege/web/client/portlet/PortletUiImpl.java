@@ -159,7 +159,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void addPortletAction(final PortletAction action) {
         final Button button = new Button(action.getName());
-        button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().buttonToolbar());
+        button.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().toolbarButton());
         toolbar.add(button);
         button.addClickHandler(event -> action.getActionHandler().handleActionInvoked(action, event));
         action.setStateChangedHandler(value -> {

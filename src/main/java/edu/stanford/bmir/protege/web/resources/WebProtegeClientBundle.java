@@ -315,11 +315,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String acceptButton();
 
 
-        @ClassName("wp-btn-toolbar")
-        String buttonToolbar();
 
-        @ClassName("wp-btn-toolbar-selected")
+        @ClassName("wp-toolbar__btn")
+        String toolbarButton();
+
+        @ClassName("wp-toolbar__btn--selected")
         String buttonToolbarSelected();
+
+
 
         @ClassName("wp-btn-add-tab")
         String addTabButton();

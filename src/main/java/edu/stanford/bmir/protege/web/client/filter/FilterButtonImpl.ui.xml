@@ -9,7 +9,7 @@
             height: 14px;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{wp.buttons.buttonToolbar} {style.main}" title="Filter">
+    <g:HTMLPanel addStyleNames="{wp.buttons.toolbarButton} {style.main}" title="Filter">
         <svg width="14" height="14">
             <line x1="3" y1="2" x2="3" y2="12" style="stroke-width:1;fill:currentColor;"/>
             <line x1="7" y1="2" x2="7" y2="12"/>
