@@ -246,7 +246,7 @@ public class ProjectCache {
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
             if(lastAccessMap.size() > currentSize) {
-                logger.info("%d projects are now being accessed", lastAccessMap.size());
+                logger.info("{} projects are now being accessed", lastAccessMap.size());
             }
         }
         finally {
