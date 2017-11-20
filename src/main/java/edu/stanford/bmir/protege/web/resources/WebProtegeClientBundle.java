@@ -270,8 +270,24 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeButtons extends CssResource {
 
-        @ClassName("wp-btn-primary")
-        String buttonPrimary();
+        /**
+         * The base class for buttons
+         */
+        @ClassName("wp-btn")
+        String button();
+
+        /**
+         * A button that appears on a page (rather than a dialog, for example)
+         */
+        @ClassName("wp-btn--page")
+        String pageButton();
+
+        /**
+         * The primary button on a page or on a dialog
+         */
+        @ClassName("wp-btn--primary")
+        String primaryButton();
+
 
         @ClassName("wp-btn-alternate")
         String buttonAlternate();

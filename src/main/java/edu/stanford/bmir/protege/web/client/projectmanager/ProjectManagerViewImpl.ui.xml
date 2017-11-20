@@ -93,7 +93,7 @@
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.projectList}">
             <g:HTMLPanel addStyleNames="{style.sideBar}">
-                <g:Button ui:field="createProjectButton" text="{msg.createProject}" enabled="false" addStyleNames="{wp.buttons.buttonPrimary}"/>
+                <g:Button ui:field="createProjectButton" text="{msg.createProject}" enabled="false" addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.primaryButton}"/>
                 <div style="height: 50px;"/>
                 <g:HTMLPanel addStyleNames="{style.filterPanel}">
                     <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
