@@ -673,14 +673,14 @@ td {
     width: 1px;
     background: #c8c8c8;
 }
-.wp-top-bar__button {
+.wp-top-bar__btn {
     font-weight: 400;
     background-color: transparent;
     color: inherit;
     padding-left: 10px;
     padding-right: 10px;
 }
-.wp-top-bar__button:hover {
+.wp-top-bar__btn:hover {
     color: #101010;
 }
 
@@ -707,4 +707,18 @@ td {
     background-color: #505050;
     color: white;
     cursor: pointer;
+}
+
+
+.wp-top-bar__btn {
+    border: none;
+    line-height: 18px;
+    cursor: pointer;
+}
+
+.wp-top-bar__btn--home {
+    background: url("../images/home-icon.svg") no-repeat;
+    background-size: 15px;
+    padding-left: 20px;
+    background-position-y: 1.5px;
 }
