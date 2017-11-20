@@ -213,8 +213,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String numberIconInset();
 
-        String portletToolbar();
-
         String inTrash();
 
         String userName();
@@ -266,6 +264,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-top-bar__home-icon")
         String topBarHomeIcon();
+
+        @ClassName("wp-toolbar")
+        String toolbar();
     }
 
     interface WebProtegeButtons extends CssResource {
