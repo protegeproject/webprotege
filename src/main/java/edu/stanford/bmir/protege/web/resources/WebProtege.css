@@ -239,31 +239,6 @@ blockquote {
     background-color: #fffaf4;
 }
 
-.deleteButton {
-    background-color: #aaaaaa;
-    color: white;
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-}
-
-.deleteButton:hover {
-    background-color: #e00000;
-}
-
-.deleteButton:focus {
-    background-color: #0A5EA8;
-}
-
-.deleteButton:disabled {
-    background-color: #dddddd;
-    cursor: default;
-}
-
 .focusBorder {
     border: 1px solid #0A5EA8;
 }

@@ -227,8 +227,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String derivedInformation();
 
-        String deleteButton();
-
         String errorBorder();
 
         String noErrorBorder();
@@ -324,6 +322,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String buttonToolbarSelected();
 
 
+        @ClassName("wp-btn-delete")
+        String deleteButton();
 
         @ClassName("wp-btn-add-tab")
         String addTabButton();

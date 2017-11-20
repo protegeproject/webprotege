@@ -65,8 +65,6 @@
     background-color: #737c85;
 }
 
-
-
 .wp-btn--accept {
     background-color: #6c1a91;
 }
@@ -74,8 +72,6 @@
 .wp-btn--accept:hover {
     background-color: #501c70;
 }
-
-
 
 .wp-toolbar__btn {
     border: solid transparent 1px;
@@ -110,4 +106,30 @@
 
 .wp-btn-add-tab {
 
+}
+
+
+.wp-btn-delete {
+    background-color: #aaaaaa;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.wp-btn-delete:hover {
+    background-color: #e00000;
+}
+
+.wp-btn-delete:focus {
+    background-color: #0A5EA8;
+}
+
+.wp-btn-delete:disabled {
+    background-color: #dddddd;
+    cursor: default;
 }
