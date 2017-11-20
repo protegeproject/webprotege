@@ -37,3 +37,7 @@
 .wp-top-bar__home-icon {
 
 }
+
+.wp-toolbar {
+    background-color: literal("var(--viewToolbar-background-color)");
+}

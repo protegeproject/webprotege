@@ -194,10 +194,6 @@
     padding-left: 22px !important;
 }
 
-.portletToolbar {
-    background: literal("var(--viewToolbar-background-color)");
-}
-
 .inTrash {
     color: #c0c0c0;
 }
