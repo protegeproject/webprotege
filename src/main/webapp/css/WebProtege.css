@@ -26,11 +26,7 @@
 }
 
 body, input, textarea, keygen, select, button, .x-tree-node, .x-tree {
-    /* Originally had Helvetica Neue with a font-weight of 300, but this is really thin
-       on Chrome.  It looks like this is a bug with Chrome -
-       https://bugs.chromium.org/p/chromium/issues/detail?id=645642.  Changing to Helvetica for now.
-    */
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 300;
     color: #505050;
     font-size: 12px;
