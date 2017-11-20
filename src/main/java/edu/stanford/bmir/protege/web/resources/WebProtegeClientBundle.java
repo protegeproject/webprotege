@@ -311,7 +311,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
          * A button to accept/apply the current state.  For example
          * a dialog "OK" button, or an "Apply" form button
          */
-        @ClassName("wp-btn-accept")
+        @ClassName("wp-btn--accept")
         String acceptButton();
 
 

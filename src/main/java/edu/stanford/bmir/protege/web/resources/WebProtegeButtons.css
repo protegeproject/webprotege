@@ -16,27 +16,11 @@
     -webkit-transition: background-color 0.15s ease-in-out;
 }
 
-.wp-btn-accept {
-    border: none;
-    border-radius: 2px;
-
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-
-    color: #fff;
-    cursor: pointer;
-
-    transition: background-color 0.15s ease-in-out;
-    -moz-transition: background-color 0.15s ease-in-out;
-    -webkit-transition: background-color 0.15s ease-in-out;
-
-}
-
 .wp-btn--page {
     height: 2.4em;
     line-height: 2.4em;
     padding: 0 20px;
+    min-width: 8em;
 }
 
 .wp-btn--dialog {
@@ -83,16 +67,11 @@
 
 
 
-.wp-btn-accept {
+.wp-btn--accept {
     background-color: #6c1a91;
-    flex-grow: 0;
-    min-width: 100px;
-    height: 1.8em;
-    line-height: 1.8em;
-    padding: 0 20px;
 }
 
-.wp-btn-accept:hover {
+.wp-btn--accept:hover {
     background-color: #501c70;
 }
 
