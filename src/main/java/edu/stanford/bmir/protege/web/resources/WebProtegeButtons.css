@@ -77,7 +77,7 @@
 
 
 
-.wp-btn-toolbar {
+.wp-toolbar__btn {
     border: solid transparent 1px;
     color: #464646;
     height: 20px;
@@ -89,21 +89,21 @@
     padding-right: 5px;
 }
 
-.wp-btn-toolbar-selected {
+.wp-toolbar__btn--selected {
     color: dodgerblue;
 }
 
-.wp-btn-toolbar:hover:enabled {
+.wp-toolbar__btn:hover:enabled {
     background-color: #707070;
     color: #ffffff;
 }
 
-.wp-btn-toolbar:active:enabled {
+.wp-toolbar__btn:active:enabled {
     background-color: #424242;
     color: #ffffff;
 }
 
-.wp-btn-toolbar:disabled {
+.wp-toolbar__btn:disabled {
     color: #aaaaaa;
     cursor: default;
 }
