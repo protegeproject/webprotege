@@ -126,7 +126,8 @@
 }
 
 .wp-btn-delete:focus {
-    background-color: #0A5EA8;
+    background-color: #e00000;
+    outline-offset: 0;
 }
 
 .wp-btn-delete:disabled {
