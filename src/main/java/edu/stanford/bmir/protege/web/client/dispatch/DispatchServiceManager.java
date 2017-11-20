@@ -5,6 +5,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -17,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 
@@ -178,6 +181,25 @@ public class DispatchServiceManager {
         if(throwable instanceof NotSignedInException) {
             signInRequiredHandler.handleSignInRequired();
             return;
+        }
+        if (throwable instanceof PermissionDeniedException) {
+            // Try to determine if the user is logged in.  The session might have expired.
+            execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
+                @Override
+                public void handleSuccess(GetCurrentUserInSessionResult result) {
+                    if(result.getUserInSession().getUserDetails().getUserId().isGuest()) {
+                        signInRequiredHandler.handleSignInRequired();
+                    }
+                    else {
+                        callback.onFailure(throwable);
+                    }
+                }
+
+                @Override
+                public void handleErrorFinally(Throwable throwable) {
+                    callback.onFailure(throwable);
+                }
+            });
         }
         // Skip handling for actions that do not care about errors
         if(action instanceof InvocationExceptionTolerantAction) {
