@@ -48,7 +48,7 @@ public class FileContents implements HasGetFile {
     public synchronized String getContents() {
         try {
             File file = getFile();
-            if (file.lastModified() > lastTimestamp) {
+            if (file.exists() && file.lastModified() > lastTimestamp) {
                 cachedTemplate = Files.toString(file, Charsets.UTF_8);
                 lastTimestamp = file.lastModified();
             }
