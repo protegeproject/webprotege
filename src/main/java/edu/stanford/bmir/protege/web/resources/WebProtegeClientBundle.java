@@ -114,8 +114,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtege.css")
     WebProtegeCss style();
 
-    @Source("WebProtegeLaf.css")
-    WebProtegeLaf laf();
+    @Source("topbar.css")
+    TopBar laf();
 
     @Source("toolbar.css")
     ToolbarCss toolbar();
@@ -214,7 +214,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String helpText();
     }
 
-    interface WebProtegeLaf extends CssResource {
+    interface TopBar extends CssResource {
 
         @ClassName("wp-topbar")
         String topBar();
