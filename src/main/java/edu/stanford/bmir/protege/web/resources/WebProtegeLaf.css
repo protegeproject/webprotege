@@ -46,3 +46,11 @@
     background-color: literal("var(--view-toolbar--background-color)");
     padding-bottom: 1px;
 }
+
+.wp-login__logo {
+    width: 200px;
+    height: 160px;
+    background-image: protegeBlenderUrl;
+    background-repeat: no-repeat;
+    background-size: contain;
+}

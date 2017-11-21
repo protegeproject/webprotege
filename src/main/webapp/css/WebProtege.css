@@ -647,11 +647,3 @@ td {
     -webkit-animation-delay: 0.41666666666666663s;
     animation-delay: 0.41666666666666663s;
 }
-
-
-.wp-login-logo {
-    width: 200px;
-    height: 160px;
-    background: url("../../java/edu/stanford/bmir/protege/web/resources/protege-blender.svg") no-repeat;
-    background-size: contain;
-}
