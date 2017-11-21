@@ -12,7 +12,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/01/2012
  * <p>
- *     Describes the content and appearance of a dialog.
+ *     Describes the content and appearance of a settings.
  * </p>
  */
 public abstract class WebProtegeDialogController<D> implements HasInitialFocusable {
@@ -56,7 +56,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
     }
 
     /**
-     * Gets the dialog title. This is shown in the title bar of the dialog.
+     * Gets the settings title. This is shown in the title bar of the settings.
      * @return A string representing the title.
      */
     public String getTitle() {
@@ -68,7 +68,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
     }
 
     /**
-     * Gets the buttons (e.g. OK, Cancel) that appear on the dialog.
+     * Gets the buttons (e.g. OK, Cancel) that appear on the settings.
      * @return A list of the buttons.
      */
     public List<DialogButton> getButtons() {
@@ -84,7 +84,7 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
     }
 
     /**
-     * Gets the button that dismisses the dialog without performing any action with the entered data.
+     * Gets the button that dismisses the settings without performing any action with the entered data.
      * This button should appear in the list returned by {@link #getButtons()}.
      * @return The cancel button.  Not <code>null</code>.
      */
@@ -93,13 +93,13 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
     }
 
     /**
-     * Gets the widget that is displayed in the dialog and allows information to be entered into the dialog.
+     * Gets the widget that is displayed in the settings and allows information to be entered into the settings.
      * @return The widget that the user interacts with.  Not <code>null</code>.
      */
     public abstract Widget getWidget();
 
     /**
-     * Gets the {@link Focusable} that should receive the focus when the dialog is shown.  If no widget should receive the focus
+     * Gets the {@link Focusable} that should receive the focus when the settings is shown.  If no widget should receive the focus
      * then {@link Optional#empty()} will be returned.
      * @return The {@link Focusable} that will receive the focus. Not <code>null</code>
      */

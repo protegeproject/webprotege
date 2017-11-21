@@ -160,7 +160,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     WebProtegeMenu menu();
 
     @Source("WebProtegeSettingsPage.css")
-    WebProtegeSettingsPage dialog();
+    WebProtegeSettingsPage settings();
 
     @Source("filter.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -270,7 +270,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String button();
 
         /**
-         * A button that appears on a page (rather than a dialog, for example)
+         * A button that appears on a page (rather than a settings, for example)
          */
         @ClassName("wp-btn--page")
         String pageButton();
@@ -279,33 +279,33 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String smallPageButton();
 
         /**
-         * A button that appears on a dialog popup
+         * A button that appears on a settings popup
          */
         @ClassName("wp-btn--dialog")
         String dialogButton();
 
         /**
-         * The primary button on a page or on a dialog
+         * The primary button on a page or on a settings
          */
         @ClassName("wp-btn--primary")
         String primaryButton();
 
         /**
-         * An alternate button on a page or on a dialog
+         * An alternate button on a page or on a settings
          */
         @ClassName("wp-btn--alternate")
         String alternateButton();
 
         /**
          * A button to clear/cancel/return-from the current state.  For example
-         * a dialog "Cancel" button, or a "Clear" form button
+         * a settings "Cancel" button, or a "Clear" form button
          */
         @ClassName("wp-btn--escape")
         String escapeButton();
 
         /**
          * A button to accept/apply the current state.  For example
-         * a dialog "OK" button, or an "Apply" form button
+         * a settings "OK" button, or an "Apply" form button
          */
         @ClassName("wp-btn--accept")
         String acceptButton();
@@ -333,9 +333,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeSettingsPage extends CssResource {
 
-        String dialogContainer();
+        String outer();
 
-        String dialog();
+        String inner();
 
         String title();
 
