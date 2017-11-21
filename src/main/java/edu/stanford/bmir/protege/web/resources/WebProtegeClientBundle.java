@@ -242,19 +242,19 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeLaf extends CssResource {
 
-        @ClassName("wp-top-bar")
+        @ClassName("wp-topbar")
         String topBar();
 
-        @ClassName("wp-top-bar__logo")
+        @ClassName("wp-topbar__logo")
         String topBarIcon();
 
-        @ClassName("wp-top-bar__content")
+        @ClassName("wp-topbar__content")
         String topBarContent();
 
-        @ClassName("wp-top-bar__title")
+        @ClassName("wp-topbar__title")
         String topBarTitle();
 
-        @ClassName("wp-top-bar__separator")
+        @ClassName("wp-topbar__separator")
         String topBarSeparator();
 
         @ClassName("wp-toolbar")
@@ -312,7 +312,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
 
 
-        @ClassName("wp-top-bar__btn")
+        @ClassName("wp-topbar__btn")
         String topBarButton();
 
 
