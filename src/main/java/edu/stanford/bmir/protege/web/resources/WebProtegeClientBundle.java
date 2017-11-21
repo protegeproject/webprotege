@@ -129,6 +129,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("menu.css")
     MenuCss menu();
 
+    @Source("discussion.css")
+    DiscussionCss discussion();
+
     @Source("WebProtegeSettingsPage.css")
     WebProtegeSettingsPage settings();
 
@@ -189,13 +192,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String inTrash();
 
-        String userName();
-
         String sharingDropDown();
-
-        String discussionThreadStatusOpen();
-
-        String discussionThreadStatusClosed();
 
         String commentIconInset();
 
@@ -239,6 +236,45 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-login__logo")
         String loginLogo();
+    }
+
+    interface DiscussionCss extends CssResource {
+
+        @ClassName("wp-discussion")
+        String discussion();
+
+
+        @ClassName("wp-discussion__thread-outer")
+        String threadOuter();
+
+        @ClassName("wp-discussion__thread-inner")
+        String threadInner();
+
+
+        @ClassName("wp-discussion__thread-status")
+        String status();
+
+        @ClassName("wp-discussion__thread-status--open")
+        String discussionThreadStatusOpen();
+
+        @ClassName("wp-discussion__thread-status--closed")
+        String discussionThreadStatusClosed();
+
+        @ClassName("wp-comment")
+        String comment();
+
+        @ClassName("wp-comment__author-name")
+        String commentAuthor();
+
+        @ClassName("wp-comment__date")
+        String commentDate();
+
+        @ClassName("wp-comment__body")
+        String commentBody();
+
+        @ClassName("wp-comment__user-mention")
+        String userMention();
+
     }
 
     interface ToolbarCss extends CssResource {

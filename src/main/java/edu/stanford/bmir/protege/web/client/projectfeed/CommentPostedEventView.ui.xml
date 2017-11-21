@@ -9,14 +9,11 @@
         .change-event-panel {
             border-bottom: solid 1px #f1f1f1;
         }
-        .time {
-            color: #757575;
+        .comment {
+            padding-left: 5px;
         }
-        .note-body {
-            color: #757575
-        }
-        .userIcon {
-            padding-right: 2px;
+        .entityLabel {
+            padding-top: 5px;
         }
     </ui:style>
 
@@ -24,28 +21,24 @@
         <table>
             <tr>
                 <td valign="top">
-                    <g:SimplePanel ui:field="userIconHolder" addStyleNames="{style.userIcon}"/>
+                    <g:SimplePanel ui:field="userIconHolder"/>
                 </td>
                 <td valign="top">
-                    <div>
+                    <g:HTMLPanel addStyleNames="{wp.discussion.comment} {style.comment}">
                         <div>
                             <div>
-                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.style.userName}"/>
+                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.discussion.commentAuthor}"/>
                                 posted a note
                             </div>
+                            <p:ElapsedTimeLabel ui:field="timeLabel" addStyleNames="{wp.discussion.commentDate}"/>
                             <div>
-                                <g:HTML ui:field="bodyLabel" addStyleNames="{style.note-body}"/>
+                                <g:HTML ui:field="bodyLabel" addStyleNames="{wp.discussion.commentBody}"/>
                             </div>
-                            <div>
+                            <g:HTMLPanel addStyleNames="{style.entityLabel}">
                                 <l:EntityLabel ui:field="entityLabel" visible="false"/>
-                            </div>
+                            </g:HTMLPanel>
                         </div>
-                        <div style="padding-top: 3px;">
-                        <p:ElapsedTimeLabel ui:field="timeLabel" addStyleNames="{style.time}"/>
-                        </div>
-
-
-                    </div>
+                    </g:HTMLPanel>
                 </td>
             </tr>
         </table>

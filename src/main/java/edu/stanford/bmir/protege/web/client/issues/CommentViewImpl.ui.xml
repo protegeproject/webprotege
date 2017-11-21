@@ -5,127 +5,61 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
-        @external .user-mention;
-
-        .main {
-            display: block;
-            border-bottom: 1px solid #f0f0f0;
-            margin-bottom: 10px;
-        }
-        .main:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        .author {
-            padding-bottom: 2px;
+        .comment {
+            display: flex;
+            flex-direction: row;
         }
 
-        .date {
-            font-size: 10px;
-            color: #B3B3B3;
-            padding-left: 2px;
-            display: inline;
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            flex-grow: 1;
+            margin-left: 5px;
         }
 
-        .body {
-            color: #676767;
-            border: none;
-            padding-left: 30px;
-            padding-top: 3px;
-            line-height: 1.4em;
-            overflow: hidden;
-        }
-        .body h1 {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .body h2 {
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .body ul,ol {
-            padding-left: 20px;
-            margin: 10px;
-        }
-        .body ul li {
-            list-style-type: disc;
-        }
-        .body ol li {
-            list-style-type: decimal;
-        }
-        .body em {
-            font-style: italic;
-        }
-        .body strong {
-            font-weight: bold;
-        }
-        .body p+p {
-            margin-top: 10px;
-        }
-        .body pre {
-            margin: 20px;
-        }
-        .body code {
-            word-wrap: break-word;
-        }
-        .body .user-mention {
-            font-weight: 500;
-            color: #434b5d;
-            background-color: #ffffcc;
-            padding-left: 2px;
-            padding-right: 2px;
-        }
-        .links:hover {
-            color: #648dbe !important;
-        }
-
-        .iconHolder {
+        .userIcon {
             display: inline-block;
             padding-right: 1px;
             vertical-align: middle;
         }
 
-        .rightBox {
-            display: inline-block;
-            vertical-align: middle;
+        .updatedAt {
+            display: inline;
         }
+
         .buttonBar {
             display: flex;
+            flex-direction: row;
             justify-content: flex-end;
         }
-        .replyButton {
-
-        }
-        .editButton {
-
-        }
-        .deleteButton {
-
-        }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:SimplePanel ui:field="userIconField" addStyleNames="{style.iconHolder}" debugId="iconHolder"/>
-        <g:HTMLPanel addStyleNames="{style.rightBox}">
-            <g:Label ui:field="userNameField" addStyleNames="{style.author}" debugId="userNameField"/>
-            <timelabel:ElapsedTimeLabel ui:field="createdAtField" addStyleNames="{style.date}"/>
+    <g:HTMLPanel addStyleNames="{style.comment} {wp.discussion.comment}">
+        <!-- User Icon -->
+        <g:SimplePanel ui:field="userIconField" addStyleNames="{style.userIcon}"/>
+        <!-- Comment Metadata and Body -->
+        <g:HTMLPanel addStyleNames="{style.content}">
+            <g:Label ui:field="userNameField" addStyleNames="{wp.discussion.commentAuthor}"/>
+            <!-- Creation/Modification Time -->
+            <timelabel:ElapsedTimeLabel ui:field="createdAtField" addStyleNames="{wp.discussion.commentDate}"/>
             <g:HTMLPanel ui:field="updatedAtPanel">
-                <g:InlineLabel text="{msg.lastUpdated} " addStyleNames="{style.date}"/>
-                <timelabel:ElapsedTimeLabel ui:field="updatedAtField" addStyleNames="{style.date}"/>
+                <g:InlineLabel text="{msg.lastUpdated} " addStyleNames="{wp.discussion.commentDate}"/>
+                <timelabel:ElapsedTimeLabel ui:field="updatedAtField" addStyleNames="{wp.discussion.commentDate} {style.updatedAt}"/>
+            </g:HTMLPanel>
+            <!-- Body -->
+            <g:HTML ui:field="bodyField" addStyleNames="{wp.discussion.commentBody}"/>
+            <!-- Button Bar -->
+            <g:HTMLPanel addStyleNames="{style.buttonBar}">
+                <g:Button text="{msg.replyToComment}" ui:field="replyButton"
+                          visible="false"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"/>
+                <g:Button text="{msg.editComment}" ui:field="editButton"
+                          visible="false"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"/>
+                <g:Button text="{msg.deleteComment}" ui:field="deleteButton"
+                          visible="false"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
-        <g:HTML ui:field="bodyField" addStyleNames="{style.body}" debugId="bodyField"/>
-        <g:HTMLPanel addStyleNames="{style.buttonBar}">
-            <g:Button text="{msg.replyToComment}" ui:field="replyButton"
-                      visible="false"
-                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {style.replyButton}"/>
-            <g:Button text="{msg.editComment}" ui:field="editButton"
-                      visible="false"
-                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {style.editButton}"/>
-            <g:Button text="{msg.deleteComment}" ui:field="deleteButton"
-                      visible="false"
-                      addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {style.deleteButton}"/>
-        </g:HTMLPanel>
-
     </g:HTMLPanel>
 </ui:UiBinder>

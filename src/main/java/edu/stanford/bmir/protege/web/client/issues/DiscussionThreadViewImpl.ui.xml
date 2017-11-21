@@ -2,28 +2,16 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-        .main {
-            border: 5px solid #f0f0f0;
-        }
-        .inner {
-            padding: 5px;
-            padding-bottom: 10px;
-            box-shadow: 1px 2px 3px #c0c0c0;
-            overflow: hidden;
-        }
         .statusLabelHolder {
             display: flex;
             justify-content: flex-end;
             flex-direction: row;
         }
-        .statusLabel {
-            cursor: hand;
-        }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{style.inner}">
+    <g:HTMLPanel addStyleNames="{wp.discussion.threadOuter}">
+        <g:HTMLPanel addStyleNames="{wp.discussion.threadInner}">
             <g:HTMLPanel addStyleNames="{style.statusLabelHolder}">
-                <g:Button ui:field="statusLabel" addStyleNames="{style.statusLabel} {wp.buttons.button} {wp.buttons.smallPageButton}"/>
+                <g:Button ui:field="statusLabel" addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.discussion.status}"/>
             </g:HTMLPanel>
             <g:FlowPanel ui:field="commentViewContainer"/>
         </g:HTMLPanel>
