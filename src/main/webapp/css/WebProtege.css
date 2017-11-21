@@ -654,6 +654,7 @@ td {
     background-color: var(--topbar--background-color);
     padding-top: 1px;
     padding-bottom: 2px;
+    min-height: 2.2em;
 }
 
 .wp-top-bar__logo {
