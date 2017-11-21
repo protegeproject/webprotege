@@ -86,9 +86,5 @@
         <g:Button ui:field="numberedListButton" addStyleNames="{style.button-style} {style.numbered-list-button} gwt-ToggleButton" title="Insert Numbered List">
             <img src="{wp.numberedListIcon.getSafeUri}" alt="Numbered list"/>
         </g:Button>
-        <span style="width: 20px"/>
-        <g:Button ui:field="createLinkButton" addStyleNames="{style.button-style} {style.insert-link-button} gwt-ToggleButton" title="Insert Link">
-            <img src="{wp.linkBlackIcon.getSafeUri}" alt="Link"/>
-        </g:Button>
     </g:HTMLPanel>
 </ui:UiBinder>
