@@ -85,18 +85,6 @@
                         </g:HTMLPanel>
                     </g:tab>
 
-                    <!--<g:tab>-->
-                    <!--<g:header size='7'>Appearance</g:header>-->
-                    <!--<g:HTMLPanel addStyleNames="{style.tabContent}">-->
-                    <!--<g:Label text="Name" addStyleNames="{style.sectionHeading}"/>-->
-                    <!--<g:HTMLPanel addStyleNames="{style.section}">-->
-                    <!--<g:Label text="Application name"/>-->
-                    <!--<text:PlaceholderTextBox ui:field="applicationNameField" placeholder="Application name"/>-->
-                    <!--</g:HTMLPanel>-->
-
-                    <!--</g:HTMLPanel>-->
-                    <!--</g:tab>-->
-
                     <g:tab>
                         <g:header size='7'>Global Permissions</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
