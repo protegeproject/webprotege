@@ -77,9 +77,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("date-time.png")
     ImageResource dateTimeIcon();
 
-    @Source("download.png")
-    ImageResource downloadIcon();
-
     @Source("trash.png")
     ImageResource trashIcon();
 
