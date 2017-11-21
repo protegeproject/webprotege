@@ -126,7 +126,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("buttons.css")
     ButtonsCss buttons();
 
-    @Source("WebProtegeMenus.css")
+    @Source("menu.css")
     MenuCss menu();
 
     @Source("WebProtegeSettingsPage.css")
