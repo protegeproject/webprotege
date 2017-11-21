@@ -19,9 +19,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("about.html")
     TextResource aboutBoxText();
 
-    @Source("feedback.html")
-    TextResource feedbackBoxText();
-
     @Source("busy.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource busy();
