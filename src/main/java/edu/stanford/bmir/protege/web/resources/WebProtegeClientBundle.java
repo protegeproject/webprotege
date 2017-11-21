@@ -123,8 +123,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("login.css")
     LoginCss login();
 
-    @Source("WebProtegeButtons.css")
-    WebProtegeButtons buttons();
+    @Source("buttons.css")
+    ButtonsCss buttons();
 
     @Source("WebProtegeMenus.css")
     WebProtegeMenu menu();
@@ -253,7 +253,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String highlightedToolbarButton();
     }
 
-    interface WebProtegeButtons extends CssResource {
+    interface ButtonsCss extends CssResource {
 
         /**
          * The base class for buttons
