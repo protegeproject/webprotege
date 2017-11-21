@@ -127,7 +127,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     ButtonsCss buttons();
 
     @Source("WebProtegeMenus.css")
-    WebProtegeMenu menu();
+    MenuCss menu();
 
     @Source("WebProtegeSettingsPage.css")
     WebProtegeSettingsPage settings();
@@ -341,7 +341,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String gwtLabel();
     }
 
-    interface WebProtegeMenu extends CssResource {
+    interface MenuCss extends CssResource {
 
         String popupMenu();
 
