@@ -103,9 +103,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("bulleted-list.png")
     ImageResource bulletedListIcon();
 
-    @Source("link-black.png")
-    ImageResource linkBlackIcon();
-
     @Source("progress.gif")
     ImageResource progressAnimation();
 
