@@ -16,9 +16,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("protege-logo-large.png")
     ImageResource webProtegeLogoLarge();
 
-    @Source("protege-blender.png")
-    ImageResource protegeBlender();
-
     @Source("protege-blender-monochrome.png")
     ImageResource protegeBlenderGrayScale();
 
@@ -169,6 +166,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("language-codes.txt")
     TextResource languageCodes();
 
+    @Source("protege-blender.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource protegeBlender();
+
     interface WebProtegeCss extends CssResource {
 
         String entityIcon();
@@ -246,7 +247,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String topBar();
 
         @ClassName("wp-topbar__logo")
-        String topBarIcon();
+        String topBarLogo();
 
         @ClassName("wp-topbar__content")
         String topBarContent();

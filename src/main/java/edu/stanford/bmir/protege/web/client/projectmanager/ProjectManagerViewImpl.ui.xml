@@ -84,7 +84,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
 
         <g:HTMLPanel addStyleNames="{style.topBar} {wp.laf.topBar}">
-            <g:HTMLPanel addStyleNames="{wp.laf.topBarIcon}"/>
+            <g:HTMLPanel addStyleNames="{wp.laf.topBarLogo}"/>
             <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
                 <g:Label text="{msg.projects}" addStyleNames="{style.title} {wp.laf.topBarTitle}"/>
                 <g:SimplePanel ui:field="loggedInUserButton" addStyleNames="{style.loggedInUserView}"/>
