@@ -197,11 +197,6 @@
     color: #c0c0c0;
 }
 
-.userName {
-    font-weight: 300;
-    color: #989898;
-}
-
 .sharingDropDown {
     text-transform: lowercase;
 }
@@ -210,29 +205,6 @@
     color: #007fff;
 }
 
-.discussionThreadStatusOpen {
-    color: #990099 !important;
-}
-
-.discussionThreadStatusOpen:hover {
-    color: white !important;
-}
-
-.discussionThreadStatusClosed {
-    color: #009900 !important;
-}
-
-.discussionThreadStatusClosed:hover {
-    color: white !important;
-}
-
-blockquote {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-left: 3px solid #d0d0d0;
-    color: #a0a0a0;
-    padding: 5px;
-}
 
 .derivedInformation {
     background-color: #fffaf4;

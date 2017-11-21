@@ -23,6 +23,6 @@ public class CommentRenderer_TestCase {
     @Test
     public void shouldRenderMentionedUsers() {
         String rendering = renderer.renderComment("Ask @{John Smith}");
-        assertThat(rendering, containsString("<span class=\"user-mention\">John Smith</span>"));
+        assertThat(rendering, containsString("<span class=\"wp-comment__user-mention\">John Smith</span>"));
     }
 }

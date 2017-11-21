@@ -27,7 +27,7 @@
                     <div>
                         <div>
                             <div>
-                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.style.userName}"/>
+                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.discussion.commentAuthor}"/>
                                 <g:InlineLabel ui:field="descriptionField"/>
                             </div>
 
