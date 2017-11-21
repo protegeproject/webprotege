@@ -333,6 +333,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeDialog extends CssResource {
 
+        String dialogContainer();
+
         String dialog();
 
         String title();
