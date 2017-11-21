@@ -254,6 +254,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-toolbar")
         String toolbar();
+
+        @ClassName("wp-login__logo")
+        String loginLogo();
     }
 
     interface WebProtegeButtons extends CssResource {
