@@ -73,10 +73,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("date-time.png")
     ImageResource dateTimeIcon();
-
-    @Source("warning.png")
-    ImageResource warningIcon();
-
+    
     @Source("eye.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIcon();
