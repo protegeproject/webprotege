@@ -159,8 +159,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtegeMenus.css")
     WebProtegeMenu menu();
 
-    @Source("WebProtegeDialog.css")
-    WebProtegeDialog dialog();
+    @Source("WebProtegeSettingsPage.css")
+    WebProtegeSettingsPage dialog();
 
     @Source("filter.svg")
     @DataResource.MimeType("image/svg+xml")
@@ -331,7 +331,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String addTabButton();
     }
 
-    interface WebProtegeDialog extends CssResource {
+    interface WebProtegeSettingsPage extends CssResource {
 
         String dialogContainer();
 
