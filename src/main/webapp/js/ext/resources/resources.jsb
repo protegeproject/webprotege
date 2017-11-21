@@ -24,20 +24,20 @@
     <include nameSupplier="css\borders.css" />
     <include nameSupplier="css\layout.css" />
     <include nameSupplier="css\progress.css" />
-    <include nameSupplier="css\dialog.css" />
+    <include nameSupplier="css\panel.css" />
   </target>
-  <file nameSupplier="images\basic-dialog\gray\close.gif" pathSupplier="images\basic-dialog\gray" />
-  <file nameSupplier="images\basic-dialog\gray\dlg-bg.gif" pathSupplier="images\basic-dialog\gray" />
-  <file nameSupplier="images\basic-dialog\gray\e-handle.gif" pathSupplier="images\basic-dialog\gray" />
-  <file nameSupplier="images\basic-dialog\gray\hd-sprite.gif" pathSupplier="images\basic-dialog\gray" />
-  <file nameSupplier="images\basic-dialog\gray\s-handle.gif" pathSupplier="images\basic-dialog\gray" />
-  <file nameSupplier="images\basic-dialog\gray\se-handle.gif" pathSupplier="images\basic-dialog\gray" />
-  <file nameSupplier="images\basic-dialog\btn-sprite.gif" pathSupplier="images\basic-dialog" />
-  <file nameSupplier="images\basic-dialog\close.gif" pathSupplier="images\basic-dialog" />
-  <file nameSupplier="images\basic-dialog\e-handle.gif" pathSupplier="images\basic-dialog" />
-  <file nameSupplier="images\basic-dialog\hd-sprite.gif" pathSupplier="images\basic-dialog" />
-  <file nameSupplier="images\basic-dialog\s-handle.gif" pathSupplier="images\basic-dialog" />
-  <file nameSupplier="images\basic-dialog\se-handle.gif" pathSupplier="images\basic-dialog" />
+  <file nameSupplier="images\basic-panel\gray\close.gif" pathSupplier="images\basic-panel\gray" />
+  <file nameSupplier="images\basic-panel\gray\dlg-bg.gif" pathSupplier="images\basic-panel\gray" />
+  <file nameSupplier="images\basic-panel\gray\e-handle.gif" pathSupplier="images\basic-panel\gray" />
+  <file nameSupplier="images\basic-panel\gray\hd-sprite.gif" pathSupplier="images\basic-panel\gray" />
+  <file nameSupplier="images\basic-panel\gray\s-handle.gif" pathSupplier="images\basic-panel\gray" />
+  <file nameSupplier="images\basic-panel\gray\se-handle.gif" pathSupplier="images\basic-panel\gray" />
+  <file nameSupplier="images\basic-panel\btn-sprite.gif" pathSupplier="images\basic-panel" />
+  <file nameSupplier="images\basic-panel\close.gif" pathSupplier="images\basic-panel" />
+  <file nameSupplier="images\basic-panel\e-handle.gif" pathSupplier="images\basic-panel" />
+  <file nameSupplier="images\basic-panel\hd-sprite.gif" pathSupplier="images\basic-panel" />
+  <file nameSupplier="images\basic-panel\s-handle.gif" pathSupplier="images\basic-panel" />
+  <file nameSupplier="images\basic-panel\se-handle.gif" pathSupplier="images\basic-panel" />
   <file nameSupplier="images\grid\arrow-left-white.gif" pathSupplier="images\grid" />
   <file nameSupplier="images\grid\arrow-right-white.gif" pathSupplier="images\grid" />
   <file nameSupplier="images\grid\done.gif" pathSupplier="images\grid" />
@@ -155,7 +155,7 @@
   <file nameSupplier="css\aero.css" pathSupplier="css" />
   <file nameSupplier="images\grid\grid-hrow.gif" pathSupplier="images\grid" />
   <file nameSupplier="images\aero\toolbar\gray-bg.gif" pathSupplier="images\aero\toolbar" />
-  <file nameSupplier="css\basic-dialog.css" pathSupplier="css" />
+  <file nameSupplier="css\basic-panel.css" pathSupplier="css" />
   <file nameSupplier="css\button.css" pathSupplier="css" />
   <file nameSupplier="css\core.css" pathSupplier="css" />
   <file nameSupplier="css\dd.css" pathSupplier="css" />
@@ -171,18 +171,18 @@
   <file nameSupplier="css\ytheme-aero.css" pathSupplier="css" />
   <file nameSupplier="css\ytheme-gray.css" pathSupplier="css" />
   <file nameSupplier="css\ytheme-vista.css" pathSupplier="css" />
-  <file nameSupplier="images\aero\basic-dialog\aero-close-over.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\aero-close.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\bg-center.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\bg-left.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\bg-right.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\close.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\dlg-bg.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\e-handle.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\hd-sprite.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\s-handle.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\se-handle.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\w-handle.gif" pathSupplier="images\aero\basic-dialog" />
+  <file nameSupplier="images\aero\basic-panel\aero-close-over.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\aero-close.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\bg-center.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\bg-left.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\bg-right.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\close.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\dlg-bg.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\e-handle.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\hd-sprite.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\s-handle.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\se-handle.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\w-handle.gif" pathSupplier="images\aero\basic-panel" />
   <file nameSupplier="images\aero\grid\grid-blue-split.gif" pathSupplier="images\aero\grid" />
   <file nameSupplier="images\aero\grid\grid-hrow.gif" pathSupplier="images\aero\grid" />
   <file nameSupplier="images\aero\grid\grid-split.gif" pathSupplier="images\aero\grid" />
@@ -224,14 +224,14 @@
   <file nameSupplier="images\aero\toolbar\bg.gif" pathSupplier="images\aero\toolbar" />
   <file nameSupplier="images\aero\gradient-bg.gif" pathSupplier="images\aero" />
   <file nameSupplier="images\aero\s.gif" pathSupplier="images\aero" />
-  <file nameSupplier="images\default\basic-dialog\btn-sprite.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\close.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\e-handle.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\hd-sprite.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\progress.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\progress2.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\s-handle.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\se-handle.gif" pathSupplier="images\default\basic-dialog" />
+  <file nameSupplier="images\default\basic-panel\btn-sprite.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\close.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\e-handle.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\hd-sprite.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\progress.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\progress2.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\s-handle.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\se-handle.gif" pathSupplier="images\default\basic-panel" />
   <file nameSupplier="images\default\dd\drop-add.gif" pathSupplier="images\default\dd" />
   <file nameSupplier="images\default\dd\drop-no.gif" pathSupplier="images\default\dd" />
   <file nameSupplier="images\default\dd\drop-yes.gif" pathSupplier="images\default\dd" />
@@ -319,12 +319,12 @@
   <file nameSupplier="images\default\tree\s.gif" pathSupplier="images\default\tree" />
   <file nameSupplier="images\default\gradient-bg.gif" pathSupplier="images\default" />
   <file nameSupplier="images\default\s.gif" pathSupplier="images\default" />
-  <file nameSupplier="images\gray\basic-dialog\close.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\dlg-bg.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\e-handle.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\hd-sprite.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\s-handle.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\se-handle.gif" pathSupplier="images\gray\basic-dialog" />
+  <file nameSupplier="images\gray\basic-panel\close.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\dlg-bg.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\e-handle.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\hd-sprite.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\s-handle.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\se-handle.gif" pathSupplier="images\gray\basic-panel" />
   <file nameSupplier="images\gray\layout\collapse.gif" pathSupplier="images\gray\layout" />
   <file nameSupplier="images\gray\layout\expand.gif" pathSupplier="images\gray\layout" />
   <file nameSupplier="images\gray\layout\gradient-bg.gif" pathSupplier="images\gray\layout" />
@@ -356,16 +356,16 @@
   <file nameSupplier="images\gray\toolbar\gray-bg.gif" pathSupplier="images\gray\toolbar" />
   <file nameSupplier="images\gray\gradient-bg.gif" pathSupplier="images\gray" />
   <file nameSupplier="images\gray\s.gif" pathSupplier="images\gray" />
-  <file nameSupplier="images\vista\basic-dialog\bg-center.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\bg-left.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\bg-right.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\close.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\dlg-bg.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\e-handle.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\hd-sprite.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\s-handle.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\se-handle.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\w-handle.gif" pathSupplier="images\vista\basic-dialog" />
+  <file nameSupplier="images\vista\basic-panel\bg-center.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\bg-left.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\bg-right.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\close.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\dlg-bg.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\e-handle.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\hd-sprite.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\s-handle.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\se-handle.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\w-handle.gif" pathSupplier="images\vista\basic-panel" />
   <file nameSupplier="images\vista\grid\grid-split.gif" pathSupplier="images\vista\grid" />
   <file nameSupplier="images\vista\grid\grid-vista-hd.gif" pathSupplier="images\vista\grid" />
   <file nameSupplier="images\vista\layout\collapse.gif" pathSupplier="images\vista\layout" />
@@ -402,7 +402,7 @@
   <file nameSupplier="images\default\grid\col-move.gif" pathSupplier="images\default\grid" />
   <file nameSupplier="images\default\grid\col-move-bottom.gif" pathSupplier="images\default\grid" />
   <file nameSupplier="images\default\grid\col-move-top.gif" pathSupplier="images\default\grid" />
-  <file nameSupplier="images\default\basic-dialog\btn-arrow.gif" pathSupplier="images\default\basic-dialog" />
+  <file nameSupplier="images\default\basic-panel\btn-arrow.gif" pathSupplier="images\default\basic-panel" />
   <file nameSupplier="images\default\toolbar\tb-btn-sprite.gif" pathSupplier="images\default\toolbar" />
   <file nameSupplier="images\aero\toolbar\tb-btn-sprite.gif" pathSupplier="images\aero\toolbar" />
   <file nameSupplier="images\vista\toolbar\tb-btn-sprite.gif" pathSupplier="images\vista\toolbar" />
@@ -424,16 +424,16 @@
   <file nameSupplier="images\default\menu\shadow.png" pathSupplier="images\default\menu" />
   <file nameSupplier="license.txt" pathSupplier="" />
   <file nameSupplier="css\date-picker.css" pathSupplier="css" />
-  <file nameSupplier="images\default\basic-dialog\collapse.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\expand.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\collapse.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\collapse-over.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\expand.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\aero\basic-dialog\expand-over.gif" pathSupplier="images\aero\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\collapse.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\gray\basic-dialog\expand.gif" pathSupplier="images\gray\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\collapse.gif" pathSupplier="images\vista\basic-dialog" />
-  <file nameSupplier="images\vista\basic-dialog\expand.gif" pathSupplier="images\vista\basic-dialog" />
+  <file nameSupplier="images\default\basic-panel\collapse.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\expand.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\collapse.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\collapse-over.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\expand.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\aero\basic-panel\expand-over.gif" pathSupplier="images\aero\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\collapse.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\gray\basic-panel\expand.gif" pathSupplier="images\gray\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\collapse.gif" pathSupplier="images\vista\basic-panel" />
+  <file nameSupplier="images\vista\basic-panel\expand.gif" pathSupplier="images\vista\basic-panel" />
   <file nameSupplier="css\.DS_Store" pathSupplier="css" />
   <file nameSupplier="images\default\grid\.DS_Store" pathSupplier="images\default\grid" />
   <file nameSupplier="images\default\toolbar\btn-arrow-light.gif" pathSupplier="images\default\toolbar" />
@@ -553,7 +553,7 @@
   <file nameSupplier="css\xtheme-aero.css" pathSupplier="css" />
   <file nameSupplier="css\xtheme-gray.css" pathSupplier="css" />
   <file nameSupplier="css\xtheme-vista.css" pathSupplier="css" />
-  <file nameSupplier="legacy\basic-dialog.css" pathSupplier="legacy" />
+  <file nameSupplier="legacy\basic-panel.css" pathSupplier="legacy" />
   <file nameSupplier="images\default\form\clear-trigger.psd" pathSupplier="images\default\form" />
   <file nameSupplier="images\default\form\date-trigger.psd" pathSupplier="images\default\form" />
   <file nameSupplier="images\default\form\search-trigger.psd" pathSupplier="images\default\form" />
@@ -566,11 +566,11 @@
   <file nameSupplier="images\default\grid\group-expand-sprite.gif" pathSupplier="images\default\grid" />
   <file nameSupplier="images\default\grid\group-by.gif" pathSupplier="images\default\grid" />
   <file nameSupplier="images\default\grid\columns.gif" pathSupplier="images\default\grid" />
-  <file nameSupplier="css\dialog.css" pathSupplier="css" />
-  <file nameSupplier="images\default\basic-dialog\icon-error.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\icon-info.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\icon-question.gif" pathSupplier="images\default\basic-dialog" />
-  <file nameSupplier="images\default\basic-dialog\icon-warning.gif" pathSupplier="images\default\basic-dialog" />
+  <file nameSupplier="css\panel.css" pathSupplier="css" />
+  <file nameSupplier="images\default\basic-panel\icon-error.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\icon-info.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\icon-question.gif" pathSupplier="images\default\basic-panel" />
+  <file nameSupplier="images\default\basic-panel\icon-warning.gif" pathSupplier="images\default\basic-panel" />
   <file nameSupplier="css\progress.css" pathSupplier="css" />
   <file nameSupplier="images\default\widgets\progress-bg.gif" pathSupplier="images\default\widgets" />
   <file nameSupplier="images\default\progress\progress-bg.gif" pathSupplier="images\default\progress" />

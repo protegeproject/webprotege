@@ -59,7 +59,7 @@ public class WatchPresenter {
     }
 
     private void updateDialog(Set<Watch> watches) {
-        GWT.log("[WatchPresenter] Updating dialog for watches: " + watches);
+        GWT.log("[WatchPresenter] Updating settings for watches: " + watches);
         controller.setSelectedType(WatchTypeSelection.NONE_SELECTED);
         for(Watch watch : watches) {
             if(watch.getType() == WatchType.ENTITY) {

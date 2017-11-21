@@ -25,7 +25,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
     public static final boolean MODAL = true;
 
-    private static final String WEB_PROTEGE_DIALOG_MAIN_PANEL = "web-protege-dialog-main-panel";
+    private static final String WEB_PROTEGE_DIALOG_MAIN_PANEL = "web-protege-dialog";
 
     private static final String WEB_PROTEGE_DIALOG_BUTTON_BAR = "web-protege-dialog-button-bar";
 
@@ -81,7 +81,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             buttonBar.add(button);
             // Base style for buttons
             button.addStyleName(BUNDLE.buttons().button());
-            // Style for dialog buttons
+            // Style for settings buttons
             button.addStyleName(BUNDLE.buttons().dialogButton());
             if(dlgButton.equals(controller.getDefaultButton())) {
                 button.addStyleName(BUNDLE.buttons().acceptButton());
@@ -225,9 +225,9 @@ public final class WebProtegeDialog<D> extends DialogBox {
     }
 
     /**
-     * Shows a dialog for the specified controller.
-     * @param controller The controller for which a dialog should be shown.  Not {@code null}.
-     * @param <D> The type of data shown by the dialog.
+     * Shows a settings for the specified controller.
+     * @param controller The controller for which a settings should be shown.  Not {@code null}.
+     * @param <D> The type of data shown by the settings.
      * @throws NullPointerException if {@code controller} is {@code null}.
      */
     public static <D> void showDialog(WebProtegeDialogController<D> controller) {

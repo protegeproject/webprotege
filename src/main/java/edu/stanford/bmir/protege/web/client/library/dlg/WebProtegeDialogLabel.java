@@ -15,7 +15,7 @@ import com.google.gwt.i18n.shared.DirectionEstimator;
  */
 public class WebProtegeDialogLabel extends WebProtegeLabel {
 
-    public static final String STYLE_NAME = "web-protege-dialog-label";
+    public static final String STYLE_NAME = "web-protege-settings-label";
 
     public WebProtegeDialogLabel() {
         setupStyle();

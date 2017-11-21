@@ -6,7 +6,7 @@ package edu.stanford.bmir.protege.web.client.library.dlg;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/01/2012
  * <p>
- *     A dialog validator that always returns the valid state.
+ *     A settings validator that always returns the valid state.
  * </p>
  */
 public class NullDialogValidator implements WebProtegeDialogValidator {

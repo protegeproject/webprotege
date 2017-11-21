@@ -31,7 +31,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main-panel-style}">
-        <!-- I originally implemented this with divs but had lots of problems with the dialog box sizing correctly. I
+        <!-- I originally implemented this with divs but had lots of problems with the settings box sizing correctly. I
         know tables aren't meant to be used for layout, but this works really nicely in this case. -->
         <table>
             <colgroup>
@@ -42,7 +42,7 @@
                 <td valign="top"><g:Image url="{wp.messageIcon.getSafeUri.asString}" ui:field="iconImage" width="120px"/></td>
                 <td valign="top">
                     <g:HTMLPanel addStyleNames="{style.message-block}">
-                        <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style} {wp.dialog.title}"/>
+                        <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style} {wp.settings.title}"/>
                         <g:HTML ui:field="messageLabel" addStyleNames="{style.sub-message-style}"/>
                     </g:HTMLPanel>
                 </td>
