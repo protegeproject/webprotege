@@ -343,14 +343,19 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface MenuCss extends CssResource {
 
+        @ClassName("wp-popup-menu")
         String popupMenu();
 
+        @ClassName("wp-popup-menu__inner")
         String popupMenuInner();
 
+        @ClassName("wp-popup-menu__item")
         String popupMenuItem();
 
+        @ClassName("wp-popup-menu__item--disabled")
         String popupMenuItemDisabled();
 
+        @ClassName("wp-popup-menu__separator")
         String separator();
     }
 }
