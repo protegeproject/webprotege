@@ -25,7 +25,6 @@
             <tr>
                 <td valign="top">
                     <g:SimplePanel ui:field="userIconHolder" addStyleNames="{style.userIcon}"/>
-                    <!--<g:Image resource="{wp.commentIcon}"/>-->
                 </td>
                 <td valign="top">
                     <div>
