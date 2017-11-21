@@ -37,7 +37,7 @@ public class FilterButtonImpl extends Composite implements FilterButton {
     }
 
     private String getSelectedStyle() {
-        return WebProtegeClientBundle.BUNDLE.buttons().highlightedToolbarButton();
+        return WebProtegeClientBundle.BUNDLE.toolbar().highlightedToolbarButton();
     }
 
     @Override
