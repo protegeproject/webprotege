@@ -23,9 +23,6 @@
         <table>
             <tr>
                 <td valign="top">
-                    <g:Image resource="{wp.userIcon}"/>
-                </td>
-                <td valign="top">
                     <div>
                         <div>
                             <div>
