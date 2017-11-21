@@ -45,6 +45,7 @@ public class WebProtege implements EntryPoint {
     private void buildUI() {
 
         BUNDLE.laf().ensureInjected();
+        BUNDLE.toolbar().ensureInjected();
         BUNDLE.style().ensureInjected();
         BUNDLE.buttons().ensureInjected();
         BUNDLE.menu().ensureInjected();

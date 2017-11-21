@@ -91,37 +91,6 @@
     background-color: #501c70;
 }
 
-.wp-toolbar__btn {
-    border: none;
-    color: #505050;
-    height: 20px;
-    background: transparent;
-    cursor: pointer;
-    font-weight: 400;
-    padding-left: 5px;
-    padding-right: 5px;
-    border-radius: 2px;
-}
-
-.wp-toolbar__btn--highlighted {
-    color: dodgerblue;
-}
-
-.wp-toolbar__btn:hover:enabled {
-    background-color: #707070;
-    color: #ffffff;
-}
-
-.wp-toolbar__btn:active:enabled {
-    background-color: #424242;
-    color: #ffffff;
-}
-
-.wp-toolbar__btn:disabled {
-    color: #aaaaaa;
-    cursor: default;
-}
-
 .wp-btn-add-tab {
     border: none;
     background-color: transparent;

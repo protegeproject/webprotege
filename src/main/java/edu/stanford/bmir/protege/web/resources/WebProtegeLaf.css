@@ -42,11 +42,6 @@
     background: #c8c8c8;
 }
 
-.wp-toolbar {
-    background-color: literal("var(--view-toolbar--background-color)");
-    padding-bottom: 1px;
-}
-
 .wp-login__logo {
     width: 200px;
     height: 160px;

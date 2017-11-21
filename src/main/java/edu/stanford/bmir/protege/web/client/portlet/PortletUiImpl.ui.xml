@@ -34,7 +34,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.parent}">
-        <g:FlowPanel ui:field="toolbar" addStyleNames="{style.toolbar} {wp.laf.toolbar}">
+        <g:FlowPanel ui:field="toolbar" addStyleNames="{style.toolbar} {wp.toolbar.toolbar}">
             <filter:FilterButtonImpl ui:field="filterButton" addStyleNames="{style.menuButton}" visible="false"/>
         </g:FlowPanel>
         <portlet:PortletContentHolder ui:field="contentHolder" addStyleNames="{style.contentHolder}"/>

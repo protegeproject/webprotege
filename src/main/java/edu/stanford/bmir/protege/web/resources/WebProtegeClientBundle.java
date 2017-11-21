@@ -73,7 +73,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("date-time.png")
     ImageResource dateTimeIcon();
-    
+
     @Source("eye.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIcon();
@@ -116,6 +116,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("WebProtegeLaf.css")
     WebProtegeLaf laf();
+
+    @Source("toolbar.css")
+    Toolbar toolbar();
 
     @Source("WebProtegeButtons.css")
     WebProtegeButtons buttons();
@@ -225,11 +228,20 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-topbar__separator")
         String topBarSeparator();
 
+        @ClassName("wp-login__logo")
+        String loginLogo();
+    }
+
+    interface Toolbar extends CssResource {
+
         @ClassName("wp-toolbar")
         String toolbar();
 
-        @ClassName("wp-login__logo")
-        String loginLogo();
+        @ClassName("wp-toolbar__btn")
+        String toolbarButton();
+
+        @ClassName("wp-toolbar__btn--highlighted")
+        String highlightedToolbarButton();
     }
 
     interface WebProtegeButtons extends CssResource {
@@ -285,14 +297,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-topbar__btn")
         String topBarButton();
-
-
-        @ClassName("wp-toolbar__btn")
-        String toolbarButton();
-
-        @ClassName("wp-toolbar__btn--highlighted")
-        String highlightedToolbarButton();
-
 
 
         @ClassName("wp-btn-delete")
