@@ -71,17 +71,14 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
-@sprite .warningLabel {
-    gwt-image: 'warningIcon';
+.warningLabel {
     border: solid 1px #ffe884;
-    background-position: 2px 2px;
     background-color: #faf6c3;
     width: auto;
     height: auto;
     vertical-align: top;
-    padding: 4px 4px 4px 24px;
+    padding: 4px 4px 4px 4px;
     font-size: 10px;
-    font-family: tahoma, sans-serif;
 }
 
 .classIconInset {
@@ -112,7 +109,6 @@
 }
 
 .annotationPropertyIconInset {
-    /*gwt-image: 'annotationPropertyIcon';*/
     background-image: annotationPropertyIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
