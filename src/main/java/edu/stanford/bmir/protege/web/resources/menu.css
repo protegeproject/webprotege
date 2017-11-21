@@ -1,4 +1,6 @@
-.popupMenu {
+@external .wp-*;
+
+.wp-popup-menu {
     background: white;
     box-shadow: 0 4px 5px rgba(0, 0, 0, .2);
     border: 1px solid #e0e0e0;
@@ -11,12 +13,12 @@
     outline: thick;
 }
 
-.popupMenuInner {
+.wp-popup-menu__inner {
     background-color: #ffffff;
     box-sizing: border-box;
 }
 
-.popupMenuItem {
+.wp-popup-menu__item {
     background: none repeat scroll 0 0 #ffffff;
     cursor: pointer;
     font-size: 14px;
@@ -29,22 +31,22 @@
     white-space: nowrap;
 }
 
-.popupMenuItem:hover {
+.wp-popup-menu__item:hover {
     background: literal("var(--selected-menu-item--background-color)");
     color: literal("var(--selected-menu-item--color)");
 }
 
-.popupMenuItemDisabled {
+.wp-popup-menu__item--disabled {
     background-color: #ffffff;
     color: #e0e0e0;
 }
 
-.popupMenuItemDisabled:hover {
+.wp-popup-menu__item--disabled:hover {
     background-color: #ffffff;
     color: #e0e0e0;
 }
 
-.separator {
+.wp-popup-menu__separator {
     width: 100%;
     border-bottom: 1px solid #e9e9e9;
 }
