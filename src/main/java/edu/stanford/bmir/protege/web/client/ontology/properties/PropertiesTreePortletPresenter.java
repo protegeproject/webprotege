@@ -599,7 +599,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
         String text = entityData.getBrowserText();
         int localAnnotationsCount = entityData.getLocalAnnotationsCount();
         if (localAnnotationsCount > 0) {
-            text = text + "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon()
+            text = text + "<img src=\"" + WebProtegeClientBundle.BUNDLE.svgCommentSmallFilledIcon()
                     .getSafeUri()
                     .asString() + "\" />" + " " + localAnnotationsCount;
         }

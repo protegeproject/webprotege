@@ -972,7 +972,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
-            text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.commentSmallIcon()
+            text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.svgCommentSmallFilledIcon()
                     .getSafeUri()
                     .asString() + "\" title=\"" + getNiceNoteCountText(
                     childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
