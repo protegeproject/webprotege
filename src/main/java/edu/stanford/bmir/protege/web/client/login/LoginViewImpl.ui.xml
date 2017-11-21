@@ -82,11 +82,11 @@
     </ui:style>
 
 
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.login.login}">
         <g:Button text="{msg.signUpForAccount}" ui:field="signUpForAccountButton"
                   addStyleNames="{style.signup} {wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.alternateButton}"/>
         <g:HTMLPanel addStyleNames="{style.center}">
-            <g:HTMLPanel addStyleNames="{style.wp-login-logo} {wp.laf.loginLogo}"/>
+            <g:HTMLPanel addStyleNames="{style.wp-login-logo} {wp.login.loginLogo}"/>
             <g:HTMLPanel addStyleNames="{style.message}">
                 <g:Label text="{msg.signInToContinue}"/>
             </g:HTMLPanel>

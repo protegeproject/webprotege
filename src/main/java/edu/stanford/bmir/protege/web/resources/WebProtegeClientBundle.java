@@ -118,7 +118,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     WebProtegeLaf laf();
 
     @Source("toolbar.css")
-    Toolbar toolbar();
+    ToolbarCss toolbar();
+
+    @Source("login.css")
+    LoginCss login();
 
     @Source("WebProtegeButtons.css")
     WebProtegeButtons buttons();
@@ -227,12 +230,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-topbar__separator")
         String topBarSeparator();
+    }
+
+    interface LoginCss extends CssResource {
+
+        @ClassName("wp-login")
+        String login();
 
         @ClassName("wp-login__logo")
         String loginLogo();
     }
 
-    interface Toolbar extends CssResource {
+    interface ToolbarCss extends CssResource {
 
         @ClassName("wp-toolbar")
         String toolbar();
