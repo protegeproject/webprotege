@@ -46,6 +46,7 @@ public class WebProtege implements EntryPoint {
 
         BUNDLE.laf().ensureInjected();
         BUNDLE.toolbar().ensureInjected();
+        BUNDLE.login().ensureInjected();
         BUNDLE.style().ensureInjected();
         BUNDLE.buttons().ensureInjected();
         BUNDLE.menu().ensureInjected();
