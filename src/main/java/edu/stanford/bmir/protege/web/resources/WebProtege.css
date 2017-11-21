@@ -48,6 +48,9 @@
 
 .formGroup {
     padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .formLabel {

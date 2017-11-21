@@ -40,18 +40,6 @@
             background-color: white;
         }
 
-        .dialogContainer {
-            display: flex;
-            flex-grow: 1;
-            flex-shrink: 1;
-            padding-top: 50px;
-            padding-bottom: 50px;
-            overflow: hidden;
-        }
-
-        .dialogBox {
-        }
-
         .topBar {
             flex-grow: 0;
             flex-shrink: 0;
@@ -63,8 +51,8 @@
             <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarIcon}"/>
             <g:InlineLabel ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
         </g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{style.dialogContainer}">
-            <g:HTMLPanel addStyleNames="{wp.dialog.dialog} {style.dialogBox}">
+        <g:HTMLPanel addStyleNames="{wp.dialog.dialogContainer}">
+            <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
                 <g:Label text="{msg.sharing_sharingSettings}" addStyleNames="{wp.dialog.title}"/>
 
                 <g:HTMLPanel addStyleNames="{wp.dialog.content}">

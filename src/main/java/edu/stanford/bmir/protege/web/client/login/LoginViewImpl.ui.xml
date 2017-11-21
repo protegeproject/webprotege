@@ -26,6 +26,8 @@
 
         .centerPanel {
             max-width: 250px;
+            display: flex;
+            flex-direction: column;
         }
 
         .message {
@@ -62,7 +64,6 @@
         }
 
         .signin {
-            width: 100%;
         }
 
         .info {
