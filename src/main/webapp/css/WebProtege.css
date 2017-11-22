@@ -199,7 +199,7 @@ select {
 
 .gwt-DialogBox .dialogTop {
     background-color: #f0f0f0;
-    background-image: url(../../java/edu/stanford/bmir/protege/web/resources/protege-blender.svg);
+    background-image: url(../images/protege-blender.svg);
     background-repeat: no-repeat;
     background-size: 30px;
     background-position-y: 2px;
