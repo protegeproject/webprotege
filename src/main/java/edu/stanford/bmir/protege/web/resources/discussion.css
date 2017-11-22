@@ -1,35 +1,25 @@
 @external .wp-*;
 
 .wp-discussion {
-
 }
 
 .wp-discussion__thread-status {
-
 }
 
 .wp-discussion__thread-status--open {
-    color: #990099 !important;
+    color: #990099;
 }
 
 .wp-discussion__thread-status--open:hover {
-    color: white !important;
+    color: white;
 }
 
 .wp-discussion__thread-status--closed {
-    color: #009900 !important;
+    color: #009900;
 }
 
 .wp-discussion__thread-status--closed:hover {
-    color: white !important;
-}
-
-blockquote {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-left: 3px solid #d0d0d0;
-    color: #a0a0a0;
-    padding: 5px;
+    color: white;
 }
 
 .wp-discussion__thread-outer {
@@ -37,14 +27,21 @@ blockquote {
 }
 
 .wp-discussion__thread-inner {
-    padding: 5px;
+    padding-top:    5px;
+    padding-right:  5px;
+    padding-left:   5px;
     padding-bottom: 10px;
-    box-shadow: 1px 2px 3px #c0c0c0;
-    overflow: hidden;
+
+    box-shadow:     1px 2px 3px #c0c0c0;
+    overflow:       hidden;
 }
 
+/*
+    Comments within threads or elsewhere
+ */
+
 .wp-comment {
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0; /* Not sure if this should be here really */
     margin-bottom: 10px;
 }
 
@@ -58,54 +55,79 @@ blockquote {
 
 .wp-comment__date {
     font-size: 10px;
-    color: #B3B3B3;
+    color:     #b3b3b3;
+}
+
+.wp-comment__user-mention {
+    padding-left:     2px;
+    padding-right:    2px;
+
+    font-weight:      500;
+    color:            #434b5d;
+    background-color: #ffffcc;
+
 }
 
 .wp-comment__body {
-    margin-top: 0.3em;
-    color: #676767;
-    border: none;
+    margin-top:  0.3em;
+    color:       #676767;
+    border:      none;
     line-height: 1.4em;
-    overflow: hidden;
+    overflow:    hidden;
 }
+
 .wp-comment__body h1 {
-    font-size: 16px;
-    font-weight: bold;
+    font-size:     16px;
+    font-weight:   bold;
     margin-bottom: 5px;
 }
+
 .wp-comment__body h2 {
-    font-size: 14px;
+    font-size:   14px;
     font-weight: bold;
 }
-.wp-comment__body ul,ol {
+
+.wp-comment__body ul, ol {
     margin: 10px;
 }
+
 .wp-comment__body ul li {
     list-style-type: disc;
 }
+
 .wp-comment__body ol li {
     list-style-type: decimal;
 }
+
 .wp-comment__body em {
     font-style: italic;
 }
+
 .wp-comment__body strong {
     font-weight: bold;
 }
-.wp-comment__body p+p {
+
+.wp-comment__body p + p {
     margin-top: 10px;
 }
+
 .wp-comment__body pre {
     margin: 20px;
 }
+
 .wp-comment__body code {
     word-wrap: break-word;
 }
-.wp-comment__user-mention {
-    font-weight: 500;
-    color: #434b5d;
-    background-color: #ffffcc;
-    padding-left: 2px;
-    padding-right: 2px;
+
+.wp-comment__body blockquote {
+    margin-top:    10px;
+    margin-bottom: 10px;
+
+    padding:       5px;
+
+    border-left:   3px solid #d0d0d0;
+    color:         #a0a0a0;
+
 }
+
 
