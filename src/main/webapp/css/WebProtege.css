@@ -74,7 +74,7 @@ ul.disc {
 
 :focus {
     outline: var(--outline);
-    outline-offset: -2px;
+    outline-offset: -1px;
 }
 
 *.web-protege-no-focus :focus {
