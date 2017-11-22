@@ -240,24 +240,24 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface DiscussionCss extends CssResource {
 
-        @ClassName("wp-discussion")
+        @ClassName("wp-disc-thread")
         String discussion();
 
 
-        @ClassName("wp-discussion__thread-outer")
+        @ClassName("wp-disc-thread__outer")
         String threadOuter();
 
-        @ClassName("wp-discussion__thread-inner")
+        @ClassName("wp-disc-thread__inner")
         String threadInner();
 
 
-        @ClassName("wp-discussion__thread-status")
+        @ClassName("wp-disc-thread__status")
         String status();
 
-        @ClassName("wp-discussion__thread-status--open")
+        @ClassName("wp-disc-thread__status--open")
         String discussionThreadStatusOpen();
 
-        @ClassName("wp-discussion__thread-status--closed")
+        @ClassName("wp-disc-thread__status--closed")
         String discussionThreadStatusClosed();
 
         @ClassName("wp-comment")
