@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/05/2012
  */
-public class OBOTermSynonymListEditor extends ValueListEditorImpl<OBOTermSynonym> {
+public class OBOTermSynonymListEditor extends ValueListFlexEditorImpl<OBOTermSynonym> {
 
     @Inject
     public OBOTermSynonymListEditor() {
