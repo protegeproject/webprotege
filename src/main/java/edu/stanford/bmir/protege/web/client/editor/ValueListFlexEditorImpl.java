@@ -60,7 +60,6 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         initWidget(rootElement);
         valueChangeHandler = event -> handleValueEditorValueChanged();
         dirtyChangedHandler = event -> handleValueEditorDirtyChanged(event);
-        ensureBlank();
         updateEnabled();
     }
 
@@ -150,11 +149,6 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     }
 
     private void updateEnabled() {
-//        for(ValueEditor<O> editor : currentEditors) {
-//            if(editor instanceof HasEnabled) {
-//                ((HasEnabled) editor).setEnabled(enabled);
-//            }
-//        }
         for(int i = 0; i < container.getWidgetCount(); i++) {
             ValueListFlexEditorContainer editorContainer = (ValueListFlexEditorContainer) container.getWidget(i);
             editorContainer.setEnabled(enabled);
@@ -164,6 +158,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
                 editorContainer.setDeleteButtonVisible(enabled);
             }
         }
+        ensureBlank();
     }
 
     @Override
@@ -184,14 +179,6 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
                 addValueEditor(false);
             }
         }
-        updateEnabled();
-//        for(int i = 0; i < container.getWidgetCount(); i++) {
-//            ValueListFlexEditorContainer editorContainer = (ValueListFlexEditorContainer) container.getWidget(i);
-//            if(i < container.getWidgetCount() - 1 && !editorContainer.isDeleteButtonVisible()) {
-//                editorContainer.setDeleteButtonEnabled(enabled);
-//                editorContainer.setDeleteButtonVisible(enabled);
-//            }
-//        }
     }
 
     private ValueEditor<O> addValueEditor(boolean deleteVisible) {
