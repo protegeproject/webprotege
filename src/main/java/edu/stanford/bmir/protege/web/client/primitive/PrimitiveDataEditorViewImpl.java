@@ -47,7 +47,6 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
         this.errorViewProvider = checkNotNull(errorViewProvider);
 
         holder = new FlowPanel();
-        holder.getElement().setAttribute("hello", "x");
         holder.add(textBox);
         initWidget(holder);
     }
