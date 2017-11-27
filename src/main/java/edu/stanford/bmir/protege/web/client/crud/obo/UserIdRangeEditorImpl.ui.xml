@@ -10,14 +10,27 @@
         .userIdEditor {
             flex-grow: 1;
             flex-shrink: 1;
+            margin-top: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 1px;
         }
         .startEditor {
             flex-grow: 0;
             flex-shrink: 0;
+            margin-top: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 1px;
+
         }
         .endEditor {
             flex-grow: 0;
             flex-shrink: 0;
+            margin-top: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 1px;
         }
 
     </ui:style>
