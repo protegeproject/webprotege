@@ -2,6 +2,9 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:button="urn:import:edu.stanford.bmir.protege.web.client.library.button">
     <ui:style>
+        @external wp-value-list-row;
+        @external wp-value-list-editor;
+        @external wp-value-list-delete-button;
         .main {
             display: flex;
             flex-direction: row;
@@ -17,9 +20,18 @@
             margin-left: 1px;
             margin-right: 2px;
         }
+        .wp-value-list__row {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .wp-value-list__editor {
+
+        }
+        .wp-value-list__delete-button {
+
+        }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:SimplePanel ui:field="editorHolder" addStyleNames="{style.editorHolder}"/>
-        <button:DeleteButton ui:field="deleteButton" addStyleNames="{style.deleteButton}"/>
+    <g:HTMLPanel addStyleNames="{style.main} {style.wp-value-list__row}">
+        <g:SimplePanel ui:field="editorHolder" addStyleNames="{style.editorHolder} {style.wp-value-list__editor}"/>
+        <button:DeleteButton ui:field="deleteButton" addStyleNames="{style.deleteButton} {style.wp-value-list__delete-button}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
