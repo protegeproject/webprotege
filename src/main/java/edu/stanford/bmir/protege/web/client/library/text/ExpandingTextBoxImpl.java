@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasAcceptKeyHandler;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,6 +36,15 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
      * For internal use.  The name of the element which has inner text set to size the suggest box to fit its content.
      */
     private static final String SIZING_TEXT_ELEMENT_NAME = "span";
+
+    /**
+     * Force single long words greater than this length to break
+     */
+    private static final int WORD_BREAK_LIMIT = 10;
+
+    private static final String WORD_BREAK_RULE_NAME = "wordBreak";
+
+    private static final String BREAK_ALL = "break-all";
 
 
     /**
@@ -188,6 +198,25 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         for (int i = 0; i < pres.getLength(); i++) {
             Element preElement = pres.getItem(i);
             preElement.setInnerText(suggestBox.getText() + (addNewLine ? "\n" : ""));
+            forceWordbreakIfNecessary(preElement);
+        }
+    }
+
+    /**
+     * Force a word break if we have a long value with no spaces.  This is done by setting
+     * the word-break style rule to a value of break-all.  We don't want to do this by default
+     * because if we do then normal text, with natural breaks, will break in the middle of
+     * words and this looks terrible.  This primarily affects long URLs e.g. in "seeAlso"
+     * annotations.
+     * @param element The element that should be forced to wrap.
+     */
+    private void forceWordbreakIfNecessary(@Nonnull Element element) {
+        String trimmedText = suggestBox.getText().trim();
+        if(trimmedText.length() > WORD_BREAK_LIMIT && !trimmedText.contains(" ")) {
+            element.getStyle().setProperty(WORD_BREAK_RULE_NAME, BREAK_ALL);
+        }
+        else {
+            element.getStyle().clearProperty(WORD_BREAK_RULE_NAME);
         }
     }
 

@@ -471,6 +471,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 navigateTo(new OWLNamedIndividualItem(data.getEntity()), data);
                 return null;
             }
+
+            @Override
+            public Void visit(OWLLiteralData data) throws RuntimeException {
+                Window.open(data.getLexicalForm(), data.getBrowserText(), "");
+                return null;
+            }
         });
     }
 
@@ -547,6 +553,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             setIconInsetStyleNameForEntityData(currentData, 1.0);
             validateCurrentEntityTypeAgainstAllowedTypes();
             if (isExternalIRI()) {
+                GWT.log("[PrimitiveDataEditorImpl] Value is external IRI");
                 view.setAnchorTitle("Open link in new window");
                 view.setAnchorVisible(true);
             } else {
@@ -571,14 +578,22 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             return false;
         }
         OWLPrimitiveData data = currentData.get();
-        if (!(data instanceof IRIData)) {
+        final IRI theIri;
+        if(data instanceof IRIData) {
+            theIri = (IRI) data.getObject();
+            return "http".equalsIgnoreCase(theIri.getScheme()) ||
+                    "https".equalsIgnoreCase(theIri.getScheme());
+        }
+        else if(data instanceof OWLLiteralData) {
+            OWLLiteralData literalData = (OWLLiteralData) data;
+            String literal = literalData.getLiteral().getLiteral();
+            return !literal.contains(" ")
+                    && (literal.startsWith("http://")
+                    || literal.startsWith("https://"));
+        }
+        else {
             return false;
         }
-        IRI iri = (IRI) data.getObject();
-        if (!iri.isAbsolute()) {
-            return false;
-        }
-        return "http".equalsIgnoreCase(iri.getScheme());
     }
 
     private void setIconInsetStyleName(Optional<String> name) {
