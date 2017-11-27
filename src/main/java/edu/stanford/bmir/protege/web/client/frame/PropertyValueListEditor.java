@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
@@ -34,7 +35,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Inject
     public PropertyValueListEditor(ProjectId projectId, final Provider<PrimitiveDataEditorImpl> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
-        this.editor = new ValueListEditorImpl<>(
+        this.editor = new ValueListFlexEditorImpl<>(
                 () -> {
                     PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl(primitiveDataEditorProvider.get(), primitiveDataEditorProvider.get());
                     PropertyValueDescriptorEditorPresenter presenter = new PropertyValueDescriptorEditorPresenter(propertyValueEditor);
