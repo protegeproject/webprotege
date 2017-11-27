@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 10/04/16
  */
-public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEditor<O>, HasPlaceholder {
+public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEditor<O>, HasPlaceholder, HasEnabled {
 
     private ValueListFlexEditorDirection direction = ValueListFlexEditorDirection.COLUMN;
 
