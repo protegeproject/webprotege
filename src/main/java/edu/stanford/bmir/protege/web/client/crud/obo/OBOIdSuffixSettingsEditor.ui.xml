@@ -22,7 +22,7 @@
         <g:Label text="User specific ranges"/>
 
         <g:ScrollPanel width="500px" height="200px">
-            <editor:ValueListEditorImpl ui:field="userRangeTable" enabled="true" addStyleNames="{style.userRangeList}"/>
+            <editor:ValueListFlexEditorImpl ui:field="userRangeTable" enabled="true" addStyleNames="{style.userRangeList}"/>
         </g:ScrollPanel>
 
 

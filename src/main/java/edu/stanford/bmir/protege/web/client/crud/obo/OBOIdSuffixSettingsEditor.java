@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
@@ -36,21 +37,18 @@ public class OBOIdSuffixSettingsEditor extends Composite implements EntityCrudKi
 
     private static OBOIdSchemeSpecificSettingsEditorUiBinder ourUiBinder = GWT.create(OBOIdSchemeSpecificSettingsEditorUiBinder.class);
 
-//    @UiField
-//    protected HasText labelLangEditor;
-//
     @UiField
     protected HasText totalDigitsEditor;
 
     @UiField(provided = true)
-    protected ValueListEditorImpl<UserIdRange> userRangeTable;
+    protected ValueListFlexEditorImpl<UserIdRange> userRangeTable;
 
     @Inject
     protected Provider<UserIdRangeEditor> userIdRangeEditorProvider;
 
     @Inject
     public OBOIdSuffixSettingsEditor() {
-        userRangeTable = new ValueListEditorImpl<>(() -> userIdRangeEditorProvider.get());
+        userRangeTable = new ValueListFlexEditorImpl<>(() -> userIdRangeEditorProvider.get());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

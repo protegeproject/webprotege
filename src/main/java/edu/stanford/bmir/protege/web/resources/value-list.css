@@ -2,6 +2,7 @@
 @external wp-value-list__row;
 @external wp-value-list__editor;
 @external wp-value-list__delete-button;
+@external .gwt-SuggestBox, .gwt-TextBox, .gwt-TextArea;
 
 .wp-value-list {
 }
@@ -17,5 +18,9 @@
 .wp-value-list__delete-button {
     margin-left: 1px;
     margin-right: 2px;
+}
+
+.wp-value-list .gwt-SuggestBox, .gwt-TextBox, .gwt-TextArea {
+    border: none;
 }
 
