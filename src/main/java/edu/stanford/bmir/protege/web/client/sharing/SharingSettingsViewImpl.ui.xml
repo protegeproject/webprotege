@@ -78,7 +78,7 @@
                     <g:HTMLPanel addStyleNames="{wp.settings.group}">
                         <ui:text from="{msg.sharing_shareWithSpecificPeople}"/>:
                         <g:HTMLPanel addStyleNames="{style.verticalPadding}"/>
-                        <editor:ValueListEditorImpl ui:field="sharingSettingsListEditor" addStyleNames="{style.list}"
+                        <editor:ValueListFlexEditorImpl ui:field="sharingSettingsListEditor" addStyleNames="{style.list}"
                                                     enabled="true"/>
                     </g:HTMLPanel>
                 </g:HTMLPanel>

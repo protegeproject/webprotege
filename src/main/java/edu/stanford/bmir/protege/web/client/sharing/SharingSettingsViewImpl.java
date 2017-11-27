@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
@@ -46,7 +47,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
     ListBox linkSharingPermissionDropDown;
 
     @UiField(provided = true)
-    ValueListEditorImpl<SharingSetting> sharingSettingsListEditor;
+    ValueListFlexEditorImpl<SharingSetting> sharingSettingsListEditor;
 
     @UiField
     HTMLPanel linkSharingView;
@@ -60,7 +61,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
 
     @Inject
     public SharingSettingsViewImpl(final DispatchServiceManager dispatchServiceManager) {
-        sharingSettingsListEditor = new ValueListEditorImpl<>(() -> new SharingSettingEditorImpl(dispatchServiceManager));
+        sharingSettingsListEditor = new ValueListFlexEditorImpl<>(() -> new SharingSettingEditorImpl(dispatchServiceManager));
         initWidget(ourUiBinder.createAndBindUi(this));
         for(SharingPermission permission : SharingPermission.values()) {
             linkSharingPermissionDropDown.addItem(permission.name());

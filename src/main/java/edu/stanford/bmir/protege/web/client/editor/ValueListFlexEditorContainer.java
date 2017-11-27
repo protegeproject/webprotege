@@ -30,11 +30,11 @@ public class ValueListFlexEditorContainer<O> extends Composite implements HasEna
         this.deleteButtonEnabled = deleteButtonEnabled;
     }
 
-    interface ValueListInlineEditorContainerUiBinder extends UiBinder<HTMLPanel, ValueListFlexEditorContainer> {
+    interface ValueListFlexEditorContainerUiBinder extends UiBinder<HTMLPanel, ValueListFlexEditorContainer> {
 
     }
 
-    private static ValueListInlineEditorContainerUiBinder ourUiBinder = GWT.create(ValueListInlineEditorContainerUiBinder.class);
+    private static ValueListFlexEditorContainerUiBinder ourUiBinder = GWT.create(ValueListFlexEditorContainerUiBinder.class);
 
     private final ValueEditor<O> editor;
 

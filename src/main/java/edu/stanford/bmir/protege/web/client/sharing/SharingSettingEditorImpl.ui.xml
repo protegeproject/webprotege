@@ -2,13 +2,22 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        .main {
+            display: flex;
+            margin-bottom: 1px;
+            margin-right: 1px;
+            margin-left: 1px;
+        }
         .personIdField {
-            width: 350px;
+            flex-grow: 1;
+            flex-shrink: 1;
         }
         .permissionField {
+            flex-grow: 0;
+            flex-shrink: 0;
         }
     </ui:style>
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.main}">
         <g:SuggestBox ui:field="personIdField" addStyleNames="{style.personIdField}"/>
         <g:ListBox ui:field="permissionField" addStyleNames="{style.permissionField} {wp.style.sharingDropDown}">
         </g:ListBox>
