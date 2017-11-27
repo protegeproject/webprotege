@@ -411,5 +411,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-value-list__delete-button")
         String valueListDeleteButton();
+
     }
 }
