@@ -30,7 +30,7 @@
             box-sizing: border-box;
         }
         .xrefsBlock {
-            padding-top: 5px;
+            margin-top: 5px;
             margin-left: 20px;
             margin-right: 20px;
         }

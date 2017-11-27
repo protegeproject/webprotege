@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -32,6 +34,9 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
     private final OBOTermSynonymListEditor editor;
 
     @Nonnull
+    private final IsWidget editorHolder;
+
+    @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
@@ -43,14 +48,15 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
         super(selectionModel, projectId);
         this.dispatch = dispatch;
         this.editor = editor;
+        this.editorHolder = new SimplePanel(editor);
         this.permissionChecker = permissionChecker;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setWidget(editor);
+        portletUi.setWidget(editorHolder);
         editor.setEnabled(false);
-        permissionChecker.hasPermission(EDIT_ONTOLOGY, editor::setEnabled);
+        permissionChecker.hasPermission(EDIT_ONTOLOGY, perm -> editor.setEnabled(perm));
     }
 
     @Override
