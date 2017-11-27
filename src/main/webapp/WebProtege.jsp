@@ -31,7 +31,7 @@
 
     <title><%writeApplicationName(out);%></title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png"/>
 
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
