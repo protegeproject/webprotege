@@ -20,16 +20,19 @@
             flex-grow: 0;
             flex-shrink: 0;
             box-sizing: border-box;
+            margin: 1px;
         }
         .name-field {
             flex-grow: 0;
             flex-shrink: 0;
             box-sizing: border-box;
+            margin: 1px;
         }
         .description-field {
             flex-grow: 1;
             flex-shrink: 1;
             box-sizing: border-box;
+            margin: 1px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.xref-editor}">

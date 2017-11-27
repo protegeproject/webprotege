@@ -5,7 +5,7 @@
         .container {
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            flex-grow: 0;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.container} {wp.valueList.valueList}" ui:field="container">
