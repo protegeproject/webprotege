@@ -5,15 +5,17 @@
         .main {
             display: flex;
             flex-direction: row;
-            align-items: flex-start;
-            flex-grow: 1;
+            align-items: baseline;
         }
         .editorHolder {
             flex-grow: 1;
+            flex-shrink: 0;
         }
         .deleteButton {
             flex-grow: 0;
             flex-shrink: 0;
+            margin-left: 1px;
+            margin-right: 2px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
