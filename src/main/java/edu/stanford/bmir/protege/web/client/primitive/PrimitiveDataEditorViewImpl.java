@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode;
 import org.semanticweb.owlapi.model.EntityType;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
@@ -31,103 +32,107 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveDataEditorView {
 
-    private ExpandingTextBox delegate;
+    private ExpandingTextBox textBox;
 
     private Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider;
 
     private Optional<String> lastStyleName = Optional.empty();
+
     private final FlowPanel holder;
 
     @Inject
-    public PrimitiveDataEditorViewImpl(ExpandingTextBox delegate, Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider) {
+    public PrimitiveDataEditorViewImpl(@Nonnull ExpandingTextBox textBox,
+                                       @Nonnull Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider) {
+        this.textBox = checkNotNull(textBox);
+        this.errorViewProvider = checkNotNull(errorViewProvider);
+
         holder = new FlowPanel();
-        this.delegate = delegate;
-        holder.add(delegate);
-        this.errorViewProvider = errorViewProvider;
+        holder.getElement().setAttribute("hello", "x");
+        holder.add(textBox);
         initWidget(holder);
     }
 
     @Override
     public void setMode(Mode mode) {
         if(mode == Mode.SINGLE_LINE) {
-            delegate.setMode(ExpandingTextBoxMode.SINGLE_LINE);
+            textBox.setMode(ExpandingTextBoxMode.SINGLE_LINE);
         }
         else {
-            delegate.setMode(ExpandingTextBoxMode.MULTI_LINE);
+            textBox.setMode(ExpandingTextBoxMode.MULTI_LINE);
         }
     }
 
     @Override
     public void setSuggestOracle(SuggestOracle oracle) {
-        delegate.setOracle(oracle);
+        textBox.setOracle(oracle);
     }
 
     @Override
     public void setAutoSelectSuggestions(boolean autoSelectSuggestions) {
-        delegate.setAutoSelectSuggestions(autoSelectSuggestions);
+        textBox.setAutoSelectSuggestions(autoSelectSuggestions);
     }
 
     @Override
     public void setPrimitiveDataStyleName(Optional<String> styleName) {
         checkNotNull(styleName);
         if(lastStyleName.isPresent()) {
-            delegate.getSuggestBox().removeStyleName(lastStyleName.get());
+            textBox.getSuggestBox().removeStyleName(lastStyleName.get());
         }
         lastStyleName = styleName;
         if (styleName.isPresent()) {
-            delegate.getSuggestBox().addStyleName(styleName.get());
+            textBox.getSuggestBox().addStyleName(styleName.get());
         }
     }
 
     @Override
     public void setAnchorVisible(boolean b) {
-        delegate.setAnchorVisible(b);
+        textBox.setAnchorVisible(b);
     }
 
     @Override
     public void setAnchorTitle(String title) {
-        delegate.setAnchorTitle(title);
+        textBox.setAnchorTitle(title);
     }
 
     @Override
     public HandlerRegistration addAnchorClickedHandler(AnchorClickedHandler handler) {
-        return delegate.addAnchorClickedHandler(handler);
+        return textBox.addAnchorClickedHandler(handler);
     }
 
     @Override
     public boolean isEnabled() {
-        return delegate.isEnabled();
+        return textBox.isEnabled();
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        delegate.setEnabled(enabled);
+        textBox.setEnabled(enabled);
     }
 
     @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
-        return delegate.addFocusHandler(handler);
+        return textBox.addFocusHandler(handler);
     }
 
     @Override
     public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
-        return delegate.addKeyUpHandler(handler);
+        return textBox.addKeyUpHandler(handler);
     }
 
     @Override
     public String getPlaceholder() {
-        return delegate.getPlaceholder();
+        return textBox.getPlaceholder();
     }
 
     @Override
     public void setPlaceholder(String placeholder) {
-        delegate.setPlaceholder(placeholder);
+        textBox.setPlaceholder(placeholder);
     }
 
     @Override
     public HandlerRegistration addSelectionHandler(final SelectionHandler<EntitySuggestion> handler) {
         final HandlerRegistration handlerReg = addHandler(handler, SelectionEvent.getType());
-        final HandlerRegistration delegateReg = delegate.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+        final HandlerRegistration delegateReg = textBox.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
             @Override
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
                 SuggestOracle.Suggestion suggestion = event.getSelectedItem();
@@ -147,17 +152,17 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     @Override
     public String getText() {
-        return delegate.getText();
+        return textBox.getText();
     }
 
     @Override
     public void setText(String text) {
-        delegate.setText(text);
+        textBox.setText(text);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-        return delegate.addValueChangeHandler(handler);
+        return textBox.addValueChangeHandler(handler);
     }
 
     @Override
