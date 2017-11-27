@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
@@ -14,7 +15,7 @@ import java.util.Arrays;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/12/2012
  */
-public class PrimitiveDataListEditor extends ValueListEditorImpl<OWLPrimitiveData> implements HasEnabled  {
+public class PrimitiveDataListEditor extends ValueListFlexEditorImpl<OWLPrimitiveData> implements HasEnabled  {
 
     public PrimitiveDataListEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                    final PrimitiveType ... allowedTypes) {

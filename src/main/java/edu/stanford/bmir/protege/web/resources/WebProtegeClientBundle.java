@@ -135,6 +135,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtegeSettingsPage.css")
     WebProtegeSettingsPage settings();
 
+    @Source("value-list.css")
+    ValueListCss valueList();
+
     @Source("filter.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgFilter();
@@ -393,5 +396,20 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-popup-menu__separator")
         String separator();
+    }
+
+    interface ValueListCss extends  CssResource {
+
+        @ClassName("wp-value-list")
+        String valueList();
+
+        @ClassName("wp-value-list__row")
+        String valueListRow();
+
+        @ClassName("wp-value-list__editor")
+        String valueListEditor();
+
+        @ClassName("wp-value-list__delete-button")
+        String valueListDeleteButton();
     }
 }

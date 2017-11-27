@@ -1,0 +1,21 @@
+@external wp-value-list;
+@external wp-value-list__row;
+@external wp-value-list__editor;
+@external wp-value-list__delete-button;
+
+.wp-value-list {
+}
+
+.wp-value-list__row {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.wp-value-list__editor {
+
+}
+
+.wp-value-list__delete-button {
+    margin-left: 1px;
+    margin-right: 2px;
+}
+
