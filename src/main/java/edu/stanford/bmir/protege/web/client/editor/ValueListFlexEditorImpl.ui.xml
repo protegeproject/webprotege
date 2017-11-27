@@ -1,17 +1,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-        @external wp-value-list;
-        .wp-value-list {
-
-        }
         .container {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.container} {style.wp-value-list}" ui:field="container">
+    <g:HTMLPanel addStyleNames="{style.container} {wp.valueList.valueList}" ui:field="container">
 
     </g:HTMLPanel>
 </ui:UiBinder>
