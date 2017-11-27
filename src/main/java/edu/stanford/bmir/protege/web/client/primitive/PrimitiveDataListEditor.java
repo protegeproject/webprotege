@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.user.client.ui.HasEnabled;
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
