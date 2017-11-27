@@ -65,7 +65,7 @@
                             <g:header size='7'>Webhooks</g:header>
                             <g:HTMLPanel addStyleNames="{style.tabContent}">
                                 <g:Label text="Payload Urls"/>
-                                <editor:ValueListEditorImpl ui:field="webhooks"/>
+                                <editor:ValueListFlexEditorImpl ui:field="webhooks"/>
                             </g:HTMLPanel>
                         </g:tab>
 

@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -58,7 +59,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     TextBox slackPayloadUrl;
 
     @UiField(provided = true)
-    ValueListEditorImpl<String> webhooks;
+    ValueListFlexEditorImpl<String> webhooks;
 
     @UiField
     Label projectTitle;
@@ -72,7 +73,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
 
     @Inject
     public ProjectSettingsViewImpl() {
-        webhooks = new ValueListEditorImpl<>(WebhookViewImpl::new);
+        webhooks = new ValueListFlexEditorImpl<>(WebhookViewImpl::new);
         webhooks.setEnabled(true);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
