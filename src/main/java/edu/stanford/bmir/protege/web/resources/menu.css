@@ -10,12 +10,12 @@
     border-radius: 3px;
     box-sizing: border-box;
     min-width: 150px;
-    outline: thick;
 }
 
 .wp-popup-menu__inner {
     background-color: #ffffff;
     box-sizing: border-box;
+    outline: none;
 }
 
 .wp-popup-menu__item {
@@ -31,11 +31,6 @@
     white-space: nowrap;
 }
 
-.wp-popup-menu__item:hover {
-    background: literal("var(--selected-menu-item--background-color)");
-    color: literal("var(--selected-menu-item--color)");
-}
-
 .wp-popup-menu__item--disabled {
     background-color: #ffffff;
     color: #e0e0e0;
@@ -49,4 +44,9 @@
 .wp-popup-menu__separator {
     width: 100%;
     border-bottom: 1px solid #e9e9e9;
+}
+
+.wp-popup-menu__item--selected {
+    background: literal("var(--selected-menu-item--background-color)");
+    color: literal("var(--selected-menu-item--color)");
 }

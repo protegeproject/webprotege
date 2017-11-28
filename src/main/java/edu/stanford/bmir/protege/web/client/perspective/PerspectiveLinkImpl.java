@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -68,13 +69,13 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
         return label.getText();
     }
 
-    public void setLabel(String label) {
+    public void setLabel(@Nonnull String label) {
         this.label.setText(label);
     }
 
     @Override
-    public void addActionHandler(String text, ClickHandler clickHandler) {
-        popupMenu.addItem(text, clickHandler);
+    public void addActionHandler(@Nonnull String text, @Nonnull Runnable runnable) {
+        popupMenu.addItem(text, runnable);
     }
 
     public void setMenuButtonVisible(boolean visible) {

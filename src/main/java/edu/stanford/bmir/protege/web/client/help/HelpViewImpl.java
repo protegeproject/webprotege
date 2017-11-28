@@ -37,7 +37,7 @@ public class HelpViewImpl extends Composite implements HelpView {
     @Inject
     public HelpViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        popupMenu.addItem(MESSAGES.about(), event -> {
+        popupMenu.addItem(MESSAGES.about(), () -> {
             AboutBox box = new AboutBox();
             box.show();
         });

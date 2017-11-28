@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.projectlist;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import com.google.gwt.event.dom.client.ClickEvent;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.projectmanager.LoadProjectInNewWindowRequestHandler;
@@ -110,7 +109,7 @@ public class AvailableProjectPresenter {
     private void addOpenAction() {
         view.addAction(new AbstractUiAction("Open") {
             @Override
-            public void execute(ClickEvent e) {
+            public void execute() {
                 loadProjectRequestHandler.handleProjectLoadRequest(project.getProjectId());
             }
         });
@@ -119,7 +118,7 @@ public class AvailableProjectPresenter {
     private void addOpenInNewWindowAction() {
         view.addAction(new AbstractUiAction("Open in new window") {
             @Override
-            public void execute(ClickEvent e) {
+            public void execute() {
                 loadProjectInNewWindowRequestHandler.handleLoadProjectInNewWindow(project.getProjectId());
             }
         });
@@ -128,7 +127,7 @@ public class AvailableProjectPresenter {
     private void addDowloadAction() {
         AbstractUiAction downloadAction = new AbstractUiAction("Download") {
             @Override
-            public void execute(ClickEvent e) {
+            public void execute() {
                 downloadProjectRequestHandler.handleProjectDownloadRequest(project.getProjectId());
             }
         };
@@ -146,7 +145,7 @@ public class AvailableProjectPresenter {
         }
         AbstractUiAction trashAction = new AbstractUiAction(trashActionLabel) {
             @Override
-            public void execute(ClickEvent e) {
+            public void execute() {
                 if (project.isInTrash()) {
                     trashManagerRequestHandler.handleRemoveProjectFromTrash(project.getProjectId());
                 }
