@@ -24,10 +24,10 @@
         .sectionHeading {
             font-size: 14px;
         }
-        .section {
-            padding: 10px;
-            padding-bottom: 15px;
-        }
+        /*.section {*/
+            /*padding: 10px;*/
+            /*padding-bottom: 15px;*/
+        /*}*/
         .tabPanel {
         }
         .tabContent {
@@ -47,7 +47,7 @@
                         <g:header size='7'>Main Settings</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
                             <g:Label text="System Details" addStyleNames="{style.sectionHeading}"/>
-                            <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:HTMLPanel addStyleNames="{wp.settings.group}">
                                 <g:Label text="Application name"/>
                                 <text:PlaceholderTextBox ui:field="applicationNameField"
                                                          placeholder="Application name"/>
@@ -65,7 +65,7 @@
                                 the Tomcat URL. Note that the Path and Port fields are optional. The Host field is
                                 mandatory.
                             </div>
-                            <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:HTMLPanel addStyleNames="{wp.settings.group}">
                                 <g:Label text="Scheme"/>
                                 <g:ListBox ui:field="applicationSchemeField">
                                     <g:item value="HTTPS">https</g:item>
@@ -89,24 +89,24 @@
                         <g:header size='7'>Global Permissions</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
                             <g:Label text="Account Creation" addStyleNames="{style.sectionHeading}"/>
-                            <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:HTMLPanel addStyleNames="{wp.settings.group}">
                                 <g:CheckBox ui:field="accountCreationEnabledCheckBox" text="Account creation enabled"
                                             addStyleNames="{style.checkBox}"/>
                             </g:HTMLPanel>
                             <g:Label text="Project Creation and Upload" addStyleNames="{style.sectionHeading}"/>
-                            <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:HTMLPanel addStyleNames="{wp.settings.group}">
                                 <g:CheckBox ui:field="projectCreationEnabledCheckBox" text="Project creation enabled"
                                             addStyleNames="{style.checkBox}"/>
                                 <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled"
                                             addStyleNames="{style.checkBox}"/>
                                 <div style="padding-left: 40px;">
                                     <g:Label text="Max upload size (MB)"/>
-                                    <text:PlaceholderTextBox ui:field="maxUploadSize" visibleLength="10"
+                                    <text:PlaceholderTextBox ui:field="maxUploadSize" width="100%"
                                                              placeholder="Enter max upload size in Megabytes (MB).  Leave blank for no limit."/>
                                 </div>
                             </g:HTMLPanel>
                             <g:Label text="Email notifications" addStyleNames="{style.sectionHeading}"/>
-                            <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:HTMLPanel addStyleNames="{wp.settings.group}">
                                 <g:CheckBox ui:field="emailNotificationsEnabledCheckBox"
                                             text="Email notifications enabled"
                                             addStyleNames="{style.checkBox}"/>
@@ -116,7 +116,7 @@
                     <g:tab>
                         <g:header size='7'>Actions</g:header>
                         <g:HTMLPanel addStyleNames="{style.tabContent}">
-                            <g:HTMLPanel addStyleNames="{style.section}">
+                            <g:HTMLPanel addStyleNames="{wp.settings.group}">
                                 <g:Button ui:field="rebuildPermissionsButton" text="Rebuild permissions"/>
                             </g:HTMLPanel>
 
