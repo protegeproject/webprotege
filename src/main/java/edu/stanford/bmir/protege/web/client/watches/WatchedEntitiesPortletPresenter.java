@@ -61,9 +61,9 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
         portletUi.addPortletAction(new PortletAction("Refresh", (action, event) -> onRefresh()));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        WatchAddedEvent.TYPE, event -> refreshDelayed());
+                                        WatchAddedEvent.ON_WATCH_ADDED, event -> refreshDelayed());
         eventBus.addProjectEventHandler(getProjectId(),
-                                        WatchAddedEvent.TYPE, event -> refreshDelayed());
+                                        WatchAddedEvent.ON_WATCH_ADDED, event -> refreshDelayed());
         eventBus.addProjectEventHandler(getProjectId(),
                                         PermissionsChangedEvent.ON_PERMISSIONS_CHANGED,
                                         event -> onRefresh());

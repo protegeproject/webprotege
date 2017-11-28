@@ -80,9 +80,13 @@ import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANC
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent.ON_ENTITY_DEPRECATED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent.ON_WATCH_ADDED;
+import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_WATCH_REMOVED;
 import static java.util.Collections.singletonList;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
@@ -107,15 +111,15 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private final LoggedInUserProjectPermissionChecker permissionChecker;
     private final WatchPresenter watchPresenter;
     private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(),
-            (action, event) -> editWatches());
+                                                                     (action, event) -> editWatches());
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
     private final SearchDialogController searchDialogController;
     private final Messages messages;
     private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
-            (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
+                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
     private TreePanel treePanel;
     private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(),
-            (action, event) -> onDeleteCls());
+                                                                      (action, event) -> onDeleteCls());
     private boolean expandDisabled = false;
     private String hierarchyProperty = null;
     private TreeNodeListenerAdapter nodeListener;
@@ -132,14 +136,14 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                      SearchDialogController searchDialogController,
                                      Messages messages) {
         this(selectionModel,
-                primitiveDataEditorProvider,
-                watchPresenter,
-                dispatchServiceManager,
-                loggedInUserProvider,
-                projectId,
-                permissionChecker,
-                searchDialogController,
-                messages);
+             primitiveDataEditorProvider,
+             watchPresenter,
+             dispatchServiceManager,
+             loggedInUserProvider,
+             projectId,
+             permissionChecker,
+             searchDialogController,
+             messages);
     }
 
     private ClassTreePortletPresenter(SelectionModel selectionModel,
@@ -223,41 +227,48 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             createRoot(root, portletUi);
         });
         eventBus.addProjectEventHandler(getProjectId(),
-                BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED,
-                event -> onEntityBrowserTextChanged(event));
+                                        ON_BROWSER_TEXT_CHANGED,
+                                        this::onEntityBrowserTextChanged);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                WatchAddedEvent.TYPE, event -> onWatchAdded(event));
+                                        ON_WATCH_ADDED,
+                                        this::onWatchAdded);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                WatchRemovedEvent.TYPE, event -> handleWatchRemoved(event));
+                                        ON_WATCH_REMOVED,
+                                        this::handleWatchRemoved);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                EntityDeprecatedChangedEvent.TYPE,
-                evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
+                                        ON_ENTITY_DEPRECATED,
+                                        evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
 
         eventBus.addProjectEventHandler(getProjectId(),
-                ClassHierarchyParentAddedEvent.TYPE, event -> handleParentAddedEvent(event));
+                                        ClassHierarchyParentAddedEvent.TYPE, this::handleParentAddedEvent);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                ClassHierarchyParentRemovedEvent.TYPE,
-                event -> handleParentRemovedEvent(event));
+                                        ClassHierarchyParentRemovedEvent.TYPE,
+                                        this::handleParentRemovedEvent);
+
         eventBus.addProjectEventHandler(getProjectId(),
-                ON_PERMISSIONS_CHANGED,
-                event -> {
-                    updateButtonStates();
-                    onRefresh();
-                });
+                                        ON_PERMISSIONS_CHANGED,
+                                        event -> {
+                                            updateButtonStates();
+                                            onRefresh();
+                                        });
+
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
-                event -> updateButtonStates());
+                                            event -> updateButtonStates());
+
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
-                event -> updateButtonStates());
+                                            event -> updateButtonStates());
+
         eventBus.addProjectEventHandler(getProjectId(),
-                ON_COMMENT_POSTED,
-                this::onCommentPosted);
+                                        ON_COMMENT_POSTED,
+                                        this::onCommentPosted);
+
         eventBus.addProjectEventHandler(getProjectId(),
-                ON_STATUS_CHANGED,
-                this::handleStatusChanged);
+                                        ON_STATUS_CHANGED,
+                                        this::handleStatusChanged);
         updateButtonStates();
     }
 
@@ -265,16 +276,16 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         final TreeNode tn = findTreeNode(event.getParent());
         if (tn != null) {
             GetEntityDataAction action = new GetEntityDataAction(getProjectId(),
-                    ImmutableSet.copyOf(event.getSignature()));
+                                                                 ImmutableSet.copyOf(event.getSignature()));
             dispatchServiceManager.execute(action, new DispatchServiceCallback<GetEntityDataResult>() {
                 @Override
                 public void handleSuccess(GetEntityDataResult result) {
                     SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(),
-                            result.getEntityDataMap()
-                                    .get(event.getChild())
-                                    .getBrowserText(),
-                            Collections.emptyList(),
-                            0);
+                                                                             result.getEntityDataMap()
+                                                                                   .get(event.getChild())
+                                                                                   .getBrowserText(),
+                                                                             Collections.emptyList(),
+                                                                             0);
                     subClassData.setValueType(ValueType.Cls);
                     onSubclassAdded((EntityData) tn.getUserObject(), Arrays.asList(subClassData), false);
                 }
@@ -453,8 +464,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                         dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
                 if (success) {
                     moveClass((EntityData) dropNode.getUserObject(),
-                            (EntityData) dropNode.getParentNode().getUserObject(),
-                            (EntityData) target.getUserObject());
+                              (EntityData) dropNode.getParentNode().getUserObject(),
+                              (EntityData) target.getUserObject());
                     return true;
                 }
                 else {
@@ -578,28 +589,28 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             return;
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(CLASS,
-                createEntityInfo -> {
-                    final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
-                    if (!superCls.isPresent()) {
-                        return;
-                    }
-                    final Set<String> browserTexts = new HashSet<String>(
-                            createEntityInfo.getBrowserTexts());
-                    if (browserTexts.size() > 1) {
-                        dispatchServiceManager.execute(new CreateClassesAction(
-                                        getProjectId(),
-                                        superCls.get(),
-                                        browserTexts),
-                                getCreateClassesActionAsyncHandler());
-                    }
-                    else {
-                        dispatchServiceManager.execute(new CreateClassAction(
-                                        getProjectId(),
-                                        browserTexts.iterator().next(),
-                                        superCls.get()),
-                                getCreateClassAsyncHandler());
-                    }
-                }, messages));
+                                                                     createEntityInfo -> {
+                                                                         final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
+                                                                         if (!superCls.isPresent()) {
+                                                                             return;
+                                                                         }
+                                                                         final Set<String> browserTexts = new HashSet<String>(
+                                                                                 createEntityInfo.getBrowserTexts());
+                                                                         if (browserTexts.size() > 1) {
+                                                                             dispatchServiceManager.execute(new CreateClassesAction(
+                                                                                                                    getProjectId(),
+                                                                                                                    superCls.get(),
+                                                                                                                    browserTexts),
+                                                                                                            getCreateClassesActionAsyncHandler());
+                                                                         }
+                                                                         else {
+                                                                             dispatchServiceManager.execute(new CreateClassAction(
+                                                                                                                    getProjectId(),
+                                                                                                                    browserTexts.iterator().next(),
+                                                                                                                    superCls.get()),
+                                                                                                            getCreateClassAsyncHandler());
+                                                                         }
+                                                                     }, messages));
     }
 
     private void createSubClassesByImportingCSVDocument() {
@@ -608,31 +619,31 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             return;
         }
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV",
-                new UploadFileResultHandler() {
-                    @Override
-                    public void handleFileUploaded(final DocumentId fileDocumentId) {
-                        WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
-                                new CSVImportDialogController(
-                                        getProjectId(),
-                                        fileDocumentId,
-                                        selCls.get(),
-                                        dispatchServiceManager,
-                                        new CSVImportViewImpl(
-                                                primitiveDataEditorProvider)));
-                        csvImportDialog.setVisible(true);
+                                                                               new UploadFileResultHandler() {
+                                                                                   @Override
+                                                                                   public void handleFileUploaded(final DocumentId fileDocumentId) {
+                                                                                       WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
+                                                                                               new CSVImportDialogController(
+                                                                                                       getProjectId(),
+                                                                                                       fileDocumentId,
+                                                                                                       selCls.get(),
+                                                                                                       dispatchServiceManager,
+                                                                                                       new CSVImportViewImpl(
+                                                                                                               primitiveDataEditorProvider)));
+                                                                                       csvImportDialog.setVisible(true);
 
-                    }
+                                                                                   }
 
-                    @Override
-                    public void handleFileUploadFailed(
-                            String errorMessage) {
-                        ProgressMonitor.get()
-                                .hideProgressMonitor();
-                        MessageBox.showAlert(
-                                "Error uploading CSV file",
-                                errorMessage);
-                    }
-                });
+                                                                                   @Override
+                                                                                   public void handleFileUploadFailed(
+                                                                                           String errorMessage) {
+                                                                                       ProgressMonitor.get()
+                                                                                                      .hideProgressMonitor();
+                                                                                       MessageBox.showAlert(
+                                                                                               "Error uploading CSV file",
+                                                                                               errorMessage);
+                                                                                   }
+                                                                               });
 
         WebProtegeDialog.showDialog(controller);
     }
@@ -652,9 +663,9 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                     for (OWLClassData createdCls : createdClasses) {
                         if (!existingClasses.contains(createdCls.getEntity())) {
                             final SubclassEntityData entityData = new SubclassEntityData(createdCls.getEntity().getIRI().toString(),
-                                    createdCls.getBrowserText(),
-                                    Collections.emptySet(),
-                                    0);
+                                                                                         createdCls.getBrowserText(),
+                                                                                         Collections.emptySet(),
+                                                                                         0);
                             entityData.setValueType(ValueType.Cls);
                             Node n = createTreeNode(entityData);
                             node.appendChild(n);
@@ -681,9 +692,9 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         final String displayName = theClassData.getBrowserText();
         String subMessage = "Are you sure you want to delete class \"" + displayName + "\"?";
         MessageBox.showConfirmBox("Delete class",
-                subMessage,
-                CANCEL, DELETE,
-                () -> deleteCls(theClassData.getEntity()), CANCEL);
+                                  subMessage,
+                                  CANCEL, DELETE,
+                                  () -> deleteCls(theClassData.getEntity()), CANCEL);
     }
 
     private void showClassNotSelectedMessage() {
@@ -753,21 +764,21 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             return;
         }
         permissionChecker.hasPermission(EDIT_ONTOLOGY,
-                canMove -> {
-                    if (canMove) {
-                        OntologyServiceManager.getInstance()
-                                .moveCls(getProjectId(),
-                                        cls.getName(),
-                                        oldParent.getName(),
-                                        newParent.getName(),
-                                        false,
-                                        loggedInUserProvider.getCurrentUserId(),
-                                        getMoveClsOperationDescription(cls,
-                                                oldParent,
-                                                newParent),
-                                        new MoveClassHandler(cls.getName()));
-                    }
-                });
+                                        canMove -> {
+                                            if (canMove) {
+                                                OntologyServiceManager.getInstance()
+                                                                      .moveCls(getProjectId(),
+                                                                               cls.getName(),
+                                                                               oldParent.getName(),
+                                                                               newParent.getName(),
+                                                                               false,
+                                                                               loggedInUserProvider.getCurrentUserId(),
+                                                                               getMoveClsOperationDescription(cls,
+                                                                                                              oldParent,
+                                                                                                              newParent),
+                                                                               new MoveClassHandler(cls.getName()));
+                                            }
+                                        });
 
     }
 
@@ -780,7 +791,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     public void getPathToRoot(final OWLEntity entity) {
         OntologyServiceManager.getInstance()
-                .getPathToRoot(getProjectId(), entity.getIRI().toString(), new GetPathToRootHandler());
+                              .getPathToRoot(getProjectId(), entity.getIRI().toString(), new GetPathToRootHandler());
     }
 
     /**
@@ -959,8 +970,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                     "top: 1px;\n" +
                     "padding-right: 2px\">" +
                     "<img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon()
-                    .getSafeUri()
-                    .asString() + "\" title=\"" + getNiceNoteCountText(
+                                                                              .getSafeUri()
+                                                                              .asString() + "\" title=\"" + getNiceNoteCountText(
                     localAnnotationsCount) + " on this category.\" /></div>" +
                     "<div id=\"" + idLocalAnnotationCnt + "\" style=\"color: #909090;\n" +
                     "font-size: smaller;\n" +
@@ -973,8 +984,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
             text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.svgCommentSmallFilledIcon()
-                    .getSafeUri()
-                    .asString() + "\" title=\"" + getNiceNoteCountText(
+                                                                                    .getSafeUri()
+                                                                                    .asString() + "\" title=\"" + getNiceNoteCountText(
                     childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
         }
 
@@ -988,13 +999,13 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         }
         if (w.iterator().next().getType() == WatchType.ENTITY) {
             return "<img src=\"" + BUNDLE.svgEyeIcon()
-                    .getSafeUri()
-                    .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+                                         .getSafeUri()
+                                         .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
             return "<img src=\"" + BUNDLE.svgEyeIconDown()
-                    .getSafeUri()
-                    .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+                                         .getSafeUri()
+                                         .asString() + "\" " + ClassTreePortletPresenter.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
     }
 
@@ -1074,11 +1085,11 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         deleteClassAction.setEnabled(false);
         watchClassAction.setEnabled(false);
         permissionChecker.hasPermission(CREATE_CLASS,
-                createClassAction::setEnabled);
+                                        createClassAction::setEnabled);
         permissionChecker.hasPermission(DELETE_CLASS,
-                deleteClassAction::setEnabled);
+                                        deleteClassAction::setEnabled);
         permissionChecker.hasPermission(WATCH_CHANGES,
-                watchClassAction::setEnabled);
+                                        watchClassAction::setEnabled);
     }
 
     public String getNodeClsName(final Node node) {
@@ -1169,16 +1180,16 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         @Override
         public void handleSuccess(final CreateClassResult result) {
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getEntity().getIRI().toString(),
-                    result.getObject().getBrowserText(),
-                    Collections.emptyList(),
-                    0);
+                                                                     result.getObject().getBrowserText(),
+                                                                     Collections.emptyList(),
+                                                                     0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
             if (pathToRoot.isEmpty()) {
                 return;
             }
             onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()),
-                    singletonList(subClassData),
-                    false);
+                            singletonList(subClassData),
+                            false);
             selectPathInTree(pathToRoot);
         }
     }

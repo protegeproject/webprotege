@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
-    public static final transient Event.Type<WatchAddedHandler> TYPE = new Event.Type<>();
+    public static final transient Event.Type<WatchAddedHandler> ON_WATCH_ADDED = new Event.Type<>();
 
     private Watch watch;
 
@@ -44,7 +44,7 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
 
     @Override
     public Event.Type<WatchAddedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_WATCH_ADDED;
     }
 
     @Override
