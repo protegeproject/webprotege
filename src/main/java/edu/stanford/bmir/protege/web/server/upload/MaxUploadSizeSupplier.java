@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
-import edu.stanford.bmir.protege.web.server.admin.ApplicationPreferencesStore;
+import edu.stanford.bmir.protege.web.server.app.ApplicationPreferencesStore;
 
 import javax.inject.Inject;
 import java.util.function.Supplier;

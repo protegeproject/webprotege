@@ -3,13 +3,15 @@ package edu.stanford.bmir.protege.web.server.admin;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
+import edu.stanford.bmir.protege.web.server.app.GetApplicationSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
-import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;

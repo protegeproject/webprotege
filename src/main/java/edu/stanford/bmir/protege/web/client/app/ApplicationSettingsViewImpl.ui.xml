@@ -3,7 +3,7 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <ui:import field="edu.stanford.bmir.protege.web.client.admin.SchemeValue.*"/>
+    <ui:import field="edu.stanford.bmir.protege.web.client.app.SchemeValue.*"/>
     <ui:style>
         .main {
             overflow: auto;
@@ -24,10 +24,6 @@
         .sectionHeading {
             font-size: 14px;
         }
-        /*.section {*/
-            /*padding: 10px;*/
-            /*padding-bottom: 15px;*/
-        /*}*/
         .tabPanel {
         }
         .tabContent {

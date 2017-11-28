@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.admin;
 
 import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
+import edu.stanford.bmir.protege.web.server.app.ApplicationPreferencesStore;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import org.junit.After;

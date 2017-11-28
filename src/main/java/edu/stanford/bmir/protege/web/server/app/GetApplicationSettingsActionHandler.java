@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.admin;
+package edu.stanford.bmir.protege.web.server.app;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
@@ -7,8 +7,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermissionValidator;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsResult;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsResult;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

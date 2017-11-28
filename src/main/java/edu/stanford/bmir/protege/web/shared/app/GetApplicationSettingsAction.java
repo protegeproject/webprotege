@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.admin;
+package edu.stanford.bmir.protege.web.shared.app;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 

@@ -1,7 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.admin;
 
-import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
+import edu.stanford.bmir.protege.web.shared.app.*;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.Matchers;

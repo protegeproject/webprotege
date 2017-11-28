@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.server.admin.GetApplicationSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.admin.SetApplicationSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.app.GetApplicationSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.app.SetApplicationSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
