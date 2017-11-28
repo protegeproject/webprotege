@@ -687,7 +687,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                     datatypeName = datatype.getIRI().toString();
                 }
                 StringBuilder tooltip = new StringBuilder();
-                tooltip.append(entityData.getBrowserText());
+                tooltip.append("value");
                 char c = datatypeName.charAt(0);
                 if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
                     tooltip.append(" is an ");
