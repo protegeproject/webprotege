@@ -133,7 +133,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     DiscussionCss discussion();
 
     @Source("WebProtegeSettingsPage.css")
-    WebProtegeSettingsPage settings();
+    SettingsPageCss settings();
 
     @Source("value-list.css")
     ValueListCss valueList();
@@ -354,7 +354,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String addTabButton();
     }
 
-    interface WebProtegeSettingsPage extends CssResource {
+    interface SettingsPageCss extends CssResource {
 
         String outer();
 
