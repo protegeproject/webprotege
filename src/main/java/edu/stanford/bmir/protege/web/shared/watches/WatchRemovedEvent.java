@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> implements HasUserId {
 
-    public transient static final Event.Type<WatchRemovedHandler> TYPE = new Event.Type<WatchRemovedHandler>();
+    public transient static final Event.Type<WatchRemovedHandler> ON_WATCH_REMOVED = new Event.Type<WatchRemovedHandler>();
 
     private Watch watch;
 
@@ -28,7 +28,7 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
 
     @Override
     public Event.Type<WatchRemovedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_WATCH_REMOVED;
     }
 
     @Override

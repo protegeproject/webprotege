@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedChangedHandler> {
 
-    public transient static final Event.Type<EntityDeprecatedChangedHandler> TYPE = new Event.Type<EntityDeprecatedChangedHandler>();
+    public transient static final Event.Type<EntityDeprecatedChangedHandler> ON_ENTITY_DEPRECATED = new Event.Type<EntityDeprecatedChangedHandler>();
 
     private OWLEntity entity;
 
@@ -40,7 +40,7 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
 
     @Override
     public Event.Type<EntityDeprecatedChangedHandler> getAssociatedType() {
-        return TYPE;
+        return ON_ENTITY_DEPRECATED;
     }
 
     @Override

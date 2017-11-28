@@ -62,7 +62,7 @@ public class DeprecatedEntitiesPresenter extends AbstractWebProtegePortletPresen
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setWidget(view);
-        eventBus.addApplicationEventHandler(EntityDeprecatedChangedEvent.TYPE,
+        eventBus.addApplicationEventHandler(EntityDeprecatedChangedEvent.ON_ENTITY_DEPRECATED,
                                             this::handleEntityDeprecatedChanged);
         view.setPageNumberChangedHandler(pageNumber -> {
             refillWithDelay();
