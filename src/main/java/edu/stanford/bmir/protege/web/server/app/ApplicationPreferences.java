@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.app;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.CappedAt;

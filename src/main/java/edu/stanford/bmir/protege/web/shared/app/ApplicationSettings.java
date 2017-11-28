@@ -1,9 +1,8 @@
-package edu.stanford.bmir.protege.web.shared.admin;
+package edu.stanford.bmir.protege.web.shared.app;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

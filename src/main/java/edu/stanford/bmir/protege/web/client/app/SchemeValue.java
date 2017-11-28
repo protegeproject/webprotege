@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.admin;
+package edu.stanford.bmir.protege.web.client.app;
 
 /**
  * Matthew Horridge

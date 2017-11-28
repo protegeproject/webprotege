@@ -7,7 +7,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.admin.ApplicationSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;

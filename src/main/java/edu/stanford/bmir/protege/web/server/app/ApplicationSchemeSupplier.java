@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.server.admin.ApplicationPreferencesStore;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 
 import javax.annotation.Nonnull;

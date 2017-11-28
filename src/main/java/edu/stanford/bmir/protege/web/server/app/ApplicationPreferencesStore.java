@@ -1,7 +1,5 @@
-package edu.stanford.bmir.protege.web.server.admin;
+package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
-import edu.stanford.bmir.protege.web.server.app.DefaultApplicationPreferences;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.mongodb.morphia.Datastore;

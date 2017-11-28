@@ -1,17 +1,15 @@
-package edu.stanford.bmir.protege.web.client.admin;
+package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
-import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
-import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.admin.SetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
@@ -22,15 +20,16 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_APPLICATION_SETTINGS;
-import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting.DO_NOT_SEND_NOTIFICATION_EMAILS;
-import static edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS;
-import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_NOT_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED;
-import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.app.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.app.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.app.NotificationEmailsSetting.DO_NOT_SEND_NOTIFICATION_EMAILS;
+import static edu.stanford.bmir.protege.web.shared.app.NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS;
+import static edu.stanford.bmir.protege.web.shared.app.ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.app.ProjectCreationSetting.EMPTY_PROJECT_CREATION_NOT_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.app.ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.app.ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED;
 
 /**
  * Matthew Horridge
@@ -53,14 +52,14 @@ public class ApplicationSettingsPresenter implements Presenter {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public ApplicationSettingsPresenter(ApplicationSettingsView view,
-                                        LoggedInUserManager loggedInUserManager,
-                                        ForbiddenView forbiddenView,
-                                        DispatchServiceManager dispatchServiceManager) {
-        this.view = view;
-        this.loggedInUserManager = loggedInUserManager;
-        this.forbiddenView = forbiddenView;
-        this.dispatchServiceManager = dispatchServiceManager;
+    public ApplicationSettingsPresenter(@Nonnull ApplicationSettingsView view,
+                                        @Nonnull LoggedInUserManager loggedInUserManager,
+                                        @Nonnull ForbiddenView forbiddenView,
+                                        @Nonnull DispatchServiceManager dispatchServiceManager) {
+        this.view = checkNotNull(view);
+        this.loggedInUserManager = checkNotNull(loggedInUserManager);
+        this.forbiddenView = checkNotNull(forbiddenView);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     @Override
