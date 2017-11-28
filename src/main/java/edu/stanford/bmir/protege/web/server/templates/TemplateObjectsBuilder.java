@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.templates;
 
 
 import com.google.common.collect.ImmutableMap;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
+import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -89,7 +89,7 @@ public class TemplateObjectsBuilder {
         return this;
     }
 
-    public TemplateObjectsBuilder withApplicationSettings(ApplicationSettings settings) {
+    public TemplateObjectsBuilder withApplicationSettings(ApplicationPreferences settings) {
         builder.put(APPLICATION_NAME, settings.getApplicationName());
         builder.put(APPLICATION_LOCATION_SCHEME, settings.getApplicationLocation().getScheme());
         builder.put(APPLICATION_LOCATION_HOST, settings.getApplicationLocation().getHost());

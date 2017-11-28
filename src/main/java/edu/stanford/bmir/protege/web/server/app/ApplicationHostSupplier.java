@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.server.admin.AdminSettingsManager;
+import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,15 +13,15 @@ import java.util.function.Supplier;
  */
 public class ApplicationHostSupplier implements Supplier<String> {
 
-    private final AdminSettingsManager adminSettingsManager;
+    private final ApplicationSettingsManager applicationSettingsManager;
 
     @Inject
-    public ApplicationHostSupplier(@Nonnull AdminSettingsManager adminSettingsManager) {
-        this.adminSettingsManager = adminSettingsManager;
+    public ApplicationHostSupplier(@Nonnull ApplicationSettingsManager applicationSettingsManager) {
+        this.applicationSettingsManager = applicationSettingsManager;
     }
 
     @Nonnull
     public String get() {
-        return adminSettingsManager.getAdminSettings().getApplicationLocation().getHost();
+        return applicationSettingsManager.getAdminSettings().getApplicationLocation().getHost();
     }
 }

@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.admin;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
+import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,49 +30,49 @@ import static org.mockito.Mockito.when;
  * 18 Mar 2017
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AdminSettingsManager_TestCase {
+public class ApplicationPreferencesManager_TestCase {
 
     public static final String THE_APP_NAME = "TheAppName";
 
     public static final String THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS = "TheSystemNotificationEmailAddress";
 
-    private AdminSettingsManager manager;
+    private ApplicationSettingsManager manager;
 
     @Mock
     private AccessManager accessManager;
 
     @Mock
-    private ApplicationSettingsManager applicationSettingsManager;
+    private ApplicationPreferencesStore applicationPreferencesStore;
 
     @Mock
-    private ApplicationSettings applicationSettings;
+    private ApplicationPreferences applicationPreferences;
 
     @Mock
     private ApplicationLocation applicationLocation;
 
     @Before
     public void setUp() throws Exception {
-        manager = new AdminSettingsManager(accessManager,
-                                           applicationSettingsManager);
+        manager = new ApplicationSettingsManager(accessManager,
+                                                 applicationPreferencesStore);
 
-        when(applicationSettings.getApplicationName()).thenReturn(THE_APP_NAME);
-        when(applicationSettings.getSystemNotificationEmailAddress()).thenReturn(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS);
-        when(applicationSettings.getApplicationLocation()).thenReturn(applicationLocation);
-        when(applicationSettingsManager.getApplicationSettings()).thenReturn(applicationSettings);
+        when(applicationPreferences.getApplicationName()).thenReturn(THE_APP_NAME);
+        when(applicationPreferences.getSystemNotificationEmailAddress()).thenReturn(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS);
+        when(applicationPreferences.getApplicationLocation()).thenReturn(applicationLocation);
+        when(applicationPreferencesStore.getApplicationPreferences()).thenReturn(applicationPreferences);
     }
 
     @Test
     public void shouldGetApplicationSettings() {
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getApplicationName(), is(THE_APP_NAME));
-        assertThat(adminSettings.getSystemNotificationEmailAddress().getEmailAddress(), is(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS));
-        assertThat(adminSettings.getApplicationLocation(), is(applicationLocation));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getApplicationName(), is(THE_APP_NAME));
+        assertThat(applicationSettings.getSystemNotificationEmailAddress().getEmailAddress(), is(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS));
+        assertThat(applicationSettings.getApplicationLocation(), is(applicationLocation));
     }
 
     @Test
     public void shouldGetAccountCreationNotAllowed() {
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_NOT_ALLOWED));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_NOT_ALLOWED));
     }
 
     @Test
@@ -80,14 +80,14 @@ public class AdminSettingsManager_TestCase {
         when(accessManager.hasPermission(forGuestUser(),
                                          ApplicationResource.get(),
                                          BuiltInAction.CREATE_ACCOUNT)).thenReturn(true);
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_ALLOWED));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_ALLOWED));
     }
 
     @Test
     public void shouldGetProjectCreationNotAllowed() {
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_NOT_ALLOWED));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_NOT_ALLOWED));
     }
 
     @Test
@@ -95,14 +95,14 @@ public class AdminSettingsManager_TestCase {
         when(accessManager.hasPermission(forAnySignedInUser(),
                                          ApplicationResource.get(),
                                          BuiltInAction.CREATE_EMPTY_PROJECT)).thenReturn(true);
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_ALLOWED));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_ALLOWED));
     }
 
     @Test
     public void shouldGetProjectUploadNotAllowed() {
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_NOT_ALLOWED));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_NOT_ALLOWED));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class AdminSettingsManager_TestCase {
         when(accessManager.hasPermission(forAnySignedInUser(),
                                          ApplicationResource.get(),
                                          BuiltInAction.UPLOAD_PROJECT)).thenReturn(true);
-        AdminSettings adminSettings = manager.getAdminSettings();
-        assertThat(adminSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_ALLOWED));
+        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        assertThat(applicationSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_ALLOWED));
     }
 }

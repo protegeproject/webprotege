@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public interface AdminView extends IsWidget {
+public interface ApplicationSettingsView extends IsWidget {
 
     void setApplySettingsHandler(@Nonnull Runnable runnable);
 

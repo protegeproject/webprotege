@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.shared.app;
+package edu.stanford.bmir.protege.web.server.app;
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import org.mongodb.morphia.annotations.AlsoLoad;
 import org.mongodb.morphia.annotations.CappedAt;
 import org.mongodb.morphia.annotations.Entity;
@@ -16,12 +18,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Mar 2017
  *
- * An object that holds application settings.
+ * An object that holds application preferences that are stored in the database.
  */
 @Entity(cap = @CappedAt(count = 1L), noClassnameStored = true)
-public class ApplicationSettings {
+public class ApplicationPreferences {
 
-    public static final String ID = "ApplicationSettings";
+    public static final String ID = "Preferences";
 
     @Id
     @SuppressWarnings("unused")
@@ -39,10 +41,10 @@ public class ApplicationSettings {
 
     private final long maxUploadSize;
 
-    public ApplicationSettings(@Nonnull String applicationName,
-                               @Nonnull String systemNotificationEmailAddress,
-                               @Nonnull ApplicationLocation applicationLocation,
-                               long maxUploadSize) {
+    public ApplicationPreferences(@Nonnull String applicationName,
+                                  @Nonnull String systemNotificationEmailAddress,
+                                  @Nonnull ApplicationLocation applicationLocation,
+                                  long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
         this.systemNotificationEmailAddress = checkNotNull(systemNotificationEmailAddress);
         this.applicationLocation = checkNotNull(applicationLocation);
@@ -97,10 +99,10 @@ public class ApplicationSettings {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ApplicationSettings)) {
+        if (!(obj instanceof ApplicationPreferences)) {
             return false;
         }
-        ApplicationSettings other = (ApplicationSettings) obj;
+        ApplicationPreferences other = (ApplicationPreferences) obj;
         return this.applicationName.equals(other.applicationName)
                 && this.systemNotificationEmailAddress.equals(other.systemNotificationEmailAddress)
                 && this.applicationLocation.equals(other.applicationLocation)
@@ -110,7 +112,7 @@ public class ApplicationSettings {
 
     @Override
     public String toString() {
-        return toStringHelper("ApplicationSettings" )
+        return toStringHelper("ApplicationPreferences" )
                 .addValue(applicationName)
                 .add("systemNotificationEmail", systemNotificationEmailAddress)
                 .addValue(applicationLocation)

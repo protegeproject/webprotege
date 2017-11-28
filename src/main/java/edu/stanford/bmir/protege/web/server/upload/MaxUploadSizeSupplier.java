@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
-import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
+import edu.stanford.bmir.protege.web.server.admin.ApplicationPreferencesStore;
 
 import javax.inject.Inject;
 import java.util.function.Supplier;
@@ -12,11 +12,11 @@ import java.util.function.Supplier;
  */
 public class MaxUploadSizeSupplier implements Supplier<Long> {
 
-    private final ApplicationSettingsManager applicationSettingsManager;
+    private final ApplicationPreferencesStore applicationPreferencesStore;
 
     @Inject
-    public MaxUploadSizeSupplier(ApplicationSettingsManager applicationSettingsManager) {
-        this.applicationSettingsManager = applicationSettingsManager;
+    public MaxUploadSizeSupplier(ApplicationPreferencesStore applicationPreferencesStore) {
+        this.applicationPreferencesStore = applicationPreferencesStore;
     }
 
     /**
@@ -25,6 +25,6 @@ public class MaxUploadSizeSupplier implements Supplier<Long> {
      */
     @Override
     public Long get() {
-        return applicationSettingsManager.getApplicationSettings().getMaxUploadSize();
+        return applicationPreferencesStore.getApplicationPreferences().getMaxUploadSize();
     }
 }

@@ -7,7 +7,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.admin.AdminPresenter;
+import edu.stanford.bmir.protege.web.client.admin.ApplicationSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
@@ -46,7 +46,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final SignUpPresenter signUpPresenter;
 
-    private final AdminPresenter adminPresenter;
+    private final ApplicationSettingsPresenter applicationSettingsPresenter;
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -66,7 +66,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                                     ProjectManagerPresenter projectListPresenter,
                                     LoginPresenter loginPresenter,
                                     SignUpPresenter signUpPresenter,
-                                    AdminPresenter adminPresenter,
+                                    ApplicationSettingsPresenter applicationSettingsPresenter,
                                     PlaceController placeController,
                                     EventBus eventBus) {
         this.applicationComponent = applicationComponent;
@@ -74,7 +74,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         this.projectManagerPresenter = projectListPresenter;
         this.signUpPresenter = signUpPresenter;
         this.loginPresenter = loginPresenter;
-        this.adminPresenter = adminPresenter;
+        this.applicationSettingsPresenter = applicationSettingsPresenter;
         this.placeController = placeController;
         this.eventBus = eventBus;
     }
@@ -95,8 +95,8 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
             return new LoginActivity(loginPresenter);
         }
-        if(place instanceof AdminPlace) {
-            return new AdminActivity(adminPresenter);
+        if(place instanceof ApplicationSettingsPlace) {
+            return new AdminActivity(applicationSettingsPresenter);
         }
         if(place instanceof ProjectSettingsPlace) {
             ProjectSettingsPlace projectSettingsPlace = (ProjectSettingsPlace) place;

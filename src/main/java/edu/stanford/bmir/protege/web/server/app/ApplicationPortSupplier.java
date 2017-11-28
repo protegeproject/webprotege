@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
+import edu.stanford.bmir.protege.web.server.admin.ApplicationPreferencesStore;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,15 +16,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ApplicationPortSupplier implements Supplier<Optional<Integer>> {
 
-    private final ApplicationSettingsManager manager;
+    private final ApplicationPreferencesStore manager;
 
     @Inject
-    public ApplicationPortSupplier(@Nonnull ApplicationSettingsManager manager) {
+    public ApplicationPortSupplier(@Nonnull ApplicationPreferencesStore manager) {
         this.manager = checkNotNull(manager);
     }
 
     public Optional<Integer> get() {
-        int port = manager.getApplicationSettings().getApplicationLocation().getPort();
+        int port = manager.getApplicationPreferences().getApplicationLocation().getPort();
         if(port != 0) {
             return Optional.of(
                     port

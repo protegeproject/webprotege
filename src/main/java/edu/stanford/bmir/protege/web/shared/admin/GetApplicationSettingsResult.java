@@ -10,19 +10,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class GetAdminSettingsResult implements Result {
+public class GetApplicationSettingsResult implements Result {
 
-    private AdminSettings adminSettings;
+    private ApplicationSettings applicationSettings;
 
     @GwtSerializationConstructor
-    private GetAdminSettingsResult() {
+    private GetApplicationSettingsResult() {
     }
 
-    public GetAdminSettingsResult(AdminSettings adminSettings) {
-        this.adminSettings = checkNotNull(adminSettings);
+    public GetApplicationSettingsResult(ApplicationSettings applicationSettings) {
+        this.applicationSettings = checkNotNull(applicationSettings);
     }
 
-    public AdminSettings getAdminSettings() {
-        return adminSettings;
+    public ApplicationSettings getApplicationSettings() {
+        return applicationSettings;
     }
 }
