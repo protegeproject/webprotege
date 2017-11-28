@@ -54,7 +54,7 @@
         <div style="height: 30px;"/>
 
         <g:Label text="{msg.frame_range}" addStyleNames="{wp.style.formLabel}"/>
-        <primitive:PrimitiveDataListEditor ui:field="ranges"/>
+        <primitive:PrimitiveDataListEditor ui:field="ranges" placeholder="{msg.frame_enterADatatype}"/>
 
     </g:HTMLPanel>
 </ui:UiBinder>
