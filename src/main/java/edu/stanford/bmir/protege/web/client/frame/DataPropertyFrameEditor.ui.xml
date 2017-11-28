@@ -49,7 +49,7 @@
         <div style="height: 30px;"/>
 
         <g:Label text="{msg.frame_domain}" addStyleNames="{wp.style.formLabel}"/>
-        <primitive:PrimitiveDataListEditor ui:field="domains"/>
+        <primitive:PrimitiveDataListEditor ui:field="domains" placeholder="{msg.frame_enterAClassName}"/>
 
         <div style="height: 30px;"/>
 
