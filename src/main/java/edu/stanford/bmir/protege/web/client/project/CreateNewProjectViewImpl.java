@@ -37,6 +37,9 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @UiField
     FormPanel formPanel;
 
+    @UiField
+    HTMLPanel fileUploadArea;
+
     private HandlerRegistration submitCompleteHandlerRegistraion = () -> {};
 
 
@@ -60,6 +63,7 @@ public class CreateNewProjectViewImpl extends Composite implements CreateNewProj
     @Override
     public void setFileUploadEnabled(boolean enabled) {
         fileUpload.setEnabled(enabled);
+        fileUploadArea.setVisible(enabled);
     }
 
     @Override
