@@ -9,9 +9,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWith
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
-import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsAction;
-import edu.stanford.bmir.protege.web.shared.admin.SetAdminSettingsAction;
+import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.admin.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
@@ -38,13 +38,13 @@ import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PR
  * 16 Mar 2017
  */
 @ApplicationSingleton
-public class AdminPresenter implements Presenter {
+public class ApplicationSettingsPresenter implements Presenter {
 
     public static final RegExp HOST_REGEXP = RegExp.compile("^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\\.?$");
 
     public static final RegExp PATH_REGEXP = RegExp.compile("(^\\/[/.a-zA-Z0-9-]+$)|^$");
 
-    private final AdminView view;
+    private final ApplicationSettingsView view;
 
     private final LoggedInUserManager loggedInUserManager;
 
@@ -53,10 +53,10 @@ public class AdminPresenter implements Presenter {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public AdminPresenter(AdminView view,
-                          LoggedInUserManager loggedInUserManager,
-                          ForbiddenView forbiddenView,
-                          DispatchServiceManager dispatchServiceManager) {
+    public ApplicationSettingsPresenter(ApplicationSettingsView view,
+                                        LoggedInUserManager loggedInUserManager,
+                                        ForbiddenView forbiddenView,
+                                        DispatchServiceManager dispatchServiceManager) {
         this.view = view;
         this.loggedInUserManager = loggedInUserManager;
         this.forbiddenView = forbiddenView;
@@ -70,27 +70,27 @@ public class AdminPresenter implements Presenter {
         }
         else {
             container.setWidget(view);
-            dispatchServiceManager.execute(new GetAdminSettingsAction(),
+            dispatchServiceManager.execute(new GetApplicationSettingsAction(),
                                            result -> {
-                                               displaySettings(result.getAdminSettings());
+                                               displaySettings(result.getApplicationSettings());
                                            });
         }
         view.setApplySettingsHandler(this::applySettings);
         view.setRebuildPermissionsHandler(this::rebuildPermissions);
     }
 
-    private void displaySettings(AdminSettings adminSettings) {
-        view.setApplicationName(adminSettings.getApplicationName());
-        view.setSystemNotificationEmailAddress(adminSettings.getSystemNotificationEmailAddress().getEmailAddress());
-        view.setAccountCreationAllowed(adminSettings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED);
-        view.setProjectCreationAllowed(adminSettings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED);
-        view.setProjectUploadAllowed(adminSettings.getProjectUploadSetting() == PROJECT_UPLOAD_ALLOWED);
-        view.setNotificationEmailsEnabled(adminSettings.getNotificationEmailsSetting() == SEND_NOTIFICATION_EMAILS);
-        SchemeValue scheme = SchemeValue.valueOf(adminSettings.getApplicationLocation().getScheme().toUpperCase());
+    private void displaySettings(ApplicationSettings applicationSettings) {
+        view.setApplicationName(applicationSettings.getApplicationName());
+        view.setSystemNotificationEmailAddress(applicationSettings.getSystemNotificationEmailAddress().getEmailAddress());
+        view.setAccountCreationAllowed(applicationSettings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED);
+        view.setProjectCreationAllowed(applicationSettings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED);
+        view.setProjectUploadAllowed(applicationSettings.getProjectUploadSetting() == PROJECT_UPLOAD_ALLOWED);
+        view.setNotificationEmailsEnabled(applicationSettings.getNotificationEmailsSetting() == SEND_NOTIFICATION_EMAILS);
+        SchemeValue scheme = SchemeValue.valueOf(applicationSettings.getApplicationLocation().getScheme().toUpperCase());
         view.setScheme(scheme);
-        view.setHost(adminSettings.getApplicationLocation().getHost());
-        view.setPath(adminSettings.getApplicationLocation().getPath());
-        int port = adminSettings.getApplicationLocation().getPort();
+        view.setHost(applicationSettings.getApplicationLocation().getHost());
+        view.setPath(applicationSettings.getApplicationLocation().getPath());
+        int port = applicationSettings.getApplicationLocation().getPort();
         if(scheme.getDefaultPort() == port) {
             view.setPort("");
         }
@@ -98,18 +98,18 @@ public class AdminPresenter implements Presenter {
             view.setPort(Integer.toString(port));
         }
 
-        if(adminSettings.getMaxUploadSize() == Long.MAX_VALUE) {
+        if(applicationSettings.getMaxUploadSize() == Long.MAX_VALUE) {
             view.setMaxUploadSize("");
         }
         else {
-            String maxUploadSize = Long.toString(adminSettings.getMaxUploadSize() / (1024 * 1024));
+            String maxUploadSize = Long.toString(applicationSettings.getMaxUploadSize() / (1024 * 1024));
             view.setMaxUploadSize(maxUploadSize);
         }
 
     }
 
     private void applySettings() {
-        AdminSettings adminSettings = new AdminSettings(
+        ApplicationSettings applicationSettings = new ApplicationSettings(
                 view.getApplicationName(),
                 new EmailAddress(view.getSystemNotificationEmailAddress()),
                 new ApplicationLocation(view.getScheme().name().toLowerCase(),
@@ -125,7 +125,7 @@ public class AdminPresenter implements Presenter {
                 view.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS,
                 parseMaxUploadSize()
         );
-        dispatchServiceManager.execute(new SetAdminSettingsAction(adminSettings),
+        dispatchServiceManager.execute(new SetApplicationSettingsAction(applicationSettings),
                                        result -> MessageBox.showMessage("Settings applied", "The application settings have successfully been applied"));
     }
 

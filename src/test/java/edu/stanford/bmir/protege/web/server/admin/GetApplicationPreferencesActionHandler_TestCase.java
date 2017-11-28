@@ -7,9 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.shared.admin.AdminSettings;
-import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsAction;
-import edu.stanford.bmir.protege.web.shared.admin.GetAdminSettingsResult;
+import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsAction;
+import edu.stanford.bmir.protege.web.shared.admin.GetApplicationSettingsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,18 +23,18 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 @RunWith(value = org.mockito.runners.MockitoJUnitRunner.class)
-public class GetAdminSettingsActionHandler_TestCase {
+public class GetApplicationPreferencesActionHandler_TestCase {
 
-    private GetAdminSettingsActionHandler handler;
+    private GetApplicationSettingsActionHandler handler;
 
     @Mock
     private AccessManager accessManager;
 
     @Mock
-    private AdminSettingsManager adminSettingsManager;
+    private ApplicationSettingsManager applicationSettingsManager;
 
     @Mock
-    private GetAdminSettingsAction action;
+    private GetApplicationSettingsAction action;
 
     @Mock
     private ExecutionContext executionContext;
@@ -49,17 +49,17 @@ public class GetAdminSettingsActionHandler_TestCase {
     private RequestContext requestContext;
 
     @Mock
-    private AdminSettings adminSettings;
+    private ApplicationSettings applicationSettings;
 
-    public GetAdminSettingsActionHandler_TestCase() {
+    public GetApplicationPreferencesActionHandler_TestCase() {
     }
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetAdminSettingsActionHandler(accessManager, adminSettingsManager);
+        handler = new GetApplicationSettingsActionHandler(accessManager, applicationSettingsManager);
         when(executionContext.getUserId()).thenReturn(userId);
         when(requestContext.getUserId()).thenReturn(userId);
-        when(adminSettingsManager.getAdminSettings()).thenReturn(adminSettings);
+        when(applicationSettingsManager.getAdminSettings()).thenReturn(applicationSettings);
     }
 
     @Test
@@ -74,8 +74,8 @@ public class GetAdminSettingsActionHandler_TestCase {
 
     @Test
     public void shouldGetAdminSettings() {
-        GetAdminSettingsResult result = handler.execute(action, executionContext);
-        verify(adminSettingsManager, times(1)).getAdminSettings();
-        assertThat(result.getAdminSettings(), is(adminSettings));
+        GetApplicationSettingsResult result = handler.execute(action, executionContext);
+        verify(applicationSettingsManager, times(1)).getAdminSettings();
+        assertThat(result.getApplicationSettings(), is(applicationSettings));
     }
 }

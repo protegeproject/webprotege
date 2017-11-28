@@ -1,15 +1,15 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import edu.stanford.bmir.protege.web.shared.place.AdminPlace;
+import edu.stanford.bmir.protege.web.shared.place.ApplicationSettingsPlace;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class AdminPlaceTokenizer implements WebProtegePlaceTokenizer<AdminPlace> {
+public class AdminPlaceTokenizer implements WebProtegePlaceTokenizer<ApplicationSettingsPlace> {
 
-    public static final String ADMIN = "admin";
+    public static final String ADMIN = "application/settings";
 
     @Override
     public boolean matches(String token) {
@@ -17,17 +17,17 @@ public class AdminPlaceTokenizer implements WebProtegePlaceTokenizer<AdminPlace>
     }
 
     @Override
-    public Class<AdminPlace> getPlaceClass() {
-        return AdminPlace.class;
+    public Class<ApplicationSettingsPlace> getPlaceClass() {
+        return ApplicationSettingsPlace.class;
     }
 
     @Override
-    public AdminPlace getPlace(String token) {
-        return AdminPlace.get();
+    public ApplicationSettingsPlace getPlace(String token) {
+        return ApplicationSettingsPlace.get();
     }
 
     @Override
-    public String getToken(AdminPlace place) {
+    public String getToken(ApplicationSettingsPlace place) {
         return ADMIN;
     }
 }

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.admin;
 
 import com.mongodb.MongoClient;
+import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +18,9 @@ import static org.junit.Assert.assertThat;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2017
  */
-public class ApplicationSettingsManager_IT {
+public class ApplicationPreferencesStore_IT {
 
-    private final ApplicationSettings applicationSettings = new ApplicationSettings(
+    private final ApplicationPreferences applicationPreferences = new ApplicationPreferences(
             "TheApplicationName" ,
             "TheSystemNotificationEmailAddress" ,
             new ApplicationLocation(
@@ -32,7 +32,7 @@ public class ApplicationSettingsManager_IT {
             44L
     );
 
-    private ApplicationSettingsManager manager;
+    private ApplicationPreferencesStore manager;
 
     private Morphia morphia;
 
@@ -45,7 +45,7 @@ public class ApplicationSettingsManager_IT {
         mongoClient = MongoTestUtils.createMongoClient();
         morphia = MongoTestUtils.createMorphia();
         datastore = morphia.createDatastore(mongoClient, MongoTestUtils.getTestDbName());
-        manager = new ApplicationSettingsManager(datastore);
+        manager = new ApplicationPreferencesStore(datastore);
     }
 
     @After
@@ -55,22 +55,22 @@ public class ApplicationSettingsManager_IT {
 
     @Test
     public void shouldSaveSettings() {
-        manager.setApplicationSettings(applicationSettings);
-        assertThat(datastore.getCount(ApplicationSettings.class), is(1L));
+        manager.setApplicationPreferences(applicationPreferences);
+        assertThat(datastore.getCount(ApplicationPreferences.class), is(1L));
     }
 
     @Test
     public void shouldSaveSingleSettings() {
-        manager.setApplicationSettings(applicationSettings);
-        manager.setApplicationSettings(applicationSettings);
-        assertThat(datastore.getCount(ApplicationSettings.class), is(1L));
+        manager.setApplicationPreferences(applicationPreferences);
+        manager.setApplicationPreferences(applicationPreferences);
+        assertThat(datastore.getCount(ApplicationPreferences.class), is(1L));
     }
 
     @Test
     public void shouldGetSavedSettings() {
-        manager.setApplicationSettings(applicationSettings);
-        ApplicationSettings settings = manager.getApplicationSettings();
-        assertThat(settings, is(applicationSettings));
+        manager.setApplicationPreferences(applicationPreferences);
+        ApplicationPreferences settings = manager.getApplicationPreferences();
+        assertThat(settings, is(applicationPreferences));
     }
 
 }

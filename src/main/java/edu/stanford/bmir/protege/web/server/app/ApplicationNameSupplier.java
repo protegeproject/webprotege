@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.server.admin.ApplicationSettingsManager;
+import edu.stanford.bmir.protege.web.server.admin.ApplicationPreferencesStore;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -15,14 +15,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ApplicationNameSupplier implements Supplier<String> {
 
-    private final ApplicationSettingsManager manager;
+    private final ApplicationPreferencesStore manager;
 
     @Inject
-    public ApplicationNameSupplier(@Nonnull ApplicationSettingsManager manager) {
+    public ApplicationNameSupplier(@Nonnull ApplicationPreferencesStore manager) {
         this.manager = checkNotNull(manager);
     }
 
     public String get() {
-        return manager.getApplicationSettings().getApplicationName();
+        return manager.getApplicationPreferences().getApplicationName();
     }
 }

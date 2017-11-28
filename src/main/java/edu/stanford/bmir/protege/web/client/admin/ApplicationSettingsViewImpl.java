@@ -19,13 +19,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class AdminViewImpl extends Composite implements AdminView {
+public class ApplicationSettingsViewImpl extends Composite implements ApplicationSettingsView {
 
-    interface AdminViewImplUiBinder extends UiBinder<HTMLPanel, AdminViewImpl> {
+    interface ApplicationSettingsViewImplUiBinder extends UiBinder<HTMLPanel, ApplicationSettingsViewImpl> {
 
     }
 
-    private static AdminViewImplUiBinder ourUiBinder = GWT.create(AdminViewImplUiBinder.class);
+    private static ApplicationSettingsViewImplUiBinder ourUiBinder = GWT.create(ApplicationSettingsViewImplUiBinder.class);
 
     @UiField
     TextBox applicationNameField;
@@ -74,10 +74,10 @@ public class AdminViewImpl extends Composite implements AdminView {
     private Runnable rebuildPermissionsHandler = () -> {};
 
     @Inject
-    public AdminViewImpl() {
+    public ApplicationSettingsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        applicationHostField.setValidation(AdminPresenter.HOST_REGEXP.getSource());
-        applicationPathField.setValidation(AdminPresenter.PATH_REGEXP.getSource());
+        applicationHostField.setValidation(ApplicationSettingsPresenter.HOST_REGEXP.getSource());
+        applicationPathField.setValidation(ApplicationSettingsPresenter.PATH_REGEXP.getSource());
         applicationPortField.setValidation("^(\\d)*$");
         maxUploadSize.setValidation("^(\\d)*$");
     }

@@ -9,14 +9,14 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class AdminPlace extends Place {
+public class ApplicationSettingsPlace extends Place {
 
-    private static final AdminPlace INSTANCE = new AdminPlace();
+    private static final ApplicationSettingsPlace INSTANCE = new ApplicationSettingsPlace();
 
-    private AdminPlace() {
+    private ApplicationSettingsPlace() {
     }
 
-    public static AdminPlace get() {
+    public static ApplicationSettingsPlace get() {
         return INSTANCE;
     }
 
@@ -27,13 +27,13 @@ public class AdminPlace extends Place {
 
     @Override
     public boolean equals(Object obj) {
-        return obj == this || obj instanceof AdminPlace;
+        return obj == this || obj instanceof ApplicationSettingsPlace;
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("AdminPlace" )
+        return toStringHelper("ApplicationSettingsPlace" )
                 .toString();
     }
 }

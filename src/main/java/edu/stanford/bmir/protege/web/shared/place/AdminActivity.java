@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.shared.place;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.admin.AdminPresenter;
+import edu.stanford.bmir.protege.web.client.admin.ApplicationSettingsPresenter;
 
 import javax.inject.Inject;
 
@@ -16,10 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AdminActivity extends AbstractActivity {
 
-    private final AdminPresenter presenter;
+    private final ApplicationSettingsPresenter presenter;
 
     @Inject
-    public AdminActivity(AdminPresenter presenter) {
+    public AdminActivity(ApplicationSettingsPresenter presenter) {
         this.presenter = checkNotNull(presenter);
     }
 

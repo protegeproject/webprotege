@@ -1,28 +1,51 @@
 package edu.stanford.bmir.protege.web.server.admin;
 
-import edu.stanford.bmir.protege.web.server.app.DefaultApplicationSettings;
-import edu.stanford.bmir.protege.web.server.persistence.Repository;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.access.RoleId;
+import edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting;
+import edu.stanford.bmir.protege.web.shared.admin.ApplicationSettings;
+import edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting;
+import edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import org.mongodb.morphia.Datastore;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forAnySignedInUser;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forGuestUser;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_EMPTY_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_PROJECT;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInRole.*;
+import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.admin.AccountCreationSetting.ACCOUNT_CREATION_NOT_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.admin.NotificationEmailsSetting.SEND_NOTIFICATION_EMAILS;
+import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.admin.ProjectCreationSetting.EMPTY_PROJECT_CREATION_NOT_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_ALLOWED;
+import static edu.stanford.bmir.protege.web.shared.admin.ProjectUploadSetting.PROJECT_UPLOAD_NOT_ALLOWED;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 16 Mar 2017
+ * 17 Mar 2017
  */
 @ApplicationSingleton
-public class ApplicationSettingsManager implements Repository {
+public class ApplicationSettingsManager {
 
-    private final Datastore datastore;
+    private final AccessManager accessManager;
+
+    private final ApplicationPreferencesStore settingsStore;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -31,38 +54,110 @@ public class ApplicationSettingsManager implements Repository {
     private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
-    public ApplicationSettingsManager(@Nonnull Datastore datastore) {
-        this.datastore = checkNotNull(datastore);
-    }
-
-    @Override
-    public void ensureIndexes() {
-        datastore.ensureIndexes(ApplicationSettingsManager.class);
+    public ApplicationSettingsManager(@Nonnull AccessManager accessManager,
+                                      @Nonnull ApplicationPreferencesStore settingsStore) {
+        this.accessManager = checkNotNull(accessManager);
+        this.settingsStore = checkNotNull(settingsStore);
     }
 
     @Nonnull
-    public ApplicationSettings getApplicationSettings() {
-        readLock.lock();
+    public ApplicationSettings getAdminSettings() {
         try {
-            ApplicationSettings applicationSettings = datastore.get(ApplicationSettings.class, ApplicationSettings.ID);
-            if (applicationSettings == null) {
-                applicationSettings = DefaultApplicationSettings.get();
-                datastore.save(applicationSettings);
+            readLock.lock();
+            ApplicationPreferences applicationPreferences = settingsStore.getApplicationPreferences();
+            AccountCreationSetting accountCreationSetting;
+            boolean canCreateAccounts = accessManager.hasPermission(forGuestUser(),
+                                                                    ApplicationResource.get(),
+                                                                    BuiltInAction.CREATE_ACCOUNT);
+            if(canCreateAccounts) {
+                accountCreationSetting = ACCOUNT_CREATION_ALLOWED;
             }
-            return applicationSettings;
+            else {
+                accountCreationSetting = ACCOUNT_CREATION_NOT_ALLOWED;
+            }
+            ProjectCreationSetting projectCreationSetting;
+            boolean canCreateEmptyProject = accessManager.hasPermission(forAnySignedInUser(),
+                                                                        ApplicationResource.get(),
+                                                                        CREATE_EMPTY_PROJECT);
+            if(canCreateEmptyProject) {
+                projectCreationSetting = EMPTY_PROJECT_CREATION_ALLOWED;
+            }
+            else {
+                projectCreationSetting = EMPTY_PROJECT_CREATION_NOT_ALLOWED;
+            }
+            ProjectUploadSetting projectUploadSetting;
+            boolean canUploadProject = accessManager.hasPermission(forAnySignedInUser(),
+                                                                   ApplicationResource.get(),
+                                                                   UPLOAD_PROJECT);
+            if(canUploadProject) {
+                projectUploadSetting = PROJECT_UPLOAD_ALLOWED;
+            }
+            else {
+                projectUploadSetting = PROJECT_UPLOAD_NOT_ALLOWED;
+            }
+            return new ApplicationSettings(
+                    applicationPreferences.getApplicationName(),
+                    new EmailAddress(applicationPreferences.getSystemNotificationEmailAddress()),
+                    applicationPreferences.getApplicationLocation(),
+                    accountCreationSetting,
+                    ImmutableList.of(),
+                    projectCreationSetting,
+                    ImmutableList.of(),
+                    projectUploadSetting,
+                    ImmutableList.of(),
+                    SEND_NOTIFICATION_EMAILS,
+                    applicationPreferences.getMaxUploadSize()
+            );
         } finally {
             readLock.unlock();
         }
-
     }
 
-    public void setApplicationSettings(@Nonnull ApplicationSettings applicationSettings) {
-        writeLock.lock();
+    public void setApplicationSettings(@Nonnull ApplicationSettings settings) {
         try {
-            datastore.save(checkNotNull(applicationSettings));
+            writeLock.lock();
+            ApplicationPreferences applicationPreferences = new ApplicationPreferences(
+                    settings.getApplicationName(),
+                    settings.getSystemNotificationEmailAddress().getEmailAddress(),
+                    settings.getApplicationLocation(),
+                    settings.getMaxUploadSize()
+            );
+            settingsStore.setApplicationPreferences(applicationPreferences);
+            Set<RoleId> guestRoleIds = new HashSet<>(accessManager.getAssignedRoles(forGuestUser(),
+                                                                                    ApplicationResource.get()));
+            if(settings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED) {
+                guestRoleIds.add(ACCOUNT_CREATOR.getRoleId());
+            }
+            else {
+                guestRoleIds.remove(ACCOUNT_CREATOR.getRoleId());
+            }
+            accessManager.setAssignedRoles(forGuestUser(),
+                                           ApplicationResource.get(),
+                                           guestRoleIds);
 
+
+            Set<RoleId> roleIds = new HashSet<>(accessManager.getAssignedRoles(forAnySignedInUser(),
+                                                                               ApplicationResource.get()));
+            if(settings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED) {
+                roleIds.add(PROJECT_CREATOR.getRoleId());
+            }
+            else {
+                roleIds.remove(PROJECT_CREATOR.getRoleId());
+            }
+
+            if(settings.getProjectUploadSetting() == PROJECT_UPLOAD_ALLOWED) {
+                roleIds.add(PROJECT_UPLOADER.getRoleId());
+            }
+            else {
+                roleIds.remove(PROJECT_UPLOADER.getRoleId());
+            }
+            accessManager.setAssignedRoles(forAnySignedInUser(),
+                                           ApplicationResource.get(),
+                                           roleIds);
         } finally {
             writeLock.unlock();
         }
     }
+
+
 }

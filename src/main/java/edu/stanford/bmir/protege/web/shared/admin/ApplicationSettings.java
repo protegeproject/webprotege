@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 16 Mar 2017
  */
-public class AdminSettings implements IsSerializable {
+public class ApplicationSettings implements IsSerializable {
 
     private String applicationName;
 
@@ -45,20 +45,20 @@ public class AdminSettings implements IsSerializable {
     private long maxUploadSize;
 
     @GwtSerializationConstructor
-    private AdminSettings() {
+    private ApplicationSettings() {
     }
 
-    public AdminSettings(@Nonnull String applicationName,
-                         @Nonnull EmailAddress systemNotificationEmailAddress,
-                         @Nonnull ApplicationLocation applicationLocation,
-                         @Nonnull AccountCreationSetting accountCreationSetting,
-                         @Nonnull List<UserId> accountCreators,
-                         @Nonnull ProjectCreationSetting projectCreationSetting,
-                         @Nonnull List<UserId> projectCreators,
-                         @Nonnull ProjectUploadSetting projectUploadSetting,
-                         @Nonnull List<UserId> projectUploaders,
-                         @Nonnull NotificationEmailsSetting notificationEmailsSetting,
-                         long maxUploadSize) {
+    public ApplicationSettings(@Nonnull String applicationName,
+                               @Nonnull EmailAddress systemNotificationEmailAddress,
+                               @Nonnull ApplicationLocation applicationLocation,
+                               @Nonnull AccountCreationSetting accountCreationSetting,
+                               @Nonnull List<UserId> accountCreators,
+                               @Nonnull ProjectCreationSetting projectCreationSetting,
+                               @Nonnull List<UserId> projectCreators,
+                               @Nonnull ProjectUploadSetting projectUploadSetting,
+                               @Nonnull List<UserId> projectUploaders,
+                               @Nonnull NotificationEmailsSetting notificationEmailsSetting,
+                               long maxUploadSize) {
         this.applicationName = checkNotNull(applicationName);
         this.systemNotificationEmailAddress = checkNotNull(systemNotificationEmailAddress);
         this.applicationLocation = checkNotNull(applicationLocation);
@@ -149,10 +149,10 @@ public class AdminSettings implements IsSerializable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof AdminSettings)) {
+        if (!(obj instanceof ApplicationSettings)) {
             return false;
         }
-        AdminSettings other = (AdminSettings) obj;
+        ApplicationSettings other = (ApplicationSettings) obj;
         return this.applicationName.equals(other.applicationName)
                 && this.systemNotificationEmailAddress.equals(other.systemNotificationEmailAddress)
                 && this.applicationLocation.equals(other.applicationLocation)
@@ -169,7 +169,7 @@ public class AdminSettings implements IsSerializable {
 
     @Override
     public String toString() {
-        return toStringHelper("AdminSettings" )
+        return toStringHelper("ApplicationSettings" )
                 .add("name", applicationName)
                 .add("systemNotificationEmail", systemNotificationEmailAddress)
                 .addValue(applicationLocation)
