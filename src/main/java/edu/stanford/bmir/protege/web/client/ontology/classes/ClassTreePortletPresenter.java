@@ -168,21 +168,21 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                 public void onContextMenu(final Node node, EventObject e) {
                     treePanel.getSelectionModel().select((TreeNode) node);
                     PopupMenu contextMenu = new PopupMenu();
-                    contextMenu.addItem(messages.showIri(), event -> {
-                        java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                    contextMenu.addItem(messages.showIri(), () -> {
+                        Optional<OWLEntity> selectedEntity = getSelectedEntity();
                         if (selectedEntity.isPresent()) {
                             String iri = selectedEntity.get().getIRI().toQuotedString();
                             InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
                             });
                         }
                     });
-                    contextMenu.addItem(messages.showDirectLink(), event -> {
+                    contextMenu.addItem(messages.showDirectLink(), () -> {
                         String location = Window.Location.getHref();
                         InputBox.showOkDialog(messages.directLink(), true, location, input -> {
                         });
                     });
                     contextMenu.addSeparator();
-                    contextMenu.addItem(messages.refreshTree(), event -> onRefresh());
+                    contextMenu.addItem(messages.refreshTree(), () -> onRefresh());
                     contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
                 }
             };
@@ -856,7 +856,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
 
-    private void setSelectionInTree(java.util.Optional<OWLEntity> selection) {
+    private void setSelectionInTree(Optional<OWLEntity> selection) {
         if (!selection.isPresent()) {
             return;
         }
@@ -1021,7 +1021,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     @Override
-    protected void handleAfterSetEntity(java.util.Optional<OWLEntity> entity) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         if (getSelectedTreeNodeClass().equals(entity)) {
             return;
         }
@@ -1060,7 +1060,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         treePanel.setVisible(true);
         setSubclassesLoaded(root, false);
 
-        java.util.Optional<OWLEntity> selection = getSelectedEntity();
+        Optional<OWLEntity> selection = getSelectedEntity();
         if (selection.isPresent() && !selection.get().isTopEntity()) {
             setSelectionInTree(selection);
         }

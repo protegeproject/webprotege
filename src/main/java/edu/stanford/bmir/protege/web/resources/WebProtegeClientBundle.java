@@ -391,6 +391,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-popup-menu__item")
         String popupMenuItem();
 
+        @ClassName("wp-popup-menu__item--selected")
+        String popupMenuItemSelected();
+
         @ClassName("wp-popup-menu__item--disabled")
         String popupMenuItemDisabled();
 

@@ -103,7 +103,7 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             @Override
             public void onContextMenu(TreeNode node, EventObject e) {
                 PopupMenu contextMenu = new PopupMenu();
-                contextMenu.addItem(messages.showIri(), event -> {
+                contextMenu.addItem(messages.showIri(), () -> {
                     java.util.Optional<OWLEntity> selectedEntity = getSelectedEntity();
                     if (selectedEntity.isPresent()) {
                         String iri = selectedEntity.get().getIRI().toQuotedString();
@@ -111,13 +111,13 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
                         });
                     }
                 });
-                contextMenu.addItem(messages.showDirectLink(), event -> {
+                contextMenu.addItem(messages.showDirectLink(), () -> {
                     String location = Window.Location.getHref();
                     InputBox.showOkDialog(messages.directLink(), true, location, input -> {
                     });
                 });
                 contextMenu.addSeparator();
-                contextMenu.addItem(messages.refreshTree(), event -> onRefresh());
+                contextMenu.addItem(messages.refreshTree(), () -> onRefresh());
                 contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
             }
         });

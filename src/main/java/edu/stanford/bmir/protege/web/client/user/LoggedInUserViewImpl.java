@@ -48,9 +48,9 @@ public class LoggedInUserViewImpl extends Composite implements LoggedInUserView 
     @Inject
     public LoggedInUserViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        popupMenu.addItem(MESSAGES.signOut(), event -> signOutRequestHandler.handleSignOutRequest());
-        popupMenu.addItem(MESSAGES.changeEmailAddress(), event -> changeEmailAddressHandler.handleChangeEmailAddress());
-        popupMenu.addItem(MESSAGES.changePassword(), event -> changePasswordHandler.handleChangePassword());
+        popupMenu.addItem(MESSAGES.signOut(), () -> signOutRequestHandler.handleSignOutRequest());
+        popupMenu.addItem(MESSAGES.changeEmailAddress(), () -> changeEmailAddressHandler.handleChangeEmailAddress());
+        popupMenu.addItem(MESSAGES.changePassword(), () -> changePasswordHandler.handleChangePassword());
     }
 
     @UiHandler("loggedInUserButton")

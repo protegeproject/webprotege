@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.client.library.popupmenu;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -22,22 +18,26 @@ public class PopupMenu {
 
     private final PopupPanel popupPanel;
 
-    private final FlowPanel holder;
+    private final PopupMenuContainer holder;
+
+    private Optional<UIObject> lastInvoker = Optional.empty();
 
     public PopupMenu() {
         popupPanel = new PopupPanel();
         popupPanel.setAutoHideEnabled(true);
         popupPanel.addStyleName(BUNDLE.menu().popupMenu());
-        holder = new FlowPanel();
-        holder.addStyleName(BUNDLE.menu().popupMenuInner());
+        holder = new PopupMenuContainer();
         popupPanel.setWidget(holder);
+        holder.setDismissHandler(this::hide);
     }
 
-    public UIAction addItem(final String label, final ClickHandler clickHandler) {
+
+
+    public UIAction addItem(final String label, final Runnable handler) {
         AbstractUiAction action = new AbstractUiAction(label) {
             @Override
-            public void execute(ClickEvent clickEvent) {
-                clickHandler.onClick(clickEvent);
+            public void execute() {
+                handler.run();
             }
         };
         addItem(action);
@@ -45,29 +45,41 @@ public class PopupMenu {
     }
 
     public void addItem(final UIAction action) {
-        holder.add(new MenuItem(action, this));
+        holder.addMenuItem(new MenuItem(action));
     }
 
     public void addSeparator() {
-        SimplePanel sep = new SimplePanel();
-        sep.addStyleName(WebProtegeClientBundle.BUNDLE.menu().separator());
-        holder.add(sep);
+        holder.addSeparator();
     }
 
     public void show() {
         popupPanel.show();
+        resetSelectionAndFocusMenu();
+        lastInvoker = Optional.empty();
     }
 
     public void show(int x, int y) {
         popupPanel.setPopupPosition(x, y);
         popupPanel.show();
-    }
+        lastInvoker = Optional.empty();
+        resetSelectionAndFocusMenu();
 
-    public void hide() {
-        popupPanel.hide();
     }
 
     public void showRelativeTo(UIObject target) {
         popupPanel.showRelativeTo(target);
+        lastInvoker = Optional.of(target);
+        resetSelectionAndFocusMenu();
+    }
+
+    void resetSelectionAndFocusMenu() {
+        holder.selectFirstEnabledMenuItem();
+        holder.focus();
+    }
+
+    public void hide() {
+        popupPanel.hide();
+        holder.clearSelection();
+        lastInvoker.ifPresent(invoker -> invoker.getElement().focus());
     }
 }

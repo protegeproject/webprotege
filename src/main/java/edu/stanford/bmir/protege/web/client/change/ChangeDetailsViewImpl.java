@@ -99,7 +99,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
         if (revertRevisionVisible) {
             popupMenu.addItem(new AbstractUiAction(messages.change_revertChangesInRevision() + " " + revision.get().getValue()) {
                 @Override
-                public void execute(ClickEvent clickEvent) {
+                public void execute() {
                     revertRevisionHandler.handleRevertRevision(revision.get());
                 }
             });
@@ -110,7 +110,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
         if (downloadRevisionVisible) {
             popupMenu.addItem(new AbstractUiAction(messages.change_downloadRevision() + " " + revision.get().getValue()) {
                 @Override
-                public void execute(ClickEvent clickEvent) {
+                public void execute() {
                     downloadRevisionHandler.handleDownloadRevision(revision.get());
                 }
             });

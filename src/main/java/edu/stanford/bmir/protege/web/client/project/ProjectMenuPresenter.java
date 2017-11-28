@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
@@ -36,21 +35,21 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.settings()) {
         @Override
-        public void execute(ClickEvent e) {
+        public void execute() {
             showProjectDetailsHandler.handleShowProjectDetails();
         }
     };
 
     private AbstractUiAction editNewEntitySettings = new AbstractUiAction(MESSAGES.newEntitySettings()) {
         @Override
-        public void execute(ClickEvent e) {
+        public void execute() {
             showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
         }
     };
 
     private AbstractUiAction uploadAndMerge = new AbstractUiAction(MESSAGES.uploadAndMerge()) {
         @Override
-        public void execute(ClickEvent e) {
+        public void execute() {
             uploadAndMergeHandler.handleUploadAndMerge();
         }
     };

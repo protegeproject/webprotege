@@ -99,7 +99,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         for (final PerspectiveId perspectiveId : bookmarkedPerspectives) {
             AbstractUiAction action = new AbstractUiAction(perspectiveId.getId()) {
                 @Override
-                public void execute(ClickEvent clickEvent) {
+                public void execute() {
                     addBookMarkedPerspectiveLinkHandler.handleAddBookmarkedPerspective(perspectiveId);
                 }
             };
@@ -108,7 +108,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
         }
         popupMenu.addSeparator();
         popupMenu.addItem(messages.perspective_addBlankTab() + "\u2026",
-                          event -> addPerspectiveLinkRequestHandler.handleAddNewPerspectiveLinkRequest());
+                          () -> addPerspectiveLinkRequestHandler.handleAddNewPerspectiveLinkRequest());
         popupMenu.showRelativeTo(newTabButton);
     }
 
@@ -131,17 +131,17 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
         });
         if (addViewAllowed) {
-            linkWidget.addActionHandler(messages.perspective_addView(), event -> {
+            linkWidget.addActionHandler(messages.perspective_addView(), () -> {
                 if (addViewAllowed) {
                     addViewHandler.handleAddViewToPerspective(perspectiveId);
                 }
             });
         }
         linkWidget.addActionHandler(messages.perspective_reset(),
-                                    event -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveId));
+                                    () -> resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveId));
         if (closePerspectiveAllowed) {
             linkWidget.addActionHandler(messages.perspective_close(),
-                                        event -> {
+                                        () -> {
                                             if (closePerspectiveAllowed) {
                                                 removePerspectiveLinkRequestHandler.handleRemovePerspectiveLinkRequest(perspectiveId);
                                             }
