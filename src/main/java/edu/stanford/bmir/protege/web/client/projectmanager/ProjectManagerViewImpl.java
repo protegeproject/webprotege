@@ -82,6 +82,7 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @Override
     public void setCreateProjectEnabled(boolean enabled) {
         createProjectButton.setEnabled(enabled);
+        createProjectButton.setVisible(enabled);
     }
 
     @Override
