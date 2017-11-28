@@ -18,11 +18,14 @@
         <g:TextBox ui:field="projectNameField" addStyleNames="{style.formField}"/>
         <g:Label text="{msg.projectSettings_description}"/>
         <g:TextArea ui:field="projectDescriptionField" addStyleNames="{style.formField}" visibleLines="5"/>
-        <g:Label text="Create from existing sources"/>
-        <g:HTMLPanel addStyleNames="{style.uploadContainer}">
-            <g:FormPanel ui:field="formPanel">
-                <g:FileUpload ui:field="fileUpload"/>
-            </g:FormPanel>
+        <g:HTMLPanel ui:field="fileUploadArea">
+            <g:Label text="Create from existing sources"/>
+            <g:HTMLPanel addStyleNames="{style.uploadContainer}">
+                <g:FormPanel ui:field="formPanel">
+                    <g:FileUpload ui:field="fileUpload"/>
+                </g:FormPanel>
+            </g:HTMLPanel>
         </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>
