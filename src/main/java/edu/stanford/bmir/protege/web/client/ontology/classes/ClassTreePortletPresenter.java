@@ -168,13 +168,10 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                 });
             }
         });
-        contextMenu.addItem(messages.showDirectLink(), () -> {
-            String location = Window.Location.getHref();
-            InputBox.showOkDialog(messages.directLink(), true, location, input -> {
-            });
-        });
-        contextMenu.addItem("Prune to root", this::pruneSelectedNodesToRoot);
-        contextMenu.addItem("Clear pruning", this::clearPruning);
+        contextMenu.addItem(messages.showDirectLink(), this::showDirectLinkForSelection);
+        contextMenu.addSeparator();
+        contextMenu.addItem(messages.tree_pruneToRoot(), this::pruneSelectedNodesToRoot);
+        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
         contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
@@ -232,6 +229,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private void handleRefresh() {
         GWT.log("[ClassTreePortlet] Refreshing tree");
         treeWidget.reload();
+    }
+
+
+    private void showDirectLinkForSelection() {
+        String location = Window.Location.getHref();
+        InputBox.showOkDialog(messages.directLink(), true, location, input -> {});
     }
 
     private void pruneSelectedNodesToRoot() {
