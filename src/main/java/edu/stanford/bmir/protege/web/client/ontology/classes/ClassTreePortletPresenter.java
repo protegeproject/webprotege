@@ -28,7 +28,6 @@ import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -72,7 +71,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private static final String SUFFIX_ID_LOCAL_ANNOTATION_COUNT = "_locAnnCnt";
     private static final String SUFFIX_ID_LOCAL_ANNOTATION_IMG = "_locAnnImg";
     private final DispatchServiceManager dispatchServiceManager;
-    private final LoggedInUserProvider loggedInUserProvider;
     private final LoggedInUserProjectPermissionChecker permissionChecker;
     private final WatchPresenter watchPresenter;
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
@@ -80,12 +78,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private final Messages messages;
     private final EntityHierarchyNodeUpdater nodeUpdater;
     private final EntityHierarchyModel hierarchyModel;
+    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
+                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
     private boolean expandDisabled = false;
     private String hierarchyProperty = null;
     private boolean inRemove = false;
     private TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
-    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
-                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
     private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(),
                                                                      (action, event) -> editWatches());
     private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(),
@@ -97,7 +95,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                      WatchPresenter watchPresenter,
                                      DispatchServiceManager dispatchServiceManager,
                                      final ProjectId projectId,
-                                     LoggedInUserProvider loggedInUserProvider,
                                      LoggedInUserProjectPermissionChecker permissionChecker,
                                      Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                      SearchDialogController searchDialogController,
@@ -106,7 +103,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
              primitiveDataEditorProvider,
              watchPresenter,
              dispatchServiceManager,
-             loggedInUserProvider,
              projectId,
              permissionChecker,
              searchDialogController,
@@ -117,14 +113,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                       Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                       WatchPresenter watchPresenter,
                                       DispatchServiceManager dispatchServiceManager,
-                                      LoggedInUserProvider loggedInUserProvider,
                                       final ProjectId projectId,
                                       LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker,
                                       SearchDialogController searchDialogController,
                                       Messages messages) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         this.watchPresenter = watchPresenter;
         this.primitiveDataEditorProvider = primitiveDataEditorProvider;
@@ -219,7 +213,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void handleRefresh() {
-        GWT.log("[ClassTreePortlet] Refreshing tree");
         treeWidget.reload();
     }
 
@@ -241,13 +234,9 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private void transmitSelectionFromTree() {
         try {
             transmittingSelectionFromTree = true;
-            GWT.log("[ClassTreePortlet] Transmitting selection from tree");
             treeWidget.getSelectedSet().stream()
                       .findFirst()
-                      .ifPresent(tn -> {
-                          getSelectionModel().setSelection(tn.getUserObject().getEntity());
-                          GWT.log("[ClassTreePortlet] Setting selection for node " + tn.getId());
-                      });
+                      .ifPresent(tn -> getSelectionModel().setSelection(tn.getUserObject().getEntity()));
         } finally {
             transmittingSelectionFromTree = false;
         }
@@ -304,15 +293,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                            result -> {
                                                Path<OWLEntity> path = new Path<>(new ArrayList<>(result.getPathToRoot().getPath()));
                                                selectAndExpandPath(path);
-
                                            });
         }
     }
 
     private void selectAndExpandPath(Path<OWLEntity> entityPath) {
-        treeWidget.setSelected(entityPath, true, () -> {
-            treeWidget.setExpanded(entityPath);
-        });
+        treeWidget.setSelected(entityPath, true, () -> treeWidget.setExpanded(entityPath));
     }
 
     private void createSubClassesByImportingCSVDocument() {
@@ -366,8 +352,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         final OWLClassData theClassData = currentSelection.get();
         final String displayName = theClassData.getBrowserText();
-        String subMessage = "Are you sure you want to delete class \"" + displayName + "\"?";
-        MessageBox.showConfirmBox("Delete class",
+        String subMessage = messages.delete_class_msg(displayName);
+        MessageBox.showConfirmBox(messages.delete_class_title(),
                                   subMessage,
                                   CANCEL, DELETE,
                                   () -> deleteCls(theClassData.getEntity()), CANCEL);
@@ -378,8 +364,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void deleteCls(final OWLClass cls) {
-        dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), deleteEntityResult -> {
-        });
+        dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), deleteEntityResult -> {});
     }
 
     protected void editWatches() {
@@ -393,8 +378,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     /**
      * Gets the selected class.
-     *
-     * @return The selected class, or {@code null} if there is not selection.
+     * @return The selected class.
      */
     private Optional<OWLClass> getSelectedTreeNodeClass() {
         Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
