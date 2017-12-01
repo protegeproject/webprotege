@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.protege.gwt.graphtree.shared.graph.AddEdge;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphEdge;
+import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 

@@ -29,20 +29,20 @@ public class DiscussionThreadStatusChangedEvent extends ProjectEvent<DiscussionT
     @Nullable
     private OWLEntity entity;
 
-    private int openThreadsForEntity;
+    private int openCommentsCountForEntity;
 
     private Status status;
 
     public DiscussionThreadStatusChangedEvent(@Nonnull ProjectId projectId,
                                               @Nonnull ThreadId threadId,
                                               @Nonnull Optional<OWLEntity> entity,
-                                              int openThreadsForEntity,
+                                              int openCommentsCountForEntity,
                                               @Nonnull Status status) {
         super(projectId);
         this.projectId = checkNotNull(projectId);
         this.threadId = checkNotNull(threadId);
         this.entity = checkNotNull(entity).orElse(null);
-        this.openThreadsForEntity = openThreadsForEntity;
+        this.openCommentsCountForEntity = openCommentsCountForEntity;
         this.status = checkNotNull(status);
     }
 
@@ -69,8 +69,8 @@ public class DiscussionThreadStatusChangedEvent extends ProjectEvent<DiscussionT
      * Gets the open threads for the entity that this thread pertains to.
      * @return The number of open threads.  Undefined if the entity for this thread is not set.
      */
-    public int getOpenThreadsForEntity() {
-        return openThreadsForEntity;
+    public int getOpenCommentsCountForEntity() {
+        return openCommentsCountForEntity;
     }
 
     public Status getStatus() {

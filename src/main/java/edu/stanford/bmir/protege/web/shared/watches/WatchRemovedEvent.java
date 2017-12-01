@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Author: Matthew Horridge<br>
@@ -46,7 +50,7 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
 
     @Override
     public int hashCode() {
-        return "WatchRemovedEvent".hashCode() + getProjectId().hashCode() + watch.hashCode();
+        return Objects.hashCode(getProjectId(), watch);
     }
 
     @Override
@@ -59,5 +63,14 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
         }
         WatchRemovedEvent other = (WatchRemovedEvent) obj;
         return this.getProjectId().equals(other.getProjectId()) && this.getWatch().equals(other.getWatch());
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("WatchRemovedEvent")
+                .addValue(getProjectId())
+                .addValue(watch)
+                .toString();
     }
 }

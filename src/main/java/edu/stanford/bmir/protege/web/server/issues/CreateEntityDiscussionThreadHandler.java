@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.webhook.CommentPostedSlackWebhookInv
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.issues.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -105,6 +107,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                                                                    Status.OPEN,
                                                                    ImmutableList.of(comment));
         repository.saveThread(thread);
+        EventTag startTag = eventManager.getCurrentTag();
         eventManager.postEvent(new DiscussionThreadCreatedEvent(thread));
         int commentCount = repository.getCommentsCount(projectId, entity);
         int openCommentCount = repository.getOpenCommentsCount(projectId, entity);
@@ -115,17 +118,25 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
                                                       rendering,
                                                       commentCount,
                                                       openCommentCount));
-        notificationsEmailer.sendCommentPostedNotification(projectId,
-                                                           renderer.getRendering(thread.getEntity()),
-                                                           thread,
-                                                           comment);
-        commentPostedSlackWebhookInvoker.invoke(projectId,
-                                                projectDetailsRepository.findOne(projectId).map(
-                                                        ProjectDetails::getDisplayName).orElse("Project"),
-                                                renderer.getRendering(thread.getEntity()),
-                                                comment);
+        EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(startTag);
+        setOutNotifications(thread, comment);
 
         List<EntityDiscussionThread> threads = repository.findThreads(projectId, entity);
-        return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads));
+        return new CreateEntityDiscussionThreadResult(ImmutableList.copyOf(threads), eventList);
+    }
+
+    void setOutNotifications(EntityDiscussionThread thread, Comment comment) {
+        Thread t = new Thread(() -> {
+            notificationsEmailer.sendCommentPostedNotification(projectId,
+                                                               renderer.getRendering(thread.getEntity()),
+                                                               thread,
+                                                               comment);
+            commentPostedSlackWebhookInvoker.invoke(projectId,
+                                                    projectDetailsRepository.findOne(projectId).map(
+                                                            ProjectDetails::getDisplayName).orElse("Project"),
+                                                    renderer.getRendering(thread.getEntity()),
+                                                    comment);
+        });
+        t.start();
     }
 }
