@@ -1,6 +1,6 @@
 :root {
-    --selected-item--background-color: #116cd6;
-    --selected-item--color: white;
+    --selected-item--background-color: #d5e1fa;/* #116cd6; */
+    --selected-item--color: inherit;
 
     --selected-menu-item--background-color: #116cd6;
     --selected-menu-item--color: white;
@@ -20,6 +20,8 @@
     --widgetmap-view-header-font-weight: 400;
     --widgetmap-view-header-padding-left: 3px;
 
+    --gt-tree__row--selected--background-color: var(--selected-item--background-color);
+    --gt-tree__row--selected--color: var(--selected-item--color);
 
     -webkit-font-smoothing: subpixel-antialiased;
     text-rendering: optimizeLegibility;
