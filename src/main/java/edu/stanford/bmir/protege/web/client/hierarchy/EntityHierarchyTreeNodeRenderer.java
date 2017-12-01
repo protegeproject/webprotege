@@ -18,8 +18,20 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
     public String getHtmlRendering(EntityHierarchyNode node) {
         StringBuilder sb = new StringBuilder();
         sb.append("<div style='display: flex; flex-direction: row; align-items: center;'>");
-        sb.append("<img src='").append(WebProtegeClientBundle.BUNDLE.svgClassIcon().getSafeUri().asString()).append("'/>");
-        sb.append("<div>");
+        String iconIri;
+        if(node.isDeprecated()) {
+            iconIri = WebProtegeClientBundle.BUNDLE.svgDeprecatedClassIcon().getSafeUri().asString();
+        }
+        else {
+            iconIri = WebProtegeClientBundle.BUNDLE.svgClassIcon().getSafeUri().asString();
+        }
+        sb.append("<img src='").append(iconIri).append("'/>");
+        if (node.isDeprecated()) {
+            sb.append("<div style=\"text-decoration: line-through; color: #a0a0a0;\">");
+        }
+        else {
+            sb.append("<div>");
+        }
         sb.append(node.getBrowserText());
         sb.append("</div>");
 
