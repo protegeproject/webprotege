@@ -38,11 +38,13 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
+import edu.stanford.protege.gwt.graphtree.shared.UserObjectKeyProvider;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
@@ -66,68 +69,58 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresenter {
 
-    protected static final String WATCH_ICON_STYLE_STRING = "style=\"position:relative; top:2px; left:2px;\"";
     private static final Messages MESSAGES = GWT.create(Messages.class);
-    private static final String SUFFIX_ID_LOCAL_ANNOTATION_COUNT = "_locAnnCnt";
-    private static final String SUFFIX_ID_LOCAL_ANNOTATION_IMG = "_locAnnImg";
+
     private final DispatchServiceManager dispatchServiceManager;
+
     private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     private final WatchPresenter watchPresenter;
+
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
+
     private final SearchDialogController searchDialogController;
+
     private final Messages messages;
+
     private final EntityHierarchyNodeUpdater nodeUpdater;
+
     private final EntityHierarchyModel hierarchyModel;
+
     private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
-                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
+                                                                      (action, event) -> handleCreateClass(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
     private boolean expandDisabled = false;
     private String hierarchyProperty = null;
     private boolean inRemove = false;
     private TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
     private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(),
-                                                                     (action, event) -> editWatches());
+                                                                     (action, event) -> handleEditWatches());
     private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(),
-                                                                      (action, event) -> onDeleteCls());
+                                                                      (action, event) -> handleDeleteClass());
     private boolean transmittingSelectionFromTree = false;
+    private final GraphTreeNodeModel<EntityHierarchyNode, OWLEntity> treeModel;
 
     @Inject
-    public ClassTreePortletPresenter(SelectionModel selectionModel,
-                                     WatchPresenter watchPresenter,
-                                     DispatchServiceManager dispatchServiceManager,
-                                     final ProjectId projectId,
-                                     LoggedInUserProjectPermissionChecker permissionChecker,
-                                     Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                     SearchDialogController searchDialogController,
-                                     Messages messages) {
-        this(selectionModel,
-             primitiveDataEditorProvider,
-             watchPresenter,
-             dispatchServiceManager,
-             projectId,
-             permissionChecker,
-             searchDialogController,
-             messages);
-    }
-
-    private ClassTreePortletPresenter(SelectionModel selectionModel,
-                                      Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                      WatchPresenter watchPresenter,
-                                      DispatchServiceManager dispatchServiceManager,
-                                      final ProjectId projectId,
-                                      LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker,
-                                      SearchDialogController searchDialogController,
-                                      Messages messages) {
+    public ClassTreePortletPresenter(@Nonnull final ProjectId projectId,
+                                     @Nonnull SelectionModel selectionModel,
+                                     @Nonnull DispatchServiceManager dispatchServiceManager,
+                                     @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                     @Nonnull WatchPresenter watchPresenter,
+                                     @Nonnull SearchDialogController searchDialogController,
+                                     @Nonnull Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
+                                     @Nonnull Messages messages) {
         super(selectionModel, projectId);
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.permissionChecker = loggedInUserProjectPermissionChecker;
-        this.watchPresenter = watchPresenter;
-        this.primitiveDataEditorProvider = primitiveDataEditorProvider;
-        this.searchDialogController = searchDialogController;
-        this.messages = messages;
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.permissionChecker = checkNotNull(permissionChecker);
+        this.watchPresenter = checkNotNull(watchPresenter);
+        this.primitiveDataEditorProvider = checkNotNull(primitiveDataEditorProvider);
+        this.searchDialogController = checkNotNull(searchDialogController);
+        this.messages = checkNotNull(messages);
 
         hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
-        GraphTreeNodeModel<EntityHierarchyNode, OWLEntity> treeModel = GraphTreeNodeModel.create(hierarchyModel,
-                                                                                                 EntityHierarchyNode::getEntity);
+        UserObjectKeyProvider<EntityHierarchyNode, OWLEntity> keyProvider = EntityHierarchyNode::getEntity;
+        treeModel = GraphTreeNodeModel.create(hierarchyModel,
+                                              keyProvider);
         treeWidget = new TreeWidget<>(
                 treeModel,
                 new EntityHierarchyTreeNodeRenderer());
@@ -141,25 +134,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             event.stopPropagation();
             displayContextMenu(event);
         }, ContextMenuEvent.getType());
-    }
-
-    private void displayContextMenu(ContextMenuEvent event) {
-        PopupMenu contextMenu = new PopupMenu();
-        contextMenu.addItem(messages.showIri(), () -> {
-            Optional<OWLEntity> selectedEntity = getSelectedEntity();
-            if (selectedEntity.isPresent()) {
-                String iri = selectedEntity.get().getIRI().toQuotedString();
-                InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
-                });
-            }
-        });
-        contextMenu.addItem(messages.showDirectLink(), this::showDirectLinkForSelection);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.tree_pruneToRoot(), this::pruneSelectedNodesToRoot);
-        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
-        contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
     }
 
     @Override
@@ -212,15 +186,34 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                                         watchClassAction::setEnabled);
     }
 
+    private void displayContextMenu(ContextMenuEvent event) {
+        PopupMenu contextMenu = new PopupMenu();
+        contextMenu.addItem(messages.showIri(), () -> {
+            Optional<OWLEntity> selectedEntity = getSelectedEntity();
+            if (selectedEntity.isPresent()) {
+                String iri = selectedEntity.get().getIRI().toQuotedString();
+                InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
+                });
+            }
+        });
+        contextMenu.addItem(messages.showDirectLink(), this::showDirectLinkForSelection);
+        contextMenu.addSeparator();
+        contextMenu.addItem(messages.tree_pruneToRoot(), this::pruneSelectedNodesToRoot);
+        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
+        contextMenu.addSeparator();
+        contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
+        contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
+    }
+
     private void handleRefresh() {
-        treeWidget.reload();
+        treeWidget.setModel(treeModel);
+        setSelectionInTree(getSelectedEntity());
     }
 
 
     private void showDirectLinkForSelection() {
         String location = Window.Location.getHref();
-        InputBox.showOkDialog(messages.directLink(), true, location, input -> {
-        });
+        InputBox.showOkDialog(messages.directLink(), true, location, input -> {});
     }
 
     private void pruneSelectedNodesToRoot() {
@@ -242,27 +235,26 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         }
     }
 
-    protected void onCreateCls(CreateClassesMode mode) {
-
+    private void handleCreateClass(CreateClassesMode mode) {
         if (mode == CreateClassesMode.CREATE_SUBCLASSES) {
-            createSubClasses();
+            handleCreateSubClasses();
         }
         else {
             createSubClassesByImportingCSVDocument();
         }
     }
 
-    private void createSubClasses() {
+    private void handleCreateSubClasses() {
         if (!getSelectedTreeNodeClass().isPresent()) {
             showClassNotSelectedMessage();
             return;
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(CLASS,
-                                                                     this::handleClassCreation,
+                                                                     this::createClasses,
                                                                      messages));
     }
 
-    private void handleClassCreation(CreateEntityInfo createEntityInfo) {
+    private void createClasses(CreateEntityInfo createEntityInfo) {
         final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
         if (!superCls.isPresent()) {
             return;
@@ -343,7 +335,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
                          .findFirst();
     }
 
-    protected void onDeleteCls() {
+    private void handleDeleteClass() {
         final Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
         if (!currentSelection.isPresent()) {
             showClassNotSelectedMessage();
@@ -356,7 +348,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         MessageBox.showConfirmBox(messages.delete_class_title(),
                                   subMessage,
                                   CANCEL, DELETE,
-                                  () -> deleteCls(theClassData.getEntity()), CANCEL);
+                                  () -> deleteCls(theClassData.getEntity()),
+                                  CANCEL);
     }
 
     private void showClassNotSelectedMessage() {
@@ -367,7 +360,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), deleteEntityResult -> {});
     }
 
-    protected void editWatches() {
+    protected void handleEditWatches() {
         final Optional<OWLClass> sel = getSelectedTreeNodeClass();
         if (!sel.isPresent()) {
             return;
@@ -389,11 +382,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         if (transmittingSelectionFromTree) {
             return;
         }
-        selection.ifPresent(sel -> {
-            GWT.log("[ClassTreePortlet] Setting selection in tree");
-            treeWidget.revealTreeNodesForUserObjectKey(sel, REVEAL_FIRST);
-
-        });
+        selection.ifPresent(sel -> treeWidget.revealTreeNodesForUserObjectKey(sel, REVEAL_FIRST));
     }
 
     private enum CreateClassesMode {
