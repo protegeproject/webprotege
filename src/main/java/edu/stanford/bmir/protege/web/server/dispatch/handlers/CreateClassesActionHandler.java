@@ -23,7 +23,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,13 +31,10 @@ import java.util.Set;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 22/02/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 22/02/2013
  */
 public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<CreateClassesAction, CreateClassesResult> {
 
@@ -90,9 +87,9 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
     @Override
     public CreateClassesResult execute(CreateClassesAction action, ExecutionContext executionContext) {
         Set<List<OWLClass>> paths = classHierarchyProvider.getPathsToRoot(action.getSuperClass());
-        if(paths.isEmpty()) {
+        if (paths.isEmpty()) {
             throw new IllegalStateException("Class does not exist in hierarchy: " + renderingManager
-                                                                                           .getBrowserText(action.getSuperClass()));
+                    .getBrowserText(action.getSuperClass()));
         }
         ObjectPath<OWLClass> pathToRoot = new ObjectPath<OWLClass>(paths.iterator().next());
 
@@ -105,18 +102,19 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
 
         EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(currentTag);
 
-        Set<OWLClass> createdClasses = result.getSubject().get();
-
-        Set<OWLClassData> classData = createdClasses.stream()
-                                                  .map(renderingManager::getRendering)
-                                                  .collect(toSet());
+        List<OWLClassData> classData = result.getSubject().map(clses -> {
+            return clses.stream()
+                        .map(renderingManager::getRendering)
+                        .sorted()
+                        .collect(toList());
+        }).orElse(Collections.emptyList());
         return new CreateClassesResult(pathToRoot, classData, eventList);
     }
 
     private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action) {
         action.getBrowserTexts();
         String msg;
-        if(action.getBrowserTexts().size() > 1) {
+        if (action.getBrowserTexts().size() > 1) {
             msg = "Added {0} as subclasses of {1}";
         }
         else {

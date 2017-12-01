@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -8,8 +9,8 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,16 +25,18 @@ public class CreateClassesResult implements Result, HasEventList<ProjectEvent<?>
 
     private ObjectPath<OWLClass> superClassPathToRoot;
 
-    private Set<OWLClassData> createdClasses = new HashSet<>();
+    private ImmutableList<OWLClassData> createdClasses;
 
     private EventList<ProjectEvent<?>> eventList;
 
     private CreateClassesResult() {
     }
 
-    public CreateClassesResult(ObjectPath<OWLClass> superClassPathToRoot, Set<OWLClassData> createdClasses, EventList<ProjectEvent<?>> eventList) {
+    public CreateClassesResult(@Nonnull ObjectPath<OWLClass> superClassPathToRoot,
+                               @Nonnull List<OWLClassData> createdClasses,
+                               @Nonnull EventList<ProjectEvent<?>> eventList) {
         this.superClassPathToRoot = checkNotNull(superClassPathToRoot);
-        this.createdClasses = new HashSet<>(createdClasses);
+        this.createdClasses = ImmutableList.copyOf(createdClasses);
         this.eventList = checkNotNull(eventList);
     }
 
@@ -41,8 +44,8 @@ public class CreateClassesResult implements Result, HasEventList<ProjectEvent<?>
         return superClassPathToRoot;
     }
 
-    public Set<OWLClassData> getCreatedClasses() {
-        return new HashSet<>(createdClasses);
+    public List<OWLClassData> getCreatedClasses() {
+        return createdClasses;
     }
 
     @Override
