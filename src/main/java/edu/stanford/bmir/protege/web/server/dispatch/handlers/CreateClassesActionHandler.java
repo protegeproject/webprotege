@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
@@ -13,6 +14,9 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -26,6 +30,7 @@ import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -35,6 +40,9 @@ import static java.util.stream.Collectors.toSet;
  * Date: 22/02/2013
  */
 public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<CreateClassesAction, CreateClassesResult> {
+
+    @Nonnull
+    private final EventManager<ProjectEvent<?>> eventManager;
 
     @Nonnull
     private final ClassHierarchyProvider classHierarchyProvider;
@@ -54,12 +62,13 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
 
     @Inject
     public CreateClassesActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                                      @Nonnull EventManager<ProjectEvent<?>> eventManager, @Nonnull ClassHierarchyProvider classHierarchyProvider,
                                       @Nonnull RenderingManager renderingManager,
                                       @Nonnull HasApplyChanges changeApplicator,
                                       @Nonnull OWLOntology rootOntology,
                                       @Nonnull OWLDataFactory dataFactory) {
         super(accessManager);
+        this.eventManager = eventManager;
         this.classHierarchyProvider = classHierarchyProvider;
         this.renderingManager = renderingManager;
         this.changeApplicator = changeApplicator;
@@ -75,7 +84,7 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
     @Nonnull
     @Override
     protected List<BuiltInAction> getRequiredExecutableBuiltInActions() {
-        return Arrays.asList(CREATE_CLASS, EDIT_ONTOLOGY);
+        return asList(CREATE_CLASS, EDIT_ONTOLOGY);
     }
 
     @Override
@@ -87,18 +96,21 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
         }
         ObjectPath<OWLClass> pathToRoot = new ObjectPath<OWLClass>(paths.iterator().next());
 
+        EventTag currentTag = eventManager.getCurrentTag();
         final CreateClassesChangeGenerator gen = new CreateClassesChangeGenerator(action.getBrowserTexts(),
                                                                                   Optional.of(action.getSuperClass()),
                                                                                   rootOntology,
                                                                                   dataFactory);
         ChangeApplicationResult<Set<OWLClass>> result = changeApplicator.applyChanges(executionContext.getUserId(), gen, createChangeText(action));
 
+        EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(currentTag);
+
         Set<OWLClass> createdClasses = result.getSubject().get();
 
         Set<OWLClassData> classData = createdClasses.stream()
-                                                  .map(cls -> renderingManager.getRendering(cls))
+                                                  .map(renderingManager::getRendering)
                                                   .collect(toSet());
-        return new CreateClassesResult(pathToRoot, classData);
+        return new CreateClassesResult(pathToRoot, classData, eventList);
     }
 
     private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action) {
