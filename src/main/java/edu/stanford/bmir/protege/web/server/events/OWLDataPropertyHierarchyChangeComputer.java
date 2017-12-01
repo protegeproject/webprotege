@@ -2,14 +2,16 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.DataPropertyHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
 * Matthew Horridge
@@ -24,12 +26,16 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLDataProperty, ?> createRemovedEvent(OWLDataProperty child, OWLDataProperty parent) {
-        return new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.DATA_PROPERTY_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLDataProperty child, OWLDataProperty parent) {
+        return Collections.singletonList(
+                new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.DATA_PROPERTY_HIERARCHY)
+        );
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLDataProperty, ?> createAddedEvent(OWLDataProperty child, OWLDataProperty parent) {
-        return new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.DATA_PROPERTY_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLDataProperty child, OWLDataProperty parent) {
+        return Collections.singletonList(
+                new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.DATA_PROPERTY_HIERARCHY)
+        );
     }
 }

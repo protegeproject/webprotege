@@ -2,15 +2,17 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.AnnotationPropertyHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.AnnotationPropertyHierarchyParentRemovedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
 * Matthew Horridge
@@ -25,12 +27,16 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLAnnotationProperty, ?> createRemovedEvent(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
-        return new AnnotationPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
+        return Collections.singletonList(
+                new AnnotationPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY)
+        );
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLAnnotationProperty, ?> createAddedEvent(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
-        return new AnnotationPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
+        return Collections.singletonList(
+                new AnnotationPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY)
+        );
     }
 }

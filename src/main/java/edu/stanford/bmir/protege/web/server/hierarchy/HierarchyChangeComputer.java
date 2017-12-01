@@ -5,7 +5,6 @@ import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.events.EventTranslator;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootRemovedEvent;
@@ -14,6 +13,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -80,14 +80,14 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                         for(T parentBefore : parentsBefore) {
                             if(!parentsAfter.contains(parentBefore)) {
                                 // Removed
-                                projectEventList.add(createRemovedEvent(t, parentBefore));
+                                projectEventList.addAll(createRemovedEvents(t, parentBefore));
 
                             }
                         }
                         for(T parentAfter : parentsAfter) {
                             if(!parentsBefore.contains(parentAfter)) {
                                 // Added
-                                projectEventList.add(createAddedEvent(t, parentAfter));
+                                projectEventList.addAll(createAddedEvents(t, parentAfter));
                             }
                         }
                     }
@@ -108,8 +108,8 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
     }
 
 
-    protected abstract HierarchyChangedEvent<T, ?> createRemovedEvent(T child, T parent);
+    protected abstract Collection<? extends ProjectEvent<?>> createRemovedEvents(T child, T parent);
 
-    protected abstract HierarchyChangedEvent<T, ?> createAddedEvent(T child, T parent);
+    protected abstract Collection<? extends ProjectEvent<?>> createAddedEvents(T child, T parent);
 
 }

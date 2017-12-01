@@ -2,15 +2,15 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.protege.gwt.graphtree.shared.graph.AddEdge;
-import edu.stanford.protege.gwt.graphtree.shared.graph.GraphEdge;
-import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
 * Matthew Horridge
@@ -25,12 +25,16 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLClass, ?> createRemovedEvent(OWLClass child, OWLClass parent) {
-        return new ClassHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.CLASS_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLClass child, OWLClass parent) {
+        return Collections.singletonList(
+                new ClassHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.CLASS_HIERARCHY)
+        );
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLClass, ?> createAddedEvent(OWLClass child, OWLClass parent) {
-        return new ClassHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.CLASS_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLClass child, OWLClass parent) {
+        return Collections.singletonList(
+                new ClassHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.CLASS_HIERARCHY)
+        );
     }
 }
