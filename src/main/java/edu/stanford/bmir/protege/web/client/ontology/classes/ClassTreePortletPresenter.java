@@ -197,11 +197,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         portletUi.setWidget(treeWidget);
 
         eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_ENTITY_DEPRECATED,
-                                        evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
-
-
-        eventBus.addProjectEventHandler(getProjectId(),
                                         ON_PERMISSIONS_CHANGED,
                                         event -> {
                                             updateButtonStates();
@@ -258,11 +253,6 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             transmittingSelectionFromTree = false;
         }
     }
-
-    protected void onEntityDeprecatedChanged(OWLEntity entity, boolean deprecated) {
-
-    }
-
 
     protected void onCreateCls(CreateClassesMode mode) {
 
