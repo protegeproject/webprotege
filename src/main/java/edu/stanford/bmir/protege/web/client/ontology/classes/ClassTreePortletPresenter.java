@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyNodeUpdater;
 import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyTreeNodeRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
@@ -31,17 +32,13 @@ import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
-import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
-import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
-import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -49,23 +46,18 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent.ON_ENTITY_DEPRECATED;
-import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
-import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent.ON_WATCH_ADDED;
-import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_WATCH_REMOVED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
@@ -86,19 +78,18 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
     private final SearchDialogController searchDialogController;
     private final Messages messages;
-    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
-                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
     private final EntityHierarchyNodeUpdater nodeUpdater;
+    private final EntityHierarchyModel hierarchyModel;
     private boolean expandDisabled = false;
     private String hierarchyProperty = null;
     private boolean inRemove = false;
     private TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
+    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
+                                                                      (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
     private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(),
                                                                      (action, event) -> editWatches());
     private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(),
                                                                       (action, event) -> onDeleteCls());
-    private final EntityHierarchyModel hierarchyModel;
-
     private boolean transmittingSelectionFromTree = false;
 
     @Inject
@@ -235,7 +226,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private void showDirectLinkForSelection() {
         String location = Window.Location.getHref();
-        InputBox.showOkDialog(messages.directLink(), true, location, input -> {});
+        InputBox.showOkDialog(messages.directLink(), true, location, input -> {
+        });
     }
 
     private void pruneSelectedNodesToRoot() {
@@ -277,30 +269,50 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             return;
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(CLASS,
-                                                                     createEntityInfo -> {
-                                                                         final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
-                                                                         if (!superCls.isPresent()) {
-                                                                             return;
-                                                                         }
-                                                                         final Set<String> browserTexts = new HashSet<String>(
-                                                                                 createEntityInfo.getBrowserTexts());
-                                                                         if (browserTexts.size() > 1) {
-                                                                             dispatchServiceManager.execute(new CreateClassesAction(
-                                                                                                                    getProjectId(),
-                                                                                                                    superCls.get(),
-                                                                                                                    browserTexts),
-                                                                                                            createClassesResult -> {
-                                                                                                            });
-                                                                         }
-                                                                         else {
-                                                                             dispatchServiceManager.execute(new CreateClassAction(
-                                                                                                                    getProjectId(),
-                                                                                                                    browserTexts.iterator().next(),
-                                                                                                                    superCls.get()),
-                                                                                                            createClassResult -> {
-                                                                                                            });
-                                                                         }
-                                                                     }, messages));
+                                                                     this::handleClassCreation,
+                                                                     messages));
+    }
+
+    private void handleClassCreation(CreateEntityInfo createEntityInfo) {
+        final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
+        if (!superCls.isPresent()) {
+            return;
+        }
+        final Set<String> browserTexts = createEntityInfo.getBrowserTexts().stream()
+                                                         .filter(browserText -> !browserText.trim().isEmpty())
+                                                         .collect(Collectors.toSet());
+        if (browserTexts.size() > 1) {
+            dispatchServiceManager.execute(new CreateClassesAction(
+                                                   getProjectId(),
+                                                   superCls.get(),
+                                                   browserTexts),
+                                           result -> {
+                                               if (!result.getCreatedClasses().isEmpty()) {
+                                                   List<OWLEntity> path = new ArrayList<>();
+                                                   path.addAll(result.getSuperClassPathToRoot().getPath());
+                                                   path.add(result.getCreatedClasses().get(0).getEntity());
+                                                   Path<OWLEntity> entityPath = new Path<>(path);
+                                                   selectAndExpandPath(entityPath);
+                                               }
+                                           });
+        }
+        else {
+            dispatchServiceManager.execute(new CreateClassAction(
+                                                   getProjectId(),
+                                                   browserTexts.iterator().next(),
+                                                   superCls.get()),
+                                           result -> {
+                                               Path<OWLEntity> path = new Path<>(new ArrayList<>(result.getPathToRoot().getPath()));
+                                               selectAndExpandPath(path);
+
+                                           });
+        }
+    }
+
+    private void selectAndExpandPath(Path<OWLEntity> entityPath) {
+        treeWidget.setSelected(entityPath, true, () -> {
+            treeWidget.setExpanded(entityPath);
+        });
     }
 
     private void createSubClassesByImportingCSVDocument() {
@@ -390,7 +402,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void setSelectionInTree(Optional<OWLEntity> selection) {
-        if(transmittingSelectionFromTree) {
+        if (transmittingSelectionFromTree) {
             return;
         }
         selection.ifPresent(sel -> {
