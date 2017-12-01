@@ -208,6 +208,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         updateButtonStates();
 
+        hierarchyModel.start(eventBus);
         nodeUpdater.start(eventBus);
 
         setSelectionInTree(getSelectedEntity());
@@ -251,7 +252,10 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
             GWT.log("[ClassTreePortlet] Transmitting selection from tree");
             treeWidget.getSelectedSet().stream()
                       .findFirst()
-                      .ifPresent(tn -> getSelectionModel().setSelection(tn.getUserObject().getEntity()));
+                      .ifPresent(tn -> {
+                          getSelectionModel().setSelection(tn.getUserObject().getEntity());
+                          GWT.log("[ClassTreePortlet] Setting selection for node " + tn.getId());
+                      });
         } finally {
             transmittingSelectionFromTree = false;
         }

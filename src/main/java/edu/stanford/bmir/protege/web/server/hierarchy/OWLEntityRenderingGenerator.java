@@ -47,7 +47,11 @@ public class OWLEntityRenderingGenerator {
                 renderingManager.getRendering(entity).getBrowserText(),
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity, userId),
-                discussionThreadRepository.getOpenCommentsCount(projectId, entity)
-                );
+                discussionThreadRepository.getOpenCommentsCount(projectId, entity));
+    }
+
+    public EntityHierarchyNode render(@Nonnull OWLEntity entity,
+                                      @Nonnull ProjectId projectId) {
+        return this.render(entity, projectId, UserId.getGuest());
     }
 }
