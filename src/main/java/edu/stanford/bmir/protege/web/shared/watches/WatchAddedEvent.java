@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.google.common.base.MoreObjects;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Author: Matthew Horridge<br>
@@ -50,5 +53,14 @@ public class WatchAddedEvent extends ProjectEvent<WatchAddedHandler> {
     @Override
     protected void dispatch(WatchAddedHandler handler) {
         handler.handleWatchAdded(this);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("WatchAddedEvent")
+                .addValue(getProjectId())
+                .addValue(getWatch())
+                .toString();
     }
 }

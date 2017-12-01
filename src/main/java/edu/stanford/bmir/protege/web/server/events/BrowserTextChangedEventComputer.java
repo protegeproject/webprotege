@@ -12,8 +12,10 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.inject.Inject;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Matthew Horridge,
@@ -58,12 +60,15 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
 
     @Override
     public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+        Set<OWLEntity> processedEntities = new HashSet<>();
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity entity : hasChangeSubject.getChangeSubjects(change)) {
-                String shortForm = shortFormProvider.getShortForm(entity);
-                String oldShortForm = shortFormMap.get(entity);
-                if(oldShortForm == null || !shortForm.equals(oldShortForm)) {
-                    projectEventList.add(new BrowserTextChangedEvent(entity, shortForm, projectId));
+                if(processedEntities.add(entity)) {
+                    String shortForm = shortFormProvider.getShortForm(entity);
+                    String oldShortForm = shortFormMap.get(entity);
+                    if(oldShortForm == null || !shortForm.equals(oldShortForm)) {
+                        projectEventList.add(new BrowserTextChangedEvent(entity, shortForm, projectId));
+                    }
                 }
             }
         }

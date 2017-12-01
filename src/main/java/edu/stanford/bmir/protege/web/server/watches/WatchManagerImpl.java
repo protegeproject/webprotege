@@ -44,7 +44,6 @@ public class WatchManagerImpl implements WatchManager {
 
     private final EventManager<ProjectEvent<?>> eventManager;
 
-
     @Inject
     public WatchManagerImpl(@Nonnull ProjectId projectId,
                             @Nonnull WatchRecordRepositoryImpl repository,

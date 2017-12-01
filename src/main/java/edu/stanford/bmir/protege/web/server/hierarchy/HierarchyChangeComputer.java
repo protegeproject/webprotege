@@ -81,6 +81,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                             if(!parentsAfter.contains(parentBefore)) {
                                 // Removed
                                 projectEventList.add(createRemovedEvent(t, parentBefore));
+
                             }
                         }
                         for(T parentAfter : parentsAfter) {

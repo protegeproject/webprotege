@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.EventBus;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
@@ -165,8 +167,10 @@ public class DispatchServiceManager {
             List<? extends WebProtegeEvent<?>> events = eventList.getEvents();
             // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
             // TODO: more than once!
+            GWT.log("[Dispatch] Dispatching " + events.size() + " events");
+            long t0 = TimeUtil.getCurrentTime();
             for(WebProtegeEvent<?> event : events) {
-                GWT.log("[DISPATCH] Dispatching event (" + event.toDebugString() + ")");
+                GWT.log("[Dispatch] Dispatching event (" + event + ")");
                 if(event.getSource() != null) {
                     eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
                 }
@@ -174,6 +178,8 @@ public class DispatchServiceManager {
                     eventBus.fireEvent(event.asGWTEvent());
                 }
             }
+            long t1 = TimeUtil.getCurrentTime();
+            GWT.log("[Dispatch] Dispatched events in " + (t1 - t0) + " ms");
         }
     }
 

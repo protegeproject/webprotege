@@ -34,6 +34,7 @@
     <inherits name="com.google.gwt.i18n.I18N"/>
 
     <inherits name="dagger.Dagger"/>
+    <inherits name="edu.stanford.protege.gwt.graphtree.graphtree"/>
 
     <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
 
