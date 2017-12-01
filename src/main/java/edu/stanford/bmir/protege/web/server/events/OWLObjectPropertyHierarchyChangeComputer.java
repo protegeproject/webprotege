@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ObjectPropertyHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ObjectPropertyHierarchyParentRemovedEvent;
@@ -11,6 +11,8 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
 * Matthew Horridge
@@ -25,12 +27,16 @@ public class OWLObjectPropertyHierarchyChangeComputer extends HierarchyChangeCom
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLObjectProperty, ?> createRemovedEvent(OWLObjectProperty child, OWLObjectProperty parent) {
-        return new ObjectPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.OBJECT_PROPERTY_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLObjectProperty child, OWLObjectProperty parent) {
+        return Collections.singletonList(
+                new ObjectPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.OBJECT_PROPERTY_HIERARCHY)
+        );
     }
 
     @Override
-    protected HierarchyChangedEvent<OWLObjectProperty, ?> createAddedEvent(OWLObjectProperty child, OWLObjectProperty parent) {
-        return new ObjectPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.OBJECT_PROPERTY_HIERARCHY);
+    protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLObjectProperty child, OWLObjectProperty parent) {
+        return Collections.singletonList(
+                new ObjectPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.OBJECT_PROPERTY_HIERARCHY)
+        );
     }
 }
