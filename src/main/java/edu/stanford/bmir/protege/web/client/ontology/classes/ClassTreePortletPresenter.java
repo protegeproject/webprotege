@@ -305,32 +305,30 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         if (!selCls.isPresent()) {
             return;
         }
+        UploadFileResultHandler uploadResultHandler = new UploadFileResultHandler() {
+            @Override
+            public void handleFileUploaded(final DocumentId fileDocumentId) {
+                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
+                        new CSVImportDialogController(
+                                getProjectId(),
+                                fileDocumentId,
+                                selCls.get(),
+                                dispatchServiceManager,
+                                new CSVImportViewImpl(
+                                        primitiveDataEditorProvider)));
+                csvImportDialog.setVisible(true);
+
+            }
+
+            @Override
+            public void handleFileUploadFailed(
+                    String errorMessage) {
+                ProgressMonitor.get().hideProgressMonitor();
+                MessageBox.showAlert("Error uploading CSV file", errorMessage);
+            }
+        };
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV",
-                                                                               new UploadFileResultHandler() {
-                                                                                   @Override
-                                                                                   public void handleFileUploaded(final DocumentId fileDocumentId) {
-                                                                                       WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
-                                                                                               new CSVImportDialogController(
-                                                                                                       getProjectId(),
-                                                                                                       fileDocumentId,
-                                                                                                       selCls.get(),
-                                                                                                       dispatchServiceManager,
-                                                                                                       new CSVImportViewImpl(
-                                                                                                               primitiveDataEditorProvider)));
-                                                                                       csvImportDialog.setVisible(true);
-
-                                                                                   }
-
-                                                                                   @Override
-                                                                                   public void handleFileUploadFailed(
-                                                                                           String errorMessage) {
-                                                                                       ProgressMonitor.get()
-                                                                                                      .hideProgressMonitor();
-                                                                                       MessageBox.showAlert(
-                                                                                               "Error uploading CSV file",
-                                                                                               errorMessage);
-                                                                                   }
-                                                                               });
+                                                                               uploadResultHandler);
 
         WebProtegeDialog.showDialog(controller);
     }
