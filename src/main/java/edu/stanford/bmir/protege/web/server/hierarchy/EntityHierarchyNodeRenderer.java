@@ -16,7 +16,7 @@ import java.util.Collections;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 29 Nov 2017
  */
-public class OWLEntityRenderingGenerator {
+public class EntityHierarchyNodeRenderer {
 
     @Nonnull
     private RenderingManager renderingManager;
@@ -31,7 +31,7 @@ public class OWLEntityRenderingGenerator {
     private EntityDiscussionThreadRepository discussionThreadRepository;
 
     @Inject
-    public OWLEntityRenderingGenerator(@Nonnull RenderingManager renderingManager, @Nonnull DeprecatedEntityChecker deprecatedEntityChecker, @Nonnull WatchManager watchManager, @Nonnull EntityDiscussionThreadRepository discussionThreadRepository) {
+    public EntityHierarchyNodeRenderer(@Nonnull RenderingManager renderingManager, @Nonnull DeprecatedEntityChecker deprecatedEntityChecker, @Nonnull WatchManager watchManager, @Nonnull EntityDiscussionThreadRepository discussionThreadRepository) {
         this.renderingManager = renderingManager;
         this.deprecatedEntityChecker = deprecatedEntityChecker;
         this.watchManager = watchManager;

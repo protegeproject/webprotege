@@ -24,16 +24,16 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
     private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
-    private final OWLEntityRenderingGenerator renderingGenerator;
+    private final EntityHierarchyNodeRenderer renderer;
 
     @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager, @Nonnull ClassHierarchyProvider classHierarchyProvider, @Nonnull OWLEntityRenderingGenerator renderingGenerator, @Nonnull OWLDataFactory dataFactory) {
+    public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager, @Nonnull ClassHierarchyProvider classHierarchyProvider, @Nonnull EntityHierarchyNodeRenderer renderer, @Nonnull OWLDataFactory dataFactory) {
         super(accessManager);
         this.classHierarchyProvider = classHierarchyProvider;
-        this.renderingGenerator = renderingGenerator;
+        this.renderer = renderer;
         this.dataFactory = dataFactory;
     }
 
@@ -45,7 +45,7 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
     @Override
     public GetHierarchyRootsResult execute(GetHierarchyRootsAction action, ExecutionContext executionContext) {
         OWLClass owlThing = dataFactory.getOWLThing();
-        EntityHierarchyNode rootNode = renderingGenerator.render(owlThing, action.getProjectId(), executionContext.getUserId());
+        EntityHierarchyNode rootNode = renderer.render(owlThing, action.getProjectId(), executionContext.getUserId());
         GraphNode<EntityHierarchyNode> graphNode = new GraphNode<>(rootNode, classHierarchyProvider.getChildren(owlThing).isEmpty());
         return new GetHierarchyRootsResult(singletonList(graphNode));
     }
