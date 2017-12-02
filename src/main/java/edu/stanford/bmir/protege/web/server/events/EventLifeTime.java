@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.concurrent.TimeUnit;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 20/03/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 20/03/2013
  */
 public class EventLifeTime {
 
@@ -20,14 +19,13 @@ public class EventLifeTime {
         return new EventLifeTime(timeInMilliseconds);
     }
 
-    public long getEventLifeTimeInMilliseconds() {
-        return eventLifeTimeMS;
-    }
-
     public static EventLifeTime get(long time, TimeUnit unit) {
         return getInMilliseconds(TimeUnit.MILLISECONDS.convert(time, unit));
     }
 
+    public long getEventLifeTimeInMilliseconds() {
+        return eventLifeTimeMS;
+    }
 
     @Override
     public int hashCode() {
@@ -36,10 +34,10 @@ public class EventLifeTime {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == this) {
+        if (obj == this) {
             return true;
         }
-        if(!(obj instanceof EventLifeTime)) {
+        if (!(obj instanceof EventLifeTime)) {
             return false;
         }
         EventLifeTime other = (EventLifeTime) obj;
@@ -48,12 +46,8 @@ public class EventLifeTime {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("EventLifeTime");
-        sb.append("(");
-        sb.append(eventLifeTimeMS);
-        sb.append("ms");
-        sb.append(")");
-        return sb.toString();
+        return MoreObjects.toStringHelper("EventLifeTime")
+                          .add("lifetime ms", eventLifeTimeMS)
+                          .toString();
     }
 }

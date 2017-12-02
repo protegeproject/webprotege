@@ -7,8 +7,11 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 24/02/2014
@@ -29,7 +32,7 @@ public class ClassSubClassOfSectionRenderer extends AbstractOWLAxiomItemSectionR
     public List<OWLClassExpression> getRenderablesForItem(OWLClass subject,
                                                           OWLSubClassOfAxiom item,
                                                           OWLOntology ontology) {
-        return Arrays.asList(item.getSuperClass());
+        return singletonList(item.getSuperClass());
     }
 
     @Override
