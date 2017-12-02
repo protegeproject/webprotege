@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.util.OWLClassExpressionVisitorExAdapter;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**

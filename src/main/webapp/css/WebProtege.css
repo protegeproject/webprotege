@@ -284,30 +284,6 @@ select {
     margin: 1px;
 }
 
-.web-protege-value-list {
-
-}
-
-.web-protege-value-list > table > tbody > tr > td {
-    border-bottom: 1px solid rgb(240, 240, 240);
-}
-
-.web-protege-value-list .gwt-SuggestBox {
-    border: 1px solid transparent;
-}
-
-.web-protege-value-list .gwt-SuggestBox {
-    border: 1px solid transparent;
-}
-
-.web-protege-value-list .gwt-TextBox {
-    border: 1px solid transparent;
-}
-
-.web-protege-value-list .gwt-TextArea {
-    border: 1px solid transparent;
-}
-
 .cm-s-manchester-syntax span.cm-quantifier {
     color: #c528eb;
     font-weight: bold;
