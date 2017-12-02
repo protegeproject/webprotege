@@ -165,12 +165,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         }
         else {
             result = extractChildren(object);
-            for (Iterator<OWLClass> it = result.iterator(); it.hasNext();) {
-                OWLClass curChild = it.next();
-                if (getAncestors(object).contains(curChild)) {
-                    it.remove();
-                }
-            }
+            result.removeIf(curChild -> getAncestors(object).contains(curChild));
         }
 
         return result;
