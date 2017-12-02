@@ -113,9 +113,7 @@ public class PropertyValueFormDataTranslator {
                                                @Nonnull Map<FormElementId, OWLProperty> binding) {
         Map<FormElementId, FormDataValue> data = formData.getData();
         Set<PropertyValue> propertyValues = new HashSet<>();
-        data.entrySet().forEach(e -> {
-            FormElementId formElementId = e.getKey();
-            FormDataValue dataValue = e.getValue();
+        data.forEach((formElementId, dataValue) -> {
             Set<OWLObject> owlObjects = toOWLObject(dataValue);
             OWLEntity property = binding.get(formElementId);
             if (property instanceof OWLObjectProperty) {
