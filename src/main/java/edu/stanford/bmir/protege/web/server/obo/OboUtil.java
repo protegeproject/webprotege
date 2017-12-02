@@ -60,7 +60,7 @@ public class OboUtil {
     public List<OWLOntologyChange> replaceStringAnnotationValue(@Nonnull IRI annotationSubject,
                                                                 @Nonnull IRI annotationPropertyIRI,
                                                                 @Nonnull String replaceWith) {
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange> changes = new ArrayList<>();
         OWLAnnotationProperty property = dataFactory.getOWLAnnotationProperty(annotationPropertyIRI);
         OWLLiteral value = dataFactory.getOWLLiteral(replaceWith);
 

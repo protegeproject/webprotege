@@ -50,11 +50,11 @@ public class ImportsCacheManager {
 
 
 
-    private Map<OWLOntologyID, ImportedOntologyMetadata> metadataMap = new HashMap<OWLOntologyID, ImportedOntologyMetadata>();
+    private Map<OWLOntologyID, ImportedOntologyMetadata> metadataMap = new HashMap<>();
 
-    private Set<OWLOntologyID> ontologyIDs = new HashSet<OWLOntologyID>();
+    private Set<OWLOntologyID> ontologyIDs = new HashSet<>();
 
-    private Map<IRI, IRI> iri2Document = new HashMap<IRI, IRI>();
+    private Map<IRI, IRI> iri2Document = new HashMap<>();
 
 
     private final ProjectId projectId;

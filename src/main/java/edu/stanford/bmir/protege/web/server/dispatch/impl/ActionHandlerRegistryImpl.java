@@ -22,7 +22,7 @@ public abstract class ActionHandlerRegistryImpl implements ActionHandlerRegistry
 
     // NOT a concurrent map.  This is only written to in the constructor. At runtime it's essentially immutable and the
     // basic maps are safe for multiple readers
-    private Map<Class<?>, ActionHandler<?, ?>> registry = new HashMap<Class<?>, ActionHandler<?, ?>>();
+    private Map<Class<?>, ActionHandler<?, ?>> registry = new HashMap<>();
 
     public ActionHandlerRegistryImpl(Set<? extends ActionHandler> handlers) {
         for(ActionHandler<?, ?> actionHandler : handlers) {

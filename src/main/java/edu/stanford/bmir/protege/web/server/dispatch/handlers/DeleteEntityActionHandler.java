@@ -62,7 +62,7 @@ public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLE
     @Override
     protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(DeleteEntityAction action,
                                                                          ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<OWLEntity>(getChangeDescription(action.getSubject(), renderingManager.getBrowserText(action.getSubject())));
+        return new FixedMessageChangeDescriptionGenerator<>(getChangeDescription(action.getSubject(), renderingManager.getBrowserText(action.getSubject())));
     }
 
     @Override

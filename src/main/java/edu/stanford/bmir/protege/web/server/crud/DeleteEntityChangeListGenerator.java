@@ -36,7 +36,7 @@ public class DeleteEntityChangeListGenerator implements ChangeListGenerator<OWLE
 
     @Override
     public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<OWLEntity> builder = new OntologyChangeList.Builder<OWLEntity>();
+        OntologyChangeList.Builder<OWLEntity> builder = new OntologyChangeList.Builder<>();
         OWLEntityRemover remover = new OWLEntityRemover(
                 rootOntology.getImportsClosure());
         entity.accept(remover);

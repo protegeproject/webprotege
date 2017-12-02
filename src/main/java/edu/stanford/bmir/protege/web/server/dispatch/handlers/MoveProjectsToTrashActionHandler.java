@@ -44,11 +44,11 @@ public class MoveProjectsToTrashActionHandler implements ApplicationActionHandle
 
     @Override
     public MoveProjectsToTrashResult execute(MoveProjectsToTrashAction action, ExecutionContext executionContext) {
-        List<ProjectMovedToTrashEvent> events = new ArrayList<ProjectMovedToTrashEvent>();
+        List<ProjectMovedToTrashEvent> events = new ArrayList<>();
         ProjectId projectId = action.getProjectId();
             projectDetailsManager.setInTrash(projectId, true);
             events.add(new ProjectMovedToTrashEvent(projectId));
 
-        return new MoveProjectsToTrashResult(new EventList<ProjectMovedToTrashEvent>(EventTag.getFirst(), events, EventTag.getFirst()));
+        return new MoveProjectsToTrashResult(new EventList<>(EventTag.getFirst(), events, EventTag.getFirst()));
     }
 }

@@ -68,7 +68,7 @@ public class ProjectEntityCrudKitHandlerCache {
      * @return The default settings.  Not {@code null}.
      */
     private static EntityCrudKitSettings<?> getDefaultSettings() {
-        return new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(getDefaultPrefixSettings(), getDefaultSuffixSettings());
+        return new EntityCrudKitSettings<>(getDefaultPrefixSettings(), getDefaultSuffixSettings());
     }
 
     private static EntityCrudKitPrefixSettings getDefaultPrefixSettings() {

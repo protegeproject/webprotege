@@ -138,7 +138,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
             for (OWLOntologyChange chg : changes) {
 
                 final Set<OWLEntity> entities = chg.getSignature();
-                Set<OWLEntity> processed = new HashSet<OWLEntity>(entities.size());
+                Set<OWLEntity> processed = new HashSet<>(entities.size());
                 if(chg.isAxiomChange()) {
                     chg.getAxiom().accept(new OWLAxiomVisitorAdapter() {
                         @Override

@@ -11,7 +11,7 @@ public class FixedMessageChangeDescriptionGenerator<S> implements ChangeDescript
     private String message;
 
     public static <S> FixedMessageChangeDescriptionGenerator<S> get(String message) {
-        return new FixedMessageChangeDescriptionGenerator<S>(message);
+        return new FixedMessageChangeDescriptionGenerator<>(message);
     }
 
     public FixedMessageChangeDescriptionGenerator(String message) {

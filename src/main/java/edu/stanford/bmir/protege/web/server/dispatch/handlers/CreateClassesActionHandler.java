@@ -91,7 +91,7 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
             throw new IllegalStateException("Class does not exist in hierarchy: " + renderingManager
                     .getBrowserText(action.getSuperClass()));
         }
-        ObjectPath<OWLClass> pathToRoot = new ObjectPath<OWLClass>(paths.iterator().next());
+        ObjectPath<OWLClass> pathToRoot = new ObjectPath<>(paths.iterator().next());
 
         EventTag currentTag = eventManager.getCurrentTag();
         final CreateClassesChangeGenerator gen = new CreateClassesChangeGenerator(action.getBrowserTexts(),

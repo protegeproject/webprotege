@@ -64,7 +64,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     @Override
     public EntityCrudKitSettings<UUIDSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<UUIDSuffixSettings>(prefixSettings, suffixSettings);
+        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
     }
 
     @Override

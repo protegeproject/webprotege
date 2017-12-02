@@ -17,16 +17,16 @@ public class FixedChangeListGenerator<R> implements ChangeListGenerator<R> {
     private List<OWLOntologyChange> fixedChangeList;
 
     public FixedChangeListGenerator(List<OWLOntologyChange> fixedChangeList) {
-        this.fixedChangeList = new ArrayList<OWLOntologyChange>(fixedChangeList);
+        this.fixedChangeList = new ArrayList<>(fixedChangeList);
     }
 
     public static <S> FixedChangeListGenerator<S> get(List<OWLOntologyChange> changes) {
-        return new FixedChangeListGenerator<S>(changes);
+        return new FixedChangeListGenerator<>(changes);
     }
 
     @Override
     public OntologyChangeList<R> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<R> builder = new OntologyChangeList.Builder<R>();
+        OntologyChangeList.Builder<R> builder = new OntologyChangeList.Builder<>();
         builder.addAll(fixedChangeList);
         return builder.build();
     }

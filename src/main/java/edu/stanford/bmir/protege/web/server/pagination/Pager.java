@@ -44,7 +44,7 @@ public class Pager<T> implements Serializable {
     }
 
     public static <T> Pager<T> getPagerForPageSize(List<T> sourceData, int pageSize) {
-        return new Pager<T>(sourceData, pageSize);
+        return new Pager<>(sourceData, pageSize);
     }
 
     /**
@@ -70,10 +70,10 @@ public class Pager<T> implements Serializable {
     public Page<T> getPage(int pageNumber) {
         checkElementIndex(pageNumber - 1, getPageCount());
         if(partition.isEmpty()) {
-            return new Page<T>(pageNumber, getPageCount(), Collections.emptyList(), 0);
+            return new Page<>(pageNumber, getPageCount(), Collections.emptyList(), 0);
         }
         else {
-            return new Page<T>(pageNumber, getPageCount(), partition.get(pageNumber - 1), sourceDataSize);
+            return new Page<>(pageNumber, getPageCount(), partition.get(pageNumber - 1), sourceDataSize);
         }
     }
 }

@@ -37,7 +37,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     private SetMultimap<T, T> child2ParentMap = HashMultimap.create();
 
-    private Set<T> roots = new HashSet<T>();
+    private Set<T> roots = new HashSet<>();
 
     public HierarchyChangeComputer(ProjectId projectId, EntityType<T> entityType, HierarchyProvider<T> hierarchyProvider, HierarchyId<T> hierarchyId) {
         this.projectId = projectId;
@@ -68,7 +68,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
     @SuppressWarnings("unchecked")
     @Override
     public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
-        Set<T> changeSignature = new HashSet<T>();
+        Set<T> changeSignature = new HashSet<>();
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity child : change.getSignature()) {
                 if(child.isType(entityType)) {
@@ -94,15 +94,15 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                 }
             }
         }
-        Set<T> rootsAfter = new HashSet<T>(hierarchyProvider.getRoots());
+        Set<T> rootsAfter = new HashSet<>(hierarchyProvider.getRoots());
         for(T rootAfter : rootsAfter) {
             if(!roots.contains(rootAfter)) {
-                projectEventList.add(new HierarchyRootAddedEvent<T>(projectId, hierarchyId, rootAfter));
+                projectEventList.add(new HierarchyRootAddedEvent<>(projectId, hierarchyId, rootAfter));
             }
         }
         for(T rootBefore : roots) {
             if(!rootsAfter.contains(rootBefore)) {
-                projectEventList.add(new HierarchyRootRemovedEvent<T>(projectId, hierarchyId, rootBefore));
+                projectEventList.add(new HierarchyRootRemovedEvent<>(projectId, hierarchyId, rootBefore));
             }
         }
     }

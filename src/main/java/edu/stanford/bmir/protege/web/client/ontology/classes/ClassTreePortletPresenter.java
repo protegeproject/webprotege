@@ -191,7 +191,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         contextMenu.addItem(messages.create(), this::handleCreateSubClasses);
         contextMenu.addItem(messages.delete(), this::handleDeleteClass);
         contextMenu.addSeparator();
-        contextMenu.addItem(messages.tree_pruneToRoot(), this::pruneSelectedNodesToRoot);
+        contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
+        contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
         contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.showIri(), showIriForSelection());
@@ -213,7 +214,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     }
 
     private void handleRefresh() {
-        treeWidget.setModel(treeModel);
+        treeWidget.reload();
         setSelectionInTree(getSelectedEntity());
     }
 
@@ -227,6 +228,10 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         treeWidget.pruneToSelectedNodes();
     }
 
+    private void pruneToKey() {
+        treeWidget.getFirstSelectedKey().ifPresent(sel -> treeWidget.pruneToNodesContainingKey(sel, () -> {}));
+    }
+
     private void clearPruning() {
         treeWidget.clearPruning();
     }
@@ -234,9 +239,8 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private void transmitSelectionFromTree() {
         try {
             transmittingSelectionFromTree = true;
-            treeWidget.getSelectedSet().stream()
-                      .findFirst()
-                      .ifPresent(tn -> getSelectionModel().setSelection(tn.getUserObject().getEntity()));
+            treeWidget.getFirstSelectedKey()
+                      .ifPresent(sel -> getSelectionModel().setSelection(sel));
         } finally {
             transmittingSelectionFromTree = false;
         }
@@ -335,7 +339,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
 
     private Optional<OWLClassData> getSelectedTreeNodeClassData() {
-        return treeWidget.getSelectedSet().stream()
+        return treeWidget.getSelectedNodes().stream()
                          .map(tn -> (OWLClassData) tn.getUserObject().getEntityData())
                          .findFirst();
     }
@@ -389,7 +393,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         }
         selection.ifPresent(sel -> {
             if (sel.isOWLClass()) {
-                treeWidget.revealTreeNodesForUserObjectKey(sel, REVEAL_FIRST);
+                treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST);
             }
         });
     }

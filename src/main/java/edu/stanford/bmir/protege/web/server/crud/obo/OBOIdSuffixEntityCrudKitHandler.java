@@ -73,7 +73,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     @Override
     public EntityCrudKitSettings<OBOIdSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<OBOIdSuffixSettings>(prefixSettings, suffixSettings);
+        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     public <E extends OWLEntity> void update(OBOIdSession session, E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         final OWLDataFactory df = context.getDataFactory();
         OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm, context);
-        OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<E>();
+        OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<>();
 
         OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
         final OWLOntology targetOntology = context.getTargetOntology();

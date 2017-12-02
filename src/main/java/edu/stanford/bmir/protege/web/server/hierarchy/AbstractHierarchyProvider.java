@@ -44,7 +44,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
 
     public Set<N> getAncestors(N object) {
-        Set<N> results = new HashSet<N>();
+        Set<N> results = new HashSet<>();
         getAncestors(results, object);
         return results;
     }
@@ -61,7 +61,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
 
     public Set<N> getDescendants(N object) {
-        Set<N> results = new HashSet<N>();
+        Set<N> results = new HashSet<>();
         getDescendants(results, object);
         return results;
     }
@@ -88,7 +88,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
      * @return A <code>Set</code> of <code>List</code>s of <code>N</code>s
      */
     public Set<List<N>> getPathsToRoot(N obj) {
-        return setOfPaths(obj, new HashSet<N>());
+        return setOfPaths(obj, new HashSet<>());
     }
 
 
@@ -96,7 +96,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
         if (getRoots().contains(obj)) {
             return getSingleSetOfLists(obj);
         }
-        Set<List<N>> paths = new HashSet<List<N>>();
+        Set<List<N>> paths = new HashSet<>();
         for (N par : getParents(obj)) {
             if (!processed.contains(par)) {
                 processed.add(par);
@@ -108,8 +108,8 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
 
     private Set<List<N>> getSingleSetOfLists(N obj) {
-        Set<List<N>> set = new HashSet<List<N>>();
-        List<N> list = new ArrayList<N>();
+        Set<List<N>> set = new HashSet<>();
+        List<N> list = new ArrayList<>();
         list.add(obj);
         set.add(list);
         return set;
@@ -127,7 +127,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
 
     private Set<N> createSet() {
-        return new HashSet<N>();
+        return new HashSet<>();
     }
 
 
@@ -169,7 +169,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
         if (!fireEvents) {
             return;
         }
-        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<OWLObjectHierarchyProviderListener<N>>(
+        for (OWLObjectHierarchyProviderListener<N> listener : new ArrayList<>(
                 listeners)) {
             try {
                 listener.hierarchyChanged();

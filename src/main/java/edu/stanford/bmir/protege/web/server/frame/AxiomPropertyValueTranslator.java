@@ -116,7 +116,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             if (!subject.isOWLClass()) {
                 return Collections.emptySet();
             }
-            Set<PropertyValue> result = new HashSet<PropertyValue>();
+            Set<PropertyValue> result = new HashSet<>();
             if (axiom.contains(subject.asOWLClass())) {
                 for (OWLClassExpression ce : axiom.getClassExpressions()) {
                     if (!ce.equals(subject)) {
@@ -213,7 +213,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         @Override
         public Set<PropertyValue> visit(OWLObjectIntersectionOf ce) {
             state = State.DERIVED;
-            Set<PropertyValue> result = new HashSet<PropertyValue>();
+            Set<PropertyValue> result = new HashSet<>();
             for (OWLClassExpression op : ce.asConjunctSet()) {
                 Set<PropertyValue> accept = op.accept(this);
                 if (accept != null) {
@@ -345,7 +345,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         @Override
         public Set<OWLAxiom> visit(final PropertyClassValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
-            final Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+            final Set<OWLClassExpression> classExpressions = new HashSet<>();
             classExpressions.add(df.getOWLObjectSomeValuesFrom(propertyValue.getProperty().getEntity(),
                                                                propertyValue.getValue().getEntity()));
             if (mode == Mode.MAXIMAL) {
@@ -356,7 +356,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
-                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    Set<OWLAxiom> result = new HashSet<>();
                     for (OWLClassExpression ce : classExpressions) {
                         result.add(df.getOWLSubClassOfAxiom(subject, ce));
                     }
@@ -365,7 +365,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
                 @Override
                 public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
-                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    Set<OWLAxiom> result = new HashSet<>();
                     for (OWLClassExpression ce : classExpressions) {
                         result.add(df.getOWLClassAssertionAxiom(ce, subject));
                     }
@@ -397,7 +397,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         @Override
         public Set<OWLAxiom> visit(final PropertyDatatypeValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
-            final Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+            final Set<OWLClassExpression> classExpressions = new HashSet<>();
             classExpressions.add(df.getOWLDataSomeValuesFrom(propertyValue.getProperty().getEntity(),
                                                              propertyValue.getValue().getEntity()));
             if (mode == Mode.MAXIMAL) {
@@ -408,7 +408,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
-                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    Set<OWLAxiom> result = new HashSet<>();
                     for (OWLClassExpression ce : classExpressions) {
                         result.add(df.getOWLSubClassOfAxiom(subject, ce));
                     }
@@ -417,7 +417,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
                 @Override
                 public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
-                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    Set<OWLAxiom> result = new HashSet<>();
                     for (OWLClassExpression ce : classExpressions) {
                         result.add(df.getOWLClassAssertionAxiom(ce, subject));
                     }

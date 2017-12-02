@@ -52,12 +52,12 @@ public class EscapingShortFormProvider implements BidirectionalShortFormProvider
     @Override
     public Set<String> getShortForms() {
         Set<String> rawShortForms = delegate.getShortForms();
-        List<String> escapedShortForms = new ArrayList<String>(rawShortForms.size() + 1);
+        List<String> escapedShortForms = new ArrayList<>(rawShortForms.size() + 1);
         for(String rawShortForm : rawShortForms) {
             String escapedShortForm = getEscapedShortForm(rawShortForm);
             escapedShortForms.add(escapedShortForm);
         }
-        return new HashSet<String>(escapedShortForms);
+        return new HashSet<>(escapedShortForms);
     }
 
     private String getEscapedShortForm(String rawShortForm) {

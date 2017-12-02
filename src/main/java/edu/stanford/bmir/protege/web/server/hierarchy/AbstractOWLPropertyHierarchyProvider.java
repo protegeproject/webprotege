@@ -26,7 +26,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
     private P root;
 
     public AbstractOWLPropertyHierarchyProvider(@RootOntology OWLOntology rootOntology, P root) {
-        this.subPropertiesOfRoot = new HashSet<P>();
+        this.subPropertiesOfRoot = new HashSet<>();
         this.rootOntology = rootOntology;
         this.root = root;
         rebuildRoots();
@@ -40,7 +40,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
 
 
     public void handleChanges(List<? extends OWLOntologyChange> changes) {
-        Set<P> properties = new HashSet<P>(getPropertiesReferencedInChange(changes));
+        Set<P> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
         for (P prop : properties) {
             if (isSubPropertyOfRoot(prop)) {
                 subPropertiesOfRoot.add(prop);
@@ -151,7 +151,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
             return Collections.unmodifiableSet(subPropertiesOfRoot);
         }
 
-        final Set<P> result = new HashSet<P>();
+        final Set<P> result = new HashSet<>();
         for (E subProp : EntitySearcher.getSubProperties(object, getOntologies())){
             // Don't add the sub property if it is a parent of
             // itself - i.e. prevent cycles
@@ -165,7 +165,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
 
 
     public Set<P> getEquivalents(P object) {
-        Set<P> result = new HashSet<P>();
+        Set<P> result = new HashSet<>();
         Set<P> ancestors = getAncestors(object);
         if (ancestors.contains(object)) {
             for (P anc : ancestors) {
@@ -191,7 +191,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
             return Collections.emptySet();
         }
 
-        Set<P> result = new HashSet<P>();
+        Set<P> result = new HashSet<>();
         for (E prop : EntitySearcher.getSuperProperties(object, getOntologies())) {
             if (!prop.isAnonymous()) {
                 result.add((P) prop);

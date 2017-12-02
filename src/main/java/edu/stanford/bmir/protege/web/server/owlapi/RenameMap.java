@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RenameMap {
 
-    private Map<IRI, IRI> map = new HashMap<IRI, IRI>();
+    private Map<IRI, IRI> map = new HashMap<>();
 
     /**
      * Constructs a {@link RenameMap} from the specified IRI map.
@@ -68,7 +68,7 @@ public class RenameMap {
      * entities in the specfied set.  Not {@code null}.
      */
     public <E extends OWLEntityData>Set<E> getRenamedEntityData(Set<E> entities) {
-        Set<E> result = new HashSet<E>(entities.size());
+        Set<E> result = new HashSet<>(entities.size());
         for(E entity : entities) {
             result.add(getRenamedEntity(entity));
         }
@@ -76,7 +76,7 @@ public class RenameMap {
     }
 
     public <E extends OWLEntity> Set<E> getRenamedEntities(Set<E> entities) {
-        Set<E> result = new HashSet<E>(entities.size());
+        Set<E> result = new HashSet<>(entities.size());
         for(E entity : entities) {
             result.add(getRenamedEntity(entity));
         }

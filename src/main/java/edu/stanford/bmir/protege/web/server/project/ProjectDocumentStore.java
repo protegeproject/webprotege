@@ -90,7 +90,7 @@ public class ProjectDocumentStore {
                         throw new RuntimeException("Document IRI is not a local file IRI" );
                     }
                     List<OWLOntologyChange> ontologyChangeList = changesByOntology.get(ontology);
-                    List<OWLOntologyChangeData> infoList = new ArrayList<OWLOntologyChangeData>();
+                    List<OWLOntologyChangeData> infoList = new ArrayList<>();
                     for (OWLOntologyChange change : ontologyChangeList) {
                         OWLOntologyChangeRecord changeRecord = change.getChangeRecord();
                         infoList.add(changeRecord.getData());

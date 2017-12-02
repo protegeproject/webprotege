@@ -31,7 +31,7 @@ public class ClassDisjointWithSectionRenderer extends AbstractOWLAxiomItemSectio
     public List<OWLClassExpression> getRenderablesForItem(OWLClass subject,
                                                           OWLDisjointClassesAxiom item,
                                                           OWLOntology ontology) {
-        return new ArrayList<OWLClassExpression>(item.getClassExpressionsMinus(subject));
+        return new ArrayList<>(item.getClassExpressionsMinus(subject));
     }
 
 }

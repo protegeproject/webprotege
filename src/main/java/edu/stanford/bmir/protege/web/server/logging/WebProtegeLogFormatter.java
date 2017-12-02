@@ -54,7 +54,7 @@ public class WebProtegeLogFormatter extends LayoutBase<ILoggingEvent> {
     }
 
     private static Iterable<String> wrap(String message, int width) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(message, "\n ", true);
         String last = "";
         while(tokenizer.hasMoreTokens()) {

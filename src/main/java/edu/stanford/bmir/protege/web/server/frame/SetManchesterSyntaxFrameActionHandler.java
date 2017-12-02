@@ -78,7 +78,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
         if(commitMessage.isPresent()) {
             changeDescription += "\n" + commitMessage.get();
         }
-        return new FixedMessageChangeDescriptionGenerator<Void>(changeDescription);
+        return new FixedMessageChangeDescriptionGenerator<>(changeDescription);
     }
 
     @Override

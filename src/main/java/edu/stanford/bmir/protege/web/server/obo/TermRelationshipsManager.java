@@ -57,9 +57,9 @@ public class TermRelationshipsManager {
     public OBOTermRelationships getRelationships(OWLClass term) {
         OWLClass cls = dataFactory.getOWLClass(term.getIRI());
         Set<OWLSubClassOfAxiom> subClassOfAxioms = rootOntology.getSubClassAxiomsForSubClass(cls);
-        Set<OBORelationship> rels = new HashSet<OBORelationship>();
+        Set<OBORelationship> rels = new HashSet<>();
         for (OWLSubClassOfAxiom ax : subClassOfAxioms) {
-            Set<OWLObjectSomeValuesFrom> relationships = new HashSet<OWLObjectSomeValuesFrom>();
+            Set<OWLObjectSomeValuesFrom> relationships = new HashSet<>();
             Set<OWLClassExpression> conjuncts = ax.getSuperClass().asConjunctSet();
             for (OWLClassExpression conjunct : conjuncts) {
                 if (conjunct instanceof OWLObjectSomeValuesFrom) {
@@ -91,10 +91,10 @@ public class TermRelationshipsManager {
         }
 
 
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange> changes = new ArrayList<>();
 
         OWLClass cls = dataFactory.getOWLClass(lastEntity.getIRI());
-        Set<OWLObjectSomeValuesFrom> existingSuperClsesToReplace = new HashSet<OWLObjectSomeValuesFrom>();
+        Set<OWLObjectSomeValuesFrom> existingSuperClsesToReplace = new HashSet<>();
         for (OWLSubClassOfAxiom ax : rootOntology.getSubClassAxiomsForSubClass(cls)) {
             if (ax.getSuperClass() instanceof OWLObjectSomeValuesFrom) {
                 OWLObjectSomeValuesFrom existing = (OWLObjectSomeValuesFrom) ax.getSuperClass();

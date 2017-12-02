@@ -61,7 +61,7 @@ public class MoveClassChangeFactory extends OWLOntologyChangeFactory {
             }
             
             for(OWLEquivalentClassesAxiom ax : ontology.getEquivalentClassesAxioms(cls)) {
-                Set<OWLClassExpression> newEquivalentClasses = new HashSet<OWLClassExpression>();
+                Set<OWLClassExpression> newEquivalentClasses = new HashSet<>();
                 for(OWLClassExpression equiv : ax.getClassExpressionsMinus(cls)) {
                     ClassExpressionMutator mutator = new ClassExpressionMutator(cls);
                     OWLClassExpression newEquivalentClass = equiv.accept(mutator);
@@ -95,7 +95,7 @@ public class MoveClassChangeFactory extends OWLOntologyChangeFactory {
         }
 
         public OWLClassExpression visit(OWLObjectIntersectionOf owlObjectIntersectionOf) {
-            Set<OWLClassExpression> replacementConjuncts = new HashSet<OWLClassExpression>();
+            Set<OWLClassExpression> replacementConjuncts = new HashSet<>();
             for(OWLClassExpression conjunct : owlObjectIntersectionOf.getOperands()) {
                 OWLClassExpression newConjunct = conjunct.accept(this);
                 if(newConjunct != null) {

@@ -106,7 +106,7 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
             public Void getRenamedResult(Void result, RenameMap renameMap) {
                 return null;
             }
-        }, new FixedMessageChangeDescriptionGenerator<Void>(commitMessage));
+        }, new FixedMessageChangeDescriptionGenerator<>(commitMessage));
     }
 
 

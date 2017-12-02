@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CompositeRequestValidator implements RequestValidator {
 
-    private final List<RequestValidator> requestValidators = new ArrayList<RequestValidator>();
+    private final List<RequestValidator> requestValidators = new ArrayList<>();
 
 
     public static <A extends Action<?>> CompositeRequestValidator get(List<RequestValidator> requestValidators) {

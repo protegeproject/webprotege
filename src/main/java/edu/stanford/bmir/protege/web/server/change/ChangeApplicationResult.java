@@ -26,7 +26,7 @@ public class ChangeApplicationResult<S> implements HasSubject<Optional<S>> {
 
     public ChangeApplicationResult(Optional<S> subject, List<OWLOntologyChange> changeList, RenameMap renameMap) {
         this.subject = subject;
-        this.changeList = new ArrayList<OWLOntologyChange>(changeList);
+        this.changeList = new ArrayList<>(changeList);
         this.renameMap = renameMap;
     }
 

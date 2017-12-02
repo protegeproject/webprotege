@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class DefaultHttpLinkRenderer implements HttpLinkRenderer {
 
-    private List<LinkRendererPlugin> pluginList = new ArrayList<LinkRendererPlugin>();
+    private List<LinkRendererPlugin> pluginList = new ArrayList<>();
 
     public DefaultHttpLinkRenderer() {
         pluginList.add(new WikipediaXRefLinkRenderer());

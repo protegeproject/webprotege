@@ -58,7 +58,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getChildren(OWLAnnotationProperty object) {
-        Set<OWLAnnotationProperty> result = new HashSet<OWLAnnotationProperty>();
+        Set<OWLAnnotationProperty> result = new HashSet<>();
         for (OWLOntology ont : getOntologies()) {
             for (OWLSubAnnotationPropertyOfAxiom ax : ont.getAxioms(AxiomType.SUB_ANNOTATION_PROPERTY_OF)) {
                 if (ax.getSuperProperty().equals(object)){
@@ -75,7 +75,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getEquivalents(OWLAnnotationProperty object) {
-        Set<OWLAnnotationProperty> result = new HashSet<OWLAnnotationProperty>();
+        Set<OWLAnnotationProperty> result = new HashSet<>();
         Set<OWLAnnotationProperty> ancestors = getAncestors(object);
         if (ancestors.contains(object)) {
             for (OWLAnnotationProperty anc : ancestors) {
@@ -90,7 +90,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public Set<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
-        Set<OWLAnnotationProperty> result = new HashSet<OWLAnnotationProperty>();
+        Set<OWLAnnotationProperty> result = new HashSet<>();
 
         for (OWLOntology ont : getOntologies()) {
             for (OWLSubAnnotationPropertyOfAxiom ax : ont.getSubAnnotationPropertyOfAxioms(object)){
@@ -110,7 +110,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     public void handleChanges(List<? extends OWLOntologyChange> changes) {
-        Set<OWLAnnotationProperty> properties = new HashSet<OWLAnnotationProperty>(getPropertiesReferencedInChange(changes));
+        Set<OWLAnnotationProperty> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
         for (OWLAnnotationProperty prop : properties) {
             if (isRoot(prop)) {
                 roots.add(prop);
@@ -135,7 +135,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     private Set<OWLAnnotationProperty> getPropertiesReferencedInChange(List<? extends OWLOntologyChange> changes){
-        final Set<OWLAnnotationProperty> props = new HashSet<OWLAnnotationProperty>();
+        final Set<OWLAnnotationProperty> props = new HashSet<>();
         for (OWLOntologyChange chg : changes){
             if(chg.isAxiomChange()){
                 chg.getAxiom().accept(new OWLAxiomVisitorAdapter(){
@@ -179,7 +179,7 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
     private void rebuildRoots() {
         roots.clear();
 
-        final Set<OWLAnnotationProperty> annotationProperties = new HashSet<OWLAnnotationProperty>();
+        final Set<OWLAnnotationProperty> annotationProperties = new HashSet<>();
 
         for (OWLOntology ont : getOntologies()) {
             annotationProperties.addAll(ont.getAnnotationPropertiesInSignature());

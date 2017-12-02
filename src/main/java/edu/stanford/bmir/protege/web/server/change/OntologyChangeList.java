@@ -31,7 +31,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
      */
     private OntologyChangeList(List<OWLOntologyChange> changes, Optional<R> result) {
         this.result = result;
-        this.changes = new ArrayList<OWLOntologyChange>(changes);
+        this.changes = new ArrayList<>(changes);
     }
 
     /**
@@ -52,7 +52,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
     }
 
     public static <R> Builder<R> builder() {
-        return new Builder<R>();
+        return new Builder<>();
     }
 
     /**
@@ -61,7 +61,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
      */
     public static class Builder<R> {
 
-        private List<OWLOntologyChange> builderChanges = new ArrayList<OWLOntologyChange>();
+        private List<OWLOntologyChange> builderChanges = new ArrayList<>();
 
         public Builder() {
         }
