@@ -96,7 +96,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
             }
         }
         propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
-        Collections.sort(propertyValues, propertyValueComparator);
+        propertyValues.sort(propertyValueComparator);
         builder.addPropertyValues(propertyValues);
         for(OWLSubClassOfAxiom ax : rootOntology.getSubClassAxiomsForSubClass(subject.getEntity())) {
             if(!ax.getSuperClass().isAnonymous()) {

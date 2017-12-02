@@ -172,7 +172,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                 expectedKeywordChoices.add(new AutoCompletionChoice(expectedKeyword, expectedKeyword, style, fromPos, toPos));
             }
         }
-        Collections.sort(expectedKeywordChoices, new Comparator<AutoCompletionChoice>() {
+        expectedKeywordChoices.sort(new Comparator<AutoCompletionChoice>() {
 
             private ManchesterSyntaxKeywords.KeywordComparator keywordComparator = new ManchesterSyntaxKeywords.KeywordComparator();
 

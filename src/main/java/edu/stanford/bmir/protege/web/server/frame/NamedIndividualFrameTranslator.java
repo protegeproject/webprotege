@@ -105,7 +105,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         }
 
         propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
-        Collections.sort(propertyValues, propertyValueComparator);
+        propertyValues.sort(propertyValueComparator);
         builder.addPropertyValues(propertyValues);
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLSameIndividualAxiom sameIndividualAxiom : ont.getSameIndividualAxioms(subject.getEntity())) {

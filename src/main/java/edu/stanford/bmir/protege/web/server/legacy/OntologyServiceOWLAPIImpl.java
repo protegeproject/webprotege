@@ -270,7 +270,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     private void sortListOfEntityData(List<EntityData> result) {
-        Collections.sort(result, new Comparator<EntityData>() {
+        result.sort(new Comparator<EntityData>() {
             @Override
             public int compare(EntityData o1, EntityData o2) {
                 String browserText1 = o1.getBrowserText();

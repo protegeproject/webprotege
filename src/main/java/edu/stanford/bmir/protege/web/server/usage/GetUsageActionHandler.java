@@ -119,7 +119,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
 
 
 
-        Collections.sort(usage, new UsageReferenceComparator(subject));
+        usage.sort(new UsageReferenceComparator(subject));
         return new GetUsageResult(projectId, usage, totalReferenceCount);
     }
 
