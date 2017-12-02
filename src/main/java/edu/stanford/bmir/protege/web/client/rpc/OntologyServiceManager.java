@@ -26,24 +26,7 @@ public class OntologyServiceManager {
         proxy = GWT.create(OntologyService.class);
     }
 
-    /*
-     * Class methods
-     */
-
-    public void getSubclasses(ProjectId projectId, String className, AsyncCallback<List<SubclassEntityData>> cb) {
-        proxy.getSubclasses(projectId.getId(), className, cb);
-    }
-
-    public void moveCls(ProjectId projectId, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
-            UserId userId, String operationDescription, AsyncCallback<List<EntityData>> cb) {
-        proxy.moveCls(projectId.getId(), clsName, oldParentName, newParentName, checkForCycles, userId.getUserName(), operationDescription, cb);
-    }
-
     public void getSubproperties(ProjectId projectId, String propertyName, AsyncCallback<List<EntityData>> cb) {
         proxy.getSubproperties(projectId.getId(), propertyName, cb);
-    }
-
-    public void getPathToRoot(ProjectId projectId, String entityName, AsyncCallback<List<EntityData>> cb) {
-        proxy.getPathToRoot(projectId.getId(), entityName, cb);
     }
 }

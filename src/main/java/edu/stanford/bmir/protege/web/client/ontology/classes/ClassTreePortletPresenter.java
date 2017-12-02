@@ -387,7 +387,11 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         if (transmittingSelectionFromTree) {
             return;
         }
-        selection.ifPresent(sel -> treeWidget.revealTreeNodesForUserObjectKey(sel, REVEAL_FIRST));
+        selection.ifPresent(sel -> {
+            if (sel.isOWLClass()) {
+                treeWidget.revealTreeNodesForUserObjectKey(sel, REVEAL_FIRST);
+            }
+        });
     }
 
     private enum CreateClassesMode {
