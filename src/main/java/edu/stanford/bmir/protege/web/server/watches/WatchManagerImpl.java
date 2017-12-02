@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent.CLASS_FRAME_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchType.BRANCH;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toSet;
@@ -60,21 +61,20 @@ public class WatchManagerImpl implements WatchManager {
     public void attach() {
         // Note, there is no need to keep hold of Handler Registrations here as these will be cleaned up and
         // terminated when the relevant project is disposed.
-        eventManager.addHandler(ClassFrameChangedEvent.CLASS_FRAME_CHANGED, event -> {
-            handleEntityFrameChanged(event.getEntity(), event.getUserId());
-        });
-        eventManager.addHandler(ObjectPropertyFrameChangedEvent.TYPE, event -> {
-            handleEntityFrameChanged(event.getEntity(), event.getUserId());
-        });
-        eventManager.addHandler(DataPropertyFrameChangedEvent.TYPE, event -> {
-            handleEntityFrameChanged(event.getEntity(), event.getUserId());
-        });
-        eventManager.addHandler(AnnotationPropertyFrameChangedEvent.TYPE, event -> {
-            handleEntityFrameChanged(event.getEntity(), event.getUserId());
-        });
-        eventManager.addHandler(NamedIndividualFrameChangedEvent.TYPE, event -> {
-            handleEntityFrameChanged(event.getEntity(), event.getUserId());
-        });
+        eventManager.addHandler(CLASS_FRAME_CHANGED,
+                                event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
+
+        eventManager.addHandler(ObjectPropertyFrameChangedEvent.TYPE,
+                                event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
+
+        eventManager.addHandler(DataPropertyFrameChangedEvent.TYPE,
+                                event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
+
+        eventManager.addHandler(AnnotationPropertyFrameChangedEvent.TYPE,
+                                event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
+
+        eventManager.addHandler(NamedIndividualFrameChangedEvent.TYPE,
+                                event -> handleEntityFrameChanged(event.getEntity(), event.getUserId()));
     }
 
     @Override

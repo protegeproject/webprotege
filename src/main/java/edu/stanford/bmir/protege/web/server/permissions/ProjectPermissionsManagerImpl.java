@@ -17,9 +17,7 @@ import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 06/02/15
+ * Matthew Horridge Stanford Center for Biomedical Informatics Research 06/02/15
  */
 public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager {
 
@@ -41,13 +39,12 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         accessManager.getResourcesAccessibleToSubject(forUser(userId), VIEW_PROJECT.getActionId())
                      .stream()
                      .filter(Resource::isProject)
-                     .forEach(resource -> {
-                         resource.getProjectId().ifPresent(projectId -> {
-                             projectDetailsRepository.findOne(projectId).ifPresent(projectDetails -> {
-                                 result.add(projectDetails);
-                             });
-                         });
-                     });
+                     .forEach(
+                             resource ->
+                                     resource.getProjectId().ifPresent(
+                                             projectId -> projectDetailsRepository
+                                                     .findOne(projectId)
+                                                     .ifPresent(result::add)));
         // Always add owned in case permissions are screwed up - yes?
         // It will be obvious that the permissions are screwed up because the
         // user won't be able to open their own project.

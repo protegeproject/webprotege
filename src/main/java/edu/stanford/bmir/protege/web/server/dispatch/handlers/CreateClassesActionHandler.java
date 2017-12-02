@@ -102,12 +102,11 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
 
         EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(currentTag);
 
-        List<OWLClassData> classData = result.getSubject().map(clses -> {
-            return clses.stream()
-                        .map(renderingManager::getRendering)
-                        .sorted()
-                        .collect(toList());
-        }).orElse(Collections.emptyList());
+        List<OWLClassData> classData = result.getSubject().map(
+                clses -> clses.stream()
+                              .map(renderingManager::getRendering)
+                              .sorted()
+                              .collect(toList())).orElse(Collections.emptyList());
         return new CreateClassesResult(pathToRoot, classData, eventList);
     }
 
