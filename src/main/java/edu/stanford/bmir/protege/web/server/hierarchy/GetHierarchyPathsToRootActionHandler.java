@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootResult;
@@ -29,17 +28,15 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractHasProjectActi
     private final ClassHierarchyProvider classHierarchyProvider;
 
     @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
-    private final OWLEntityRenderingGenerator renderingGenerator;
+    private final EntityHierarchyNodeRenderer renderer;
 
     @Inject
-    public GetHierarchyPathsToRootActionHandler(@Nonnull AccessManager accessManager, ClassHierarchyProvider classHierarchyProvider, RenderingManager renderingManager, @Nonnull OWLEntityRenderingGenerator renderingGenerator) {
+    public GetHierarchyPathsToRootActionHandler(@Nonnull AccessManager accessManager,
+                                                @Nonnull ClassHierarchyProvider classHierarchyProvider,
+                                                @Nonnull EntityHierarchyNodeRenderer renderer) {
         super(accessManager);
         this.classHierarchyProvider = classHierarchyProvider;
-        this.renderingManager = renderingManager;
-        this.renderingGenerator = renderingGenerator;
+        this.renderer = renderer;
     }
 
     @Override
@@ -63,7 +60,7 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractHasProjectActi
 
     private GraphNode<EntityHierarchyNode> toGraphNode(OWLClass cls, ProjectId projectId, UserId userId) {
         return new GraphNode<>(
-                renderingGenerator.render(cls, projectId, userId),
+                renderer.render(cls, projectId, userId),
                 classHierarchyProvider.getChildren(cls).isEmpty());
     }
 }

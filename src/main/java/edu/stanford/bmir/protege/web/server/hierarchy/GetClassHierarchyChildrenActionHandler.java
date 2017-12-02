@@ -31,16 +31,16 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectAc
     private final DeprecatedEntityChecker deprecatedEntityChecker;
 
     @Nonnull
-    private OWLEntityRenderingGenerator hierarchyNodeRenderer;
+    private EntityHierarchyNodeRenderer renderer;
 
     @Inject
     public GetClassHierarchyChildrenActionHandler(@Nonnull AccessManager accessManager,
                                                   @Nonnull ClassHierarchyProvider classHierarchyProvider,
-                                                  @Nonnull DeprecatedEntityChecker deprecatedEntityChecker, @Nonnull OWLEntityRenderingGenerator hierarchyNodeRenderer) {
+                                                  @Nonnull DeprecatedEntityChecker deprecatedEntityChecker, @Nonnull EntityHierarchyNodeRenderer renderer) {
         super(accessManager);
         this.classHierarchyProvider = classHierarchyProvider;
         this.deprecatedEntityChecker = deprecatedEntityChecker;
-        this.hierarchyNodeRenderer = hierarchyNodeRenderer;
+        this.renderer = renderer;
     }
 
     @Override
@@ -71,6 +71,6 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectAc
     }
 
     private EntityHierarchyNode toEntityHierarchyNode(OWLEntity entity, ProjectId projectId, UserId userId) {
-        return hierarchyNodeRenderer.render(entity, projectId, userId);
+        return renderer.render(entity, projectId, userId);
     }
 }

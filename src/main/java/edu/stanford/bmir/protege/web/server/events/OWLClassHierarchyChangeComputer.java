@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLEntityRenderingGenerator;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -29,24 +28,24 @@ import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_H
 public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWLClass> {
 
     @Nonnull
-    private final OWLEntityRenderingGenerator renderingGenerator;
+    private final EntityHierarchyNodeRenderer renderer;
 
     @Nonnull
     private final ClassHierarchyProvider classHierarchyProvider;
 
     @Inject
     public OWLClassHierarchyChangeComputer(@Nonnull ProjectId projectId,
-                                           @Nonnull HierarchyProvider<OWLClass> hierarchyProvider, @Nonnull OWLEntityRenderingGenerator renderingGenerator, @Nonnull ClassHierarchyProvider classHierarchyProvider) {
+                                           @Nonnull HierarchyProvider<OWLClass> hierarchyProvider, @Nonnull EntityHierarchyNodeRenderer renderer, @Nonnull ClassHierarchyProvider classHierarchyProvider) {
         super(projectId, EntityType.CLASS, hierarchyProvider, CLASS_HIERARCHY);
-        this.renderingGenerator = checkNotNull(renderingGenerator);
+        this.renderer = checkNotNull(renderer);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
     }
 
     @Override
     protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLClass child, OWLClass parent) {
         RemoveEdge<EntityHierarchyNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderingGenerator.render(parent, getProjectId())),
-                new GraphNode<>(renderingGenerator.render(child, getProjectId()))
+                new GraphNode<>(renderer.render(parent, getProjectId())),
+                new GraphNode<>(renderer.render(child, getProjectId()))
         ));
         return Arrays.asList(
                 new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))),
@@ -57,8 +56,8 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLClass child, OWLClass parent) {
         AddEdge<EntityHierarchyNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderingGenerator.render(parent, getProjectId()), classHierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderingGenerator.render(child, getProjectId()), classHierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent, getProjectId()), classHierarchyProvider.getChildren(parent).isEmpty()),
+                new GraphNode<>(renderer.render(child, getProjectId()), classHierarchyProvider.getChildren(child).isEmpty())
         ));
         return Arrays.asList(
                 new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge))),
