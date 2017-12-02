@@ -13,7 +13,7 @@ public class ObjectPropertyFrameRenderer implements FrameRenderer<OWLObjectPrope
     @Override
     public List<FrameSectionRenderer<OWLObjectProperty, ?, ?>> getSectionRenderers() {
         List<FrameSectionRenderer<OWLObjectProperty, ?, ?>> renderers = Lists.newArrayList();
-        renderers.add(new AnnotationsSectionRenderer<OWLObjectProperty>());
+        renderers.add(new AnnotationsSectionRenderer<>());
         renderers.add(new ObjectPropertyDomainSectionRenderer());
         renderers.add(new ObjectPropertyRangeSectionRenderer());
         renderers.add(new ObjectPropertyCharacteristicsSectionRenderer());

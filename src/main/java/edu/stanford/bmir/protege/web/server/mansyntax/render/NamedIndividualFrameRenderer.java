@@ -14,7 +14,7 @@ public class NamedIndividualFrameRenderer implements FrameRenderer<OWLNamedIndiv
     public List<FrameSectionRenderer<OWLNamedIndividual, ?, ?>> getSectionRenderers() {
         List<FrameSectionRenderer<OWLNamedIndividual, ?, ?>> renderers = Lists.newArrayList();
         renderers.add(new NamedIndividualTypesSectionRenderer());
-        renderers.add(new AnnotationsSectionRenderer<OWLNamedIndividual>());
+        renderers.add(new AnnotationsSectionRenderer<>());
         renderers.add(new NamedIndividualFactsSectionRenderer());
         renderers.add(new NamedIndividualSameAsSectionRenderer());
         renderers.add(new NamedIndividualDifferentFromSectionRenderer());

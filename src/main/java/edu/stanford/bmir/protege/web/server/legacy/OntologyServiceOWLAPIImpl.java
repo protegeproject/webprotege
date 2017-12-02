@@ -147,7 +147,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     private void applyChanges(OWLOntologyChangeFactory... changeFactories) {
 
         for (OWLOntologyChangeFactory cf : changeFactories) {
-            List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+            List<OWLOntologyChange> changes = new ArrayList<>();
             cf.createChanges(changes);
             if (!changes.isEmpty()) {
                 Project project = cf.getProject();
@@ -200,7 +200,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         // The properties tree asks for sub properties
         // of this property
         if (propertyName == null || PROPERTY_HIERARCHY_ROOT_NODE_NAME.equals(propertyName)) {
-            List<EntityData> roots = new ArrayList<EntityData>();
+            List<EntityData> roots = new ArrayList<>();
             OWLDataFactory df = project.getDataFactory();
             EntityData topObjectProperty = rm.getPropertyEntityData(df.getOWLTopObjectProperty());
             roots.add(topObjectProperty);
@@ -212,8 +212,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
         // Special handling for fake annotation property root
         if (propertyName.equals(ANNOTATION_PROPERTIES_ROOT_NAME)) {
-            Set<EntityData> annotationPropertyRoots = new LinkedHashSet<EntityData>();
-            Set<IRI> addedProperties = new HashSet<IRI>();
+            Set<EntityData> annotationPropertyRoots = new LinkedHashSet<>();
+            Set<IRI> addedProperties = new HashSet<>();
             for (OWLAnnotationProperty annotationProperty : project.getAnnotationPropertyHierarchyProvider()
                                                                    .getRoots()) {
                 annotationPropertyRoots.add(rm.getEntityData(annotationProperty));
@@ -224,13 +224,13 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                     annotationPropertyRoots.add(rm.getEntityData(iri));
                 }
             }
-            final ArrayList<EntityData> result = new ArrayList<EntityData>(annotationPropertyRoots);
+            final ArrayList<EntityData> result = new ArrayList<>(annotationPropertyRoots);
             sortListOfEntityData(result);
             return result;
         }
 
 
-        List<EntityData> result = new ArrayList<EntityData>();
+        List<EntityData> result = new ArrayList<>();
         Set<OWLEntity> matchingEntities = rm.getEntities(propertyName);
         // Which entity does it refer to?  All messed up.
         for (OWLEntity entity : matchingEntities) {

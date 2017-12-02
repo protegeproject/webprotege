@@ -37,7 +37,7 @@ public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerat
     @Override
     public OntologyChangeList<Void> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
-        Map<OWLEntity, IRI> renameMap = new HashMap<OWLEntity, IRI>();
+        Map<OWLEntity, IRI> renameMap = new HashMap<>();
         for(OWLEntity entity : rootOntology.getSignature(Imports.INCLUDED)) {
             if(!entity.isBuiltIn()) {
                 IRI iri = entity.getIRI();

@@ -95,7 +95,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
 
     @Override
     public Set<OWLAxiom> getAxioms(ObjectPropertyFrame frame, Mode mode) {
-        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> result = new HashSet<>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
             result.addAll(translator.getAxioms(frame.getSubject().getEntity(), pv, mode));

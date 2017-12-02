@@ -30,7 +30,7 @@ public class ClientObjectWriter<T>  {
     }
 
     public static <T> ClientObjectWriter<T> get(String variableName, ClientObjectEncoder<T> encoder) {
-        return new ClientObjectWriter<T>(variableName, encoder);
+        return new ClientObjectWriter<>(variableName, encoder);
     }
 
     public void writeVariableDeclaration(T object, Writer ps) {

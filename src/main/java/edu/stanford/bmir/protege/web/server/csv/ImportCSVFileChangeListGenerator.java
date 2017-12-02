@@ -56,7 +56,7 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
 
     @Override
     public OntologyChangeList<Integer> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<Integer> changesBuilder = new OntologyChangeList.Builder<Integer>();
+        OntologyChangeList.Builder<Integer> changesBuilder = new OntologyChangeList.Builder<>();
         for (CSVRow row : csvGrid.getRows()) {
             for (CSVColumnDescriptor columnDescriptor : descriptor.getColumnDescriptors()) {
                 if (columnDescriptor.getColumnIndex() < row.size()) {

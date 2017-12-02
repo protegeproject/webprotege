@@ -73,7 +73,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
 
     @Override
     public Set<OWLAxiom> getAxioms(DataPropertyFrame frame, Mode mode) {
-        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> result = new HashSet<>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
             result.addAll(translator.getAxioms(frame.getSubject().getEntity(), pv, mode));

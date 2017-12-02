@@ -37,7 +37,7 @@ public class GetEntityCrudKitsActionHandler implements ApplicationActionHandler<
 
     @Override
     public GetEntityCrudKitsResult execute(GetEntityCrudKitsAction action, ExecutionContext executionContext) {
-        List<EntityCrudKit<?>> kits = new ArrayList<EntityCrudKit<?>>();
+        List<EntityCrudKit<?>> kits = new ArrayList<>();
         for(EntityCrudKit<?> kit : EntityCrudKitRegistry.get().getKits()) {
             kits.add(kit);
         }

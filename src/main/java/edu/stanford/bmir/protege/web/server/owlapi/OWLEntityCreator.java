@@ -16,7 +16,7 @@ public class OWLEntityCreator<E extends OWLEntity> {
 
     private E entity;
 
-    private List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+    private List<OWLOntologyChange> changes = new ArrayList<>();
 
     public OWLEntityCreator(E entity, List<OWLOntologyChange> changes) {
         this.entity = entity;
@@ -29,6 +29,6 @@ public class OWLEntityCreator<E extends OWLEntity> {
     }
 
     public List<OWLOntologyChange> getChanges() {
-        return new ArrayList<OWLOntologyChange>(changes);
+        return new ArrayList<>(changes);
     }
 }

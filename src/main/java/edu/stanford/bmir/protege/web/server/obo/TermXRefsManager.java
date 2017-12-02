@@ -63,7 +63,7 @@ public class TermXRefsManager {
         Set<OWLAnnotation> annotations = xrefs.stream()
                 .map(annotationToXRefConverter::toAnnotation)
                 .collect(Collectors.toSet());
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange> changes = new ArrayList<>();
         // Remove OLD
         for (OWLAnnotationAssertionAxiom ax : rootOntology.getAnnotationAssertionAxioms(subject)) {
             if (isXRefProperty(ax.getProperty())) {

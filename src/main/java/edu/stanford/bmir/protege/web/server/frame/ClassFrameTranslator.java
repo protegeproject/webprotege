@@ -110,7 +110,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                                                                 OWLOntology rootOntology,
                                                                 Set<OWLAxiom> relevantAxioms,
                                                                 State initialState) {
-        List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
+        List<PropertyValue> propertyValues = new ArrayList<>();
         for (OWLAxiom axiom : relevantAxioms) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
             propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology, initialState, rm));

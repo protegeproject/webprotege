@@ -157,7 +157,7 @@ public class TermDefinitionManager {
     }
 
     private Set<OWLAnnotation> getAxiomAnnotationsExcludingXRefs(OWLAnnotationAssertionAxiom existingAx) {
-        Set<OWLAnnotation> annotationsToCopy = new HashSet<OWLAnnotation>();
+        Set<OWLAnnotation> annotationsToCopy = new HashSet<>();
         for (OWLAnnotation existingAnnotation : existingAx.getAnnotations()) {
             if (!isXRefProperty(existingAnnotation.getProperty())) {
                 annotationsToCopy.add(existingAnnotation);

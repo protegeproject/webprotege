@@ -74,7 +74,7 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
             String fromPrefix = action.getFromSettings().getPrefixSettings().getIRIPrefix();
             String toPrefix = action.getToSettings().getPrefixSettings().getIRIPrefix();
             FindAndReplaceIRIPrefixChangeGenerator changeGenerator = new FindAndReplaceIRIPrefixChangeGenerator(fromPrefix, toPrefix, rootOntology);
-            changeManager.applyChanges(executionContext.getUserId(), changeGenerator, new FixedMessageChangeDescriptionGenerator<Void>("Replaced IRI prefix <" + fromPrefix + "> with <" + toPrefix + ">"));
+            changeManager.applyChanges(executionContext.getUserId(), changeGenerator, new FixedMessageChangeDescriptionGenerator<>("Replaced IRI prefix <" + fromPrefix + "> with <" + toPrefix + ">"));
         }
         return new SetEntityCrudKitSettingsResult();
     }

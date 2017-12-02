@@ -79,7 +79,7 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
      * @throws NullPointerException if {@code event} is {@code null}.
      */
     public EventTag postEvent(E event) {
-        final List<E> events = new ArrayList<E>(1);
+        final List<E> events = new ArrayList<>(1);
         events.add(checkNotNull(event, "event must not be null"));
         return postEvents(events);
     }
@@ -120,7 +120,7 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
      */
     public EventList<E> getEventsFromTag(EventTag fromTag) {
         checkNotNull(fromTag, "tag must not be null");
-        List<E> resultList = new ArrayList<E>();
+        List<E> resultList = new ArrayList<>();
         final EventTag curTag;
         try {
             readLock.lock();
@@ -136,11 +136,11 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
         }
         final EventTag toTag = curTag.next();
         if(resultList.isEmpty()) {
-            return new EventList<E>(fromTag, toTag);
+            return new EventList<>(fromTag, toTag);
         }
         // Prune duplicates
-        LinkedHashSet<E> events = new LinkedHashSet<E>(resultList);
-        return new EventList<E>(fromTag, events, toTag);
+        LinkedHashSet<E> events = new LinkedHashSet<>(resultList);
+        return new EventList<>(fromTag, events, toTag);
     }
 
     public EventTag getCurrentTag() {
@@ -188,7 +188,7 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
          */
         private EventBucket(long timestamp, List<E> events, EventTag tag, EventLifeTime eventLifeTime) {
             this.timestamp = timestamp;
-            this.events = new ArrayList<E>(checkNotNull(events));
+            this.events = new ArrayList<>(checkNotNull(events));
             this.tag = checkNotNull(tag);
             this.eventLifeTime = checkNotNull(eventLifeTime);
         }

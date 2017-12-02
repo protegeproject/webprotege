@@ -13,7 +13,7 @@ public class DataPropertyFrameRenderer implements FrameRenderer<OWLDataProperty>
     @Override
     public List<FrameSectionRenderer<OWLDataProperty, ?, ?>> getSectionRenderers() {
         List<FrameSectionRenderer<OWLDataProperty, ?, ?>> renderers = Lists.newArrayList();
-        renderers.add(new AnnotationsSectionRenderer<OWLDataProperty>());
+        renderers.add(new AnnotationsSectionRenderer<>());
         renderers.add(new DataPropertyDomainSectionRenderer());
         renderers.add(new DataPropertyRangeSectionRenderer());
         renderers.add(new DataPropertyCharacteristicsSectionRenderer());

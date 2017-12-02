@@ -142,7 +142,7 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
 
     @Override
     public OntologyChangeList<S> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<S> b = new OntologyChangeList.Builder<S>();
+        OntologyChangeList.Builder<S> b = new OntologyChangeList.Builder<>();
         b.addAll(createChanges());
         return b.build(to.getSubject());
     }

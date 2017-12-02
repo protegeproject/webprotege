@@ -60,7 +60,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public EntityCrudKitSettings<SuppliedNameSuffixSettings> getSettings() {
-        return new EntityCrudKitSettings<SuppliedNameSuffixSettings>(prefixSettings, suffixSettings);
+        return new EntityCrudKitSettings<>(prefixSettings, suffixSettings);
     }
 
     @Override

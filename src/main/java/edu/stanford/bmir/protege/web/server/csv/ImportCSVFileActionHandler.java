@@ -94,7 +94,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
                                                      ImportCSVFileAction action,
                                                      ExecutionContext executionContext,
                                                      EventList<ProjectEvent<?>> eventList) {
-        return new ImportCSVFileResult(new EventList<ProjectEvent<?>>(EventTag.get(0), EventTag.get(1)), changeApplicationResult.getSubject().get());
+        return new ImportCSVFileResult(new EventList<>(EventTag.get(0), EventTag.get(1)), changeApplicationResult.getSubject().get());
     }
 
     @Nonnull

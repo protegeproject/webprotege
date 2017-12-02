@@ -29,6 +29,6 @@ public class ClassEquivalentToSectionRenderer extends AbstractOWLAxiomItemSectio
     public List<OWLClassExpression> getRenderablesForItem(OWLClass subject,
                                                           OWLEquivalentClassesAxiom item,
                                                           OWLOntology ontology) {
-        return new ArrayList<OWLClassExpression>(item.getClassExpressionsMinus(subject));
+        return new ArrayList<>(item.getClassExpressionsMinus(subject));
     }
 }

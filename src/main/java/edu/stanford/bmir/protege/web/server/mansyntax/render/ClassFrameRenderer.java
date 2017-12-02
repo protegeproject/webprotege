@@ -13,7 +13,7 @@ public class ClassFrameRenderer implements FrameRenderer<OWLClass> {
     @Override
     public List<FrameSectionRenderer<OWLClass, ?, ?>> getSectionRenderers() {
         List<FrameSectionRenderer<OWLClass, ?, ?>> renderers = Lists.newArrayList();
-        renderers.add(new AnnotationsSectionRenderer<OWLClass>());
+        renderers.add(new AnnotationsSectionRenderer<>());
         renderers.add(new ClassSubClassOfSectionRenderer());
         renderers.add(new ClassEquivalentToSectionRenderer());
         renderers.add(new ClassDisjointWithSectionRenderer());

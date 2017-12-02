@@ -61,7 +61,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
 
     @Override
     public GetUsageResult execute(GetUsageAction action, ExecutionContext executionContext) {
-        List<UsageReference> usage = new ArrayList<UsageReference>();
+        List<UsageReference> usage = new ArrayList<>();
         final OWLEntity subject = action.getSubject();
         ReferencingAxiomVisitor visitor = new ReferencingAxiomVisitor(subject, rootOntology, renderingManager);
         final UsageFilter usageFilter = action.getUsageFilter();

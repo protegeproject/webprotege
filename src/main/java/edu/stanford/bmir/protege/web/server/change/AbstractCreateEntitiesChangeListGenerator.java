@@ -42,7 +42,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
 
 
 
-    private static Map<String, String> builtInPrefixes = new HashMap<String, String>();
+    private static Map<String, String> builtInPrefixes = new HashMap<>();
 
     static {
         builtInPrefixes.put("owl:", Namespaces.OWL.toString());

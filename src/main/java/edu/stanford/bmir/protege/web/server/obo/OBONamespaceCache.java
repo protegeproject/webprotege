@@ -86,7 +86,7 @@ public class OBONamespaceCache {
     public Set<OBONamespace> getNamespaces() {
         try {
             READ_LOCK.lock();
-            return new HashSet<OBONamespace>(namespaceCache);
+            return new HashSet<>(namespaceCache);
         }
         finally {
             READ_LOCK.unlock();

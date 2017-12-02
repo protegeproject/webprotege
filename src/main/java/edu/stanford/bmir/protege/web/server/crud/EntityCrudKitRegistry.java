@@ -23,9 +23,9 @@ public class EntityCrudKitRegistry {
 
     private static final EntityCrudKitRegistry instance = new EntityCrudKitRegistry();
 
-    private List<EntityCrudKit<?>> kits = new ArrayList<EntityCrudKit<?>>();
+    private List<EntityCrudKit<?>> kits = new ArrayList<>();
 
-    private final Map<EntityCrudKitId, EntityCrudKit<?>> id2CrudKit = new HashMap<EntityCrudKitId, EntityCrudKit<?>>();
+    private final Map<EntityCrudKitId, EntityCrudKit<?>> id2CrudKit = new HashMap<>();
 
     private final Map<EntityCrudKitId, EntityCrudKitPlugin<?,?, ?>> id2Plugin = Maps.newHashMap();
 
@@ -77,7 +77,7 @@ public class EntityCrudKitRegistry {
     @SuppressWarnings("unchecked")
     public <S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getHandler(EntityCrudKitId id) {
         EntityCrudKit<S> kit = getKit(id);
-        return getHandler(new EntityCrudKitSettings<S>(kit.getDefaultPrefixSettings(), kit.getDefaultSuffixSettings()));
+        return getHandler(new EntityCrudKitSettings<>(kit.getDefaultPrefixSettings(), kit.getDefaultSuffixSettings()));
     }
 
     public <H extends EntityCrudKitHandler<S, C>, S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getHandler(EntityCrudKitSettings<S> settings) {

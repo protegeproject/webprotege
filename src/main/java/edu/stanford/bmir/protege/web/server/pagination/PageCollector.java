@@ -99,11 +99,11 @@ public class PageCollector<T> implements Collector<T, List<T>, Optional<Page<T>>
             if(pageSize < 1) {
                 throw new IllegalArgumentException("Page size must be greater than zero");
             }
-            return new PageCollector<S>(pageSize, pageNumber);
+            return new PageCollector<>(pageSize, pageNumber);
         }
 
         public <S> PageCollector<S> withDefaultPageSize() {
-            return new PageCollector<S>(DEFAULT_PAGE_SIZE, pageNumber);
+            return new PageCollector<>(DEFAULT_PAGE_SIZE, pageNumber);
         }
 
     }

@@ -24,7 +24,7 @@ public class OWLMessageFormatter {
 
 
     private static Object [] formatToPrimitives(RenderingManager renderingManager, Object ... objects) {
-        List<Object> result = new ArrayList<Object>(objects.length);
+        List<Object> result = new ArrayList<>(objects.length);
         for(Object obj : objects) {
             Object formattedObj = formatToPrimitive(obj, renderingManager);
             result.add(formattedObj);
