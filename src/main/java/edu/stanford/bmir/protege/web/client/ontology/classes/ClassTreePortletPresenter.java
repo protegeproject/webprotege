@@ -188,21 +188,28 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
     private void displayContextMenu(ContextMenuEvent event) {
         PopupMenu contextMenu = new PopupMenu();
-        contextMenu.addItem(messages.showIri(), () -> {
+        contextMenu.addItem(messages.create(), this::handleCreateSubClasses);
+        contextMenu.addItem(messages.delete(), this::handleDeleteClass);
+        contextMenu.addSeparator();
+        contextMenu.addItem(messages.tree_pruneToRoot(), this::pruneSelectedNodesToRoot);
+        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
+        contextMenu.addSeparator();
+        contextMenu.addItem(messages.showIri(), showIriForSelection());
+        contextMenu.addItem(messages.showDirectLink(), this::showDirectLinkForSelection);
+        contextMenu.addSeparator();
+        contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
+        contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
+    }
+
+    private Runnable showIriForSelection() {
+        return () -> {
             Optional<OWLEntity> selectedEntity = getSelectedEntity();
             if (selectedEntity.isPresent()) {
                 String iri = selectedEntity.get().getIRI().toQuotedString();
                 InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
                 });
             }
-        });
-        contextMenu.addItem(messages.showDirectLink(), this::showDirectLinkForSelection);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.tree_pruneToRoot(), this::pruneSelectedNodesToRoot);
-        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
-        contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
+        };
     }
 
     private void handleRefresh() {
