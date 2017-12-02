@@ -123,12 +123,8 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                                             boolean includeAnnotations) {
         final Set<OWLAxiom> relevantAxioms = new HashSet<>();
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
-            for (OWLSubClassOfAxiom subClassOfAxiom : ont.getSubClassAxiomsForSubClass(subject)) {
-                relevantAxioms.add(subClassOfAxiom);
-            }
-            for (OWLEquivalentClassesAxiom ax : rootOntology.getEquivalentClassesAxioms(subject)) {
-                relevantAxioms.add(ax);
-            }
+            relevantAxioms.addAll(ont.getSubClassAxiomsForSubClass(subject));
+            relevantAxioms.addAll(rootOntology.getEquivalentClassesAxioms(subject));
             if (includeAnnotations) {
                 relevantAxioms.addAll(ont.getAnnotationAssertionAxioms(subject.getIRI()));
             }
