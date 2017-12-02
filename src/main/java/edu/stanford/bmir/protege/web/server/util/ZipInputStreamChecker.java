@@ -23,11 +23,8 @@ public class ZipInputStreamChecker {
     }
 
     public boolean isZipFile(File file) throws IOException {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-        try {
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
             return isZipInputStream(bufferedInputStream);
-        } finally {
-            bufferedInputStream.close();
         }
     }
 
