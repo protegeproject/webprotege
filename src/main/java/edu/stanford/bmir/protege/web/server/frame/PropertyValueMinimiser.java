@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,11 +39,7 @@ public class PropertyValueMinimiser {
                 }
             }
         }
-        for (Iterator<PropertyValue> it = result.iterator(); it.hasNext(); ) {
-            if (it.next() == null) {
-                it.remove();
-            }
-        }
+        result.removeIf(Objects::isNull);
         return result;
     }
 }
