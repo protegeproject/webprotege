@@ -20,7 +20,7 @@ public class CommentIdConverter extends TypeSafeConverter<String, CommentId> imp
 
     @Override
     public CommentId decodeObject(String fromDBObject, MappedField optionalExtraInfo) {
-        return CommentId.fromString(fromDBObject.toString());
+        return CommentId.fromString(fromDBObject);
     }
 
     @Override

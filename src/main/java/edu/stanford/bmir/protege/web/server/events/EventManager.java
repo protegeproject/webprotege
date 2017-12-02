@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import com.google.common.base.MoreObjects;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
@@ -224,16 +225,11 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("EventManager$EventListBucket");
-            sb.append("(");
-            sb.append(tag);
-            sb.append(" ");
-            sb.append(timestamp);
-            sb.append(" ");
-            sb.append(events);
-            sb.append(")");
-            return sb.toString();
+            return MoreObjects.toStringHelper("EventManager$EventListBucket")
+                       .addValue(tag)
+                       .addValue(timestamp)
+                       .addValue(events)
+                       .toString();
         }
     }
 
