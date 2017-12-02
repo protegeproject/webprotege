@@ -159,7 +159,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
 
     private void sortDiff(List<DiffElement<String, OWLAxiom>> diffElements) {
 
-        Collections.sort(diffElements, new Comparator<DiffElement<String, OWLAxiom>>() {
+        diffElements.sort(new Comparator<DiffElement<String, OWLAxiom>>() {
             @Override
             public int compare(DiffElement<String, OWLAxiom> o1, DiffElement<String, OWLAxiom> o2) {
                 int diff = axiomComparator.compare(o1.getLineElement(), o2.getLineElement());

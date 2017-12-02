@@ -46,7 +46,7 @@ public class AnnotationsSectionRenderer<S extends OWLEntity> extends AbstractOWL
     @Override
     protected List<OWLAnnotationAssertionAxiom> sort(Set<OWLAnnotationAssertionAxiom> items, final ShortFormProvider shortFormProvider) {
         List<OWLAnnotationAssertionAxiom> sorted = Lists.newArrayList(items);
-        Collections.sort(sorted, new Comparator<OWLAnnotationAssertionAxiom>() {
+        sorted.sort(new Comparator<OWLAnnotationAssertionAxiom>() {
             @Override
             public int compare(OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom,
                                OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom2) {
