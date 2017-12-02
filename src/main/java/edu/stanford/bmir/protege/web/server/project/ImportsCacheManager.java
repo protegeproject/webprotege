@@ -236,7 +236,7 @@ public class ImportsCacheManager {
 
         @Override
         public void handleDocumentMetaData(BinaryOWLMetadata metadata) throws OWLRuntimeException {
-            timestamp = metadata.getLongAttribute(META_DATA_TIME_STAMP_ATTR, 0l);
+            timestamp = metadata.getLongAttribute(META_DATA_TIME_STAMP_ATTR, 0L);
             documentIRI = IRI.create(metadata.getStringAttribute(METADATA_DOCUMENT_IRI_ATTR, ""));
         }
 
