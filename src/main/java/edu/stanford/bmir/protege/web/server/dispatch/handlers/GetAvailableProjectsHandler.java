@@ -30,10 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MOVE_ANY
 import static java.util.stream.Collectors.toList;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 01/04/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 01/04/2013
  */
 public class GetAvailableProjectsHandler implements ApplicationActionHandler<GetAvailableProjectsAction, GetAvailableProjectsResult> {
 
@@ -67,21 +64,21 @@ public class GetAvailableProjectsHandler implements ApplicationActionHandler<Get
         UserId userId = executionContext.getUserId();
         Optional<UserActivityRecord> userActivityRecord = userActivityManager.getUserActivityRecord(executionContext.getUserId());
         Map<ProjectId, Long> lastOpenedMap = new HashMap<>();
-        userActivityRecord.ifPresent(record -> {
-            record.getRecentProjects()
-                  .forEach(recent -> lastOpenedMap.put(recent.getProjectId(), recent.getTimestamp()));
-        });
+        userActivityRecord.ifPresent(record ->
+                                             record.getRecentProjects()
+                                                   .forEach(recent ->
+                                                                    lastOpenedMap.put(recent.getProjectId(), recent.getTimestamp())));
         List<AvailableProject> availableProjects = projectPermissionsManager.getReadableProjects(userId).stream()
-               .map(details -> {
-                   Subject user = forUser(userId);
-                   ProjectResource projectResource = new ProjectResource(details.getProjectId());
-                   boolean downloadable = accessManager.hasPermission(user, projectResource, DOWNLOAD_PROJECT);
-                   boolean trashable = details.getOwner().equals(userId)
-                           || accessManager.hasPermission(user, projectResource, MOVE_ANY_PROJECT_TO_TRASH);
-                   long lastOpened = lastOpenedMap.getOrDefault(details.getProjectId(), 0L);
-                   return new AvailableProject(details, downloadable, trashable, lastOpened);
-               })
-               .collect(toList());
+                                                                            .map(details -> {
+                                                                                Subject user = forUser(userId);
+                                                                                ProjectResource projectResource = new ProjectResource(details.getProjectId());
+                                                                                boolean downloadable = accessManager.hasPermission(user, projectResource, DOWNLOAD_PROJECT);
+                                                                                boolean trashable = details.getOwner().equals(userId)
+                                                                                        || accessManager.hasPermission(user, projectResource, MOVE_ANY_PROJECT_TO_TRASH);
+                                                                                long lastOpened = lastOpenedMap.getOrDefault(details.getProjectId(), 0L);
+                                                                                return new AvailableProject(details, downloadable, trashable, lastOpened);
+                                                                            })
+                                                                            .collect(toList());
         return new GetAvailableProjectsResult(availableProjects);
     }
 }

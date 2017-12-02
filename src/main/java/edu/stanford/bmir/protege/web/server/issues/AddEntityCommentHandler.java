@@ -115,19 +115,17 @@ public class AddEntityCommentHandler implements ProjectActionHandler<AddEntityCo
     }
 
     private void sendOutNotifications(ThreadId threadId, Comment comment) {
-        Thread t = new Thread(() -> {
-            repository.getThread(threadId).ifPresent(thread -> {
-                notificationsEmailer.sendCommentPostedNotification(projectId,
-                                                                   renderer.getRendering(thread.getEntity()),
-                                                                   thread,
-                                                                   comment);
-                commentPostedSlackWebhookInvoker.invoke(projectId,
-                                                        projectDetailsRepository.findOne(projectId).map(
-                                                                ProjectDetails::getDisplayName).orElse("Project"),
-                                                        renderer.getRendering(thread.getEntity()),
-                                                        comment);
-            });
-        });
+        Thread t = new Thread(() -> repository.getThread(threadId).ifPresent(thread -> {
+            notificationsEmailer.sendCommentPostedNotification(projectId,
+                                                               renderer.getRendering(thread.getEntity()),
+                                                               thread,
+                                                               comment);
+            commentPostedSlackWebhookInvoker.invoke(projectId,
+                                                    projectDetailsRepository.findOne(projectId).map(
+                                                            ProjectDetails::getDisplayName).orElse("Project"),
+                                                    renderer.getRendering(thread.getEntity()),
+                                                    comment);
+        }));
         t.start();
     }
 

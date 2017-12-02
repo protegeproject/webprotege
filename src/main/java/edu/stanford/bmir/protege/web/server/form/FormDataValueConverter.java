@@ -66,9 +66,7 @@ public class FormDataValueConverter extends TypeSafeConverter<Object, FormDataVa
             }
             else {
                 Map<String, FormDataValue> result = new HashMap<>();
-                map.forEach((key, val) -> {
-                    result.put(key, decodeObject(val, optionalExtraInfo));
-                });
+                map.forEach((key, val) -> result.put(key, decodeObject(val, optionalExtraInfo)));
                 return new FormDataObject(result);
             }
 
@@ -101,9 +99,7 @@ public class FormDataValueConverter extends TypeSafeConverter<Object, FormDataVa
         if(value instanceof FormDataObject) {
             Document document = new Document();
             FormDataObject object = (FormDataObject) value;
-            object.getMap().forEach((key, val) -> {
-                document.put(key, encodeObject(val, optionalExtraInfo));
-            });
+            object.getMap().forEach((key, val) -> document.put(key, encodeObject(val, optionalExtraInfo)));
             return document;
         }
         else if(value instanceof FormDataList) {

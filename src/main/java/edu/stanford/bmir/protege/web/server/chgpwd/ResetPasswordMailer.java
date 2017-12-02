@@ -54,18 +54,20 @@ public class ResetPasswordMailer {
                                       .withApplicationName(applicationNameSupplier.get())
                                       .withApplicationUrl(placeUrl.getApplicationUrl())
                                       .withUserId(userId)
-                                      .with("pwd" , pwd)
+                                      .with("pwd", pwd)
                                       .build();
 
         String template = templateFile.getContents();
         String emailBody = templateEngine.populateTemplate(template, objects);
 
-        sendMailImpl.sendMail(singletonList(emailAddress), SUBJECT, emailBody, e -> {
-            logger.info("A password reset email could not be sent to user % at %s.  The password was reset to %s." ,
-                        userId.getUserName(),
-                        emailAddress,
-                        pwd);
-        });
+        sendMailImpl.sendMail(singletonList(emailAddress),
+                              SUBJECT,
+                              emailBody,
+                              ex -> logger.info("A password reset email could not be sent to user % at %s.  " +
+                                                        "The password was reset to %s.",
+                                                userId.getUserName(),
+                                                emailAddress,
+                                                pwd));
 
     }
 }

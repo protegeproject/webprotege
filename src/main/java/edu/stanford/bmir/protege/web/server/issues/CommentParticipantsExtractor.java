@@ -29,9 +29,12 @@ public class CommentParticipantsExtractor {
     public Collection<UserId> extractParticipants(Comment comment) {
         Set<UserId> participantIds = new HashSet<>();
         participantIds.add(comment.getCreatedBy());
-        mentionParser.parseMentions(comment.getBody()).forEach(parsedMention -> {
-            parsedMention.getParsedMention().getMentionedUserId().ifPresent(participantIds::add);
-        });
+        mentionParser.parseMentions(comment.getBody())
+                     .forEach(
+                             parsedMention ->
+                                     parsedMention.getParsedMention()
+                                                  .getMentionedUserId()
+                                                  .ifPresent(participantIds::add));
         return participantIds;
     }
 }
