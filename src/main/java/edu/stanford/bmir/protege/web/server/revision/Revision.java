@@ -51,7 +51,7 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
     }
 
     public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
-        return new Revision(UserId.getGuest(), revision, ImmutableList.of(), 0l, "");
+        return new Revision(UserId.getGuest(), revision, ImmutableList.of(), 0L, "");
     }
 
     public long getTimestamp() {

@@ -156,7 +156,7 @@ public class RevisionStoreImpl implements RevisionStore {
 
                     BinaryOWLMetadata metadata = list.getMetadata();
                     String userName = metadataInterner.intern(metadata.getStringAttribute(RevisionSerializationVocabulary.USERNAME_METADATA_ATTRIBUTE.getVocabularyName(), ""));
-                    Long revisionNumberValue = metadata.getLongAttribute(RevisionSerializationVocabulary.REVISION_META_DATA_ATTRIBUTE.getVocabularyName(), 0l);
+                    Long revisionNumberValue = metadata.getLongAttribute(RevisionSerializationVocabulary.REVISION_META_DATA_ATTRIBUTE.getVocabularyName(), 0L);
                     RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(revisionNumberValue);
 
                     String description = metadataInterner.intern(metadata.getStringAttribute(RevisionSerializationVocabulary.DESCRIPTION_META_DATA_ATTRIBUTE.getVocabularyName(), ""));
