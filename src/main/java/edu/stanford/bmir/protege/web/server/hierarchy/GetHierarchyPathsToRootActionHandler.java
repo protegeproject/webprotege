@@ -60,7 +60,7 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractHasProjectActi
 
     private GraphNode<EntityHierarchyNode> toGraphNode(OWLClass cls, ProjectId projectId, UserId userId) {
         return new GraphNode<>(
-                renderer.render(cls, projectId, userId),
+                renderer.render(cls, userId),
                 classHierarchyProvider.getChildren(cls).isEmpty());
     }
 }

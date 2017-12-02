@@ -45,7 +45,7 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
     @Override
     public GetHierarchyRootsResult execute(GetHierarchyRootsAction action, ExecutionContext executionContext) {
         OWLClass owlThing = dataFactory.getOWLThing();
-        EntityHierarchyNode rootNode = renderer.render(owlThing, action.getProjectId(), executionContext.getUserId());
+        EntityHierarchyNode rootNode = renderer.render(owlThing, executionContext.getUserId());
         GraphNode<EntityHierarchyNode> graphNode = new GraphNode<>(rootNode, classHierarchyProvider.getChildren(owlThing).isEmpty());
         return new GetHierarchyRootsResult(singletonList(graphNode));
     }

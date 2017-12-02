@@ -44,8 +44,8 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     @Override
     protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLClass child, OWLClass parent) {
         RemoveEdge<EntityHierarchyNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent, getProjectId())),
-                new GraphNode<>(renderer.render(child, getProjectId()))
+                new GraphNode<>(renderer.render(parent)),
+                new GraphNode<>(renderer.render(child))
         ));
         return Arrays.asList(
                 new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))),
@@ -56,8 +56,8 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLClass child, OWLClass parent) {
         AddEdge<EntityHierarchyNode> addEdge = new AddEdge<>(new GraphEdge<>(
-                new GraphNode<>(renderer.render(parent, getProjectId()), classHierarchyProvider.getChildren(parent).isEmpty()),
-                new GraphNode<>(renderer.render(child, getProjectId()), classHierarchyProvider.getChildren(child).isEmpty())
+                new GraphNode<>(renderer.render(parent), classHierarchyProvider.getChildren(parent).isEmpty()),
+                new GraphNode<>(renderer.render(child), classHierarchyProvider.getChildren(child).isEmpty())
         ));
         return Arrays.asList(
                 new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge))),

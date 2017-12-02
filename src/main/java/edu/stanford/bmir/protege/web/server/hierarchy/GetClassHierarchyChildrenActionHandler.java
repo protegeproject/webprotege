@@ -71,6 +71,6 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectAc
     }
 
     private EntityHierarchyNode toEntityHierarchyNode(OWLEntity entity, ProjectId projectId, UserId userId) {
-        return renderer.render(entity, projectId, userId);
+        return renderer.render(entity, userId);
     }
 }
