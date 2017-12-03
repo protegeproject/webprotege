@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ontology.classes;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
@@ -36,6 +37,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.protege.gwt.graphtree.client.NoOpTreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.UserObjectKeyProvider;
@@ -119,21 +121,12 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
         UserObjectKeyProvider<EntityHierarchyNode, OWLEntity> keyProvider = EntityHierarchyNode::getEntity;
-        treeModel = GraphTreeNodeModel.create(hierarchyModel,
-                                              keyProvider);
-        treeWidget = new TreeWidget<>(
-                treeModel,
-                new EntityHierarchyTreeNodeRenderer());
-
-        treeWidget.addSelectionChangeHandler(event -> transmitSelectionFromTree());
-
+        treeModel = GraphTreeNodeModel.create(hierarchyModel, keyProvider);
+        treeWidget = new TreeWidget<>(treeModel, new EntityHierarchyTreeNodeRenderer());
+        treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
+        treeWidget.addContextMenuHandler(this::displayContextMenu);
         nodeUpdater = new EntityHierarchyNodeUpdater(projectId, hierarchyModel);
 
-        treeWidget.addDomHandler(event -> {
-            event.preventDefault();
-            event.stopPropagation();
-            displayContextMenu(event);
-        }, ContextMenuEvent.getType());
     }
 
     @Override
@@ -236,7 +229,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         treeWidget.clearPruning();
     }
 
-    private void transmitSelectionFromTree() {
+    private void transmitSelectionFromTree(SelectionChangeEvent event) {
         try {
             transmittingSelectionFromTree = true;
             treeWidget.getFirstSelectedKey()
