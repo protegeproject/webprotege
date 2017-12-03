@@ -83,15 +83,19 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
     @Override
     public void getRootNodes(GetRootNodesCallback<EntityHierarchyNode> callback) {
         dispatchServiceManager.execute(new GetHierarchyRootsAction(projectId, hierarchyId), result -> {
-            result.getRootNodes().stream()
-                  .map(GraphNode::getUserObject)
-                  .forEach(node -> {
-                      nodeCache.put(node.getEntity(), node);
-                      rootNodes.add(node.getEntity());
-                  });
+            cacheRootNodes(result);
             callback.handleRootNodes(result.getRootNodes());
         });
 
+    }
+
+    private void cacheRootNodes(GetHierarchyRootsResult result) {
+        result.getRootNodes().stream()
+              .map(GraphNode::getUserObject)
+              .forEach(node -> {
+                  nodeCache.put(node.getEntity(), node);
+                  rootNodes.add(node.getEntity());
+              });
     }
 
     @Override
@@ -99,14 +103,18 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
                                   @Nonnull GetSuccessorNodesCallback<EntityHierarchyNode> callback) {
         dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId, parent, hierarchyId),
                                        result -> {
-                                           result.getChildren().getSuccessors().stream()
-                                                 .map(GraphNode::getUserObject)
-                                                 .forEach(node -> {
-                                                     nodeCache.put(node.getEntity(), node);
-                                                     parent2ChildMap.put(parent, node.getEntity());
-                                                 });
+                                           cacheEdges(parent, result);
                                            callback.handleSuccessorNodes(result.getChildren());
                                        });
+    }
+
+    private void cacheEdges(@Nonnull OWLEntity parent, GetHierarchyChildrenResult result) {
+        result.getChildren().getSuccessors().stream()
+              .map(GraphNode::getUserObject)
+              .forEach(node -> {
+                  nodeCache.put(node.getEntity(), node);
+                  parent2ChildMap.put(parent, node.getEntity());
+              });
     }
 
     @Override
