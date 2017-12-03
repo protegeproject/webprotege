@@ -121,7 +121,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
 
-        hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId, CLASS_HIERARCHY);
+        hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
         UserObjectKeyProvider<EntityHierarchyNode, OWLEntity> keyProvider = EntityHierarchyNode::getEntity;
         treeModel = GraphTreeNodeModel.create(hierarchyModel, keyProvider);
         treeWidget = new TreeWidget<>(treeModel, new EntityHierarchyTreeNodeRenderer());
@@ -162,7 +162,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
 
         updateButtonStates();
 
-        hierarchyModel.start(eventBus);
+        hierarchyModel.start(eventBus, CLASS_HIERARCHY);
         nodeUpdater.start(eventBus);
 
         setSelectionInTree(getSelectedEntity());
