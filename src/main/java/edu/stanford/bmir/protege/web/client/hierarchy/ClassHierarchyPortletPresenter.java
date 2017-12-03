@@ -89,6 +89,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
                                                                       (action, event) -> handleCreateClass(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
+
+//    private final EntityHierarchyContextMenuPresenter contextMenuPresenter;
+
     private boolean expandDisabled = false;
     private String hierarchyProperty = null;
     private boolean inRemove = false;
@@ -123,6 +126,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget = new TreeWidget<>(treeModel, new EntityHierarchyTreeNodeRenderer());
         treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
         treeWidget.addContextMenuHandler(this::displayContextMenu);
+//        this.contextMenuPresenter = new EntityHierarchyContextMenuPresenter(messages, treeWidget);
         nodeUpdater = new EntityHierarchyNodeUpdater(projectId, hierarchyModel);
 
     }
@@ -145,10 +149,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         eventBus.addProjectEventHandler(getProjectId(),
                                         ON_PERMISSIONS_CHANGED,
-                                        event -> {
-                                            updateButtonStates();
-                                            handleRefresh();
-                                        });
+                                        event -> updateButtonStates());
 
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> updateButtonStates());
@@ -178,54 +179,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void displayContextMenu(ContextMenuEvent event) {
-        PopupMenu contextMenu = new PopupMenu();
-        contextMenu.addItem(messages.create(), this::handleCreateSubClasses);
-        contextMenu.addItem(messages.delete(), this::handleDeleteClass);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
-        contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
-        contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.showIri(), showIriForSelection());
-        contextMenu.addItem(messages.showDirectLink(), this::showDirectLinkForSelection);
-        contextMenu.addSeparator();
-        contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
-        contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
+//        contextMenuPresenter.showContextMenu(event);
     }
 
-    private Runnable showIriForSelection() {
-        return () -> {
-            Optional<OWLEntity> selectedEntity = getSelectedEntity();
-            if (selectedEntity.isPresent()) {
-                String iri = selectedEntity.get().getIRI().toQuotedString();
-                InputBox.showOkDialog(messages.classIri(), true, iri, input -> {
-                });
-            }
-        };
-    }
-
-    private void handleRefresh() {
-        treeWidget.reload();
-        setSelectionInTree(getSelectedEntity());
-    }
-
-
-    private void showDirectLinkForSelection() {
-        String location = Window.Location.getHref();
-        InputBox.showOkDialog(messages.directLink(), true, location, input -> {});
-    }
-
-    private void pruneSelectedNodesToRoot() {
-        treeWidget.pruneToSelectedNodes();
-    }
-
-    private void pruneToKey() {
-        treeWidget.getFirstSelectedKey().ifPresent(sel -> treeWidget.pruneToNodesContainingKey(sel, () -> {}));
-    }
-
-    private void clearPruning() {
-        treeWidget.clearPruning();
-    }
 
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
         try {
