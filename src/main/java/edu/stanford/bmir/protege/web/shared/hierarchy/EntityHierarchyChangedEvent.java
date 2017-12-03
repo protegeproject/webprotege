@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
-import com.google.common.collect.ImmutableList;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.protege.gwt.graphtree.shared.graph.GraphModelChange;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphModelChangedEvent;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,12 +17,12 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
 
     public static final transient Event.Type<EntityHierarchyChangedHandler> ON_HIERARCHY_CHANGED = new Event.Type<>();
 
-    private HierarchyId<?> hierarchyId;
+    private HierarchyId hierarchyId;
 
     private GraphModelChangedEvent<EntityHierarchyNode> changeEvent;
 
     public EntityHierarchyChangedEvent(@Nonnull ProjectId source,
-                                       @Nonnull HierarchyId<?> hierarchyId,
+                                       @Nonnull HierarchyId hierarchyId,
                                        @Nonnull GraphModelChangedEvent<EntityHierarchyNode> changeEvent) {
         super(source);
         this.hierarchyId = checkNotNull(hierarchyId);

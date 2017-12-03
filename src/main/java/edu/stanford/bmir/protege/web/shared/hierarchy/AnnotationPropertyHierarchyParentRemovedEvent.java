@@ -14,7 +14,7 @@ public class AnnotationPropertyHierarchyParentRemovedEvent extends HierarchyChan
 
     public transient static final Event.Type<AnnotationPropertyHierarchyParentRemoved> TYPE = new Event.Type<AnnotationPropertyHierarchyParentRemoved>();
 
-    public AnnotationPropertyHierarchyParentRemovedEvent(ProjectId source, OWLAnnotationProperty child, OWLAnnotationProperty parent, HierarchyId<OWLAnnotationProperty> hierarchyId) {
+    public AnnotationPropertyHierarchyParentRemovedEvent(ProjectId source, OWLAnnotationProperty child, OWLAnnotationProperty parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

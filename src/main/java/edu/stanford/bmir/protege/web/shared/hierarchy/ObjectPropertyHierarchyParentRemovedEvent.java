@@ -14,7 +14,7 @@ public class ObjectPropertyHierarchyParentRemovedEvent extends HierarchyChangedE
 
     public transient static final Event.Type<ObjectPropertyHierarchyParentRemovedHandler> TYPE = new Event.Type<ObjectPropertyHierarchyParentRemovedHandler>();
 
-    public ObjectPropertyHierarchyParentRemovedEvent(ProjectId source, OWLObjectProperty child, OWLObjectProperty parent, HierarchyId<OWLObjectProperty> hierarchyId) {
+    public ObjectPropertyHierarchyParentRemovedEvent(ProjectId source, OWLObjectProperty child, OWLObjectProperty parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

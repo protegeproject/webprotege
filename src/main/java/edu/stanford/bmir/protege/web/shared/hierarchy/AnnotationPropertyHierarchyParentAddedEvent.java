@@ -15,7 +15,7 @@ public class AnnotationPropertyHierarchyParentAddedEvent extends HierarchyChange
     public transient static final Event.Type<AnnotationPropertyHierarchyParentAddedHandler> TYPE = new Event.Type<AnnotationPropertyHierarchyParentAddedHandler>();
 
 
-    public AnnotationPropertyHierarchyParentAddedEvent(ProjectId source, OWLAnnotationProperty child, OWLAnnotationProperty parent, HierarchyId<OWLAnnotationProperty> hierarchyId) {
+    public AnnotationPropertyHierarchyParentAddedEvent(ProjectId source, OWLAnnotationProperty child, OWLAnnotationProperty parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

@@ -38,7 +38,8 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
 
     @Inject
     public EntityHierarchyModel(@Nonnull DispatchServiceManager dispatchServiceManager,
-                                @Nonnull ProjectId projectId) {
+                                @Nonnull ProjectId projectId,
+                                @Nonnull HierarchyId hierarchyId) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
     }

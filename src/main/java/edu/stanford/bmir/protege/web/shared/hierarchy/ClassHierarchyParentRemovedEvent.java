@@ -16,7 +16,7 @@ public class ClassHierarchyParentRemovedEvent extends HierarchyChangedEvent<OWLC
 
     public static final transient Event.Type<ClassHierarchyParentRemovedHandler> TYPE = new Event.Type<ClassHierarchyParentRemovedHandler>();
 
-    public ClassHierarchyParentRemovedEvent(ProjectId source, OWLClass child, OWLClass parent, HierarchyId<OWLClass> hierarchyId) {
+    public ClassHierarchyParentRemovedEvent(ProjectId source, OWLClass child, OWLClass parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 
