@@ -65,7 +65,7 @@ public class CollectionViewImpl extends Composite implements CollectionView {
         PortletUiImpl ui = new PortletUiImpl(new ForbiddenViewImpl(),
                                              new NothingSelectedViewImpl());
         ui.setWidget(formContainer);
-        ui.addPortletAction(new PortletAction("Clear", (action, event) -> clearItemDataHandler.handleClearItemData()));
+        ui.addAction(new PortletAction("Clear", () -> clearItemDataHandler.handleClearItemData()));
         formHolder = new ViewHolder(ui, NodeProperties.emptyNodeProperties());
         formContainer.setWidth("100%");
         formContainer.setHeight("100%");
@@ -78,7 +78,7 @@ public class CollectionViewImpl extends Composite implements CollectionView {
                 PortletUiImpl widgets = new PortletUiImpl(new ForbiddenViewImpl(),
                                                           new NothingSelectedViewImpl());
                 widgets.setToolbarVisible(true);
-                widgets.addPortletAction(new PortletAction("Add", (action, event) -> addItemHandler.handleAddItem()));
+                widgets.addAction(new PortletAction("Add", () -> addItemHandler.handleAddItem()));
                 widgets.setTitle("Amino Acids");
                 widgets.setWidget(listContainer);
                 ViewHolder viewHolder = new ViewHolder(widgets, terminalNode.getNodeProperties());

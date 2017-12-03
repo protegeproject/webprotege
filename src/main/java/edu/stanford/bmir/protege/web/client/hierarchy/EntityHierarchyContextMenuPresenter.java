@@ -59,8 +59,9 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
-        contextMenu.show(event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY() + 5);
-
+        int x = event.getNativeEvent().getClientX();
+        int y = event.getNativeEvent().getClientY() + 5;
+        contextMenu.show(x, y);
     }
 
 

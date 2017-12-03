@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.issues;
 
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -41,7 +42,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Nonnull
-    private final PortletAction addCommentAction;
+    private final UIAction addCommentAction;
 
     @Nonnull
     private final FilterView filterView;
@@ -69,7 +70,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.addCommentAction = new PortletAction(messages.startNewCommentThread(),
-                                                  (action, event) -> presenter.createThread());
+                                                  presenter::createThread);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                         this::handlePemissionsChange);
         this.portletUi = Optional.of(portletUi);
         portletUi.setWidget(presenter.getView());
-        portletUi.addPortletAction(addCommentAction);
+        portletUi.addAction(addCommentAction);
         addCommentAction.setEnabled(false);
         portletUi.setFilterView(filterView);
         portletUi.setForbiddenMessage(messages.discussionThread_ViewingForbidden());

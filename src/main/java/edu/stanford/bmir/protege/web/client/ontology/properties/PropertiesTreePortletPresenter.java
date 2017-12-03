@@ -13,6 +13,7 @@ import com.gwtext.client.widgets.tree.TreeSelectionModel;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
@@ -68,9 +69,9 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final PortletAction createAction;
+    private final UIAction createAction;
 
-    private final PortletAction deleteAction;
+    private final UIAction deleteAction;
     private final LoggedInUserProjectPermissionChecker permissionChecker;
     private final Messages messages;
     protected TreePanel treePanel;
@@ -140,14 +141,12 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
             public void onSelectionChange(DefaultSelectionModel defaultSelectionModel, TreeNode treeNode) {
                 if (treeNode != null) {
                     Optional<OWLEntityData> sel = getEntityDataFromTreeNode(treeNode);
-                    if (sel.isPresent()) {
-                        getSelectionModel().setSelection(sel.get().getEntity());
-                    }
+                    sel.ifPresent(owlEntityData -> getSelectionModel().setSelection(owlEntityData.getEntity()));
                 }
             }
         });
-        createAction = new PortletAction(messages.create(), (action, event) -> onCreateProperty());
-        deleteAction = new PortletAction(messages.delete(), (action, event) -> onDeleteProperty());
+        createAction = new PortletAction(messages.create(), this::onCreateProperty);
+        deleteAction = new PortletAction(messages.delete(), this::onDeleteProperty);
     }
 
     private static Optional<OWLEntityData> getEntityDataFromTreeNode(TreeNode selectedTreeNode) {
@@ -168,8 +167,8 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.addPortletAction(createAction);
-        portletUi.addPortletAction(deleteAction);
+        portletUi.addAction(createAction);
+        portletUi.addAction(deleteAction);
         portletUi.setWidget(treePanel.asWidget());
         eventBus.addProjectEventHandler(getProjectId(),
                 ObjectPropertyHierarchyParentAddedEvent.TYPE,

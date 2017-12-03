@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
-import com.google.gwt.user.client.ui.HasEnabled;
-import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.shared.HasStateChangedHandler;
-import edu.stanford.bmir.protege.web.shared.StateChangedHandler;
+import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,57 +9,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 10/02/16
  */
-public class PortletAction implements HasEnabled, HasStateChangedHandler<PortletAction> {
+public class PortletAction extends AbstractUiAction {
 
-    private String name;
+    private final Runnable handler;
 
-    private PortletActionHandler actionHandler;
-
-    private boolean enabled = true;
-
-    private StateChangedHandler<PortletAction> stateChangedHandler = new StateChangedHandler<PortletAction>() {
-        @Override
-        public void handleStateChanged(PortletAction value) {
-
-        }
-    };
-
-    public PortletAction(String name, PortletActionHandler actionHandler) {
-        this.name = name;
-        this.actionHandler = actionHandler;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        if (!this.name.equals(name)) {
-            this.name = name;
-            stateChangedHandler.handleStateChanged(this);
-        }
-    }
-
-    public PortletActionHandler getActionHandler() {
-        return actionHandler;
+    public PortletAction(String label, Runnable handler) {
+        super(label);
+        this.handler = checkNotNull(handler);
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        if(this.enabled != enabled) {
-            this.enabled = enabled;
-            stateChangedHandler.handleStateChanged(this);
-        }
-
-    }
-
-    @Override
-    public void setStateChangedHandler(StateChangedHandler<PortletAction> stateChangedHandler) {
-        this.stateChangedHandler = checkNotNull(stateChangedHandler);
+    public final void execute() {
+        handler.run();
     }
 }

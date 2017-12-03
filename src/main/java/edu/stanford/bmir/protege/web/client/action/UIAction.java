@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.action;
 
+import com.google.gwt.user.client.ui.HasEnabled;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 13/06/2014
  */
-public interface UIAction {
+public interface UIAction extends HasEnabled {
 
 
     interface LabelChangedHandler {

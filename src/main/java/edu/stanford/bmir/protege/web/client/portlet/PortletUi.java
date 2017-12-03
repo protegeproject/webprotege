@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.app.HasForbiddenView;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -27,7 +28,7 @@ public interface PortletUi extends IsWidget, AcceptsOneWidget, HasPortletActions
 
     void setFilterApplied(boolean filterApplied);
 
-    void addPortletAction(PortletAction action);
+    void addAction(UIAction action);
 
     void setTitle(@Nonnull String title);
 
