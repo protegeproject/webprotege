@@ -15,11 +15,11 @@ public class HierarchyRootRemovedEvent<T extends OWLEntity> extends ProjectEvent
 
     public transient static final Event.Type<HierarchyRootRemovedHandler<?>> TYPE = new Event.Type<HierarchyRootRemovedHandler<?>>();
 
-    private HierarchyId<T> hierarchyId;
+    private HierarchyId hierarchyId;
 
     private T root;
 
-    public HierarchyRootRemovedEvent(ProjectId source, HierarchyId<T> hierarchyId, T root) {
+    public HierarchyRootRemovedEvent(ProjectId source, HierarchyId hierarchyId, T root) {
         super(source);
         this.hierarchyId = hierarchyId;
         this.root = root;
@@ -28,7 +28,7 @@ public class HierarchyRootRemovedEvent<T extends OWLEntity> extends ProjectEvent
     private HierarchyRootRemovedEvent() {
     }
 
-    public HierarchyId<T> getHierarchyId() {
+    public HierarchyId getHierarchyId() {
         return hierarchyId;
     }
 

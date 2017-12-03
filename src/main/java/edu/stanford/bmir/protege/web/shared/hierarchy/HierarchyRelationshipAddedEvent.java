@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public abstract class HierarchyRelationshipAddedEvent<T extends OWLEntity, H> extends HierarchyChangedEvent<T, H> {
 
-    public HierarchyRelationshipAddedEvent(ProjectId source, T child, T parent, HierarchyId<T> hierarchyId) {
+    public HierarchyRelationshipAddedEvent(ProjectId source, T child, T parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

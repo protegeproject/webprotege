@@ -20,9 +20,9 @@ public abstract class HierarchyChangedEvent<T extends OWLEntity, H> extends Proj
 
     private T parent;
 
-    private HierarchyId<T> hierarchyId;
+    private HierarchyId hierarchyId;
 
-    public HierarchyChangedEvent(ProjectId source, T child, T parent, HierarchyId<T> hierarchyId) {
+    public HierarchyChangedEvent(ProjectId source, T child, T parent, HierarchyId hierarchyId) {
         super(source);
         this.child = child;
         this.parent = parent;
@@ -42,7 +42,7 @@ public abstract class HierarchyChangedEvent<T extends OWLEntity, H> extends Proj
         return parent;
     }
 
-    public HierarchyId<?> getHierarchyId() {
+    public HierarchyId getHierarchyId() {
         return hierarchyId;
     }
 

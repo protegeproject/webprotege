@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public abstract class HierarchyRelationshipRemovedEvent<T extends OWLEntity, H> extends HierarchyChangedEvent<T, H> {
 
-    public HierarchyRelationshipRemovedEvent(ProjectId source, T child, T parent, HierarchyId<T> hierarchyId) {
+    public HierarchyRelationshipRemovedEvent(ProjectId source, T child, T parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

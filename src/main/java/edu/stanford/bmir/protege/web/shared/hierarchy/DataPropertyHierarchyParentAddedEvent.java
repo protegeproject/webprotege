@@ -14,7 +14,7 @@ public class DataPropertyHierarchyParentAddedEvent extends HierarchyChangedEvent
 
     public static final transient Event.Type<DataPropertyHierarchyParentAddedHandler> TYPE = new Event.Type<DataPropertyHierarchyParentAddedHandler>();
 
-    public DataPropertyHierarchyParentAddedEvent(ProjectId source, OWLDataProperty child, OWLDataProperty parent, HierarchyId<OWLDataProperty> hierarchyId) {
+    public DataPropertyHierarchyParentAddedEvent(ProjectId source, OWLDataProperty child, OWLDataProperty parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

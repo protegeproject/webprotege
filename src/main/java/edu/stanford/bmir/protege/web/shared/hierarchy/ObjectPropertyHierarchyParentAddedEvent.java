@@ -14,7 +14,7 @@ public class ObjectPropertyHierarchyParentAddedEvent extends HierarchyChangedEve
 
     public static final transient Event.Type<ObjectPropertyHierarchyParentAddedHandler> TYPE = new Event.Type<ObjectPropertyHierarchyParentAddedHandler>();
 
-    public ObjectPropertyHierarchyParentAddedEvent(ProjectId source, OWLObjectProperty child, OWLObjectProperty parent, HierarchyId<OWLObjectProperty> hierarchyId) {
+    public ObjectPropertyHierarchyParentAddedEvent(ProjectId source, OWLObjectProperty child, OWLObjectProperty parent, HierarchyId hierarchyId) {
         super(source, child, parent, hierarchyId);
     }
 

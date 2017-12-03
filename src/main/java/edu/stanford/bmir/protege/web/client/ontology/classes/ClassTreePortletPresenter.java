@@ -35,6 +35,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.NoOpTreeNodeDropHandler;
@@ -61,6 +62,7 @@ import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
@@ -119,7 +121,7 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
 
-        hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
+        hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId, CLASS_HIERARCHY);
         UserObjectKeyProvider<EntityHierarchyNode, OWLEntity> keyProvider = EntityHierarchyNode::getEntity;
         treeModel = GraphTreeNodeModel.create(hierarchyModel, keyProvider);
         treeWidget = new TreeWidget<>(treeModel, new EntityHierarchyTreeNodeRenderer());
