@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -67,8 +65,6 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-    private static final Messages MESSAGES = GWT.create(Messages.class);
-
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
@@ -85,18 +81,16 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final EntityHierarchyModel hierarchyModel;
 
-    private final UIAction createClassAction = new PortletAction(MESSAGES.create(),
-                                                                 this::handleCreateSubClasses);
+    private final UIAction createClassAction;
 
-    private boolean expandDisabled = false;
-    private String hierarchyProperty = null;
-    private boolean inRemove = false;
+    private final UIAction watchClassAction;
+
+    private final UIAction deleteClassAction;
+
+    private final UIAction searchAction;
+
     private TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
 
-    private final UIAction watchClassAction = new PortletAction(MESSAGES.watch(),
-                                                                     this::handleEditWatches);
-    private final UIAction deleteClassAction = new PortletAction(MESSAGES.delete(),
-                                                                      this::handleDeleteClass);
     private boolean transmittingSelectionFromTree = false;
 
     @Inject
@@ -115,6 +109,18 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.primitiveDataEditorProvider = checkNotNull(primitiveDataEditorProvider);
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
+
+        this.createClassAction = new PortletAction(messages.create(),
+                                                    this::handleCreateSubClasses);
+
+        this.deleteClassAction = new PortletAction(messages.delete(),
+                                                 this::handleDeleteClass);
+
+        this.watchClassAction = new PortletAction(messages.watch(),
+                                                  this::handleEditWatches);
+
+        this.searchAction = new PortletAction(messages.search(),
+                                              this::handleSearch);
 
         hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
         nodeUpdater = new EntityHierarchyNodeUpdater(projectId, hierarchyModel);
@@ -140,10 +146,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.addAction(createClassAction);
         portletUi.addAction(deleteClassAction);
         portletUi.addAction(watchClassAction);
-        portletUi.addAction(new PortletAction(messages.search(), () -> {
-            searchDialogController.setEntityTypes(CLASS);
-            WebProtegeDialog.showDialog(searchDialogController);
-        }));
+        portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
 
         eventBus.addProjectEventHandler(getProjectId(),
@@ -239,6 +242,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                                selectAndExpandPath(path);
                                            });
         }
+    }
+
+    private void handleSearch() {
+        searchDialogController.setEntityTypes(CLASS);
+        WebProtegeDialog.showDialog(searchDialogController);
     }
 
     private void selectAndExpandPath(Path<OWLEntity> entityPath) {
