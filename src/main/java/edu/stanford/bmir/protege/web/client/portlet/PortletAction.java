@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.gwt.user.client.ui.HasEnabled;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.shared.HasStateChangedHandler;
 import edu.stanford.bmir.protege.web.shared.StateChangedHandler;
 
