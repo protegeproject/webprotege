@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ontology.classes;
+package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -14,8 +14,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
-import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyNodeUpdater;
-import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyTreeNodeRenderer;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -35,10 +33,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.protege.gwt.graphtree.client.NoOpTreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.UserObjectKeyProvider;
@@ -71,7 +67,7 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
 @Portlet(id = "portlets.ClassHierarchy",
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
-public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresenter {
+public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
@@ -105,14 +101,14 @@ public class ClassTreePortletPresenter extends AbstractWebProtegePortletPresente
     private final GraphTreeNodeModel<EntityHierarchyNode, OWLEntity> treeModel;
 
     @Inject
-    public ClassTreePortletPresenter(@Nonnull final ProjectId projectId,
-                                     @Nonnull SelectionModel selectionModel,
-                                     @Nonnull DispatchServiceManager dispatchServiceManager,
-                                     @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
-                                     @Nonnull WatchPresenter watchPresenter,
-                                     @Nonnull SearchDialogController searchDialogController,
-                                     @Nonnull Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                     @Nonnull Messages messages) {
+    public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
+                                          @Nonnull SelectionModel selectionModel,
+                                          @Nonnull DispatchServiceManager dispatchServiceManager,
+                                          @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                          @Nonnull WatchPresenter watchPresenter,
+                                          @Nonnull SearchDialogController searchDialogController,
+                                          @Nonnull Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
+                                          @Nonnull Messages messages) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.permissionChecker = checkNotNull(permissionChecker);
