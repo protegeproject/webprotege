@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
-import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -17,10 +16,14 @@ public class GetHierarchyPathsToRootAction extends AbstractHasProjectAction<GetH
 
     private OWLEntity entity;
 
+    private HierarchyId hierarchyId;
+
     public GetHierarchyPathsToRootAction(@Nonnull ProjectId projectId,
-                                         @Nonnull OWLEntity entity) {
+                                         @Nonnull OWLEntity entity,
+                                         @Nonnull HierarchyId hierarchyId) {
         super(projectId);
         this.entity = checkNotNull(entity);
+        this.hierarchyId = checkNotNull(hierarchyId);
     }
 
     @GwtSerializationConstructor
@@ -30,5 +33,10 @@ public class GetHierarchyPathsToRootAction extends AbstractHasProjectAction<GetH
     @Nonnull
     public OWLEntity getEntity() {
         return entity;
+    }
+
+    @Nonnull
+    public HierarchyId getHierarchyId() {
+        return hierarchyId;
     }
 }

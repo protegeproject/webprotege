@@ -29,6 +29,11 @@ public class EntityHierarchyChangedEvent extends ProjectEvent<EntityHierarchyCha
         this.changeEvent = checkNotNull(changeEvent);
     }
 
+    @Nonnull
+    public HierarchyId getHierarchyId() {
+        return hierarchyId;
+    }
+
     @GwtSerializationConstructor
     private EntityHierarchyChangedEvent() {
     }

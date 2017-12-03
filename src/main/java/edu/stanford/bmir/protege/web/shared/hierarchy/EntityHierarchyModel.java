@@ -15,6 +15,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent.ON_HIERARCHY_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static java.util.Collections.singletonList;
 
 /**
@@ -28,6 +29,8 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
     @Nonnull
     private final ProjectId projectId;
 
+    private HierarchyId hierarchyId = CLASS_HIERARCHY;
+
     private final List<GraphModelChangedHandler<EntityHierarchyNode>> handlers = new ArrayList<>();
 
     private Map<OWLEntity, EntityHierarchyNode> nodeCache = new HashMap<>();
@@ -38,17 +41,20 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
 
     @Inject
     public EntityHierarchyModel(@Nonnull DispatchServiceManager dispatchServiceManager,
-                                @Nonnull ProjectId projectId,
-                                @Nonnull HierarchyId hierarchyId) {
+                                @Nonnull ProjectId projectId) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
     }
 
-    public void start(WebProtegeEventBus eventBus) {
+    public void start(@Nonnull WebProtegeEventBus eventBus, @Nonnull HierarchyId hierarchyId) {
+        this.hierarchyId = checkNotNull(hierarchyId);
         eventBus.addProjectEventHandler(projectId, ON_HIERARCHY_CHANGED, this::handleEntityHierarchyChanged);
     }
 
     private void handleEntityHierarchyChanged(EntityHierarchyChangedEvent event) {
+        if(!event.getHierarchyId().equals(hierarchyId)) {
+            return;
+        }
         GraphModelChangeProcessor graphModelChangeProcessor = new GraphModelChangeProcessor(parent2ChildMap, rootNodes);
         event.getChangeEvent().getChanges().forEach(evt -> evt.accept(graphModelChangeProcessor));
         GraphModelChangedEvent<EntityHierarchyNode> graphModelChangedEvent = new GraphModelChangedEvent<>(graphModelChangeProcessor.getChanges());
@@ -76,7 +82,7 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
 
     @Override
     public void getRootNodes(GetRootNodesCallback<EntityHierarchyNode> callback) {
-        dispatchServiceManager.execute(new GetHierarchyRootsAction(projectId), result -> {
+        dispatchServiceManager.execute(new GetHierarchyRootsAction(projectId, hierarchyId), result -> {
             result.getRootNodes().stream()
                   .map(GraphNode::getUserObject)
                   .forEach(node -> {
@@ -91,7 +97,7 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
     @Override
     public void getSuccessorNodes(@Nonnull OWLEntity parent,
                                   @Nonnull GetSuccessorNodesCallback<EntityHierarchyNode> callback) {
-        dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId, parent),
+        dispatchServiceManager.execute(new GetHierarchyChildrenAction(projectId, parent, hierarchyId),
                                        result -> {
                                            result.getChildren().getSuccessors().stream()
                                                  .map(GraphNode::getUserObject)
@@ -106,7 +112,7 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
     @Override
     public void getPathsFromRootNodes(@Nonnull OWLEntity node,
                                       @Nonnull GetPathsBetweenNodesCallback<EntityHierarchyNode> callback) {
-        dispatchServiceManager.execute(new GetHierarchyPathsToRootAction(projectId, node),
+        dispatchServiceManager.execute(new GetHierarchyPathsToRootAction(projectId, node, hierarchyId),
                                        result -> callback.handlePaths(result.getPaths()));
     }
 
