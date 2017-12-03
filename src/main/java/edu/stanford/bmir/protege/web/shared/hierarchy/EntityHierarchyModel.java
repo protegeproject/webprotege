@@ -2,11 +2,9 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -54,10 +52,8 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
         event.getChangeEvent().getChanges().forEach(evt -> evt.accept(graphModelChangeProcessor));
         GraphModelChangedEvent<EntityHierarchyNode> graphModelChangedEvent = new GraphModelChangedEvent<>(graphModelChangeProcessor.getChanges());
         if (!graphModelChangedEvent.getChanges().isEmpty()) {
-            GWT.log("[EntityHierarchyModel] Received event that changed the hierarchy.  Propagating to listeners.");
-            handlers.forEach(handler -> {
-                handler.handleGraphModelChanged(graphModelChangedEvent);
-            });
+            handlers.forEach(handler ->
+                                     handler.handleGraphModelChanged(graphModelChangedEvent));
         }
     }
 
@@ -70,14 +66,11 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
         if (Objects.equals(currentNode, node)) {
             return;
         }
-        GWT.log("[EntityHierarchyModel] Updating node: " + node);
         nodeCache.put(node.getEntity(), node);
-        handlers.forEach(handler -> {
-            GWT.log("[EntityHierarchyModel] Dispatching events to handler: " + handler);
-            handler.handleGraphModelChanged(new GraphModelChangedEvent<>(
-                    singletonList(new UpdateUserObject<>(node)
-                    )));
-        });
+        handlers.forEach(handler ->
+                                 handler.handleGraphModelChanged(
+                                         new GraphModelChangedEvent<>(
+                                                 singletonList(new UpdateUserObject<>(node)))));
     }
 
     @Override
@@ -152,14 +145,14 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
 
         @Override
         public void visit(AddRootNode<EntityHierarchyNode> addRootNode) {
-            if(rootNodes.add(addRootNode.getNode().getUserObject().getEntity())) {
+            if (rootNodes.add(addRootNode.getNode().getUserObject().getEntity())) {
                 changes.add(addRootNode);
             }
         }
 
         @Override
         public void visit(RemoveRootNode<EntityHierarchyNode> removeRootNode) {
-            if(rootNodes.remove(removeRootNode.getNode().getUserObject().getEntity())) {
+            if (rootNodes.remove(removeRootNode.getNode().getUserObject().getEntity())) {
                 changes.add(removeRootNode);
             }
         }
@@ -169,8 +162,7 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
             GraphEdge<EntityHierarchyNode> edge = addEdge.getEdge();
             OWLEntity child = edge.getSuccessor().getUserObject().getEntity();
             OWLEntity parent = edge.getPredecessor().getUserObject().getEntity();
-            if(parent2ChildMap.put(parent, child)) {
-                GWT.log("[EntityHierarchyModel] Added child-parent edge: " + child + " --> " + parent);
+            if (parent2ChildMap.put(parent, child)) {
                 changes.add(addEdge);
             }
         }
@@ -180,8 +172,7 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
             GraphEdge<EntityHierarchyNode> edge = removeEdge.getEdge();
             OWLEntity child = edge.getSuccessor().getUserObject().getEntity();
             OWLEntity parent = edge.getPredecessor().getUserObject().getEntity();
-            if(parent2ChildMap.remove(parent, child)) {
-                GWT.log("[EntityHierarchyModel] Removed child-parent edge: " + child + " --> " + parent);
+            if (parent2ChildMap.remove(parent, child)) {
                 changes.add(removeEdge);
             }
         }
