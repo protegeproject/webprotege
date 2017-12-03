@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import org.semanticweb.owlapi.model.*;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,18 +27,17 @@ public class HierarchyId<T extends OWLEntity> implements IsSerializable {
 
     private String id;
 
-    private HierarchyId(String id) {
-        this.id = id;
+    private HierarchyId(@Nonnull String id) {
+        this.id = checkNotNull(id);
     }
 
-    /**
-     * For serialization only
-     */
+    @GwtSerializationConstructor
     private HierarchyId() {
 
     }
 
-    public static <T extends OWLEntity> HierarchyId<T> get(String id) {
+    @Nonnull
+    public static <T extends OWLEntity> HierarchyId<T> get(@Nonnull String id) {
         return new HierarchyId<>(checkNotNull(id));
     }
 
