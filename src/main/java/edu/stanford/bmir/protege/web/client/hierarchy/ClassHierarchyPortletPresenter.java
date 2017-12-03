@@ -60,6 +60,7 @@ import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_F
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
 
+@SuppressWarnings("Convert2MethodRef")
 @Portlet(id = "portlets.ClassHierarchy",
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
@@ -172,12 +173,14 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         createClassAction.setEnabled(false);
         deleteClassAction.setEnabled(false);
         watchClassAction.setEnabled(false);
+        // Note that the following action handlers cause GWT compile problems if method references
+        // are used for some reason
         permissionChecker.hasPermission(CREATE_CLASS,
-                                        createClassAction::setEnabled);
+                                        enabled -> createClassAction.setEnabled(enabled));
         permissionChecker.hasPermission(DELETE_CLASS,
-                                        deleteClassAction::setEnabled);
+                                        enabled -> deleteClassAction.setEnabled(enabled));
         permissionChecker.hasPermission(WATCH_CHANGES,
-                                        watchClassAction::setEnabled);
+                                        enabled -> watchClassAction.setEnabled(enabled));
     }
 
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
