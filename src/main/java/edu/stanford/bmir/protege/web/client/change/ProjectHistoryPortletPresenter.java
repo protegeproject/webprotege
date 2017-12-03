@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -29,7 +30,7 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
 
     private final ChangeListViewPresenter presenter;
 
-    private final PortletAction refreshAction;
+    private final UIAction refreshAction;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
@@ -61,14 +62,14 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
         filterView.addValueChangeHandler(event -> changeListView.setDetailsVisible(event.getValue()
                                                                                         .hasSetting(SHOW_DETAILS_FILTER,
                                                                                                     FilterSetting.ON)));
-        refreshAction = new PortletAction(messages.refresh(), (action, event) -> reload());
+        refreshAction = new PortletAction(messages.refresh(), () -> reload());
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.setForbiddenMessage(messages.change_permissionDenied());
         portletUi.setWidget(changeListView.asWidget());
-        portletUi.addPortletAction(refreshAction);
+        portletUi.addAction(refreshAction);
         portletUi.setToolbarVisible(true);
         portletUi.setFilterView(filterView);
         presenter.setHasBusy(portletUi);

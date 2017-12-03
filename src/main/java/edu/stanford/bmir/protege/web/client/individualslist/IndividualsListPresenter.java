@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
@@ -58,8 +59,8 @@ public class IndividualsListPresenter {
     private final ActiveProjectIdProvider activeProjectIdProvider;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
-    private final PortletAction createAction;
-    private final PortletAction deleteAction;
+    private final UIAction createAction;
+    private final UIAction deleteAction;
     private Optional<OWLClass> currentType = Optional.empty();
     private EntityDisplay entityDisplay = entityData -> {
     };
@@ -94,9 +95,9 @@ public class IndividualsListPresenter {
         });
         view.setPageNumberChangedHandler(pageNumber -> updateList());
         createAction = new PortletAction(messages.create(),
-                (action, event) -> handleCreateIndividuals());
+                                         this::handleCreateIndividuals);
         deleteAction = new PortletAction(messages.delete(),
-                (action, event) -> handleDeleteIndividuals());
+                                         this::handleDeleteIndividuals);
     }
 
     public void start(AcceptsOneWidget container) {
@@ -109,8 +110,8 @@ public class IndividualsListPresenter {
     }
 
     public void installActions(HasPortletActions hasPortletActions) {
-        hasPortletActions.addPortletAction(createAction);
-        hasPortletActions.addPortletAction(deleteAction);
+        hasPortletActions.addAction(createAction);
+        hasPortletActions.addAction(deleteAction);
         updateButtonStates();
     }
 

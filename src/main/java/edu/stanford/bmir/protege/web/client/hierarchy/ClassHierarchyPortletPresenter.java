@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
@@ -15,9 +15,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
@@ -87,21 +85,19 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final EntityHierarchyModel hierarchyModel;
 
-    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(),
-                                                                      (action, event) -> handleCreateClass(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
-
-//    private final EntityHierarchyContextMenuPresenter contextMenuPresenter;
+    private final UIAction createClassAction = new PortletAction(MESSAGES.create(),
+                                                                 this::handleCreateSubClasses);
 
     private boolean expandDisabled = false;
     private String hierarchyProperty = null;
     private boolean inRemove = false;
     private TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
-    private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(),
-                                                                     (action, event) -> handleEditWatches());
-    private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(),
-                                                                      (action, event) -> handleDeleteClass());
+
+    private final UIAction watchClassAction = new PortletAction(MESSAGES.watch(),
+                                                                     this::handleEditWatches);
+    private final UIAction deleteClassAction = new PortletAction(MESSAGES.delete(),
+                                                                      this::handleDeleteClass);
     private boolean transmittingSelectionFromTree = false;
-    private final GraphTreeNodeModel<EntityHierarchyNode, OWLEntity> treeModel;
 
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
@@ -121,13 +117,16 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.messages = checkNotNull(messages);
 
         hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
+        nodeUpdater = new EntityHierarchyNodeUpdater(projectId, hierarchyModel);
+
         UserObjectKeyProvider<EntityHierarchyNode, OWLEntity> keyProvider = EntityHierarchyNode::getEntity;
-        treeModel = GraphTreeNodeModel.create(hierarchyModel, keyProvider);
+        GraphTreeNodeModel<EntityHierarchyNode, OWLEntity> treeModel = GraphTreeNodeModel.create(hierarchyModel, keyProvider);
         treeWidget = new TreeWidget<>(treeModel, new EntityHierarchyTreeNodeRenderer());
         treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
-        treeWidget.addContextMenuHandler(this::displayContextMenu);
-//        this.contextMenuPresenter = new EntityHierarchyContextMenuPresenter(messages, treeWidget);
-        nodeUpdater = new EntityHierarchyNodeUpdater(projectId, hierarchyModel);
+
+        EntityHierarchyContextMenuPresenter contextMenuPresenter = new EntityHierarchyContextMenuPresenter(messages, treeWidget, createClassAction, deleteClassAction);
+        treeWidget.addContextMenuHandler(contextMenuPresenter::showContextMenu);
+
 
     }
 
@@ -138,10 +137,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.addPortletAction(createClassAction);
-        portletUi.addPortletAction(deleteClassAction);
-        portletUi.addPortletAction(watchClassAction);
-        portletUi.addPortletAction(new PortletAction(messages.search(), (action, event) -> {
+        portletUi.addAction(createClassAction);
+        portletUi.addAction(deleteClassAction);
+        portletUi.addAction(watchClassAction);
+        portletUi.addAction(new PortletAction(messages.search(), () -> {
             searchDialogController.setEntityTypes(CLASS);
             WebProtegeDialog.showDialog(searchDialogController);
         }));
@@ -177,11 +176,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         permissionChecker.hasPermission(WATCH_CHANGES,
                                         watchClassAction::setEnabled);
     }
-
-    private void displayContextMenu(ContextMenuEvent event) {
-//        contextMenuPresenter.showContextMenu(event);
-    }
-
 
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
         try {

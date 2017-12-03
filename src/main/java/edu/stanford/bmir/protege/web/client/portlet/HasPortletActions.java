@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
+import edu.stanford.bmir.protege.web.client.action.UIAction;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -7,5 +9,5 @@ package edu.stanford.bmir.protege.web.client.portlet;
  */
 public interface HasPortletActions {
 
-    void addPortletAction(PortletAction portletAction);
+    void addAction(UIAction action);
 }

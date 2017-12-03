@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.NothingSelectedView;
 import edu.stanford.bmir.protege.web.client.filter.FilterButtonImpl;
@@ -157,14 +158,14 @@ public class PortletUiImpl extends Composite implements PortletUi {
     }
 
     @Override
-    public void addPortletAction(final PortletAction action) {
-        final Button button = new Button(action.getName());
+    public void addAction(final UIAction action) {
+        final Button button = new Button(action.getLabel());
         button.addStyleName(WebProtegeClientBundle.BUNDLE.toolbar().toolbarButton());
         toolbar.add(button);
-        button.addClickHandler(event -> action.getActionHandler().handleActionInvoked(action, event));
+        button.addClickHandler(event -> action.execute());
         action.setStateChangedHandler(value -> {
             button.setEnabled(value.isEnabled());
-            button.setText(value.getName());
+            button.setText(value.getLabel());
         });
         setToolbarVisible(true);
     }
