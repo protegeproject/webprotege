@@ -61,7 +61,7 @@ import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChange
 @Portlet(id = "portlets.PropertyHierarchy",
         title = "Property Hierarchy",
         tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
-public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPresenter {
+public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";
 
@@ -77,11 +77,11 @@ public class PropertiesTreePortletPresenter extends AbstractWebProtegePortletPre
     protected TreePanel treePanel;
 
     @Inject
-    public PropertiesTreePortletPresenter(SelectionModel selectionModel,
-                                          DispatchServiceManager dispatchServiceManager,
-                                          ProjectId projectId,
-                                          LoggedInUserProjectPermissionChecker permissionChecker,
-                                          Messages messages) {
+    public PropertyHierarchyPortletPresenter(SelectionModel selectionModel,
+                                             DispatchServiceManager dispatchServiceManager,
+                                             ProjectId projectId,
+                                             LoggedInUserProjectPermissionChecker permissionChecker,
+                                             Messages messages) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
