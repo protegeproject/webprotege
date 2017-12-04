@@ -6,17 +6,17 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
-import edu.stanford.protege.gwt.graphtree.shared.tree.TreeNode;
+import edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+
 import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 3 Dec 2017
@@ -55,12 +55,12 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
         contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
         contextMenu.addSeparator();
-        contextMenu.addItem(messages.showIri(), showIriForSelection());
+        contextMenu.addItem(messages.showIri(), this::showIriForSelection);
         contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
         int x = event.getNativeEvent().getClientX();
-        int y = event.getNativeEvent().getClientY() + 5;
+        int y = event.getNativeEvent().getClientY();
         contextMenu.show(x, y);
     }
 
@@ -78,13 +78,11 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
 
-    private Runnable showIriForSelection() {
-        return () -> {
-            treeWidget.getFirstSelectedKey().ifPresent(sel -> {
-                String iri = sel.getIRI().toQuotedString();
-                InputBox.showOkDialog(messages.classIri(), true, iri, input -> {});
-            });
-        };
+    private void showIriForSelection() {
+        treeWidget.getFirstSelectedKey().ifPresent(sel -> {
+            String iri = sel.getIRI().toQuotedString();
+            InputBox.showOkDialog(messages.classIri(), true, iri, input -> {});
+        });
     }
 
     private void showUrlForSelection() {
@@ -93,9 +91,9 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
     private void handleRefresh() {
-        Set<OWLEntity> selection = treeWidget.getSelectedKeys();
+        Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
         treeWidget.reload();
-//        treeWidget.setSelected(selection);
+        firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
     }
 
 }
