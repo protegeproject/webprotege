@@ -33,7 +33,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
-import edu.stanford.protege.gwt.graphtree.shared.UserObjectKeyProvider;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -78,9 +77,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final Messages messages;
 
-    private final EntityHierarchyNodeUpdater nodeUpdater;
-
     private final EntityHierarchyModel hierarchyModel;
+    @Nonnull
+    private final EntityHierarchyTreeNodeRenderer renderer;
 
     private final UIAction createClassAction;
 
@@ -90,7 +89,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final UIAction searchAction;
 
-    private TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
+    private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
 
     private boolean transmittingSelectionFromTree = false;
 
@@ -102,7 +101,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull WatchPresenter watchPresenter,
                                           @Nonnull SearchDialogController searchDialogController,
                                           @Nonnull Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
-                                          @Nonnull Messages messages) {
+                                          @Nonnull Messages messages,
+                                          @Nonnull EntityHierarchyModel hierarchyModel,
+                                          @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+                                          @Nonnull EntityHierarchyTreeNodeRenderer renderer) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.permissionChecker = checkNotNull(permissionChecker);
@@ -110,6 +112,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.primitiveDataEditorProvider = checkNotNull(primitiveDataEditorProvider);
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
+        this.hierarchyModel = checkNotNull(hierarchyModel);
+        this.treeWidget = checkNotNull(treeWidget);
+        this.renderer = checkNotNull(renderer);
 
         this.createClassAction = new PortletAction(messages.create(),
                                                     this::handleCreateSubClasses);
@@ -123,16 +128,12 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.searchAction = new PortletAction(messages.search(),
                                               this::handleSearch);
 
-        hierarchyModel = new EntityHierarchyModel(dispatchServiceManager, projectId);
-        nodeUpdater = new EntityHierarchyNodeUpdater(projectId, hierarchyModel);
-
-        UserObjectKeyProvider<EntityHierarchyNode, OWLEntity> keyProvider = EntityHierarchyNode::getEntity;
-        GraphTreeNodeModel<EntityHierarchyNode, OWLEntity> treeModel = GraphTreeNodeModel.create(hierarchyModel, keyProvider);
-        treeWidget = new TreeWidget<>(treeModel, new EntityHierarchyTreeNodeRenderer());
-        treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
-
-        EntityHierarchyContextMenuPresenter contextMenuPresenter = new EntityHierarchyContextMenuPresenter(messages, treeWidget, createClassAction, deleteClassAction);
-        treeWidget.addContextMenuHandler(contextMenuPresenter::showContextMenu);
+        this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
+        EntityHierarchyContextMenuPresenter contextMenuPresenter = new EntityHierarchyContextMenuPresenter(messages,
+                                                                                                           treeWidget,
+                                                                                                           createClassAction,
+                                                                                                           deleteClassAction);
+        this.treeWidget.addContextMenuHandler(contextMenuPresenter::showContextMenu);
 
 
     }
@@ -143,7 +144,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     @Override
-    public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+    public void startPortlet(@Nonnull PortletUi portletUi,
+                             @Nonnull WebProtegeEventBus eventBus) {
         portletUi.addAction(createClassAction);
         portletUi.addAction(deleteClassAction);
         portletUi.addAction(watchClassAction);
@@ -163,7 +165,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         updateButtonStates();
 
         hierarchyModel.start(eventBus, CLASS_HIERARCHY);
-        nodeUpdater.start(eventBus);
+        treeWidget.setRenderer(renderer);
+        treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
+                                                      node -> node.getEntity()));
+
 
         setSelectionInTree(getSelectedEntity());
     }
@@ -203,7 +208,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void handleCreateSubClasses() {
-        if (!getSelectedTreeNodeClass().isPresent()) {
+        if (!treeWidget.getFirstSelectedKey().isPresent()) {
             showClassNotSelectedMessage();
             return;
         }

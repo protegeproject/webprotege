@@ -6,11 +6,14 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeRenderer;
 
+import javax.inject.Inject;
+
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
 public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityHierarchyNode> {
 
+    @Inject
     public EntityHierarchyTreeNodeRenderer() {
     }
 

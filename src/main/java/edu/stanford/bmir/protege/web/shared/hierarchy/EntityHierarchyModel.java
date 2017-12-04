@@ -4,12 +4,15 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyNodeUpdater;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -29,25 +32,32 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
     @Nonnull
     private final ProjectId projectId;
 
-    private HierarchyId hierarchyId = CLASS_HIERARCHY;
+    @Nonnull
+    private final EntityHierarchyNodeUpdater hierarchyNodeUpdater;
 
     private final List<GraphModelChangedHandler<EntityHierarchyNode>> handlers = new ArrayList<>();
 
-    private Map<OWLEntity, EntityHierarchyNode> nodeCache = new HashMap<>();
+    private final Map<OWLEntity, EntityHierarchyNode> nodeCache = new HashMap<>();
 
-    private SetMultimap<OWLEntity, OWLEntity> parent2ChildMap = HashMultimap.create();
+    private final SetMultimap<OWLEntity, OWLEntity> parent2ChildMap = HashMultimap.create();
 
-    private Set<OWLEntity> rootNodes = new HashSet<>();
+    private final Set<OWLEntity> rootNodes = new HashSet<>();
+
+    @Nonnull
+    private HierarchyId hierarchyId = CLASS_HIERARCHY;
 
     @Inject
     public EntityHierarchyModel(@Nonnull DispatchServiceManager dispatchServiceManager,
-                                @Nonnull ProjectId projectId) {
+                                @Nonnull ProjectId projectId,
+                                @Nonnull EntityHierarchyNodeUpdater hierarchyNodeUpdater) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
+        this.hierarchyNodeUpdater = checkNotNull(hierarchyNodeUpdater);
     }
 
     public void start(@Nonnull WebProtegeEventBus eventBus, @Nonnull HierarchyId hierarchyId) {
         this.hierarchyId = checkNotNull(hierarchyId);
+        hierarchyNodeUpdater.start(eventBus, this);
         eventBus.addProjectEventHandler(projectId, ON_HIERARCHY_CHANGED, this::handleEntityHierarchyChanged);
     }
 
