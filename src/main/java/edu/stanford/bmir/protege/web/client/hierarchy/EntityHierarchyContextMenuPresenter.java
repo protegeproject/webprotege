@@ -8,10 +8,10 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
-import edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Optional;
 
@@ -35,6 +35,9 @@ public class EntityHierarchyContextMenuPresenter {
     @Nonnull
     private final UIAction deleteEntityAction;
 
+    @Nullable
+    private PopupMenu contextMenu;
+
 
     public EntityHierarchyContextMenuPresenter(@Nonnull Messages messages,
                                                @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
@@ -47,7 +50,16 @@ public class EntityHierarchyContextMenuPresenter {
     }
 
     public void showContextMenu(ContextMenuEvent event) {
-        PopupMenu contextMenu = new PopupMenu();
+        if(contextMenu == null) {
+            createContextMenu();
+        }
+        int x = event.getNativeEvent().getClientX();
+        int y = event.getNativeEvent().getClientY();
+        contextMenu.show(x, y);
+    }
+
+    private void createContextMenu() {
+        contextMenu = new PopupMenu();
         contextMenu.addItem(createEntityAction);
         contextMenu.addItem(deleteEntityAction);
         contextMenu.addSeparator();
@@ -59,9 +71,6 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
-        int x = event.getNativeEvent().getClientX();
-        int y = event.getNativeEvent().getClientY();
-        contextMenu.show(x, y);
     }
 
 
