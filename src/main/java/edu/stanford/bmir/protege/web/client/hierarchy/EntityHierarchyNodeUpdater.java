@@ -14,8 +14,8 @@ import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,18 +35,24 @@ public class EntityHierarchyNodeUpdater {
     @Nonnull
     private final ProjectId projectId;
 
-    @Nonnull
-    private final EntityHierarchyModel model;
+    @Nullable
+    private EntityHierarchyModel model;
 
     @Inject
-    public EntityHierarchyNodeUpdater(@Nonnull ProjectId projectId,
-                                      @Nonnull EntityHierarchyModel model) {
+    public EntityHierarchyNodeUpdater(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
-        this.model = checkNotNull(model);
     }
 
-    public void start(WebProtegeEventBus eventBus) {
+    /**
+     * Start listening for events on the specified event bus in order to keep the specified hierarchy
+     * up to date.
+     * @param eventBus The event bus on which project changes are broadcast.
+     * @param model The hierarchy model that will be kept up to date.
+     */
+    public void start(@Nonnull WebProtegeEventBus eventBus,
+                      @Nonnull EntityHierarchyModel model) {
         GWT.log("[EntityHierarchyNodeUpdater] Starting to listen for events");
+        this.model = checkNotNull(model);
         eventBus.addProjectEventHandler(projectId, ON_WATCH_ADDED, this::handleWatchAdded);
         eventBus.addProjectEventHandler(projectId, ON_WATCH_REMOVED, this::handleWatchRemoved);
         eventBus.addProjectEventHandler(projectId, ON_BROWSER_TEXT_CHANGED, this::handleBrowserTextChanged);
@@ -55,10 +61,10 @@ public class EntityHierarchyNodeUpdater {
         eventBus.addProjectEventHandler(projectId, ON_ENTITY_DEPRECATED, this::handleEntityDeprecatedChanged);
     }
 
-    int browserTextEventCounter = 0;
-
     private void handleBrowserTextChanged(BrowserTextChangedEvent event) {
-        browserTextEventCounter++;
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
             EntityHierarchyNode updatedNode = new EntityHierarchyNode(
                     node.getEntity(),
@@ -71,6 +77,9 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleWatchAdded(WatchAddedEvent event) {
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
         model.getHierarchyNode(event.getWatch().getEntity()).ifPresent(node -> {
             Set<Watch> updatedWatches = new HashSet<>(node.getWatches());
             updatedWatches.add(event.getWatch());
@@ -79,6 +88,9 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleWatchRemoved(WatchRemovedEvent event) {
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
         model.getHierarchyNode(event.getWatch().getEntity()).ifPresent(node -> {
             Set<Watch> updatedWatches = new HashSet<>(node.getWatches());
             updatedWatches.remove(event.getWatch());
@@ -87,6 +99,9 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void updateWatches(EntityHierarchyNode node, Set<Watch> updatedWatches) {
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
         EntityHierarchyNode updatedNode = new EntityHierarchyNode(
                 node.getEntity(),
                 node.getBrowserText(),
@@ -97,6 +112,9 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleCommentPosted(CommentPostedEvent event) {
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
         event.getEntity().ifPresent(entity -> {
             model.getHierarchyNode(entity.getEntity()).ifPresent(node -> {
                 EntityHierarchyNode updatedNode = new EntityHierarchyNode(
@@ -111,6 +129,9 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleDiscussionThreadStatusChanged(DiscussionThreadStatusChangedEvent event) {
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
         event.getEntity().ifPresent(entity -> {
             model.getHierarchyNode(entity).ifPresent(node -> {
                 EntityHierarchyNode updatedNode = new EntityHierarchyNode(
@@ -125,14 +146,22 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleEntityDeprecatedChanged(EntityDeprecatedChangedEvent event) {
-            model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-                EntityHierarchyNode updatedNode = new EntityHierarchyNode(
-                        node.getEntity(),
-                        node.getBrowserText(),
-                        event.isDeprecated(),
-                        node.getWatches(),
-                        node.getOpenCommentCount());
-                model.updateNode(updatedNode);
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
+        model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
+            EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+                    node.getEntity(),
+                    node.getBrowserText(),
+                    event.isDeprecated(),
+                    node.getWatches(),
+                    node.getOpenCommentCount());
+            model.updateNode(updatedNode);
         });
     }
+
+    private static RuntimeException createHierarchyModelIsNullException() {
+        return new NullPointerException("Hierarchy Model is null");
+    }
+
 }

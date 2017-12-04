@@ -8,8 +8,10 @@ import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
+import edu.stanford.bmir.protege.web.client.editor.OWLEntityContext;
 import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
@@ -36,9 +38,12 @@ import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -162,5 +167,10 @@ public class ClientProjectModule {
     @Provides
     BusyView provideBusyView(BusyViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    TreeWidget<EntityHierarchyNode, OWLEntity> providesEntityHierarchyTree() {
+        return new TreeWidget<>();
     }
 }
