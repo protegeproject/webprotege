@@ -3,9 +3,6 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
-import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
-import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
@@ -18,14 +15,9 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
-import edu.stanford.bmir.protege.web.client.upload.UploadFileDialogController;
-import edu.stanford.bmir.protege.web.client.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
-import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -40,7 +32,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,8 +62,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final WatchPresenter watchPresenter;
 
-    private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
-
     private final SearchDialogController searchDialogController;
 
     private final Messages messages;
@@ -100,7 +89,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                           @Nonnull WatchPresenter watchPresenter,
                                           @Nonnull SearchDialogController searchDialogController,
-                                          @Nonnull Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
@@ -109,7 +97,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.watchPresenter = checkNotNull(watchPresenter);
-        this.primitiveDataEditorProvider = checkNotNull(primitiveDataEditorProvider);
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
         this.hierarchyModel = checkNotNull(hierarchyModel);
@@ -188,6 +175,12 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                         enabled -> watchClassAction.setEnabled(enabled));
     }
 
+    private Optional<OWLClass> getFirstSelectedClass() {
+        return treeWidget.getFirstSelectedKey()
+                         .filter(sel -> sel instanceof OWLClass)
+                         .map(sel -> (OWLClass) sel);
+    }
+
     private void transmitSelectionFromTree(SelectionChangeEvent event) {
         try {
             transmittingSelectionFromTree = true;
@@ -198,37 +191,26 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         }
     }
 
-    private void handleCreateClass(CreateClassesMode mode) {
-        if (mode == CreateClassesMode.CREATE_SUBCLASSES) {
-            handleCreateSubClasses();
-        }
-        else {
-            createSubClassesByImportingCSVDocument();
-        }
-    }
-
     private void handleCreateSubClasses() {
-        if (!treeWidget.getFirstSelectedKey().isPresent()) {
-            showClassNotSelectedMessage();
-            return;
-        }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(CLASS,
                                                                      this::createClasses,
                                                                      messages));
     }
 
     private void createClasses(CreateEntityInfo createEntityInfo) {
-        final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
-        if (!superCls.isPresent()) {
-            return;
-        }
+        final Optional<OWLClass> selCls = getFirstSelectedClass();
+        OWLClass superCls = selCls.orElse(DataFactory.getOWLThing());
+        performClassCreation(createEntityInfo, superCls);
+    }
+
+    private void performClassCreation(@Nonnull CreateEntityInfo createEntityInfo, @Nonnull OWLClass superCls) {
         final Set<String> browserTexts = createEntityInfo.getBrowserTexts().stream()
                                                          .filter(browserText -> !browserText.trim().isEmpty())
                                                          .collect(Collectors.toSet());
         if (browserTexts.size() > 1) {
             dispatchServiceManager.execute(new CreateClassesAction(
                                                    getProjectId(),
-                                                   superCls.get(),
+                                                   superCls,
                                                    browserTexts),
                                            result -> {
                                                if (!result.getCreatedClasses().isEmpty()) {
@@ -244,7 +226,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
             dispatchServiceManager.execute(new CreateClassAction(
                                                    getProjectId(),
                                                    browserTexts.iterator().next(),
-                                                   superCls.get()),
+                                                   superCls),
                                            result -> {
                                                Path<OWLEntity> path = new Path<>(new ArrayList<>(result.getPathToRoot().getPath()));
                                                selectAndExpandPath(path);
@@ -261,87 +243,26 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget.setSelected(entityPath, true, () -> treeWidget.setExpanded(entityPath));
     }
 
-    private void createSubClassesByImportingCSVDocument() {
-        final Optional<OWLClass> selCls = getSelectedTreeNodeClass();
-        if (!selCls.isPresent()) {
-            return;
-        }
-        UploadFileResultHandler uploadResultHandler = new UploadFileResultHandler() {
-            @Override
-            public void handleFileUploaded(final DocumentId fileDocumentId) {
-                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
-                        new CSVImportDialogController(
-                                getProjectId(),
-                                fileDocumentId,
-                                selCls.get(),
-                                dispatchServiceManager,
-                                new CSVImportViewImpl(
-                                        primitiveDataEditorProvider)));
-                csvImportDialog.setVisible(true);
-
-            }
-
-            @Override
-            public void handleFileUploadFailed(
-                    String errorMessage) {
-                ProgressMonitor.get().hideProgressMonitor();
-                MessageBox.showAlert("Error uploading CSV file", errorMessage);
-            }
-        };
-        UploadFileDialogController controller = new UploadFileDialogController("Upload CSV",
-                                                                               uploadResultHandler);
-
-        WebProtegeDialog.showDialog(controller);
-    }
-
-
-    private Optional<OWLClassData> getSelectedTreeNodeClassData() {
-        return treeWidget.getSelectedNodes().stream()
-                         .map(tn -> (OWLClassData) tn.getUserObject().getEntityData())
-                         .findFirst();
-    }
-
     private void handleDeleteClass() {
-        final Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
-        if (!currentSelection.isPresent()) {
-            showClassNotSelectedMessage();
-            return;
-        }
-
-        final OWLClassData theClassData = currentSelection.get();
-        final String displayName = theClassData.getBrowserText();
-        String subMessage = messages.delete_class_msg(displayName);
-        MessageBox.showConfirmBox(messages.delete_class_title(),
-                                  subMessage,
-                                  CANCEL, DELETE,
-                                  () -> deleteCls(theClassData.getEntity()),
-                                  CANCEL);
+        final Optional<EntityHierarchyNode> currentSelection = treeWidget.getFirstSelectedUserObject();
+        currentSelection.ifPresent(sel -> {
+            OWLEntity entity = sel.getEntity();
+            String subMessage = messages.delete_class_msg(sel.getBrowserText());
+            MessageBox.showConfirmBox(messages.delete_class_title(),
+                                      subMessage,
+                                      CANCEL, DELETE,
+                                      () -> deleteCls(entity),
+                                      CANCEL);
+        });
     }
 
-    private void showClassNotSelectedMessage() {
-        MessageBox.showAlert("No class selected", "Please select a class.");
-    }
-
-    private void deleteCls(final OWLClass cls) {
+    private void deleteCls(final OWLEntity cls) {
         dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), deleteEntityResult -> {});
     }
 
     protected void handleEditWatches() {
-        final Optional<OWLClass> sel = getSelectedTreeNodeClass();
-        if (!sel.isPresent()) {
-            return;
-        }
-        watchPresenter.showDialog(sel.get());
-    }
-
-
-    /**
-     * Gets the selected class.
-     * @return The selected class.
-     */
-    private Optional<OWLClass> getSelectedTreeNodeClass() {
-        Optional<OWLClassData> currentSelection = getSelectedTreeNodeClassData();
-        return currentSelection.map(OWLClassData::getEntity);
+        final Optional<OWLEntity> sel = treeWidget.getFirstSelectedKey();
+        sel.ifPresent(watchPresenter::showDialog);
     }
 
     private void setSelectionInTree(Optional<OWLEntity> selection) {
@@ -354,11 +275,4 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
             }
         });
     }
-
-    private enum CreateClassesMode {
-
-        CREATE_SUBCLASSES,
-        IMPORT_CSV
-    }
-
 }
