@@ -44,6 +44,7 @@ import static java.util.stream.Collectors.toSet;
 /**
  * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 12/09/2013
  */
+@SuppressWarnings("Convert2MethodRef")
 public class IndividualsListPresenter {
 
     private static final int SEARCH_DELAY = 700;
@@ -218,8 +219,8 @@ public class IndividualsListPresenter {
     private void updateButtonStates() {
         createAction.setEnabled(false);
         deleteAction.setEnabled(false);
-        permissionChecker.hasPermission(CREATE_INDIVIDUAL, createAction::setEnabled);
-        permissionChecker.hasPermission(DELETE_INDIVIDUAL, deleteAction::setEnabled);
+        permissionChecker.hasPermission(CREATE_INDIVIDUAL, enabled -> createAction.setEnabled(enabled));
+        permissionChecker.hasPermission(DELETE_INDIVIDUAL, enabled -> deleteAction.setEnabled(enabled));
     }
 
 }
