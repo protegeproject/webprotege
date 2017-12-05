@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHiera
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -96,10 +95,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     private final ChangeManager chgMan;
 
 
-    @SuppressWarnings("deprecation")
-    private final LegacyEntityDataManager legacyEntityDataManager;
-
-
     @Nonnull
     private final ProjectActionHandlerRegistry actionHandlerRegistry;
 
@@ -107,7 +102,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     public Project(ProjectId projectId,
                    OWLDataFactory dataFactory,
                    RenderingManager renderingManager,
-                   @SuppressWarnings("deprecation") LegacyEntityDataManager legacyEntityDataManager,
                    EventManager<ProjectEvent<?>> projectEventManager,
                    @RootOntology OWLOntology ontology,
                    ClassHierarchyProvider classHierarchyProvider,
@@ -129,7 +123,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         this.chgMan = chgMan;
         this.dataFactory = dataFactory;
         this.renderingManager = renderingManager;
-        this.legacyEntityDataManager = legacyEntityDataManager;
         this.projectEventManager = projectEventManager;
         this.ontology = ontology;
         this.classHierarchyProvider = classHierarchyProvider;
@@ -157,12 +150,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     public ReverseEngineeredChangeDescriptionGeneratorFactory getChangeDescriptionGeneratorFactory() {
         return changeDescriptionGeneratorFactory;
-    }
-
-    @SuppressWarnings("deprecation")
-    @Deprecated
-    public LegacyEntityDataManager getLegacyEntityDataManager() {
-        return legacyEntityDataManager;
     }
 
     /**
