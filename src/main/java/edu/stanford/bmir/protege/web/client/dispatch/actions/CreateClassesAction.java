@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,29 +15,15 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
  */
-public class CreateClassesAction extends AbstractHasProjectAction<CreateClassesResult> {
+public class CreateClassesAction extends CreateEntitiesInHierarchyAction<CreateClassesResult, OWLClass> {
 
-    private OWLClass superClass;
-
-    private Set<String> browserTexts;
-
-
+    @GwtSerializationConstructor
     private CreateClassesAction() {
     }
 
-    public CreateClassesAction(ProjectId projectId, OWLClass superClass, Set<String> browserTexts) {
-        super(projectId);
-        this.superClass = superClass;
-        this.browserTexts = new HashSet<String>(browserTexts);
+    public CreateClassesAction(@Nonnull ProjectId projectId,
+                               @Nonnull ImmutableSet<String> browserTexts,
+                               @Nonnull Optional<OWLClass> superClass) {
+        super(projectId, browserTexts, superClass);
     }
-
-    public OWLClass getSuperClass() {
-        return superClass;
-    }
-
-    public Set<String> getBrowserTexts() {
-        return new HashSet<String>(browserTexts);
-    }
-
-
 }

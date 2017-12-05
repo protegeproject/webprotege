@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,15 +15,15 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class CreateDataPropertiesAction extends AbstractCreateEntityInHierarchyAction<CreateDataPropertiesResult, OWLDataProperty> {
+public class CreateDataPropertiesAction extends CreateEntitiesInHierarchyAction<CreateDataPropertiesResult, OWLDataProperty> {
 
-    public CreateDataPropertiesAction(ProjectId projectId, Set<String> browserTexts, Optional<OWLDataProperty> parent) {
+    public CreateDataPropertiesAction(@Nonnull ProjectId projectId,
+                                      @Nonnull ImmutableSet<String> browserTexts,
+                                      @Nonnull Optional<OWLDataProperty> parent) {
         super(projectId, browserTexts, parent);
     }
 
-    /**
-     * For serialization
-     */
+    @GwtSerializationConstructor
     private CreateDataPropertiesAction() {
     }
 }

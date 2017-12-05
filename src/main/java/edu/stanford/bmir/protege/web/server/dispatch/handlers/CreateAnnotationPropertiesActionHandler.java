@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -20,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
@@ -82,11 +84,9 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
                                                                   CreateAnnotationPropertiesAction action,
                                                                   ExecutionContext executionContext,
                                                                   EventList<ProjectEvent<?>> eventList) {
-        Map<OWLAnnotationProperty, String> map = new HashMap<>();
-        for(OWLAnnotationProperty result : changeApplicationResult.getSubject().get()) {
-            map.put(result, renderer.getBrowserText(result));
-        }
-        return new CreateAnnotationPropertiesResult(map, projectId, action.getParent(), eventList);
+        Optional<Set<OWLAnnotationProperty>> result = changeApplicationResult.getSubject();
+        return result.map(props -> new CreateAnnotationPropertiesResult(projectId, ImmutableSet.copyOf(props), eventList))
+                .orElse(new CreateAnnotationPropertiesResult(projectId, ImmutableSet.of(), eventList));
     }
 
     @Nonnull

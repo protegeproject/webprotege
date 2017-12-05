@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -83,12 +84,7 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
     @Override
     protected CreateObjectPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLObjectProperty>> changeApplicationResult, CreateObjectPropertiesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Optional<Set<OWLObjectProperty>> result = changeApplicationResult.getSubject();
-        Map<OWLObjectProperty, String> map = new HashMap<>();
-        result.ifPresent(props -> {
-            for(OWLObjectProperty prop : props) {
-                map.put(prop, renderingManager.getBrowserText(prop));
-            }
-        });
-        return new CreateObjectPropertiesResult(map, projectId, action.getParent(), eventList);
+        return result.map(props -> new CreateObjectPropertiesResult(projectId, ImmutableSet.copyOf(props), eventList))
+                     .orElse(new CreateObjectPropertiesResult(projectId, ImmutableSet.of(), eventList));
     }
 }
