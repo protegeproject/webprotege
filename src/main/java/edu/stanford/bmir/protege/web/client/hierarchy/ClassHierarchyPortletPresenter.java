@@ -4,11 +4,8 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -17,7 +14,6 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -32,11 +28,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
@@ -79,6 +71,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final UIAction searchAction;
 
+    @Nonnull
+    private final CreateEntityPresenter createEntityPresenter;
+
     private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
 
     private boolean transmittingSelectionFromTree = false;
@@ -93,7 +88,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
-                                          @Nonnull EntityHierarchyTreeNodeRenderer renderer) {
+                                          @Nonnull EntityHierarchyTreeNodeRenderer renderer,
+                                          @Nonnull CreateEntityPresenter createEntityPresenter) {
         super(selectionModel, projectId);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.permissionChecker = checkNotNull(permissionChecker);
@@ -103,6 +99,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.hierarchyModel = checkNotNull(hierarchyModel);
         this.treeWidget = checkNotNull(treeWidget);
         this.renderer = checkNotNull(renderer);
+        this.createEntityPresenter = checkNotNull(createEntityPresenter);
 
         this.createClassAction = new PortletAction(messages.create(),
                                                    this::handleCreateSubClasses);
@@ -115,6 +112,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         this.searchAction = new PortletAction(messages.search(),
                                               this::handleSearch);
+
 
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
     }
@@ -190,46 +188,12 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     }
 
     private void handleCreateSubClasses() {
-        WebProtegeDialog.showDialog(new CreateEntityDialogController(CLASS,
-                                                                     this::createClasses,
-                                                                     messages));
-    }
-
-    private void createClasses(CreateEntityInfo createEntityInfo) {
-        final Optional<OWLClass> selCls = getFirstSelectedClass();
-        OWLClass superCls = selCls.orElse(DataFactory.getOWLThing());
-        performClassCreation(createEntityInfo, superCls);
-    }
-
-    private void performClassCreation(@Nonnull CreateEntityInfo createEntityInfo, @Nonnull OWLClass superCls) {
-        final Set<String> browserTexts = createEntityInfo.getBrowserTexts().stream()
-                                                         .filter(browserText -> !browserText.trim().isEmpty())
-                                                         .collect(Collectors.toSet());
-        if (browserTexts.size() > 1) {
-            dispatchServiceManager.execute(new CreateClassesAction(
-                                                   getProjectId(),
-                                                   superCls,
-                                                   browserTexts),
-                                           result -> {
-                                               if (!result.getCreatedClasses().isEmpty()) {
-                                                   List<OWLEntity> path = new ArrayList<>();
-                                                   path.addAll(result.getSuperClassPathToRoot().getPath());
-                                                   path.add(result.getCreatedClasses().get(0).getEntity());
-                                                   Path<OWLEntity> entityPath = new Path<>(path);
-                                                   selectAndExpandPath(entityPath);
-                                               }
-                                           });
-        }
-        else {
-            dispatchServiceManager.execute(new CreateClassAction(
-                                                   getProjectId(),
-                                                   browserTexts.iterator().next(),
-                                                   superCls),
-                                           result -> {
-                                               Path<OWLEntity> path = new Path<>(new ArrayList<>(result.getPathToRoot().getPath()));
-                                               selectAndExpandPath(path);
-                                           });
-        }
+        createEntityPresenter.createEntities(CLASS,
+                                             treeWidget, (projectId, browserText) ->
+                                                     new CreateClassesAction(projectId,
+                                                                             browserText,
+                                                                             getFirstSelectedClass())
+        );
     }
 
     private void handleSearch() {

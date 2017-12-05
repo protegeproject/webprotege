@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -10,6 +11,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,33 +24,18 @@ public abstract class AbstractCreateEntityResult<E extends OWLEntity> implements
 
     private ProjectId projectId;
 
-    private Map<E, String> browserText2EntityMap;
-
     private EventList<ProjectEvent<?>> eventList;
 
-    /**
-     * For serialization purposes only!
-     */
+    public AbstractCreateEntityResult(@Nonnull ProjectId projectId,
+                                      @Nonnull EventList<ProjectEvent<?>> eventList) {
+        this.projectId = checkNotNull(projectId);
+        this.eventList = checkNotNull(eventList);
+    }
+
+    @GwtSerializationConstructor
     protected AbstractCreateEntityResult() {
     }
 
-    public AbstractCreateEntityResult(Map<E, String> browserText2EntityMap, ProjectId projectId, EventList<ProjectEvent<?>> eventList) {
-        this.browserText2EntityMap = new HashMap<E, String>(browserText2EntityMap);
-        this.projectId = projectId;
-        this.eventList = eventList;
-    }
-
-    public Set<String> getBrowserTexts() {
-        return new HashSet<String>(browserText2EntityMap.values());
-    }
-
-    public Set<E> getEntities() {
-        return new HashSet<E>(browserText2EntityMap.keySet());
-    }
-
-    public Optional<String> getBrowserText(E entity) {
-        return Optional.ofNullable(browserText2EntityMap.get(entity));
-    }
 
     @Nonnull
     @Override

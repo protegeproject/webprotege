@@ -4,6 +4,9 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
@@ -17,7 +20,10 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,6 +34,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_P
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
+import static org.semanticweb.owlapi.model.EntityType.*;
 
 @SuppressWarnings("Convert2MethodRef")
 @Portlet(id = "portlets.PropertyHierarchy",
@@ -74,6 +81,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final EntityHierarchyTreeNodeRenderer renderer = new EntityHierarchyTreeNodeRenderer();
 
+    @Nonnull
+    private final CreateEntityPresenter createEntityPresenter;
+
     private boolean transmittingSelection = false;
 
     @Inject
@@ -88,7 +98,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull EntityHierarchyModel annotationPropertyHierarchyModel,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> objectPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree,
-                                             @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree) {
+                                             @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
+                                             @Nonnull CreateEntityPresenter createEntityPresenter) {
         super(selectionModel, projectId);
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
@@ -103,6 +114,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.objectPropertyTree = objectPropertyTree;
         this.dataPropertyTree = dataPropertyTree;
         this.annotationPropertyTree = annotationPropertyTree;
+        this.createEntityPresenter = createEntityPresenter;
     }
 
     @Override
@@ -135,13 +147,14 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     /**
-     * Starts and setups the specified model and tree using the specified event bus.  The renderer will be set
-     * and a context menu will be installed.
+     * Starts and setups the specified model and tree using the specified event bus.  The renderer will be set and a
+     * context menu will be installed.
+     *
      * @param hierarchyId The hierarchy Id
-     * @param label The label for the tree
-     * @param eventBus The event bus
-     * @param model The model
-     * @param treeWidget The tree
+     * @param label       The label for the tree
+     * @param eventBus    The event bus
+     * @param model       The model
+     * @param treeWidget  The tree
      */
     private void startTree(@Nonnull HierarchyId hierarchyId,
                            @Nonnull String label,
@@ -209,7 +222,67 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleCreate() {
-        
+        view.getSelectedHierarchyId().ifPresent(hierarchyId -> {
+            if (hierarchyId.equals(OBJECT_PROPERTY_HIERARCHY)) {
+                handleCreateObjectProperty();
+            }
+            else if (hierarchyId.equals(DATA_PROPERTY_HIERARCHY)) {
+                handleCreateDataProperty();
+            }
+            else if (hierarchyId.equals(ANNOTATION_PROPERTY_HIERARCHY)) {
+                handleCreateAnnotationProperty();
+            }
+        });
+    }
+
+    private void handleCreateAnnotationProperty() {
+        createEntityPresenter.createEntities(ANNOTATION_PROPERTY,
+                                             annotationPropertyTree,
+                                             (projectId, browserText) ->
+                                                     new CreateAnnotationPropertiesAction(projectId,
+                                                                                          browserText,
+                                                                                          getSelectedAnnotationProperty())
+        );
+    }
+
+    private void handleCreateDataProperty() {
+        createEntityPresenter.createEntities(DATA_PROPERTY,
+                                             dataPropertyTree,
+                                             (projectId, browserText) ->
+                                                     new CreateDataPropertiesAction(projectId,
+                                                                                    browserText,
+                                                                                    getSelectedDataProperty())
+        );
+    }
+
+    private void handleCreateObjectProperty() {
+        createEntityPresenter.createEntities(OBJECT_PROPERTY,
+                                             objectPropertyTree,
+                                             (projectId, browserText) ->
+                                                     new CreateObjectPropertiesAction(projectId,
+                                                                                      browserText,
+                                                                                      getSelectedObjectProperty())
+        );
+    }
+
+    private Optional<OWLObjectProperty> getSelectedObjectProperty() {
+        return objectPropertyTree.getFirstSelectedKey()
+                                 .filter(sel -> sel instanceof OWLObjectProperty)
+                                 .map(sel -> (OWLObjectProperty) sel);
+    }
+
+
+    private Optional<OWLDataProperty> getSelectedDataProperty() {
+        return dataPropertyTree.getFirstSelectedKey()
+                               .filter(sel -> sel instanceof OWLDataProperty)
+                               .map(sel -> (OWLDataProperty) sel);
+    }
+
+
+    private Optional<OWLAnnotationProperty> getSelectedAnnotationProperty() {
+        return annotationPropertyTree.getFirstSelectedKey()
+                                     .filter(sel -> sel instanceof OWLAnnotationProperty)
+                                     .map(sel -> (OWLAnnotationProperty) sel);
     }
 
     private void handleDelete() {

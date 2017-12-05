@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -22,15 +23,13 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 25/03/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 25/03/2013
  */
 public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHandler<Set<OWLDataProperty>, CreateDataPropertiesAction, CreateDataPropertiesResult> {
 
@@ -89,10 +88,9 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
                                                             ExecutionContext executionContext,
                                                             EventList<ProjectEvent<?>> eventList) {
         Map<OWLDataProperty, String> map = new HashMap<>();
-        for(OWLDataProperty dataProperty : changeApplicationResult.getSubject().get()) {
-            map.put(dataProperty, renderingManager.getBrowserText(dataProperty));
-        }
-        return new CreateDataPropertiesResult(map, projectId, action.getParent(), eventList);
+        Optional<Set<OWLDataProperty>> properties = changeApplicationResult.getSubject();
+        return properties.map(props -> new CreateDataPropertiesResult(projectId, ImmutableSet.copyOf(props), eventList))
+                         .orElse(new CreateDataPropertiesResult(projectId, ImmutableSet.of(), eventList));
     }
 
     @Nullable

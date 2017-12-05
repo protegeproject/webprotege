@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,10 +16,12 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class CreateDataPropertiesResult extends AbstractCreateEntityInHierarchyResult<OWLDataProperty> {
+public class CreateDataPropertiesResult extends CreateEntitiesInHierarchyResult<OWLDataProperty> {
 
-    public CreateDataPropertiesResult(Map<OWLDataProperty, String> entity2BrowserTextMap, ProjectId projectId, Optional<OWLDataProperty> parent, EventList<ProjectEvent<?>> eventList) {
-        super(entity2BrowserTextMap, projectId, parent, eventList);
+    public CreateDataPropertiesResult(@Nonnull ProjectId projectId,
+                                      @Nonnull ImmutableSet<OWLDataProperty> parent,
+                                      @Nonnull EventList<ProjectEvent<?>> eventList) {
+        super(projectId, parent, eventList);
     }
 
     private CreateDataPropertiesResult() {
