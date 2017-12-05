@@ -13,8 +13,6 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
-import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataManager;
-import edu.stanford.bmir.protege.web.server.legacy.LegacyEntityDataProvider;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
@@ -335,12 +333,6 @@ public class ProjectModule {
     public RevisionStore provideRevisionStore(RevisionStoreProvider provider) {
         return provider.get();
     }
-
-    @Provides
-    public LegacyEntityDataProvider provideLegacyEntityDataProvider(LegacyEntityDataManager renderingManager) {
-        return renderingManager;
-    }
-
 
     @Provides
     List<MetricCalculator> providesMetricsCaculator(MetricCalculatorsProvider provider) {
