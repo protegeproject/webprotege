@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
+import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
@@ -104,10 +105,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.renderer = checkNotNull(renderer);
 
         this.createClassAction = new PortletAction(messages.create(),
-                                                    this::handleCreateSubClasses);
+                                                   this::handleCreateSubClasses);
 
         this.deleteClassAction = new PortletAction(messages.delete(),
-                                                 this::handleDeleteClass);
+                                                   this::handleDeleteClass);
 
         this.watchClassAction = new PortletAction(messages.watch(),
                                                   this::handleEditWatches);
@@ -116,13 +117,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                               this::handleSearch);
 
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
-        EntityHierarchyContextMenuPresenter contextMenuPresenter = new EntityHierarchyContextMenuPresenter(messages,
-                                                                                                           treeWidget,
-                                                                                                           createClassAction,
-                                                                                                           deleteClassAction);
-        this.treeWidget.addContextMenuHandler(contextMenuPresenter::showContextMenu);
-
-
     }
 
     @Override
@@ -156,6 +150,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                                                       node -> node.getEntity()));
 
+        createAndInstallContextMenu(treeWidget,
+                                    messages,
+                                    createClassAction,
+                                    deleteClassAction);
 
         setSelectionInTree(getSelectedEntity());
     }

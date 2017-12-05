@@ -39,8 +39,8 @@ public class EntityHierarchyContextMenuPresenter {
     private PopupMenu contextMenu;
 
 
-    public EntityHierarchyContextMenuPresenter(@Nonnull Messages messages,
-                                               @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+    public EntityHierarchyContextMenuPresenter(@Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+                                               @Nonnull Messages messages,
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction) {
         this.messages = checkNotNull(messages);
@@ -49,7 +49,25 @@ public class EntityHierarchyContextMenuPresenter {
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
     }
 
-    public void showContextMenu(ContextMenuEvent event) {
+    public static void createAndInstallContextMenu(@Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+                                                   @Nonnull Messages messages,
+                                                   @Nonnull UIAction createEntityAction,
+                                                   @Nonnull UIAction deleteEntityAction) {
+        EntityHierarchyContextMenuPresenter presenter = new EntityHierarchyContextMenuPresenter(treeWidget,
+                                                                                                messages,
+                                                                                                createEntityAction,
+                                                                                                deleteEntityAction);
+        presenter.install();
+    }
+
+    /**
+     * Install the context menu on its tree
+     */
+    public void install() {
+        treeWidget.addContextMenuHandler(this::showContextMenu);
+    }
+
+    private void showContextMenu(ContextMenuEvent event) {
         if(contextMenu == null) {
             createContextMenu();
         }

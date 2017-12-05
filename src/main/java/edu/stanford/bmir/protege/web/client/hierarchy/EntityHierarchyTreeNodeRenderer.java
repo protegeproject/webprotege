@@ -1,12 +1,17 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeRenderer;
+import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
@@ -22,13 +27,8 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         StringBuilder sb = new StringBuilder();
         sb.append("<div style='display: flex; flex-direction: row; align-items: center;'>");
         String iconIri;
-        if(node.isDeprecated()) {
-            iconIri = WebProtegeClientBundle.BUNDLE.svgDeprecatedClassIcon().getSafeUri().asString();
-        }
-        else {
-            iconIri = WebProtegeClientBundle.BUNDLE.svgClassIcon().getSafeUri().asString();
-        }
-        sb.append("<img src='").append(iconIri).append("'/>");
+        DataResource icon = getIcon(node);
+        sb.append("<img src='").append(icon.getSafeUri().asString()).append("'/>");
         if (node.isDeprecated()) {
             sb.append("<div style=\"text-decoration: line-through; color: #a0a0a0;\">");
         }
@@ -39,7 +39,7 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         sb.append("</div>");
 
         if(node.getOpenCommentCount() > 0) {
-            sb.append("<img style='padding-left: 6px;' src='").append(WebProtegeClientBundle.BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString()).append("'/>");
+            sb.append("<img style='padding-left: 6px;' src='").append(BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString()).append("'/>");
             sb.append("<div style='padding-left: 4px; padding-bottom: 4px; font-size: smaller;'> (").append(node.getOpenCommentCount()).append(")</div>");
         }
         node.getWatches().stream()
@@ -47,14 +47,42 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
                  .forEach(watchType -> {
                      sb.append("<img style='padding-left: 4px;' src='");
                      if(watchType == WatchType.ENTITY) {
-                         sb.append(WebProtegeClientBundle.BUNDLE.svgEyeIcon().getSafeUri().asString());
+                         sb.append(BUNDLE.svgEyeIcon().getSafeUri().asString());
                      }
                      else {
-                         sb.append(WebProtegeClientBundle.BUNDLE.svgEyeIconDown().getSafeUri().asString());
+                         sb.append(BUNDLE.svgEyeIconDown().getSafeUri().asString());
                      }
                      sb.append("'/>");
                  });
         sb.append("</div>");
         return sb.toString();
+    }
+
+    @Nonnull
+    private DataResource getIcon(@Nonnull EntityHierarchyNode node) {
+        OWLEntity entity = node.getEntity();
+        if(entity.isOWLClass()) {
+            if(node.isDeprecated()) {
+                return BUNDLE.svgDeprecatedClassIcon();
+            }
+            else {
+                return BUNDLE.svgClassIcon();
+            }
+        }
+        else if(entity.isOWLObjectProperty()) {
+            return BUNDLE.svgObjectPropertyIcon();
+        }
+        else if(entity.isOWLDataProperty()) {
+            return BUNDLE.svgDataPropertyIcon();
+        }
+        else if(entity.isOWLAnnotationProperty()) {
+            return BUNDLE.svgAnnotationPropertyIcon();
+        }
+        else if(entity.isOWLNamedIndividual()) {
+            return BUNDLE.svgIndividualIcon();
+        }
+        else {
+            return BUNDLE.svgDatatypeIcon();
+        }
     }
 }

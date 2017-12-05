@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditorImpl;
+import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletView;
+import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
@@ -173,4 +175,10 @@ public class ClientProjectModule {
     TreeWidget<EntityHierarchyNode, OWLEntity> providesEntityHierarchyTree() {
         return new TreeWidget<>();
     }
+
+    @Provides
+    PropertyHierarchyPortletView providePropertyHierarchyPortletView(PropertyHierarchyPortletViewImpl impl) {
+        return impl;
+    }
+
 }
