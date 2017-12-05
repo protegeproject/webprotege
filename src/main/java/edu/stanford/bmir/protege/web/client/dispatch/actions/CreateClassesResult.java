@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.protege.gwt.graphtree.shared.Path;
 import org.semanticweb.owlapi.model.OWLClass;
-
-import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
