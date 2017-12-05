@@ -6,14 +6,18 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsResult;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
-import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 30 Nov 2017
@@ -21,20 +25,16 @@ import static java.util.Collections.singletonList;
 public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHandler<GetHierarchyRootsAction, GetHierarchyRootsResult> {
 
     @Nonnull
-    private final ClassHierarchyProvider classHierarchyProvider;
+    private final HierarchyProviderMapper hierarchyProviderMapper;
 
     @Nonnull
     private final EntityHierarchyNodeRenderer renderer;
 
-    @Nonnull
-    private final OWLDataFactory dataFactory;
-
     @Inject
-    public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager, @Nonnull ClassHierarchyProvider classHierarchyProvider, @Nonnull EntityHierarchyNodeRenderer renderer, @Nonnull OWLDataFactory dataFactory) {
+    public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager, @Nonnull HierarchyProviderMapper hierarchyProviderMapper, @Nonnull EntityHierarchyNodeRenderer renderer) {
         super(accessManager);
-        this.classHierarchyProvider = classHierarchyProvider;
+        this.hierarchyProviderMapper = hierarchyProviderMapper;
         this.renderer = renderer;
-        this.dataFactory = dataFactory;
     }
 
     @Override
@@ -44,9 +44,18 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
 
     @Override
     public GetHierarchyRootsResult execute(GetHierarchyRootsAction action, ExecutionContext executionContext) {
-        OWLClass owlThing = dataFactory.getOWLThing();
-        EntityHierarchyNode rootNode = renderer.render(owlThing, executionContext.getUserId());
-        GraphNode<EntityHierarchyNode> graphNode = new GraphNode<>(rootNode, classHierarchyProvider.getChildren(owlThing).isEmpty());
-        return new GetHierarchyRootsResult(singletonList(graphNode));
+        HierarchyId hierarchyId = action.getHierarchyId();
+        return hierarchyProviderMapper.getHierarchyProvider(hierarchyId).map(hierarchyProvider -> {
+            Set<OWLEntity> roots = hierarchyProvider.getRoots();
+            List<GraphNode<EntityHierarchyNode>> rootNodes =
+                    roots.stream()
+                         .map(rootEntity -> {
+                             EntityHierarchyNode rootNode = renderer.render(rootEntity, executionContext.getUserId());
+                             return new GraphNode<>(rootNode, hierarchyProvider.getChildren(rootEntity).isEmpty());
+                         })
+                         .sorted(Comparator.comparing(node -> node.getUserObject().getBrowserText()))
+                         .collect(toList());
+            return new GetHierarchyRootsResult(rootNodes);
+        }).orElse(new GetHierarchyRootsResult(Collections.emptyList()));
     }
 }

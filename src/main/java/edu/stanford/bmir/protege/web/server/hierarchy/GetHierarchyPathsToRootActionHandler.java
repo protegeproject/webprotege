@@ -10,11 +10,13 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
@@ -25,17 +27,16 @@ import static java.util.stream.Collectors.toList;
 public class GetHierarchyPathsToRootActionHandler extends AbstractHasProjectActionHandler<GetHierarchyPathsToRootAction, GetHierarchyPathsToRootResult> {
 
     @Nonnull
-    private final ClassHierarchyProvider classHierarchyProvider;
+    private final HierarchyProviderMapper hierarchyProviderMapper;
 
     @Nonnull
     private final EntityHierarchyNodeRenderer renderer;
 
     @Inject
     public GetHierarchyPathsToRootActionHandler(@Nonnull AccessManager accessManager,
-                                                @Nonnull ClassHierarchyProvider classHierarchyProvider,
-                                                @Nonnull EntityHierarchyNodeRenderer renderer) {
+                                                @Nonnull HierarchyProviderMapper hierarchyProviderMapper, @Nonnull EntityHierarchyNodeRenderer renderer) {
         super(accessManager);
-        this.classHierarchyProvider = classHierarchyProvider;
+        this.hierarchyProviderMapper = hierarchyProviderMapper;
         this.renderer = renderer;
     }
 
@@ -46,24 +47,25 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractHasProjectActi
 
     @Override
     public GetHierarchyPathsToRootResult execute(GetHierarchyPathsToRootAction action, ExecutionContext executionContext) {
-        if(!action.getEntity().isOWLClass()) {
-            return new GetHierarchyPathsToRootResult(Collections.emptyList());
-        }
-        Set<List<OWLClass>> pathsToRoot = classHierarchyProvider.getPathsToRoot(action.getEntity().asOWLClass());
-        List<Path<GraphNode<EntityHierarchyNode>>> result =
-                pathsToRoot.stream()
-                           .map(path -> {
-                               List<GraphNode<EntityHierarchyNode>> nodePath = path.stream()
-                                                                                   .map(cls -> toGraphNode(cls, executionContext.getUserId()))
-                                                                                   .collect(toList());
-                               return new Path<>(nodePath);
-                           }).collect(toList());
-        return new GetHierarchyPathsToRootResult(result);
+        Optional<HierarchyProvider<OWLEntity>> hierarchyProvider = hierarchyProviderMapper.getHierarchyProvider(action.getHierarchyId());
+        return hierarchyProvider.map(hp -> {
+            Set<List<OWLEntity>> pathsToRoot = hp.getPathsToRoot(action.getEntity());
+            List<Path<GraphNode<EntityHierarchyNode>>> result =
+                    pathsToRoot.stream()
+                               .map(path -> {
+                                   List<GraphNode<EntityHierarchyNode>> nodePath = path.stream()
+                                                                                       .map(e -> toGraphNode(e, executionContext.getUserId(), hp))
+                                                                                       .collect(toList());
+                                   return new Path<>(nodePath);
+                               }).collect(toList());
+            return new GetHierarchyPathsToRootResult(result);
+        }).orElse(new GetHierarchyPathsToRootResult(Collections.emptyList()));
+
     }
 
-    private GraphNode<EntityHierarchyNode> toGraphNode(OWLClass cls, UserId userId) {
+    private GraphNode<EntityHierarchyNode> toGraphNode(OWLEntity entity, UserId userId, HierarchyProvider<OWLEntity> hierarchyProvider) {
         return new GraphNode<>(
-                renderer.render(cls, userId),
-                classHierarchyProvider.getChildren(cls).isEmpty());
+                renderer.render(entity, userId),
+                hierarchyProvider.getChildren(entity).isEmpty());
     }
 }
