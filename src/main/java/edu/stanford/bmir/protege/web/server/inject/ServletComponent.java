@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceImpl;
 import edu.stanford.bmir.protege.web.server.download.ProjectDownloadServlet;
-import edu.stanford.bmir.protege.web.server.legacy.OntologyServiceOWLAPIImpl;
 import edu.stanford.bmir.protege.web.server.upload.FileUploadServlet;
 
 import javax.inject.Singleton;
@@ -18,8 +17,6 @@ import javax.inject.Singleton;
 public interface ServletComponent {
 
     DispatchServiceImpl getDispatchService();
-
-    OntologyServiceOWLAPIImpl getOntologyService();
 
     ProjectDownloadServlet getFileDownloadServlet();
 
