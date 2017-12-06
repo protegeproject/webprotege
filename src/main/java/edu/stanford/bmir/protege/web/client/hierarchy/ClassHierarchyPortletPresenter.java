@@ -5,9 +5,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
@@ -34,8 +32,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
-import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
@@ -48,8 +44,6 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
-
-    private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
@@ -74,6 +68,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Nonnull
     private final CreateEntityPresenter createEntityPresenter;
 
+    @Nonnull
+    private final DeleteEntityPresenter deleteEntityPresenter;
+
     private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
 
     private boolean transmittingSelectionFromTree = false;
@@ -81,7 +78,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
-                                          @Nonnull DispatchServiceManager dispatchServiceManager,
                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                           @Nonnull WatchPresenter watchPresenter,
                                           @Nonnull SearchDialogController searchDialogController,
@@ -89,9 +85,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                           @Nonnull EntityHierarchyTreeNodeRenderer renderer,
-                                          @Nonnull CreateEntityPresenter createEntityPresenter) {
+                                          @Nonnull CreateEntityPresenter createEntityPresenter, @Nonnull DeleteEntityPresenter deleteEntityPresenter) {
         super(selectionModel, projectId);
-        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
@@ -105,13 +100,14 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                                    this::handleCreateSubClasses);
 
         this.deleteClassAction = new PortletAction(messages.delete(),
-                                                   this::handleDeleteClass);
+                                                   this::handleDelete);
 
         this.watchClassAction = new PortletAction(messages.watch(),
                                                   this::handleEditWatches);
 
         this.searchAction = new PortletAction(messages.search(),
                                               this::handleSearch);
+        this.deleteEntityPresenter = deleteEntityPresenter;
 
 
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
@@ -196,6 +192,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         );
     }
 
+    private void handleDelete() {
+        deleteEntityPresenter.start(treeWidget);
+    }
+
     private void handleSearch() {
         searchDialogController.setEntityTypes(CLASS);
         WebProtegeDialog.showDialog(searchDialogController);
@@ -205,22 +205,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget.setSelected(entityPath, true, () -> treeWidget.setExpanded(entityPath));
     }
 
-    private void handleDeleteClass() {
-        final Optional<EntityHierarchyNode> currentSelection = treeWidget.getFirstSelectedUserObject();
-        currentSelection.ifPresent(sel -> {
-            OWLEntity entity = sel.getEntity();
-            String subMessage = messages.delete_class_msg(sel.getBrowserText());
-            MessageBox.showConfirmBox(messages.delete_class_title(),
-                                      subMessage,
-                                      CANCEL, DELETE,
-                                      () -> deleteCls(entity),
-                                      CANCEL);
-        });
-    }
 
-    private void deleteCls(final OWLEntity cls) {
-        dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), deleteEntityResult -> {});
-    }
 
     protected void handleEditWatches() {
         final Optional<OWLEntity> sel = treeWidget.getFirstSelectedKey();

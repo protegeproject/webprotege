@@ -90,6 +90,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final CreateEntityPresenter createEntityPresenter;
 
     @Nonnull
+    private final DeleteEntityPresenter deleteEntityPresenter;
+
+    @Nonnull
     private final SearchDialogController searchDialogController;
 
     private boolean transmittingSelection = false;
@@ -108,6 +111,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
+                                             @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                              @Nonnull SearchDialogController searchDialogController) {
         super(selectionModel, projectId);
         this.view = view;
@@ -125,6 +129,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.dataPropertyTree = dataPropertyTree;
         this.annotationPropertyTree = annotationPropertyTree;
         this.createEntityPresenter = createEntityPresenter;
+        this.deleteEntityPresenter = deleteEntityPresenter;
         this.searchDialogController = searchDialogController;
     }
 
@@ -298,7 +303,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleDelete() {
-
+        view.getSelectedHierarchy().ifPresent(treeWidget -> deleteEntityPresenter.start(treeWidget));
     }
 
     private void handleSearch() {
