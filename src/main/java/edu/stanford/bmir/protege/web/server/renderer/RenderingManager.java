@@ -50,10 +50,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     
     private final OWLOntology rootOntology;
 
-    private final OWLDataFactory dataFactory;
-
-    private final WebProtegeLogger logger;
-
     private final ManchesterSyntaxObjectRenderer renderer;
 
     private final OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
@@ -65,13 +61,10 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                             DeprecatedEntityChecker deprecatedChecker,
                             BidirectionalShortFormProvider shortFormProvider,
                             OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                            HighlightedEntityChecker highlightedEntityChecker,
-                            WebProtegeLogger logger) {
+                            HighlightedEntityChecker highlightedEntityChecker) {
         this.rootOntology = rootOnt;
-        this.dataFactory = dataFactory;
         this.shortFormProvider = shortFormProvider;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
-        this.logger = logger;
         this.renderer = new ManchesterSyntaxObjectRenderer(
                 getShortFormProvider(),
                 new EntityIRICheckerImpl(rootOntology),

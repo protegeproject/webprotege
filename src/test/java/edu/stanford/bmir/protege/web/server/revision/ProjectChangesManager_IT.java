@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityCheckerImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.EntityIRICheckerImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.NullHighlightedEntityChecker;
@@ -20,7 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -56,9 +54,6 @@ public class ProjectChangesManager_IT {
     private ProjectChangesManager changesManager;
 
     private ProjectId projectId = ProjectId.get(UUID.randomUUID().toString());
-
-    @Mock
-    private WebProtegeLogger logger;
 
     @Before
     public void setUp() throws Exception {
@@ -107,8 +102,7 @@ public class ProjectChangesManager_IT {
                 new DeprecatedEntityCheckerImpl(rootOntology),
                 new WebProtegeBidirectionalShortFormProvider(rootOntology, webProtegeShortFormProvider),
                 ontologyIRIShortFormProvider,
-                new NullHighlightedEntityChecker(),
-                logger
+                new NullHighlightedEntityChecker()
         );
 
         AxiomComparatorImpl axiomComparator = new AxiomComparatorImpl(
