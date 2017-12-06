@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -209,7 +208,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     protected void handleEditWatches() {
         final Optional<OWLEntity> sel = treeWidget.getFirstSelectedKey();
-        sel.ifPresent(watchPresenter::showDialog);
+        sel.ifPresent(watchPresenter::start);
     }
 
     private void setSelectionInTree(Optional<OWLEntity> selection) {

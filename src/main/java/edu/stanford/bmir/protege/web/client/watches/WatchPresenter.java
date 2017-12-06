@@ -40,7 +40,7 @@ public class WatchPresenter {
         this.loggedInUserProvider = loggedInUserProvider;
     }
 
-    public void showDialog(final OWLEntity forEntity) {
+    public void start(final OWLEntity forEntity) {
         final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetWatchesAction(projectId, userId, forEntity), new DispatchServiceCallback<GetWatchesResult>() {
             @Override

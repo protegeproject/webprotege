@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
+import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -54,6 +55,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final UIAction deleteAction;
 
     @Nonnull
+    private final UIAction watchAction;
+
+    @Nonnull
     private final UIAction searchAction;
 
     @Nonnull
@@ -93,6 +97,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final DeleteEntityPresenter deleteEntityPresenter;
 
     @Nonnull
+    private final WatchPresenter watchPresenter;
+
+    @Nonnull
     private final SearchDialogController searchDialogController;
 
     private boolean transmittingSelection = false;
@@ -112,6 +119,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
+                                             @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull SearchDialogController searchDialogController) {
         super(selectionModel, projectId);
         this.view = view;
@@ -121,6 +129,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
         createAction = new PortletAction(messages.create(), this::handleCreate);
         deleteAction = new PortletAction(messages.delete(), this::handleDelete);
+        watchAction =  new PortletAction(messages.watch(), this::handleWatch);
         searchAction = new PortletAction(messages.search(), this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
@@ -130,6 +139,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.annotationPropertyTree = annotationPropertyTree;
         this.createEntityPresenter = createEntityPresenter;
         this.deleteEntityPresenter = deleteEntityPresenter;
+        this.watchPresenter = watchPresenter;
         this.searchDialogController = searchDialogController;
     }
 
@@ -137,6 +147,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addAction(createAction);
         portletUi.addAction(deleteAction);
+        portletUi.addAction(watchAction);
         portletUi.addAction(searchAction);
 
         startTree(OBJECT_PROPERTY_HIERARCHY,
@@ -304,6 +315,14 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleDelete() {
         view.getSelectedHierarchy().ifPresent(treeWidget -> deleteEntityPresenter.start(treeWidget));
+    }
+
+    private void handleWatch() {
+        view.getSelectedHierarchy().ifPresent(treeWidget -> {
+            treeWidget.getFirstSelectedKey().ifPresent(selection -> {
+                watchPresenter.start(selection);
+            });
+        });
     }
 
     private void handleSearch() {
