@@ -44,11 +44,6 @@ a {
     text-decoration: underline;
 }
 
-ul.disc {
-    list-style-type: disc;
-    padding: 15px;
-}
-
 pre {
     margin: 0;
     padding: 0;
