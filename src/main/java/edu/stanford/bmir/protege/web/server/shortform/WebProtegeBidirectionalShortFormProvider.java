@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
@@ -43,7 +44,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
 
         OWLOntologyManager manager = rootOntology.getOWLOntologyManager();
         manager.addOntologyChangeListener(new OWLOntologyChangeListener() {
-            public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
+            public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws OWLException {
                 updateRenderings(changes);
             }
         });
@@ -76,7 +77,8 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
         }
     }
 
-    public Set<OWLEntity> getEntities(String shortForm) {
+    @Nonnull
+    public Set<OWLEntity> getEntities(@Nonnull String shortForm) {
         try {
             readWriteLock.readLock().lock();
             return delegate.getEntities(shortForm);
@@ -86,7 +88,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
         }
     }
 
-    public OWLEntity getEntity(String shortForm) {
+    public OWLEntity getEntity(@Nonnull String shortForm) {
         try {
             readWriteLock.readLock().lock();
             return delegate.getEntity(shortForm);
@@ -96,6 +98,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
         }
     }
 
+    @Nonnull
     public Set<String> getShortForms() {
         try {
             readWriteLock.readLock().lock();
@@ -106,7 +109,8 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
         }
     }
 
-    public String getShortForm(OWLEntity entity) {
+    @Nonnull
+    public String getShortForm(@Nonnull OWLEntity entity) {
         try {
             readWriteLock.readLock().lock();
             return delegate.getShortForm(entity);
