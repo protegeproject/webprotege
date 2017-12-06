@@ -70,14 +70,10 @@ public class DeleteEntityPresenter {
                                           browserText);
     }
 
-    private void deleteEntity(@Nonnull OWLEntity cls, TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
-//        treeWidget.getSelectedNodes().stream()
-//                  .map(node -> node.getId())
-//                  .map(nodeId -> treeWidget.getPathToRoot(nodeId))
-//                  .map(pathToRoot -> pathToRoot.getLastPredecessor())
-        dispatchServiceManager.execute(new DeleteEntityAction(cls, projectId), deleteEntityResult -> {
-
-        });
+    private void deleteEntity(@Nonnull OWLEntity cls,
+                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
+        treeWidget.moveSelectionDown();
+        dispatchServiceManager.execute(new DeleteEntityAction(cls, projectId), deleteEntityResult -> {});
     }
 
 }
