@@ -7,10 +7,12 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesAction;
+import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -52,6 +54,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final UIAction deleteAction;
 
     @Nonnull
+    private final UIAction searchAction;
+
+    @Nonnull
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Nonnull
@@ -84,6 +89,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final CreateEntityPresenter createEntityPresenter;
 
+    @Nonnull
+    private final SearchDialogController searchDialogController;
+
     private boolean transmittingSelection = false;
 
     @Inject
@@ -99,7 +107,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> objectPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
-                                             @Nonnull CreateEntityPresenter createEntityPresenter) {
+                                             @Nonnull CreateEntityPresenter createEntityPresenter,
+                                             @Nonnull SearchDialogController searchDialogController) {
         super(selectionModel, projectId);
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
@@ -108,6 +117,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
         createAction = new PortletAction(messages.create(), this::handleCreate);
         deleteAction = new PortletAction(messages.delete(), this::handleDelete);
+        searchAction = new PortletAction(messages.search(), this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
         this.annotationPropertyHierarchyModel = annotationPropertyHierarchyModel;
@@ -115,12 +125,14 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.dataPropertyTree = dataPropertyTree;
         this.annotationPropertyTree = annotationPropertyTree;
         this.createEntityPresenter = createEntityPresenter;
+        this.searchDialogController = searchDialogController;
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addAction(createAction);
         portletUi.addAction(deleteAction);
+        portletUi.addAction(searchAction);
 
         startTree(OBJECT_PROPERTY_HIERARCHY,
                   messages.hierarchy_objectproperties(),
@@ -287,6 +299,11 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     private void handleDelete() {
 
+    }
+
+    private void handleSearch() {
+        searchDialogController.setEntityTypes(OBJECT_PROPERTY, DATA_PROPERTY, ANNOTATION_PROPERTY);
+        WebProtegeDialog.showDialog(searchDialogController);
     }
 
     private void updateButtonStates() {
