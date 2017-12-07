@@ -26,12 +26,9 @@ public class CreateEntityForm extends WebProtegeDialogForm {
 
     private ExpandingTextBox entityBrowserTextField;
 
-    private EntityType<?> entityType;
-
     private static ExpandingTextBoxMode mode = ExpandingTextBoxMode.MULTI_LINE;
 
     public CreateEntityForm(EntityType<?> type) {
-        this.entityType = type;
         entityBrowserTextField = new ExpandingTextBox();
         entityBrowserTextField.setWidth("450px");
         entityBrowserTextField.setMode(mode);
@@ -43,7 +40,7 @@ public class CreateEntityForm extends WebProtegeDialogForm {
 
     public List<String> getEntityBrowserText() {
         String enteredText = entityBrowserTextField.getText().trim();
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         RegExp regExp = RegExp.compile("\n");
         SplitResult split = regExp.split(enteredText);
         for(int i = 0; i < split.length(); i++) {
