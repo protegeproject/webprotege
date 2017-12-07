@@ -26,7 +26,7 @@ import javax.inject.Inject;
  *     using a GWT {@link SuggestBox}.
  * </p>
  */
-public class ExpandingTextBox extends Composite implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasAnchor {
+public class ExpandingTextBox extends Composite implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasAnchor, HasOneWidget {
 
     private final ExpandingTextBoxImpl impl;
 
@@ -34,6 +34,21 @@ public class ExpandingTextBox extends Composite implements Focusable, HasText, H
     public ExpandingTextBox() {
         impl = new ExpandingTextBoxImpl();
         initWidget(impl);
+    }
+
+    @Override
+    public void setWidget(IsWidget isWidget) {
+        throw new RuntimeException("Not Allowed");
+    }
+
+    @Override
+    public Widget getWidget() {
+        return impl;
+    }
+
+    @Override
+    public void setWidget(Widget widget) {
+        setWidget((IsWidget) widget);
     }
 
     public ExpandingTextBoxMode getMode() {

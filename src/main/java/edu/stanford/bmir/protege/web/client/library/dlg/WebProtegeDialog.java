@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.library.dlg;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -114,12 +115,14 @@ public final class WebProtegeDialog<D> extends DialogBox {
         }
 
 
-
         if (widget instanceof HasWidgets) {
             HasWidgets hasWidgets = (HasWidgets) widget;
             for (Widget childWidget : hasWidgets) {
                 attachAcceleratorKeyHandlers(childWidget, handlerRegistrations);
             }
+        }
+        else if(widget instanceof HasOneWidget) {
+            attachAcceleratorKeyHandlers(((HasOneWidget) widget).getWidget(), handlerRegistrations);
         }
     }
 
@@ -210,6 +213,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
         public void onKeyDown(KeyDownEvent event) {
             if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && event.isControlKeyDown()) {
+                GWT.log("[WebProtegeDialog] CTRL+ENTER Accelerator pressed");
                 hideWithDefaultButton();
             }
         }

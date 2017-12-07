@@ -23,6 +23,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.gwt.event.dom.client.KeyCodes.KEY_ENTER;
+import static edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode.MULTI_LINE;
+import static edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBoxMode.SINGLE_LINE;
 
 /**
  * Author: Matthew Horridge<br>
@@ -79,7 +82,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     @UiField
     protected Anchor anchor;
 
-    private ExpandingTextBoxMode mode = ExpandingTextBoxMode.SINGLE_LINE;
+    private ExpandingTextBoxMode mode = SINGLE_LINE;
 
     private AcceptKeyHandler acceptKeyHandler = () -> {};
 
@@ -94,18 +97,18 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         setWidget(rootElement);
         textArea.addKeyUpHandler(event -> doPreElements(false));
         textArea.addKeyDownHandler(event -> {
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.SINGLE_LINE) {
+            if ((event.getNativeKeyCode() == KEY_ENTER) && (mode == SINGLE_LINE)) {
                 event.preventDefault();
                 acceptKeyHandler.handleAcceptKey();
             }
-            else if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && isCurrentTextAutoCompleted(textArea)) {
+            else if((event.getNativeKeyCode() == KEY_ENTER) && (mode == MULTI_LINE) && isCurrentTextAutoCompleted(textArea)) {
                 event.preventDefault();
             }
-            else if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && event.isControlKeyDown()) {
+            else if (event.getNativeKeyCode() == KEY_ENTER && mode == MULTI_LINE && event.isControlKeyDown()) {
                 event.preventDefault();
                 acceptKeyHandler.handleAcceptKey();
             }
-            doPreElements(mode == ExpandingTextBoxMode.MULTI_LINE && event.getNativeKeyCode() == KeyCodes.KEY_ENTER && (!event.isControlKeyDown() && !isCurrentTextAutoCompleted(textArea)));
+            doPreElements(mode == MULTI_LINE && event.getNativeKeyCode() == KEY_ENTER && (!event.isControlKeyDown() && !isCurrentTextAutoCompleted(textArea)));
         });
         // Regain the focus after the suggest box closes (doesn't seem to happen by default here).
         suggestBox.addSelectionHandler(event -> {

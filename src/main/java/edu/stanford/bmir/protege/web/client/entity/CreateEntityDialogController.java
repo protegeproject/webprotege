@@ -33,7 +33,7 @@ public class CreateEntityDialogController extends WebProtegeDialogController<Cre
         for(WebProtegeDialogValidator validator : form.getDialogValidators()) {
             addDialogValidator(validator);
         }
-        setDialogButtonHandler(DialogButton.get(messages.create()), (data, closer) -> {
+        setDialogButtonHandler(CREATE, (data, closer) -> {
             handler.handleCreateEntity(data);
             closer.hide();
         });
