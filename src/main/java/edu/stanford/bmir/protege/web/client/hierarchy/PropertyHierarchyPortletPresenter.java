@@ -33,8 +33,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.*;
@@ -44,9 +44,6 @@ import static org.semanticweb.owlapi.model.EntityType.*;
         title = "Property Hierarchy",
         tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
 public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
-
-    @Nonnull
-    private final DispatchServiceManager dispatchServiceManager;
 
     @Nonnull
     private final UIAction createAction;
@@ -59,9 +56,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
     @Nonnull
     private final UIAction searchAction;
-
-    @Nonnull
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Nonnull
     private final Messages messages;
@@ -102,13 +96,14 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final SearchDialogController searchDialogController;
 
+    @Nonnull
+    private final HierarchyActionStatePresenter actionStatePresenter;
+
     private boolean transmittingSelection = false;
 
     @Inject
     public PropertyHierarchyPortletPresenter(@Nonnull SelectionModel selectionModel,
-                                             @Nonnull DispatchServiceManager dispatchServiceManager,
                                              @Nonnull ProjectId projectId,
-                                             @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                              @Nonnull Messages messages,
                                              @Nonnull PropertyHierarchyPortletView view,
                                              @Nonnull EntityHierarchyModel objectPropertyHierarchyModel,
@@ -120,17 +115,15 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                              @Nonnull WatchPresenter watchPresenter,
-                                             @Nonnull SearchDialogController searchDialogController) {
+                                             @Nonnull SearchDialogController searchDialogController,
+                                             @Nonnull HierarchyActionStatePresenter actionStatePresenter) {
         super(selectionModel, projectId);
         this.view = view;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.permissionChecker = permissionChecker;
         this.messages = messages;
-
-        createAction = new PortletAction(messages.create(), this::handleCreate);
-        deleteAction = new PortletAction(messages.delete(), this::handleDelete);
-        watchAction =  new PortletAction(messages.watch(), this::handleWatch);
-        searchAction = new PortletAction(messages.search(), this::handleSearch);
+        this.createAction = new PortletAction(messages.create(), this::handleCreate);
+        this.deleteAction = new PortletAction(messages.delete(), this::handleDelete);
+        this.watchAction =  new PortletAction(messages.watch(), this::handleWatch);
+        this.searchAction = new PortletAction(messages.search(), this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
         this.annotationPropertyHierarchyModel = annotationPropertyHierarchyModel;
@@ -141,6 +134,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.deleteEntityPresenter = deleteEntityPresenter;
         this.watchPresenter = watchPresenter;
         this.searchDialogController = searchDialogController;
+        this.actionStatePresenter = actionStatePresenter;
     }
 
     @Override
@@ -149,6 +143,10 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         portletUi.addAction(deleteAction);
         portletUi.addAction(watchAction);
         portletUi.addAction(searchAction);
+
+        actionStatePresenter.registerAction(CREATE_PROPERTY, createAction);
+        actionStatePresenter.registerAction(DELETE_PROPERTY, deleteAction);
+        actionStatePresenter.registerAction(WATCH_CHANGES, watchAction);
 
         startTree(OBJECT_PROPERTY_HIERARCHY,
                   messages.hierarchy_objectproperties(),
@@ -165,11 +163,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                   eventBus,
                   annotationPropertyHierarchyModel, annotationPropertyTree);
 
+        actionStatePresenter.start(eventBus);
+
         view.setHierarchyIdSelectedHandler(this::handleHierarchyChanged);
 
         view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
 
-        updateButtonStates();
         setSelectionInTree(getSelectedEntity());
         portletUi.setWidget(view);
     }
@@ -200,7 +199,6 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         view.addHierarchy(hierarchyId,
                           label,
                           treeWidget);
-
     }
 
     private void handleSelectionChanged(SelectionChangeEvent selectionChangeEvent) {
@@ -329,10 +327,4 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         searchDialogController.setEntityTypes(OBJECT_PROPERTY, DATA_PROPERTY, ANNOTATION_PROPERTY);
         WebProtegeDialog.showDialog(searchDialogController);
     }
-
-    private void updateButtonStates() {
-        permissionChecker.hasPermission(CREATE_PROPERTY, enabled -> createAction.setEnabled(enabled));
-        permissionChecker.hasPermission(DELETE_PROPERTY, enabled -> deleteAction.setEnabled(enabled));
-    }
-
 }

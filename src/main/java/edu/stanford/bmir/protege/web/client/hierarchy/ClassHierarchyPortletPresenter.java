@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -28,12 +29,11 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
-import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
@@ -43,8 +43,6 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPresenter {
-
-    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private final WatchPresenter watchPresenter;
 
@@ -70,6 +68,10 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Nonnull
     private final DeleteEntityPresenter deleteEntityPresenter;
 
+    @Nonnull
+    private final HierarchyActionStatePresenter actionStatePresenter;
+
+    @Nonnull
     private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
 
     private boolean transmittingSelectionFromTree = false;
@@ -77,16 +79,15 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
-                                          @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                           @Nonnull WatchPresenter watchPresenter,
                                           @Nonnull SearchDialogController searchDialogController,
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                           @Nonnull EntityHierarchyTreeNodeRenderer renderer,
-                                          @Nonnull CreateEntityPresenter createEntityPresenter, @Nonnull DeleteEntityPresenter deleteEntityPresenter) {
+                                          @Nonnull CreateEntityPresenter createEntityPresenter,
+                                          @Nonnull DeleteEntityPresenter deleteEntityPresenter, @Nonnull HierarchyActionStatePresenter actionStatePresenter) {
         super(selectionModel, projectId);
-        this.permissionChecker = checkNotNull(permissionChecker);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
@@ -107,6 +108,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.searchAction = new PortletAction(messages.search(),
                                               this::handleSearch);
         this.deleteEntityPresenter = deleteEntityPresenter;
+        this.actionStatePresenter = actionStatePresenter;
 
 
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
@@ -126,17 +128,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
 
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
-                                        event -> updateButtonStates());
+        actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
+        actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
+        actionStatePresenter.registerAction(WATCH_CHANGES, watchClassAction);
 
-        eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
-                                            event -> updateButtonStates());
-
-        eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
-                                            event -> updateButtonStates());
-
-        updateButtonStates();
+        actionStatePresenter.start(eventBus);
 
         hierarchyModel.start(eventBus, CLASS_HIERARCHY);
         treeWidget.setRenderer(renderer);
@@ -149,21 +145,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                     deleteClassAction);
 
         setSelectionInTree(getSelectedEntity());
-    }
-
-
-    public void updateButtonStates() {
-        createClassAction.setEnabled(false);
-        deleteClassAction.setEnabled(false);
-        watchClassAction.setEnabled(false);
-        // Note that the following action handlers cause GWT compile problems if method references
-        // are used for some reason
-        permissionChecker.hasPermission(CREATE_CLASS,
-                                        enabled -> createClassAction.setEnabled(enabled));
-        permissionChecker.hasPermission(DELETE_CLASS,
-                                        enabled -> deleteClassAction.setEnabled(enabled));
-        permissionChecker.hasPermission(WATCH_CHANGES,
-                                        enabled -> watchClassAction.setEnabled(enabled));
     }
 
     private Optional<OWLClass> getFirstSelectedClass() {
