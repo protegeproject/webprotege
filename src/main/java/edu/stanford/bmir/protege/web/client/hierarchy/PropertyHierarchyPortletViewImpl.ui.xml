@@ -6,6 +6,7 @@
         .main {
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
         .switcher {
             flex-grow: 0;
