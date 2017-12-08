@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult;
@@ -15,10 +17,12 @@ import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static java.util.Comparator.comparing;
 
 /**
@@ -49,6 +53,12 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectAc
     @Override
     public Class<GetHierarchyChildrenAction> getActionClass() {
         return GetHierarchyChildrenAction.class;
+    }
+
+    @Nullable
+    @Override
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return VIEW_PROJECT;
     }
 
     @Override

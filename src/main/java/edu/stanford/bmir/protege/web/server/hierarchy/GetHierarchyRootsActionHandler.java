@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsResult;
@@ -11,12 +12,14 @@ import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -40,6 +43,12 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
     @Override
     public Class<GetHierarchyRootsAction> getActionClass() {
         return GetHierarchyRootsAction.class;
+    }
+    
+    @Nullable
+    @Override
+    protected BuiltInAction getRequiredExecutableBuiltInAction() {
+        return VIEW_PROJECT;
     }
 
     @Override
