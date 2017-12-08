@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -20,6 +19,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -71,7 +71,7 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
 
     @Override
     protected ChangeListGenerator<Set<OWLClass>> getChangeListGenerator(CreateClassesAction action, ExecutionContext executionContext) {
-        return new CreateClassesChangeGenerator(action.getBrowserTexts(),
+        return new CreateClassesChangeGenerator(action.getSourceText(),
                                                 action.getParent(),
                                                 rootOntology,
                                                 dataFactory);
@@ -79,7 +79,7 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
 
     @Override
     protected ChangeDescriptionGenerator<Set<OWLClass>> getChangeDescription(CreateClassesAction action, ExecutionContext executionContext) {
-        return createChangeText(action);
+        return new FixedMessageChangeDescriptionGenerator<>("Created classes");
     }
 
     @Override
@@ -89,16 +89,16 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
                       .orElse(new CreateClassesResult(action.getProjectId(), ImmutableSet.of(), eventList));
     }
 
-    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action) {
+    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action, Collection<String> shortForms) {
         String msg;
-        if (action.getBrowserTexts().size() > 1) {
+        if (shortForms.size() > 1) {
             msg = "Added {0} as subclasses of {1}";
         }
         else {
             msg = "Added {0} as a subclass of {1}";
         }
         return new FixedMessageChangeDescriptionGenerator<>(formatMessage(msg, renderingManager,
-                                                                          action.getBrowserTexts(),
+                                                                          shortForms,
                                                                           action.getParent()
                                                                                 .orElse(dataFactory.getOWLThing())));
     }

@@ -27,11 +27,11 @@ public class CreateDataPropertiesChangeGenerator extends AbstractCreateEntitiesC
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public CreateDataPropertiesChangeGenerator(@Nonnull Set<String> browserTexts,
+    public CreateDataPropertiesChangeGenerator(@Nonnull String sourceText,
                                                @Nonnull Optional<OWLDataProperty> parent,
                                                @Nonnull OWLOntology rootOntology,
                                                @Nonnull OWLDataFactory dataFactory) {
-        super(DATA_PROPERTY, browserTexts, parent, rootOntology, dataFactory);
+        super(DATA_PROPERTY, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

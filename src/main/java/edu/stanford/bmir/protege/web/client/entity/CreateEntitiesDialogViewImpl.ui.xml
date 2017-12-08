@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <g:HTMLPanel>
+        <text:ExpandingTextBoxImpl ui:field="textBox"
+                                   mode="MULTI_LINE"
+                                   placeholder="{msg.createEntityInstructions}"
+                                   anchorVisible="false"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -26,11 +26,11 @@ public class CreateIndividualsChangeListGenerator extends AbstractCreateEntities
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public CreateIndividualsChangeListGenerator(@Nonnull Set<String> browserTexts,
+    public CreateIndividualsChangeListGenerator(@Nonnull String sourceText,
                                                 @Nonnull Optional<OWLClass> parent,
                                                 @Nonnull OWLOntology rootOntology,
                                                 @Nonnull OWLDataFactory dataFactory) {
-        super(NAMED_INDIVIDUAL, browserTexts, parent, rootOntology, dataFactory);
+        super(NAMED_INDIVIDUAL, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

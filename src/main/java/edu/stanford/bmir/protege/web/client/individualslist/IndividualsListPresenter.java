@@ -7,8 +7,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.inject.ActiveProjectIdProvider;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -57,14 +56,19 @@ public class IndividualsListPresenter {
 
     private final IndividualsListView view;
 
-    private final ActiveProjectIdProvider activeProjectIdProvider;
+    @Nonnull
+    private final ProjectId projectId;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     private final UIAction createAction;
+
     private final UIAction deleteAction;
+
     private Optional<OWLClass> currentType = Optional.empty();
-    private EntityDisplay entityDisplay = entityData -> {
-    };
+
+    private EntityDisplay entityDisplay = entityData -> { };
+
     private final Timer searchStringDelayTimer = new Timer() {
         @Override
         public void run() {
@@ -72,18 +76,23 @@ public class IndividualsListPresenter {
         }
     };
 
+    @Nonnull
+    private final CreateEntitiesDialogController controller;
+
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
+                                    @Nonnull ProjectId projectId,
                                     final SelectionModel selectionModel,
-                                    ActiveProjectIdProvider projectIdProvider,
                                     DispatchServiceManager dispatchServiceManager,
                                     LoggedInUserProjectPermissionChecker permissionChecker,
-                                    Messages messages) {
-        this.activeProjectIdProvider = projectIdProvider;
+                                    Messages messages,
+                                    @Nonnull CreateEntitiesDialogController controller) {
+        this.projectId = projectId;
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.messages = messages;
+        this.controller = controller;
         view.addSelectionHandler(event -> {
             OWLNamedIndividualData selectedItem = event.getSelectedItem();
             if (selectedItem != null) {
@@ -130,7 +139,6 @@ public class IndividualsListPresenter {
     }
 
     private void updateList() {
-        ProjectId projectId = activeProjectIdProvider.get();
         GetIndividualsAction action = new GetIndividualsAction(projectId,
                 currentType.orElse(DataFactory.getOWLThing()),
                 view.getSearchString(),
@@ -166,19 +174,19 @@ public class IndividualsListPresenter {
     }
 
     private void handleCreateIndividuals() {
-        CreateEntityDialogController controller = new CreateEntityDialogController(EntityType.NAMED_INDIVIDUAL, createEntityInfo -> {
-            final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
-            ProjectId projectId = activeProjectIdProvider.get();
-            dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts),
-                    result -> {
-                        Set<OWLNamedIndividualData> individuals = result.getIndividuals();
-                        view.addListData(individuals);
-                        if (!individuals.isEmpty()) {
-                            OWLNamedIndividualData next = individuals.iterator().next();
-                            view.setSelectedIndividual(next);
-                        }
-                    });
-        }, messages);
+        controller.clear();
+        controller.setEntityType(EntityType.NAMED_INDIVIDUAL);
+        controller.setCreateEntityHandler(createFromText -> {
+            dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, createFromText),
+                                           result -> {
+                                               Set<OWLNamedIndividualData> individuals = result.getIndividuals();
+                                               view.addListData(individuals);
+                                               if (!individuals.isEmpty()) {
+                                                   OWLNamedIndividualData next = individuals.iterator().next();
+                                                   view.setSelectedIndividual(next);
+                                               }
+                                           });
+        });
         WebProtegeDialog.showDialog(controller);
     }
 
@@ -190,11 +198,11 @@ public class IndividualsListPresenter {
         String subMessage;
         String title;
         if (sel.size() == 1) {
-            title = "Delete Individual";
-            subMessage = "Are you sure you want to delete " + sel.iterator().next().getBrowserText() + "?";
+            title = messages.delete_entity_title("individual");
+            subMessage = messages.delete_entity_msg("individual", sel.iterator().next().getBrowserText());
         }
         else {
-            title = "Delete Iindividuals";
+            title = messages.delete_entity_title("individuals");
             subMessage = "Are you sure you want to delete " + sel.size() + " individuals?";
         }
         MessageBox.showConfirmBox(title,
@@ -207,7 +215,6 @@ public class IndividualsListPresenter {
 
     private void deleteSelectedIndividuals() {
         Collection<OWLNamedIndividualData> selection = view.getSelectedIndividuals();
-        ProjectId projectId = activeProjectIdProvider.get();
         Set<OWLEntity> entities = view.getSelectedIndividuals().stream()
                 .map(OWLNamedIndividualData::getEntity)
                 .collect(toSet());

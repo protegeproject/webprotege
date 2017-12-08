@@ -24,9 +24,9 @@ public abstract class CreateEntitiesInHierarchyAction<R extends CreateEntitiesIn
     }
 
     public CreateEntitiesInHierarchyAction(@Nonnull ProjectId projectId,
-                                           @Nonnull ImmutableSet<String> browserTexts,
+                                           @Nonnull String createFromText,
                                            @Nonnull Optional<E> parent) {
-        super(projectId, browserTexts);
+        super(projectId, createFromText);
         this.parent = parent.orElse(null);
     }
 

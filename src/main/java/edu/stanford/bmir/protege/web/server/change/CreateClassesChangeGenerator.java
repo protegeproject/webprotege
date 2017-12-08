@@ -26,11 +26,11 @@ public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeLi
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public CreateClassesChangeGenerator(@Nonnull Set<String> browserTexts,
+    public CreateClassesChangeGenerator(@Nonnull String sourceText,
                                         @Nonnull Optional<OWLClass> parent,
                                         @Nonnull OWLOntology rootOntology,
                                         @Nonnull OWLDataFactory dataFactory) {
-        super(CLASS, browserTexts, parent, rootOntology, dataFactory);
+        super(CLASS, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

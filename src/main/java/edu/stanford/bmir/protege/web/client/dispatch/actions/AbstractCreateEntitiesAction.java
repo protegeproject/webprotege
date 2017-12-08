@@ -1,16 +1,11 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,22 +17,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class AbstractCreateEntitiesAction<R extends AbstractCreateEntityResult<E>, E extends OWLEntity> extends AbstractHasProjectAction<R> {
 
-    private ImmutableSet<String> browserTexts;
+    private String sourceText;
 
     public AbstractCreateEntitiesAction(@Nonnull ProjectId projectId,
-                                        @Nonnull ImmutableSet<String> browserTexts) {
+                                        @Nonnull String sourceText) {
         super(projectId);
-        this.browserTexts = checkNotNull(browserTexts);
+        this.sourceText = checkNotNull(sourceText);
     }
 
     @GwtSerializationConstructor
     protected AbstractCreateEntitiesAction() {
     }
 
-    @Nonnull
-    public ImmutableSet<String> getBrowserTexts() {
-        return browserTexts;
+    public String getSourceText() {
+        return sourceText;
     }
-
-
 }

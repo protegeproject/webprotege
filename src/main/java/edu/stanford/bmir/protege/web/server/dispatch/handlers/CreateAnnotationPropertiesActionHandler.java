@@ -19,8 +19,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -66,7 +64,7 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     @Override
     protected ChangeListGenerator<Set<OWLAnnotationProperty>> getChangeListGenerator(CreateAnnotationPropertiesAction action,
                                                                                      ExecutionContext executionContext) {
-        return new CreateAnnotationPropertiesChangeGenerator(action.getBrowserTexts(),
+        return new CreateAnnotationPropertiesChangeGenerator(action.getSourceText(),
                                                              action.getParent(),
                                                              rootOntology,
                                                              dataFactory);

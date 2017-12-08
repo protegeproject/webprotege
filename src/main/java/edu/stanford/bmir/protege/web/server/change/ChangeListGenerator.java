@@ -24,6 +24,4 @@ public interface ChangeListGenerator<R> {
     OntologyChangeList<R> generateChanges(ChangeGenerationContext context);
 
     R getRenamedResult(R result, RenameMap renameMap);
-
-
 }

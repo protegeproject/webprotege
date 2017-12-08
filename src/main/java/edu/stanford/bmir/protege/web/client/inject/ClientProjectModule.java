@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.editor.OWLEntityContext;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
 import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.frame.ManchesterSyntaxFrameEditor;
@@ -178,6 +180,11 @@ public class ClientProjectModule {
 
     @Provides
     PropertyHierarchyPortletView providePropertyHierarchyPortletView(PropertyHierarchyPortletViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CreateEntityDialogView providesCreateEntityDialogView(CreateEntitiesDialogViewImpl impl) {
         return impl;
     }
 

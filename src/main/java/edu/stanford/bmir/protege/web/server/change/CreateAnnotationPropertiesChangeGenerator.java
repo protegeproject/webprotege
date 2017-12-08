@@ -26,11 +26,11 @@ public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEnt
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public CreateAnnotationPropertiesChangeGenerator(@Nonnull Set<String> browserTexts,
+    public CreateAnnotationPropertiesChangeGenerator(@Nonnull String sourceText,
                                                      @Nonnull Optional<OWLAnnotationProperty> parent,
                                                      @Nonnull OWLOntology rootOntology,
                                                      @Nonnull OWLDataFactory dataFactory) {
-        super(ANNOTATION_PROPERTY, browserTexts, parent, rootOntology, dataFactory);
+        super(ANNOTATION_PROPERTY, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
