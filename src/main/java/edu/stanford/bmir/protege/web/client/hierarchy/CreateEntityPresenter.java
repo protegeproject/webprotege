@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateEntitiesInHierarchyAction;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogController;
-import edu.stanford.bmir.protege.web.client.entity.CreateEntityInfo;
+import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -27,42 +25,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CreateEntityPresenter {
 
     @Nonnull
-    private final Messages messages;
-    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
+
     @Nonnull
     private final ProjectId projectId;
 
+    @Nonnull
+    private CreateEntitiesDialogController dialogController;
+
     @Inject
-    public CreateEntityPresenter(@Nonnull Messages messages,
-                                 @Nonnull DispatchServiceManager dispatchServiceManager,
-                                 @Nonnull ProjectId projectId) {
-        this.messages = checkNotNull(messages);
+    public CreateEntityPresenter(@Nonnull DispatchServiceManager dispatchServiceManager,
+                                 @Nonnull ProjectId projectId,
+                                 @Nonnull CreateEntitiesDialogController dialogController) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
+        this.dialogController = checkNotNull(dialogController);
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
                                TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                @Nonnull ActionFactory actionFactory) {
-
-        CreateEntityDialogController.CreateEntityHandler createEntityHandler = createEntityInfo ->
-                handleCreateEntities(createEntityInfo, actionFactory, treeWidget);
-        CreateEntityDialogController controller = new CreateEntityDialogController(checkNotNull(entityType),
-                                                                                   createEntityHandler,
-                                                                                   messages);
-        WebProtegeDialog.showDialog(controller);
+        dialogController.clear();
+        dialogController.setEntityType(entityType);
+        dialogController.setCreateEntityHandler(createEntityInfo -> {
+            handleCreateEntities(createEntityInfo, actionFactory, treeWidget);
+        });
+        WebProtegeDialog.showDialog(dialogController);
     }
 
-    private void handleCreateEntities(@Nonnull CreateEntityInfo createEntityInfo,
+    private void handleCreateEntities(@Nonnull String enteredText,
                                       @Nonnull ActionFactory actionFactory,
                                       @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
 
-        final Set<String> browserTexts = createEntityInfo.getBrowserTexts().stream()
-                                                         .filter(browserText -> !browserText.trim().isEmpty())
-                                                         .collect(Collectors.toSet());
         CreateEntitiesInHierarchyAction<?, ?> action = actionFactory.createAction(projectId,
-                                                                                  ImmutableSet.copyOf(createEntityInfo.getBrowserTexts()));
+                                                                                  enteredText);
         dispatchServiceManager.execute(action,
                                        result -> {
                                            result.getEntities().stream()
@@ -83,6 +79,6 @@ public class CreateEntityPresenter {
     interface ActionFactory {
         CreateEntitiesInHierarchyAction<?, ?> createAction(
                 @Nonnull ProjectId projectId,
-                @Nonnull ImmutableSet<String> browserText);
+                @Nonnull String createFromText);
     }
 }

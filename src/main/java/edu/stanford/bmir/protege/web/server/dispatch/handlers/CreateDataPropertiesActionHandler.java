@@ -63,7 +63,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     @Override
     protected ChangeListGenerator<Set<OWLDataProperty>> getChangeListGenerator(CreateDataPropertiesAction action,
                                                                                ExecutionContext executionContext) {
-        return new CreateDataPropertiesChangeGenerator(action.getBrowserTexts(),
+        return new CreateDataPropertiesChangeGenerator(action.getSourceText(),
                                                        action.getParent(),
                                                        rootOntology,
                                                        dataFactory);
@@ -72,14 +72,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     @Override
     protected ChangeDescriptionGenerator<Set<OWLDataProperty>> getChangeDescription(CreateDataPropertiesAction action,
                                                                                     ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>(action.getBrowserTexts().size() == 1 ?
-                                                                    String.format("Created data property %s as a sub-property of %s",
-                                                                                  action.getBrowserTexts().iterator().next(),
-                                                                                  action.getParent()
-                                                                                        .map(renderingManager::getBrowserText)
-                                                                                        .orElse("owl:topDataProperty"))
-                                                                    :
-                                                                    "Created data properties");
+        return new FixedMessageChangeDescriptionGenerator<>("Created data properties");
     }
 
     @Override

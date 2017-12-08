@@ -21,11 +21,11 @@ public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitie
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-    public CreateObjectPropertiesChangeGenerator(@Nonnull Set<String> browserTexts,
+    public CreateObjectPropertiesChangeGenerator(@Nonnull String sourceText,
                                                  @Nonnull Optional<OWLObjectProperty> parent,
                                                  @Nonnull OWLOntology rootOntology,
                                                  @Nonnull OWLDataFactory dataFactory) {
-        super(OBJECT_PROPERTY, browserTexts, parent, rootOntology, dataFactory);
+        super(OBJECT_PROPERTY, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

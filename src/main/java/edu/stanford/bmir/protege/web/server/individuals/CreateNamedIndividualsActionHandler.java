@@ -71,7 +71,7 @@ public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActio
                                                 ExecutionContext executionContext) {
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
                                                                                                 new CreateIndividualsChangeListGenerator(
-                                                                                                        action.getShortNames(),
+                                                                                                        action.getSourceText(),
                                                                                                         action.getType(),
                                                                                                         rootOntology,
                                                                                                         dataFactory),

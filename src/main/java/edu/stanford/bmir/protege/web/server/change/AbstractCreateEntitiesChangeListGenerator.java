@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityShortFormsParser;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
@@ -29,7 +30,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     private final EntityType<E> entityType;
 
     @Nonnull
-    private final Set<String> browserTexts;
+    private final String sourceText;
 
     @Nonnull
     private final Optional<P> parent;
@@ -58,18 +59,18 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     /**
      * Constructs an {@link AbstractCreateEntitiesChangeListGenerator}.
      * @param entityType The type of entities that are created by this change generator.  Not {@code null}.
-     * @param browserTexts The set of browser text strings that correspond to short names of the fresh entities that will
+     * @param sourceText The set of browser text strings that correspond to short names of the fresh entities that will
      * be created.  Not {@code null}.  May be empty.
      * @param parent The parent entity.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public AbstractCreateEntitiesChangeListGenerator(@Nonnull EntityType<E> entityType,
-                                                     @Nonnull Set<String> browserTexts,
+                                                     @Nonnull String sourceText,
                                                      @Nonnull Optional<P> parent,
                                                      @Nonnull OWLOntology rootOntology,
                                                      @Nonnull OWLDataFactory dataFactory) {
         this.entityType = entityType;
-        this.browserTexts = browserTexts;
+        this.sourceText = sourceText;
         this.parent = parent;
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
@@ -79,7 +80,9 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     public OntologyChangeList<Set<E>> generateChanges(ChangeGenerationContext context) {
         OntologyChangeList.Builder<Set<E>> builder = new OntologyChangeList.Builder<>();
         Set<E> freshEntities = new HashSet<>();
-        for (String bt : browserTexts) {
+        EntityShortFormsParser parser = new EntityShortFormsParser();
+        List<String> shortForms = parser.parseShortForms(sourceText);
+        for (String bt : shortForms) {
             String browserText = bt.trim();
             Optional<String> builtInPrefix = getBuiltInPrefix(browserText);
             E freshEntity;

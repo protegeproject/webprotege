@@ -4,9 +4,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.HashSet;
+import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,7 +19,7 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
 
     private OWLClass type;
 
-    private Set<String> shortNames = new HashSet<String>();
+    private String sourceText;
 
     private CreateNamedIndividualsAction() {
     }
@@ -28,40 +27,46 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
     /**
      * Constructs a CreateNamedIndividualsAction.
      * @param projectId The project identifier which identifies the project to create the individuals in.
-     * @param shortNames A set of short names for the individuals.  Not {@code null}.
+     * @param sourceText The input text that the individuals will be created from.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public CreateNamedIndividualsAction(ProjectId projectId, Set<String> shortNames) {
+    public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
+                                        @Nonnull String sourceText) {
         super(projectId);
         this.type = null;
-        this.shortNames = checkNotNull(shortNames);
+        this.sourceText = checkNotNull(sourceText);
     }
 
     /**
      * Constructs a CreateNamedIndividualsAction.
      * @param projectId The project identifier which identifies the project to create the individuals in.
      * @param type A type for the individuals.  Not {@code null}.
-     * @param shortNames A set of short names for the individuals.  Not {@code null}.
+     * @param sourceText The input text that the individuals will be created from.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public CreateNamedIndividualsAction(ProjectId projectId, OWLClass type, Set<String> shortNames) {
+    public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
+                                        @Nonnull OWLClass type,
+                                        @Nonnull String sourceText) {
         super(projectId);
         this.type = checkNotNull(type);
-        this.shortNames = checkNotNull(shortNames);
+        this.sourceText = checkNotNull(sourceText);
     }
 
     /**
      * Constructs a CreateNamedIndividualsAction.
      * @param projectId The project identifier which identifies the project to create the individuals in.
      * @param type A type for the individuals.  Not {@code null}.
-     * @param shortNames A set of short names for the individuals.  Not {@code null}.
+     * @param sourceText The input text that the individuals will be created from.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public CreateNamedIndividualsAction(ProjectId projectId, Optional<OWLClass> type, Set<String> shortNames) {
+    public CreateNamedIndividualsAction(@Nonnull ProjectId projectId,
+                                        @Nonnull Optional<OWLClass> type,
+                                        @Nonnull String sourceText) {
         super(projectId);
-        this.type = checkNotNull(type).orElse(null);
-        this.shortNames = checkNotNull(shortNames);
+        this.type = type.orElse(null);
+        this.sourceText = checkNotNull(sourceText);
     }
+
 
     /**
      * Gets the type for the individuals.
@@ -72,10 +77,11 @@ public class CreateNamedIndividualsAction extends AbstractHasProjectAction<Creat
     }
 
     /**
-     * Gets the set of short names for the new individuals.
-     * @return The set of names.  Not {@code null}.
+     * Gets the text that the individuals will be created from
+     * @return The text
      */
-    public Set<String> getShortNames() {
-        return shortNames;
+    @Nonnull
+    public String getSourceText() {
+        return sourceText;
     }
 }

@@ -70,7 +70,7 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
 
     @Override
     protected ChangeListGenerator<Set<OWLObjectProperty>> getChangeListGenerator(CreateObjectPropertiesAction action, ExecutionContext executionContext) {
-        return new CreateObjectPropertiesChangeGenerator(action.getBrowserTexts(),
+        return new CreateObjectPropertiesChangeGenerator(action.getSourceText(),
                                                          action.getParent(),
                                                          rootOntology,
                                                          dataFactory);

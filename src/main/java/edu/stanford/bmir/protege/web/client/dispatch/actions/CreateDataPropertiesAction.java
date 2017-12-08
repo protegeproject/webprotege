@@ -18,9 +18,9 @@ import java.util.Optional;
 public class CreateDataPropertiesAction extends CreateEntitiesInHierarchyAction<CreateDataPropertiesResult, OWLDataProperty> {
 
     public CreateDataPropertiesAction(@Nonnull ProjectId projectId,
-                                      @Nonnull ImmutableSet<String> browserTexts,
+                                      @Nonnull String sourceText,
                                       @Nonnull Optional<OWLDataProperty> parent) {
-        super(projectId, browserTexts, parent);
+        super(projectId, sourceText, parent);
     }
 
     @GwtSerializationConstructor

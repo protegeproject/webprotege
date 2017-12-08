@@ -17,9 +17,9 @@ import java.util.Optional;
 public class CreateAnnotationPropertiesAction extends CreateEntitiesInHierarchyAction<CreateAnnotationPropertiesResult, OWLAnnotationProperty> {
 
     public CreateAnnotationPropertiesAction(@Nonnull ProjectId projectId,
-                                            @Nonnull ImmutableSet<String> browserTexts,
+                                            @Nonnull String sourceText,
                                             @Nonnull Optional<OWLAnnotationProperty> parent) {
-        super(projectId, browserTexts, parent);
+        super(projectId, sourceText, parent);
     }
 
     /**
