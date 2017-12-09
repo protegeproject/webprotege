@@ -144,6 +144,19 @@ public class SelectionModel {
         return selectedIndividualManager.getLastSelection();
     }
 
+    public void clearSelection() {
+        Place place = placeController.getWhere();
+        if(!(place instanceof ProjectViewPlace)) {
+            return;
+        }
+        ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
+        if(projectViewPlace.getItemSelection().isEmpty()) {
+            return;
+        }
+        Place nextPlace = projectViewPlace.builder().clearSelection().build();
+        placeController.goTo(nextPlace);
+    }
+
     public void setSelection(OWLEntity entity) {
         Place place = placeController.getWhere();
         if(!(place instanceof ProjectViewPlace)) {
