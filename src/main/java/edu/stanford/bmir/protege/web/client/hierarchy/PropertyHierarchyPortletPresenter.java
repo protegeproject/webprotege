@@ -3,12 +3,10 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -30,6 +28,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
@@ -99,6 +98,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final HierarchyActionStatePresenter actionStatePresenter;
 
+    @Nonnull
+    private final Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider;
+
     private boolean transmittingSelection = false;
 
     @Inject
@@ -116,7 +118,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                              @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull SearchDialogController searchDialogController,
-                                             @Nonnull HierarchyActionStatePresenter actionStatePresenter) {
+                                             @Nonnull HierarchyActionStatePresenter actionStatePresenter,
+                                             @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider) {
         super(selectionModel, projectId);
         this.view = view;
         this.messages = messages;
@@ -135,6 +138,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.watchPresenter = watchPresenter;
         this.searchDialogController = searchDialogController;
         this.actionStatePresenter = actionStatePresenter;
+        this.entityHierarchyDropHandlerProvider = entityHierarchyDropHandlerProvider;
     }
 
     @Override
@@ -196,6 +200,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                     messages,
                                     createAction,
                                     deleteAction);
+        EntityHierarchyDropHandler entityHierarchyDropHandler = entityHierarchyDropHandlerProvider.get();
+        treeWidget.setDropHandler(entityHierarchyDropHandler);
+        entityHierarchyDropHandler.start(hierarchyId);
         view.addHierarchy(hierarchyId,
                           label,
                           treeWidget);

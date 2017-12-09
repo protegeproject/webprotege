@@ -5,18 +5,17 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -74,6 +73,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Nonnull
     private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
 
+    @Nonnull
+    private final EntityHierarchyDropHandler dropHandler;
+
     private boolean transmittingSelectionFromTree = false;
 
     @Inject
@@ -86,7 +88,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                           @Nonnull EntityHierarchyTreeNodeRenderer renderer,
                                           @Nonnull CreateEntityPresenter createEntityPresenter,
-                                          @Nonnull DeleteEntityPresenter deleteEntityPresenter, @Nonnull HierarchyActionStatePresenter actionStatePresenter) {
+                                          @Nonnull DeleteEntityPresenter deleteEntityPresenter,
+                                          @Nonnull HierarchyActionStatePresenter actionStatePresenter,
+                                          @Nonnull EntityHierarchyDropHandler dropHandler) {
         super(selectionModel, projectId);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
@@ -109,6 +113,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                               this::handleSearch);
         this.deleteEntityPresenter = deleteEntityPresenter;
         this.actionStatePresenter = actionStatePresenter;
+        this.dropHandler = dropHandler;
 
 
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
@@ -139,6 +144,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                                                       node -> node.getEntity()));
 
+        treeWidget.setDropHandler(this.dropHandler);
+        dropHandler.start(CLASS_HIERARCHY);
         createAndInstallContextMenu(treeWidget,
                                     messages,
                                     createClassAction,
