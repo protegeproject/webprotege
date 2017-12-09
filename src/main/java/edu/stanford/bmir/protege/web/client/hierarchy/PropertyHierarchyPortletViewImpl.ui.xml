@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-        @external .gwt-TabBarItem, .gwt-TabBarItem-selected, .gwt-TabBar;
+        @external .gwt-TabBarItem, .gwt-TabBarItem-selected, .gwt-TabBar, .gt-tree;
         .main {
             display: flex;
             flex-direction: column;
@@ -19,6 +19,14 @@
             flex-grow: 1;
             flex-shrink: 1;
             overflow-y: auto;
+            position: relative;
+        }
+        .main .gt-tree {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
         .main .gwt-TabBar {
 
