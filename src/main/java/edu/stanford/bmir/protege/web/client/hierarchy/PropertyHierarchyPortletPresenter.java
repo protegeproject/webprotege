@@ -220,9 +220,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         try {
             transmittingSelection = true;
             view.getSelectedHierarchy().ifPresent(tree -> {
-                tree.getFirstSelectedKey().ifPresent(entity ->
-                                                             getSelectionModel().setSelection(entity)
-                );
+                Optional<OWLEntity> sel = tree.getFirstSelectedKey();
+                sel.ifPresent(entity -> getSelectionModel().setSelection(entity));
+                if(!sel.isPresent()) {
+                    getSelectionModel().clearSelection();
+                }
+
             });
         } finally {
             transmittingSelection = false;
