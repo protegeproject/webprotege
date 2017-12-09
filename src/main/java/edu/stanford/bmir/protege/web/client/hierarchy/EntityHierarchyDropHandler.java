@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -49,6 +51,9 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHie
         if(!hierarchyId.isPresent()) {
             return false;
         }
+        if(nodePath.isEmpty()) {
+            return false;
+        }
         // Don't drop on self
         return !targetPath.getLast().equals(nodePath.getLast());
     }
@@ -64,7 +69,16 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHie
                            @Nonnull Path<EntityHierarchyNode> targetPath,
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
+        GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
         if(!hierarchyId.isPresent()) {
+            dropEndHandler.handleDropCancelled();
+            return;
+        }
+        if(nodePath.isEmpty()) {
+            dropEndHandler.handleDropCancelled();
+            return;
+        }
+        if(nodePath.getLast().map(EntityHierarchyNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
             dropEndHandler.handleDropCancelled();
             return;
         }
