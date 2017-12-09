@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.GetClassHierarchyChildrenActionHandler;
 import edu.stanford.bmir.protege.web.server.hierarchy.GetHierarchyPathsToRootActionHandler;
 import edu.stanford.bmir.protege.web.server.hierarchy.GetHierarchyRootsActionHandler;
+import edu.stanford.bmir.protege.web.server.hierarchy.MoveHierarchyNodeActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.*;
@@ -489,6 +490,11 @@ public class ProjectActionHandlersModule {
 
     @Provides(type = SET)
     public ProjectActionHandler providesGetHierarchyRootsActionHandler(GetHierarchyRootsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesMoveHierarchyNodeActionHandler(MoveHierarchyNodeActionHandler handler) {
         return handler;
     }
 }

@@ -44,7 +44,7 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
     public Class<GetHierarchyRootsAction> getActionClass() {
         return GetHierarchyRootsAction.class;
     }
-    
+
     @Nullable
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
