@@ -22,6 +22,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -37,10 +40,7 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
     private final RenderingManager renderingManager;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
     public CreateObjectPropertyActionHandler(@Nonnull AccessManager accessManager,
@@ -48,13 +48,11 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
                                              @Nonnull HasApplyChanges applyChanges,
                                              @Nonnull ProjectId projectId,
                                              @Nonnull RenderingManager renderingManager,
-                                             @Nonnull @RootOntology OWLOntology rootOntology,
-                                             @Nonnull OWLDataFactory dataFactory) {
+                                             @Nonnull CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
         this.renderingManager = renderingManager;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+        this.changeGeneratorFactory = changeGeneratorFactory;
     }
 
     @Override
@@ -65,19 +63,19 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
     @Nonnull
     @Override
     protected Iterable<BuiltInAction> getRequiredExecutableBuiltInActions() {
-        return Arrays.asList(BuiltInAction.CREATE_PROPERTY, BuiltInAction.EDIT_ONTOLOGY);
+        return Arrays.asList(CREATE_PROPERTY, EDIT_ONTOLOGY);
     }
 
     @Override
-    protected ChangeListGenerator<Set<OWLObjectProperty>> getChangeListGenerator(CreateObjectPropertiesAction action, ExecutionContext executionContext) {
-        return new CreateObjectPropertiesChangeGenerator(action.getSourceText(),
-                                                         action.getParent(),
-                                                         rootOntology,
-                                                         dataFactory);
+    protected ChangeListGenerator<Set<OWLObjectProperty>> getChangeListGenerator(CreateObjectPropertiesAction action,
+                                                                                 ExecutionContext executionContext) {
+        return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getParent());
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLObjectProperty>> getChangeDescription(CreateObjectPropertiesAction action, ExecutionContext executionContext) {
+    protected ChangeDescriptionGenerator<Set<OWLObjectProperty>> getChangeDescription(CreateObjectPropertiesAction action,
+                                                                                      ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>("Created object properties");
     }
 
