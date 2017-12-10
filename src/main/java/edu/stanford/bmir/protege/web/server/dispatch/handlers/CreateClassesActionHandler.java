@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter.formatMessage;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
@@ -38,23 +39,22 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
     private final RenderingManager renderingManager;
 
     @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
+    private final OWLDataFactory dataFactory;
 
     @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final CreateClassesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
     public CreateClassesActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                       @Nonnull HasApplyChanges applyChanges,
                                       @Nonnull RenderingManager renderingManager,
-                                      @Nonnull OWLOntology rootOntology,
-                                      @Nonnull OWLDataFactory dataFactory) {
+                                      @Nonnull OWLDataFactory dataFactory,
+                                      @Nonnull CreateClassesChangeGeneratorFactory changeFactory) {
         super(accessManager, eventManager, applyChanges);
-        this.renderingManager = renderingManager;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+        this.renderingManager = checkNotNull(renderingManager);
+        this.dataFactory = checkNotNull(dataFactory);
+        this.changeGeneratorFactory = checkNotNull(changeFactory);
     }
 
     @Override
@@ -71,10 +71,8 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
 
     @Override
     protected ChangeListGenerator<Set<OWLClass>> getChangeListGenerator(CreateClassesAction action, ExecutionContext executionContext) {
-        return new CreateClassesChangeGenerator(action.getSourceText(),
-                                                action.getParent(),
-                                                rootOntology,
-                                                dataFactory);
+        return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getParent());
     }
 
     @Override
