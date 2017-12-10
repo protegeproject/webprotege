@@ -38,12 +38,9 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
 
     @Nonnull
     private final RenderingManager renderingManager;
-
+    
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final CreateDataPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
     public CreateDataPropertiesActionHandler(@Nonnull AccessManager accessManager,
@@ -51,22 +48,18 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
                                              @Nonnull HasApplyChanges applyChanges,
                                              @Nonnull ProjectId projectId,
                                              @Nonnull RenderingManager renderingManager,
-                                             @Nonnull @RootOntology OWLOntology rootOntology,
-                                             @Nonnull OWLDataFactory dataFactory) {
+                                             @Nonnull CreateDataPropertiesChangeGeneratorFactory changeGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
         this.renderingManager = renderingManager;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+        this.changeGeneratorFactory = changeGeneratorFactory;
     }
 
     @Override
     protected ChangeListGenerator<Set<OWLDataProperty>> getChangeListGenerator(CreateDataPropertiesAction action,
                                                                                ExecutionContext executionContext) {
-        return new CreateDataPropertiesChangeGenerator(action.getSourceText(),
-                                                       action.getParent(),
-                                                       rootOntology,
-                                                       dataFactory);
+        return changeGeneratorFactory.create(action.getSourceText(),
+                                             action.getParent());
     }
 
     @Override
