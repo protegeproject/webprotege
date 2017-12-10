@@ -165,6 +165,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
             transmittingSelectionFromTree = true;
             treeWidget.getFirstSelectedKey()
                       .ifPresent(sel -> getSelectionModel().setSelection(sel));
+            if(!treeWidget.getFirstSelectedKey().isPresent()) {
+                getSelectionModel().clearSelection();
+            }
         } finally {
             transmittingSelectionFromTree = false;
         }
