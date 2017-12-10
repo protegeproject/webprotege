@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
+import javax.annotation.Nonnull;
 import java.util.Date;
 import java.util.Optional;
 
@@ -97,6 +98,13 @@ public class DataFactory {
     public static <T extends OWLEntity> T getFreshOWLEntity(EntityType<T> entityType, String shortName) {
         String iri = getFreshIRIString(shortName);
         return getOWLEntity(entityType, iri);
+    }
+
+    public static <T extends OWLEntity> T getFreshOWLEntity(@Nonnull EntityType<T> entityType,
+                                                            @Nonnull String shortName,
+                                                            @Nonnull OWLDataFactory dataFactory) {
+        String iri = getFreshIRIString(shortName);
+        return dataFactory.getOWLEntity(entityType, IRI.create(iri));
     }
 
     private static String getFreshIRIString(String shortName) {
