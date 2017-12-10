@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -16,15 +18,16 @@ import static org.semanticweb.owlapi.model.EntityType.OBJECT_PROPERTY;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
+@AutoFactory
 public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLObjectProperty, OWLObjectProperty> {
 
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-    public CreateObjectPropertiesChangeGenerator(@Nonnull String sourceText,
-                                                 @Nonnull Optional<OWLObjectProperty> parent,
-                                                 @Nonnull OWLOntology rootOntology,
-                                                 @Nonnull OWLDataFactory dataFactory) {
+    public CreateObjectPropertiesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
+                                                 @Provided @Nonnull OWLOntology rootOntology,
+                                                 @Nonnull String sourceText,
+                                                 @Nonnull Optional<OWLObjectProperty> parent) {
         super(OBJECT_PROPERTY, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
