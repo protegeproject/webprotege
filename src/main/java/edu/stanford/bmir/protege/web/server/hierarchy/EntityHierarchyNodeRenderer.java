@@ -48,31 +48,17 @@ public class EntityHierarchyNodeRenderer {
     }
 
     /**
-     * Renders the hierarchy node for the specified entity in the context of the specified user.
-     * @param entity The entity.
-     * @param userId The user.  The user context is used to render things like watches, which depend on
-     *               the user that is viewing the hierarchy node.
-     * @return The hierarchy node for the specified entity.
-     */
-    @Nonnull
-    public EntityHierarchyNode render(@Nonnull OWLEntity entity,
-                                      @Nonnull UserId userId) {
-
-        return new EntityHierarchyNode(
-                entity,
-                browserTextProvider.getOWLEntityBrowserText(entity).orElse(""),
-                deprecatedEntityChecker.isDeprecated(entity),
-                watchManager.getDirectWatches(entity, userId),
-                discussionThreadRepository.getOpenCommentsCount(projectId, entity));
-    }
-
-    /**
-     * Renders the hierarchy node for the specified entity in the context of the guest user.
+     * Renders the hierarchy node for the specified entity.
      * @param entity The entity to be rendered.
      * @return The hierarchy node for the specified entity.
      */
     @Nonnull
     public EntityHierarchyNode render(@Nonnull OWLEntity entity) {
-        return this.render(entity, UserId.getGuest());
+        return new EntityHierarchyNode(
+                entity,
+                browserTextProvider.getOWLEntityBrowserText(entity).orElse(""),
+                deprecatedEntityChecker.isDeprecated(entity),
+                watchManager.getDirectWatches(entity),
+                discussionThreadRepository.getOpenCommentsCount(projectId, entity));
     }
 }

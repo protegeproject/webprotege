@@ -51,4 +51,11 @@ public interface WatchManager {
      */
     Set<Watch> getDirectWatches(@Nonnull OWLEntity watchedObject,
                                 @Nonnull UserId userId);
+
+    /**
+     * Gets all direct watches for the specfied entity.
+     * @param watchedEntity The watched entity
+     * @return Direct watches for the specified entity
+     */
+    Set<Watch> getDirectWatches(@Nonnull OWLEntity watchedEntity);
 }

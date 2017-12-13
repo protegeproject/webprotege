@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.resources.client.DataResource;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
@@ -11,6 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
@@ -18,8 +19,11 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityHierarchyNode> {
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     @Inject
-    public EntityHierarchyTreeNodeRenderer() {
+    public EntityHierarchyTreeNodeRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
+        this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
     }
 
     @Override
@@ -38,22 +42,23 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         sb.append(node.getBrowserText());
         sb.append("</div>");
 
-        if(node.getOpenCommentCount() > 0) {
+        if (node.getOpenCommentCount() > 0) {
             sb.append("<img style='padding-left: 6px;' src='").append(BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString()).append("'/>");
             sb.append("<div style='padding-left: 4px; padding-bottom: 4px; font-size: smaller;'> (").append(node.getOpenCommentCount()).append(")</div>");
         }
         node.getWatches().stream()
-                 .map(Watch::getType)
-                 .forEach(watchType -> {
-                     sb.append("<img style='padding-left: 4px;' src='");
-                     if(watchType == WatchType.ENTITY) {
-                         sb.append(BUNDLE.svgEyeIcon().getSafeUri().asString());
-                     }
-                     else {
-                         sb.append(BUNDLE.svgEyeIconDown().getSafeUri().asString());
-                     }
-                     sb.append("'/>");
-                 });
+            .filter(w -> loggedInUserProvider.getCurrentUserId().equals(w.getUserId()))
+            .map(Watch::getType)
+            .forEach(watchType -> {
+                sb.append("<img style='padding-left: 4px;' src='");
+                if (watchType == WatchType.ENTITY) {
+                    sb.append(BUNDLE.svgEyeIcon().getSafeUri().asString());
+                }
+                else {
+                    sb.append(BUNDLE.svgEyeIconDown().getSafeUri().asString());
+                }
+                sb.append("'/>");
+            });
         sb.append("</div>");
         return sb.toString();
     }
@@ -61,24 +66,24 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
     @Nonnull
     private DataResource getIcon(@Nonnull EntityHierarchyNode node) {
         OWLEntity entity = node.getEntity();
-        if(entity.isOWLClass()) {
-            if(node.isDeprecated()) {
+        if (entity.isOWLClass()) {
+            if (node.isDeprecated()) {
                 return BUNDLE.svgDeprecatedClassIcon();
             }
             else {
                 return BUNDLE.svgClassIcon();
             }
         }
-        else if(entity.isOWLObjectProperty()) {
+        else if (entity.isOWLObjectProperty()) {
             return BUNDLE.svgObjectPropertyIcon();
         }
-        else if(entity.isOWLDataProperty()) {
+        else if (entity.isOWLDataProperty()) {
             return BUNDLE.svgDataPropertyIcon();
         }
-        else if(entity.isOWLAnnotationProperty()) {
+        else if (entity.isOWLAnnotationProperty()) {
             return BUNDLE.svgAnnotationPropertyIcon();
         }
-        else if(entity.isOWLNamedIndividual()) {
+        else if (entity.isOWLNamedIndividual()) {
             return BUNDLE.svgIndividualIcon();
         }
         else {

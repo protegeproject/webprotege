@@ -97,6 +97,13 @@ public class WatchManagerImpl implements WatchManager {
     }
 
     @Override
+    public Set<Watch> getDirectWatches(@Nonnull OWLEntity watchedEntity) {
+        return repository.findWatchRecords(projectId, singleton(watchedEntity)).stream()
+                .map(this::toWatch)
+                .collect(toSet());
+    }
+
+    @Override
     public Set<Watch> getDirectWatches(@Nonnull OWLEntity watchedObject, @Nonnull UserId userId) {
         return repository.findWatchRecords(projectId,
                                            userId,
