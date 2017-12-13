@@ -81,7 +81,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree;
 
     @Nonnull
-    private final EntityHierarchyTreeNodeRenderer renderer = new EntityHierarchyTreeNodeRenderer();
+    private final EntityHierarchyTreeNodeRenderer renderer;
 
     @Nonnull
     private final CreateEntityPresenter createEntityPresenter;
@@ -114,7 +114,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> objectPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
-                                             @Nonnull CreateEntityPresenter createEntityPresenter,
+                                             @Nonnull EntityHierarchyTreeNodeRenderer renderer, @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                              @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull SearchDialogController searchDialogController,
@@ -133,6 +133,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.objectPropertyTree = objectPropertyTree;
         this.dataPropertyTree = dataPropertyTree;
         this.annotationPropertyTree = annotationPropertyTree;
+        this.renderer = renderer;
         this.createEntityPresenter = createEntityPresenter;
         this.deleteEntityPresenter = deleteEntityPresenter;
         this.watchPresenter = watchPresenter;
