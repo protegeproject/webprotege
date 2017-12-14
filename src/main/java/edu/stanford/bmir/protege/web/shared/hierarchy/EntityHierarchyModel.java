@@ -6,13 +6,11 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyNodeUpdater;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -65,9 +63,10 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
         if(!event.getHierarchyId().equals(hierarchyId)) {
             return;
         }
-        GraphModelChangeProcessor graphModelChangeProcessor = new GraphModelChangeProcessor(parent2ChildMap, rootNodes);
-        event.getChangeEvent().getChanges().forEach(evt -> evt.accept(graphModelChangeProcessor));
-        GraphModelChangedEvent<EntityHierarchyNode> graphModelChangedEvent = new GraphModelChangedEvent<>(graphModelChangeProcessor.getChanges());
+        GraphModelChangeProcessor changeProcessor = new GraphModelChangeProcessor(parent2ChildMap, rootNodes);
+        event.getChangeEvent().getChanges().forEach(evt -> evt.accept(changeProcessor));
+        changeProcessor.getUpdatedNodes().forEach(node -> nodeCache.put(node.getEntity(), node));
+        GraphModelChangedEvent<EntityHierarchyNode> graphModelChangedEvent = new GraphModelChangedEvent<>(changeProcessor.getChanges());
         if (!graphModelChangedEvent.getChanges().isEmpty()) {
             handlers.forEach(handler ->
                                      handler.handleGraphModelChanged(graphModelChangedEvent));
@@ -80,7 +79,7 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
 
     public void updateNode(@Nonnull EntityHierarchyNode node) {
         EntityHierarchyNode currentNode = nodeCache.get(node.getEntity());
-        if (Objects.equals(currentNode, node)) {
+        if (node.equals(currentNode)) {
             return;
         }
         nodeCache.put(node.getEntity(), node);
@@ -158,6 +157,8 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
 
         private final List<GraphModelChange<EntityHierarchyNode>> changes = new ArrayList<>();
 
+        private final Set<EntityHierarchyNode> updatedNodes = new HashSet<>();
+
         public GraphModelChangeProcessor(@Nonnull SetMultimap<OWLEntity, OWLEntity> parent2ChildMap,
                                          @Nonnull Set<OWLEntity> rootNodes) {
             this.parent2ChildMap = parent2ChildMap;
@@ -168,9 +169,15 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
             return changes;
         }
 
+        public Set<EntityHierarchyNode> getUpdatedNodes() {
+            return updatedNodes;
+        }
+
         @Override
         public void visit(AddRootNode<EntityHierarchyNode> addRootNode) {
-            if (rootNodes.add(addRootNode.getNode().getUserObject().getEntity())) {
+            EntityHierarchyNode entityHierarchyNode = addRootNode.getNode().getUserObject();
+            if (rootNodes.add(entityHierarchyNode.getEntity())) {
+                updatedNodes.add(entityHierarchyNode);
                 changes.add(addRootNode);
             }
         }
@@ -185,9 +192,13 @@ public class EntityHierarchyModel implements GraphModel<EntityHierarchyNode, OWL
         @Override
         public void visit(AddEdge<EntityHierarchyNode> addEdge) {
             GraphEdge<EntityHierarchyNode> edge = addEdge.getEdge();
-            OWLEntity child = edge.getSuccessor().getUserObject().getEntity();
-            OWLEntity parent = edge.getPredecessor().getUserObject().getEntity();
+            EntityHierarchyNode successorEntityHierarchyNode = edge.getSuccessor().getUserObject();
+            OWLEntity child = successorEntityHierarchyNode.getEntity();
+            EntityHierarchyNode predecessorEntityHierarchyNode = edge.getPredecessor().getUserObject();
+            OWLEntity parent = predecessorEntityHierarchyNode.getEntity();
             if (parent2ChildMap.put(parent, child)) {
+                updatedNodes.add(predecessorEntityHierarchyNode);
+                updatedNodes.add(successorEntityHierarchyNode);
                 changes.add(addEdge);
             }
         }

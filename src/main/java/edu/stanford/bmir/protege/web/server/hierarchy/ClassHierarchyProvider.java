@@ -165,7 +165,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
         }
         else {
             result = extractChildren(object);
-            result.removeIf(curChild -> getAncestors(object).contains(curChild));
+//            result.removeIf(curChild -> getAncestors(object).contains(curChild));
         }
 
         return result;
