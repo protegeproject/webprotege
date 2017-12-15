@@ -1,13 +1,17 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
+import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -21,6 +25,7 @@ import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_F
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 3 Dec 2017
  */
+@AutoFactory
 public class EntityHierarchyContextMenuPresenter {
 
     @Nonnull
@@ -28,6 +33,9 @@ public class EntityHierarchyContextMenuPresenter {
 
     @Nonnull
     private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
+
+    @Nonnull
+    private final EntityHierarchyModel model;
 
     @Nonnull
     private final UIAction createEntityAction;
@@ -39,25 +47,16 @@ public class EntityHierarchyContextMenuPresenter {
     private PopupMenu contextMenu;
 
 
-    public EntityHierarchyContextMenuPresenter(@Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
-                                               @Nonnull Messages messages,
+    public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
+                                               @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
-                                               @Nonnull UIAction deleteEntityAction) {
+                                               @Nonnull UIAction deleteEntityAction,
+                                               @Provided Messages messages) {
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
+        this.model = checkNotNull(model);
         this.createEntityAction = checkNotNull(createEntityAction);
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
-    }
-
-    public static void createAndInstallContextMenu(@Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
-                                                   @Nonnull Messages messages,
-                                                   @Nonnull UIAction createEntityAction,
-                                                   @Nonnull UIAction deleteEntityAction) {
-        EntityHierarchyContextMenuPresenter presenter = new EntityHierarchyContextMenuPresenter(treeWidget,
-                                                                                                messages,
-                                                                                                createEntityAction,
-                                                                                                deleteEntityAction);
-        presenter.install();
     }
 
     /**
@@ -119,7 +118,7 @@ public class EntityHierarchyContextMenuPresenter {
 
     private void handleRefresh() {
         Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
-        treeWidget.reload();
+        treeWidget.setModel(GraphTreeNodeModel.create(model, EntityHierarchyNode::getEntity));
         firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
     }
 

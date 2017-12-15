@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyModel;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -28,10 +27,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.DELETE_CLASS;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
@@ -68,6 +64,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private final DeleteEntityPresenter deleteEntityPresenter;
 
     @Nonnull
+    private final EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory;
+
+    @Nonnull
     private final HierarchyActionStatePresenter actionStatePresenter;
 
     @Nonnull
@@ -85,6 +84,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull SearchDialogController searchDialogController,
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
+                                          @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
                                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                           @Nonnull EntityHierarchyTreeNodeRenderer renderer,
                                           @Nonnull CreateEntityPresenter createEntityPresenter,
@@ -96,6 +96,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
         this.hierarchyModel = checkNotNull(hierarchyModel);
+        this.contextMenuPresenterFactory = checkNotNull(contextMenuPresenterFactory);
         this.treeWidget = checkNotNull(treeWidget);
         this.renderer = checkNotNull(renderer);
         this.createEntityPresenter = checkNotNull(createEntityPresenter);
@@ -146,11 +147,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         treeWidget.setDropHandler(this.dropHandler);
         dropHandler.start(CLASS_HIERARCHY);
-        createAndInstallContextMenu(treeWidget,
-                                    messages,
-                                    createClassAction,
-                                    deleteClassAction);
-
+        contextMenuPresenterFactory.create(hierarchyModel,
+                                           treeWidget,
+                                           createClassAction,
+                                           deleteClassAction)
+                                   .install();
         setSelectionInTree(getSelectedEntity());
     }
 
@@ -165,7 +166,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
             transmittingSelectionFromTree = true;
             treeWidget.getFirstSelectedKey()
                       .ifPresent(sel -> getSelectionModel().setSelection(sel));
-            if(!treeWidget.getFirstSelectedKey().isPresent()) {
+            if (!treeWidget.getFirstSelectedKey().isPresent()) {
                 getSelectionModel().clearSelection();
             }
         } finally {
@@ -194,7 +195,6 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private void selectAndExpandPath(Path<OWLEntity> entityPath) {
         treeWidget.setSelected(entityPath, true, () -> treeWidget.setExpanded(entityPath));
     }
-
 
 
     protected void handleEditWatches() {
