@@ -180,10 +180,10 @@ public class SendMailImpl implements SendMail {
                     Collections.list(msg.getAllHeaderLines()))
             );
         } catch (MessagingException e) {
-            logger.info("There was a problem sending mail: " + e.getMessage());
+            logger.info("There was a problem sending mail: {}", e.getMessage());
             exceptionHandler.handleMessagingException(e);
         } catch (UnsupportedEncodingException e) {
-            logger.info("There was a problem sending mail: " + e.getMessage());
+            logger.info("There was a problem sending mail: {}", e.getMessage());
         }
     }
 
