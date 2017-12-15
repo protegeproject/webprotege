@@ -91,7 +91,9 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
             Salt salt = saltProvider.get();
             SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword(pwd, salt);
             authenticationManager.setDigestedPassword(userId.get(), saltedPasswordDigest, salt);
-            mailer.sendEmail(userId.get(), emailAddress, pwd);
+            mailer.sendEmail(userId.get(), emailAddress, pwd, ex -> {
+                throw new RuntimeException(ex);
+            });
             logger.info("The password for %s has been reset.  " +
                             "An email has been sent to %s that contains the new password.",
                     userId.get().getUserName(),
@@ -101,8 +103,8 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
         } catch (Exception e) {
             logger.info("Could not reset the user password " +
                                 "associated with the email " +
-                                "address %s.  The following " +
-                                "error occurred: %s.", emailAddress, e.getMessage());
+                                "address {}.  The following " +
+                                "error occurred: {}.", emailAddress, e.getMessage());
             return new ResetPasswordResult(INTERNAL_ERROR);
         }
     }

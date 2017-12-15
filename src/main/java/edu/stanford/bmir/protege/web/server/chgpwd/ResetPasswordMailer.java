@@ -3,12 +3,14 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Map;
 
@@ -48,7 +50,10 @@ public class ResetPasswordMailer {
         this.logger = logger;
     }
 
-    public void sendEmail(final UserId userId, final String emailAddress, final String pwd) {
+    public void sendEmail(@Nonnull UserId userId,
+                          @Nonnull String emailAddress,
+                          @Nonnull String pwd,
+                          @Nonnull MessagingExceptionHandler messagingExceptionHandler) {
         Map<String, Object> objects =
                 TemplateObjectsBuilder.builder()
                                       .withApplicationName(applicationNameSupplier.get())
@@ -63,9 +68,12 @@ public class ResetPasswordMailer {
         sendMailImpl.sendMail(singletonList(emailAddress),
                               SUBJECT,
                               emailBody,
-                              ex -> logger.info("A password reset email could not be sent to user {} at {}.",
-                                                userId.getUserName(),
-                                                emailAddress));
+                              ex -> {
+                                  logger.info("A password reset email could not be sent to user {} at {}.",
+                                              userId.getUserName(),
+                                              emailAddress);
+                                  messagingExceptionHandler.handleMessagingException(ex);
+                              });
 
     }
 }

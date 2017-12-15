@@ -68,8 +68,7 @@ public class ResetPasswordPresenter {
                 }
                 else {
                     MessageBox.showAlert("Password reset error",
-                                         "An error occurred and your password could not be reset.  " +
-                                                 "Please contact the administrator.");
+                                         "An error occurred. Please contact the administrator.");
                 }
             }
         });

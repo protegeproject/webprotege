@@ -75,7 +75,7 @@ public class PasswordResetMailer_IT {
                                                              placeUrl,
                                                              appNameProvider,
                                                              logger);
-        mailer.sendEmail(userId, emailAddress, theNewPassword);
+        mailer.sendEmail(userId, emailAddress, theNewPassword, e -> {});
         verify(sendMailImpl, times(1)).sendMail(
                 eq(singletonList(emailAddress)),
                 eq("Your password has been reset"),
