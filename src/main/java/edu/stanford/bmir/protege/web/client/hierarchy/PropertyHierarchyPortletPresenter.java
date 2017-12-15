@@ -31,9 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyContextMenuPresenter.createAndInstallContextMenu;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
-import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CHANGES;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.*;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.*;
@@ -90,6 +88,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final DeleteEntityPresenter deleteEntityPresenter;
 
     @Nonnull
+    private final EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory;
+
+    @Nonnull
     private final WatchPresenter watchPresenter;
 
     @Nonnull
@@ -116,7 +117,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
                                              @Nonnull EntityHierarchyTreeNodeRenderer renderer, @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
-                                             @Nonnull WatchPresenter watchPresenter,
+                                             @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory, @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull SearchDialogController searchDialogController,
                                              @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                              @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider) {
@@ -125,7 +126,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.messages = messages;
         this.createAction = new PortletAction(messages.create(), this::handleCreate);
         this.deleteAction = new PortletAction(messages.delete(), this::handleDelete);
-        this.watchAction =  new PortletAction(messages.watch(), this::handleWatch);
+        this.watchAction = new PortletAction(messages.watch(), this::handleWatch);
         this.searchAction = new PortletAction(messages.search(), this::handleSearch);
         this.objectPropertyHierarchyModel = objectPropertyHierarchyModel;
         this.dataPropertyHierarchyModel = dataPropertyHierarchyModel;
@@ -136,6 +137,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.renderer = renderer;
         this.createEntityPresenter = createEntityPresenter;
         this.deleteEntityPresenter = deleteEntityPresenter;
+        this.contextMenuPresenterFactory = contextMenuPresenterFactory;
         this.watchPresenter = watchPresenter;
         this.searchDialogController = searchDialogController;
         this.actionStatePresenter = actionStatePresenter;
@@ -197,10 +199,11 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityHierarchyNode::getEntity));
         treeWidget.addSelectionChangeHandler(this::handleSelectionChanged);
-        createAndInstallContextMenu(treeWidget,
-                                    messages,
-                                    createAction,
-                                    deleteAction);
+        contextMenuPresenterFactory.create(model,
+                                           treeWidget,
+                                           createAction,
+                                           deleteAction)
+                                   .install();
         EntityHierarchyDropHandler entityHierarchyDropHandler = entityHierarchyDropHandlerProvider.get();
         treeWidget.setDropHandler(entityHierarchyDropHandler);
         entityHierarchyDropHandler.start(hierarchyId);
@@ -223,7 +226,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
             view.getSelectedHierarchy().ifPresent(tree -> {
                 Optional<OWLEntity> sel = tree.getFirstSelectedKey();
                 sel.ifPresent(entity -> getSelectionModel().setSelection(entity));
-                if(!sel.isPresent()) {
+                if (!sel.isPresent()) {
                     getSelectionModel().clearSelection();
                 }
 
