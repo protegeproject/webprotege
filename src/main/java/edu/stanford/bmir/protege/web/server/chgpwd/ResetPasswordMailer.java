@@ -63,11 +63,9 @@ public class ResetPasswordMailer {
         sendMailImpl.sendMail(singletonList(emailAddress),
                               SUBJECT,
                               emailBody,
-                              ex -> logger.info("A password reset email could not be sent to user % at %s.  " +
-                                                        "The password was reset to %s.",
+                              ex -> logger.info("A password reset email could not be sent to user {} at {}.",
                                                 userId.getUserName(),
-                                                emailAddress,
-                                                pwd));
+                                                emailAddress));
 
     }
 }
