@@ -83,7 +83,7 @@ public class ResetPasswordMailer_TestCase {
 
     @Test
     public void shouldPopulateUserId() {
-        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
+        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD, e -> {});
         verify(templateEngine, times(1)).populateTemplate(anyString(), objectMapCaptor.capture());
         Map<String, Object> objectMap = objectMapCaptor.getValue();
         assertThat(objectMap, Matchers.hasEntry("userId", THE_USER_NAME));
@@ -91,7 +91,7 @@ public class ResetPasswordMailer_TestCase {
 
     @Test
     public void shouldPopulatePassword() {
-        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
+        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD, e -> {});
         verify(templateEngine, times(1)).populateTemplate(any(), objectMapCaptor.capture());
         Map<String, Object> objectMap = objectMapCaptor.getValue();
         assertThat(objectMap, Matchers.hasEntry("pwd", PWD));
@@ -99,7 +99,7 @@ public class ResetPasswordMailer_TestCase {
 
     @Test
     public void shouldPopulateApplicationUrl() {
-        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
+        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD, e -> {});
         verify(templateEngine, times(1)).populateTemplate(any(), objectMapCaptor.capture());
         Map<String, Object> objectMap = objectMapCaptor.getValue();
         assertThat(objectMap, Matchers.hasEntry("application.url", THE_APPLICATION_URL));
@@ -107,7 +107,7 @@ public class ResetPasswordMailer_TestCase {
 
     @Test
     public void shouldSendEmailToSpecifiedAddress() {
-        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
+        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD, e -> {});
         verify(sendMailImpl, times(1)).sendMail(
                 eq(singletonList(EMAIL_ADDRESS)),
                 anyString(),

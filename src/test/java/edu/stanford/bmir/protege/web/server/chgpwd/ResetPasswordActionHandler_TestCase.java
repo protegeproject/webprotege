@@ -125,7 +125,7 @@ public class ResetPasswordActionHandler_TestCase {
         handler.execute(action, context);
         ArgumentCaptor<UserId> userIdCaptor = ArgumentCaptor.forClass(UserId.class);
         ArgumentCaptor<String> emailCaptor = ArgumentCaptor.forClass(String.class);
-        verify(mailer, times(1)).sendEmail(userIdCaptor.capture(), emailCaptor.capture(), any(String.class));
+        verify(mailer, times(1)).sendEmail(userIdCaptor.capture(), emailCaptor.capture(), any(String.class), e -> {});
         assertThat(userIdCaptor.getValue(), is(userId));
         assertThat(emailCaptor.getValue(), is(EMAIL_ADDRESS));
     }
@@ -154,6 +154,6 @@ public class ResetPasswordActionHandler_TestCase {
                 any(SaltedPasswordDigest.class),
                 any(Salt.class));
         handler.execute(action, context);
-        verify(mailer, never()).sendEmail(any(UserId.class), any(String.class), any(String.class));
+        verify(mailer, never()).sendEmail(any(UserId.class), any(String.class), any(String.class), e -> {});
     }
 }
