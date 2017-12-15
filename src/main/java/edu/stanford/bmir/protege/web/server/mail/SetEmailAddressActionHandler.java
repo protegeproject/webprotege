@@ -13,6 +13,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS;
+import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.ADDRESS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.ADDRESS_UNCHANGED;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -45,16 +49,16 @@ public class SetEmailAddressActionHandler implements ApplicationActionHandler<Se
         if(userId.isPresent()) {
             if(userId.get().equals(action.getUserId())) {
                 // Same user, same address
-                return new SetEmailAddressResult(SetEmailAddressResult.Result.ADDRESS_UNCHANGED);
+                return new SetEmailAddressResult(ADDRESS_UNCHANGED);
             }
             else {
                 // Already exists
-                return new SetEmailAddressResult(SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS);
+                return new SetEmailAddressResult(ADDRESS_ALREADY_EXISTS);
             }
         }
         else {
             userDetailsManager.setEmail(action.getUserId(), emailAddress);
-            return new SetEmailAddressResult(SetEmailAddressResult.Result.ADDRESS_CHANGED);
+            return new SetEmailAddressResult(ADDRESS_CHANGED);
         }
     }
 }

@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.user;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -16,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class UserDetailsManagerImpl implements UserDetailsManager {
 
     private final UserRecordRepository repository;
+
+    private final Logger logger = LoggerFactory.getLogger(UserDetailsManagerImpl.class);
 
     @Inject
     public UserDetailsManagerImpl(UserRecordRepository userRecordRepository) {
@@ -33,10 +37,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
             return Optional.empty();
         }
         Optional<UserRecord> record = repository.findOneByEmailAddress(emailAddress.getEmailAddress());
-        if (!record.isPresent()) {
-            return Optional.empty();
-        }
-        return Optional.of(record.get().getUserId());
+        return record.map(UserRecord::getUserId);
     }
 
     @Override
@@ -71,29 +72,33 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
     public void setEmail(UserId userId, String email) {
         checkNotNull(userId);
         checkNotNull(email);
+        logger.info("Received request to set email address ({}) for user ({})", email, userId.getUserName());
         if (userId.isGuest()) {
+            logger.info("Specified user is the guest user.  Not setting email address.");
             return;
         }
         Optional<UserRecord> record = repository.findOne(userId);
         if (!record.isPresent()) {
+            logger.info("Specified user ({}) does not exist.", userId.getUserName());
             return;
         }
         Optional<UserRecord> recordByEmail = repository.findOneByEmailAddress(email);
-        if (!record.equals(recordByEmail)) {
-            // TODO: Log failure
+        if (recordByEmail.isPresent()) {
+            logger.info("Account with specified email address ({}) already exists", email);
             return;
         }
         UserRecord theRecord = record.get();
         UserRecord replacement = new UserRecord(
                 theRecord.getUserId(),
                 theRecord.getRealName(),
-                theRecord.getEmailAddress(),
+                email,
                 theRecord.getAvatarUrl(),
                 theRecord.getSalt(),
                 theRecord.getSaltedPasswordDigest()
         );
         repository.delete(userId);
         repository.save(replacement);
+        logger.info("Email address for {} changed to {}", userId.getUserName(), email);
     }
 
     @Override
@@ -103,9 +108,6 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
             return Optional.of(byUserId.get().getUserId());
         }
         Optional<UserRecord> byEmail = repository.findOneByEmailAddress(userNameOrEmail);
-        if (byEmail.isPresent()) {
-            return Optional.of(byEmail.get().getUserId());
-        }
-        return Optional.empty();
+        return byEmail.map(UserRecord::getUserId);
     }
 }
