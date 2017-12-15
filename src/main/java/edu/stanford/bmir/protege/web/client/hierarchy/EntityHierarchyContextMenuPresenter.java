@@ -106,7 +106,7 @@ public class EntityHierarchyContextMenuPresenter {
 
     private void showIriForSelection() {
         treeWidget.getFirstSelectedKey().ifPresent(sel -> {
-            String iri = sel.getIRI().toQuotedString();
+            String iri = sel.getIRI().toString();
             InputBox.showOkDialog(messages.classIri(), true, iri, input -> {});
         });
     }
