@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -20,16 +22,17 @@ import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
+@AutoFactory
 public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLAnnotationProperty, OWLAnnotationProperty> {
 
     @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public CreateAnnotationPropertiesChangeGenerator(@Nonnull String sourceText,
-                                                     @Nonnull Optional<OWLAnnotationProperty> parent,
-                                                     @Nonnull OWLOntology rootOntology,
-                                                     @Nonnull OWLDataFactory dataFactory) {
+    public CreateAnnotationPropertiesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
+                                                     @Provided @Nonnull OWLOntology rootOntology,
+                                                     @Nonnull String sourceText,
+                                                     @Nonnull Optional<OWLAnnotationProperty> parent) {
         super(ANNOTATION_PROPERTY, sourceText, parent, rootOntology, dataFactory);
         this.dataFactory = checkNotNull(dataFactory);
     }
