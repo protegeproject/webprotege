@@ -58,7 +58,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
             return Optional.empty();
         }
         Optional<UserRecord> record = repository.findOne(userId);
-        if (record == null) {
+        if (!record.isPresent()) {
             return Optional.empty();
         }
         String emailAddress = record.get().getEmailAddress();

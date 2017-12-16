@@ -41,10 +41,7 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     private final RenderingManager renderer;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
     public CreateAnnotationPropertiesActionHandler(@Nonnull AccessManager accessManager,
@@ -52,22 +49,17 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
                                                    @Nonnull HasApplyChanges applyChanges,
                                                    @Nonnull ProjectId projectId,
                                                    @Nonnull RenderingManager renderer,
-                                                   @Nonnull OWLOntology rootOntology,
-                                                   @Nonnull OWLDataFactory dataFactory) {
+                                                   @Nonnull CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
         this.renderer = renderer;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+        this.changeGeneratorFactory = changeGeneratorFactory;
     }
 
     @Override
     protected ChangeListGenerator<Set<OWLAnnotationProperty>> getChangeListGenerator(CreateAnnotationPropertiesAction action,
                                                                                      ExecutionContext executionContext) {
-        return new CreateAnnotationPropertiesChangeGenerator(action.getSourceText(),
-                                                             action.getParent(),
-                                                             rootOntology,
-                                                             dataFactory);
+        return changeGeneratorFactory.create(action.getSourceText(), action.getParent());
     }
 
     @Override
