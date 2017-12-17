@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.DeleteEntitiesChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.crud.DeleteEntitiesChangeListGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
@@ -19,7 +20,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -33,17 +33,17 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
     private final RenderingManager renderer;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final DeleteEntitiesChangeListGeneratorFactory factory;
 
     @Inject
     public DeleteEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                        @Nonnull HasApplyChanges applyChanges,
                                        @Nonnull RenderingManager renderer,
-                                       @Nonnull OWLOntology rootOntology) {
+                                       @Nonnull DeleteEntitiesChangeListGeneratorFactory factory) {
         super(accessManager, eventManager, applyChanges);
         this.renderer = renderer;
-        this.rootOntology = rootOntology;
+        this.factory = factory;
     }
 
     @Override
@@ -61,8 +61,7 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
     protected ChangeListGenerator<Set<OWLEntity>> getChangeListGenerator(DeleteEntitiesAction action,
                                                                          ExecutionContext executionContext) {
 
-        return new DeleteEntitiesChangeListGenerator(action.getEntities(),
-                                                     rootOntology);
+        return factory.create(action.getEntities());
     }
 
     @Override
