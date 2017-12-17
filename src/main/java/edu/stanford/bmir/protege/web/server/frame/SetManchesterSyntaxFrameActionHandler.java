@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
+import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -27,28 +28,28 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
-public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChangeHandler<Boolean, SetManchesterSyntaxFrameAction, SetManchesterSyntaxFrameResult> {
+public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChangeHandler<Optional<ManchesterSyntaxFrameParseError>, SetManchesterSyntaxFrameAction, SetManchesterSyntaxFrameResult> {
 
     @Nonnull
     private final GetManchesterSyntaxFrameActionHandler handler;
 
     @Nonnull
-    private final Provider<ManchesterSyntaxFrameParser> parserProvider;
+    private final RenderingManager renderer;
 
     @Nonnull
-    private final RenderingManager renderer;
+    private final ManchesterSyntaxChangeGeneratorFactory factory;
 
     @Inject
     public SetManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
                                                  @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                                  @Nonnull HasApplyChanges applyChanges,
                                                  @Nonnull GetManchesterSyntaxFrameActionHandler handler,
-                                                 @Nonnull Provider<ManchesterSyntaxFrameParser> parserProvider,
-                                                 @Nonnull RenderingManager renderer) {
+                                                 @Nonnull RenderingManager renderer,
+                                                 @Nonnull ManchesterSyntaxChangeGeneratorFactory factory) {
         super(accessManager, eventManager, applyChanges);
         this.handler = handler;
-        this.parserProvider = parserProvider;
         this.renderer = renderer;
+        this.factory = factory;
     }
 
     @Nullable
@@ -58,20 +59,15 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected ChangeListGenerator<Boolean> getChangeListGenerator(SetManchesterSyntaxFrameAction action,
+    protected ChangeListGenerator<Optional<ManchesterSyntaxFrameParseError>> getChangeListGenerator(SetManchesterSyntaxFrameAction action,
                                                                ExecutionContext executionContext) {
-        ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(parserProvider.get());
-        try {
-            List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering(), action);
-            return new FixedChangeListGenerator<>(changes, changes.size() > 0);
-        } catch (ParserException e) {
-            ManchesterSyntaxFrameParseError error = ManchesterSyntaxFrameParser.getParseError(e);
-            throw new SetManchesterSyntaxFrameException(error);
-        }
+        return factory.create(action.getFromRendering(),
+                       action.getToRendering(),
+                       action);
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Boolean> getChangeDescription(SetManchesterSyntaxFrameAction action,
+    protected ChangeDescriptionGenerator<Optional<ManchesterSyntaxFrameParseError>> getChangeDescription(SetManchesterSyntaxFrameAction action,
                                                                     ExecutionContext executionContext) {
         String changeDescription = "Edited description of " + renderer.getShortForm(action.getSubject()) + ".";
         Optional<String> commitMessage = action.getCommitMessage();
@@ -82,15 +78,21 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult,
+    protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Optional<ManchesterSyntaxFrameParseError>> result,
                                                                 SetManchesterSyntaxFrameAction action,
                                                                 ExecutionContext executionContext,
                                                                 EventList<ProjectEvent<?>> eventList) {
-        GetManchesterSyntaxFrameAction ac = new GetManchesterSyntaxFrameAction(action.getProjectId(),
-                                                                                    action.getSubject());
-        GetManchesterSyntaxFrameResult result = handler.execute(ac, executionContext);
-        String reformattedFrame = result.getManchesterSyntax();
-        return new SetManchesterSyntaxFrameResult(eventList, reformattedFrame);
+
+        if(result.getSubject().isPresent()) {
+            throw new SetManchesterSyntaxFrameException(result.getSubject().get());
+        }
+        else {
+            GetManchesterSyntaxFrameAction ac = new GetManchesterSyntaxFrameAction(action.getProjectId(),
+                                                                                   action.getSubject());
+            GetManchesterSyntaxFrameResult frame = handler.execute(ac, executionContext);
+            String reformattedFrame = frame.getManchesterSyntax();
+            return new SetManchesterSyntaxFrameResult(eventList, reformattedFrame);
+        }
     }
 
     @Override
