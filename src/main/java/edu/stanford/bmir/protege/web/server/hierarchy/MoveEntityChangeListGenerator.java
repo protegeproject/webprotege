@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import com.google.googlejavaformat.Op;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -15,6 +16,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +28,7 @@ import static java.util.Collections.emptySet;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 8 Dec 2017
  */
+@AutoFactory
 public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolean> {
 
     private final OWLOntology rootOntology;
@@ -34,14 +37,13 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
 
     private final MoveHierarchyNodeAction action;
 
-    private final EventManager<ProjectEvent<?>> eventManager;
-
-
-    public MoveEntityChangeListGenerator(OWLOntology rootOntology, OWLDataFactory dataFactory, MoveHierarchyNodeAction action, EventManager<ProjectEvent<?>> eventManager) {
+    @Inject
+    public MoveEntityChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
+                                         @Provided @Nonnull OWLOntology rootOntology,
+                                         MoveHierarchyNodeAction action) {
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
         this.action = action;
-        this.eventManager = eventManager;
     }
 
     private static OntologyChangeList<Boolean> notMoved() {
