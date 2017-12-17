@@ -8,9 +8,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/09/2013
  */
-public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerator<Void> {
+public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerator<Collection<OWLEntity>> {
 
     private String fromPrefix;
 
@@ -35,8 +33,8 @@ public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerat
     }
 
     @Override
-    public OntologyChangeList<Void> generateChanges(ChangeGenerationContext context) {
-        OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
+    public OntologyChangeList<Collection<OWLEntity>> generateChanges(ChangeGenerationContext context) {
+        OntologyChangeList.Builder<Collection<OWLEntity>> builder = OntologyChangeList.builder();
         Map<OWLEntity, IRI> renameMap = new HashMap<>();
         for(OWLEntity entity : rootOntology.getSignature(Imports.INCLUDED)) {
             if(!entity.isBuiltIn()) {
@@ -52,11 +50,11 @@ public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerat
                                                               rootOntology.getImportsClosure());
         List<OWLOntologyChange> changeList = entityRenamer.changeIRI(renameMap);
         builder.addAll(changeList);
-        return builder.build();
+        return builder.build(renameMap.keySet());
     }
 
     @Override
-    public Void getRenamedResult(Void result, RenameMap renameMap) {
+    public Collection<OWLEntity> getRenamedResult(Collection<OWLEntity> result, RenameMap renameMap) {
         return result;
     }
 }

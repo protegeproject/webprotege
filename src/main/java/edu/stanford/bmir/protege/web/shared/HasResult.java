@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -15,6 +17,7 @@ public interface HasResult<T> {
      * Gets the result.
      * @return The result.  Not {@code null}.
      */
+    @Nonnull
     T getResult();
 
 }

@@ -75,7 +75,7 @@ public class TermXRefsManager {
             changes.add(new AddAxiom(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(subject, annotation)));
         }
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes),
+                                   new FixedChangeListGenerator<>(changes, term),
                                    new FixedMessageChangeDescriptionGenerator<>("Edited term XRefs"));
     }
 

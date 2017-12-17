@@ -94,16 +94,16 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
     }
 
     private void applyChanges(String commitMessage, final List<OWLOntologyChange> changes, ExecutionContext executionContext) {
-        changeManager.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Void>() {
+        changeManager.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Boolean>() {
             @Override
-            public OntologyChangeList<Void> generateChanges(ChangeGenerationContext context) {
-                OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
+            public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
+                OntologyChangeList.Builder<Boolean> builder = OntologyChangeList.builder();
                 builder.addAll(changes);
-                return builder.build();
+                return builder.build(!changes.isEmpty());
             }
 
             @Override
-            public Void getRenamedResult(Void result, RenameMap renameMap) {
+            public Boolean getRenamedResult(Boolean result, RenameMap renameMap) {
                 return null;
             }
         }, new FixedMessageChangeDescriptionGenerator<>(commitMessage));

@@ -140,7 +140,7 @@ public class TermDefinitionManager {
             changes.add(new AddAxiom(rootOntology, definitionAssertion));
         }
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes),
+                                   new FixedChangeListGenerator<>(changes, term),
                                    new FixedMessageChangeDescriptionGenerator<>("Edited the term definition for " + renderingManager
                                            .getRendering(term)
                                            .getBrowserText()));

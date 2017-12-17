@@ -131,7 +131,7 @@ public class TermRelationshipsManager {
 
         if (!changes.isEmpty()) {
             changeManager.applyChanges(userId,
-                                       new FixedChangeListGenerator<>(changes),
+                                       new FixedChangeListGenerator<>(changes, cls),
                                        new FixedMessageChangeDescriptionGenerator<>("Edited relationship values: " + description.toString()));
         }
     }

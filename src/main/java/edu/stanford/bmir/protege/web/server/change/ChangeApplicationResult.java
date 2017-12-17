@@ -22,9 +22,9 @@ public class ChangeApplicationResult<S> implements HasSubject<Optional<S>> {
 
     private List<OWLOntologyChange> changeList;
 
-    private Optional<S> subject;
+    private S subject;
 
-    public ChangeApplicationResult(Optional<S> subject, List<OWLOntologyChange> changeList, RenameMap renameMap) {
+    public ChangeApplicationResult(S subject, List<OWLOntologyChange> changeList, RenameMap renameMap) {
         this.subject = subject;
         this.changeList = new ArrayList<>(changeList);
         this.renameMap = renameMap;
@@ -44,6 +44,6 @@ public class ChangeApplicationResult<S> implements HasSubject<Optional<S>> {
 
     @Override
     public Optional<S> getSubject() {
-        return subject;
+        return Optional.of(subject);
     }
 }

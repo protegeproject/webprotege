@@ -88,7 +88,7 @@ public class ChangeEntityIRIActionHandler extends AbstractHasProjectActionHandle
         List<OWLOntologyChange> changeList = renamer.changeIRI(action.getEntity(), action.getTheNewIri());
         OWLEntityData oldRendering = renderer.getRendering(action.getEntity());
         applyChanges.applyChanges(executionContext.getUserId(),
-                             new FixedChangeListGenerator<>(changeList),
+                             new FixedChangeListGenerator<>(changeList, action.getEntity()),
                              new FixedMessageChangeDescriptionGenerator<>(
                                      String.format("Changed %s IRI from %s to %s",
                                                    action.getEntity().getEntityType().getPrintName(),
