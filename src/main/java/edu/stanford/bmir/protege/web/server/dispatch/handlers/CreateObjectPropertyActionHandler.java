@@ -37,9 +37,6 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
     private final ProjectId projectId;
 
     @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
     private final CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
@@ -47,11 +44,9 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
                                              @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                              @Nonnull HasApplyChanges applyChanges,
                                              @Nonnull ProjectId projectId,
-                                             @Nonnull RenderingManager renderingManager,
                                              @Nonnull CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
-        this.renderingManager = renderingManager;
         this.changeGeneratorFactory = changeGeneratorFactory;
     }
 
