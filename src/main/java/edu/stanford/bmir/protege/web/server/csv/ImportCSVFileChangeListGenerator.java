@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -13,6 +15,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
 
@@ -22,6 +25,7 @@ import static org.semanticweb.owlapi.model.EntityType.CLASS;
  * Bio-Medical Informatics Research Group<br>
  * Date: 31/05/2013
  */
+@AutoFactory
 public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Integer>, SilentChangeListGenerator {
 
 
@@ -45,13 +49,13 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     public ImportCSVFileChangeListGenerator(@Nonnull OWLClass importRootClass,
                                             @Nonnull CSVGrid csvGrid,
                                             @Nonnull CSVImportDescriptor descriptor,
-                                            @Nonnull OWLOntology rootOntology,
-                                            @Nonnull OWLDataFactory dataFactory) {
-        this.importRootClass = importRootClass;
-        this.csvGrid = csvGrid;
-        this.descriptor = descriptor;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+                                            @Provided @Nonnull OWLOntology rootOntology,
+                                            @Provided @Nonnull OWLDataFactory dataFactory) {
+        this.importRootClass = checkNotNull(importRootClass);
+        this.csvGrid = checkNotNull(csvGrid);
+        this.descriptor = checkNotNull(descriptor);
+        this.rootOntology = checkNotNull(rootOntology);
+        this.dataFactory = checkNotNull(dataFactory);
     }
 
     @Override

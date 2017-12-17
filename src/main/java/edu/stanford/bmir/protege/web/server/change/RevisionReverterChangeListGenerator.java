@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
@@ -18,11 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 19/03/15
  */
+@AutoFactory
 public class RevisionReverterChangeListGenerator implements ChangeListGenerator<Boolean> {
 
     @Nonnull
@@ -40,10 +45,10 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
 
     @Inject
     public RevisionReverterChangeListGenerator(@Nonnull RevisionNumber revisionNumber,
-                                               @Nonnull OWLOntologyChangeDataReverter changeDataReverter,
-                                               @Nonnull RevisionManager revisionManager,
-                                               @Nonnull @RootOntology OWLOntology rootOntology) {
-        this.revisionNumber = revisionNumber;
+                                               @Provided @Nonnull OWLOntologyChangeDataReverter changeDataReverter,
+                                               @Provided @Nonnull RevisionManager revisionManager,
+                                               @Provided @Nonnull @RootOntology OWLOntology rootOntology) {
+        this.revisionNumber = checkNotNull(revisionNumber);
         this.changeDataReverter = changeDataReverter;
         this.revisionManager = revisionManager;
         this.rootOntology = rootOntology;

@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
@@ -31,27 +30,17 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<Bo
     private final ProjectId projectId;
 
     @Nonnull
-    private final Provider<OWLOntologyChangeDataReverter> reverterProvider;
-
-    @Nonnull
-    private final RevisionManager revisionManager;
-
-    @Nonnull
-    private final OWLOntology rootOntology;
+    private final RevisionReverterChangeListGeneratorFactory factory;
 
     @Inject
     public RevertRevisionActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                        @Nonnull HasApplyChanges applyChanges,
                                        @Nonnull ProjectId projectId,
-                                       @Nonnull Provider<OWLOntologyChangeDataReverter> reverterProvider,
-                                       @Nonnull RevisionManager revisionManager,
-                                       @Nonnull OWLOntology rootOntology) {
+                                       @Nonnull RevisionReverterChangeListGeneratorFactory factory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
-        this.reverterProvider = reverterProvider;
-        this.revisionManager = revisionManager;
-        this.rootOntology = rootOntology;
+        this.factory = factory;
     }
 
     @Override
@@ -63,10 +52,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<Bo
     protected ChangeListGenerator<Boolean> getChangeListGenerator(RevertRevisionAction action,
                                                                     ExecutionContext executionContext) {
         RevisionNumber revisionNumber = action.getRevisionNumber();
-        return new RevisionReverterChangeListGenerator(revisionNumber,
-                                                       reverterProvider.get(),
-                                                       revisionManager,
-                                                       rootOntology);
+        return factory.create(revisionNumber);
     }
 
     @Override
