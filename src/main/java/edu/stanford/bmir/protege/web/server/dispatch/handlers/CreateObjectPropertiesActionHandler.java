@@ -31,7 +31,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHandler<Set<OWLObjectProperty>, CreateObjectPropertiesAction, CreateObjectPropertiesResult> {
+public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHandler<Set<OWLObjectProperty>, CreateObjectPropertiesAction, CreateObjectPropertiesResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -40,11 +40,11 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
     private final CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
-    public CreateObjectPropertyActionHandler(@Nonnull AccessManager accessManager,
-                                             @Nonnull EventManager<ProjectEvent<?>> eventManager,
-                                             @Nonnull HasApplyChanges applyChanges,
-                                             @Nonnull ProjectId projectId,
-                                             @Nonnull CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory) {
+    public CreateObjectPropertiesActionHandler(@Nonnull AccessManager accessManager,
+                                               @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                               @Nonnull HasApplyChanges applyChanges,
+                                               @Nonnull ProjectId projectId,
+                                               @Nonnull CreateObjectPropertiesChangeGeneratorFactory changeGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
         this.changeGeneratorFactory = changeGeneratorFactory;
