@@ -133,11 +133,6 @@ public class ProjectActionHandlersModule {
     }
 
     @Provides(type = SET)
-    public ProjectActionHandler provideDeleteEntityActionHandler(DeleteEntityActionHandler handler) {
-        return handler;
-    }
-
-    @Provides(type = SET)
     public ProjectActionHandler provideCreateClassesActionHandler(CreateClassesActionHandler handler) {
         return handler;
     }
