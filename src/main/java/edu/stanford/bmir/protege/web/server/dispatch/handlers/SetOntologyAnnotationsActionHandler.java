@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -86,7 +87,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
                 });
             }
         }
-        return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList) {
+        return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList, Collections.emptySet()) {
             @Override
             public Set<OWLAnnotation> getRenamedResult(Set<OWLAnnotation> result, RenameMap renameMap) {
                 return super.getRenamedResult(result, renameMap);

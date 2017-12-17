@@ -151,26 +151,6 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     /**
-     * Applies a list of changes to ontologies in this project.
-     *
-     * @param userId            The userId of the user applying the changes. Not {@code null}.
-     * @param changes           The list of changes to be applied.  Not {@code null}.
-     * @param changeDescription A description of the changes. Not {@code null}.
-     * @return A {@link ChangeApplicationResult} that describes the changes which took place an any renaminings.
-     * @throws NullPointerException if any parameters are {@code null}.
-     * @deprecated Use {@link #applyChanges(UserId,
-     * ChangeListGenerator, ChangeDescriptionGenerator)}
-     */
-    @Deprecated
-    public ChangeApplicationResult<?> applyChanges(UserId userId,
-                                                   List<OWLOntologyChange> changes,
-                                                   String changeDescription) {
-        return applyChanges(userId,
-                            FixedChangeListGenerator.get(changes),
-                            FixedMessageChangeDescriptionGenerator.get(changeDescription));
-    }
-
-    /**
      * Applies ontology changes to the ontologies contained within a project.
      *
      * @param userId                     The userId of the user applying the changes.  Not {@code null}.
@@ -305,8 +285,8 @@ public class ChangeManager implements HasApplyChanges {
                 manager.getDelegate().applyChanges(effectiveChanges);
                 appliedChanges = effectiveChanges;
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
-                Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
-                finalResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
+                R renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
+                finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
                     Revision rev = logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
                     revision = Optional.of(rev);
@@ -412,18 +392,10 @@ public class ChangeManager implements HasApplyChanges {
      * @param <R>       The type of result.
      * @return The renamed (or untouched if no rename was necessary) result.
      */
-    private <R> Optional<R> getRenamedResult(ChangeListGenerator<R> changeListGenerator,
-                                             Optional<R> result,
+    private <R> R getRenamedResult(ChangeListGenerator<R> changeListGenerator,
+                                             R result,
                                              RenameMap renameMap) {
-        Optional<R> renamedResult;
-        if (result.isPresent()) {
-            R actualResult = result.get();
-            renamedResult = Optional.of(changeListGenerator.getRenamedResult(actualResult, renameMap));
-        }
-        else {
-            renamedResult = result;
-        }
-        return renamedResult;
+        return changeListGenerator.getRenamedResult(result, renameMap);
     }
 
 
@@ -532,7 +504,7 @@ public class ChangeManager implements HasApplyChanges {
                                EntityShortForm.get(shortName),
                                getEntityCrudContext(userId),
                                builder);
-        return new OWLEntityCreator<>(ent, builder.build().getChanges());
+        return new OWLEntityCreator<>(ent, builder.build(ent).getChanges());
 
     }
 

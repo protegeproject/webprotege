@@ -705,9 +705,9 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         );
     }
 
-    public void applyChanges(UserId userId, List<OWLOntologyChange> changes, String changeDescription) {
-        applyChanges(userId, new FixedChangeListGenerator<>(changes), new FixedMessageChangeDescriptionGenerator<>(changeDescription));
-    }
+//    public void applyChanges(UserId userId, List<OWLOntologyChange> changes, String changeDescription) {
+//        applyChanges(userId, new FixedChangeListGenerator<>(changes), new FixedMessageChangeDescriptionGenerator<>(changeDescription));
+//    }
 
     private OWLObjectRenderer getOWLObjectRenderer() {
         return new OWLObjectRenderer() {

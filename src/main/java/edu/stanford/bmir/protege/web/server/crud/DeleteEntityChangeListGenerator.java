@@ -42,7 +42,7 @@ public class DeleteEntityChangeListGenerator implements ChangeListGenerator<OWLE
         entity.accept(remover);
         List<RemoveAxiom> changeList = remover.getChanges();
         builder.addAll(changeList);
-        return builder.build();
+        return builder.build(entity);
     }
 
     @Override

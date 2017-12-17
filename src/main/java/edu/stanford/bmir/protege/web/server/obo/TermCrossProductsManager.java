@@ -161,7 +161,7 @@ public class TermCrossProductsManager {
         changes.add(new AddAxiom(rootOntology, newXPAxiom));
         existingXPAxiom.ifPresent(ax -> changes.add(new RemoveAxiom(rootOntology, ax)));
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes),
+                                   new FixedChangeListGenerator<>(changes, term),
                                    new FixedMessageChangeDescriptionGenerator<>("Set cross product values"));
 
     }

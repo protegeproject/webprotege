@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasResult;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,40 +15,44 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
  * <p>
- *     A list of ontology changes plus an optional result of applying the changes.
+ *     A list of ontology changes plus a result of applying the changes.
  * </p>
  */
-public class OntologyChangeList<R> implements HasResult<Optional<R>> {
+public class OntologyChangeList<R> implements HasResult<R> {
 
-    private Optional<R> result;
+    @Nonnull
+    private final R result;
 
-    private List<OWLOntologyChange> changes;
+    @Nonnull
+    private final List<OWLOntologyChange> changes;
 
     /**
      * Constructs a {@link OntologyChangeList} object which bundles together a list of ontology changes with
      * a main result.
-     * @param changes The list of ontology changes.  Not {@code null}.
-     * @param result The main result. Not {@code null}.
+     * @param changes The list of ontology changes.
+     * @param result The main result.
      */
-    private OntologyChangeList(List<OWLOntologyChange> changes, Optional<R> result) {
-        this.result = result;
-        this.changes = new ArrayList<>(changes);
+    private OntologyChangeList(@Nonnull List<OWLOntologyChange> changes, @Nonnull R result) {
+        this.result = checkNotNull(result);
+        this.changes = ImmutableList.copyOf(changes);
     }
 
     /**
      * Gets the list of changes.
      * @return An immutable list of changes.
      */
+    @Nonnull
     public List<OWLOntologyChange> getChanges() {
-        return Collections.unmodifiableList(changes);
+        return changes;
     }
 
     /**
      * Gets the main result of generating the changes.
      * @return The result.  Not {@code null}.
      */
+    @Nonnull
     @Override
-    public Optional<R> getResult() {
+    public R getResult() {
         return result;
     }
 
@@ -61,57 +66,34 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
      */
     public static class Builder<R> {
 
-        private List<OWLOntologyChange> builderChanges = new ArrayList<>();
+        private final ImmutableList.Builder<OWLOntologyChange> listBuilder = ImmutableList.builder();
 
         public Builder() {
         }
 
-        private void add(OWLOntologyChange change) {
-            builderChanges.add(change);
+        private void add(@Nonnull OWLOntologyChange change) {
+            listBuilder.add(checkNotNull(change));
         }
 
         public boolean isEmpty() {
-            return builderChanges.isEmpty();
+            return listBuilder.build().isEmpty();
         }
 
-        public void addAxiom(OWLOntology ontology, OWLAxiom axiom) {
-            add(new AddAxiom(ontology, axiom));
+        public void addAxiom(@Nonnull OWLOntology ontology, @Nonnull OWLAxiom axiom) {
+            add(new AddAxiom(checkNotNull(ontology), checkNotNull(axiom)));
         }
 
-//        public void addAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
-//            for(OWLAxiom axiom : axioms) {
-//                addAxiom(ontology, axiom);
-//            }
-//        }
-
-        public void removeAxiom(OWLOntology ontology, OWLAxiom axiom) {
-            add(new RemoveAxiom(ontology, axiom));
+        public void removeAxiom(@Nonnull OWLOntology ontology, @Nonnull OWLAxiom axiom) {
+            add(new RemoveAxiom(checkNotNull(ontology), checkNotNull(axiom)));
         }
-//
-//        public void removeAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
-//            for(OWLAxiom axiom : axioms) {
-//                removeAxiom(ontology, axiom);
-//            }
-//        }
 
-        public Builder<R> addAll(List<? extends OWLOntologyChange> changes) {
-            for(OWLOntologyChange change : changes) {
-                add(change);
-            }
+        public Builder<R> addAll(@Nonnull List<? extends OWLOntologyChange> changes) {
+            listBuilder.addAll(checkNotNull(changes));
             return this;
         }
 
-        public OntologyChangeList<R> build(R subject) {
-            return build(Optional.of(subject));
-        }
-
-        public OntologyChangeList<R> build() {
-            return build(Optional.empty());
-        }
-
-
-        private OntologyChangeList<R> build(Optional<R> subject) {
-            return new OntologyChangeList<>(builderChanges, subject);
+        public OntologyChangeList<R> build(@Nonnull R subject) {
+            return new OntologyChangeList<>(listBuilder.build(), checkNotNull(subject));
         }
 
 

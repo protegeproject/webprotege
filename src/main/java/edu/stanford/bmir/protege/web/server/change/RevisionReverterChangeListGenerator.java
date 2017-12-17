@@ -23,7 +23,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 19/03/15
  */
-public class RevisionReverterChangeListGenerator implements ChangeListGenerator<OWLEntity> {
+public class RevisionReverterChangeListGenerator implements ChangeListGenerator<Boolean> {
 
     @Nonnull
     private final RevisionNumber revisionNumber;
@@ -50,15 +50,15 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
     }
 
     @Override
-    public OWLEntity getRenamedResult(OWLEntity result, RenameMap renameMap) {
+    public Boolean getRenamedResult(Boolean result, RenameMap renameMap) {
         return result;
     }
 
     @Override
-    public OntologyChangeList<OWLEntity> generateChanges(ChangeGenerationContext context) {
+    public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
         Optional<Revision> revision = revisionManager.getRevision(revisionNumber);
         if(!revision.isPresent()) {
-            return OntologyChangeList.<OWLEntity>builder().build();
+            return OntologyChangeList.<Boolean>builder().build(false);
         }
 
         List<OWLOntologyChange> changes = new ArrayList<>();
@@ -69,7 +69,7 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
             OWLOntologyChange change = revertingRecord.createOntologyChange(manager);
             changes.add(0, change);
         }
-        return OntologyChangeList.<OWLEntity>builder().addAll(changes).build();
+        return OntologyChangeList.<Boolean>builder().addAll(changes).build(true);
     }
 
 

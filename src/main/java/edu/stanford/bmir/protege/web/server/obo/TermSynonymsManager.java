@@ -100,7 +100,7 @@ public class TermSynonymsManager {
         }
         if(!changes.isEmpty()) {
             changeManager.applyChanges(userId,
-                                       new FixedChangeListGenerator<>(changes),
+                                       new FixedChangeListGenerator<>(changes, term),
                                        new FixedMessageChangeDescriptionGenerator<>("Edited term synonyms"));
         }
     }

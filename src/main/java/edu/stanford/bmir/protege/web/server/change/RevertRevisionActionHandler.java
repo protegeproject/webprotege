@@ -25,7 +25,7 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 19/03/15
  */
-public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OWLEntity, RevertRevisionAction, RevertRevisionResult> {
+public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<Boolean, RevertRevisionAction, RevertRevisionResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -60,7 +60,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
     }
 
     @Override
-    protected ChangeListGenerator<OWLEntity> getChangeListGenerator(RevertRevisionAction action,
+    protected ChangeListGenerator<Boolean> getChangeListGenerator(RevertRevisionAction action,
                                                                     ExecutionContext executionContext) {
         RevisionNumber revisionNumber = action.getRevisionNumber();
         return new RevisionReverterChangeListGenerator(revisionNumber,
@@ -70,7 +70,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
     }
 
     @Override
-    protected RevertRevisionResult createActionResult(ChangeApplicationResult<OWLEntity> changeApplicationResult,
+    protected RevertRevisionResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult,
                                                       RevertRevisionAction action,
                                                       ExecutionContext executionContext,
                                                       EventList<ProjectEvent<?>> eventList) {
@@ -84,7 +84,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
     }
 
     @Override
-    protected ChangeDescriptionGenerator<OWLEntity> getChangeDescription(RevertRevisionAction action,
+    protected ChangeDescriptionGenerator<Boolean> getChangeDescription(RevertRevisionAction action,
                                                                          ExecutionContext executionContext) {
         return new FixedMessageChangeDescriptionGenerator<>("Reverted the changes in Revision " + action.getRevisionNumber().getValue());
     }

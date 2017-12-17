@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
-public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChangeHandler<Void, SetManchesterSyntaxFrameAction, SetManchesterSyntaxFrameResult> {
+public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChangeHandler<Boolean, SetManchesterSyntaxFrameAction, SetManchesterSyntaxFrameResult> {
 
     @Nonnull
     private final GetManchesterSyntaxFrameActionHandler handler;
@@ -58,12 +58,12 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected ChangeListGenerator<Void> getChangeListGenerator(SetManchesterSyntaxFrameAction action,
+    protected ChangeListGenerator<Boolean> getChangeListGenerator(SetManchesterSyntaxFrameAction action,
                                                                ExecutionContext executionContext) {
         ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(parserProvider.get());
         try {
             List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering(), action);
-            return new FixedChangeListGenerator<>(changes);
+            return new FixedChangeListGenerator<>(changes, changes.size() > 0);
         } catch (ParserException e) {
             ManchesterSyntaxFrameParseError error = ManchesterSyntaxFrameParser.getParseError(e);
             throw new SetManchesterSyntaxFrameException(error);
@@ -71,7 +71,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Void> getChangeDescription(SetManchesterSyntaxFrameAction action,
+    protected ChangeDescriptionGenerator<Boolean> getChangeDescription(SetManchesterSyntaxFrameAction action,
                                                                     ExecutionContext executionContext) {
         String changeDescription = "Edited description of " + renderer.getShortForm(action.getSubject()) + ".";
         Optional<String> commitMessage = action.getCommitMessage();
@@ -82,7 +82,7 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
     }
 
     @Override
-    protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Void> changeApplicationResult,
+    protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult,
                                                                 SetManchesterSyntaxFrameAction action,
                                                                 ExecutionContext executionContext,
                                                                 EventList<ProjectEvent<?>> eventList) {

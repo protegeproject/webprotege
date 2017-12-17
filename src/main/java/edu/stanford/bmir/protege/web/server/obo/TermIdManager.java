@@ -97,7 +97,7 @@ public class TermIdManager {
         }
         if (!changes.isEmpty()) {
             changeManager.applyChanges(userId,
-                                       new FixedChangeListGenerator<>(changes),
+                                       new FixedChangeListGenerator<>(changes, termId),
                                        new FixedMessageChangeDescriptionGenerator<>(description.toString().trim()));
         }
     }
