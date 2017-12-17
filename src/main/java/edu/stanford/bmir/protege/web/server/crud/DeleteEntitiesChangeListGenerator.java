@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -13,10 +15,9 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
- * Matthew Horridge
- * Stanford Center for Biomedical Informatics Research
- * 9 May 2017
+ * Matthew Horridge Stanford Center for Biomedical Informatics Research 9 May 2017
  */
+@AutoFactory
 public class DeleteEntitiesChangeListGenerator implements ChangeListGenerator<Set<OWLEntity>> {
 
     private final Set<OWLEntity> entities;
@@ -24,8 +25,8 @@ public class DeleteEntitiesChangeListGenerator implements ChangeListGenerator<Se
     @Nonnull
     private final OWLOntology rootOntology;
 
-    public DeleteEntitiesChangeListGenerator(@Nonnull Set<OWLEntity> entities,
-                                             @Nonnull OWLOntology rootOntology) {
+    public DeleteEntitiesChangeListGenerator(@Provided @Nonnull OWLOntology rootOntology,
+                                             @Nonnull Set<OWLEntity> entities) {
         this.entities = ImmutableSet.copyOf(entities);
         this.rootOntology = rootOntology;
     }
