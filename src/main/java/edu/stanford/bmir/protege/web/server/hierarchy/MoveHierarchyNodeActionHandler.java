@@ -36,7 +36,11 @@ public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public MoveHierarchyNodeActionHandler(@Nonnull AccessManager accessManager, @Nonnull EventManager<ProjectEvent<?>> eventManager, @Nonnull HasApplyChanges applyChanges, OWLOntology rootOntology, OWLDataFactory dataFactory) {
+    public MoveHierarchyNodeActionHandler(@Nonnull AccessManager accessManager,
+                                          @Nonnull EventManager<ProjectEvent<?>> eventManager,
+                                          @Nonnull HasApplyChanges applyChanges,
+                                          OWLOntology rootOntology,
+                                          OWLDataFactory dataFactory) {
         super(accessManager, eventManager, applyChanges);
         this.eventManager = eventManager;
         this.rootOntology = rootOntology;
@@ -55,12 +59,12 @@ public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler
 
     @Override
     protected ChangeDescriptionGenerator<Boolean> getChangeDescription(MoveHierarchyNodeAction action, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Moved class");
+        return new FixedMessageChangeDescriptionGenerator<>("Moved entity");
     }
 
     @Override
     protected MoveHierarchyNodeResult createActionResult(ChangeApplicationResult<Boolean> changeApplicationResult, MoveHierarchyNodeAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        return new MoveHierarchyNodeResult(changeApplicationResult.getSubject().orElse(false),
+        return new MoveHierarchyNodeResult(changeApplicationResult.getSubject(),
                                            eventList);
     }
 

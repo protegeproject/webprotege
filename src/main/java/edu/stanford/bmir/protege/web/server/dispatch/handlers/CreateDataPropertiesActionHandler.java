@@ -74,9 +74,10 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
                                                             ExecutionContext executionContext,
                                                             EventList<ProjectEvent<?>> eventList) {
         Map<OWLDataProperty, String> map = new HashMap<>();
-        Optional<Set<OWLDataProperty>> properties = changeApplicationResult.getSubject();
-        return properties.map(props -> new CreateDataPropertiesResult(projectId, ImmutableSet.copyOf(props), eventList))
-                         .orElse(new CreateDataPropertiesResult(projectId, ImmutableSet.of(), eventList));
+        Set<OWLDataProperty> properties = changeApplicationResult.getSubject();
+        return new CreateDataPropertiesResult(projectId,
+                                              ImmutableSet.copyOf(properties),
+                                              eventList);
     }
 
     @Nullable

@@ -74,9 +74,10 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
                                                                   CreateAnnotationPropertiesAction action,
                                                                   ExecutionContext executionContext,
                                                                   EventList<ProjectEvent<?>> eventList) {
-        Optional<Set<OWLAnnotationProperty>> result = changeApplicationResult.getSubject();
-        return result.map(props -> new CreateAnnotationPropertiesResult(projectId, ImmutableSet.copyOf(props), eventList))
-                .orElse(new CreateAnnotationPropertiesResult(projectId, ImmutableSet.of(), eventList));
+        Set<OWLAnnotationProperty> properties = changeApplicationResult.getSubject();
+        return new CreateAnnotationPropertiesResult(projectId,
+                                                    ImmutableSet.copyOf(properties),
+                                                    eventList);
     }
 
     @Nonnull

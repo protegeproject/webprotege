@@ -81,8 +81,7 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
 
     @Override
     protected CreateObjectPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLObjectProperty>> changeApplicationResult, CreateObjectPropertiesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        Optional<Set<OWLObjectProperty>> result = changeApplicationResult.getSubject();
-        return result.map(props -> new CreateObjectPropertiesResult(projectId, ImmutableSet.copyOf(props), eventList))
-                     .orElse(new CreateObjectPropertiesResult(projectId, ImmutableSet.of(), eventList));
+        Set<OWLObjectProperty> result = changeApplicationResult.getSubject();
+        return new CreateObjectPropertiesResult(projectId, ImmutableSet.copyOf(result), eventList);
     }
 }

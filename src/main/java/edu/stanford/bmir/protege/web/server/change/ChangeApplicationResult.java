@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
  */
-public class ChangeApplicationResult<S> implements HasSubject<Optional<S>> {
+public class ChangeApplicationResult<S> implements HasSubject<S> {
 
     @Nonnull
     private final RenameMap renameMap;
@@ -56,7 +56,7 @@ public class ChangeApplicationResult<S> implements HasSubject<Optional<S>> {
 
     @Nonnull
     @Override
-    public Optional<S> getSubject() {
-        return Optional.of(subject);
+    public S getSubject() {
+        return subject;
     }
 }
