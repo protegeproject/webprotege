@@ -70,14 +70,14 @@ public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActio
     public CreateNamedIndividualsResult execute(CreateNamedIndividualsAction action,
                                                 ExecutionContext executionContext) {
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
-                                                                                                new CreateIndividualsChangeListGenerator(
-                                                                                                        action.getSourceText(),
-                                                                                                        action.getType(),
-                                                                                                        rootOntology,
-                                                                                                        dataFactory),
-                                                                                                new FixedMessageChangeDescriptionGenerator<>(
-                                                                                                        "Created individuals"));
-        Set<OWLNamedIndividualData> individualData = result.getSubject().orElse(emptySet()).stream()
+                                                                                                             new CreateIndividualsChangeListGenerator(
+                                                                                                                     action.getSourceText(),
+                                                                                                                     action.getType(),
+                                                                                                                     rootOntology,
+                                                                                                                     dataFactory),
+                                                                                                             new FixedMessageChangeDescriptionGenerator<>(
+                                                                                                                     "Created individuals"));
+        Set<OWLNamedIndividualData> individualData = result.getSubject().stream()
                                                            .map(renderer::getRendering)
                                                            .collect(toSet());
         return new CreateNamedIndividualsResult(individualData);

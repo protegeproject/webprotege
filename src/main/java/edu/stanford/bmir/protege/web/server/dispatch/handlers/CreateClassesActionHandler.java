@@ -82,9 +82,10 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
 
     @Override
     protected CreateClassesResult createActionResult(ChangeApplicationResult<Set<OWLClass>> changeApplicationResult, CreateClassesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        Optional<Set<OWLClass>> subject = changeApplicationResult.getSubject();
-        return subject.map(classes -> new CreateClassesResult(action.getProjectId(), ImmutableSet.copyOf(classes), eventList))
-                      .orElse(new CreateClassesResult(action.getProjectId(), ImmutableSet.of(), eventList));
+        Set<OWLClass> classes = changeApplicationResult.getSubject();
+        return new CreateClassesResult(action.getProjectId(),
+                                       ImmutableSet.copyOf(classes),
+                                       eventList);
     }
 
     private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action, Collection<String> shortForms) {

@@ -88,6 +88,6 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
                                                       ExecutionContext executionContext,
                                                       EventList<ProjectEvent<?>> eventList) {
         return new DeleteEntitiesResult(eventList,
-                                        changeApplicationResult.getSubject().orElse(Collections.emptySet()));
+                                        changeApplicationResult.getSubject());
     }
 }
