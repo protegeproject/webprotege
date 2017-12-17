@@ -8,18 +8,14 @@ import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeResult;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
-import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 
@@ -28,23 +24,15 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONT
  */
 public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler<Boolean, MoveHierarchyNodeAction, MoveHierarchyNodeResult> {
 
-
-    private final EventManager<ProjectEvent<?>> eventManager;
-
-    private final OWLOntology rootOntology;
-
-    private final OWLDataFactory dataFactory;
+    private final MoveEntityChangeListGeneratorFactory factory;
 
     @Inject
     public MoveHierarchyNodeActionHandler(@Nonnull AccessManager accessManager,
                                           @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                           @Nonnull HasApplyChanges applyChanges,
-                                          OWLOntology rootOntology,
-                                          OWLDataFactory dataFactory) {
+                                          @Nonnull MoveEntityChangeListGeneratorFactory factory) {
         super(accessManager, eventManager, applyChanges);
-        this.eventManager = eventManager;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+        this.factory = factory;
     }
 
     @Override
@@ -54,7 +42,7 @@ public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler
 
     @Override
     protected ChangeListGenerator<Boolean> getChangeListGenerator(MoveHierarchyNodeAction action, ExecutionContext executionContext) {
-        return new MoveEntityChangeListGenerator(rootOntology, dataFactory, action, eventManager);
+        return factory.create(action);
     }
 
     @Override
