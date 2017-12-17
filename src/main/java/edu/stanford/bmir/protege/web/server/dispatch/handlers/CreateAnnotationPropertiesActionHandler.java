@@ -38,9 +38,6 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     private final ProjectId projectId;
 
     @Nonnull
-    private final RenderingManager renderer;
-
-    @Nonnull
     private final CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
@@ -52,7 +49,6 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
                                                    @Nonnull CreateAnnotationPropertiesChangeGeneratorFactory changeGeneratorFactory) {
         super(accessManager, eventManager, applyChanges);
         this.projectId = projectId;
-        this.renderer = renderer;
         this.changeGeneratorFactory = changeGeneratorFactory;
     }
 
