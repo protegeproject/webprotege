@@ -69,11 +69,11 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
     protected ChangeDescriptionGenerator<Set<OWLEntity>> getChangeDescription(DeleteEntitiesAction action,
                                                                               ExecutionContext executionContext) {
         Set<OWLEntity> entities = action.getEntities();
-        Joiner joiner = Joiner.on(", ").skipNulls();
         Object[] renderings = entities.stream()
                                       .map(this::getBrowserText)
                                       .sorted()
                                       .toArray();
+        Joiner joiner = Joiner.on(", ").skipNulls();
         String deletedEntitiesRendering = joiner.join(renderings);
         return new FixedMessageChangeDescriptionGenerator<>(String.format("Deleted %s", deletedEntitiesRendering));
     }
