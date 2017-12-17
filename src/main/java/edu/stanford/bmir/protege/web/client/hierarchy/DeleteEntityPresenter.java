@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -16,6 +16,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.DELETE;
+import static java.util.Collections.singleton;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 6 Dec 2017
@@ -73,7 +74,7 @@ public class DeleteEntityPresenter {
     private void deleteEntity(@Nonnull OWLEntity cls,
                               @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
         treeWidget.moveSelectionDown();
-        dispatchServiceManager.execute(new DeleteEntityAction(cls, projectId), deleteEntityResult -> {});
+        dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, singleton(cls)), deleteEntityResult -> {});
     }
 
 }
