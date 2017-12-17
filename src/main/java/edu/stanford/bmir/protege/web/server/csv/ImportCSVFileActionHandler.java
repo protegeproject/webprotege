@@ -36,22 +36,17 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     private final File uploadsDirectory;
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final ImportCSVFileChangeListGeneratorFactory factory;
 
     @Inject
     public ImportCSVFileActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                       @Nonnull HasApplyChanges applyChanges,
                                       @Nonnull @UploadsDirectory File uploadsDirectory,
-                                      @Nonnull @RootOntology OWLOntology rootOntology,
-                                      @Nonnull OWLDataFactory dataFactory) {
+                                      @Nonnull ImportCSVFileChangeListGeneratorFactory factory) {
         super(accessManager, eventManager, applyChanges);
         this.uploadsDirectory = uploadsDirectory;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
+        this.factory = factory;
     }
 
     @Override
@@ -63,10 +58,9 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     protected ChangeListGenerator<Integer> getChangeListGenerator(ImportCSVFileAction action,
                                                                   ExecutionContext executionContext) {
         CSVGrid csvGrid = parseCSVGrid(action);
-        return new ImportCSVFileChangeListGenerator(action.getImportRootClass(),
-                                                    csvGrid, action.getDescriptor(),
-                                                    rootOntology,
-                                                    dataFactory);
+        return factory.create(action.getImportRootClass(),
+                              csvGrid,
+                              action.getDescriptor());
     }
 
     private CSVGrid parseCSVGrid(ImportCSVFileAction action) {
