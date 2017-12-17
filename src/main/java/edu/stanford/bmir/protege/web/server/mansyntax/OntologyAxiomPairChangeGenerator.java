@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  */
 public class OntologyAxiomPairChangeGenerator {
+
+    @Inject
+    public OntologyAxiomPairChangeGenerator() {
+    }
 
     public List<OWLOntologyChange> generateChanges(Set<OntologyAxiomPair> fromPairs, Set<OntologyAxiomPair> toPairs) {
         List<OWLOntologyChange> result = Lists.newArrayList();
