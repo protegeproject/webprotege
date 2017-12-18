@@ -151,28 +151,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return changeDescriptionGeneratorFactory;
     }
 
-    /**
-     * Determines if the specified entity is deprecated in this project.
-     *
-     * @param entity The entity to test.
-     * @return {@code true} if the entity is deprecated in this project, otherwise {@code false}.
-     */
-    public boolean isDeprecated(OWLEntity entity) {
-        if (!getRootOntology().containsAnnotationPropertyInSignature(OWL_DEPRECATED.getIRI(),
-                                                                     Imports.INCLUDED)) {
-            return false;
-        }
-        // TODO: Cache
-        for (OWLOntology ont : getRootOntology().getImportsClosure()) {
-            for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI())) {
-                if (ax.isDeprecatedIRIAssertion()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     @Override
     public <R> ChangeApplicationResult<R> applyChanges(UserId userId,
                                                        ChangeListGenerator<R> changeListGenerator) throws PermissionDeniedException {
