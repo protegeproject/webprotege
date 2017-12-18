@@ -53,7 +53,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
  */
 @Deprecated
 @ProjectSingleton
-public class Project implements HasDispose, HasGetRevisionSummary {
+public class Project implements HasDispose {
 
     private final ProjectId projectId;
 
@@ -143,11 +143,6 @@ public class Project implements HasDispose, HasGetRevisionSummary {
         return projectId;
     }
 
-    @Override
-    public java.util.Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
-        return changeManager.getRevisionSummary(revisionNumber);
-    }
-
     public EventManager<ProjectEvent<?>> getEventManager() {
         return projectEventManager;
     }
@@ -163,7 +158,7 @@ public class Project implements HasDispose, HasGetRevisionSummary {
     public ProjectActionHandlerRegistry getActionHanderRegistry() {
         return actionHandlerRegistry;
     }
-    
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
