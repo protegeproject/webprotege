@@ -156,22 +156,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return changeManager;
     }
 
-    public ClassHierarchyProvider getClassHierarchyProvider() {
-        return classHierarchyProvider;
-    }
-
-    public OWLObjectPropertyHierarchyProvider getObjectPropertyHierarchyProvider() {
-        return objectPropertyHierarchyProvider;
-    }
-
-    public OWLDataPropertyHierarchyProvider getDataPropertyHierarchyProvider() {
-        return dataPropertyHierarchyProvider;
-    }
-
-    public OWLAnnotationPropertyHierarchyProvider getAnnotationPropertyHierarchyProvider() {
-        return annotationPropertyHierarchyProvider;
-    }
-
     public OWLDataFactory getDataFactory() {
         return dataFactory;
     }
