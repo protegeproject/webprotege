@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
-import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
@@ -28,7 +27,7 @@ import static java.util.Comparator.comparing;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
-public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectActionHandler<GetHierarchyChildrenAction, GetHierarchyChildrenResult> {
+public class GetClassHierarchyChildrenActionHandler extends AbstractProjectActionHandler<GetHierarchyChildrenAction, GetHierarchyChildrenResult> {
 
     @Nonnull
     private final HierarchyProviderMapper hierarchyProviderMapper;
@@ -50,6 +49,7 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectAc
         this.renderer = renderer;
     }
 
+    @Nonnull
     @Override
     public Class<GetHierarchyChildrenAction> getActionClass() {
         return GetHierarchyChildrenAction.class;
@@ -61,8 +61,9 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractHasProjectAc
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetHierarchyChildrenResult execute(GetHierarchyChildrenAction action, ExecutionContext executionContext) {
+    public GetHierarchyChildrenResult execute(@Nonnull GetHierarchyChildrenAction action, @Nonnull ExecutionContext executionContext) {
         HierarchyId hierarchyId = action.getHierarchyId();
         Optional<HierarchyProvider<OWLEntity>> hierarchyProvider = hierarchyProviderMapper.getHierarchyProvider(hierarchyId);
         if(!hierarchyProvider.isPresent()) {

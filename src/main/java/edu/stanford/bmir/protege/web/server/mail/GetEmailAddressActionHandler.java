@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -24,13 +25,15 @@ public class GetEmailAddressActionHandler implements ApplicationActionHandler<Ge
         this.userDetailsManager = userDetailsManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetEmailAddressAction> getActionClass() {
         return GetEmailAddressAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetEmailAddressAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetEmailAddressAction action, @Nonnull RequestContext requestContext) {
         return () -> {
             if(!requestContext.getUserId().isGuest()) {
                 return RequestValidationResult.getValid();
@@ -41,8 +44,9 @@ public class GetEmailAddressActionHandler implements ApplicationActionHandler<Ge
         };
     }
 
+    @Nonnull
     @Override
-    public GetEmailAddressResult execute(GetEmailAddressAction action, ExecutionContext executionContext) {
+    public GetEmailAddressResult execute(@Nonnull GetEmailAddressAction action, @Nonnull ExecutionContext executionContext) {
         Optional<EmailAddress> address = userDetailsManager.getEmail(action.getUserId()).map(EmailAddress::new);
         return new GetEmailAddressResult(action.getUserId(), address);
     }

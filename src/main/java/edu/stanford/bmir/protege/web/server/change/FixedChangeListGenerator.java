@@ -5,8 +5,9 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,13 +24,21 @@ public class FixedChangeListGenerator<R> implements ChangeListGenerator<R> {
     @Nonnull
     private final List<OWLOntologyChange> fixedChangeList;
 
-    public FixedChangeListGenerator(@Nonnull List<OWLOntologyChange> fixedChangeList, @Nonnull R result) {
-        this.result = result;
+    @Nonnull
+    private final String message;
+
+    public FixedChangeListGenerator(@Nonnull List<OWLOntologyChange> fixedChangeList,
+                                    @Nonnull R result,
+                                    @Nonnull String message) {
+        this.result = checkNotNull(result);
         this.fixedChangeList = ImmutableList.copyOf(fixedChangeList);
+        this.message = checkNotNull(message);
     }
 
-    public static <S> FixedChangeListGenerator<S> get(List<OWLOntologyChange> changes, @Nonnull S result) {
-        return new FixedChangeListGenerator<>(changes, result);
+    public static <S> FixedChangeListGenerator<S> get(List<OWLOntologyChange> changes,
+                                                      @Nonnull S result,
+                                                      String message) {
+        return new FixedChangeListGenerator<>(changes, result, message);
     }
 
     @Override
@@ -42,5 +51,11 @@ public class FixedChangeListGenerator<R> implements ChangeListGenerator<R> {
     @Override
     public R getRenamedResult(R result, RenameMap renameMap) {
         return result;
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<R> result) {
+        return message;
     }
 }

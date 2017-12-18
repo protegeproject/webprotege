@@ -4,12 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
@@ -41,7 +38,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_A
  * Stanford Center for Biomedical Informatics Research
  * 26/01/15
  */
-public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionHandler<MergeUploadedProjectAction, MergeUploadedProjectResult> {
+public class MergeUploadedProjectActionHandler extends AbstractProjectActionHandler<MergeUploadedProjectAction, MergeUploadedProjectResult> {
 
     private final File uploadsDirectory;
 
@@ -68,8 +65,9 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
         return Arrays.asList(UPLOAD_AND_MERGE, EDIT_ONTOLOGY);
     }
 
+    @Nonnull
     @Override
-    public MergeUploadedProjectResult execute(MergeUploadedProjectAction action, ExecutionContext executionContext) {
+    public MergeUploadedProjectResult execute(@Nonnull MergeUploadedProjectAction action, @Nonnull ExecutionContext executionContext) {
         try {
             DocumentId documentId = action.getUploadedDocumentId();
             final OWLOntology uploadedRootOntology = loadUploadedOntology(documentId);
@@ -106,11 +104,19 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
             public Boolean getRenamedResult(Boolean result, RenameMap renameMap) {
                 return null;
             }
-        }, new FixedMessageChangeDescriptionGenerator<>(commitMessage));
+
+            @Nonnull
+            @Override
+            public String getMessage(ChangeApplicationResult<Boolean> result) {
+                return commitMessage;
+            }
+        });
+
     }
 
 
 
+    @Nonnull
     @Override
     public Class<MergeUploadedProjectAction> getActionClass() {
         return MergeUploadedProjectAction.class;

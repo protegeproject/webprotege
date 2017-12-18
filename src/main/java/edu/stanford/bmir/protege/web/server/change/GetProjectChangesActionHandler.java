@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.revision.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -22,7 +22,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  * Stanford Center for Biomedical Informatics Research
  * 24/02/15
  */
-public class GetProjectChangesActionHandler extends AbstractHasProjectActionHandler<GetProjectChangesAction, GetProjectChangesResult> {
+public class GetProjectChangesActionHandler extends AbstractProjectActionHandler<GetProjectChangesAction, GetProjectChangesResult> {
 
     @Nonnull
     private final ProjectChangesManager changesManager;
@@ -34,6 +34,7 @@ public class GetProjectChangesActionHandler extends AbstractHasProjectActionHand
         this.changesManager = changesManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetProjectChangesAction> getActionClass() {
         return GetProjectChangesAction.class;
@@ -45,8 +46,9 @@ public class GetProjectChangesActionHandler extends AbstractHasProjectActionHand
         return VIEW_CHANGES;
     }
 
+    @Nonnull
     @Override
-    public GetProjectChangesResult execute(final GetProjectChangesAction action, ExecutionContext executionContext) {
+    public GetProjectChangesResult execute(@Nonnull final GetProjectChangesAction action, @Nonnull ExecutionContext executionContext) {
         List<ProjectChange> changeList = changesManager.getProjectChanges(action.getSubject());
         return new GetProjectChangesResult(ImmutableList.copyOf(changeList));
     }

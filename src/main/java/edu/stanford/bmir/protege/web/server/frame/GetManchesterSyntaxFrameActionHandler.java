@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
@@ -19,7 +19,7 @@ import java.io.StringWriter;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
-public class GetManchesterSyntaxFrameActionHandler extends AbstractHasProjectActionHandler<GetManchesterSyntaxFrameAction, GetManchesterSyntaxFrameResult> {
+public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectActionHandler<GetManchesterSyntaxFrameAction, GetManchesterSyntaxFrameResult> {
 
     @Nonnull
     @RootOntology
@@ -42,9 +42,10 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractHasProjectAct
         this.shortFormProvider = shortFormProvider;
     }
 
+    @Nonnull
     @Override
-    public GetManchesterSyntaxFrameResult execute(GetManchesterSyntaxFrameAction action,
-                                                     ExecutionContext executionContext) {
+    public GetManchesterSyntaxFrameResult execute(@Nonnull GetManchesterSyntaxFrameAction action,
+                                                  @Nonnull ExecutionContext executionContext) {
         StringWriter writer = new StringWriter();
         EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(shortFormProvider);
         final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer, entityShortFormProvider);
@@ -59,6 +60,7 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractHasProjectAct
         return new GetManchesterSyntaxFrameResult(writer.getBuffer().toString());
     }
 
+    @Nonnull
     @Override
     public Class<GetManchesterSyntaxFrameAction> getActionClass() {
         return GetManchesterSyntaxFrameAction.class;

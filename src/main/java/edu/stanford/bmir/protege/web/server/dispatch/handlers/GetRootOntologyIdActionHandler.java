@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetRootOntologyIdAction, GetRootOntologyIdResult> {
+public class GetRootOntologyIdActionHandler extends AbstractProjectActionHandler<GetRootOntologyIdAction, GetRootOntologyIdResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -45,6 +45,7 @@ public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHand
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
      * @return The class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public Class<GetRootOntologyIdAction> getActionClass() {
         return GetRootOntologyIdAction.class;
@@ -64,8 +65,9 @@ public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHand
      * {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user who requested the action be executed.
      * @return The result of the execution to be returned to the client.
      */
+    @Nonnull
     @Override
-    public GetRootOntologyIdResult execute(GetRootOntologyIdAction action, ExecutionContext executionContext) {
+    public GetRootOntologyIdResult execute(@Nonnull GetRootOntologyIdAction action, @Nonnull ExecutionContext executionContext) {
         final OWLOntologyID result = rootOntology.getOntologyID();
         return new GetRootOntologyIdResult(projectId, result);
     }

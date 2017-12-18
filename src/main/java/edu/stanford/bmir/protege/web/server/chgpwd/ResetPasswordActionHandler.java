@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -57,20 +58,23 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
         this.logger = logger;
     }
 
+    @Nonnull
     @Override
     public Class<ResetPasswordAction> getActionClass() {
         return ResetPasswordAction.class;
     }
 
+    @Nonnull
     @Override
     public RequestValidator getRequestValidator(
-            ResetPasswordAction action, RequestContext requestContext) {
+            @Nonnull ResetPasswordAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
     public ResetPasswordResult execute(
-            ResetPasswordAction action, ExecutionContext executionContext) {
+            @Nonnull ResetPasswordAction action, @Nonnull ExecutionContext executionContext) {
         final String emailAddress = action.getResetPasswordData().getEmailAddress();
         try {
             Optional<UserId> userId = userDetailsManager.getUserByUserIdOrEmail(emailAddress);

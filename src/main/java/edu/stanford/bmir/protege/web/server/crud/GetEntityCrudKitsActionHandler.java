@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +26,21 @@ public class GetEntityCrudKitsActionHandler implements ApplicationActionHandler<
     public GetEntityCrudKitsActionHandler() {
     }
 
+    @Nonnull
     @Override
     public Class<GetEntityCrudKitsAction> getActionClass() {
         return GetEntityCrudKitsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetEntityCrudKitsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetEntityCrudKitsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetEntityCrudKitsResult execute(GetEntityCrudKitsAction action, ExecutionContext executionContext) {
+    public GetEntityCrudKitsResult execute(@Nonnull GetEntityCrudKitsAction action, @Nonnull ExecutionContext executionContext) {
         List<EntityCrudKit<?>> kits = new ArrayList<>();
         kits.addAll(EntityCrudKitRegistry.get().getKits());
         return new GetEntityCrudKitsResult(kits);

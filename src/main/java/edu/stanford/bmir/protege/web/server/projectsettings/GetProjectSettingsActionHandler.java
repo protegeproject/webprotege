@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -20,7 +20,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PRO
  * Stanford Center for Biomedical Informatics Research
  * 25/11/14
  */
-public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHandler<GetProjectSettingsAction, GetProjectSettingsResult> {
+public class GetProjectSettingsActionHandler extends AbstractProjectActionHandler<GetProjectSettingsAction, GetProjectSettingsResult> {
 
 
     @Nonnull
@@ -37,6 +37,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
         this.projectDetailsManager = projectDetailsManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetProjectSettingsAction> getActionClass() {
         return GetProjectSettingsAction.class;
@@ -48,8 +49,9 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
         return EDIT_PROJECT_SETTINGS;
     }
 
+    @Nonnull
     @Override
-    public GetProjectSettingsResult execute(GetProjectSettingsAction action, ExecutionContext executionContext) {
+    public GetProjectSettingsResult execute(@Nonnull GetProjectSettingsAction action, @Nonnull ExecutionContext executionContext) {
         return new GetProjectSettingsResult(projectDetailsManager.getProjectSettings(projectId));
     }
 

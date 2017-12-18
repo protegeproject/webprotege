@@ -55,6 +55,7 @@ public class UpdateObjectPropertyFrameHandler extends AbstractUpdateFrameHandler
         return "Edited object property";
     }
 
+    @Nonnull
     @Override
     public Class<UpdateObjectPropertyFrameAction> getActionClass() {
         return UpdateObjectPropertyFrameAction.class;

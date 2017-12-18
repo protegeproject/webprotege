@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWatchAction, AddWatchResult> {
+public class AddWatchActionHandler extends AbstractProjectActionHandler<AddWatchAction, AddWatchResult> {
 
     private EventManager<ProjectEvent<?>> eventManager;
 
@@ -38,6 +38,7 @@ public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWa
         this.watchManager = watchManager;
     }
 
+    @Nonnull
     @Override
     public Class<AddWatchAction> getActionClass() {
         return AddWatchAction.class;
@@ -55,8 +56,9 @@ public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWa
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public AddWatchResult execute(AddWatchAction action, ExecutionContext executionContext) {
+    public AddWatchResult execute(@Nonnull AddWatchAction action, @Nonnull ExecutionContext executionContext) {
         EventTag startTag = eventManager.getCurrentTag();
         watchManager.addWatch(action.getWatch());
         return new AddWatchResult(eventManager.getEventsFromTag(startTag));

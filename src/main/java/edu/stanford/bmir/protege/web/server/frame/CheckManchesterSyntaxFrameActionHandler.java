@@ -3,11 +3,12 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGeneratorFactory;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
@@ -23,16 +24,21 @@ import static edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFramePa
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
-public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectActionHandler<CheckManchesterSyntaxFrameAction, CheckManchesterSyntaxFrameResult> {
+public class CheckManchesterSyntaxFrameActionHandler extends AbstractProjectActionHandler<CheckManchesterSyntaxFrameAction, CheckManchesterSyntaxFrameResult> {
 
     @Nonnull
     private final ManchesterSyntaxChangeGeneratorFactory factory;
 
+    @Nonnull
+    private final RenderingManager renderer;
+
     @Inject
     public CheckManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
-                                                   @Nonnull ManchesterSyntaxChangeGeneratorFactory factory) {
+                                                   @Nonnull ManchesterSyntaxChangeGeneratorFactory factory,
+                                                   @Nonnull RenderingManager renderer) {
         super(accessManager);
         this.factory = factory;
+        this.renderer = renderer;
     }
 
     @Nullable
@@ -41,13 +47,16 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectA
         return BuiltInAction.VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public CheckManchesterSyntaxFrameResult execute(CheckManchesterSyntaxFrameAction action,
-                                                    ExecutionContext executionContext) {
+    public CheckManchesterSyntaxFrameResult execute(@Nonnull CheckManchesterSyntaxFrameAction action,
+                                                    @Nonnull ExecutionContext executionContext) {
 
         ManchesterSyntaxChangeGenerator changeGenerator = factory.create(
+                renderer.getRendering(action.getSubject()),
                 action.getFrom(),
                 action.getTo(),
+                "",
                 action);
         try {
             OntologyChangeList<?> changeList = changeGenerator.generateChanges(new ChangeGenerationContext(executionContext.getUserId()));
@@ -62,6 +71,7 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectA
         }
     }
 
+    @Nonnull
     @Override
     public Class<CheckManchesterSyntaxFrameAction> getActionClass() {
         return CheckManchesterSyntaxFrameAction.class;

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.change.matcher.ChangeMatcher;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ public class ReverseEngineeredChangeDescriptionGeneratorFactory {
         this.changeMatchers = ImmutableSet.copyOf(changeMatchers);
     }
 
-    public ReverseEngineeredChangeDescriptionGenerator get(String defaultDescription) {
-        return new ReverseEngineeredChangeDescriptionGenerator(defaultDescription, changeMatchers);
+    public <S extends OWLEntityData> ReverseEngineeredChangeDescriptionGenerator<S> get(String defaultDescription) {
+        return new ReverseEngineeredChangeDescriptionGenerator<>(defaultDescription, changeMatchers);
     }
 }

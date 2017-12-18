@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
 
@@ -26,10 +27,13 @@ public interface ActionHandler<A extends Action<R>, R extends Result> {
      * Gets the class of {@link Action} handled by this handler.
      * @return The class of {@link Action}.  Not {@code null}.
      */
+    @Nonnull
     Class<A> getActionClass();
 
-    RequestValidator getRequestValidator(A action, RequestContext requestContext);
+    @Nonnull
+    RequestValidator getRequestValidator(@Nonnull A action, @Nonnull RequestContext requestContext);
 
-    R execute(A action, ExecutionContext executionContext);
+    @Nonnull
+    R execute(@Nonnull A action, @Nonnull ExecutionContext executionContext);
 
 }

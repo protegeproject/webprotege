@@ -4,9 +4,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividu
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -23,7 +22,6 @@ import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_INDIVIDUAL;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
-import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -32,7 +30,7 @@ import static java.util.stream.Collectors.toSet;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
+public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
 
     @Nonnull
     private final HasApplyChanges changeApplicator;
@@ -66,23 +64,23 @@ public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActio
         return Arrays.asList(EDIT_ONTOLOGY, CREATE_INDIVIDUAL);
     }
 
+    @Nonnull
     @Override
-    public CreateNamedIndividualsResult execute(CreateNamedIndividualsAction action,
-                                                ExecutionContext executionContext) {
+    public CreateNamedIndividualsResult execute(@Nonnull CreateNamedIndividualsAction action,
+                                                @Nonnull ExecutionContext executionContext) {
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
                                                                                                              new CreateIndividualsChangeListGenerator(
                                                                                                                      action.getSourceText(),
                                                                                                                      action.getType(),
                                                                                                                      rootOntology,
-                                                                                                                     dataFactory),
-                                                                                                             new FixedMessageChangeDescriptionGenerator<>(
-                                                                                                                     "Created individuals"));
+                                                                                                                     dataFactory));
         Set<OWLNamedIndividualData> individualData = result.getSubject().stream()
                                                            .map(renderer::getRendering)
                                                            .collect(toSet());
         return new CreateNamedIndividualsResult(individualData);
     }
 
+    @Nonnull
     @Override
     public Class<CreateNamedIndividualsAction> getActionClass() {
         return CreateNamedIndividualsAction.class;

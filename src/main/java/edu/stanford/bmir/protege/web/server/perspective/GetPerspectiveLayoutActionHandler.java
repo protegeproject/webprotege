@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -28,18 +29,21 @@ public class GetPerspectiveLayoutActionHandler implements ProjectActionHandler<G
         this.perspectiveLayoutStore = perspectiveLayoutStore;
     }
 
+    @Nonnull
     @Override
     public Class<GetPerspectiveLayoutAction> getActionClass() {
         return GetPerspectiveLayoutAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetPerspectiveLayoutAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetPerspectiveLayoutAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetPerspectiveLayoutResult execute(GetPerspectiveLayoutAction action, ExecutionContext executionContext) {
+    public GetPerspectiveLayoutResult execute(@Nonnull GetPerspectiveLayoutAction action, @Nonnull ExecutionContext executionContext) {
         PerspectiveId perspectiveId = action.getPerspectiveId();
         ProjectId projectId = action.getProjectId();
         UserId userId = action.getUserId();

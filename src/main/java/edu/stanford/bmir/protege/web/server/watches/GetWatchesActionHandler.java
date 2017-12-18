@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.watches.GetWatchesAction;
@@ -21,7 +21,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.WATCH_CH
  * Stanford Center for Biomedical Informatics Research
  * 29/02/16
  */
-public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<GetWatchesAction, GetWatchesResult> {
+public class GetWatchesActionHandler extends AbstractProjectActionHandler<GetWatchesAction, GetWatchesResult> {
 
     @Nonnull
     private final WatchManager watchManager;
@@ -33,6 +33,7 @@ public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<Get
         this.watchManager = watchManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetWatchesAction> getActionClass() {
         return GetWatchesAction.class;
@@ -44,8 +45,9 @@ public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<Get
         return Arrays.asList(WATCH_CHANGES, VIEW_PROJECT);
     }
 
+    @Nonnull
     @Override
-    public GetWatchesResult execute(GetWatchesAction action, ExecutionContext executionContext) {
+    public GetWatchesResult execute(@Nonnull GetWatchesAction action, @Nonnull ExecutionContext executionContext) {
         Set<Watch> watches = watchManager.getDirectWatches(action.getEntity(), action.getUserId());
         return new GetWatchesResult(watches);
     }

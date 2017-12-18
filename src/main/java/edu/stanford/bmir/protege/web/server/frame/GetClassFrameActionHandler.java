@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -26,7 +26,7 @@ import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<GetClassFrameAction, GetClassFrameResult> {
+public class GetClassFrameActionHandler extends AbstractProjectActionHandler<GetClassFrameAction, GetClassFrameResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetClassFrameActionHandler.class);
 
@@ -49,6 +49,7 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
      * @return The class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public Class<GetClassFrameAction> getActionClass() {
         return GetClassFrameAction.class;
@@ -60,8 +61,9 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
         return BuiltInAction.VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetClassFrameResult execute(GetClassFrameAction action, ExecutionContext executionContext) {
+    public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
         FrameActionResultTranslator<ClassFrame, OWLClassData> translator = new FrameActionResultTranslator<>(
                 renderingManager,
                 translatorProvider.get(),

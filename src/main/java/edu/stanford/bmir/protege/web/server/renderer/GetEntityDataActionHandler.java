@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.renderer;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 22/02/15
  */
-public class GetEntityDataActionHandler extends AbstractHasProjectActionHandler<GetEntityDataAction, GetEntityDataResult> {
+public class GetEntityDataActionHandler extends AbstractProjectActionHandler<GetEntityDataAction, GetEntityDataResult> {
 
     @Nonnull
     private final RenderingManager renderer;
@@ -29,13 +29,15 @@ public class GetEntityDataActionHandler extends AbstractHasProjectActionHandler<
         this.renderer = renderer;
     }
 
+    @Nonnull
     @Override
     public Class<GetEntityDataAction> getActionClass() {
         return GetEntityDataAction.class;
     }
 
+    @Nonnull
     @Override
-    public GetEntityDataResult execute(GetEntityDataAction action, ExecutionContext executionContext) {
+    public GetEntityDataResult execute(@Nonnull GetEntityDataAction action, @Nonnull ExecutionContext executionContext) {
         ImmutableMap.Builder<OWLEntity, OWLEntityData> builder = ImmutableMap.builder();
         builder.putAll(renderer.getRendering(action.getEntities()));
         return new GetEntityDataResult(builder.build());

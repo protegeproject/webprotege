@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 30 Nov 2017
  */
-public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHandler<GetHierarchyRootsAction, GetHierarchyRootsResult> {
+public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler<GetHierarchyRootsAction, GetHierarchyRootsResult> {
 
     @Nonnull
     private final HierarchyProviderMapper hierarchyProviderMapper;
@@ -40,6 +40,7 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
         this.renderer = renderer;
     }
 
+    @Nonnull
     @Override
     public Class<GetHierarchyRootsAction> getActionClass() {
         return GetHierarchyRootsAction.class;
@@ -51,8 +52,9 @@ public class GetHierarchyRootsActionHandler extends AbstractHasProjectActionHand
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetHierarchyRootsResult execute(GetHierarchyRootsAction action, ExecutionContext executionContext) {
+    public GetHierarchyRootsResult execute(@Nonnull GetHierarchyRootsAction action, @Nonnull ExecutionContext executionContext) {
         HierarchyId hierarchyId = action.getHierarchyId();
         return hierarchyProviderMapper.getHierarchyProvider(hierarchyId).map(hierarchyProvider -> {
             Set<OWLEntity> roots = hierarchyProvider.getRoots();

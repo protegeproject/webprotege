@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -56,5 +57,11 @@ public class FindAndReplaceIRIPrefixChangeGenerator implements ChangeListGenerat
     @Override
     public Collection<OWLEntity> getRenamedResult(Collection<OWLEntity> result, RenameMap renameMap) {
         return result;
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Collection<OWLEntity>> result) {
+        return String.format("Replaced IRI prefix <%s> with <%s>", fromPrefix, toPrefix);
     }
 }

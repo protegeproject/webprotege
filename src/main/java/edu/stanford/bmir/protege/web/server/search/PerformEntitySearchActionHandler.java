@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.search;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.server.util.ProtegeStreams.entityStr
  * Stanford Center for Biomedical Informatics Research
  * 21 Apr 2017
  */
-public class PerformEntitySearchActionHandler extends AbstractHasProjectActionHandler<PerformEntitySearchAction, PerformEntitySearchResult> {
+public class PerformEntitySearchActionHandler extends AbstractProjectActionHandler<PerformEntitySearchAction, PerformEntitySearchResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -50,14 +50,16 @@ public class PerformEntitySearchActionHandler extends AbstractHasProjectActionHa
         this.rootOntology = rootOntology;
     }
 
+    @Nonnull
     @Override
     public Class<PerformEntitySearchAction> getActionClass() {
         return PerformEntitySearchAction.class;
     }
 
+    @Nonnull
     @Override
-    public PerformEntitySearchResult execute(PerformEntitySearchAction action,
-                                                ExecutionContext executionContext) {
+    public PerformEntitySearchResult execute(@Nonnull PerformEntitySearchAction action,
+                                             @Nonnull ExecutionContext executionContext) {
         Set<EntityType<?>> entityTypes = action.getEntityTypes();
         String searchString = action.getSearchString();
         EntitySearcher entitySearcher = EntitySearcher.get(projectId,

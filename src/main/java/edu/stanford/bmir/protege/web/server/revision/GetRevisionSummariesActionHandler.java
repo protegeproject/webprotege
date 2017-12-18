@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class GetRevisionSummariesActionHandler extends AbstractHasProjectActionHandler<GetRevisionSummariesAction, GetRevisionSummariesResult> {
+public class GetRevisionSummariesActionHandler extends AbstractProjectActionHandler<GetRevisionSummariesAction, GetRevisionSummariesResult> {
 
     @Nonnull
     private final RevisionManager revisionManager;
@@ -35,11 +35,13 @@ public class GetRevisionSummariesActionHandler extends AbstractHasProjectActionH
         return BuiltInAction.VIEW_CHANGES;
     }
 
+    @Nonnull
     @Override
-    public GetRevisionSummariesResult execute(GetRevisionSummariesAction action, ExecutionContext executionContext) {
+    public GetRevisionSummariesResult execute(@Nonnull GetRevisionSummariesAction action, @Nonnull ExecutionContext executionContext) {
         return new GetRevisionSummariesResult(ImmutableList.copyOf(revisionManager.getRevisionSummaries()));
     }
 
+    @Nonnull
     @Override
     public Class<GetRevisionSummariesAction> getActionClass() {
         return GetRevisionSummariesAction.class;

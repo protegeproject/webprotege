@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax.render;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -18,7 +18,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
-public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHandler<GetEntityRenderingAction, GetEntityRenderingResult> {
+public class GetEntityRenderingActionHandler extends AbstractProjectActionHandler<GetEntityRenderingAction, GetEntityRenderingResult> {
 
     @Nonnull
     private final RenderingManager renderingManager;
@@ -30,6 +30,7 @@ public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHan
         this.renderingManager = renderingManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetEntityRenderingAction> getActionClass() {
         return GetEntityRenderingAction.class;
@@ -41,9 +42,10 @@ public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHan
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetEntityRenderingResult execute(GetEntityRenderingAction action,
-                                               ExecutionContext executionContext) {
+    public GetEntityRenderingResult execute(@Nonnull GetEntityRenderingAction action,
+                                            @Nonnull ExecutionContext executionContext) {
         OWLEntity entity = action.getEntity();
         return new GetEntityRenderingResult(renderingManager.getFrameRendering(entity),
                                             renderingManager.getRendering(entity));

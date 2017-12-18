@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -27,13 +28,15 @@ public class ChangePasswordActionHandler extends AuthenticatedActionHandler<Chan
         this.authenticationManager = authMan;
     }
 
+    @Nonnull
     @Override
     public Class<ChangePasswordAction> getActionClass() {
         return ChangePasswordAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(ChangePasswordAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull ChangePasswordAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 

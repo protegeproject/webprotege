@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.metrics;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
@@ -19,7 +19,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/04/2014
  */
-public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<GetMetricsAction, GetMetricsResult> {
+public class GetMetricsActionHandler extends AbstractProjectActionHandler<GetMetricsAction, GetMetricsResult> {
 
     @Nonnull
     private final OWLAPIProjectMetricsManager metricsManager;
@@ -37,12 +37,14 @@ public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<Get
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetMetricsResult execute(GetMetricsAction action, ExecutionContext executionContext) {
+    public GetMetricsResult execute(@Nonnull GetMetricsAction action, @Nonnull ExecutionContext executionContext) {
         List<MetricValue> metrics = metricsManager.getMetrics();
         return new GetMetricsResult(ImmutableList.copyOf(metrics));
     }
 
+    @Nonnull
     @Override
     public Class<GetMetricsAction> getActionClass() {
         return GetMetricsAction.class;

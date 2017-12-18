@@ -55,6 +55,7 @@ public class UpdateDataPropertyFrameHandler extends AbstractUpdateFrameHandler<U
         return "Edited data property";
     }
 
+    @Nonnull
     @Override
     public Class<UpdateDataPropertyFrameAction> getActionClass() {
         return UpdateDataPropertyFrameAction.class;

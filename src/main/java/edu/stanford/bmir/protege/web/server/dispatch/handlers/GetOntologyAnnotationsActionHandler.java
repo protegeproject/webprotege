@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
@@ -29,7 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, GetOntologyAnnotationsResult> {
+public class GetOntologyAnnotationsActionHandler extends AbstractProjectActionHandler<GetOntologyAnnotationsAction, GetOntologyAnnotationsResult> {
 
     @Nonnull
     @RootOntology
@@ -52,6 +52,7 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
         this.propertyValueComparator = propertyValueComparator;
     }
 
+    @Nonnull
     @Override
     public Class<GetOntologyAnnotationsAction> getActionClass() {
         return GetOntologyAnnotationsAction.class;
@@ -63,8 +64,9 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, ExecutionContext executionContext) {
+    public GetOntologyAnnotationsResult execute(@Nonnull GetOntologyAnnotationsAction action, @Nonnull ExecutionContext executionContext) {
         List<OWLAnnotation> result = new ArrayList<>(rootOntology.getAnnotations());
         ImmutableList.Builder<PropertyAnnotationValue> annotationValues = ImmutableList.builder();
         result.stream()

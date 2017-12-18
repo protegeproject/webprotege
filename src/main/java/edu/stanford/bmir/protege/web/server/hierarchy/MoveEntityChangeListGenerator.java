@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -253,4 +254,12 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
         boolean test(A axiom);
     }
 
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Boolean> result) {
+        String entity = action.getFromNodePath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("entity");
+        String from = action.getFromNodePath().getLastPredecessor().map(EntityHierarchyNode::getBrowserText).orElse("root");
+        String to = action.getToNodeParentPath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("root");
+        return String.format("Moved %s from %s to %s", entity, from, to);
+    }
 }

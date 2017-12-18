@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -97,8 +96,8 @@ public class TermIdManager {
         }
         if (!changes.isEmpty()) {
             changeManager.applyChanges(userId,
-                                       new FixedChangeListGenerator<>(changes, termId),
-                                       new FixedMessageChangeDescriptionGenerator<>(description.toString().trim()));
+                                       new FixedChangeListGenerator<>(changes, termId, description.toString().trim())
+            );
         }
     }
 

@@ -45,6 +45,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
         this.rootOntology = rootOntology;
     }
 
+    @Nonnull
     @Override
     public Class<SetOntologyAnnotationsAction> getActionClass() {
         return SetOntologyAnnotationsAction.class;
@@ -87,18 +88,12 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
                 });
             }
         }
-        return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList, Collections.emptySet()) {
+        return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList, Collections.emptySet(), "Edited ontology annotations") {
             @Override
             public Set<OWLAnnotation> getRenamedResult(Set<OWLAnnotation> result, RenameMap renameMap) {
                 return super.getRenamedResult(result, renameMap);
             }
         };
-    }
-
-    @Override
-    protected ChangeDescriptionGenerator<Set<OWLAnnotation>> getChangeDescription(SetOntologyAnnotationsAction action,
-                                                                                  ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Edited ontology annotations");
     }
 
     @Override

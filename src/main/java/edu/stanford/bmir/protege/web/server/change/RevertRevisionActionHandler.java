@@ -43,6 +43,7 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<Bo
         this.factory = factory;
     }
 
+    @Nonnull
     @Override
     public Class<RevertRevisionAction> getActionClass() {
         return RevertRevisionAction.class;
@@ -67,11 +68,5 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<Bo
     @Override
     protected BuiltInAction getRequiredExecutableBuiltInAction() {
         return BuiltInAction.REVERT_CHANGES;
-    }
-
-    @Override
-    protected ChangeDescriptionGenerator<Boolean> getChangeDescription(RevertRevisionAction action,
-                                                                         ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Reverted the changes in Revision " + action.getRevisionNumber().getValue());
     }
 }

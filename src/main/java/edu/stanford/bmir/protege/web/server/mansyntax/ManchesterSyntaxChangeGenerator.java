@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
@@ -30,31 +29,46 @@ public class ManchesterSyntaxChangeGenerator implements ChangeListGenerator<Opti
 
     private final OntologyAxiomPairChangeGenerator changeGenerator;
 
+    private final OWLEntityData subject;
+
     private final String from;
 
     private final String to;
 
+    @Nonnull
+    private final String commitMessage;
+
     private final HasFreshEntities hasFreshEntities;
 
+    private final ReverseEngineeredChangeDescriptionGeneratorFactory factory;
 
 
     /**
      * Generates a list of ontology changes to convert one piece of Manchester Syntax to another piece.
+     *
+     * @param subject
      * @param from The from piece of syntax.  Not {@code null}.
      * @param to The to piece of syntax.  Not {@code null}.
+     * @param commitMessage The commit message.  Can be empty.
      * @throws ParserException If there was a problem parsing either {@code from} or {@code to}.
      */
     @Inject
     public ManchesterSyntaxChangeGenerator(@Provided @Nonnull ManchesterSyntaxFrameParser parser,
                                            @Provided OntologyAxiomPairChangeGenerator changeGenerator,
+                                           @Provided @Nonnull ReverseEngineeredChangeDescriptionGeneratorFactory factory,
+                                           @Nonnull OWLEntityData subject,
                                            @Nonnull String from,
                                            @Nonnull String to,
+                                           @Nonnull String commitMessage,
                                            @Nonnull HasFreshEntities hasFreshEntities) {
         this.parser = parser;
         this.changeGenerator = changeGenerator;
+        this.subject = subject;
         this.from = checkNotNull(from);
         this.to = checkNotNull(to);
+        this.commitMessage = commitMessage;
         this.hasFreshEntities = checkNotNull(hasFreshEntities);
+        this.factory = factory;
     }
 
     @Override
@@ -88,4 +102,13 @@ public class ManchesterSyntaxChangeGenerator implements ChangeListGenerator<Opti
         return parser.parse(rendering, hasFreshEntities);
     }
 
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Optional<ManchesterSyntaxFrameParseError>> result) {
+        String changeDescription = "Edited description of " + subject.getBrowserText() + ".";
+        if(!commitMessage.isEmpty()) {
+            changeDescription += "\n" + commitMessage;
+        }
+        return changeDescription;
+    }
 }

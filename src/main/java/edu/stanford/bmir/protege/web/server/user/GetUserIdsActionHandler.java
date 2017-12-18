@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -27,18 +28,21 @@ public class GetUserIdsActionHandler implements ActionHandler<GetUserIdsAction, 
         this.hasUserIds = checkNotNull(hasUserIds);
     }
 
+    @Nonnull
     @Override
     public Class<GetUserIdsAction> getActionClass() {
         return GetUserIdsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetUserIdsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetUserIdsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetUserIdsResult execute(GetUserIdsAction action, ExecutionContext executionContext) {
+    public GetUserIdsResult execute(@Nonnull GetUserIdsAction action, @Nonnull ExecutionContext executionContext) {
         return new GetUserIdsResult(ImmutableList.copyOf(hasUserIds.getUserIds()));
     }
 }

@@ -2,19 +2,18 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
-import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.entity.EntityShortFormsParser;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
 import javax.annotation.Nonnull;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -22,7 +21,7 @@ import javax.annotation.Nonnull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/02/2013
  */
-public abstract class AbstractProjectChangeHandler<T, A extends ProjectAction<R> & HasProjectId, R extends Result> extends AbstractHasProjectActionHandler<A, R> {
+public abstract class AbstractProjectChangeHandler<T, A extends ProjectAction<R>, R extends Result> extends AbstractProjectActionHandler<A, R> {
 
     @Nonnull
     private final EventManager<ProjectEvent<?>> eventManager;
@@ -35,25 +34,23 @@ public abstract class AbstractProjectChangeHandler<T, A extends ProjectAction<R>
                                         @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                         @Nonnull HasApplyChanges applyChanges) {
         super(accessManager);
-        this.eventManager = eventManager;
-        this.applyChanges = applyChanges;
+        this.eventManager = checkNotNull(eventManager);
+        this.applyChanges = checkNotNull(applyChanges);
     }
 
+    @Nonnull
     @Override
-    public final R execute(A action, ExecutionContext executionContext) {
+    public final R execute(@Nonnull A action, @Nonnull ExecutionContext executionContext) {
         EventTag tag = eventManager.getCurrentTag();
         ChangeListGenerator<T> changeListGenerator = getChangeListGenerator(action, executionContext);
-        final ChangeDescriptionGenerator<T> changeDescription = getChangeDescription(action, executionContext);
-        ChangeApplicationResult<T> changeApplicationResult = applyChanges.applyChanges(executionContext.getUserId(), changeListGenerator, changeDescription);
+        ChangeApplicationResult<T> result = applyChanges.applyChanges(executionContext.getUserId(),
+                                                                                       changeListGenerator);
         EventList<ProjectEvent<?>> eventList = eventManager.getEventsFromTag(tag);
-        return createActionResult(changeApplicationResult, action, executionContext, eventList);
+        return createActionResult(result, action, executionContext, eventList);
     }
 
     protected abstract ChangeListGenerator<T> getChangeListGenerator(A action,
                                                                      ExecutionContext executionContext);
-
-    protected abstract ChangeDescriptionGenerator<T> getChangeDescription(A action,
-                                                                          ExecutionContext executionContext);
 
     protected abstract R createActionResult(ChangeApplicationResult<T> changeApplicationResult,
                                             A action,

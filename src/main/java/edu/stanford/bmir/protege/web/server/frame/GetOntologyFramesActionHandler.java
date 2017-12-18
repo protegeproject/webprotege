@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -24,7 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Stanford Center for Biomedical Informatics Research
  * 25/07/15
  */
-public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHandler<GetOntologyFramesAction, GetOntologyFramesResult> {
+public class GetOntologyFramesActionHandler extends AbstractProjectActionHandler<GetOntologyFramesAction, GetOntologyFramesResult> {
 
 
     @Nonnull
@@ -48,8 +48,9 @@ public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHand
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetOntologyFramesResult execute(GetOntologyFramesAction action, ExecutionContext executionContext) {
+    public GetOntologyFramesResult execute(@Nonnull GetOntologyFramesAction action, @Nonnull ExecutionContext executionContext) {
         List<OntologyFrame> ontologyFrames = rootOntology.getImportsClosure()
                                                          .stream().map(o -> {
                     PropertyValueList list = new PropertyValueList(
@@ -68,6 +69,7 @@ public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHand
         return new GetOntologyFramesResult(ImmutableList.copyOf(ontologyFrames));
     }
 
+    @Nonnull
     @Override
     public Class<GetOntologyFramesAction> getActionClass() {
         return GetOntologyFramesAction.class;

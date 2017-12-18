@@ -44,6 +44,7 @@ public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandle
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
      * @return The class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public Class<UpdateNamedIndividualFrameAction> getActionClass() {
         return UpdateNamedIndividualFrameAction.class;

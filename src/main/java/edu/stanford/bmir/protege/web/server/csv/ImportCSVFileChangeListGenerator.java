@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.csv;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.change.SilentChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.*;
@@ -182,5 +179,11 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     @Override
     public Integer getRenamedResult(Integer result, RenameMap renameMap) {
         return result;
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Integer> result) {
+        return "Generated axioms from imported CSV file";
     }
 }

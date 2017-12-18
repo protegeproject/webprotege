@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
@@ -75,8 +74,8 @@ public class TermXRefsManager {
             changes.add(new AddAxiom(rootOntology, dataFactory.getOWLAnnotationAssertionAxiom(subject, annotation)));
         }
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes, term),
-                                   new FixedMessageChangeDescriptionGenerator<>("Edited term XRefs"));
+                                   new FixedChangeListGenerator<>(changes, term, "Edited term XRefs")
+        );
     }
 
 }

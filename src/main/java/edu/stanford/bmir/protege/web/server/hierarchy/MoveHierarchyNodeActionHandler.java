@@ -35,6 +35,7 @@ public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler
         this.factory = factory;
     }
 
+    @Nonnull
     @Override
     public Class<MoveHierarchyNodeAction> getActionClass() {
         return MoveHierarchyNodeAction.class;
@@ -43,11 +44,6 @@ public class MoveHierarchyNodeActionHandler extends AbstractProjectChangeHandler
     @Override
     protected ChangeListGenerator<Boolean> getChangeListGenerator(MoveHierarchyNodeAction action, ExecutionContext executionContext) {
         return factory.create(action);
-    }
-
-    @Override
-    protected ChangeDescriptionGenerator<Boolean> getChangeDescription(MoveHierarchyNodeAction action, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Moved entity");
     }
 
     @Override

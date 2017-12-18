@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -26,7 +26,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetDataPropertyFrameAction, GetDataPropertyFrameResult> {
+public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHandler<GetDataPropertyFrameAction, GetDataPropertyFrameResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetDataPropertyFrameActionHandler.class);
 
@@ -51,8 +51,9 @@ public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionH
         return VIEW_CHANGES;
     }
 
+    @Nonnull
     @Override
-    public GetDataPropertyFrameResult execute(GetDataPropertyFrameAction action, ExecutionContext executionContext) {
+    public GetDataPropertyFrameResult execute(@Nonnull GetDataPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         DataPropertyFrameTranslator translator = translatorProvider.get();
         final DataPropertyFrame frame = translator.getFrame(renderingManager.getRendering(action.getSubject())
         );
@@ -66,6 +67,7 @@ public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionH
         return new GetDataPropertyFrameResult(new LabelledFrame<>(displayName, frame));
     }
 
+    @Nonnull
     @Override
     public Class<GetDataPropertyFrameAction> getActionClass() {
         return GetDataPropertyFrameAction.class;

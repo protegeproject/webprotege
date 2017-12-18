@@ -57,6 +57,7 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
         this.changeGeneratorFactory = checkNotNull(changeFactory);
     }
 
+    @Nonnull
     @Override
     public Class<CreateClassesAction> getActionClass() {
         return CreateClassesAction.class;
@@ -76,29 +77,10 @@ public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLClass>> getChangeDescription(CreateClassesAction action, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Created classes");
-    }
-
-    @Override
     protected CreateClassesResult createActionResult(ChangeApplicationResult<Set<OWLClass>> changeApplicationResult, CreateClassesAction action, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
         Set<OWLClass> classes = changeApplicationResult.getSubject();
         return new CreateClassesResult(action.getProjectId(),
                                        ImmutableSet.copyOf(classes),
                                        eventList);
-    }
-
-    private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(CreateClassesAction action, Collection<String> shortForms) {
-        String msg;
-        if (shortForms.size() > 1) {
-            msg = "Added {0} as subclasses of {1}";
-        }
-        else {
-            msg = "Added {0} as a subclass of {1}";
-        }
-        return new FixedMessageChangeDescriptionGenerator<>(formatMessage(msg, renderingManager,
-                                                                          shortForms,
-                                                                          action.getParent()
-                                                                                .orElse(dataFactory.getOWLThing())));
     }
 }

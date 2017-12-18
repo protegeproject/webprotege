@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntityData> extends AbstractHasProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
+public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntityData> extends AbstractProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
 
     @Nonnull
     private final ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory;
@@ -69,8 +69,9 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
      * {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user who requested the action be executed.
      * @return The result of the execution to be returned to the client.
      */
+    @Nonnull
     @Override
-    public Result execute(A action, ExecutionContext executionContext) {
+    public Result execute(@Nonnull A action, @Nonnull ExecutionContext executionContext) {
         LabelledFrame<F> from = action.getFrom();
         LabelledFrame<F> to = action.getTo();
         final EventTag startTag = eventManager.getCurrentTag();
@@ -84,9 +85,10 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
 
         final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<>(from.getFrame(), to.getFrame(),
                                                                                       translator,
-                                                                                      rootOntology);
+                                                                                      rootOntology,
+                                                                                      changeDescriptionGeneratorFactory);
         ChangeDescriptionGenerator<S> generator = changeDescriptionGeneratorFactory.get("Edited " + from.getDisplayName());
-        applyChanges.applyChanges(userId, changeGenerator, generator);
+        applyChanges.applyChanges(userId, changeGenerator);
         EventList<ProjectEvent<?>> events = eventManager.getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);
     }

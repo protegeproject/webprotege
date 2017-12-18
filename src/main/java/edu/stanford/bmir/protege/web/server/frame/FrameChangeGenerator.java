@@ -4,9 +4,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
-import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
@@ -19,10 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 14/01/2013
+ * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 14/01/2013
  */
 public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityData> implements ChangeListGenerator<S> {
 
@@ -33,16 +28,20 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
 
     private final FrameTranslator<F, S> translator;
 
+    private final ReverseEngineeredChangeDescriptionGeneratorFactory factory;
+
     @Nonnull
     private final OWLOntology rootOntology;
 
     public FrameChangeGenerator(F from, F to,
                                 FrameTranslator<F, S> translator,
-                                OWLOntology rootOntology) {
+                                OWLOntology rootOntology,
+                                ReverseEngineeredChangeDescriptionGeneratorFactory factory) {
         this.from = from;
         this.to = to;
         this.translator = translator;
         this.rootOntology = rootOntology;
+        this.factory = factory;
     }
 
     public List<OWLOntologyChange> createChanges() {
@@ -73,9 +72,9 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
         Multimap<OWLAxiom, OWLOntology> axiom2OntologyMap = LinkedHashMultimap.create();
 
         // Generate a map of existing axioms so we can ensure they stay in the correct place
-        for(OWLOntology ontology : importsClosure) {
-            for(OWLAxiom fromAxiom : fromAxioms) {
-                if(isContainedInOntology(fromAxiom, ontology)) {
+        for (OWLOntology ontology : importsClosure) {
+            for (OWLAxiom fromAxiom : fromAxioms) {
+                if (isContainedInOntology(fromAxiom, ontology)) {
                     axiom2OntologyMap.put(fromAxiom, ontology);
                 }
             }
@@ -97,11 +96,11 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
         }
 
 
-        for(OWLAxiom toAxiom : toAxioms) {
+        for (OWLAxiom toAxiom : toAxioms) {
             Collection<OWLOntology> existingLocations = axiom2OntologyMap.get(toAxiom);
-            if(existingLocations.isEmpty()) {
+            if (existingLocations.isEmpty()) {
                 // Fresh axiom to be placed somewhere
-                if(mutatedOntologies.size() == 1) {
+                if (mutatedOntologies.size() == 1) {
                     // Assume edit i.e. replacement of axiom in the same ontology.
                     changes.add(new AddAxiom(mutatedOntologies.iterator().next(), toAxiom));
                 }
@@ -114,7 +113,7 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
             }
             else {
                 // Ensure it is still in there
-                for(OWLOntology ont : existingLocations) {
+                for (OWLOntology ont : existingLocations) {
                     changes.add(new AddAxiom(ont, toAxiom));
                 }
             }
@@ -130,9 +129,9 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
     }
 
     private OWLOntology getFreshAxiomOntology(Set<OWLAxiom> fromAxioms, List<OWLOntology> importsClosure, OWLOntology rootOntology) {
-        for(OWLOntology ont : importsClosure) {
-            for(OWLAxiom existingFrameAxiom : fromAxioms) {
-                if(isContainedInOntology(existingFrameAxiom, ont)) {
+        for (OWLOntology ont : importsClosure) {
+            for (OWLAxiom existingFrameAxiom : fromAxioms) {
+                if (isContainedInOntology(existingFrameAxiom, ont)) {
                     return ont;
                 }
             }
@@ -150,5 +149,12 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntityD
     @Override
     public S getRenamedResult(S result, RenameMap renameMap) {
         return renameMap.getRenamedEntity(result);
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<S> result) {
+        return factory.<S>get("Edited " + from.getSubject().getBrowserText())
+                .generateChangeDescription(result);
     }
 }

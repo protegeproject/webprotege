@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
@@ -29,7 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Stanford Center for Biomedical Informatics Research
  * 16 Jun 2017
  */
-public class GetDeprecatedEntitiesActionHandler extends AbstractHasProjectActionHandler<GetDeprecatedEntitiesAction, GetDeprecatedEntitiesResult> {
+public class GetDeprecatedEntitiesActionHandler extends AbstractProjectActionHandler<GetDeprecatedEntitiesAction, GetDeprecatedEntitiesResult> {
 
     @Nonnull
     @RootOntology
@@ -52,6 +52,7 @@ public class GetDeprecatedEntitiesActionHandler extends AbstractHasProjectAction
         this.renderingManager = renderingManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetDeprecatedEntitiesAction> getActionClass() {
         return GetDeprecatedEntitiesAction.class;
@@ -63,9 +64,10 @@ public class GetDeprecatedEntitiesActionHandler extends AbstractHasProjectAction
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetDeprecatedEntitiesResult execute(GetDeprecatedEntitiesAction action,
-                                                  ExecutionContext executionContext) {
+    public GetDeprecatedEntitiesResult execute(@Nonnull GetDeprecatedEntitiesAction action,
+                                               @Nonnull ExecutionContext executionContext) {
         PageRequest pageRequest = action.getPageRequest();
         Optional<Page<OWLEntityData>> page = entityStream(action.getEntityTypes(),
                                                           rootOntology,

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.*;
 
@@ -31,18 +32,21 @@ public class GetCSVGridActionHandler implements ApplicationActionHandler<GetCSVG
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
     }
 
+    @Nonnull
     @Override
     public Class<GetCSVGridAction> getActionClass() {
         return GetCSVGridAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetCSVGridAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetCSVGridAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetCSVGridResult execute(GetCSVGridAction action, ExecutionContext executionContext) {
+    public GetCSVGridResult execute(@Nonnull GetCSVGridAction action, @Nonnull ExecutionContext executionContext) {
         DocumentId documentId = action.getCSVDocumentId();
         File file = new File(uploadsDirectory, documentId.getDocumentId());
         if(!file.exists()) {

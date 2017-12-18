@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermSynonymsAction;
@@ -19,7 +19,7 @@ import java.util.Collection;
  * Stanford Center for Biomedical Informatics Research
  * 23 Jun 2017
  */
-public class GetOboTermSynonymsActionHandler extends AbstractHasProjectActionHandler<GetOboTermSynonymsAction, GetOboTermSynonymsResult> {
+public class GetOboTermSynonymsActionHandler extends AbstractProjectActionHandler<GetOboTermSynonymsAction, GetOboTermSynonymsResult> {
 
     @Nonnull
     private final TermSynonymsManager synonymsManager;
@@ -31,6 +31,7 @@ public class GetOboTermSynonymsActionHandler extends AbstractHasProjectActionHan
         this.synonymsManager = synonymsManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetOboTermSynonymsAction> getActionClass() {
         return GetOboTermSynonymsAction.class;
@@ -42,8 +43,9 @@ public class GetOboTermSynonymsActionHandler extends AbstractHasProjectActionHan
         return BuiltInAction.VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetOboTermSynonymsResult execute(GetOboTermSynonymsAction action, ExecutionContext executionContext) {
+    public GetOboTermSynonymsResult execute(@Nonnull GetOboTermSynonymsAction action, @Nonnull ExecutionContext executionContext) {
         Collection<OBOTermSynonym> synonyms = synonymsManager.getSynonyms(action.getEntity());
         return new GetOboTermSynonymsResult(new ArrayList<>(synonyms));
     }

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 15 Mar 2017
  */
-public class ResetPerspectiveLayoutActionHandler extends AbstractHasProjectActionHandler<ResetPerspectiveLayoutAction, ResetPerspectiveLayoutResult> {
+public class ResetPerspectiveLayoutActionHandler extends AbstractProjectActionHandler<ResetPerspectiveLayoutAction, ResetPerspectiveLayoutResult> {
 
     @Nonnull
     private final PerspectiveLayoutStore store;
@@ -30,14 +30,16 @@ public class ResetPerspectiveLayoutActionHandler extends AbstractHasProjectActio
         this.store = store;
     }
 
+    @Nonnull
     @Override
     public Class<ResetPerspectiveLayoutAction> getActionClass() {
         return ResetPerspectiveLayoutAction.class;
     }
 
+    @Nonnull
     @Override
-    public ResetPerspectiveLayoutResult execute(ResetPerspectiveLayoutAction action,
-                                                   ExecutionContext executionContext) {
+    public ResetPerspectiveLayoutResult execute(@Nonnull ResetPerspectiveLayoutAction action,
+                                                @Nonnull ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
         PerspectiveId perspectiveId = action.getPerspectiveId();
         PerspectiveLayout defaultLayout = store.getPerspectiveLayout(projectId, perspectiveId);

@@ -38,8 +38,9 @@ public abstract class AuthenticatedActionHandler<A extends AbstractAuthenticatio
         this.logger = logger;
     }
 
+    @Nonnull
     @Override
-    public final R execute(A action, ExecutionContext executionContext) {
+    public final R execute(@Nonnull A action, @Nonnull ExecutionContext executionContext) {
         UserId userId = action.getUserId();
         Optional<SaltedPasswordDigest> passwordDigest = authenticationManager.getSaltedPasswordDigest(userId);
         if (!passwordDigest.isPresent()) {

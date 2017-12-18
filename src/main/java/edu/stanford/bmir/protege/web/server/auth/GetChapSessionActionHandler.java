@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionResult;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -39,18 +40,21 @@ public class GetChapSessionActionHandler implements ApplicationActionHandler<Get
         this.logger = logger;
     }
 
+    @Nonnull
     @Override
     public Class<GetChapSessionAction> getActionClass() {
         return GetChapSessionAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetChapSessionAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetChapSessionAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetChapSessionResult execute(GetChapSessionAction action, ExecutionContext executionContext) {
+    public GetChapSessionResult execute(@Nonnull GetChapSessionAction action, @Nonnull ExecutionContext executionContext) {
         UserId userId = action.getUserId();
         if(userId.isGuest()) {
             logger.info("Attempt at authenticating guest user");

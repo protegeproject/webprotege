@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -24,7 +24,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/11/2013
  */
-public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
+public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -46,6 +46,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         this.renderingManager = renderingManager;
     }
 
+    @Nonnull
     @Override
     public Class<LookupEntitiesAction> getActionClass() {
         return LookupEntitiesAction.class;
@@ -57,8 +58,9 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         return BuiltInAction.VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public LookupEntitiesResult execute(LookupEntitiesAction action, ExecutionContext executionContext) {
+    public LookupEntitiesResult execute(@Nonnull LookupEntitiesAction action, @Nonnull ExecutionContext executionContext) {
         return new LookupEntitiesResult(lookupEntities(action.getEntityLookupRequest()));
     }
 

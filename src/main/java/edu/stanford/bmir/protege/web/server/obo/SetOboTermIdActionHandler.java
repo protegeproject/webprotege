@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermIdAction;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermIdResult;
@@ -14,7 +14,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 22 Jun 2017
  */
-public class SetOboTermIdActionHandler extends AbstractHasProjectActionHandler<SetOboTermIdAction, SetOboTermIdResult> {
+public class SetOboTermIdActionHandler extends AbstractProjectActionHandler<SetOboTermIdAction, SetOboTermIdResult> {
 
     @Nonnull
     private final TermIdManager termIdManager;
@@ -26,13 +26,15 @@ public class SetOboTermIdActionHandler extends AbstractHasProjectActionHandler<S
         this.termIdManager = termIdManager;
     }
 
+    @Nonnull
     @Override
     public Class<SetOboTermIdAction> getActionClass() {
         return SetOboTermIdAction.class;
     }
 
+    @Nonnull
     @Override
-    public SetOboTermIdResult execute(SetOboTermIdAction action, ExecutionContext executionContext) {
+    public SetOboTermIdResult execute(@Nonnull SetOboTermIdAction action, @Nonnull ExecutionContext executionContext) {
         termIdManager.setTermId(executionContext.getUserId(),
                                 action.getEntity(),
                                 action.getOboTermId());

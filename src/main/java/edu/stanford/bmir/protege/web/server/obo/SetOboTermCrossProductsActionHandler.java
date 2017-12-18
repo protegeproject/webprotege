@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermCrossProductAction;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermCrossProductResult;
@@ -14,7 +14,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 23 Jun 2017
  */
-public class SetOboTermCrossProductsActionHandler extends AbstractHasProjectActionHandler<SetOboTermCrossProductAction, SetOboTermCrossProductResult> {
+public class SetOboTermCrossProductsActionHandler extends AbstractProjectActionHandler<SetOboTermCrossProductAction, SetOboTermCrossProductResult> {
 
     @Nonnull
     private final TermCrossProductsManager crossProductsManager;
@@ -26,14 +26,16 @@ public class SetOboTermCrossProductsActionHandler extends AbstractHasProjectActi
         this.crossProductsManager = crossProductsManager;
     }
 
+    @Nonnull
     @Override
     public Class<SetOboTermCrossProductAction> getActionClass() {
         return SetOboTermCrossProductAction.class;
     }
 
+    @Nonnull
     @Override
-    public SetOboTermCrossProductResult execute(SetOboTermCrossProductAction action,
-                                                ExecutionContext executionContext) {
+    public SetOboTermCrossProductResult execute(@Nonnull SetOboTermCrossProductAction action,
+                                                @Nonnull ExecutionContext executionContext) {
         crossProductsManager.setCrossProduct(executionContext.getUserId(),
                                              action.getEntity(),
                                              action.getCrossProduct());

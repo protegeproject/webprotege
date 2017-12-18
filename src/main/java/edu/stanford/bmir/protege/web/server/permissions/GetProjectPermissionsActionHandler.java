@@ -33,18 +33,21 @@ public class GetProjectPermissionsActionHandler implements ApplicationActionHand
         this.accessManager = checkNotNull(accessManager);
     }
 
+    @Nonnull
     @Override
     public Class<GetProjectPermissionsAction> getActionClass() {
         return GetProjectPermissionsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetProjectPermissionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetProjectPermissionsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetProjectPermissionsResult execute(GetProjectPermissionsAction action, ExecutionContext executionContext) {
+    public GetProjectPermissionsResult execute(@Nonnull GetProjectPermissionsAction action, @Nonnull ExecutionContext executionContext) {
         Set<ActionId> allowedActions = accessManager.getActionClosure(
                 forUser(executionContext.getUserId()),
                 forProject(action.getProjectId())

@@ -55,6 +55,7 @@ public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFr
         return "Edited annotation property";
     }
 
+    @Nonnull
     @Override
     public Class<UpdateAnnotationPropertyFrameAction> getActionClass() {
         return UpdateAnnotationPropertyFrameAction.class;
