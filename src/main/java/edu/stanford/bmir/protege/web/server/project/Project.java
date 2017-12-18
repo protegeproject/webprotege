@@ -147,10 +147,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return "en";
     }
 
-    public ReverseEngineeredChangeDescriptionGeneratorFactory getChangeDescriptionGeneratorFactory() {
-        return changeDescriptionGeneratorFactory;
-    }
-
     @Override
     public java.util.Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
         return changeManager.getRevisionSummary(revisionNumber);
@@ -220,54 +216,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public AxiomSubjectProvider getAxiomSubjectProvider() {
-        Comparator<OWLObject> comparator = getOWLObjectComparator();
-        return new AxiomSubjectProvider(
-                new OWLClassExpressionSelector(comparator),
-                new OWLObjectPropertyExpressionSelector(comparator),
-                new OWLDataPropertyExpressionSelector(comparator),
-                new OWLIndividualSelector(comparator),
-                new SWRLAtomSelector(comparator)
-        );
-    }
-
-    public Comparator<OWLObject> getOWLObjectComparator() {
-        return new OWLObjectComparatorImpl(
-                getRenderingManager()
-        );
-    }
-
-    private OWLObjectRenderer getOWLObjectRenderer() {
-        return new OWLObjectRenderer() {
-            @Override
-            public void setShortFormProvider(@Nonnull ShortFormProvider shortFormProvider) {
-
-            }
-
-            @Nonnull
-            @Override
-            public String render(@Nonnull OWLObject object) {
-                return renderingManager.getHTMLBrowserText(object);
-            }
-        };
-    }
-
-    public Comparator<OWLAxiom> getAxiomComparator() {
-        return new AxiomComparatorImpl(
-                new AxiomBySubjectComparator(
-                        getAxiomSubjectProvider(),
-                        getOWLObjectComparator()
-                ),
-                new AxiomByTypeComparator(
-                        DefaultAxiomTypeOrdering.get()
-                ),
-                new AxiomByRenderingComparator(
-                        getOWLObjectRenderer()
-                )
-        );
-    }
-
+    
     @Override
     public void dispose() {
         projectEventManager.dispose();
