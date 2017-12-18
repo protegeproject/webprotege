@@ -53,7 +53,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
  */
 @Deprecated
 @ProjectSingleton
-public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, HasLang, HasApplyChanges {
+public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, HasLang {
 
     private final ProjectId projectId;
 
@@ -149,12 +149,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     public ReverseEngineeredChangeDescriptionGeneratorFactory getChangeDescriptionGeneratorFactory() {
         return changeDescriptionGeneratorFactory;
-    }
-
-    @Override
-    public <R> ChangeApplicationResult<R> applyChanges(UserId userId,
-                                                       ChangeListGenerator<R> changeListGenerator) throws PermissionDeniedException {
-        return chgMan.applyChanges(userId, changeListGenerator);
     }
 
     @Override
