@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.events.ProjectEventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -39,18 +40,21 @@ public class GetProjectEventsActionHandler implements ApplicationActionHandler<G
         this.logger = checkNotNull(logger);
     }
 
+    @Nonnull
     @Override
     public Class<GetProjectEventsAction> getActionClass() {
         return GetProjectEventsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetProjectEventsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetProjectEventsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetProjectEventsResult execute(GetProjectEventsAction action, ExecutionContext executionContext) {
+    public GetProjectEventsResult execute(@Nonnull GetProjectEventsAction action, @Nonnull ExecutionContext executionContext) {
         final EventTag sinceTag = action.getSinceTag();
         final ProjectId projectId = action.getProjectId();
         if(!projectManager.isActive(projectId)) {

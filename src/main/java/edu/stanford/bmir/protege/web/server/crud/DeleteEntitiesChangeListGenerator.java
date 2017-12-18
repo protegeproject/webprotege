@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -42,5 +43,16 @@ public class DeleteEntitiesChangeListGenerator implements ChangeListGenerator<Se
     @Override
     public Set<OWLEntity> getRenamedResult(Set<OWLEntity> result, RenameMap renameMap) {
         return renameMap.getRenamedEntities(result);
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Set<OWLEntity>> result) {
+        if(entities.size() == 1) {
+            return "Deleted " + entities.iterator().next().getEntityType().getPrintName().toLowerCase();
+        }
+        else {
+            return "Deleted entities";
+        }
     }
 }

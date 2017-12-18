@@ -33,20 +33,23 @@ public class GetApplicationSettingsActionHandler implements ApplicationActionHan
         this.applicationSettingsManager = checkNotNull(applicationSettingsManager);
     }
 
+    @Nonnull
     @Override
     public Class<GetApplicationSettingsAction> getActionClass() {
         return GetApplicationSettingsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetApplicationSettingsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetApplicationSettingsAction action, @Nonnull RequestContext requestContext) {
         return new ApplicationPermissionValidator(manager,
                                                   requestContext.getUserId(),
                                                   BuiltInAction.EDIT_APPLICATION_SETTINGS.getActionId());
     }
 
+    @Nonnull
     @Override
-    public GetApplicationSettingsResult execute(GetApplicationSettingsAction action, ExecutionContext executionContext) {
+    public GetApplicationSettingsResult execute(@Nonnull GetApplicationSettingsAction action, @Nonnull ExecutionContext executionContext) {
         return new GetApplicationSettingsResult(applicationSettingsManager.getAdminSettings());
     }
 }

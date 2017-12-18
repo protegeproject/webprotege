@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class GetObjectPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetObjectPropertyFrameAction, GetObjectPropertyFrameResult> {
+public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHandler<GetObjectPropertyFrameAction, GetObjectPropertyFrameResult> {
 
     private static Logger logger = LoggerFactory.getLogger(GetObjectPropertyFrameAction.class);
 
@@ -52,7 +52,8 @@ public class GetObjectPropertyFrameActionHandler extends AbstractHasProjectActio
         return VIEW_PROJECT;
     }
 
-    public GetObjectPropertyFrameResult execute(GetObjectPropertyFrameAction action, ExecutionContext executionContext) {
+    @Nonnull
+    public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         FrameTranslator<ObjectPropertyFrame, OWLObjectPropertyData> translator = new ObjectPropertyFrameTranslator(renderer,
                                                                                                                    rootOntology);
 
@@ -70,6 +71,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractHasProjectActio
         return new GetObjectPropertyFrameResult(f);
     }
 
+    @Nonnull
     @Override
     public Class<GetObjectPropertyFrameAction> getActionClass() {
         return GetObjectPropertyFrameAction.class;

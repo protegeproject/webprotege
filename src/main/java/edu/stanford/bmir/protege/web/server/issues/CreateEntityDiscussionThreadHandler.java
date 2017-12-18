@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
@@ -32,7 +32,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_O
  * Stanford Center for Biomedical Informatics Research
  * 6 Oct 2016
  */
-public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActionHandler<CreateEntityDiscussionThreadAction, CreateEntityDiscussionThreadResult> {
+public class CreateEntityDiscussionThreadHandler extends AbstractProjectActionHandler<CreateEntityDiscussionThreadAction, CreateEntityDiscussionThreadResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -75,6 +75,7 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
         this.renderer = renderer;
     }
 
+    @Nonnull
     @Override
     public Class<CreateEntityDiscussionThreadAction> getActionClass() {
         return CreateEntityDiscussionThreadAction.class;
@@ -86,9 +87,10 @@ public class CreateEntityDiscussionThreadHandler extends AbstractHasProjectActio
         return CREATE_OBJECT_COMMENT;
     }
 
+    @Nonnull
     @Override
-    public CreateEntityDiscussionThreadResult execute(CreateEntityDiscussionThreadAction action,
-                                                         ExecutionContext executionContext) {
+    public CreateEntityDiscussionThreadResult execute(@Nonnull CreateEntityDiscussionThreadAction action,
+                                                      @Nonnull ExecutionContext executionContext) {
         String rawComment = action.getComment();
         CommentRenderer commentRenderer = new CommentRenderer();
         String renderedComment = commentRenderer.renderComment(rawComment);

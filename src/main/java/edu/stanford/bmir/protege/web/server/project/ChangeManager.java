@@ -161,7 +161,6 @@ public class ChangeManager implements HasApplyChanges {
      *                                   party
      *                                   ontology changes will take place between the {@link ChangeListGenerator#generateChanges(ChangeGenerationContext)}
      *                                   method being called and the changes being applied.
-     * @param changeDescriptionGenerator A generator that describes the changes that took place.
      * @return A {@link ChangeApplicationResult} that describes the changes which took place an any renaminings.
      * @throws NullPointerException      if any parameters are {@code null}.
      * @throws PermissionDeniedException if the user identified by {@code userId} does not have permssion to write to
@@ -169,14 +168,11 @@ public class ChangeManager implements HasApplyChanges {
      */
     @Override
     public <R> ChangeApplicationResult<R> applyChanges(final UserId userId,
-                                                       final ChangeListGenerator<R> changeListGenerator,
-                                                       final ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException {
+                                                       final ChangeListGenerator<R> changeListGenerator) throws PermissionDeniedException {
         //noinspection ResultOfMethodCallIgnored
         checkNotNull(userId);
         //noinspection ResultOfMethodCallIgnored
         checkNotNull(changeListGenerator);
-        //noinspection ResultOfMethodCallIgnored
-        checkNotNull(changeDescriptionGenerator);
 
         // Final check of whether the user can actually edit the project
         Subject subject = forUser(userId);
@@ -286,9 +282,9 @@ public class ChangeManager implements HasApplyChanges {
                 appliedChanges = effectiveChanges;
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
                 R renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
-                finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
+                finalResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
-                    Revision rev = logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
+                    Revision rev = logAndBroadcastAppliedChanges(userId, changeListGenerator, finalResult);
                     revision = Optional.of(rev);
                     projectDetailsRepository.setModified(projectId, rev.getTimestamp(), userId);
                 }
@@ -400,10 +396,10 @@ public class ChangeManager implements HasApplyChanges {
 
 
     private <R> Revision logAndBroadcastAppliedChanges(UserId userId,
-                                                       ChangeApplicationResult<R> finalResult,
-                                                       ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
+                                                       ChangeListGenerator<R> changeList,
+                                                       ChangeApplicationResult<R> finalResult) {
         // Generate a description for the changes that were actually applied
-        String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
+        String changeDescription = changeList.getMessage(finalResult);
         // Log the changes
         List<OWLOntologyChangeRecord> changeRecords = finalResult.getChangeList()
                                                                  .stream()

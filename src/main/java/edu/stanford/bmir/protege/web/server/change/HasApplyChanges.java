@@ -7,5 +7,5 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  */
 public interface HasApplyChanges {
-    <R> ChangeApplicationResult<R> applyChanges(UserId userId, ChangeListGenerator<R> changeListGenerator, ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException;
+    <R> ChangeApplicationResult<R> applyChanges(UserId userId, ChangeListGenerator<R> changeListGenerator) throws PermissionDeniedException;
 }

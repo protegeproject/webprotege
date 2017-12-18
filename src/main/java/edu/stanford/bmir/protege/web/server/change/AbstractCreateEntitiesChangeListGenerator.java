@@ -41,8 +41,6 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     @Nonnull
     private final OWLDataFactory dataFactory;
 
-
-
     private static Map<String, String> builtInPrefixes = new HashMap<>();
 
     static {
@@ -143,24 +141,15 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
                                                                  ChangeGenerationContext context,
                                                                  Optional<P> parent);
 
-
-
-
-
-//    @Override
-//    public GeneratedOntologyChanges<E> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-//        OWLClass freshClass = DataFactory.getFreshOWLEntity(EntityType.CLASS, browserText);
-//
-//        GeneratedOntologyChanges.Builder<OWLClass> builder = new GeneratedOntologyChanges.Builder<OWLClass>();
-//
-//        builder.add(new AddAxiom(project.getRootOntology(), DataFactory.get().getOWLDeclarationAxiom(freshClass)));
-//        builder.add(new AddAxiom(project.getRootOntology(), DataFactory.get().getOWLSubClassOfAxiom(freshClass, superClass)));
-//
-//        return builder.build(freshClass);
-//    }
-
-//    @Override
-//    public OWLClass getRenamedResult(OWLClass result, RenameMap renameMap) {
-//        return renameMap.getRenamedEntity(result);
-//    }
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Set<E>> result) {
+        int entityCount = result.getSubject().size();
+        if(entityCount == 1) {
+            return "Created " + entityType.getPrintName().toLowerCase();
+        }
+        else {
+            return "Created " + entityType.getPluralPrintName().toLowerCase();
+        }
+    }
 }

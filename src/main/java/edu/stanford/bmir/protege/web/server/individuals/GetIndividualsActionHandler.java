@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.toList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler<GetIndividualsAction, GetIndividualsResult> {
+public class GetIndividualsActionHandler extends AbstractProjectActionHandler<GetIndividualsAction, GetIndividualsResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetIndividualsActionHandler.class);
 
@@ -70,9 +70,10 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetIndividualsResult execute(GetIndividualsAction action,
-                                           ExecutionContext executionContext) {
+    public GetIndividualsResult execute(@Nonnull GetIndividualsAction action,
+                                        @Nonnull ExecutionContext executionContext) {
         Stream<OWLNamedIndividual> stream;
         if (action.getType().isOWLThing()) {
             stream = rootOntology.getIndividualsInSignature(Imports.INCLUDED).stream();
@@ -110,6 +111,7 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         return new GetIndividualsResult(type, page, counter.getCount(), individualsData.size());
     }
 
+    @Nonnull
     @Override
     public Class<GetIndividualsAction> getActionClass() {
         return GetIndividualsAction.class;

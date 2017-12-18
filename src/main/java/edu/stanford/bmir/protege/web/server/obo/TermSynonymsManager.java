@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonymScope;
@@ -100,8 +99,8 @@ public class TermSynonymsManager {
         }
         if(!changes.isEmpty()) {
             changeManager.applyChanges(userId,
-                                       new FixedChangeListGenerator<>(changes, term),
-                                       new FixedMessageChangeDescriptionGenerator<>("Edited term synonyms"));
+                                       new FixedChangeListGenerator<>(changes, term, "Edited term synonyms")
+            );
         }
     }
 

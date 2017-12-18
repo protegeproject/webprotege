@@ -36,18 +36,21 @@ public class CreateUserAccountActionHandler implements ApplicationActionHandler<
         this.authenticationManager = checkNotNull(authenticationManager);
     }
 
+    @Nonnull
     @Override
     public Class<CreateUserAccountAction> getActionClass() {
         return CreateUserAccountAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(CreateUserAccountAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull CreateUserAccountAction action, @Nonnull RequestContext requestContext) {
         return new ApplicationPermissionValidator(accessManager, requestContext.getUserId(), CREATE_ACCOUNT);
     }
 
+    @Nonnull
     @Override
-    public CreateUserAccountResult execute(CreateUserAccountAction action, ExecutionContext executionContext) {
+    public CreateUserAccountResult execute(@Nonnull CreateUserAccountAction action, @Nonnull ExecutionContext executionContext) {
         authenticationManager.registerUser(action.getUserId(), action.getEmailAddress(), action.getPasswordDigest(), action.getSalt());
         return new CreateUserAccountResult();
     }

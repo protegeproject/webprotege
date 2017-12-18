@@ -50,6 +50,7 @@ public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHa
         this.changeGeneratorFactory = changeGeneratorFactory;
     }
 
+    @Nonnull
     @Override
     public Class<CreateObjectPropertiesAction> getActionClass() {
         return CreateObjectPropertiesAction.class;
@@ -66,12 +67,6 @@ public class CreateObjectPropertiesActionHandler extends AbstractProjectChangeHa
                                                                                  ExecutionContext executionContext) {
         return changeGeneratorFactory.create(action.getSourceText(),
                                              action.getParent());
-    }
-
-    @Override
-    protected ChangeDescriptionGenerator<Set<OWLObjectProperty>> getChangeDescription(CreateObjectPropertiesAction action,
-                                                                                      ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Created object properties");
     }
 
     @Override

@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 
@@ -57,13 +58,15 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
         this.accessManager = accessManager;
     }
 
+    @Nonnull
     @Override
     public Class<CreateNewProjectAction> getActionClass() {
         return CreateNewProjectAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(CreateNewProjectAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull CreateNewProjectAction action, @Nonnull RequestContext requestContext) {
         return new CompositeRequestValidator(
                 new UserIsSignedInValidator(requestContext.getUserId()),
                 new ApplicationPermissionValidator(
@@ -73,8 +76,9 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
         );
     }
 
+    @Nonnull
     @Override
-    public CreateNewProjectResult execute(CreateNewProjectAction action, ExecutionContext executionContext) {
+    public CreateNewProjectResult execute(@Nonnull CreateNewProjectAction action, @Nonnull ExecutionContext executionContext) {
         try {
             if(!accessManager.hasPermission(forUser(executionContext.getUserId()), ApplicationResource.get(), CREATE_EMPTY_PROJECT)) {
                 throw new PermissionDeniedException("You do not have permission to create new projects");

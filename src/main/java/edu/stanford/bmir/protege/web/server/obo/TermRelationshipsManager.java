@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -131,8 +130,7 @@ public class TermRelationshipsManager {
 
         if (!changes.isEmpty()) {
             changeManager.applyChanges(userId,
-                                       new FixedChangeListGenerator<>(changes, cls),
-                                       new FixedMessageChangeDescriptionGenerator<>("Edited relationship values: " + description.toString()));
+                                       new FixedChangeListGenerator<>(changes, cls, "Edited relationship values: " + description.toString()));
         }
     }
 }

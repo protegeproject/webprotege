@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsResul
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 
@@ -32,18 +33,21 @@ public class GetPersonIdCompletionsActionHandler implements ApplicationActionHan
         this.userDetailsManager = checkNotNull(userDetailsManager);
     }
 
+    @Nonnull
     @Override
     public Class<GetPersonIdCompletionsAction> getActionClass() {
         return GetPersonIdCompletionsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetPersonIdCompletionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetPersonIdCompletionsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetPersonIdCompletionsResult execute(GetPersonIdCompletionsAction action, ExecutionContext executionContext) {
+    public GetPersonIdCompletionsResult execute(@Nonnull GetPersonIdCompletionsAction action, @Nonnull ExecutionContext executionContext) {
         List<PersonId> matches = userDetailsManager.getUserIdsContainingIgnoreCase(action.getCompletionText(), 7).stream()
                 .map(u -> new PersonId(u.getUserName()))
                 .collect(toList());

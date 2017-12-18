@@ -24,13 +24,15 @@ public class DeleteEntityCommentHandler implements ProjectActionHandler<DeleteEn
         this.repository = repository;
     }
 
+    @Nonnull
     @Override
     public Class<DeleteEntityCommentAction> getActionClass() {
         return DeleteEntityCommentAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(DeleteEntityCommentAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull DeleteEntityCommentAction action, @Nonnull RequestContext requestContext) {
         return () -> {
             Optional<EntityDiscussionThread> thread = repository.findThreadByCommentId(action.getCommentId());
             if(!thread.isPresent()) {
@@ -51,8 +53,9 @@ public class DeleteEntityCommentHandler implements ProjectActionHandler<DeleteEn
         return RequestValidationResult.getInvalid("You do not have permission the delete this comment");
     }
 
+    @Nonnull
     @Override
-    public DeleteEntityCommentResult execute(DeleteEntityCommentAction action, ExecutionContext executionContext) {
+    public DeleteEntityCommentResult execute(@Nonnull DeleteEntityCommentAction action, @Nonnull ExecutionContext executionContext) {
         boolean deleted = repository.deleteComment(action.getCommentId());
         System.out.println("Deleted comment: " + deleted);
         return new DeleteEntityCommentResult(action.getCommentId(), deleted);

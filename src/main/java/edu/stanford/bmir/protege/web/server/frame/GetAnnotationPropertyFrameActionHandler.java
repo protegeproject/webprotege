@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetAnnotationPropertyFrameAction, GetAnnotationPropertyFrameResult> {
+public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActionHandler<GetAnnotationPropertyFrameAction, GetAnnotationPropertyFrameResult> {
 
     private Logger logger = LoggerFactory.getLogger(GetAnnotationPropertyFrameActionHandler.class);
 
@@ -52,8 +52,9 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetAnnotationPropertyFrameResult execute(GetAnnotationPropertyFrameAction action, ExecutionContext executionContext) {
+    public GetAnnotationPropertyFrameResult execute(@Nonnull GetAnnotationPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         AnnotationPropertyFrameTranslator translator = new AnnotationPropertyFrameTranslator(renderingManager,
                                                                                              rootOntology);
         AnnotationPropertyFrame frame = translator.getFrame(
@@ -70,6 +71,7 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
         return new GetAnnotationPropertyFrameResult(labelledFrame);
     }
 
+    @Nonnull
     @Override
     public Class<GetAnnotationPropertyFrameAction> getActionClass() {
         return GetAnnotationPropertyFrameAction.class;

@@ -29,18 +29,21 @@ public class LogOutUserActionHandler implements ApplicationActionHandler<LogOutU
         this.userActivityManager = checkNotNull(userActivityManager);
     }
 
+    @Nonnull
     @Override
     public Class<LogOutUserAction> getActionClass() {
         return LogOutUserAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(LogOutUserAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull LogOutUserAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public LogOutUserResult execute(LogOutUserAction action, ExecutionContext executionContext) {
+    public LogOutUserResult execute(@Nonnull LogOutUserAction action, @Nonnull ExecutionContext executionContext) {
         WebProtegeSession session = executionContext.getSession();
         UserId userId = session.getUserInSession();
         session.clearUserInSession();

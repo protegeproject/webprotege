@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 7 Mar 2017
  */
-public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionHandler<GetCommentedEntitiesAction, GetCommentedEntitiesResult> {
+public class GetCommentedEntitiesActionHandler extends AbstractProjectActionHandler<GetCommentedEntitiesAction, GetCommentedEntitiesResult> {
 
     @Nonnull
     private final EntityDiscussionThreadRepository repository;
@@ -53,14 +53,16 @@ public class GetCommentedEntitiesActionHandler extends AbstractHasProjectActionH
         this.renderer = renderer;
     }
 
+    @Nonnull
     @Override
     public Class<GetCommentedEntitiesAction> getActionClass() {
         return GetCommentedEntitiesAction.class;
     }
 
+    @Nonnull
     @Override
-    public GetCommentedEntitiesResult execute(GetCommentedEntitiesAction action,
-                                                 ExecutionContext executionContext) {
+    public GetCommentedEntitiesResult execute(@Nonnull GetCommentedEntitiesAction action,
+                                              @Nonnull ExecutionContext executionContext) {
         PageRequest request = action.getPageRequest();
         List<EntityDiscussionThread> allThreads = repository.getThreadsInProject(action.getProjectId());
 

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import edu.stanford.bmir.protege.web.client.ontology.id.GetOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.ontology.id.GetOntologyIdResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetOntologyIdAction, GetOntologyIdResult> {
+public class GetOntologyIdActionHandler extends AbstractProjectActionHandler<GetOntologyIdAction, GetOntologyIdResult> {
 
     @Nonnull
     @RootOntology
@@ -31,8 +31,9 @@ public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<
         this.rootOntology = rootOntology;
     }
 
+    @Nonnull
     @Override
-    public GetOntologyIdResult execute(GetOntologyIdAction action, ExecutionContext executionContext) {
+    public GetOntologyIdResult execute(@Nonnull GetOntologyIdAction action, @Nonnull ExecutionContext executionContext) {
         return new GetOntologyIdResult(rootOntology.getOntologyID());
     }
 
@@ -42,6 +43,7 @@ public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
     public Class<GetOntologyIdAction> getActionClass() {
         return GetOntologyIdAction.class;

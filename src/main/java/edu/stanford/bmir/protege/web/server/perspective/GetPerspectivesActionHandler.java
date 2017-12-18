@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -28,18 +29,21 @@ public class GetPerspectivesActionHandler implements ProjectActionHandler<GetPer
         this.perspectivesManager = perspectivesManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetPerspectivesAction> getActionClass() {
         return GetPerspectivesAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetPerspectivesAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetPerspectivesAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetPerspectivesResult execute(GetPerspectivesAction action, ExecutionContext executionContext) {
+    public GetPerspectivesResult execute(@Nonnull GetPerspectivesAction action, @Nonnull ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
         UserId userId = action.getUserId();
         ImmutableList<PerspectiveId> perspectives = perspectivesManager.getPerspectives(projectId, userId);

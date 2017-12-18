@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.form;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItemData;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 25 Jun 2017
  */
-public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<SetFormDataAction, SetFormDataResult> {
+public class SetFormDataActionHandler extends AbstractProjectActionHandler<SetFormDataAction, SetFormDataResult> {
 
     @Nonnull
     private final CollectionItemDataRepository repository;
@@ -29,13 +29,15 @@ public class SetFormDataActionHandler extends AbstractHasProjectActionHandler<Se
         this.repository = repository;
     }
 
+    @Nonnull
     @Override
     public Class<SetFormDataAction> getActionClass() {
         return SetFormDataAction.class;
     }
 
+    @Nonnull
     @Override
-    public SetFormDataResult execute(SetFormDataAction action, ExecutionContext executionContext) {
+    public SetFormDataResult execute(@Nonnull SetFormDataAction action, @Nonnull ExecutionContext executionContext) {
         FormData formData = action.getFormData();
         CollectionItemData data = null;
         if (formData.isEmpty()) {

@@ -44,6 +44,7 @@ public class UpdateClassFrameActionHandler extends AbstractUpdateFrameHandler<Up
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
      * @return The class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public Class<UpdateClassFrameAction> getActionClass() {
         return UpdateClassFrameAction.class;

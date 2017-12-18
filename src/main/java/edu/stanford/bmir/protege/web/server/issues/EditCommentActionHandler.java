@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_OWN
  * Stanford Center for Biomedical Informatics Research
  * 8 Oct 2016
  */
-public class EditCommentActionHandler extends AbstractHasProjectActionHandler<EditCommentAction, EditCommentResult> {
+public class EditCommentActionHandler extends AbstractProjectActionHandler<EditCommentAction, EditCommentResult> {
 
 
     @Nonnull
@@ -47,6 +47,7 @@ public class EditCommentActionHandler extends AbstractHasProjectActionHandler<Ed
         this.eventManager = eventManager;
     }
 
+    @Nonnull
     @Override
     public Class<EditCommentAction> getActionClass() {
         return EditCommentAction.class;
@@ -58,9 +59,10 @@ public class EditCommentActionHandler extends AbstractHasProjectActionHandler<Ed
         return EDIT_OWN_OBJECT_COMMENT;
     }
 
+    @Nonnull
     @Override
-    public EditCommentResult execute(EditCommentAction action,
-                                        ExecutionContext executionContext) {
+    public EditCommentResult execute(@Nonnull EditCommentAction action,
+                                     @Nonnull ExecutionContext executionContext) {
         EventTag fromTag = eventManager.getCurrentTag();
 
         Optional<EntityDiscussionThread> thread = repository.getThread(action.getThreadId());

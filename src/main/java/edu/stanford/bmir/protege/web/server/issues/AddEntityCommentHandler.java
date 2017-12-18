@@ -76,13 +76,15 @@ public class AddEntityCommentHandler implements ProjectActionHandler<AddEntityCo
         this.accessManager = accessManager;
     }
 
+    @Nonnull
     @Override
     public Class<AddEntityCommentAction> getActionClass() {
         return AddEntityCommentAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(AddEntityCommentAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull AddEntityCommentAction action, @Nonnull RequestContext requestContext) {
         return new ProjectPermissionValidator(accessManager,
                                               projectId,
                                               requestContext.getUserId(),
@@ -90,6 +92,7 @@ public class AddEntityCommentHandler implements ProjectActionHandler<AddEntityCo
 
     }
 
+    @Nonnull
     @Override
     public AddEntityCommentResult execute(@Nonnull AddEntityCommentAction action,
                                              @Nonnull ExecutionContext executionContext) {

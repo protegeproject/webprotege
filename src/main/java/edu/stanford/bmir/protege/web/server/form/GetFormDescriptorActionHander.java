@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
@@ -28,7 +28,7 @@ import java.net.URL;
  * Stanford Center for Biomedical Informatics Research
  * 07/04/16
  */
-public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandler<GetFormDescriptorAction, GetFormDescriptorResult> {
+public class GetFormDescriptorActionHander extends AbstractProjectActionHandler<GetFormDescriptorAction, GetFormDescriptorResult> {
 
     private final ProjectId projectId;
 
@@ -52,12 +52,14 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
     }
 
 
+    @Nonnull
     @Override
     public Class<GetFormDescriptorAction> getActionClass() {
         return GetFormDescriptorAction.class;
     }
 
-    public GetFormDescriptorResult execute(GetFormDescriptorAction action, ExecutionContext executionContext) {
+    @Nonnull
+    public GetFormDescriptorResult execute(@Nonnull GetFormDescriptorAction action, @Nonnull ExecutionContext executionContext) {
         return getDummy(action.getCollectionId(),
                         action.getFormId(),
                         action.getElementId());

@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -41,18 +42,21 @@ public class GetCurrentUserInSessionActionHandler implements ApplicationActionHa
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
      * @return The class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public Class<GetCurrentUserInSessionAction> getActionClass() {
         return GetCurrentUserInSessionAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetCurrentUserInSessionAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetCurrentUserInSessionAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetCurrentUserInSessionResult execute(GetCurrentUserInSessionAction action, ExecutionContext executionContext) {
+    public GetCurrentUserInSessionResult execute(@Nonnull GetCurrentUserInSessionAction action, @Nonnull ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
         Optional<UserDetails> userDetails = userDetailsManager.getUserDetails(userId);
         UserDetails theUserDetails;

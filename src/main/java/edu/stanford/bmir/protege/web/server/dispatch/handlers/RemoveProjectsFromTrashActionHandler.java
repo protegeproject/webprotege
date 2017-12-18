@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.RemoveProjectFromTrashAction;
 import edu.stanford.bmir.protege.web.shared.project.RemoveProjectsFromTrashResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +33,23 @@ public class RemoveProjectsFromTrashActionHandler implements ApplicationActionHa
         this.projectDetailsManager = projectDetailsManager;
     }
 
+    @Nonnull
     @Override
     public Class<RemoveProjectFromTrashAction> getActionClass() {
         return RemoveProjectFromTrashAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(RemoveProjectFromTrashAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull RemoveProjectFromTrashAction action, @Nonnull RequestContext requestContext) {
         return new UserIsProjectOwnerValidator(action.getProjectId(),
                                                requestContext.getUserId(),
                                                projectDetailsManager);
     }
 
+    @Nonnull
     @Override
-    public RemoveProjectsFromTrashResult execute(RemoveProjectFromTrashAction action, ExecutionContext executionContext) {
+    public RemoveProjectsFromTrashResult execute(@Nonnull RemoveProjectFromTrashAction action, @Nonnull ExecutionContext executionContext) {
         List<ProjectMovedFromTrashEvent> events = new ArrayList<>();
         ProjectId projectId = action.getProjectId();
         projectDetailsManager.setInTrash(projectId, false);

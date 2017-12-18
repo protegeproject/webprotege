@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -23,7 +23,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.SET_OBJE
  * Stanford Center for Biomedical Informatics Research
  * 12 Oct 2016
  */
-public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHandler<SetDiscussionThreadStatusAction, SetDiscussionThreadStatusResult> {
+public class SetDiscussionThreadStatusHandler extends AbstractProjectActionHandler<SetDiscussionThreadStatusAction, SetDiscussionThreadStatusResult> {
 
     @Nonnull
     private final EntityDiscussionThreadRepository repository;
@@ -45,6 +45,7 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
         this.projectId = projectId;
     }
 
+    @Nonnull
     @Override
     public Class<SetDiscussionThreadStatusAction> getActionClass() {
         return SetDiscussionThreadStatusAction.class;
@@ -56,9 +57,10 @@ public class SetDiscussionThreadStatusHandler extends AbstractHasProjectActionHa
         return SET_OBJECT_COMMENT_STATUS;
     }
 
+    @Nonnull
     @Override
-    public SetDiscussionThreadStatusResult execute(SetDiscussionThreadStatusAction action,
-                                                      ExecutionContext executionContext) {
+    public SetDiscussionThreadStatusResult execute(@Nonnull SetDiscussionThreadStatusAction action,
+                                                   @Nonnull ExecutionContext executionContext) {
         EventTag fromTag = eventManager.getCurrentTag();
         ThreadId threadId = action.getThreadId();
         Status status = action.getStatus();

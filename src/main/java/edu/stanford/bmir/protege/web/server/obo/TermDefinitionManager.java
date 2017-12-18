@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.obo.IAOVocabulary;
@@ -140,10 +139,10 @@ public class TermDefinitionManager {
             changes.add(new AddAxiom(rootOntology, definitionAssertion));
         }
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes, term),
-                                   new FixedMessageChangeDescriptionGenerator<>("Edited the term definition for " + renderingManager
+                                   new FixedChangeListGenerator<>(changes, term, "Edited the term definition for " + renderingManager
                                            .getRendering(term)
-                                           .getBrowserText()));
+                                           .getBrowserText())
+        );
     }
 
     private boolean isOBODefinitionProperty(OWLAnnotationProperty property) {

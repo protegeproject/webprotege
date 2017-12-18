@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdItemsResult;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +33,21 @@ public class GetPersonIdItemsActionHandler implements ApplicationActionHandler<G
         this.userDetailsManager = checkNotNull(userDetailsManager);
     }
 
+    @Nonnull
     @Override
     public Class<GetPersonIdItemsAction> getActionClass() {
         return GetPersonIdItemsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetPersonIdItemsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetPersonIdItemsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetPersonIdItemsResult execute(GetPersonIdItemsAction action, ExecutionContext executionContext) {
+    public GetPersonIdItemsResult execute(@Nonnull GetPersonIdItemsAction action, @Nonnull ExecutionContext executionContext) {
         List<PersonId> result = new ArrayList<>();
         for(String itemName : action.getItemNames()) {
             if(userDetailsManager.getUserDetails(UserId.getUserId(itemName)).isPresent()) {

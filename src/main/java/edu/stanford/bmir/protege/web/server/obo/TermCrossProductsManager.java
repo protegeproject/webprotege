@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -161,8 +160,8 @@ public class TermCrossProductsManager {
         changes.add(new AddAxiom(rootOntology, newXPAxiom));
         existingXPAxiom.ifPresent(ax -> changes.add(new RemoveAxiom(rootOntology, ax)));
         changeManager.applyChanges(userId,
-                                   new FixedChangeListGenerator<>(changes, term),
-                                   new FixedMessageChangeDescriptionGenerator<>("Set cross product values"));
+                                   new FixedChangeListGenerator<>(changes, term, "Set cross product values")
+        );
 
     }
 

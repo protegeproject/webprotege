@@ -6,7 +6,7 @@ import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionChoice;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionResult;
 import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
@@ -35,7 +35,7 @@ import java.util.*;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
  */
 public class GetManchesterSyntaxFrameCompletionsActionHandler
-        extends AbstractHasProjectActionHandler<GetManchesterSyntaxFrameCompletionsAction, GetManchesterSyntaxFrameCompletionsResult> {
+        extends AbstractProjectActionHandler<GetManchesterSyntaxFrameCompletionsAction, GetManchesterSyntaxFrameCompletionsResult> {
 
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
@@ -65,8 +65,9 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
     }
 
+    @Nonnull
     @Override
-    public GetManchesterSyntaxFrameCompletionsResult execute(GetManchesterSyntaxFrameCompletionsAction action, ExecutionContext executionContext) {
+    public GetManchesterSyntaxFrameCompletionsResult execute(@Nonnull GetManchesterSyntaxFrameCompletionsAction action, @Nonnull ExecutionContext executionContext) {
         String syntax = action.getSyntax();
         int from = action.getFrom();
         String triggerText = syntax.substring(0, from) + "\u0000";
@@ -210,6 +211,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     }
 
 
+    @Nonnull
     @Override
     public Class<GetManchesterSyntaxFrameCompletionsAction> getActionClass() {
         return GetManchesterSyntaxFrameCompletionsAction.class;

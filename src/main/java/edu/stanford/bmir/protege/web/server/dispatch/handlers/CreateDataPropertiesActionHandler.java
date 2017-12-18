@@ -58,12 +58,6 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLDataProperty>> getChangeDescription(CreateDataPropertiesAction action,
-                                                                                    ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Created data properties");
-    }
-
-    @Override
     protected CreateDataPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLDataProperty>> changeApplicationResult,
                                                             CreateDataPropertiesAction action,
                                                             ExecutionContext executionContext,
@@ -81,6 +75,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
         return CREATE_PROPERTY;
     }
 
+    @Nonnull
     @Override
     public Class<CreateDataPropertiesAction> getActionClass() {
         return CreateDataPropertiesAction.class;

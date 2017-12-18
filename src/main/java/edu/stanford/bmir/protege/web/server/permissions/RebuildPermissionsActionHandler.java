@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermi
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.REBUILD_PERMISSIONS;
@@ -27,18 +28,21 @@ public class RebuildPermissionsActionHandler implements ApplicationActionHandler
         this.accessManager = accessManager;
     }
 
+    @Nonnull
     @Override
     public Class<RebuildPermissionsAction> getActionClass() {
         return RebuildPermissionsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(RebuildPermissionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull RebuildPermissionsAction action, @Nonnull RequestContext requestContext) {
         return new ApplicationPermissionValidator(accessManager, requestContext.getUserId(), REBUILD_PERMISSIONS.getActionId());
     }
 
+    @Nonnull
     @Override
-    public RebuildPermissionsResult execute(RebuildPermissionsAction action, ExecutionContext executionContext) {
+    public RebuildPermissionsResult execute(@Nonnull RebuildPermissionsAction action, @Nonnull ExecutionContext executionContext) {
         accessManager.rebuild();
         return new RebuildPermissionsResult();
     }

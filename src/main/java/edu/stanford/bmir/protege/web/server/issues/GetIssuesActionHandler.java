@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetIssuesAction, GetIssuesResult> {
+public class GetIssuesActionHandler extends AbstractProjectActionHandler<GetIssuesAction, GetIssuesResult> {
 
 //    private final IssueRepository repository;
 
@@ -32,6 +32,7 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
         this.projectId = projectId;
     }
 
+    @Nonnull
     @Override
     public Class<GetIssuesAction> getActionClass() {
         return GetIssuesAction.class;
@@ -43,8 +44,9 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
         return BuiltInAction.VIEW_ANY_ISSUE;
     }
 
+    @Nonnull
     @Override
-    public GetIssuesResult execute(GetIssuesAction action, ExecutionContext executionContext) {
+    public GetIssuesResult execute(@Nonnull GetIssuesAction action, @Nonnull ExecutionContext executionContext) {
         // TODO: Should work out the issue number
 //        int issueNumber = repository.findOneByProjectIdOrderByNumberDesc(project.getProjectId())
 //                .map(i -> i.getNumber())

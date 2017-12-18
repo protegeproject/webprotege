@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 
+import javax.annotation.Nonnull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -24,4 +26,7 @@ public interface ChangeListGenerator<R> {
     OntologyChangeList<R> generateChanges(ChangeGenerationContext context);
 
     R getRenamedResult(R result, RenameMap renameMap);
+
+    @Nonnull
+    String getMessage(ChangeApplicationResult<R> result);
 }

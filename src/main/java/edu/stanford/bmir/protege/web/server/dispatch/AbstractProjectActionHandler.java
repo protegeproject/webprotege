@@ -31,17 +31,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * actually exists and fails if this isn't the case.
  * </p>
  */
-public abstract class AbstractHasProjectActionHandler<A extends ProjectAction<R> & HasProjectId, R extends Result> implements ProjectActionHandler<A, R> {
+public abstract class AbstractProjectActionHandler<A extends ProjectAction<R>, R extends Result> implements ProjectActionHandler<A, R> {
 
     @Nonnull
     private final AccessManager accessManager;
 
-    public AbstractHasProjectActionHandler(@Nonnull AccessManager accessManager) {
+    public AbstractProjectActionHandler(@Nonnull AccessManager accessManager) {
         this.accessManager = checkNotNull(accessManager);
     }
 
+    @Nonnull
     @Override
-    public final RequestValidator getRequestValidator(A action, RequestContext requestContext) {
+    public final RequestValidator getRequestValidator(@Nonnull A action, @Nonnull RequestContext requestContext) {
         List<RequestValidator> validators = new ArrayList<>();
 
         BuiltInAction builtInAction = getRequiredExecutableBuiltInAction();

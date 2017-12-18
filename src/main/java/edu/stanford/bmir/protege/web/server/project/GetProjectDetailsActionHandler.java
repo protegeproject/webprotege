@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -28,18 +29,21 @@ public class GetProjectDetailsActionHandler implements ApplicationActionHandler<
         this.projectDetailsManager = checkNotNull(projectDetailsManager);
     }
 
+    @Nonnull
     @Override
     public Class<GetProjectDetailsAction> getActionClass() {
         return GetProjectDetailsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetProjectDetailsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetProjectDetailsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetProjectDetailsResult execute(GetProjectDetailsAction action, ExecutionContext executionContext) {
+    public GetProjectDetailsResult execute(@Nonnull GetProjectDetailsAction action, @Nonnull ExecutionContext executionContext) {
         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(action.getProjectId());
         return new GetProjectDetailsResult(projectDetails);
     }

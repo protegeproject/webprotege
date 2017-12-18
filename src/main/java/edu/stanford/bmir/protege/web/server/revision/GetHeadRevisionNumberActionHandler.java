@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
@@ -18,7 +18,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectActionHandler<GetHeadRevisionNumberAction, GetHeadRevisionNumberResult> {
+public class GetHeadRevisionNumberActionHandler extends AbstractProjectActionHandler<GetHeadRevisionNumberAction, GetHeadRevisionNumberResult> {
 
     @Nonnull
     private final RevisionManager revisionManager;
@@ -30,6 +30,7 @@ public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectAction
         this.revisionManager = revisionManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetHeadRevisionNumberAction> getActionClass() {
         return GetHeadRevisionNumberAction.class;
@@ -41,8 +42,9 @@ public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectAction
         return VIEW_CHANGES;
     }
 
+    @Nonnull
     @Override
-    public GetHeadRevisionNumberResult execute(GetHeadRevisionNumberAction action, ExecutionContext executionContext) {
+    public GetHeadRevisionNumberResult execute(@Nonnull GetHeadRevisionNumberAction action, @Nonnull ExecutionContext executionContext) {
         return new GetHeadRevisionNumberResult(revisionManager.getCurrentRevision());
     }
 }

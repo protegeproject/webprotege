@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.usage;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -15,7 +15,6 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +24,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
-public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUsageAction, GetUsageResult> {
+public class GetUsageActionHandler extends AbstractProjectActionHandler<GetUsageAction, GetUsageResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -48,6 +47,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
         this.renderingManager = renderingManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetUsageAction> getActionClass() {
         return GetUsageAction.class;
@@ -59,8 +59,9 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetUsageResult execute(GetUsageAction action, ExecutionContext executionContext) {
+    public GetUsageResult execute(@Nonnull GetUsageAction action, @Nonnull ExecutionContext executionContext) {
         List<UsageReference> usage = new ArrayList<>();
         final OWLEntity subject = action.getSubject();
         ReferencingAxiomVisitor visitor = new ReferencingAxiomVisitor(subject, rootOntology, renderingManager);

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
@@ -31,18 +32,21 @@ public class GetUserIdCompletionsActionHandler implements ApplicationActionHandl
         this.userDetailsManager = checkNotNull(userDetailsManager);
     }
 
+    @Nonnull
     @Override
     public Class<GetUserIdCompletionsAction> getActionClass() {
         return GetUserIdCompletionsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetUserIdCompletionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetUserIdCompletionsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetPossibleItemCompletionsResult<UserId> execute(GetUserIdCompletionsAction action, ExecutionContext executionContext) {
+    public GetPossibleItemCompletionsResult<UserId> execute(@Nonnull GetUserIdCompletionsAction action, @Nonnull ExecutionContext executionContext) {
         String completionText = action.getCompletionText();
         List<UserId> result = userDetailsManager.getUserIdsContainingIgnoreCase(completionText, 10);
         Collections.sort(result);

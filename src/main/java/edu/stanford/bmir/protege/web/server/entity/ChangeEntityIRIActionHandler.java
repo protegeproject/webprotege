@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.server.entity;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
@@ -30,7 +29,7 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 10 May 2017
  */
-public class ChangeEntityIRIActionHandler extends AbstractHasProjectActionHandler<ChangeEntityIRIAction, ChangeEntityIRIResult> {
+public class ChangeEntityIRIActionHandler extends AbstractProjectActionHandler<ChangeEntityIRIAction, ChangeEntityIRIResult> {
 
 
     @Nonnull
@@ -69,6 +68,7 @@ public class ChangeEntityIRIActionHandler extends AbstractHasProjectActionHandle
         this.discussionThreadRepository = discussionThreadRepository;
     }
 
+    @Nonnull
     @Override
     public Class<ChangeEntityIRIAction> getActionClass() {
         return ChangeEntityIRIAction.class;
@@ -80,21 +80,20 @@ public class ChangeEntityIRIActionHandler extends AbstractHasProjectActionHandle
         return BuiltInAction.EDIT_ONTOLOGY;
     }
 
+    @Nonnull
     @Override
-    public ChangeEntityIRIResult execute(ChangeEntityIRIAction action,
-                                            ExecutionContext executionContext) {
+    public ChangeEntityIRIResult execute(@Nonnull ChangeEntityIRIAction action,
+                                         @Nonnull ExecutionContext executionContext) {
         OWLEntityRenamer renamer = new OWLEntityRenamer(rootOntology.getOWLOntologyManager(),
                                                         rootOntology.getImportsClosure());
         List<OWLOntologyChange> changeList = renamer.changeIRI(action.getEntity(), action.getTheNewIri());
         OWLEntityData oldRendering = renderer.getRendering(action.getEntity());
         applyChanges.applyChanges(executionContext.getUserId(),
-                             new FixedChangeListGenerator<>(changeList, action.getEntity()),
-                             new FixedMessageChangeDescriptionGenerator<>(
-                                     String.format("Changed %s IRI from %s to %s",
-                                                   action.getEntity().getEntityType().getPrintName(),
-                                                   action.getEntity().getIRI(),
-                                                   action.getTheNewIri())
-                             ));
+                             new FixedChangeListGenerator<>(changeList, action.getEntity(), String.format("Changed %s IRI from %s to %s",
+                                                                                                          action.getEntity().getEntityType().getPrintName(),
+                                                                                                          action.getEntity().getIRI(),
+                                                                                                          action.getTheNewIri()))
+        );
         OWLEntity theNewEntity = dataFactory.getOWLEntity(action.getEntity().getEntityType(),
                                                           action.getTheNewIri());
 

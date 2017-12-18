@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.collection;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.collection.GetCollectionItemsAction;
@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Aug 2017
  */
-public class GetCollectionItemsActionHandler extends AbstractHasProjectActionHandler<GetCollectionItemsAction, GetCollectionItemsResult> {
+public class GetCollectionItemsActionHandler extends AbstractProjectActionHandler<GetCollectionItemsAction, GetCollectionItemsResult> {
 
     @Nonnull
     private final CollectionItemDataRepository repository;
@@ -32,13 +32,15 @@ public class GetCollectionItemsActionHandler extends AbstractHasProjectActionHan
         this.repository = checkNotNull(repository);
     }
 
+    @Nonnull
     @Override
     public Class<GetCollectionItemsAction> getActionClass() {
         return GetCollectionItemsAction.class;
     }
 
+    @Nonnull
     @Override
-    public GetCollectionItemsResult execute(GetCollectionItemsAction action, ExecutionContext executionContext) {
+    public GetCollectionItemsResult execute(@Nonnull GetCollectionItemsAction action, @Nonnull ExecutionContext executionContext) {
         PageRequest pageRequest = action.getPageRequest();
         List<CollectionItem> elementIdList = repository.list(action.getCollectionId(),
                                                              pageRequest.getSkip(),

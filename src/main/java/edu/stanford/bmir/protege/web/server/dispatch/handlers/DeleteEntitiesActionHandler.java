@@ -46,6 +46,7 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
         this.factory = factory;
     }
 
+    @Nonnull
     @Override
     public Class<DeleteEntitiesAction> getActionClass() {
         return DeleteEntitiesAction.class;
@@ -62,19 +63,6 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
                                                                          ExecutionContext executionContext) {
 
         return factory.create(action.getEntities());
-    }
-
-    @Override
-    protected ChangeDescriptionGenerator<Set<OWLEntity>> getChangeDescription(DeleteEntitiesAction action,
-                                                                              ExecutionContext executionContext) {
-        Set<OWLEntity> entities = action.getEntities();
-        Object[] renderings = entities.stream()
-                                      .map(this::getBrowserText)
-                                      .sorted()
-                                      .toArray();
-        Joiner joiner = Joiner.on(", ").skipNulls();
-        String deletedEntitiesRendering = joiner.join(renderings);
-        return new FixedMessageChangeDescriptionGenerator<>(String.format("Deleted %s", deletedEntitiesRendering));
     }
 
     private String getBrowserText(OWLEntity e) {

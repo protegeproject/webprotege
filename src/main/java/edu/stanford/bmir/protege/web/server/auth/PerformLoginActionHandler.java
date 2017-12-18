@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.auth.PerformLoginResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -34,13 +35,15 @@ public class PerformLoginActionHandler extends AuthenticatedActionHandler<Perfor
         this.activityManager = activityManager;
     }
 
+    @Nonnull
     @Override
     public Class<PerformLoginAction> getActionClass() {
         return PerformLoginAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(PerformLoginAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull PerformLoginAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 

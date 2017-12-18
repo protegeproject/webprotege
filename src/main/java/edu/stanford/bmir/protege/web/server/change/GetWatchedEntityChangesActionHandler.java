@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchedChangesManager;
@@ -24,7 +24,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_CHA
  * Stanford Center for Biomedical Informatics Research
  * 27/02/15
  */
-public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActionHandler<GetWatchedEntityChangesAction, GetWatchedEntityChangesResult> {
+public class GetWatchedEntityChangesActionHandler extends AbstractProjectActionHandler<GetWatchedEntityChangesAction, GetWatchedEntityChangesResult> {
 
     @Nonnull
     private final WatchManager watchManager;
@@ -47,13 +47,15 @@ public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActi
         return VIEW_CHANGES;
     }
 
+    @Nonnull
     @Override
-    public GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, ExecutionContext executionContext) {
+    public GetWatchedEntityChangesResult execute(@Nonnull GetWatchedEntityChangesAction action, @Nonnull ExecutionContext executionContext) {
         Set<Watch> watches = watchManager.getWatches(action.getUserId());
         ImmutableList<ProjectChange> changes = watchedChangesManager.getProjectChangesForWatches(watches);
         return new GetWatchedEntityChangesResult(changes);
     }
 
+    @Nonnull
     @Override
     public Class<GetWatchedEntityChangesAction> getActionClass() {
         return GetWatchedEntityChangesAction.class;

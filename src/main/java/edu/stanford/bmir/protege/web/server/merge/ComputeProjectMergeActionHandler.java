@@ -5,7 +5,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
@@ -44,7 +44,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.UPLOAD_A
  * Stanford Center for Biomedical Informatics Research
  * 26/01/15
  */
-public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHandler<ComputeProjectMergeAction, ComputeProjectMergeResult> {
+public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandler<ComputeProjectMergeAction, ComputeProjectMergeResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(ComputeProjectMergeActionHandler.class);
 
@@ -86,8 +86,9 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
         return Arrays.asList(EDIT_ONTOLOGY, UPLOAD_AND_MERGE);
     }
 
+    @Nonnull
     @Override
-    public ComputeProjectMergeResult execute(ComputeProjectMergeAction action, ExecutionContext executionContext) {
+    public ComputeProjectMergeResult execute(@Nonnull ComputeProjectMergeAction action, @Nonnull ExecutionContext executionContext) {
         try {
             DocumentId documentId = action.getProjectDocumentId();
 
@@ -258,6 +259,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
         };
     }
 
+    @Nonnull
     @Override
     public Class<ComputeProjectMergeAction> getActionClass() {
         return ComputeProjectMergeAction.class;

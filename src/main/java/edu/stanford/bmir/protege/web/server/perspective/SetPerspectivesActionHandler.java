@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectivesResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -24,18 +25,21 @@ public class SetPerspectivesActionHandler implements ProjectActionHandler<SetPer
         this.perspectivesManager = perspectivesManager;
     }
 
+    @Nonnull
     @Override
     public Class<SetPerspectivesAction> getActionClass() {
         return SetPerspectivesAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(SetPerspectivesAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull SetPerspectivesAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public SetPerspectivesResult execute(SetPerspectivesAction action, ExecutionContext executionContext) {
+    public SetPerspectivesResult execute(@Nonnull SetPerspectivesAction action, @Nonnull ExecutionContext executionContext) {
         perspectivesManager.setPerspectives(action.getProjectId(), action.getUserId(), action.getPerspectiveIds());
         return new SetPerspectivesResult();
     }

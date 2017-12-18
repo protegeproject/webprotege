@@ -59,13 +59,6 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     }
 
     @Override
-    protected ChangeDescriptionGenerator<Set<OWLAnnotationProperty>> getChangeDescription(
-            CreateAnnotationPropertiesAction action,
-            ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Created annotation properties");
-    }
-
-    @Override
     protected CreateAnnotationPropertiesResult createActionResult(ChangeApplicationResult<Set<OWLAnnotationProperty>> changeApplicationResult,
                                                                   CreateAnnotationPropertiesAction action,
                                                                   ExecutionContext executionContext,
@@ -82,6 +75,7 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
         return asList(EDIT_ONTOLOGY, CREATE_PROPERTY);
     }
 
+    @Nonnull
     @Override
     public Class<CreateAnnotationPropertiesAction> getActionClass() {
         return CreateAnnotationPropertiesAction.class;

@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualF
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -25,7 +25,7 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PRO
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActionHandler<GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
+public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionHandler<GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
     private static Logger logger = LoggerFactory.getLogger(GetNamedIndividualFrameActionHandler.class);
 
@@ -48,6 +48,7 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
      * @return The class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action}.  Not {@code null}.
      */
+    @Nonnull
     @Override
     public Class<GetNamedIndividualFrameAction> getActionClass() {
         return GetNamedIndividualFrameAction.class;
@@ -59,9 +60,10 @@ public class GetNamedIndividualFrameActionHandler extends AbstractHasProjectActi
         return VIEW_PROJECT;
     }
 
+    @Nonnull
     @Override
-    public GetNamedIndividualFrameResult execute(GetNamedIndividualFrameAction action,
-                                                    ExecutionContext executionContext) {
+    public GetNamedIndividualFrameResult execute(@Nonnull GetNamedIndividualFrameAction action,
+                                                 @Nonnull ExecutionContext executionContext) {
         NamedIndividualFrame frame = translator.getFrame(
                 renderingManager.getRendering(action.getSubject())
         );

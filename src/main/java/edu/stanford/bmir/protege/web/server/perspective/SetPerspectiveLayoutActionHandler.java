@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.SetPerspectiveLayoutResult;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -24,18 +25,21 @@ public class SetPerspectiveLayoutActionHandler implements ProjectActionHandler<S
         this.perspectiveLayoutStore = perspectiveLayoutStore;
     }
 
+    @Nonnull
     @Override
     public Class<SetPerspectiveLayoutAction> getActionClass() {
         return SetPerspectiveLayoutAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(SetPerspectiveLayoutAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull SetPerspectiveLayoutAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public SetPerspectiveLayoutResult execute(SetPerspectiveLayoutAction action, ExecutionContext executionContext) {
+    public SetPerspectiveLayoutResult execute(@Nonnull SetPerspectiveLayoutAction action, @Nonnull ExecutionContext executionContext) {
         perspectiveLayoutStore.setPerspectiveLayout(action.getProjectId(), action.getUserId(), action.getLayout());
         return new SetPerspectiveLayoutResult();
     }

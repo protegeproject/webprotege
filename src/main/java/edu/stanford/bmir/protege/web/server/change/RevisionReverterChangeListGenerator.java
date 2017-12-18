@@ -77,6 +77,9 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
         return OntologyChangeList.<Boolean>builder().addAll(changes).build(true);
     }
 
-
-
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<Boolean> result) {
+        return "Reverted revision " + revisionNumber.getValue();
+    }
 }

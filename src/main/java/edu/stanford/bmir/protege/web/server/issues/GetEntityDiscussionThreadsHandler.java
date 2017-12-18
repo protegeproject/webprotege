@@ -44,21 +44,24 @@ public class GetEntityDiscussionThreadsHandler implements ProjectActionHandler<G
         this.renderingManager = renderingManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetEntityDiscussionThreadsAction> getActionClass() {
         return GetEntityDiscussionThreadsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetEntityDiscussionThreadsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetEntityDiscussionThreadsAction action, @Nonnull RequestContext requestContext) {
         return new ProjectPermissionValidator(accessManager,
                                               action.getProjectId(),
                                               requestContext.getUserId(),
                                               VIEW_OBJECT_COMMENT.getActionId());
     }
 
+    @Nonnull
     @Override
-    public GetEntityDiscussionThreadsResult execute(GetEntityDiscussionThreadsAction action, ExecutionContext executionContext) {
+    public GetEntityDiscussionThreadsResult execute(@Nonnull GetEntityDiscussionThreadsAction action, @Nonnull ExecutionContext executionContext) {
         List<EntityDiscussionThread> threads = repository.findThreads(action.getProjectId(), action.getEntity());
         OWLEntityData entityData = renderingManager.getRendering(action.getEntity());
         return new GetEntityDiscussionThreadsResult(entityData,

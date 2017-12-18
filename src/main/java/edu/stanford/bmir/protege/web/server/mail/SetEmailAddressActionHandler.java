@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -32,18 +33,21 @@ public class SetEmailAddressActionHandler implements ApplicationActionHandler<Se
         this.userDetailsManager = userDetailsManager;
     }
 
+    @Nonnull
     @Override
     public Class<SetEmailAddressAction> getActionClass() {
         return SetEmailAddressAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(SetEmailAddressAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull SetEmailAddressAction action, @Nonnull RequestContext requestContext) {
         return new SetEmailAddressRequestValidator(action.getUserId(), requestContext.getUserId());
     }
 
+    @Nonnull
     @Override
-    public SetEmailAddressResult execute(SetEmailAddressAction action, ExecutionContext executionContext) {
+    public SetEmailAddressResult execute(@Nonnull SetEmailAddressAction action, @Nonnull ExecutionContext executionContext) {
         String emailAddress = action.getEmailAddress();
         Optional<UserId> userId = userDetailsManager.getUserIdByEmailAddress(new EmailAddress(emailAddress));
         if(userId.isPresent()) {

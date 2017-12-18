@@ -33,20 +33,23 @@ public class SetApplicationSettingsActionHandler implements ApplicationActionHan
         this.accessManager = checkNotNull(accessManager);
     }
 
+    @Nonnull
     @Override
     public Class<SetApplicationSettingsAction> getActionClass() {
         return SetApplicationSettingsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(SetApplicationSettingsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull SetApplicationSettingsAction action, @Nonnull RequestContext requestContext) {
         return new ApplicationPermissionValidator(accessManager,
                                                   requestContext.getUserId(),
                                                   BuiltInAction.EDIT_APPLICATION_SETTINGS.getActionId());
     }
 
+    @Nonnull
     @Override
-    public SetApplicationSettingsResult execute(SetApplicationSettingsAction action, ExecutionContext executionContext) {
+    public SetApplicationSettingsResult execute(@Nonnull SetApplicationSettingsAction action, @Nonnull ExecutionContext executionContext) {
         applicationSettingsManager.setApplicationSettings(action.getApplicationSettings());
         return new SetApplicationSettingsResult();
     }

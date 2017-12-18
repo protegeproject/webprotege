@@ -49,18 +49,21 @@ public class GetAvailableProjectsHandler implements ApplicationActionHandler<Get
         this.userActivityManager = userActivityManager;
     }
 
+    @Nonnull
     @Override
     public Class<GetAvailableProjectsAction> getActionClass() {
         return GetAvailableProjectsAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(GetAvailableProjectsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull GetAvailableProjectsAction action, @Nonnull RequestContext requestContext) {
         return NullValidator.get();
     }
 
+    @Nonnull
     @Override
-    public GetAvailableProjectsResult execute(GetAvailableProjectsAction action, ExecutionContext executionContext) {
+    public GetAvailableProjectsResult execute(@Nonnull GetAvailableProjectsAction action, @Nonnull ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
         Optional<UserActivityRecord> userActivityRecord = userActivityManager.getUserActivityRecord(executionContext.getUserId());
         Map<ProjectId, Long> lastOpenedMap = new HashMap<>();

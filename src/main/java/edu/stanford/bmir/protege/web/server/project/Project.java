@@ -41,7 +41,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 
 import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
@@ -176,9 +175,8 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     @Override
     public <R> ChangeApplicationResult<R> applyChanges(UserId userId,
-                                                       ChangeListGenerator<R> changeListGenerator,
-                                                       ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException {
-        return chgMan.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
+                                                       ChangeListGenerator<R> changeListGenerator) throws PermissionDeniedException {
+        return chgMan.applyChanges(userId, changeListGenerator);
     }
 
     @Override

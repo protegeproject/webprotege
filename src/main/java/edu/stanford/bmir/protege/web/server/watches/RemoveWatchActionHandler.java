@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
-public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<RemoveWatchesAction, RemoveWatchesResult> {
+public class RemoveWatchActionHandler extends AbstractProjectActionHandler<RemoveWatchesAction, RemoveWatchesResult> {
 
     @Nonnull
     private final EventManager<ProjectEvent<?>> eventManager;
@@ -36,8 +36,9 @@ public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<Re
         this.watchManager = watchManager;
     }
 
+    @Nonnull
     @Override
-    public RemoveWatchesResult execute(RemoveWatchesAction action, ExecutionContext executionContext) {
+    public RemoveWatchesResult execute(@Nonnull RemoveWatchesAction action, @Nonnull ExecutionContext executionContext) {
         EventTag tag = eventManager.getCurrentTag();
         for(Watch watch : action.getWatches()) {
             watchManager.removeWatch(watch);
@@ -45,6 +46,7 @@ public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<Re
         return new RemoveWatchesResult(eventManager.getEventsFromTag(tag));
     }
 
+    @Nonnull
     @Override
     public Class<RemoveWatchesAction> getActionClass() {
         return RemoveWatchesAction.class;

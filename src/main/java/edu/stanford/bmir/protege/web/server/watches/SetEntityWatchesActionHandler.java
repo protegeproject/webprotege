@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -20,7 +20,7 @@ import java.util.Set;
  * Stanford Center for Biomedical Informatics Research
  * 29/02/16
  */
-public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandler<SetEntityWatchesAction, SetEntityWatchesResult> {
+public class SetEntityWatchesActionHandler extends AbstractProjectActionHandler<SetEntityWatchesAction, SetEntityWatchesResult> {
 
     private EventManager<ProjectEvent<?>> eventManager;
 
@@ -35,13 +35,15 @@ public class SetEntityWatchesActionHandler extends AbstractHasProjectActionHandl
         this.watchManager = watchManager;
     }
 
+    @Nonnull
     @Override
     public Class<SetEntityWatchesAction> getActionClass() {
         return SetEntityWatchesAction.class;
     }
 
+    @Nonnull
     @Override
-    public SetEntityWatchesResult execute(SetEntityWatchesAction action, ExecutionContext executionContext) {
+    public SetEntityWatchesResult execute(@Nonnull SetEntityWatchesAction action, @Nonnull ExecutionContext executionContext) {
         EventTag startTag = eventManager.getCurrentTag();
         UserId userId = action.getUserId();
         Set<Watch> watches = watchManager.getDirectWatches(action.getEntity(), userId);

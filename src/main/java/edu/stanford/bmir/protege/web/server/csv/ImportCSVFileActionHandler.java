@@ -49,6 +49,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
         this.factory = factory;
     }
 
+    @Nonnull
     @Override
     public Class<ImportCSVFileAction> getActionClass() {
         return ImportCSVFileAction.class;
@@ -75,12 +76,6 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
         catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    protected ChangeDescriptionGenerator<Integer> getChangeDescription(ImportCSVFileAction action,
-                                                                       ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<>("Imported CSV File");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
@@ -48,5 +49,11 @@ public class DeleteEntityChangeListGenerator implements ChangeListGenerator<OWLE
     @Override
     public OWLEntity getRenamedResult(OWLEntity result, RenameMap renameMap) {
         return renameMap.getRenamedEntity(result);
+    }
+
+    @Nonnull
+    @Override
+    public String getMessage(ChangeApplicationResult<OWLEntity> result) {
+        return "Deleted " + entity.getEntityType().getPrintName().toLowerCase();
     }
 }

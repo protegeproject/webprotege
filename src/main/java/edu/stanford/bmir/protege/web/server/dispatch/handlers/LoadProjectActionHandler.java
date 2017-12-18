@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
@@ -52,19 +53,22 @@ public class LoadProjectActionHandler implements ApplicationActionHandler<LoadPr
         this.userActivityManager = userActivityManager;
     }
 
+    @Nonnull
     @Override
     public Class<LoadProjectAction> getActionClass() {
         return LoadProjectAction.class;
     }
 
+    @Nonnull
     @Override
-    public RequestValidator getRequestValidator(LoadProjectAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(@Nonnull LoadProjectAction action, @Nonnull RequestContext requestContext) {
         return new ProjectPermissionValidator(accessManager, action.getProjectId(), requestContext.getUserId(), VIEW_PROJECT
                 .getActionId());
     }
 
+    @Nonnull
     @Override
-    public LoadProjectResult execute(final LoadProjectAction action, ExecutionContext executionContext) {
+    public LoadProjectResult execute(@Nonnull final LoadProjectAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         logger.info("{} is being loaded due to request by {}",
                     action.getProjectId(),
