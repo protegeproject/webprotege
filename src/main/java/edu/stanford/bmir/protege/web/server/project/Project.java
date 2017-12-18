@@ -53,7 +53,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
  */
 @Deprecated
 @ProjectSingleton
-public class Project implements HasDispose, HasDataFactory, HasGetRevisionSummary {
+public class Project implements HasDispose, HasGetRevisionSummary {
 
     private final ProjectId projectId;
 
@@ -154,10 +154,6 @@ public class Project implements HasDispose, HasDataFactory, HasGetRevisionSummar
 
     public RevisionManager getRevisionManager() {
         return changeManager;
-    }
-
-    public OWLDataFactory getDataFactory() {
-        return dataFactory;
     }
 
     public OWLOntology getRootOntology() {
