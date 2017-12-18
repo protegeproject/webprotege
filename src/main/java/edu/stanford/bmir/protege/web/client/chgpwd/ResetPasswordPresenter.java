@@ -48,7 +48,7 @@ public class ResetPasswordPresenter {
             closer.hide();
             resetPassword(data);
         });
-        WebProtegeDialog<ResetPasswordData> dlg = new WebProtegeDialog<ResetPasswordData>(controller);
+        WebProtegeDialog<ResetPasswordData> dlg = new WebProtegeDialog<>(controller);
         dlg.setVisible(true);
     }
 
@@ -58,17 +58,16 @@ public class ResetPasswordPresenter {
             @Override
             public void handleSuccess(ResetPasswordResult result) {
                 if (result.getResultCode() == ResetPasswordResultCode.SUCCESS) {
-                    MessageBox.showMessage("Your password has been reset.  " +
-                                                   "A temporary password has been sent to your email address.");
+                    MessageBox.showMessage(messages.password_reset_success_msg(),
+                                           messages.password_reset_success_submsg());
                 }
                 else if(result.getResultCode() == ResetPasswordResultCode.INVALID_EMAIL_ADDRESS) {
-                    MessageBox.showAlert("Invalid email address.  " +
-                                                 "The email address that you supplied is not valid.  " +
-                                                 "Your password has not been reset.");
+                    MessageBox.showAlert(messages.password_reset_error_invalidemail_msg(),
+                                         messages.password_reset_error_invalidemail_submsg());
                 }
                 else {
-                    MessageBox.showAlert("Password reset error",
-                                         "An error occurred. Please contact the administrator.");
+                    MessageBox.showAlert(messages.password_reset_error_generic_msg(),
+                                         messages.password_reset_error_generic_submsg());
                 }
             }
         });
