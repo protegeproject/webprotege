@@ -160,10 +160,6 @@ public class Project implements HasDispose, HasGetRevisionSummary {
         return ontology;
     }
 
-    public RenderingManager getRenderingManager() {
-        return renderingManager;
-    }
-
     public ProjectActionHandlerRegistry getActionHanderRegistry() {
         return actionHandlerRegistry;
     }
