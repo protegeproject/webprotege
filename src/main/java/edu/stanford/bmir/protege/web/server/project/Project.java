@@ -168,10 +168,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return classHierarchyProvider;
     }
 
-    public ManchesterSyntaxFrameParser getManchesterSyntaxFrameParser() {
-        return manchesterSyntaxFrameParserProvider.get();
-    }
-
     public OWLObjectPropertyHierarchyProvider getObjectPropertyHierarchyProvider() {
         return objectPropertyHierarchyProvider;
     }
@@ -182,10 +178,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 
     public OWLAnnotationPropertyHierarchyProvider getAnnotationPropertyHierarchyProvider() {
         return annotationPropertyHierarchyProvider;
-    }
-
-    public OWLAPIProjectMetricsManager getMetricsManager() {
-        return metricsManager;
     }
 
     public OWLDataFactory getDataFactory() {
