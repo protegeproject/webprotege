@@ -53,7 +53,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
  */
 @Deprecated
 @ProjectSingleton
-public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary {
+public class Project implements HasDispose, HasDataFactory, HasGetRevisionSummary {
 
     private final ProjectId projectId;
 
@@ -178,21 +178,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         entityCrudKitSettingsRepository.save(projectSettings);
     }
 
-    @Override
-    public boolean containsEntityInSignature(@Nonnull OWLEntity entity) {
-        return getRootOntology().containsEntityInSignature(entity, Imports.INCLUDED);
-    }
-
-    @Override
-    public Set<OWLEntity> getEntitiesWithIRI(IRI iri) {
-        return getRootOntology().getEntitiesInSignature(iri, Imports.INCLUDED);
-    }
-
-    @Nonnull
-    @Override
-    public Set<OWLEntity> getEntitiesInSignature(@Nonnull IRI entityIRI) {
-        return getRootOntology().getEntitiesInSignature(entityIRI, Imports.INCLUDED);
-    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
