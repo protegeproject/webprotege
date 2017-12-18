@@ -163,13 +163,7 @@ public class Project implements HasDispose, HasGetRevisionSummary {
     public ProjectActionHandlerRegistry getActionHanderRegistry() {
         return actionHandlerRegistry;
     }
-
-    public void setEntityCrudKitSettings(EntityCrudKitSettings<?> entityCrudKitSettings) {
-        ProjectEntityCrudKitSettings projectSettings = new ProjectEntityCrudKitSettings(getProjectId(),
-                                                                                        entityCrudKitSettings);
-        entityCrudKitSettingsRepository.save(projectSettings);
-    }
-
+    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
