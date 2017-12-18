@@ -164,14 +164,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return changeManager;
     }
 
-    public ProjectChangesManager getProjectChangesManager() {
-        return projectChangesManager;
-    }
-
-    public WatchedChangesManager getWatchedChangesManager() {
-        return watchedChangesManager;
-    }
-
     public ClassHierarchyProvider getClassHierarchyProvider() {
         return classHierarchyProvider;
     }
