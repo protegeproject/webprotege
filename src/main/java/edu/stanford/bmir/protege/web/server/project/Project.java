@@ -211,17 +211,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     public RenderingManager getRenderingManager() {
         return renderingManager;
     }
-
-    public RevisionNumber getRevisionNumber() {
-        try {
-            // TODO
-//            projectChangeReadLock.lock();
-            return changeManager.getCurrentRevision();
-        } finally {
-//            projectChangeReadLock.unlock();
-        }
-    }
-
+    
     public ProjectActionHandlerRegistry getActionHanderRegistry() {
         return actionHandlerRegistry;
     }
