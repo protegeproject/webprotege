@@ -195,8 +195,6 @@ public class ProjectCache {
             LAST_ACCESS_LOCK.writeLock().lock();
             ProjectComponent projectComponent = projectId2ProjectComponent.remove(projectId);
             lastAccessMap.remove(projectId);
-            Project project  = projectComponent.getProject();
-            project.dispose();
         }
         finally {
             final int projectsBeingAccessed = lastAccessMap.size();
