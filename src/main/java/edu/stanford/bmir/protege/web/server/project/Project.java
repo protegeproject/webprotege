@@ -53,7 +53,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
  */
 @Deprecated
 @ProjectSingleton
-public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, HasLang {
+public class Project implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary {
 
     private final ProjectId projectId;
 
@@ -143,10 +143,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return projectId;
     }
 
-    public String getLang() {
-        return "en";
-    }
-
     @Override
     public java.util.Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
         return changeManager.getRevisionSummary(revisionNumber);
@@ -216,7 +212,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     @Override
     public void dispose() {
         projectEventManager.dispose();
