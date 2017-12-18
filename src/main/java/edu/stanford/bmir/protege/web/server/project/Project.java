@@ -160,10 +160,6 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
         return projectEventManager;
     }
 
-    public WatchManager getWatchManager() {
-        return watchManager;
-    }
-
     public RevisionManager getRevisionManager() {
         return changeManager;
     }
@@ -211,7 +207,7 @@ public class Project implements HasDispose, HasDataFactory, HasContainsEntityInS
     public RenderingManager getRenderingManager() {
         return renderingManager;
     }
-    
+
     public ProjectActionHandlerRegistry getActionHanderRegistry() {
         return actionHandlerRegistry;
     }
