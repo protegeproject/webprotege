@@ -59,7 +59,7 @@ public class ResetPasswordPresenter {
             public void handleSuccess(ResetPasswordResult result) {
                 if (result.getResultCode() == ResetPasswordResultCode.SUCCESS) {
                     MessageBox.showMessage("Your password has been reset.  " +
-                                                   "A temporary password has been sent your email address.");
+                                                   "A temporary password has been sent to your email address.");
                 }
                 else if(result.getResultCode() == ResetPasswordResultCode.INVALID_EMAIL_ADDRESS) {
                     MessageBox.showAlert("Invalid email address.  " +
