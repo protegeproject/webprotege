@@ -57,94 +57,30 @@ public class Project {
 
     private final ProjectId projectId;
 
-    private final OWLDataFactory dataFactory;
-
-    private final RenderingManager renderingManager;
-
     private final EventManager<ProjectEvent<?>> projectEventManager;
 
     private final OWLOntology ontology;
 
-    private final ClassHierarchyProvider classHierarchyProvider;
-
-    private final OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
-
-    private final OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider;
-
-    private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
-
     private final RevisionManager changeManager;
-
-    private final ProjectChangesManager projectChangesManager;
-
-    private final WatchedChangesManager watchedChangesManager;
-
-    private final OWLAPIProjectMetricsManager metricsManager;
-
-    private final WatchManager watchManager;
-
-    private final ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory;
-
-    private final ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository;
-
-
-    private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
-
-
-    private final ChangeManager chgMan;
-
 
     @Nonnull
     private final ProjectActionHandlerRegistry actionHandlerRegistry;
 
     @Inject
     public Project(ProjectId projectId,
-                   OWLDataFactory dataFactory,
-                   RenderingManager renderingManager,
                    EventManager<ProjectEvent<?>> projectEventManager,
                    @RootOntology OWLOntology ontology,
-                   ClassHierarchyProvider classHierarchyProvider,
-                   OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
-                   OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                   OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
                    RevisionManager changeManager,
-                   ProjectChangesManager projectChangesManager,
-                   WatchedChangesManager watchedChangesManager,
-                   OWLAPIProjectMetricsManager metricsManager,
-                   WatchManager watchManager,
-                   ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache,
-                   ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository,
-                   Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider,
-                   ReverseEngineeredChangeDescriptionGeneratorFactory changeDescriptionGeneratorFactory,
-                   @Nonnull ProjectActionHandlerRegistry actionHandlerRegistry,
-                   ChangeManager chgMan) {
+                   @Nonnull ProjectActionHandlerRegistry actionHandlerRegistry) {
         this.projectId = projectId;
-        this.chgMan = chgMan;
-        this.dataFactory = dataFactory;
-        this.renderingManager = renderingManager;
         this.projectEventManager = projectEventManager;
         this.ontology = ontology;
-        this.classHierarchyProvider = classHierarchyProvider;
-        this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
-        this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
-        this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
         this.changeManager = changeManager;
-        this.projectChangesManager = projectChangesManager;
-        this.watchedChangesManager = watchedChangesManager;
-        this.metricsManager = metricsManager;
-        this.watchManager = watchManager;
-        this.entityCrudKitSettingsRepository = entityCrudKitSettingsRepository;
-        this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
-        this.changeDescriptionGeneratorFactory = changeDescriptionGeneratorFactory;
         this.actionHandlerRegistry = actionHandlerRegistry;
     }
 
     public ProjectId getProjectId() {
         return projectId;
-    }
-
-    public java.util.Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
-        return changeManager.getRevisionSummary(revisionNumber);
     }
 
     public EventManager<ProjectEvent<?>> getEventManager() {
