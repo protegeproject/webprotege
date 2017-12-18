@@ -53,7 +53,7 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.OWL_DEPRECATED;
  */
 @Deprecated
 @ProjectSingleton
-public class Project implements HasDispose {
+public class Project {
 
     private final ProjectId projectId;
 
@@ -143,6 +143,10 @@ public class Project implements HasDispose {
         return projectId;
     }
 
+    public java.util.Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
+        return changeManager.getRevisionSummary(revisionNumber);
+    }
+
     public EventManager<ProjectEvent<?>> getEventManager() {
         return projectEventManager;
     }
@@ -158,18 +162,4 @@ public class Project implements HasDispose {
     public ProjectActionHandlerRegistry getActionHanderRegistry() {
         return actionHandlerRegistry;
     }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public void dispose() {
-        projectEventManager.dispose();
-        classHierarchyProvider.dispose();
-        objectPropertyHierarchyProvider.dispose();
-        dataPropertyHierarchyProvider.dispose();
-        annotationPropertyHierarchyProvider.dispose();
-    }
-
 }
