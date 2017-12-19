@@ -9,8 +9,6 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -18,7 +16,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -27,7 +24,7 @@ import static java.util.Comparator.comparing;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
-public class GetClassHierarchyChildrenActionHandler extends AbstractProjectActionHandler<GetHierarchyChildrenAction, GetHierarchyChildrenResult> {
+public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActionHandler<GetHierarchyChildrenAction, GetHierarchyChildrenResult> {
 
     @Nonnull
     private final HierarchyProviderMapper hierarchyProviderMapper;
@@ -36,17 +33,21 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractProjectActio
     private final DeprecatedEntityChecker deprecatedEntityChecker;
 
     @Nonnull
-    private EntityHierarchyNodeRenderer renderer;
+    private final GraphNodeRenderer nodeRenderer;
 
     @Inject
-    public GetClassHierarchyChildrenActionHandler(@Nonnull AccessManager accessManager,
-                                                  @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
-                                                  @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
-                                                  @Nonnull EntityHierarchyNodeRenderer renderer) {
+    public GetEntityHierarchyChildrenActionHandler(@Nonnull AccessManager accessManager,
+                                                   @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
+                                                   @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
+                                                   @Nonnull GraphNodeRenderer nodeRenderer) {
         super(accessManager);
         this.hierarchyProviderMapper = hierarchyProviderMapper;
         this.deprecatedEntityChecker = deprecatedEntityChecker;
-        this.renderer = renderer;
+        this.nodeRenderer = nodeRenderer;
+    }
+
+    static GetHierarchyChildrenResult emptyResult() {
+        return new GetHierarchyChildrenResult(SuccessorMap.<EntityHierarchyNode>builder().build());
     }
 
     @Nonnull
@@ -66,31 +67,23 @@ public class GetClassHierarchyChildrenActionHandler extends AbstractProjectActio
     public GetHierarchyChildrenResult execute(@Nonnull GetHierarchyChildrenAction action, @Nonnull ExecutionContext executionContext) {
         HierarchyId hierarchyId = action.getHierarchyId();
         Optional<HierarchyProvider<OWLEntity>> hierarchyProvider = hierarchyProviderMapper.getHierarchyProvider(hierarchyId);
-        if(!hierarchyProvider.isPresent()) {
+        if (!hierarchyProvider.isPresent()) {
             return emptyResult();
         }
-        OWLEntity entity = action.getEntity();
-        GraphNode<EntityHierarchyNode> parentNode = toGraphNode(toEntityHierarchyNode(entity, action.getProjectId(), executionContext.getUserId()), hierarchyProvider.get());
+        OWLEntity parent = action.getEntity();
+        GraphNode<EntityHierarchyNode> parentNode = nodeRenderer.toGraphNode(parent, hierarchyProvider.get());
         SuccessorMap.Builder<EntityHierarchyNode> successorMap = SuccessorMap.builder();
-        hierarchyProvider.get().getChildren(entity).stream()
-                              .filter(childEntity -> !deprecatedEntityChecker.isDeprecated(childEntity))
-                              .map(childEntity -> toEntityHierarchyNode(childEntity, action.getProjectId(), executionContext.getUserId()))
-                              .map(node -> new GraphNode<>(node, hierarchyProvider.get().getChildren(node.getEntity()).isEmpty()))
-                              .forEach(node -> successorMap.add(parentNode, node));
-        return new GetHierarchyChildrenResult(successorMap.sort(comparing(GraphNode::getUserObject)).build());
+        hierarchyProvider.get().getChildren(parent).stream()
+                         // Filter out deprecated entities that are displayed under owl:Thing, owl:topObjectProperty
+                         // owl:topDataProperty
+                         .filter(child -> isNotDeprecatedTopLevelEntity(parent, child))
+                         .map(child -> nodeRenderer.toGraphNode(child, hierarchyProvider.get()))
+                         .forEach(childNode -> successorMap.add(parentNode, childNode));
+        successorMap.sort(comparing(GraphNode::getUserObject));
+        return new GetHierarchyChildrenResult(successorMap.build());
     }
 
-    static GetHierarchyChildrenResult emptyResult() {
-        return new GetHierarchyChildrenResult(SuccessorMap.<EntityHierarchyNode>builder().build());
-    }
-
-    private GraphNode<EntityHierarchyNode> toGraphNode(EntityHierarchyNode node, HierarchyProvider<OWLEntity> hierarchyProvider) {
-        return new GraphNode<>(
-                node,
-                hierarchyProvider.getChildren(node.getEntity()).isEmpty());
-    }
-
-    private EntityHierarchyNode toEntityHierarchyNode(OWLEntity entity, ProjectId projectId, UserId userId) {
-        return renderer.render(entity);
+    private boolean isNotDeprecatedTopLevelEntity(OWLEntity parent, OWLEntity child) {
+        return !(parent.isTopEntity() && deprecatedEntityChecker.isDeprecated(child));
     }
 }
