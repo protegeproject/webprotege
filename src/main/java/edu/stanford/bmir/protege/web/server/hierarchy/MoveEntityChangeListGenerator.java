@@ -6,9 +6,8 @@ import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
@@ -23,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.util.ProtegeStreams.ontologyStream;
 import static java.util.Collections.emptySet;
 
@@ -38,13 +38,17 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
 
     private final MoveHierarchyNodeAction action;
 
+    private final MessageFormatter msg;
+
     @Inject
     public MoveEntityChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
                                          @Provided @Nonnull OWLOntology rootOntology,
-                                         MoveHierarchyNodeAction action) {
+                                         @Provided @Nonnull MessageFormatter msg,
+                                         @Nonnull MoveHierarchyNodeAction action) {
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
-        this.action = action;
+        this.action = checkNotNull(action);
+        this.msg = msg;
     }
 
     private static OntologyChangeList<Boolean> notMoved() {
@@ -257,9 +261,10 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<Boolean> result) {
-        String entity = action.getFromNodePath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("entity");
+        String type = action.getFromNodePath().getLast().map(node -> node.getEntity().getEntityType().getPrintName().toLowerCase()).orElse("entity");
+        String entity = action.getFromNodePath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("");
         String from = action.getFromNodePath().getLastPredecessor().map(EntityHierarchyNode::getBrowserText).orElse("root");
         String to = action.getToNodeParentPath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("root");
-        return String.format("Moved %s from %s to %s", entity, from, to);
+        return msg.format("Moved {0} {1} from {2} to {3}", type, entity, from, to);
     }
 }
