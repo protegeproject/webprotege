@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityShortFormsParser;
@@ -41,6 +42,9 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final MessageFormatter msg;
+
     private static Map<String, String> builtInPrefixes = new HashMap<>();
 
     static {
@@ -60,18 +64,21 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @param sourceText The set of browser text strings that correspond to short names of the fresh entities that will
      * be created.  Not {@code null}.  May be empty.
      * @param parent The parent entity.  Not {@code null}.
+     * @param msg
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public AbstractCreateEntitiesChangeListGenerator(@Nonnull EntityType<E> entityType,
                                                      @Nonnull String sourceText,
                                                      @Nonnull Optional<P> parent,
                                                      @Nonnull OWLOntology rootOntology,
-                                                     @Nonnull OWLDataFactory dataFactory) {
+                                                     @Nonnull OWLDataFactory dataFactory,
+                                                     @Nonnull MessageFormatter msg) {
         this.entityType = entityType;
         this.sourceText = sourceText;
         this.parent = parent;
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
+        this.msg = msg;
     }
 
     @Override
@@ -144,12 +151,17 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     @Nonnull
     @Override
     public String getMessage(ChangeApplicationResult<Set<E>> result) {
-        int entityCount = result.getSubject().size();
+        Set<E> entities = result.getSubject();
+        int entityCount = entities.size();
         if(entityCount == 1) {
-            return "Created " + entityType.getPrintName().toLowerCase();
+            return msg.format("Created {0}: {1}",
+                              entityType.getPrintName().toLowerCase(),
+                              entities);
         }
         else {
-            return "Created " + entityType.getPluralPrintName().toLowerCase();
+            return msg.format("Created {0}: {1}",
+                              entityType.getPluralPrintName().toLowerCase(),
+                              entities);
         }
     }
 }

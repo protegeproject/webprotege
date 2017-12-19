@@ -45,17 +45,21 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
     @Nonnull
     private final OWLDataFactory dataFactory;
 
+    @Nonnull
+    private final CreateIndividualsChangeListGeneratorFactory factory;
+
     @Inject
     public CreateNamedIndividualsActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull HasApplyChanges changeApplicator,
                                                @Nonnull RenderingManager renderer,
                                                @Nonnull @RootOntology OWLOntology rootOntology,
-                                               @Nonnull OWLDataFactory dataFactory) {
+                                               @Nonnull OWLDataFactory dataFactory, @Nonnull CreateIndividualsChangeListGeneratorFactory factory) {
         super(accessManager);
         this.changeApplicator = changeApplicator;
         this.renderer = renderer;
         this.rootOntology = rootOntology;
         this.dataFactory = dataFactory;
+        this.factory = factory;
     }
 
     @Nonnull
@@ -69,11 +73,8 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
     public CreateNamedIndividualsResult execute(@Nonnull CreateNamedIndividualsAction action,
                                                 @Nonnull ExecutionContext executionContext) {
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
-                                                                                                             new CreateIndividualsChangeListGenerator(
-                                                                                                                     action.getSourceText(),
-                                                                                                                     action.getType(),
-                                                                                                                     rootOntology,
-                                                                                                                     dataFactory));
+                                                                                                factory.create(action.getType(),
+                                                                                                               action.getSourceText()));
         Set<OWLNamedIndividualData> individualData = result.getSubject().stream()
                                                            .map(renderer::getRendering)
                                                            .collect(toSet());
