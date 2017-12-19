@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -36,5 +38,32 @@ public class GetHierarchyRootsAction implements ProjectAction<GetHierarchyRootsR
     @Nonnull
     public HierarchyId getHierarchyId() {
         return hierarchyId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(hierarchyId, projectId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof GetHierarchyRootsAction)) {
+            return false;
+        }
+        GetHierarchyRootsAction other = (GetHierarchyRootsAction) obj;
+        return this.hierarchyId.equals(other.hierarchyId)
+                && this.projectId.equals(other.projectId);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("GetHierarchyRootsAction")
+                          .addValue(projectId)
+                          .addValue(hierarchyId)
+                          .toString();
     }
 }
