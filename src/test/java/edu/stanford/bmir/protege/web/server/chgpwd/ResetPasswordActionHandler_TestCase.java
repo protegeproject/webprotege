@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
@@ -125,7 +126,7 @@ public class ResetPasswordActionHandler_TestCase {
         handler.execute(action, context);
         ArgumentCaptor<UserId> userIdCaptor = ArgumentCaptor.forClass(UserId.class);
         ArgumentCaptor<String> emailCaptor = ArgumentCaptor.forClass(String.class);
-        verify(mailer, times(1)).sendEmail(userIdCaptor.capture(), emailCaptor.capture(), any(String.class), e -> {});
+        verify(mailer, times(1)).sendEmail(userIdCaptor.capture(), emailCaptor.capture(), any(String.class), any(MessagingExceptionHandler.class));
         assertThat(userIdCaptor.getValue(), is(userId));
         assertThat(emailCaptor.getValue(), is(EMAIL_ADDRESS));
     }
@@ -154,6 +155,6 @@ public class ResetPasswordActionHandler_TestCase {
                 any(SaltedPasswordDigest.class),
                 any(Salt.class));
         handler.execute(action, context);
-        verify(mailer, never()).sendEmail(any(UserId.class), any(String.class), any(String.class), e -> {});
+        verify(mailer, never()).sendEmail(any(UserId.class), any(String.class), any(String.class), any(MessagingExceptionHandler.class));
     }
 }
