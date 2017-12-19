@@ -14,12 +14,13 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
+import static java.util.Collections.emptyList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -34,10 +35,12 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
     private final EntityHierarchyNodeRenderer renderer;
 
     @Inject
-    public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager, @Nonnull HierarchyProviderMapper hierarchyProviderMapper, @Nonnull EntityHierarchyNodeRenderer renderer) {
+    public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager,
+                                          @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
+                                          @Nonnull EntityHierarchyNodeRenderer renderer) {
         super(accessManager);
-        this.hierarchyProviderMapper = hierarchyProviderMapper;
-        this.renderer = renderer;
+        this.hierarchyProviderMapper = checkNotNull(hierarchyProviderMapper);
+        this.renderer = checkNotNull(renderer);
     }
 
     @Nonnull
@@ -64,9 +67,9 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
                              EntityHierarchyNode rootNode = renderer.render(rootEntity);
                              return new GraphNode<>(rootNode, hierarchyProvider.getChildren(rootEntity).isEmpty());
                          })
-                         .sorted(Comparator.comparing(node -> node.getUserObject().getBrowserText()))
+                         .sorted(comparing(node -> node.getUserObject().getBrowserText()))
                          .collect(toList());
             return new GetHierarchyRootsResult(rootNodes);
-        }).orElse(new GetHierarchyRootsResult(Collections.emptyList()));
+        }).orElse(new GetHierarchyRootsResult(emptyList()));
     }
 }
