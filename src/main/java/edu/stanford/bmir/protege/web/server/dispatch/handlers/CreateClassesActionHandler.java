@@ -36,24 +36,14 @@ import static java.util.Arrays.asList;
 public class CreateClassesActionHandler extends AbstractProjectChangeHandler<Set<OWLClass>, CreateClassesAction, CreateClassesResult> {
 
     @Nonnull
-    private final RenderingManager renderingManager;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
-
-    @Nonnull
     private final CreateClassesChangeGeneratorFactory changeGeneratorFactory;
 
     @Inject
     public CreateClassesActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                       @Nonnull HasApplyChanges applyChanges,
-                                      @Nonnull RenderingManager renderingManager,
-                                      @Nonnull OWLDataFactory dataFactory,
                                       @Nonnull CreateClassesChangeGeneratorFactory changeFactory) {
         super(accessManager, eventManager, applyChanges);
-        this.renderingManager = checkNotNull(renderingManager);
-        this.dataFactory = checkNotNull(dataFactory);
         this.changeGeneratorFactory = checkNotNull(changeFactory);
     }
 
