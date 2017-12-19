@@ -19,7 +19,8 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 public interface ProjectComponent {
 
     @Deprecated
-    Project regetProject();
+    Project getProject();
 
     ProjectActionHandlerRegistry getActionHandlerRegistry();
 }
+

@@ -15,7 +15,6 @@ public interface HierarchyProvider<N> extends HasGetAncestors<N> {
      */
     Set<N> getRoots();
 
-
     Set<N> getChildren(N object);
 
 
