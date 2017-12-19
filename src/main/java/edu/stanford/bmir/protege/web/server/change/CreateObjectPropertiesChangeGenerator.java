@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -25,10 +26,11 @@ public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitie
     private final OWLDataFactory dataFactory;
 
     public CreateObjectPropertiesChangeGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
+                                                 @Provided @Nonnull MessageFormatter msg,
                                                  @Provided @Nonnull OWLOntology rootOntology,
                                                  @Nonnull String sourceText,
                                                  @Nonnull Optional<OWLObjectProperty> parent) {
-        super(OBJECT_PROPERTY, sourceText, parent, rootOntology, dataFactory);
+        super(OBJECT_PROPERTY, sourceText, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 

@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.change.AbstractCreateEntitiesChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
+import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -20,17 +23,19 @@ import static org.semanticweb.owlapi.model.EntityType.NAMED_INDIVIDUAL;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
+@AutoFactory
 public class CreateIndividualsChangeListGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLNamedIndividual, OWLClass> {
 
     @Nonnull
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public CreateIndividualsChangeListGenerator(@Nonnull String sourceText,
+    public CreateIndividualsChangeListGenerator(@Provided @Nonnull OWLDataFactory dataFactory,
+                                                @Provided @Nonnull MessageFormatter msg,
+                                                @Provided @Nonnull OWLOntology rootOntology,
                                                 @Nonnull Optional<OWLClass> parent,
-                                                @Nonnull OWLOntology rootOntology,
-                                                @Nonnull OWLDataFactory dataFactory) {
-        super(NAMED_INDIVIDUAL, sourceText, parent, rootOntology, dataFactory);
+                                                @Nonnull String sourceText) {
+        super(NAMED_INDIVIDUAL, sourceText, parent, rootOntology, dataFactory, msg);
         this.dataFactory = checkNotNull(dataFactory);
     }
 
