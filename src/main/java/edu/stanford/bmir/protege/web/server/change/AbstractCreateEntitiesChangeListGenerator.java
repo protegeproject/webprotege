@@ -153,15 +153,19 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     public String getMessage(ChangeApplicationResult<Set<E>> result) {
         Set<E> entities = result.getSubject();
         int entityCount = entities.size();
+        String mainMsg;
         if(entityCount == 1) {
-            return msg.format("Created {0}: {1}",
-                              entityType.getPrintName().toLowerCase(),
-                              entities);
+            mainMsg = msg.format("Created {0}: {1}",
+                                       entityType.getPrintName().toLowerCase(),
+                                       entities);
+            mainMsg += parent.map(p -> msg.format(" as a child of {0}", p)).orElse("");
         }
         else {
-            return msg.format("Created {0}: {1}",
+            mainMsg = msg.format("Created {0}: {1}",
                               entityType.getPluralPrintName().toLowerCase(),
                               entities);
+            mainMsg += parent.map(p -> msg.format(" as children of {0}", p)).orElse("");
         }
+        return mainMsg;
     }
 }
