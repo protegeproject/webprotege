@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootResult;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -21,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
+import static edu.stanford.protege.gwt.graphtree.shared.PathCollector.toPath;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -32,14 +32,15 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractProjectActionH
     private final HierarchyProviderMapper hierarchyProviderMapper;
 
     @Nonnull
-    private final EntityHierarchyNodeRenderer renderer;
+    private final GraphNodeRenderer nodeRenderer;
 
     @Inject
     public GetHierarchyPathsToRootActionHandler(@Nonnull AccessManager accessManager,
-                                                @Nonnull HierarchyProviderMapper hierarchyProviderMapper, @Nonnull EntityHierarchyNodeRenderer renderer) {
+                                                @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
+                                                @Nonnull GraphNodeRenderer nodeRenderer) {
         super(accessManager);
         this.hierarchyProviderMapper = hierarchyProviderMapper;
-        this.renderer = renderer;
+        this.nodeRenderer = nodeRenderer;
     }
 
     @Nonnull
@@ -62,20 +63,12 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractProjectActionH
             Set<List<OWLEntity>> pathsToRoot = hp.getPathsToRoot(action.getEntity());
             List<Path<GraphNode<EntityHierarchyNode>>> result =
                     pathsToRoot.stream()
-                               .map(path -> {
-                                   List<GraphNode<EntityHierarchyNode>> nodePath = path.stream()
-                                                                                       .map(e -> toGraphNode(e, executionContext.getUserId(), hp))
-                                                                                       .collect(toList());
-                                   return new Path<>(nodePath);
-                               }).collect(toList());
+                               .map(pathList -> pathList.stream()
+                                                        .map(e -> nodeRenderer.toGraphNode(e, hp))
+                                                        .collect(toPath()))
+                               .collect(toList());
             return new GetHierarchyPathsToRootResult(result);
         }).orElse(new GetHierarchyPathsToRootResult(Collections.emptyList()));
 
-    }
-
-    private GraphNode<EntityHierarchyNode> toGraphNode(OWLEntity entity, UserId userId, HierarchyProvider<OWLEntity> hierarchyProvider) {
-        return new GraphNode<>(
-                renderer.render(entity),
-                hierarchyProvider.getChildren(entity).isEmpty());
     }
 }
