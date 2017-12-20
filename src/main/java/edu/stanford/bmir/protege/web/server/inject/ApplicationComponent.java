@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 import dagger.Component;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeConfigurationChecker;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeSessionListener;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationModule;
@@ -47,4 +48,6 @@ public interface ApplicationComponent {
     AccessManager getAccessManager();
 
     ApplicationNameSupplier getApplicationNameProvider();
+
+    ApplicationSettingsChecker getApplicationSettingsChecker();
 }
