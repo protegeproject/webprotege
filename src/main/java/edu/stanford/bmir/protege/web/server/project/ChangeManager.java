@@ -300,7 +300,7 @@ public class ChangeManager implements HasApplyChanges {
             if (revision.isPresent() && !(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<>();
                 Revision rev = revision.get();
-                eventTranslatorManager.translateOntologyChanges(rev, appliedChanges, highLevelEvents);
+                eventTranslatorManager.translateOntologyChanges(rev, finalResult, highLevelEvents);
                 if (changeListGenerator instanceof HasHighLevelEvents) {
                     highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
                 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -29,7 +30,7 @@ public class EventTranslatorManager {
         }
     }
 
-    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         for(EventTranslator eventTranslator : eventTranslators) {
             eventTranslator.translateOntologyChanges(revision, appliedChanges, projectEventList);
         }
