@@ -61,7 +61,7 @@ public class GetApplicationPreferencesActionHandler_TestCase {
         handler = new GetApplicationSettingsActionHandler(accessManager, applicationSettingsManager);
         when(executionContext.getUserId()).thenReturn(userId);
         when(requestContext.getUserId()).thenReturn(userId);
-        when(applicationSettingsManager.getAdminSettings()).thenReturn(applicationSettings);
+        when(applicationSettingsManager.getApplicationSettings()).thenReturn(applicationSettings);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class GetApplicationPreferencesActionHandler_TestCase {
     @Test
     public void shouldGetAdminSettings() {
         GetApplicationSettingsResult result = handler.execute(action, executionContext);
-        verify(applicationSettingsManager, times(1)).getAdminSettings();
+        verify(applicationSettingsManager, times(1)).getApplicationSettings();
         assertThat(result.getApplicationSettings(), is(applicationSettings));
     }
 }

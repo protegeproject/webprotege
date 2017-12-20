@@ -20,6 +20,6 @@ public class ApplicationHostSupplier implements Supplier<String> {
 
     @Nonnull
     public String get() {
-        return applicationSettingsManager.getAdminSettings().getApplicationLocation().getHost();
+        return applicationSettingsManager.getApplicationSettings().getApplicationLocation().getHost();
     }
 }
