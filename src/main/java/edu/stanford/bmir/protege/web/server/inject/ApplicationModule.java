@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
+import com.google.auto.factory.Provided;
 import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
@@ -7,6 +8,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
+import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker;
+import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
@@ -29,6 +32,7 @@ import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStoreImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
+import edu.stanford.bmir.protege.web.server.place.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
@@ -39,6 +43,7 @@ import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
@@ -242,5 +247,10 @@ public class ApplicationModule {
     public CollectionItemDataRepository provideCollectionElementDataRepository(CollectionItemDataRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
+    }
+
+    @Provides
+    public ApplicationSettings provideApplicationSettings(ApplicationSettingsManager manager) {
+        return manager.getApplicationSettings();
     }
 }

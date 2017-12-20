@@ -16,6 +16,11 @@
 <%@ page import="java.util.HashSet" %>
 <%@ page import="java.util.Optional" %>
 <%@ page import="java.util.Set" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.place.ApplicationSettingsPlace" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.app.ApplicationSettings" %>
+<%@ page import="edu.stanford.bmir.protege.web.client.place.WebProtegePlaceTokenizer" %>
+<%@ page import="edu.stanford.bmir.protege.web.client.place.AdminPlaceTokenizer" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -62,7 +67,9 @@
     */
     injectStyleCustomizationIfPresent(out);
 %>
-
+<%
+    checkApplicationSettings(out);
+%>
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
         style="position:absolute;width:0;height:0;border:0"></iframe>
 <iframe src="" id="__download" style="width:0;height:0;border:0"></iframe>
@@ -85,6 +92,27 @@
     private AccessManager getAccessManager() {
         ApplicationComponent component = getWebProtegeComponent();
         return component.getAccessManager();
+    }
+
+    private ApplicationSettingsChecker getApplicationSettingsChecker() {
+        return getWebProtegeComponent().getApplicationSettingsChecker();
+    }
+
+    private void checkApplicationSettings(JspWriter writer) throws IOException {
+        ApplicationSettingsChecker checker = getApplicationSettingsChecker();
+        if(!checker.isProperlyConfigured()) {
+            writer.println("<div class=\"wp-configuration-error-banner\">");
+            ApplicationSettingsPlace appSettings = ApplicationSettingsPlace.get();
+            AdminPlaceTokenizer tokenizer = new AdminPlaceTokenizer();
+            String appSettingsToken = tokenizer.getToken(appSettings);
+            String appName = getWebProtegeComponent().getApplicationNameProvider().get();
+            writer.println(String.format("%s is not properly configured.  " +
+                                                 "Please ensure that you are signed in as the admin user and visit the <a href=\"#%s\">application settings</a> page to configure %s.  Note that you will need to refresh your browser after editing the application settings.",
+                                         appName,
+                                         appSettingsToken,
+                                         appName));
+            writer.println("</div>");
+        }
     }
 
     private void injectStyleCustomizationIfPresent(JspWriter writer) throws IOException {

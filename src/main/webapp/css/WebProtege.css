@@ -271,6 +271,23 @@ select {
     margin: 1px;
 }
 
+.wp-configuration-error-banner {
+    color: #901c28;
+    background-color: #f8d7da;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.1em;
+    margin: 2px;
+    border: 2px solid #e8b9be;
+    border-radius: 4px;
+    padding: 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
 .cm-s-manchester-syntax span.cm-quantifier {
     color: #c528eb;
     font-weight: bold;
