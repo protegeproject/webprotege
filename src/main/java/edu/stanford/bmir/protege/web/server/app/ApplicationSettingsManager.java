@@ -60,7 +60,7 @@ public class ApplicationSettingsManager {
     }
 
     @Nonnull
-    public ApplicationSettings getAdminSettings() {
+    public ApplicationSettings getApplicationSettings() {
         try {
             readLock.lock();
             ApplicationPreferences applicationPreferences = settingsStore.getApplicationPreferences();

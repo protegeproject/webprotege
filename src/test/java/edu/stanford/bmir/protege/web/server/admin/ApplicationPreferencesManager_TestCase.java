@@ -65,7 +65,7 @@ public class ApplicationPreferencesManager_TestCase {
 
     @Test
     public void shouldGetApplicationSettings() {
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getApplicationName(), is(THE_APP_NAME));
         assertThat(applicationSettings.getSystemNotificationEmailAddress().getEmailAddress(), is(THE_SYSTEM_NOTIFICATION_EMAIL_ADDRESS));
         assertThat(applicationSettings.getApplicationLocation(), is(applicationLocation));
@@ -73,7 +73,7 @@ public class ApplicationPreferencesManager_TestCase {
 
     @Test
     public void shouldGetAccountCreationNotAllowed() {
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_NOT_ALLOWED));
     }
 
@@ -82,13 +82,13 @@ public class ApplicationPreferencesManager_TestCase {
         when(accessManager.hasPermission(forGuestUser(),
                                          ApplicationResource.get(),
                                          BuiltInAction.CREATE_ACCOUNT)).thenReturn(true);
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getAccountCreationSetting(), is(ACCOUNT_CREATION_ALLOWED));
     }
 
     @Test
     public void shouldGetProjectCreationNotAllowed() {
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_NOT_ALLOWED));
     }
 
@@ -97,13 +97,13 @@ public class ApplicationPreferencesManager_TestCase {
         when(accessManager.hasPermission(forAnySignedInUser(),
                                          ApplicationResource.get(),
                                          BuiltInAction.CREATE_EMPTY_PROJECT)).thenReturn(true);
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getProjectCreationSetting(), is(EMPTY_PROJECT_CREATION_ALLOWED));
     }
 
     @Test
     public void shouldGetProjectUploadNotAllowed() {
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_NOT_ALLOWED));
     }
 
@@ -112,7 +112,7 @@ public class ApplicationPreferencesManager_TestCase {
         when(accessManager.hasPermission(forAnySignedInUser(),
                                          ApplicationResource.get(),
                                          BuiltInAction.UPLOAD_PROJECT)).thenReturn(true);
-        ApplicationSettings applicationSettings = manager.getAdminSettings();
+        ApplicationSettings applicationSettings = manager.getApplicationSettings();
         assertThat(applicationSettings.getProjectUploadSetting(), is(PROJECT_UPLOAD_ALLOWED));
     }
 }
