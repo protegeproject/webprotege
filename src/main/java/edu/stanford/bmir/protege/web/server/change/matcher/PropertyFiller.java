@@ -18,17 +18,17 @@ public class PropertyFiller {
 
     private final OWLClassExpression classExpression;
 
-    private final OWLClassExpression subClass;
+    private final OWLObject subject;
 
-    public PropertyFiller(@Nonnull OWLClassExpression subClass,
+    public PropertyFiller(@Nonnull OWLObject subject,
                           @Nonnull OWLClassExpression classExpression) {
         this.classExpression = classExpression;
-        this.subClass = subClass;
+        this.subject = subject;
     }
 
     @Nonnull
-    public OWLClassExpression getSubClass() {
-        return subClass;
+    public OWLObject getSubject() {
+        return subject;
     }
 
     @Nonnull
