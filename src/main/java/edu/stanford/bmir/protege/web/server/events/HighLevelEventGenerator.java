@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
@@ -10,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
 import javax.annotation.Nonnull;
@@ -26,6 +28,8 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     private final ProjectId projectId;
 
+    private final OWLOntology rootOntology;
+
     private final BrowserTextProvider browserTextProvider;
 
     private final HasGetRevisionSummary hasGetRevisionSummary;
@@ -34,10 +38,12 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     @Inject
     public HighLevelEventGenerator(ProjectId projectId,
+                                   OWLOntology rootOntology,
                                    BrowserTextProvider browserTextProvider,
                                    HasGetEntitiesWithIRI hasGetEntitiesWithIRI,
                                    HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
+        this.rootOntology = rootOntology;
         this.browserTextProvider = browserTextProvider;
         this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
         this.hasGetRevisionSummary = hasGetRevisionSummary;
@@ -45,15 +51,16 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     @Override
     public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
-
     }
 
     @Override
-    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, final List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision,
+                                         ChangeApplicationResult<?> changes,
+                                         final List<ProjectEvent<?>> projectEventList) {
         // TODO: NEED TIDYING AND SPLITTING UP
         final Set<OWLEntity> changedEntities = new HashSet<>();
 
-        for(OWLOntologyChange change : appliedChanges) {
+        for(OWLOntologyChange change : changes.getChangeList()) {
             change.accept(new OWLOntologyChangeVisitor() {
                 @Override
                 public void visit(@Nonnull AddAxiom change) {
@@ -153,10 +160,31 @@ public class HighLevelEventGenerator implements EventTranslator {
 
 
         Set<OWLEntityData> changedEntitiesData = new HashSet<>();
+        Object subject = changes.getSubject();
+        if(subject instanceof OWLEntity) {
+            OWLEntity entity = (OWLEntity) subject;
+            if (rootOntology.containsEntityInSignature(entity)) {
+                String browserText = browserTextProvider.getOWLEntityBrowserText(entity).orElse("");
+                changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
+            }
+        }
+        else if(subject instanceof OWLEntityData) {
+            OWLEntityData entityData = (OWLEntityData) subject;
+            if (rootOntology.containsEntityInSignature(entityData.getEntity())) {
+                changedEntitiesData.add(entityData);
+            }
+        }
+        else if(subject instanceof Collection) {
+            Collection<?> collection = (Collection<?>) subject;
+            collection.stream()
+                      .filter(element -> element instanceof OWLEntity)
+                      .map(element -> (OWLEntity) element)
+                      .filter(rootOntology::containsEntityInSignature)
+                      .forEach(entity -> {
+                          String browserText = browserTextProvider.getOWLEntityBrowserText(entity).orElse("");
+                          changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
+                      });
 
-        for (OWLEntity entity : changedEntities) {
-            Optional<String> browserText = browserTextProvider.getOWLEntityBrowserText(entity);
-            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.orElse("" )));
         }
         Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
         if (revisionSummary.isPresent()) {

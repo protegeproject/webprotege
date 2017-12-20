@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.events.EventTranslator;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -63,9 +64,9 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     @SuppressWarnings("unchecked")
     @Override
-    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, ChangeApplicationResult<?> result, List<ProjectEvent<?>> projectEventList) {
         Set<T> changeSignature = new HashSet<>();
-        for (OWLOntologyChange change : appliedChanges) {
+        for (OWLOntologyChange change : result.getChangeList()) {
             for (OWLEntity child : change.getSignature()) {
                 if (child.isType(entityType)) {
                     final T t = (T) child;
