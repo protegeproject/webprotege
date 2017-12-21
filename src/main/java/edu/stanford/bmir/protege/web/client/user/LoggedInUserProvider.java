@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.user;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -9,5 +11,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public interface LoggedInUserProvider {
 
+    @Nonnull
     UserId getCurrentUserId();
 }
