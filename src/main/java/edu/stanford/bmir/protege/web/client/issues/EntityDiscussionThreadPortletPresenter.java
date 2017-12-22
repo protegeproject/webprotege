@@ -116,6 +116,7 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                     }
                     else {
                         presenter.clear();
+                        setDisplayedEntity(Optional.empty());
                     }
                 }
             });
