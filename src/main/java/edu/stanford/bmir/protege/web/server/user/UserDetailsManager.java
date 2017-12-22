@@ -15,6 +15,13 @@ public interface UserDetailsManager extends HasGetUserIdByEmailAddress, HasGetUs
 
     List<UserId> getUserIdsContainingIgnoreCase(String userName, int limit);
 
+    /**
+     * Gets the {@link UserDetails} for the specified UserId.
+     * @param userId The UserId of the user whose details are to be retrieved.
+     * @return If the userId is the guest user then the guest user details will be returned, otherwise,
+     * the details of the specified userId.  If the userId does not exists then an empty value will
+     * be returned.
+     */
     Optional<UserDetails> getUserDetails(UserId userId);
 
     Optional<String> getEmail(UserId userId);

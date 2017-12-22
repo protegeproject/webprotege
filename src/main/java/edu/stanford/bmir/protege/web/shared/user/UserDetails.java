@@ -21,6 +21,8 @@ public class UserDetails implements Serializable {
 
     private static final String GUEST_DISPLAY_NAME = "Guest";
 
+    private static final UserDetails GUEST_DETAILS = new UserDetails(UserId.getGuest(), GUEST_DISPLAY_NAME, Optional.empty());
+
     private UserId userId;
 
     private String displayName;
@@ -69,7 +71,7 @@ public class UserDetails implements Serializable {
     }
 
     public static UserDetails getGuestUserDetails() {
-        return new UserDetails(UserId.getGuest(), GUEST_DISPLAY_NAME, Optional.empty());
+        return GUEST_DETAILS;
     }
 
 

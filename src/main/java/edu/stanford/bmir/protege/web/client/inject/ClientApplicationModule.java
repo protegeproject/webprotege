@@ -132,14 +132,8 @@ public class ClientApplicationModule {
 
     @Provides
     @ApplicationSingleton
-    LoggedInUserProvider provideLoggedInUserProvider(LoggedInUserManager loggedInUserManager) {
-        return loggedInUserManager;
-    }
-
-    @Provides
-    @ApplicationSingleton
-    LoggedInUserManager provideLoggedInUserManager(LoggedInUserManagerProvider provider) {
-        return provider.get();
+    LoggedInUserProvider provideLoggedInUserProvider(LoggedInUser loggedInUser) {
+        return loggedInUser;
     }
 
     @Provides

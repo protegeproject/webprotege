@@ -2,22 +2,20 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
-import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
-import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,15 +25,12 @@ import java.util.Optional;
  */
 public class GetCurrentUserInSessionActionHandler implements ApplicationActionHandler<GetCurrentUserInSessionAction, GetCurrentUserInSessionResult> {
 
-    private final UserDetailsManager userDetailsManager;
-
-    private final AccessManager accessManager;
+    @Nonnull
+    private final UserInSessionFactory userInSessionFactory;
 
     @Inject
-    public GetCurrentUserInSessionActionHandler(UserDetailsManager userDetailsManager,
-                                                AccessManager accessManager) {
-        this.userDetailsManager = userDetailsManager;
-        this.accessManager = accessManager;
+    public GetCurrentUserInSessionActionHandler(@Nonnull UserInSessionFactory userInSessionFactory) {
+        this.userInSessionFactory = checkNotNull(userInSessionFactory);
     }
 
     /**
@@ -58,18 +53,7 @@ public class GetCurrentUserInSessionActionHandler implements ApplicationActionHa
     @Override
     public GetCurrentUserInSessionResult execute(@Nonnull GetCurrentUserInSessionAction action, @Nonnull ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
-        Optional<UserDetails> userDetails = userDetailsManager.getUserDetails(userId);
-        UserDetails theUserDetails;
-        if (userDetails.isPresent()) {
-            theUserDetails = userDetails.get();
-        }
-        else {
-            theUserDetails = UserDetails.getGuestUserDetails();
-        }
-        return new GetCurrentUserInSessionResult(
-                new UserInSession(
-                        theUserDetails,
-                        accessManager.getActionClosure(Subject.forUser(executionContext.getUserId()),
-                                                       ApplicationResource.get())));
+        UserInSession userInSession = userInSessionFactory.getUserInSession(userId);
+        return new GetCurrentUserInSessionResult(userInSession);
     }
 }

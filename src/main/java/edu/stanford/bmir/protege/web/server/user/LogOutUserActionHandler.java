@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -22,11 +23,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LogOutUserActionHandler implements ApplicationActionHandler<LogOutUserAction, LogOutUserResult> {
 
+    @Nonnull
     private final UserActivityManager userActivityManager;
 
+    @Nonnull
+    private final UserInSessionFactory userInSessionFactory;
+
     @Inject
-    public LogOutUserActionHandler(@Nonnull UserActivityManager userActivityManager) {
+    public LogOutUserActionHandler(@Nonnull UserActivityManager userActivityManager,
+                                   @Nonnull UserInSessionFactory userInSessionFactory) {
         this.userActivityManager = checkNotNull(userActivityManager);
+        this.userInSessionFactory = checkNotNull(userInSessionFactory);
     }
 
     @Nonnull
@@ -50,6 +57,6 @@ public class LogOutUserActionHandler implements ApplicationActionHandler<LogOutU
         if (!userId.isGuest()) {
             userActivityManager.setLastLogout(userId, System.currentTimeMillis());
         }
-        return new LogOutUserResult();
+        return new LogOutUserResult(userInSessionFactory.getUserInSession(UserId.getGuest()));
     }
 }

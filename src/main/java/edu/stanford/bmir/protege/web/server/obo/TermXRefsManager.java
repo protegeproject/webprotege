@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 
@@ -57,7 +56,7 @@ public class TermXRefsManager {
         return xrefExtractor.getXRefs(term);
     }
 
-    public void setXRefs(UserId userId, OWLEntity term, List<OBOXRef> xrefs) throws NotSignedInException {
+    public void setXRefs(UserId userId, OWLEntity term, List<OBOXRef> xrefs) {
         IRI subject = term.getIRI();
         Set<OWLAnnotation> annotations = xrefs.stream()
                 .map(annotationToXRefConverter::toAnnotation)

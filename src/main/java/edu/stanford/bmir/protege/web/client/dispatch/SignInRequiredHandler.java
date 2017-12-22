@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.place.shared.Place;
+
+import javax.annotation.Nonnull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -7,5 +11,5 @@ package edu.stanford.bmir.protege.web.client.dispatch;
  */
 public interface SignInRequiredHandler {
 
-    void handleSignInRequired();
+    void handleSignInRequired(@Nonnull Place continueTo);
 }

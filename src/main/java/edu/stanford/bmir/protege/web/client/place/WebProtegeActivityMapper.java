@@ -83,13 +83,21 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         GWT.log("[WebProtegeActivityMapper] Started activity mapper.");
         eventBus.addHandler(UserLoggedOutEvent.ON_USER_LOGGED_OUT, event -> {
             GWT.log("[WebProtegeActivityMapper] User logged out.  Going to the Login Place.");
-            placeController.goTo(new LoginPlace());
+            LoginPlace loginPlace;
+            Place currentPlace = placeController.getWhere();
+            if(!(currentPlace instanceof LoginPlace)) {
+                loginPlace = new LoginPlace(placeController.getWhere());
+            }
+            else {
+                loginPlace = new LoginPlace();
+            }
+            placeController.goTo(loginPlace);
         });
     }
 
     public Activity getActivity(final Place place) {
         GWT.log("[WebProtegeActivityMapper] Map place: " + place);
-        if(!(place instanceof LoginPlace) && !(place instanceof SignUpPlace) && loggedInUserProvider.getCurrentUserId().isGuest()) {
+        if(shouldRedirectToLogin(place)) {
             GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
             loginPresenter.setNextPlace(place);
             Scheduler.get().scheduleFinally(() -> placeController.goTo(new LoginPlace(place)));
@@ -157,6 +165,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 //        }
 
         return null;
+    }
+
+    private boolean shouldRedirectToLogin(Place requestedPlace) {
+        return !(requestedPlace instanceof LoginPlace)
+                && !(requestedPlace instanceof SignUpPlace)
+                && loggedInUserProvider.getCurrentUserId().isGuest();
     }
 
     private ProjectPresenter getProjectPresenter(ProjectViewPlace projectViewPlace) {

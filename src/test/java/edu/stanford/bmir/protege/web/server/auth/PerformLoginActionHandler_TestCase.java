@@ -1,10 +1,16 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -71,16 +78,33 @@ public class PerformLoginActionHandler_TestCase {
     @Mock
     private UserActivityManager activityManager;
 
+    @Mock
+    private UserDetails userDetails;
+
+    @Mock
+    private UserInSessionFactory userInSessionFactory;
+
+    @Mock
+    private UserInSession userInSession;
+
     @Before
     public void setUp() throws Exception {
-        handler = new PerformLoginActionHandler(activityManager, sessionManager, authenticationManager, responseChecker, logger);
+        handler = new PerformLoginActionHandler(activityManager,
+                                                sessionManager,
+                                                authenticationManager,
+                                                responseChecker,
+                                                logger,
+                                                userInSessionFactory);
         when(action.getUserId()).thenReturn(userId);
+        Optional<UserDetails> userDetailsOpt = Optional.of(userDetails);
+        when(userInSessionFactory.getUserInSession(any())).thenReturn(userInSession);
+        when(userInSession.getUserDetails()).thenReturn(userDetails);
         when(action.getChapSessionId()).thenReturn(chapSessionId);
         when(action.getChapResponse()).thenReturn(chapResponse);
         when(sessionManager.retrieveChallengeMessage(chapSessionId)).thenReturn(Optional.of(chapSession));
 
         when(authenticationManager.getSaltedPasswordDigest(userId)).thenReturn(Optional.of(passwordDigest));
-
+        when(executionContext.getUserId()).thenReturn(userId);
         when(executionContext.getSession()).thenReturn(webProtegeSession);
     }
 

@@ -42,7 +42,7 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
     private UserId userId;
 
     @Mock
-    private DispatchServiceCallback<AuthenticationResponse> callback;
+    private AuthenticatedDispatchServiceCallback<R> callback;
 
     private String clearTextPassword = "ThePassword";
 

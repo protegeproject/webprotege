@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -45,12 +47,19 @@ public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends
     @Mock
     private ProjectManager projectManager;
 
+    @Mock
+    private UserInSessionFactory userInSessionFactory;
+
+    @Mock
+    private UserInSession userInSession;
+
     @Before
     public void setUp() throws Exception {
-        executor = new DispatchServiceExecutorImpl(registry, projectManager);
+        executor = new DispatchServiceExecutorImpl(registry, projectManager, userInSessionFactory);
         when(registry.getActionHandler(action)).thenReturn(actionHandler);
         when(actionHandler.getRequestValidator(action, requestContext)).thenReturn(requestValidator);
         when(requestValidator.validateAction()).thenReturn(RequestValidationResult.getValid());
+        when(userInSessionFactory.getUserInSession(any())).thenReturn(userInSession);
     }
 
     @Test(expected = ActionExecutionException.class)

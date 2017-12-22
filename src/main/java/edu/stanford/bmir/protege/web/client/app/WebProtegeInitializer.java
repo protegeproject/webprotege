@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +28,15 @@ public class WebProtegeInitializer {
      */
     private static boolean properlyInitialized = false;
 
-    private final LoggedInUserManager userManager;
+    private final ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask;
 
-    private final DispatchServiceManager dispatchServiceManager;
+    private final EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask;
 
     @Inject
-    protected WebProtegeInitializer(DispatchServiceManager dispatchServiceManager, LoggedInUserManager loggedInUserManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.userManager = loggedInUserManager;
+    protected WebProtegeInitializer(@Nonnull ReadLoggedInUserInitializationTask readLoggedInUserInitializationTask,
+                                    @Nonnull EntityCrudKitManagerInitializationTask entityCrudKitManagerInitializationTask) {
+        this.readLoggedInUserInitializationTask = readLoggedInUserInitializationTask;
+        this.entityCrudKitManagerInitializationTask = entityCrudKitManagerInitializationTask;
     }
 
 
@@ -68,7 +70,8 @@ public class WebProtegeInitializer {
      */
     private void runInitTasks(final AsyncCallback<Void> callback) {
         List<ApplicationInitManager.ApplicationInitializationTask> initTasks = new ArrayList<>();
-        initTasks.add(new EntityCrudKitManagerInitializationTask(dispatchServiceManager));
+        initTasks.add(entityCrudKitManagerInitializationTask);
+        initTasks.add(readLoggedInUserInitializationTask);
         ApplicationInitManager initManager = new ApplicationInitManager(initTasks);
         // Run the tasks and mark proper initalization on finish.
         initManager.runTasks(new AsyncCallback<Void>() {
@@ -83,24 +86,5 @@ public class WebProtegeInitializer {
                 callback.onSuccess(result);
             }
         });
-    }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////
-    ///// Public interface
-    /////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Gets the UserId of the logged in user.  This may be the guest user.
-     * @return The UserId of the logged in user.  Not {@code null}.
-     */
-    public UserId getUserId() {
-        return userManager.getLoggedInUserId();
     }
 }

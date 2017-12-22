@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,6 +18,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * Stanford Center for Biomedical Informatics Research
  * 18/02/15
  */
+@SuppressWarnings("ConstantConditions")
 @RunWith(MockitoJUnitRunner.class)
 public class PerformLoginResult_TestCase {
 
@@ -24,17 +27,25 @@ public class PerformLoginResult_TestCase {
 
     private PerformLoginResult otherResult;
 
+    @Mock
+    private UserInSession userInSession;
+
     private AuthenticationResponse response = AuthenticationResponse.SUCCESS;
 
     @Before
     public void setUp() throws Exception {
-        result = new PerformLoginResult(response);
-        otherResult = new PerformLoginResult(response);
+        result = new PerformLoginResult(response, userInSession);
+        otherResult = new PerformLoginResult(response, userInSession);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new PerformLoginResult(null);
+        new PerformLoginResult(null, userInSession);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIfUserDetailsIsNull() {
+        new PerformLoginResult(response, null);
     }
 
     @Test

@@ -24,7 +24,7 @@ public class UserInSession implements IsSerializable {
 
     private UserDetails userDetails;
 
-    private Set<ActionId> allowedApplicationActions;
+    private ImmutableSet<ActionId> allowedApplicationActions;
 
     /**
      * For serialization
@@ -53,6 +53,14 @@ public class UserInSession implements IsSerializable {
         return allowedApplicationActions;
     }
 
+    /**
+     * Determines if the user is the guest user
+     * @return true if the user is the guest user, otherwise false
+     */
+    public boolean isGuest() {
+        return userDetails.getUserId().isGuest();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(userDetails, allowedApplicationActions);
@@ -78,5 +86,9 @@ public class UserInSession implements IsSerializable {
                 .addValue(userDetails)
                 .add("allowedApplicationActions", allowedApplicationActions)
                 .toString();
+    }
+
+    public boolean isAllowedApplicationAction(@Nonnull ActionId actionId) {
+        return allowedApplicationActions.contains(actionId);
     }
 }

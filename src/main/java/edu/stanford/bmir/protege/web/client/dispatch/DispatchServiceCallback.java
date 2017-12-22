@@ -89,11 +89,16 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     public void handlePermissionDeniedException(PermissionDeniedException e) {
-        if(e.getMessage() != null) {
-            errorMessageDisplay.displayPermissionDeniedErrorMessage(e.getMessage());
-        }
-        else {
-            errorMessageDisplay.displayPermissionDeniedErrorMessage();
+        // Only display the permission denied message if the user is not the guest user.  This
+        // is because when a guest user gets a permission denied error message they are first
+        // redirected to the login in page
+        if (!e.getUserInSession().isGuest()) {
+            if(e.getMessage() != null) {
+                errorMessageDisplay.displayPermissionDeniedErrorMessage(e.getMessage());
+            }
+            else {
+                errorMessageDisplay.displayPermissionDeniedErrorMessage();
+            }
         }
     }
 

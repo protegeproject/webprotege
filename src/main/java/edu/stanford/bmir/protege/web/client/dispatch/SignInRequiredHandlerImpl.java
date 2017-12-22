@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**
@@ -22,12 +24,12 @@ public class SignInRequiredHandlerImpl implements SignInRequiredHandler {
     }
 
     @Override
-    public void handleSignInRequired() {
-        MessageBox.showAlert("You are not signed in", "WebProtégé requires you to be signed in.  Please sign in to continue.");
-        Place currentPlace = placeController.getWhere();
+    public void handleSignInRequired(@Nonnull Place redirectTo) {
+        GWT.log("[SignInRequiredHandler] Handling sign in required");
         LoginPlace loginPlace;
-        if(!(currentPlace instanceof LoginPlace)) {
-            loginPlace = new LoginPlace(currentPlace);
+        GWT.log("[SignInRequiredHandler] Place: " + redirectTo);
+        if(!(redirectTo instanceof LoginPlace)) {
+            loginPlace = new LoginPlace(redirectTo);
         }
         else {
             loginPlace = new LoginPlace();
