@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,6 +82,9 @@ public class DispatchServiceCallbackWithProgress_TestCase<T> {
     @Test
     public void shouldCall_handlePermissionDeniedException() {
         PermissionDeniedException exception = mock(PermissionDeniedException.class);
+        UserInSession userInSession = mock(UserInSession.class);
+        when(userInSession.isGuest()).thenReturn(false);
+        when(exception.getUserInSession()).thenReturn(userInSession);
         callback.onFailure(exception);
         verify(callback, times(1)).handlePermissionDeniedException(exception);
         verify(messageDisplay, times(1)).displayPermissionDeniedErrorMessage();
