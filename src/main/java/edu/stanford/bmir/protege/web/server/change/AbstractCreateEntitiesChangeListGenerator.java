@@ -10,6 +10,8 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static org.semanticweb.owlapi.model.EntityType.*;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -155,17 +157,57 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
         int entityCount = entities.size();
         String mainMsg;
         if(entityCount == 1) {
-            mainMsg = msg.format("Created {0}: {1}",
+            mainMsg = msg.format("Created {0} {1}",
                                        entityType.getPrintName().toLowerCase(),
                                        entities);
-            mainMsg += parent.map(p -> msg.format(" as a child of {0}", p)).orElse("");
+            mainMsg += parent.map(p -> msg.format(" {0} {1}", getSingularRelationship(), p)).orElse("");
         }
         else {
-            mainMsg = msg.format("Created {0}: {1}",
+            mainMsg = msg.format("Created {0} {1}",
                               entityType.getPluralPrintName().toLowerCase(),
                               entities);
-            mainMsg += parent.map(p -> msg.format(" as children of {0}", p)).orElse("");
+            mainMsg += parent.map(p -> msg.format(" {0} {1}", getPluralRelationship(), p)).orElse("");
         }
         return mainMsg;
+    }
+
+    private String getSingularRelationship() {
+        if(entityType.equals(CLASS)) {
+            return "as a subclass of";
+        }
+        else if(entityType.equals(OBJECT_PROPERTY) ||
+                entityType.equals(DATA_PROPERTY) ||
+                entityType.equals(ANNOTATION_PROPERTY)) {
+            return "as a sub-property of";
+        }
+        else if(entityType.equals(NAMED_INDIVIDUAL)) {
+            return "as an instance of";
+        }
+        else if(entityType.equals(DATATYPE)) {
+            return "as a subtype of";
+        }
+        else {
+            return "as a child of";
+        }
+    }
+
+    private String getPluralRelationship() {
+        if(entityType.equals(CLASS)) {
+            return "as subclasses of";
+        }
+        else if(entityType.equals(OBJECT_PROPERTY) ||
+                entityType.equals(DATA_PROPERTY) ||
+                entityType.equals(ANNOTATION_PROPERTY)) {
+            return "as sub-properties of";
+        }
+        else if(entityType.equals(NAMED_INDIVIDUAL)) {
+            return "as instances of";
+        }
+        else if(entityType.equals(DATATYPE)) {
+            return "as subtypes of";
+        }
+        else {
+            return "as children of";
+        }
     }
 }
