@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +32,7 @@ public class DispatchServiceCallback_TestCase<T> {
     @Before
     public void setUp() throws Exception {
         messageDisplay = mock(DispatchErrorMessageDisplay.class);
-        callback = spy(new DispatchServiceCallback<T>(messageDisplay) {
-        });
+        callback = spy(new DispatchServiceCallback<T>(messageDisplay) {});
     }
 
     @Test
@@ -54,6 +54,9 @@ public class DispatchServiceCallback_TestCase<T> {
     @Test
     public void shouldCall_handlePermissionDeniedException() {
         PermissionDeniedException exception = mock(PermissionDeniedException.class);
+        UserInSession userInSession = mock(UserInSession.class);
+        when(userInSession.isGuest()).thenReturn(false);
+        when(exception.getUserInSession()).thenReturn(userInSession);
         callback.onFailure(exception);
         verify(callback, times(1)).handlePermissionDeniedException(exception);
         verify(messageDisplay, times(1)).displayPermissionDeniedErrorMessage();
