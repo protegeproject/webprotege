@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.place.shared.PlaceController;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,14 +15,12 @@ import javax.inject.Inject;
  */
 public class SignOutRequestHandlerImpl implements SignOutRequestHandler {
 
+    @Nonnull
     private final LoggedInUserManager loggedInUserManager;
 
-    private final PlaceController placeController;
-
     @Inject
-    public SignOutRequestHandlerImpl(LoggedInUserManager loggedInUserManager, PlaceController placeController) {
-        this.loggedInUserManager = loggedInUserManager;
-        this.placeController = placeController;
+    public SignOutRequestHandlerImpl(@Nonnull LoggedInUserManager loggedInUserManager) {
+        this.loggedInUserManager = checkNotNull(loggedInUserManager);
     }
 
     @Override

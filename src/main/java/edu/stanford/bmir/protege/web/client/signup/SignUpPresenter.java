@@ -177,7 +177,7 @@ public class SignUpPresenter implements Presenter {
         if(continueTo.isPresent()) {
             placeController.goTo(continueTo.get());
         }
-        else if(loggedInUserManager.getCurrentUserId().isGuest()) {
+        else if(loggedInUserManager.getLoggedInUserId().isGuest()) {
             // Take guests back to the login place so that they can sign in
             placeController.goTo(new LoginPlace());
         }
@@ -189,7 +189,7 @@ public class SignUpPresenter implements Presenter {
         if(backTo.isPresent()) {
             placeController.goTo(backTo.get());
         }
-        else if(loggedInUserManager.getCurrentUserId().isGuest()) {
+        else if(loggedInUserManager.getLoggedInUserId().isGuest()) {
             // Take guests back to the login place
             placeController.goTo(new LoginPlace());
         }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -9,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -27,15 +29,22 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
     private static final Logger logger = Logger.getLogger(DispatchServiceExecutorImpl.class.getName());
 
+    @Nonnull
     private final ApplicationActionHandlerRegistry handlerRegistry;
 
+    @Nonnull
     private final ProjectManager projectManager;
+
+    @Nonnull
+    private final UserInSessionFactory userInSessionFactory;
     
     @Inject
     public DispatchServiceExecutorImpl(@Nonnull ApplicationActionHandlerRegistry handlerRegistry,
-                                       @Nonnull ProjectManager projectManager) {
+                                       @Nonnull ProjectManager projectManager,
+                                       @Nonnull UserInSessionFactory userInSessionFactory) {
         this.handlerRegistry = checkNotNull(handlerRegistry);
         this.projectManager = checkNotNull(projectManager);
+        this.userInSessionFactory = userInSessionFactory;
     }
 
     @Override
@@ -54,7 +63,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         RequestValidator validator = actionHandler.getRequestValidator(action, requestContext);
         RequestValidationResult validationResult = validator.validateAction();
         if(!validationResult.isValid()) {
-            throw  getPermissionDeniedException(validationResult);
+            throw  getPermissionDeniedException(requestContext.getUserId(),
+                                                validationResult);
         }
 
         try {
@@ -68,13 +78,15 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         }
     }
 
-    private static PermissionDeniedException getPermissionDeniedException(RequestValidationResult validationResult) {
+    private PermissionDeniedException getPermissionDeniedException(@Nonnull UserId userId,
+                                                                   @Nonnull RequestValidationResult validationResult) {
         if(validationResult.getInvalidException().isPresent()) {
             Exception validationException = validationResult.getInvalidException().get();
             if(validationException instanceof PermissionDeniedException) {
                 return  ((PermissionDeniedException) validationException);
             }
         }
-        throw new PermissionDeniedException(validationResult.getInvalidMessage());
+        throw new PermissionDeniedException(validationResult.getInvalidMessage(),
+                                            userInSessionFactory.getUserInSession(userId));
     }
 }

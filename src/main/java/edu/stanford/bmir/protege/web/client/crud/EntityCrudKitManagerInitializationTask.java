@@ -6,6 +6,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
 
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -16,7 +19,8 @@ public class EntityCrudKitManagerInitializationTask implements ApplicationInitMa
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public EntityCrudKitManagerInitializationTask(DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public EntityCrudKitManagerInitializationTask(@Nonnull DispatchServiceManager dispatchServiceManager) {
         this.dispatchServiceManager = dispatchServiceManager;
     }
 

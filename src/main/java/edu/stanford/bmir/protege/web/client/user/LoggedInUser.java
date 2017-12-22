@@ -3,10 +3,16 @@ package edu.stanford.bmir.protege.web.client.user;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.shared.access.ActionId;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.user.LoggedInUser.LoggedInUserState.LOGGED_IN_USER_CHANGED;
@@ -19,6 +25,7 @@ import static edu.stanford.bmir.protege.web.client.user.LoggedInUser.LoggedInUse
  * logged in user changes.  No communication with the server is performed by instances
  * of this class.  See also {@link LoggedInUserManager}.
  */
+@ApplicationSingleton
 public class LoggedInUser implements LoggedInUserProvider {
 
     enum LoggedInUserState {
@@ -30,7 +37,8 @@ public class LoggedInUser implements LoggedInUserProvider {
     private final EventBus eventBus;
 
     @Nonnull
-    private UserId loggedInUser = UserId.getGuest();
+    private UserInSession userInSession = new UserInSession(UserDetails.getGuestUserDetails(),
+                                                            Collections.emptySet());
 
     @Inject
     public LoggedInUser(@Nonnull EventBus eventBus) {
@@ -43,7 +51,22 @@ public class LoggedInUser implements LoggedInUserProvider {
      */
     @Nonnull
     public UserId getCurrentUserId() {
-        return loggedInUser;
+        return userInSession.getUserDetails().getUserId();
+    }
+
+    @Nonnull
+    public UserInSession getUserInSession() {
+        return userInSession;
+    }
+
+    /**
+     * Determines if the specified action is an allowed application action for the logged in user.
+     * @param actionId The action to test for
+     * @return true if the application is an allowed application action for the logged in user,
+     * otherwise false.
+     */
+    public boolean isAllowedApplicationAction(@Nonnull ActionId actionId) {
+        return userInSession.isAllowedApplicationAction(actionId);
     }
 
     /**
@@ -55,12 +78,12 @@ public class LoggedInUser implements LoggedInUserProvider {
      * will be returned.
      */
     @Nonnull
-    public LoggedInUserState setLoggedInUser(@Nonnull UserId loggedInUser) {
-        if (this.loggedInUser.equals(checkNotNull(loggedInUser))) {
+    public LoggedInUserState setLoggedInUser(@Nonnull UserInSession loggedInUser) {
+        if (this.userInSession.equals(checkNotNull(loggedInUser))) {
             return LOGGED_IN_USER_UNCHANGED;
         }
-        this.loggedInUser = loggedInUser;
-        if(loggedInUser.isGuest()) {
+        this.userInSession = loggedInUser;
+        if(getCurrentUserId().isGuest()) {
             fireUserLoggedOutEvent();
         }
         else {
@@ -70,11 +93,11 @@ public class LoggedInUser implements LoggedInUserProvider {
     }
 
     private void fireUserLoggedInEvent() {
-        eventBus.fireEvent(new UserLoggedInEvent(loggedInUser).asGWTEvent());
+        eventBus.fireEvent(new UserLoggedInEvent(getCurrentUserId()).asGWTEvent());
     }
 
     private void fireUserLoggedOutEvent() {
-        eventBus.fireEvent(new UserLoggedOutEvent(loggedInUser).asGWTEvent());
+        eventBus.fireEvent(new UserLoggedOutEvent(getCurrentUserId()).asGWTEvent());
     }
 
 

@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.Resource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
@@ -11,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -67,12 +69,19 @@ public class CreateNewProjectActionHandler_TestCase {
     @Mock
     private AccessManager accessManager;
 
+    @Mock
+    private UserInSessionFactory userInSessionFactory;
+
+    @Mock
+    private UserInSession userInSession;
+
     @Before
     public void setUp() throws Exception {
-        handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, projectSharingSettingsManager, accessManager);
+        handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, accessManager, userInSessionFactory);
         when(projectManager.createNewProject(newProjectSettings)).thenReturn(projectId);
         when(executionContext.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("User_Name");
+        when(userInSessionFactory.getUserInSession(any())).thenReturn(userInSession);
         when(projectDetailsManager.getProjectDetails(projectId)).thenReturn(projectDetails);
         when(requestContext.getUserId()).thenReturn(userId);
         setPermission(true);

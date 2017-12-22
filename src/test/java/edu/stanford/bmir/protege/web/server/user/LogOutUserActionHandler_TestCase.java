@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.server.user;
 
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,16 +37,31 @@ public class LogOutUserActionHandler_TestCase {
     @Mock
     private UserActivityManager activityManager;
 
+    private UserId userId = UserId.getUserId("OtherUserId");
+
     @Mock
-    private UserId userId;
+    private UserInSessionFactory userInSessionFactory;
+
+    @Mock
+    private UserInSession userInSession;
+
+    @Mock
+    private UserInSession guestUserInSession;
+
+    @Mock
+    private UserDetails userDetails;
 
 
     @Before
     public void setUp() throws Exception {
-        actionHandler = new LogOutUserActionHandler(activityManager);
+        when(userInSessionFactory.getUserInSession(UserId.getGuest())).thenReturn(guestUserInSession);
+        when(guestUserInSession.getUserDetails()).thenReturn(UserDetails.getGuestUserDetails());
+        when(userInSessionFactory.getUserInSession(userId)).thenReturn(userInSession);
+        when(userInSession.getUserDetails()).thenReturn(userDetails);
+        when(userDetails.getUserId()).thenReturn(userId);
         when(executionContext.getSession()).thenReturn(session);
-        when(userId.isGuest()).thenReturn(false);
         when(session.getUserInSession()).thenReturn(userId);
+        actionHandler = new LogOutUserActionHandler(activityManager, userInSessionFactory);
     }
 
     @Test

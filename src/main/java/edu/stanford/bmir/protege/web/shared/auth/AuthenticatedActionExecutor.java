@@ -33,7 +33,7 @@ public class AuthenticatedActionExecutor {
         this.responseDigestAlgorithm = checkNotNull(responseDigestAlgorithm);
     }
 
-    public <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void execute(final UserId userId, final String clearTextPassword, final AuthenticationActionFactory<A, R> actionFactory, final DispatchServiceCallback<AuthenticationResponse> callback) {
+    public <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void execute(final UserId userId, final String clearTextPassword, final AuthenticationActionFactory<A, R> actionFactory, final AuthenticatedDispatchServiceCallback<R> callback) {
         dispatchServiceManager.execute(new GetChapSessionAction(userId), new DispatchServiceCallback<GetChapSessionResult>() {
             @Override
             public void handleSuccess(GetChapSessionResult result) {
@@ -41,13 +41,13 @@ public class AuthenticatedActionExecutor {
                 if (chapSession.isPresent()) {
                     constructAndSendResponse(userId, clearTextPassword, chapSession.get(), actionFactory, callback);
                 } else {
-                    callback.onSuccess(AuthenticationResponse.FAIL);
+                    callback.handleAuthenticationResponse(AuthenticationResponse.FAIL);
                 }
             }
         });
     }
 
-    private <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void constructAndSendResponse(UserId userId, String clearTextPassword, ChapSession chapSession, AuthenticationActionFactory<A, R> actionFactory, final DispatchServiceCallback<AuthenticationResponse> callback) {
+    private <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void constructAndSendResponse(UserId userId, String clearTextPassword, ChapSession chapSession, AuthenticationActionFactory<A, R> actionFactory, final AuthenticatedDispatchServiceCallback<R> callback) {
         SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword(
                 clearTextPassword,
                 chapSession.getSalt());
@@ -59,14 +59,15 @@ public class AuthenticatedActionExecutor {
         sendResponse(userId, chapSession, response, actionFactory, callback);
     }
 
-    private <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void sendResponse(UserId userId, ChapSession chapSession, ChapResponse chapResponse, AuthenticationActionFactory<A, R> actionFactory, final DispatchServiceCallback<AuthenticationResponse> callback) {
+    private <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void sendResponse(UserId userId, ChapSession chapSession, ChapResponse chapResponse, AuthenticationActionFactory<A, R> actionFactory, final AuthenticatedDispatchServiceCallback<R> callback) {
         ChapSessionId chapSessionId = chapSession.getId();
         A action = actionFactory.createAction(chapSessionId, userId, chapResponse);
         dispatchServiceManager.execute(action,
                 new DispatchServiceCallback<R>() {
                     @Override
                     public void handleSuccess(R loginResult) {
-                        callback.onSuccess(loginResult.getResponse());
+                        callback.handleAuthenticationResponse(loginResult.getResponse());
+                        callback.handleSuccess(loginResult);
                     }
                 });
     }

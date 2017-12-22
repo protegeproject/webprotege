@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -43,19 +44,20 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
 
     private final ProjectDetailsManager projectDetailsManager;
 
-    private final ProjectSharingSettingsManager projectSharingSettingsManager;
-
     private final AccessManager accessManager;
+
+    @Nonnull
+    private final UserInSessionFactory userInSessionFactory;
 
     @Inject
     public CreateNewProjectActionHandler(ProjectManager pm,
                                          ProjectDetailsManager projectDetailsManager,
-                                         ProjectSharingSettingsManager projectSharingSettingsManager,
-                                         AccessManager accessManager) {
+                                         AccessManager accessManager,
+                                         @Nonnull UserInSessionFactory userInSessionFactory) {
         this.pm = pm;
         this.projectDetailsManager = projectDetailsManager;
-        this.projectSharingSettingsManager = projectSharingSettingsManager;
         this.accessManager = accessManager;
+        this.userInSessionFactory = userInSessionFactory;
     }
 
     @Nonnull
@@ -80,19 +82,21 @@ public class CreateNewProjectActionHandler implements ApplicationActionHandler<C
     @Override
     public CreateNewProjectResult execute(@Nonnull CreateNewProjectAction action, @Nonnull ExecutionContext executionContext) {
         try {
-            if(!accessManager.hasPermission(forUser(executionContext.getUserId()), ApplicationResource.get(), CREATE_EMPTY_PROJECT)) {
-                throw new PermissionDeniedException("You do not have permission to create new projects");
+            UserId userId = executionContext.getUserId();
+            if(!accessManager.hasPermission(forUser(userId), ApplicationResource.get(), CREATE_EMPTY_PROJECT)) {
+                throw new PermissionDeniedException("You do not have permission to create new projects",
+                                                    userInSessionFactory.getUserInSession(userId));
             }
             NewProjectSettings newProjectSettings = action.getNewProjectSettings();
             if(newProjectSettings.hasSourceDocument()) {
-                if(!accessManager.hasPermission(forUser(executionContext.getUserId()), ApplicationResource.get(), UPLOAD_PROJECT)) {
-                    throw new PermissionDeniedException("You do not have permission to upload projects");
+                if(!accessManager.hasPermission(forUser(userId), ApplicationResource.get(), UPLOAD_PROJECT)) {
+                    throw new PermissionDeniedException("You do not have permission to upload projects",
+                                                        userInSessionFactory.getUserInSession(userId));
                 }
             }
             ProjectId projectId = pm.createNewProject(newProjectSettings);
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);
-                UserId userId = executionContext.getUserId();
                 applyDefaultPermissions(projectId, userId);
             }
             return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));

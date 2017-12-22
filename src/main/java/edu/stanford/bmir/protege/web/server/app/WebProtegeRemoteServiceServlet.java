@@ -5,7 +5,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
@@ -42,31 +41,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
         return new WebProtegeSessionImpl(session).getUserInSession();
-    }
-
-    /**
-     * Gets the userId for the signed in client that is associated with the current thread local request.
-     * local request does not have a signed in user associated with it.
-     *
-     * @return The {@link UserId} of the signed in user associated with the thread local request.
-     * @throws NotSignedInException if there is not a signed in user associated with the thread local request.
-     */
-    public UserId getUserInSessionAndEnsureSignedIn() throws NotSignedInException {
-        UserId userId = getUserInSession();
-        if (userId.isGuest()) {
-            throw new NotSignedInException();
-        } else {
-            return userId;
-        }
-    }
-
-    /**
-     * Ensures that there is a user signed in for the current thread local request.
-     *
-     * @throws NotSignedInException if there is no user signed in for the current thread local request.
-     */
-    public void ensureSignedIn() throws NotSignedInException {
-        getUserInSessionAndEnsureSignedIn();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

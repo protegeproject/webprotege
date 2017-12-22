@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -25,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.user.LoggedInUser.LoggedInUserState.LOGGED_IN_USER_CHANGED;
+import static edu.stanford.bmir.protege.web.client.user.LoggedInUser.LoggedInUserState.LOGGED_IN_USER_UNCHANGED;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,40 +35,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2013
  */
-public class LoggedInUserManager implements LoggedInUserProvider {
+@ApplicationSingleton
+public class LoggedInUserManager {
 
     @Nonnull
-    private final EventBus eventBus;
+    private final LoggedInUser loggedInUser;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final Set<ActionId> applicationActions = new HashSet<>();
-
-    private UserId userId = UserId.getGuest();
-
-    private UserDetails userDetails = UserDetails.getGuestUserDetails();
-
     @Inject
-    public LoggedInUserManager(@Nonnull EventBus eventBus,
+    public LoggedInUserManager(@Nonnull LoggedInUser loggedInUser,
                                @Nonnull DispatchServiceManager dispatchServiceManager) {
-        this.eventBus = checkNotNull(eventBus);
+        this.loggedInUser = loggedInUser;
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
     }
 
     /**
-     * Creates a {@link LoggedInUserManager} with the guest user as the current user.  A call will be made to the server
-     * to asynchronously restore the current user from the server side session.
-     * @return A {@link LoggedInUserManager} instances which is initialised immediately with the guest user details and
-     * initialised asynchronously with the server side session details.
+     * Reads the initial logged in user from the web page source.
+     * This should really only be called once on page load.
      */
-    @Nonnull
-    public static LoggedInUserManager getAndRestoreFromServer(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        LoggedInUserManager manager = new LoggedInUserManager(eventBus, dispatchServiceManager);
-        manager.readUserInSession();
-        return manager;
+    public void readInitialUserInSession() {
+        readUserInSession();
     }
-
 
     /**
      * Gets the id of the currently logged in user.
@@ -74,26 +66,16 @@ public class LoggedInUserManager implements LoggedInUserProvider {
      */
     @Nonnull
     public UserId getLoggedInUserId() {
-        return userId;
-    }
-
-    @Nonnull
-    @Override
-    public UserId getCurrentUserId() {
-        return userId;
+        return loggedInUser.getCurrentUserId();
     }
 
     /**
      * Sets the logged in user.  An event will be fired (asynchronously) to indicate whether the user has logged in or out.
-     * @param userId The user id of the logged in user.  Not {@code null}.
+     * @param userInSession The user in the session that is the logged in user.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    public void setLoggedInUser(@Nonnull final UserId userId, @Nonnull AsyncCallback<UserDetails> callback) {
-        if(checkNotNull(userId).equals(this.userId)) {
-            callback.onSuccess(userDetails);
-            return;
-        }
-        restoreUserFromServerSideSession(Optional.of(callback));
+    public void setLoggedInUser(@Nonnull final UserInSession userInSession) {
+        loggedInUser.setLoggedInUser(userInSession);
     }
 
     /**
@@ -101,23 +83,20 @@ public class LoggedInUserManager implements LoggedInUserProvider {
      * be fired (asynchronously) when the current user has been logged out.
      */
     public void logOutCurrentUser() {
-        if(userId.isGuest()) {
+        if(loggedInUser.getCurrentUserId().isGuest()) {
             return;
         }
-        dispatchServiceManager.execute(new LogOutUserAction(), logOutUserResult -> {
-            replaceUserAndBroadcastChanges(new UserInSession(
-                    UserDetails.getGuestUserDetails(),
-                    Collections.emptySet()
-            ));
+        dispatchServiceManager.execute(new LogOutUserAction(), result -> {
+            loggedInUser.setLoggedInUser(result.getUserInSession());
         });
     }
 
     public Set<ActionId> getLoggedInUserApplicationActions() {
-        return applicationActions;
+        return loggedInUser.getUserInSession().getAllowedApplicationActions();
     }
 
     public boolean isAllowedApplicationAction(ActionId actionId) {
-        return applicationActions.contains(actionId);
+        return loggedInUser.isAllowedApplicationAction(actionId);
     }
 
     public boolean isAllowedApplicationAction(BuiltInAction action) {
@@ -128,17 +107,13 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         dispatchServiceManager.execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
             @Override
             public void handleExecutionException(Throwable cause) {
-                if (callback.isPresent()) {
-                    callback.get().onFailure(cause);
-                }
+                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onFailure(cause));
             }
 
             @Override
             public void handleSuccess(GetCurrentUserInSessionResult result) {
-                replaceUserAndBroadcastChanges(result.getUserInSession());
-                if (callback.isPresent()) {
-                    callback.get().onSuccess(result.getUserInSession().getUserDetails());
-                }
+                loggedInUser.setLoggedInUser(result.getUserInSession());
+                callback.ifPresent(userDetailsAsyncCallback -> userDetailsAsyncCallback.onSuccess(result.getUserInSession().getUserDetails()));
             }
 
         });
@@ -147,21 +122,6 @@ public class LoggedInUserManager implements LoggedInUserProvider {
     private void readUserInSession() {
         UserInSessionDecoder decoder = new UserInSessionDecoder();
         UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
-        replaceUserAndBroadcastChanges(userInSession);
+        loggedInUser.setLoggedInUser(userInSession);
     }
-
-    private void replaceUserAndBroadcastChanges(UserInSession userInSession) {
-        UserId previousUserId = this.userId;
-        this.userId = userInSession.getUserDetails().getUserId();
-        this.userDetails = userInSession.getUserDetails();
-        this.applicationActions.clear();
-        this.applicationActions.addAll(userInSession.getAllowedApplicationActions());
-        if(userId.isGuest()) {
-            eventBus.fireEvent(new UserLoggedOutEvent(previousUserId).asGWTEvent());
-        }
-        else {
-            eventBus.fireEvent(new UserLoggedInEvent(userId).asGWTEvent());
-        }
-    }
-
 }

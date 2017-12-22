@@ -11,10 +11,8 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.shared.auth.AuthenticatedActionExecutor;
-import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
-import edu.stanford.bmir.protege.web.shared.auth.PerformLoginActionFactory;
-import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
+import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -107,29 +105,34 @@ public class LoginPresenter implements Presenter {
         final UserId userId = UserId.getUserId(signInDetails.getUserName());
         loginExecutor.execute(userId, signInDetails.getClearTextPassword(),
                 new PerformLoginActionFactory(),
-                new DispatchServiceCallback<AuthenticationResponse>() {
+                new AuthenticatedDispatchServiceCallback<PerformLoginResult>() {
                     @Override
-                    public void handleSuccess(AuthenticationResponse response) {
-                        handleAuthenticationResponse(userId, response);
+                    public void handleAuthenticationResponse(@Nonnull AuthenticationResponse authenticationResponse) {
+
+                    }
+
+                    @Override
+                    public void handleSuccess(@Nonnull PerformLoginResult result) {
+                        handlePerformLoginResult(result);
+                    }
+
+                    @Override
+                    public String getProgressDisplayTitle() {
+                        return "Logging in";
+                    }
+
+                    @Override
+                    public String getProgressDisplayMessage() {
+                        return "Please wait.";
                     }
                 });
     }
 
-    private void handleAuthenticationResponse(UserId userId, AuthenticationResponse response) {
-        if(response == AuthenticationResponse.SUCCESS) {
-            loggedInUserManager.setLoggedInUser(userId, new AsyncCallback<UserDetails>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    GWT.log("[LoginPresenter] Switching user failed");
-                }
-
-                @Override
-                public void onSuccess(UserDetails result) {
-                    if(nextPlace.isPresent()) {
-                        placeController.goTo(nextPlace.get());
-                    }
-                }
-            });
+    private void handlePerformLoginResult(@Nonnull PerformLoginResult result) {
+        if(result.getResponse() == AuthenticationResponse.SUCCESS) {
+            UserInSession userInSession = result.getUserInSession();
+            loggedInUserManager.setLoggedInUser(userInSession);
+            nextPlace.ifPresent(placeController::goTo);
         }
         else {
             view.showLoginFailedErrorMessage();

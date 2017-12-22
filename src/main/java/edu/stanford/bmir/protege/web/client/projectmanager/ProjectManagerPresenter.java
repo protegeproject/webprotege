@@ -74,13 +74,13 @@ public class ProjectManagerPresenter implements Presenter {
         this.createProjectRequestHandler = createProjectRequestHandler;
 
         viewCat2Filter.put(OWNED_BY_ME,
-                           p -> !p.isInTrash() && p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
+                           p -> !p.isInTrash() && p.getOwner().equals(loggedInUserManager.getLoggedInUserId()));
 
         viewCat2Filter.put(SHARED_WITH_ME,
-                           p -> !p.isInTrash() && !p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
+                           p -> !p.isInTrash() && !p.getOwner().equals(loggedInUserManager.getLoggedInUserId()));
 
         viewCat2Filter.put(TRASH,
-                           p -> p.isInTrash() && p.getOwner().equals(loggedInUserManager.getCurrentUserId()));
+                           p -> p.isInTrash() && p.getOwner().equals(loggedInUserManager.getLoggedInUserId()));
 
         projectManagerView.setViewFilterChangedHandler(this::applyFilters);
         projectManagerView.setViewFilters(asList(OWNED_BY_ME, SHARED_WITH_ME));

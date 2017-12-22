@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ChangePasswordData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.annotation.Nonnull;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -84,9 +86,10 @@ public class ChangePasswordPresenter {
         String currentPassword = data.getOldPassword();
         String newPassword = data.getNewPassword();
         ChangePasswordActionFactory actionFactory = new ChangePasswordActionFactory(newPassword, new SaltProvider());
-        executor.execute(userId, currentPassword, actionFactory, new DispatchServiceCallbackWithProgressDisplay<AuthenticationResponse>() {
+        executor.execute(userId, currentPassword, actionFactory, new AuthenticatedDispatchServiceCallback<ChangePasswordResult>() {
+
             @Override
-            public void handleSuccess(AuthenticationResponse response) {
+            public void handleAuthenticationResponse(@Nonnull AuthenticationResponse response) {
                 if(response == AuthenticationResponse.SUCCESS) {
                     MessageBox.showMessage("Your password has been changed");
                     closer.hide();

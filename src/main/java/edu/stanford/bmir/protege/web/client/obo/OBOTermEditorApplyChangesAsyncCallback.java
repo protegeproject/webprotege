@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.shared.user.NotSignedInException;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,9 +22,6 @@ public class OBOTermEditorApplyChangesAsyncCallback implements AsyncCallback<Voi
     }
 
     public void onFailure(Throwable caught) {
-        if(caught instanceof NotSignedInException) {
-            MessageBox.showMessage(msg + ".  You must be signed in for your changes to be applied.");
-        }
     }
 
     public void onSuccess(Void result) {

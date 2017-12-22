@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.project;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.crud.*;
@@ -104,6 +105,9 @@ public class ChangeManager implements HasApplyChanges {
     private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
     @Nonnull
+    private final UserInSessionFactory userInSessionFactory;
+
+    @Nonnull
     private final ReadWriteLock projectChangeLock = new ReentrantReadWriteLock();
 
     @Nonnull
@@ -131,7 +135,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider) {
+                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, @Nonnull UserInSessionFactory userInSessionFactory) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.accessManager = accessManager;
@@ -148,6 +152,7 @@ public class ChangeManager implements HasApplyChanges {
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
         this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
         this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
+        this.userInSessionFactory = userInSessionFactory;
     }
 
     /**
@@ -180,7 +185,8 @@ public class ChangeManager implements HasApplyChanges {
         if (!accessManager.hasPermission(subject,
                                          projectResource,
                                          EDIT_ONTOLOGY.getActionId())) {
-            throw new PermissionDeniedException("You do not have permission to edit this project");
+            throw new PermissionDeniedException("You do not have permission to edit this project",
+                                                userInSessionFactory.getUserInSession(userId));
         }
 
         final List<OWLOntologyChange> appliedChanges;
@@ -214,24 +220,28 @@ public class ChangeManager implements HasApplyChanges {
                     if (DataFactory.isFreshEntity(entity)) {
                         if (entity.isOWLClass()) {
                             if (!accessManager.hasPermission(subject, projectResource, CREATE_CLASS.getActionId())) {
-                                throw new PermissionDeniedException("You do not have permission to create new classes");
+                                throw new PermissionDeniedException("You do not have permission to create new classes",
+                                                                    userInSessionFactory.getUserInSession(userId));
                             }
                         }
                         else if (entity.isOWLObjectProperty() || entity.isOWLDataProperty() || entity.isOWLAnnotationProperty()) {
                             if (!accessManager.hasPermission(subject, projectResource, CREATE_PROPERTY.getActionId())) {
-                                throw new PermissionDeniedException("You do not have permission to create new properties");
+                                throw new PermissionDeniedException("You do not have permission to create new properties",
+                                                                    userInSessionFactory.getUserInSession(userId));
                             }
                         }
                         else if (entity.isOWLNamedIndividual()) {
                             if (!accessManager.hasPermission(subject,
                                                              projectResource,
                                                              CREATE_INDIVIDUAL.getActionId())) {
-                                throw new PermissionDeniedException("You do not have permission to create new individuals");
+                                throw new PermissionDeniedException("You do not have permission to create new individuals",
+                                                                    userInSessionFactory.getUserInSession(userId));
                             }
                         }
                         else if (entity.isOWLDatatype()) {
                             if (!accessManager.hasPermission(subject, projectResource, CREATE_DATATYPE.getActionId())) {
-                                throw new PermissionDeniedException("You do not have permission to create new datatypes");
+                                throw new PermissionDeniedException("You do not have permission to create new datatypes",
+                                                                    userInSessionFactory.getUserInSession(userId));
                             }
                         }
                         changesToRename.add(change);
