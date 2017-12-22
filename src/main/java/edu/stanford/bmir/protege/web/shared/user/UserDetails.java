@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.user;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -29,11 +30,6 @@ public class UserDetails implements Serializable {
 
     private String emailAddress;
 
-    /**
-     * For serialization only
-     */
-    private UserDetails() {
-    }
 
     /**
      * Constructs a {@link UserDetails} object representing the key details about a user.
@@ -42,18 +38,16 @@ public class UserDetails implements Serializable {
      * @param emailAddress The email address of the user.  Not {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.
      */
-    public UserDetails(UserId userId, String displayName, java.util.Optional<String> emailAddress) {
+    public UserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
         this.userId = checkNotNull(userId);
         this.displayName = checkNotNull(displayName);
-        if(emailAddress.isPresent()) {
-            this.emailAddress = emailAddress.get();
-        }
-        else {
-            this.emailAddress = null;
-        }
+        this.emailAddress = emailAddress.orElse(null);
     }
 
 
+    @GwtSerializationConstructor
+    private UserDetails() {
+    }
 
     /**
      * Constructs a {@link UserDetails} object representing the key details about a user.
@@ -66,7 +60,7 @@ public class UserDetails implements Serializable {
         return new UserDetails(userId, displayName, Optional.of(emailAddress));
     }
 
-    public static UserDetails getUserDetails(UserId userId, String displayName, java.util.Optional<String> emailAddress) {
+    public static UserDetails getUserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
         return new UserDetails(userId, displayName, emailAddress);
     }
 
@@ -95,7 +89,7 @@ public class UserDetails implements Serializable {
      * Gets the email address for the user.
      * @return The {@link EmailAddress}.  Not {@code null}.
      */
-    public java.util.Optional<String> getEmailAddress() {
+    public Optional<String> getEmailAddress() {
         return Optional.ofNullable(emailAddress);
     }
 
