@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import edu.stanford.bmir.protege.web.server.access.AccessManager;
+import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -14,13 +15,18 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.events.ProjectEventList;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.access.ProjectResource.forProject;
+import static edu.stanford.bmir.protege.web.server.access.Subject.forUser;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 
 /**
  * Author: Matthew Horridge<br>
@@ -30,14 +36,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectEventsActionHandler implements ApplicationActionHandler<GetProjectEventsAction, GetProjectEventsResult> {
 
-    public final WebProtegeLogger logger;
+    @Nonnull
+    private final ProjectManager projectManager;
 
-    private ProjectManager projectManager;
+    @Nonnull
+    private final AccessManager accessManager;
+
+    @Nonnull
+    private final UserInSessionFactory userInSessionFactory;
 
     @Inject
-    public GetProjectEventsActionHandler(ProjectManager projectManager, WebProtegeLogger logger) {
+    public GetProjectEventsActionHandler(@Nonnull ProjectManager projectManager,
+                                         @Nonnull AccessManager accessManager,
+                                         @Nonnull UserInSessionFactory userInSessionFactory) {
         this.projectManager = checkNotNull(projectManager);
-        this.logger = checkNotNull(logger);
+        this.accessManager = checkNotNull(accessManager);
+        this.userInSessionFactory = checkNotNull(userInSessionFactory);
     }
 
     @Nonnull
@@ -55,8 +69,14 @@ public class GetProjectEventsActionHandler implements ApplicationActionHandler<G
     @Nonnull
     @Override
     public GetProjectEventsResult execute(@Nonnull GetProjectEventsAction action, @Nonnull ExecutionContext executionContext) {
-        final EventTag sinceTag = action.getSinceTag();
-        final ProjectId projectId = action.getProjectId();
+        EventTag sinceTag = action.getSinceTag();
+        ProjectId projectId = action.getProjectId();
+        UserId userId = executionContext.getUserId();
+        if(!accessManager.hasPermission(forUser(userId),
+                                        forProject(action.getProjectId()),
+                                        VIEW_PROJECT)) {
+            return getEmptyResult(projectId, sinceTag);
+        }
         if(!projectManager.isActive(projectId)) {
             return getEmptyResult(projectId, sinceTag);
         }
