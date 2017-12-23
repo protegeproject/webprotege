@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -118,7 +119,8 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     @Override
     public void setValue(final LabelledFrame<NamedIndividualFrame> frame) {
         editedFrame = java.util.Optional.of(frame);
-        iriField.setValue(frame.getFrame().getSubject().getEntity().getIRI().toString());
+        String decodedIri = URL.decode(frame.getFrame().getSubject().getEntity().getIRI().toString());
+        iriField.setValue(decodedIri);
         assertions.setValue(frame.getFrame().getPropertyValueList());
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         types.setValue(new ArrayList<>(frame.getFrame().getClasses()));

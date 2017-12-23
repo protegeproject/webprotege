@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -149,7 +150,8 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     public void setValue(LabelledFrame<ObjectPropertyFrame> object) {
         dirty = false;
         final ObjectPropertyFrame frame = object.getFrame();
-        iriField.setValue(frame.getSubject().getEntity().getIRI().toString());
+        String decodedIri = URL.decode(object.getFrame().getSubject().getEntity().getIRI().toString());
+        iriField.setValue(decodedIri);
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
         characteristics.clear();
         characteristics.addAll(object.getFrame().getCharacteristics());
