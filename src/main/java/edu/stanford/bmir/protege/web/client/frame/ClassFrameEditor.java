@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -97,7 +98,8 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
         entityDisplay.setDisplayedEntity(java.util.Optional.of(currentSubject));
-        iriField.setValue(lcf.getFrame().getSubject().getEntity().getIRI().toString());
+        String decodedIri = URL.decode(lcf.getFrame().getSubject().getEntity().getIRI().toString());
+        iriField.setValue(decodedIri);
         ArrayList<PropertyAnnotationValue> annotationPropertyValues = new ArrayList<>(lcf.getFrame()
                                                                                .getAnnotationPropertyValues());
         Collections.sort(annotationPropertyValues);

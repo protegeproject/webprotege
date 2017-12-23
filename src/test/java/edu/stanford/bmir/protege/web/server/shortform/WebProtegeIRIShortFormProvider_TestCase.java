@@ -27,8 +27,6 @@ public class WebProtegeIRIShortFormProvider_TestCase {
 
     public static final String LITERAL = "LITERAL";
 
-    public static final String ENTITY_IRI_FRAGMENT = "FRAGMENT";
-
     @Mock
     private HasAnnotationAssertionAxioms annotationAssertionAxiomsProvider;
 
@@ -51,7 +49,6 @@ public class WebProtegeIRIShortFormProvider_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        when(iri.getFragment()).thenReturn(ENTITY_IRI_FRAGMENT);
 
         when(annotationAssertion.getValue()).thenReturn(annotationValue);
         when(annotationValue.getLiteral()).thenReturn(LITERAL);
@@ -103,9 +100,28 @@ public class WebProtegeIRIShortFormProvider_TestCase {
     }
 
     @Test
-    public void shouldReturnEntityIRIFragmentIfAnnotationAssertionPropertyIsNotKnown() {
-        when(annotationProperty.getIRI()).thenReturn(IRI.create("http://other.com/other"));
-        assertThat(shortFormProvider.getShortForm(iri), is(ENTITY_IRI_FRAGMENT));
+    public void shouldReturnIriSlashTrailingPartIfAnnotationAssertionPropertyIsNotKnown() {
+        assertThat(shortFormProvider.getShortForm(IRI.create("http://other.com/other")), is("other"));
+    }
+
+    @Test
+    public void shouldReturnIriHashTrailingPartIfAnnotationAssertionPropertyIsNotKnown() {
+        assertThat(shortFormProvider.getShortForm(IRI.create("http://other.com/path#other")), is("other"));
+    }
+
+    @Test
+    public void shouldReturnDecodedString() {
+        assertThat(shortFormProvider.getShortForm(IRI.create("http://other.com/path#gro%C3%9F")), is("groß"));
+    }
+
+    @Test
+    public void shouldReturnDecodedUtf16() {
+        assertThat(shortFormProvider.getShortForm(IRI.create("http://other.com/path#%E9%96%80%E7%94%9F")), is("門生"));
+    }
+
+    @Test
+    public void shouldReturnDecodedFragment() {
+        assertThat(shortFormProvider.getShortForm(IRI.create("http://other.com/path#With%23Hash")), is("With#Hash"));
     }
 
     @Test

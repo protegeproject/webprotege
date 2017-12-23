@@ -102,19 +102,31 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
         if (renderingValue instanceof OWLLiteral) {
             return ((OWLLiteral) renderingValue).getLiteral();
         } else {
-            String result;
-            String iriFragment = iri.getFragment();
-            if (iriFragment != null) {
-                result = iriFragment;
-            } else {
-                result = iri.toQuotedString();
-            }
             try {
-                return URLDecoder.decode(result, "UTF-8");
+                String trailingPart = getTrailingPart(iri.toString());
+                if(trailingPart.isEmpty()) {
+                    String decodedIri = URLDecoder.decode(iri.toString(), "UTF-8");
+                    return "<" + decodedIri + ">";
+                }
+                else {
+                    return URLDecoder.decode(trailingPart, "UTF-8");
+                }
             } catch (IllegalArgumentException | UnsupportedEncodingException e) {
-                return result;
+                return iri.toQuotedString();
             }
         }
+    }
 
+    @Nonnull
+    private String getTrailingPart(@Nonnull String iriString) {
+        int hashIndex = iriString.lastIndexOf("#");
+        if(hashIndex != -1 && hashIndex < iriString.length() - 1) {
+            return iriString.substring(hashIndex + 1);
+        }
+        int slashIndex = iriString.lastIndexOf("/");
+        if(slashIndex != -1 && slashIndex < iriString.length() - 1) {
+            return iriString.substring(slashIndex + 1);
+        }
+        return "";
     }
 }

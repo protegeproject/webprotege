@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -135,7 +136,8 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         lastFrame = Optional.of(object);
         entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
         final AnnotationPropertyFrame frame = object.getFrame();
-        iriField.setText(frame.getSubject().getEntity().getIRI().toString());
+        String decodedIri = URL.decode(object.getFrame().getSubject().getEntity().getIRI().toString());
+        iriField.setValue(decodedIri);
         annotations.setValue(frame.getPropertyValueList());
         domains.setValue(new ArrayList<>(frame.getDomains()));
         ranges.setValue(new ArrayList<>(frame.getRanges()));
