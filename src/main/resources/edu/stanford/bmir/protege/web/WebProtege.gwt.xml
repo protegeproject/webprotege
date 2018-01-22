@@ -26,9 +26,7 @@
     <inherits name="com.google.gwt.logging.Logging"/>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
-
-	<inherits name='com.gwtext.GwtExt' />
-
+    
     <inherits name="edu.stanford.protege.widgetmap.widgetmap"/>
     <inherits name="com.google.gwt.activity.Activity"/>
     <inherits name="com.google.gwt.i18n.I18N"/>
