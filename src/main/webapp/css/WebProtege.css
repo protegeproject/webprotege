@@ -281,10 +281,10 @@ select {
     border: 2px solid #e8b9be;
     border-radius: 4px;
     padding: 4px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: relative;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
     z-index: 1;
 }
 

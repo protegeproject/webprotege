@@ -102,14 +102,8 @@
         ApplicationSettingsChecker checker = getApplicationSettingsChecker();
         if(!checker.isProperlyConfigured()) {
             writer.println("<div class=\"wp-configuration-error-banner\">");
-            ApplicationSettingsPlace appSettings = ApplicationSettingsPlace.get();
-            AdminPlaceTokenizer tokenizer = new AdminPlaceTokenizer();
-            String appSettingsToken = tokenizer.getToken(appSettings);
             String appName = getWebProtegeComponent().getApplicationNameProvider().get();
-            writer.println(String.format("%s is not properly configured.  " +
-                                                 "Please ensure that you are signed in as the admin user and visit the <a href=\"#%s\">application settings</a> page to configure %s.  Note that you will need to refresh your browser after editing the application settings.",
-                                         appName,
-                                         appSettingsToken,
+            writer.println(String.format("%s is not configured properly",
                                          appName));
             writer.println("</div>");
         }
