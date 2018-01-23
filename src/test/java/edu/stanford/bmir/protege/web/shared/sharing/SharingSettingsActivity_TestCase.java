@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import org.junit.Before;
 import org.junit.Test;

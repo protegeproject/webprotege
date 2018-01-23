@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.projectsettings;
+package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;

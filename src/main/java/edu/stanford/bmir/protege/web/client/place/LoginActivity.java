@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.place;
+package edu.stanford.bmir.protege.web.client.place;
 
 import com.google.common.base.Objects;
 import com.google.gwt.activity.shared.AbstractActivity;
