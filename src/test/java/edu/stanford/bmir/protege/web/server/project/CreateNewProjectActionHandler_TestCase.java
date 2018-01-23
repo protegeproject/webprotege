@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.Resource;
 import edu.stanford.bmir.protege.web.server.access.Subject;

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
+import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ApplicationPermissionValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.CompositeRequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
-import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;

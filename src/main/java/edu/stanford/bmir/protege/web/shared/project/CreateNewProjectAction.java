@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
