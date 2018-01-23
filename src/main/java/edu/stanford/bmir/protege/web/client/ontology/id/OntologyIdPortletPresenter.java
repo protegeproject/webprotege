@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ontology.id;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;

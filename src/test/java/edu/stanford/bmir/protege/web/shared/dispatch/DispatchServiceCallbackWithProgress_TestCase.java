@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.google.gwt.user.client.rpc.InvocationException;
-import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;

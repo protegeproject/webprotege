@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateAnnotationPropertiesResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
@@ -14,12 +14,9 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 import java.util.Set;
 
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_PROPERTY;

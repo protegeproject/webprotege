@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateEntitiesInHierarchyAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntitiesInHierarchyAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -14,8 +13,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

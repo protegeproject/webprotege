@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameResult;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.frame.NamedIndividualFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;

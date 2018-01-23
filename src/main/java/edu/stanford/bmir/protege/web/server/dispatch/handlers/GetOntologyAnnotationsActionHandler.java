@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;

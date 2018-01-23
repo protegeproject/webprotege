@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;

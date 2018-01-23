@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;

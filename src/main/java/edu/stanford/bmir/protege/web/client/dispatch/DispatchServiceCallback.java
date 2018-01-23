@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.UmbrellaException;
+import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 /**
