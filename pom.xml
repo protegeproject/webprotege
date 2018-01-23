@@ -436,7 +436,6 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <goal>i18n</goal>
                         </goals>
                     </execution>
                 </executions>
