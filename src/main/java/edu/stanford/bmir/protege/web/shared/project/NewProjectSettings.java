@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.project;
+package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;

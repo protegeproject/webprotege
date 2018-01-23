@@ -12,10 +12,7 @@ import edu.stanford.bmir.protege.web.client.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.upload.FileUploadResponse;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
-import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
+import edu.stanford.bmir.protege.web.shared.project.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
