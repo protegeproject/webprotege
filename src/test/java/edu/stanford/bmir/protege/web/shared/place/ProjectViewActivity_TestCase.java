@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.place;
 
+import edu.stanford.bmir.protege.web.client.place.ProjectViewActivity;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import org.hamcrest.Matchers;
 import org.junit.Before;
