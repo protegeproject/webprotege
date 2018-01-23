@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
-import edu.stanford.bmir.protege.web.shared.HasGetChangeSubjects;
+import edu.stanford.bmir.protege.web.server.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared;
+package edu.stanford.bmir.protege.web.server;
 
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;

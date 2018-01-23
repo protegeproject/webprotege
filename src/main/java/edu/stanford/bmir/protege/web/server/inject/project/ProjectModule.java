@@ -38,7 +38,7 @@ import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
-import edu.stanford.bmir.protege.web.shared.HasGetChangeSubjects;
+import edu.stanford.bmir.protege.web.server.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomComparatorImpl;
 import edu.stanford.bmir.protege.web.shared.axiom.DefaultAxiomTypeOrdering;

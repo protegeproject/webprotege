@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.renderer;
+package edu.stanford.bmir.protege.web.server.renderer;
 
 import com.google.common.collect.Maps;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;

@@ -15,7 +15,7 @@ import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsResult;
-import edu.stanford.bmir.protege.web.shared.renderer.ManchesterSyntaxKeywords;
+import edu.stanford.bmir.protege.web.server.renderer.ManchesterSyntaxKeywords;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;

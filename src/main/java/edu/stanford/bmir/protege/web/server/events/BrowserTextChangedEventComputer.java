@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.events;
 import com.google.common.collect.Maps;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
-import edu.stanford.bmir.protege.web.shared.HasGetChangeSubjects;
+import edu.stanford.bmir.protege.web.server.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
