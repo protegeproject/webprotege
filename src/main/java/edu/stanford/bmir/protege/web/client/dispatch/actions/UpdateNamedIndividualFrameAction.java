@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
