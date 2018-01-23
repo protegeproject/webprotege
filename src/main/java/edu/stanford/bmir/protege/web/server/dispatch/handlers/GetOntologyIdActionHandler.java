@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.client.ontology.id.GetOntologyIdAction;
-import edu.stanford.bmir.protege.web.client.ontology.id.GetOntologyIdResult;
+import edu.stanford.bmir.protege.web.shared.ontology.id.GetOntologyIdAction;
+import edu.stanford.bmir.protege.web.shared.ontology.id.GetOntologyIdResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;

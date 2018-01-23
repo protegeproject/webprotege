@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.client.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.shared.access.ActionId;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
@@ -20,14 +17,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.user.LoggedInUser.LoggedInUserState.LOGGED_IN_USER_CHANGED;
-import static edu.stanford.bmir.protege.web.client.user.LoggedInUser.LoggedInUserState.LOGGED_IN_USER_UNCHANGED;
 
 /**
  * Author: Matthew Horridge<br>

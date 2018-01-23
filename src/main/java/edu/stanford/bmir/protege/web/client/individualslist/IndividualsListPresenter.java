@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.server.app.UserInSessionFactory;
 import edu.stanford.bmir.protege.web.server.dispatch.ApplicationActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

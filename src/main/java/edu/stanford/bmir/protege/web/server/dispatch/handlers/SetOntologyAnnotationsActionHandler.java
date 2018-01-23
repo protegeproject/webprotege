@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;

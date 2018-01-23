@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;

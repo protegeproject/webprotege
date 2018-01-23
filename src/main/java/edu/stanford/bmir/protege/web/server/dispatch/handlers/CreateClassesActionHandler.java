@@ -1,31 +1,24 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter.formatMessage;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.CREATE_CLASS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static java.util.Arrays.asList;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.frame.ClassFrameEditor;
 import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
