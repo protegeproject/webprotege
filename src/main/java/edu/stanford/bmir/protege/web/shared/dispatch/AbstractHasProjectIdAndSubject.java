@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.dispatch.actions;
+package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
