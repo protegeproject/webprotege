@@ -5,6 +5,8 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 
 import java.io.Serializable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Matthew Horridge
@@ -13,20 +15,13 @@ import java.io.Serializable;
  */
 public class OWLAxiomData implements IsSerializable, Serializable {
 
-    private OWLAxiom axiom;
-
     private String htmlRendering;
 
     private OWLAxiomData() {
     }
 
-    public OWLAxiomData(OWLAxiom axiom, String htmlRendering) {
-        this.axiom = axiom;
-        this.htmlRendering = htmlRendering;
-    }
-
-    public OWLAxiom getAxiom() {
-        return axiom;
+    public OWLAxiomData(String htmlRendering) {
+        this.htmlRendering = checkNotNull(htmlRendering);
     }
 
     public String getHtmlRendering() {
