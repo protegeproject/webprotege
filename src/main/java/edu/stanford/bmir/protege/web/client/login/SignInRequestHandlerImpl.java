@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.login;
 
 import com.google.gwt.place.shared.PlaceController;
+import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 
 import javax.inject.Inject;
 

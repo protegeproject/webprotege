@@ -3,8 +3,7 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

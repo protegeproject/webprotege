@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServiceProvider;
