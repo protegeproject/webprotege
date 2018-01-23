@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.csv;
 
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 

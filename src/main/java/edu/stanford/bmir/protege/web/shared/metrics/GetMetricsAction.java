@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.metrics;
 
 import com.google.common.base.MoreObjects;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
