@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.dispatch;
+package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
