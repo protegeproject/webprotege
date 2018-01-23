@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
