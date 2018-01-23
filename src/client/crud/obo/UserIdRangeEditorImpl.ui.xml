@@ -1,0 +1,44 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .userIdEditor {
+            flex-grow: 1;
+            flex-shrink: 1;
+            margin-top: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 1px;
+        }
+        .startEditor {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-top: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 1px;
+
+        }
+        .endEditor {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-top: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 1px;
+        }
+
+    </ui:style>
+    <g:HTMLPanel  addStyleNames="{style.main}">
+            <g:SuggestBox ui:field="userIdEditor" addStyleNames="{style.userIdEditor}"/>
+            <text:PlaceholderTextBox ui:field="startEditor" visibleLength="8" placeholder="start"
+                                     addStyleNames="{style.startEditor}"/>
+            <text:PlaceholderTextBox ui:field="endEditor" visibleLength="8" placeholder="end"
+                                     addStyleNames="{style.endEditor}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

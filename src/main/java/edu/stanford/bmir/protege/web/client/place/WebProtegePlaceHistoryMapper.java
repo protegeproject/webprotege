@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.place;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
-import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlaceTokenizer;
+import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlaceTokenizer;
 

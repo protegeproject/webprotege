@@ -1,0 +1,54 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .main {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        .middle {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .blenderHolder {
+            width: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 30px;
+        }
+        .blender {
+            width: 100px;
+            height: auto;
+            left: -07px;
+            position: relative;
+        }
+        .errorMessageLabel {
+            font-size: 20pt;
+            text-align: center;
+            width: 100%;
+        }
+        .subMessageLabel {
+            text-align: center;
+            width: 100%;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{style.middle}">
+            <g:HTMLPanel addStyleNames="{style.blenderHolder}">
+                <g:Image resource="{wp.protegeBlenderGrayScale}" addStyleNames="{style.blender}"/>
+            </g:HTMLPanel>
+            <g:Label addStyleNames="{style.errorMessageLabel}" text="{msg.forbidden}"/>
+            <g:Label ui:field="subMessage" addStyleNames="{style.subMessageLabel}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

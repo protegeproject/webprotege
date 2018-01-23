@@ -1,0 +1,50 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .leftItem {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .middlePadding {
+            flex-grow: 1;
+        }
+
+        .rightItem {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+
+        .inline {
+            display: inline-block;
+        }
+        .splitter {
+            align-self: stretch;
+            margin-top: 3px;
+            margin-bottom: 3px;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main} {wp.laf.topBar}">
+        <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarLogo}"/>
+        <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
+            <g:Label ui:field="projectTitle" addStyleNames="{style.inline}  {style.leftItem} {wp.laf.topBarTitle}"/>
+            <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
+            <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
+            <g:HTMLPanel addStyleNames="{style.inline} {style.middlePadding}"/>
+            <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+            <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+            <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+            <g:SimplePanel ui:field="helpContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

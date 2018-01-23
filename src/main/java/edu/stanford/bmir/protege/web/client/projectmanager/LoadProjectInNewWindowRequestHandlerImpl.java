@@ -5,7 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.place.ItemSelection;
+import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesAction;

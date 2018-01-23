@@ -1,0 +1,65 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.library.timelabel"
+>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .comment {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            flex-grow: 1;
+            margin-left: 5px;
+        }
+
+        .userIcon {
+            display: inline-block;
+            padding-right: 1px;
+            vertical-align: middle;
+        }
+
+        .updatedAt {
+            display: inline;
+        }
+
+        .buttonBar {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.comment} {wp.discussion.comment}">
+        <!-- User Icon -->
+        <g:SimplePanel ui:field="userIconField" addStyleNames="{style.userIcon}"/>
+        <!-- Comment Metadata and Body -->
+        <g:HTMLPanel addStyleNames="{style.content}">
+            <g:Label ui:field="userNameField" addStyleNames="{wp.discussion.commentAuthor}"/>
+            <!-- Creation/Modification Time -->
+            <timelabel:ElapsedTimeLabel ui:field="createdAtField" addStyleNames="{wp.discussion.commentDate}"/>
+            <g:HTMLPanel ui:field="updatedAtPanel">
+                <g:InlineLabel text="{msg.lastUpdated} " addStyleNames="{wp.discussion.commentDate}"/>
+                <timelabel:ElapsedTimeLabel ui:field="updatedAtField" addStyleNames="{wp.discussion.commentDate} {style.updatedAt}"/>
+            </g:HTMLPanel>
+            <!-- Body -->
+            <g:HTML ui:field="bodyField" addStyleNames="{wp.discussion.commentBody}"/>
+            <!-- Button Bar -->
+            <g:HTMLPanel addStyleNames="{style.buttonBar}">
+                <g:Button text="{msg.replyToComment}" ui:field="replyButton"
+                          visible="false"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"/>
+                <g:Button text="{msg.editComment}" ui:field="editButton"
+                          visible="false"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"/>
+                <g:Button text="{msg.deleteComment}" ui:field="deleteButton"
+                          visible="false"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton}"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

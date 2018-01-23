@@ -4,7 +4,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.place.ItemSelection;
+import edu.stanford.bmir.protege.web.shared.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import org.junit.Before;
 import org.junit.Test;

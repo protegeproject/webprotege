@@ -1,0 +1,32 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .main {
+        }
+        .validator {
+            color: #ff0000;
+            padding: 2px;
+            padding-bottom: 4px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+
+        <div class="{wp.style.formGroup}">
+            <g:Label text="IRI Prefix"/>
+            <g:TextBox ui:field="iriPrefixEditor" visibleLength="90"/>
+            <g:HTML ui:field="prefixValidatorMessage" visible="false" addStyleNames="{style.validator}"/>
+        </div>
+
+        <div class="{wp.style.formGroup}">
+            <g:Label text="IRI Suffix"/>
+            <g:ListBox ui:field="suffixSelectorListBox" visibleItemCount="1"/>
+        </div>
+
+        <div style="height: 10px;"/>
+        <g:SimplePanel ui:field="schemeSpecificSettingsEditorHolder"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,24 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:gwtcodemirror="urn:import:edu.stanford.bmir.gwtcodemirror.client">
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .main {
+            /*display: flex;*/
+        }
+        .help {
+            padding-top: 10px;
+            padding-left: 5px;
+            display: inline-block;
+            color: #909090;
+        }
+        .editor {
+            display: block;
+            border: 1px solid #f0f0f0;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <gwtcodemirror:GWTCodeMirror ui:field="bodyField" width="60em" height="10em" addStyleNames="{style.editor}"/>
+        <g:Anchor text="{msg.markdownSupported}" target="_blank" href="http://www.markdowntutorial.com/" addStyleNames="{style.help}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

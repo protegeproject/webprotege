@@ -5,9 +5,8 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.place.*;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;

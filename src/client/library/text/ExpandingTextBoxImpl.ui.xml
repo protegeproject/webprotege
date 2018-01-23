@@ -1,0 +1,86 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+
+        @external .gwt-SuggestBox;
+
+
+        textarea pre {
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            border: 0;
+        }
+
+        .main {
+            position: relative;
+        }
+
+        .main > textarea {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .main.active > textarea {
+            overflow: hidden;
+            position: relative;
+            top: 0;
+            left: 0;
+            height: 100%;
+            resize: none;
+        }
+
+        .main > pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            visibility: hidden;
+            color: #00ffff;
+            font-size: 12px;
+            padding-left: 22px;
+            padding-bottom: 2px;
+            padding-right: 2px;
+            padding-top: 2px;
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            border: 1px solid transparent;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            line-height: 16px;
+
+        }
+
+        .button-loc {
+            cursor: pointer;
+            top: 1px;
+            right: 1px;
+            padding: 2px;
+            position: absolute;
+            text-decoration: none;
+        }
+
+        .main > a {
+            color: #f0f0f0;
+        }
+
+        .main > a:hover {
+            color: #a9a9a9;
+        }
+
+        .main .gwt-SuggestBox {
+            border: none;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+            <pre class="{wp.style.classIconInset}"><span/><br/></pre>
+            <g:SuggestBox ui:field="suggestBox"/>
+            <g:Anchor addStyleNames="{style.button-loc}" text="&#x25B6;" title="Navigate to entity" ui:field="anchor"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

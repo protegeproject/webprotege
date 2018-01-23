@@ -19,8 +19,8 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.place.ApplicationSettingsPlace" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.ApplicationSettings" %>
-<%@ page import="edu.stanford.bmir.protege.web.client.place.WebProtegePlaceTokenizer" %>
-<%@ page import="edu.stanford.bmir.protege.web.client.place.AdminPlaceTokenizer" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.place.AdminPlaceTokenizer" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

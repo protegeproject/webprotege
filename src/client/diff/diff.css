@@ -1,0 +1,44 @@
+.line {
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+}
+
+.add {
+    background-color: mintcream;
+    padding: 4px;
+}
+
+.addBullet {
+    color: #00ba00;
+    font-weight: bold;
+    padding-right: 10px;
+    min-width: 10px;
+    display: inline-block;
+}
+
+.remove {
+    background-color: #fff5fa;
+    padding: 4px;
+}
+
+.removeBullet {
+    color: #d70000;
+    font-weight: bold;
+    padding-right: 10px;
+    min-width: 10px;
+    display: inline-block;
+}
+
+.source {
+    color: #b2b2b2;
+    padding-right: 10px;
+    min-width: 50px;
+}
+
+.lineElement {
+    display: inline-block;
+    width: 500px;
+    vertical-align: top;
+    white-space: normal;
+}
+

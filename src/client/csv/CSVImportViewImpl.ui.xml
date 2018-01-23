@@ -1,0 +1,101 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:csv="urn:import:edu.stanford.bmir.protege.web.client.csv"
+             xmlns:dlg="urn:import:edu.stanford.bmir.protege.web.client.library.dlg"
+        >
+    <ui:style>
+        .holder {
+            /*position: absolute;*/
+            width: 800px;
+            height: 600px;
+        }
+        .flex-table-style {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 200px;
+            padding-bottom: 20px;
+        }
+        .csv-grid-style {
+            position: relative;
+            height: 200px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            width: 800px;
+            border: solid #f1f1f1 1px;
+        }
+        .column-table-scroll-pane {
+            /*height: 200px;*/
+            border: 1px solid #f1f1f1;
+        }
+        .form-table {
+
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.holder}">
+        <table width="100%" style=" border-spacing: 20px 20px;
+            border-collapse: separate;">
+            <colgroup>
+                <col width="150px"/>
+            </colgroup>
+
+
+
+            <tr valign="top">
+                <td>
+                    <dlg:WebProtegeDialogLabel text="Import rows as"/>
+                </td>
+                <td>
+                    <g:ListBox visibleItemCount="1" ui:field="importTypeField" width="200px"/>
+                </td>
+            </tr>
+
+            <tr valign="top">
+                <td>
+                    <dlg:WebProtegeDialogLabel text="Display name column"/>
+                </td>
+                <td>
+                    <g:ListBox visibleItemCount="1" ui:field="displayNameField" width="200px"/>
+                </td>
+            </tr>
+
+
+            <tr valign="top">
+                <td>
+                    <dlg:WebProtegeDialogLabel text="Property value mapping"/>
+                </td>
+                <td>
+                    <g:DockLayoutPanel width="100%" height="200px" unit="EM">
+                        <g:north size="2">
+                            <g:FlexTable ui:field="flexTableHeader" addStyleNames="{style.flex-table-style}"/>
+                        </g:north>
+                        <g:center>
+                            <g:ScrollPanel addStyleNames="{style.column-table-scroll-pane}">
+                                <g:FlexTable ui:field="flexTable" addStyleNames="{style.flex-table-style}"/>
+                            </g:ScrollPanel>
+                        </g:center>
+                    </g:DockLayoutPanel>
+                </td>
+            </tr>
+
+            <!--<tr valign="top">-->
+                <!--<td>-->
+                    <!--<dlg:WebProtegeDialogLabel text="CSV data"/>-->
+                <!--</td>-->
+                <!--<td colspan="2">-->
+                    <!--<csv:CSVGridViewImpl ui:field="csvGridView" width="100%" height="200px"-->
+                                         <!--addStyleNames="{style.csv-grid-style}"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+
+        </table>
+
+        <div style="border-top: 1px #f1f1f1 solid; margin-top: 10px; margin-bottom: 20px; width: 100%;"/>
+            <csv:CSVGridViewImpl ui:field="csvGridView" width="800px" height="200px"
+                                 addStyleNames="{style.csv-grid-style}"/>
+
+
+    </g:HTMLPanel>
+</ui:UiBinder>

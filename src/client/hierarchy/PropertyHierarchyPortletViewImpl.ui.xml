@@ -1,0 +1,55 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        @external .gwt-TabBarItem, .gwt-TabBarItem-selected, .gwt-TabBar, .gt-tree;
+        .main {
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        .switcher {
+            flex-grow: 0;
+            flex-shrink: 0;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .hierarchyContainer {
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+        .main .gt-tree {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .main .gwt-TabBar {
+
+        }
+        .main .gwt-TabBarItem {
+            font-weight: 400;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+            outline: none;
+            margin-right: 10px;
+
+        }
+        .main .gwt-TabBarItem-selected {
+            color: literal("var(--selected-tab--color)");
+            border-bottom: 2px solid literal("var(--selected-tab--color)");
+
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:TabBar ui:field="switcher" addStyleNames="{style.switcher} {wp.toolbar.toolbar}"/>
+        <g:SimplePanel ui:field="hierarchyContainer" addStyleNames="{style.hierarchyContainer}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,33 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+
+    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+
+        <div class="{wp.style.formGroup}">
+            <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
+            <g:TextBox ui:field="iriField" width="100%"/>
+        </div>
+
+
+        <div style="height: 10px;"/>
+
+        <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
+        <wp:PropertyValueListEditor ui:field="annotations"/>
+
+        <div style="height: 10px;"/>
+
+        <g:Label text="{msg.frame_classes}" addStyleNames="{wp.style.formLabel}"/>
+        <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="{msg.frame_enterAClassName}"/>
+
+        <div style="height: 15px;"/>
+
+        <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
+        <wp:PropertyValueListEditor ui:field="properties"/>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

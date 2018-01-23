@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.place;
 
-import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.MatcherAssert;
