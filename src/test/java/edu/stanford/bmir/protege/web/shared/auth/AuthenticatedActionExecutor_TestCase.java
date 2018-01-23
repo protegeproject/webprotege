@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
