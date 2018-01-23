@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.dispatch.actions;
+package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
