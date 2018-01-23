@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.frame.ObjectPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
