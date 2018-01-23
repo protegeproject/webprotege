@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
+import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 
 import javax.annotation.Nonnull;

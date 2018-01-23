@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;

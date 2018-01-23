@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.DataPropertyFrameEditor;
-import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;

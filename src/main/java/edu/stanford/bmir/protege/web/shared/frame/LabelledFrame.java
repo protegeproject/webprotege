@@ -1,8 +1,7 @@
-package edu.stanford.bmir.protege.web.client.frame;
+package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
-import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Set;

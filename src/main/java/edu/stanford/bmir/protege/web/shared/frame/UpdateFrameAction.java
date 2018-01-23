@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasProjectAction;
-import edu.stanford.bmir.protege.web.client.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
