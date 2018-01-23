@@ -1,0 +1,51 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+
+    <ui:style>
+        .cell-content {
+            box-sizing: border-box;
+            width: 100%;
+            line-height: 18px;
+         }
+
+        .xref-editor {
+            width: 100%;
+        }
+        .xrefEditorHolder {
+            display: flex;
+            flex-direction: row;
+        }
+        .id-field {
+            flex-grow: 0;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            margin: 1px;
+        }
+        .name-field {
+            flex-grow: 0;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            margin: 1px;
+        }
+        .description-field {
+            flex-grow: 1;
+            flex-shrink: 1;
+            box-sizing: border-box;
+            margin: 1px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.xref-editor}">
+            <div class="{style.xrefEditorHolder}">
+                <div class="{style.id-field}">
+                    <text:PlaceholderTextBox ui:field="databaseIdField" placeholder="DB Id" addStyleNames="{style.cell-content}"/>
+                </div>
+                <div class="{style.name-field}">
+                    <text:PlaceholderTextBox ui:field="databaseNameField" placeholder="DB Name" addStyleNames="{style.cell-content}"/>
+                </div>
+                <div class="{style.description-field}">
+                    <text:PlaceholderTextBox ui:field="descriptionField" placeholder="Description" addStyleNames="{style.cell-content}"/>
+                </div>
+            </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,46 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            text-align: center;
+        }
+        .holder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.5;
+        }
+        .messageLabel {
+            font-size: 18px;
+            padding: 10px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{style.holder}">
+            <div class="busy-indicator">
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(0deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(30deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(60deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(90deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(120deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(150deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(180deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(210deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(240deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(270deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(300deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+                <div style='top:30px;left:37px;width:7px;height:20px;background:#000000;transform:rotate(330deg) translate(0,-30px);border-radius:4px;position:absolute;'/>
+            </div>
+            <g:Label ui:field="messageLabel" addStyleNames="{style.messageLabel}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

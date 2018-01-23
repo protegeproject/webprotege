@@ -4,7 +4,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
-import edu.stanford.bmir.protege.web.client.place.ProjectListPlace;
+import edu.stanford.bmir.protege.web.shared.place.ProjectListPlace;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 import javax.annotation.Nonnull;

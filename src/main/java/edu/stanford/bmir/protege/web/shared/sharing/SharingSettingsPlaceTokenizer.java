@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceTokenizer;
+import edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 

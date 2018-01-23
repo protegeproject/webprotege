@@ -1,0 +1,16 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .main {
+
+        }
+
+        .buttonStyle {
+            display: inline;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Button ui:field="applyChanges" text="Apply changes now" addStyleNames="{style.buttonStyle}"/>
+        <g:Button ui:field="applyChangesWithCommitMessage" text="Apply changes with commit message now" addStyleNames="{style.buttonStyle}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

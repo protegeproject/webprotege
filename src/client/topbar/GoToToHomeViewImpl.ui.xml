@@ -1,0 +1,24 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+        }
+        .homeIcon {
+            width: 16px;
+        }
+        .homeButton {
+            padding-left: 2px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Image url="{wp.homeIcon.getSafeUri.asString}" addStyleNames="{style.homeIcon}"/>
+        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.topBarButton} {style.homeButton}" text="{msg.home}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

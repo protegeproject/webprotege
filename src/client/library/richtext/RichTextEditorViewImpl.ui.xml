@@ -1,0 +1,12 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .rich-text-area html body {
+            margin: 0;
+            font-size: 12px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:RichTextArea ui:field="richTextArea" addStyleNames="{style.rich-text-area}" width="60em"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

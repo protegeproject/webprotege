@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.common.base.Objects;
 import com.google.gwt.place.shared.Place;
-import edu.stanford.bmir.protege.web.client.place.Item;
-import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.client.place.PlaceKey;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
