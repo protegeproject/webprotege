@@ -1,4 +1,6 @@
-package edu.stanford.bmir.protege.web.shared.crud;
+package edu.stanford.bmir.protege.web.client.crud;
+
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 
 import java.io.Serializable;
 

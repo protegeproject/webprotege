@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 
 import java.util.Optional;

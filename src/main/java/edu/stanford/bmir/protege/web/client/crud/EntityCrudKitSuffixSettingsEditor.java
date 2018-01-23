@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.shared.crud;
+package edu.stanford.bmir.protege.web.client.crud;
 
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>

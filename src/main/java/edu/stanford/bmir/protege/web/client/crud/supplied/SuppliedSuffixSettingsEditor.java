@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 
