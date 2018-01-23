@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
-import edu.stanford.bmir.protege.web.client.upload.FileUploadResponseAttributes;
+import edu.stanford.bmir.protege.web.shared.upload.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;

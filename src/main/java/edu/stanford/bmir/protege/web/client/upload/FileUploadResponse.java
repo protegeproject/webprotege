@@ -5,6 +5,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.upload.FileUploadResponseAttributes;
 
 /**
  * Author: Matthew Horridge<br>
