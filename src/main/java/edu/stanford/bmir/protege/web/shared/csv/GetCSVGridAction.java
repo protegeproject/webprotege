@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.csv;
 
-import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
 import static com.google.common.base.Preconditions.checkArgument;

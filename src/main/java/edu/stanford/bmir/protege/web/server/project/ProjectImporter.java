@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.client.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.*;

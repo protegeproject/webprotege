@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.project;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
