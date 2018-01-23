@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.projectmanager.ProjectManagerPresenter;

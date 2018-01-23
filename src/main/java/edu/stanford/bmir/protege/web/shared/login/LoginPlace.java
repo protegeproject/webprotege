@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.login;
+package edu.stanford.bmir.protege.web.shared.login;
 
 import com.google.gwt.place.shared.Place;
 

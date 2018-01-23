@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
-import edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer;
+import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 
 /**
  * Matthew Horridge
