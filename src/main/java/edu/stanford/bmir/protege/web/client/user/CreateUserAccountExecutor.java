@@ -1,10 +1,14 @@
-package edu.stanford.bmir.protege.web.shared.user;
+package edu.stanford.bmir.protege.web.client.user;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountResult;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
