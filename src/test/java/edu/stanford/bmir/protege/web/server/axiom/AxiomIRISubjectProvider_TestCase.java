@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
 import com.google.common.collect.Sets;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

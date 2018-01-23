@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffViewImpl;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
-import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
+import edu.stanford.bmir.protege.web.server.axiom.OWLAxiomData;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
 import org.semanticweb.owlapi.model.OWLAnnotation;
