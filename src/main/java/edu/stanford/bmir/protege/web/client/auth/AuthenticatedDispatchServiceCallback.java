@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.shared.auth;
+package edu.stanford.bmir.protege.web.client.auth;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.shared.auth.AbstractAuthenticationResult;
+import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
 
 import javax.annotation.Nonnull;
 
