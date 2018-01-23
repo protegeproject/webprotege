@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import edu.stanford.bmir.protege.web.shared.axiom.DefaultAxiomTypeOrdering;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.AxiomType;
 

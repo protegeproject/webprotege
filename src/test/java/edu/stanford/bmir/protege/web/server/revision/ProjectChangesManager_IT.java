@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityCheckerImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.EntityIRICheckerImpl;
@@ -10,7 +11,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsI
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
-import edu.stanford.bmir.protege.web.shared.axiom.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

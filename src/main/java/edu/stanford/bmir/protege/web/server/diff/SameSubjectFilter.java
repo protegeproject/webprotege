@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.diff;
 
 import edu.stanford.bmir.protege.web.shared.Filter;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
+import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;

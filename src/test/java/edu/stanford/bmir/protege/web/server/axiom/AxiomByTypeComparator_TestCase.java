@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomByTypeComparator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

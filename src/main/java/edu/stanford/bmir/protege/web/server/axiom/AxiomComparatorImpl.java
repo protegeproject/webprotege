@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.axiom;
+package edu.stanford.bmir.protege.web.server.axiom;
 
 import com.google.common.collect.Ordering;
 import org.semanticweb.owlapi.model.OWLAxiom;

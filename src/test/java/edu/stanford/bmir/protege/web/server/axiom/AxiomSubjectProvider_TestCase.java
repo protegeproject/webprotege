@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
 import edu.stanford.bmir.protege.web.shared.object.OWLObjectSelector;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;

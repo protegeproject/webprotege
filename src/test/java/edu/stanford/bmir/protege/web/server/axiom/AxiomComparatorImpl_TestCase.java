@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomByRenderingComparator;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomBySubjectComparator;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomByTypeComparator;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomComparatorImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -5,7 +5,7 @@ import com.google.gwt.i18n.shared.DirectionEstimator;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
+import edu.stanford.bmir.protege.web.server.axiom.AxiomTypeGroup;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.Optional;
