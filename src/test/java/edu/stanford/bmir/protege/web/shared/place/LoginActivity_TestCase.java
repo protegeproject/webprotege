@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
+import edu.stanford.bmir.protege.web.client.place.LoginActivity;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

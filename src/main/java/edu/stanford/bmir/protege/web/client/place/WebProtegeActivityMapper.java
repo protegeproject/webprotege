@@ -23,8 +23,8 @@ import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsActivity;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsActivity;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsActivity;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsActivity;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

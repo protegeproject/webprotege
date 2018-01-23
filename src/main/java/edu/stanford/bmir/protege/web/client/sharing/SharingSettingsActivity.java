@@ -1,10 +1,10 @@
-package edu.stanford.bmir.protege.web.shared.sharing;
+package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.common.base.Objects;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 
 import javax.annotation.Nonnull;
 
