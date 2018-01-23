@@ -1,9 +1,10 @@
-package edu.stanford.bmir.protege.web.shared.crud.supplied;
+package edu.stanford.bmir.protege.web.client.crud.supplied;
 
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitEditorKit;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitEditorKit;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 
 /**
  * Author: Matthew Horridge<br>
