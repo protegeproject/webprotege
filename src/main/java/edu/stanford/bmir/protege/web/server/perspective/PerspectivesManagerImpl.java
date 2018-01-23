@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerImpl;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -22,7 +21,7 @@ import java.util.List;
  */
 public class PerspectivesManagerImpl implements PerspectivesManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(PerspectiveLinkManagerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(PerspectivesManagerImpl.class);
 
     private List<PerspectiveId> perspectiveIds = new ArrayList<>(
     );

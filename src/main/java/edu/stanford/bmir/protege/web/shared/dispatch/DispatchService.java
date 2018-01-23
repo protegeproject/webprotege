@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.dispatch;
+package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
