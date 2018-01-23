@@ -1,9 +1,0 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel>
-        <g:FocusPanel ui:field="focusPanel" addStyleNames="{wp.menu.popupMenuInner}">
-            <g:HTMLPanel ui:field="holder" />
-        </g:FocusPanel>
-    </g:HTMLPanel>
-</ui:UiBinder>

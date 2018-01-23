@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
-import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
@@ -16,7 +15,7 @@ public class SetEmailAddressActionTestCase {
 
     public static final String DUMMY_EMAIL = "test@test.com";
 
-    public static final UserId DUMMY_USER_ID = MockingUtils.mockUserId();
+    public static final UserId DUMMY_USER_ID = UserId.getUserId("UserA");
 
     @Test(expected = NullPointerException.class)
     public void nullUserIdThrowsNullPointerException() {

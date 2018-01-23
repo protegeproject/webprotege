@@ -16,12 +16,13 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.semanticweb.owlapi.model.IRI;
+import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static edu.stanford.bmir.protege.web.MockingUtils.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 
@@ -63,31 +64,31 @@ public class PrimitiveDataParserImpl_EntityParsing_TestCase {
     @Test
     public void shouldParseNameAsClass() {
         primitiveTypes.add(PrimitiveType.CLASS);
-        parseEntityData(new OWLClassData(mockOWLClass(), "A"));
+        parseEntityData(new OWLClassData(new OWLClassImpl(IRI.create("http://ont.com/cls")), "A"));
     }
 
     @Test
     public void shouldParseNameAsObjectProperty() {
         primitiveTypes.add(PrimitiveType.OBJECT_PROPERTY);
-        parseEntityData(new OWLObjectPropertyData(mockOWLObjectProperty(), "prop"));
+        parseEntityData(new OWLObjectPropertyData(new OWLObjectPropertyImpl(IRI.create("http://ont.com/prop")), "prop"));
     }
 
     @Test
     public void shouldParseNameAsDataProperty() {
         primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-        parseEntityData(new OWLDataPropertyData(mockOWLDataProperty(), "prop"));
+        parseEntityData(new OWLDataPropertyData(new OWLDataPropertyImpl(IRI.create("http://ont.com/prop")), "prop"));
     }
 
     @Test
     public void shouldParseNameAsAnnotationProperty() {
         primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-        parseEntityData(new OWLAnnotationPropertyData(mockOWLAnnotationProperty(), "prop"));
+        parseEntityData(new OWLAnnotationPropertyData(new OWLAnnotationPropertyImpl(IRI.create("http://ont.com/prop")), "prop"));
     }
 
     @Test
     public void shouldParseNameAsIndividual() {
         primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
-        parseEntityData(new OWLNamedIndividualData(mockOWLNamedIndividual(), "prop"));
+        parseEntityData(new OWLNamedIndividualData(new OWLNamedIndividualImpl(IRI.create("http://ont.com/ind")), "prop"));
     }
 
     private void parseEntityData(OWLEntityData entityData) {

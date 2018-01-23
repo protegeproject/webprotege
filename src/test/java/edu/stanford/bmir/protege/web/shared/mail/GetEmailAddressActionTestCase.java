@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
-import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
@@ -26,14 +25,14 @@ public class GetEmailAddressActionTestCase {
 
     @Test
     public void getUserIdReturnsSuppliedUserId() {
-        UserId userId = MockingUtils.mockUserId();
+        UserId userId = UserId.getUserId("UserA");
         GetEmailAddressAction action = new GetEmailAddressAction(userId);
         assertEquals(userId, action.getUserId());
     }
 
     @Test
     public void equalsReturnsTrueForSameUserId() {
-        UserId userId = MockingUtils.mockUserId();
+        UserId userId = UserId.getUserId("UserB");
         GetEmailAddressAction actionA = new GetEmailAddressAction(userId);
         GetEmailAddressAction actionB = new GetEmailAddressAction(userId);
         assertEquals(actionA, actionB);
@@ -41,7 +40,7 @@ public class GetEmailAddressActionTestCase {
 
     @Test
     public void hashCodeReturnsSameValueForSameUserId() {
-        UserId userId = MockingUtils.mockUserId();
+        UserId userId = UserId.getUserId("UserC");
         GetEmailAddressAction actionA = new GetEmailAddressAction(userId);
         GetEmailAddressAction actionB = new GetEmailAddressAction(userId);
         assertEquals(actionA.hashCode(), actionB.hashCode());
