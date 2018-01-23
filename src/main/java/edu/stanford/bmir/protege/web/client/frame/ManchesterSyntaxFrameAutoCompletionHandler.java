@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.frame;
+package edu.stanford.bmir.protege.web.client.frame;
 
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionCallback;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionHandler;
@@ -7,6 +7,9 @@ import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
+import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
+import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsResult;
+import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
