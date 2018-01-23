@@ -1,7 +1,8 @@
-package edu.stanford.bmir.protege.web.shared.auth;
+package edu.stanford.bmir.protege.web.client.auth;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;

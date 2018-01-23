@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;

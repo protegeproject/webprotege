@@ -5,6 +5,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
+import edu.stanford.bmir.protege.web.client.auth.AuthenticatedActionExecutor;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.shared.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
