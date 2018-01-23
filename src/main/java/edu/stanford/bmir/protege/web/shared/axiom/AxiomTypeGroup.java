@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.axiom;
+package edu.stanford.bmir.protege.web.shared.axiom;
 
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
