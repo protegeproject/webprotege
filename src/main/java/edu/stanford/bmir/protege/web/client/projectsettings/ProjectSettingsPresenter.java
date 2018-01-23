@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.projectsettings;
+package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

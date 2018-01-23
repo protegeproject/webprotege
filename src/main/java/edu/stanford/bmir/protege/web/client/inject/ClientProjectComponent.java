@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientM
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
 
 /**
  * Matthew Horridge
