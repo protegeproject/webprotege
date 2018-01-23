@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.csv;
+package edu.stanford.bmir.protege.web.shared.csv;
 
 import java.io.Serializable;
 
