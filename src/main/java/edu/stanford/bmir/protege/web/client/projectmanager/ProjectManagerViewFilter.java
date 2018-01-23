@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectmanager;
 
-import edu.stanford.bmir.protege.web.client.library.common.HasLabel;
+import edu.stanford.bmir.protege.web.shared.HasLabel;
 
 /**
  * Author: Matthew Horridge<br>

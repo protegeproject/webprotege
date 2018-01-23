@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.library.common;
+package edu.stanford.bmir.protege.web.shared;
 
 /**
  * Author: Matthew Horridge<br>
