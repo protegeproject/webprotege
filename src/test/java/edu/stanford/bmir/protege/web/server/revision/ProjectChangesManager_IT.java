@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityCheckerImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.EntityIRICheckerImpl;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.NullHighlightedEntityChecker;
+import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;

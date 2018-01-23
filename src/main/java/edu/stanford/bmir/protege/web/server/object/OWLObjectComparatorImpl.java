@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.object;
+package edu.stanford.bmir.protege.web.server.object;
 
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
