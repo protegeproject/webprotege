@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.view.client.ListDataProvider;
 import edu.stanford.bmir.protege.web.client.csv.CSVGridResources;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
-import edu.stanford.bmir.protege.web.server.axiom.AxiomTypeGroup;
+import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReferenceComparator;
