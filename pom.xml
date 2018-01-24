@@ -111,9 +111,10 @@
         </pluginManagement>
     </build>
     <modules>
-        <module>webprotege-client</module>
         <module>webprotege-shared</module>
+        <module>webprotege-server-lib</module>
         <module>webprotege-server</module>
         <module>webprotege-cli</module>
+        <module>webprotege-client</module>
     </modules>
 </project>
