@@ -56,6 +56,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
+                    <moduleName>webprotege</moduleName>
                     <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
                 </configuration>
             </plugin>
