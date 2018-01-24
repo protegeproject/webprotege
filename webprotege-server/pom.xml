@@ -43,11 +43,6 @@
 
         <dependency>
             <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
@@ -86,32 +81,6 @@
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
             <version>0.9.2</version>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.google.gwt</groupId>-->
-            <!--<artifactId>gwt-user</artifactId>-->
-            <!--<version>${gwtVersion}</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.google.gwt</groupId>-->
-            <!--<artifactId>gwt-dev</artifactId>-->
-            <!--<version>${gwtVersion}</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger-gwt</artifactId>
-            <version>2.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -203,21 +172,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-gwt</artifactId>
-            <version>4.3.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi-gwt-client-side-emul</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>binaryowl</artifactId>
@@ -229,6 +184,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-owlapi-extensions</artifactId>
@@ -240,23 +196,13 @@
             <artifactId>mail</artifactId>
             <version>1.4.7</version>
         </dependency>
-        <dependency>
-            <groupId>edu.stanford.protege</groupId>
-            <artifactId>codemirror-gwt</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gwt-ext</groupId>
-            <artifactId>gwt-ext</artifactId>
-            <version>2.0.6</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
         </dependency>
+
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
