@@ -64,12 +64,6 @@
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value</artifactId>
             <version>1.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
             <scope>provided</scope>
         </dependency>
 
@@ -78,12 +72,6 @@
             <artifactId>auto-factory</artifactId>
             <version>1.0-beta3</version>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -129,24 +117,12 @@
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
             <version>4.3.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>binaryowl</artifactId>
             <version>2.0.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -207,12 +183,6 @@
             <groupId>edu.stanford.protege</groupId>
             <artifactId>widgetmap</artifactId>
             <version>2.1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
