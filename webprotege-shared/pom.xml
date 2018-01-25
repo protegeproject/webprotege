@@ -14,6 +14,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
         </dependency>
@@ -26,21 +31,9 @@
             <artifactId>junit-dep</artifactId>
         </dependency>
 
-
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger-gwt</artifactId>
-            <version>2.4</version>
         </dependency>
 
         <dependency>
@@ -68,17 +61,6 @@
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
             <version>4.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-gwt</artifactId>
-            <version>4.3.2.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi-gwt-client-side-emul</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
