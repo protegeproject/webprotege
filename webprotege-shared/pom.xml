@@ -27,15 +27,14 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
         </dependency>
 
         <dependency>
