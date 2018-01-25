@@ -41,6 +41,14 @@
                 <version>${guava.version}</version>
             </dependency>
 
+            <!-- Dependency Injection via Dagger -->
+            <dependency>
+                <groupId>com.google.dagger</groupId>
+                <artifactId>dagger-compiler</artifactId>
+                <version>2.4</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- Testing Dependencies -->
             <dependency>
                 <groupId>org.hamcrest</groupId>
