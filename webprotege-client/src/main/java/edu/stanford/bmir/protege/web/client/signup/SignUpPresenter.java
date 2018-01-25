@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.client.verification.HumanVerificationServic
 import edu.stanford.bmir.protege.web.client.verification.NullHumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
-import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
+import edu.stanford.bmir.protege.web.server.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
