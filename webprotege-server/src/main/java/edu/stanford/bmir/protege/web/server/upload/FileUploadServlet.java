@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
+import edu.stanford.bmir.protege.web.server.app.ServerSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.upload.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
@@ -52,6 +54,7 @@ import static edu.stanford.bmir.protege.web.server.logging.RequestFormatter.form
  *     will contain an message that describes the problem.
  * </p>
  */
+@ApplicationSingleton
 public class FileUploadServlet extends HttpServlet {
 
     public static final Logger logger = LoggerFactory.getLogger(FileUploadServlet.class);

@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.server.app;
 
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.inject.ApplicationComponent;
-import edu.stanford.bmir.protege.web.server.inject.DaggerApplicationComponent;
-import edu.stanford.bmir.protege.web.server.inject.ServletComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,25 +21,25 @@ public class WebProtegeServletContextListener implements ServletContextListener 
     public void contextInitialized(ServletContextEvent sce) {
         logger.info(WebProtegeMarker, "Initializing WebProtege");
         try {
-            ApplicationComponent applicationComponent = DaggerApplicationComponent.create();
+            ServerComponent serverComponent = DaggerServerComponent.create();
+
             ServletContext servletContext = sce.getServletContext();
 
-            servletContext.setAttribute(ApplicationComponent.class.getName(), applicationComponent);
+            servletContext.setAttribute(ServerComponent.class.getName(), serverComponent);
 
-            ServletComponent servletComponent = applicationComponent.getServletComponent();
 
-            servletContext.addServlet("DispatchService", servletComponent.getDispatchService())
+            servletContext.addServlet("DispatchService", serverComponent.getDispatchServlet())
                           .addMapping("/webprotege/dispatchservice");
 
-            servletContext.addServlet("ProjectDownloadServlet", servletComponent.getFileDownloadServlet())
+            servletContext.addServlet("ProjectDownloadServlet", serverComponent.getProjectDownloadServlet())
                           .addMapping("/download");
 
-            servletContext.addServlet("FileUploadServlet", servletComponent.getFileUploadServlet())
+            servletContext.addServlet("FileUploadServlet", serverComponent.getFileUploadServlet())
                           .addMapping("/webprotege/submitfile");
 
-            servletContext.addListener(applicationComponent.getSessionListener());
+            servletContext.addListener(serverComponent.getSessionListener());
 
-            applicationComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
+            serverComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
 
             Runtime runtime = Runtime.getRuntime();
             logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));

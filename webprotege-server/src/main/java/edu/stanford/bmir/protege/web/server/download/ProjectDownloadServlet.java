@@ -3,9 +3,11 @@ package edu.stanford.bmir.protege.web.server.download;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
 import edu.stanford.bmir.protege.web.server.access.Subject;
+import edu.stanford.bmir.protege.web.server.app.ServerSingleton;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -32,6 +34,7 @@ import static edu.stanford.bmir.protege.web.server.logging.RequestFormatter.form
  * the piece of machinery that actually does the processing of request parameters and the downloading.
  * </p>
  */
+@ApplicationSingleton
 public class ProjectDownloadServlet extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectDownloadServlet.class);

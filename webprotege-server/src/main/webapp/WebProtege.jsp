@@ -4,7 +4,6 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.filemanager.StyleCustomizationFileManager" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.inject.ApplicationComponent" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
@@ -17,10 +16,7 @@
 <%@ page import="java.util.Optional" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ApplicationSettingsChecker" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.place.ApplicationSettingsPlace" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.app.ApplicationSettings" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.place.AdminPlaceTokenizer" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.app.ServerComponent" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -79,30 +75,30 @@
 <%!
     private final StyleCustomizationFileManager styleCustomizationFileManager = new StyleCustomizationFileManager();
 
-    private ApplicationComponent getWebProtegeComponent() {
+    private ServerComponent getServerComponent() {
         ServletContext context = getServletConfig().getServletContext();
-        return (ApplicationComponent) context.getAttribute(ApplicationComponent.class.getName());
+        return (ServerComponent) context.getAttribute(ServerComponent.class.getName());
     }
 
     private void writeApplicationName(JspWriter out) throws IOException {
-        ApplicationComponent component = getWebProtegeComponent();
-        out.print(component.getApplicationNameProvider().get());
+        ServerComponent component = getServerComponent();
+        out.print(component.getApplicationNameSupplier().get());
     }
 
     private AccessManager getAccessManager() {
-        ApplicationComponent component = getWebProtegeComponent();
+        ServerComponent component = getServerComponent();
         return component.getAccessManager();
     }
 
     private ApplicationSettingsChecker getApplicationSettingsChecker() {
-        return getWebProtegeComponent().getApplicationSettingsChecker();
+        return getServerComponent().getApplicationSettingsChecker();
     }
 
     private void checkApplicationSettings(JspWriter writer) throws IOException {
         ApplicationSettingsChecker checker = getApplicationSettingsChecker();
         if(!checker.isProperlyConfigured()) {
             writer.println("<div class=\"wp-configuration-error-banner\">");
-            String appName = getWebProtegeComponent().getApplicationNameProvider().get();
+            String appName = getServerComponent().getApplicationNameSupplier().get();
             writer.println(String.format("%s is not configured properly",
                                          appName));
             writer.println("</div>");
@@ -137,7 +133,7 @@
             userDetails = UserDetails.getGuestUserDetails();
         }
         else {
-            UserDetailsManager userDetailsManager = getWebProtegeComponent().getUserDetailsManager();
+            UserDetailsManager userDetailsManager = getServerComponent().getUserDetailsManager();
             Optional<String> email = userDetailsManager.getEmail(userId);
             if (email.isPresent()) {
                 userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.of(email.get()));

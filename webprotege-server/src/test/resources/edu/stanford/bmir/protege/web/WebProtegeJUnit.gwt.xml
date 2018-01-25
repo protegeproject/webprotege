@@ -3,6 +3,7 @@
     <!-- Inherit our applications main module.                      -->
     <inherits name="com.google.gwt.resources.Resources"/>
     <inherits name="edu.stanford.bmir.protege.web.WebProtege"/>
+    <inherits name="edu.stanford.protege.gwt.graphtree.graphtree"/>
 
     <source path="client"/>
     <source path="shared"/>

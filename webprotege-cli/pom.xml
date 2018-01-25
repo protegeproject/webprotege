@@ -15,9 +15,8 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>webprotege-server</artifactId>
+            <artifactId>webprotege-server-lib</artifactId>
             <version>${project.version}</version>
-            <classifier>war</classifier>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -46,6 +45,16 @@
                                     <mainClass>edu.stanford.bmir.protege.web.server.cmdline.WebProtegeCli</mainClass>
                                 </transformer>
                             </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
