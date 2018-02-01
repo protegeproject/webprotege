@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
-import edu.stanford.bmir.protege.web.server.auth.SaltProvider;
+import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;

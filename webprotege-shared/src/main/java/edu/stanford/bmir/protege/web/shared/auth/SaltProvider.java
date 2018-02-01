@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.auth;
+package edu.stanford.bmir.protege.web.shared.auth;
 
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 

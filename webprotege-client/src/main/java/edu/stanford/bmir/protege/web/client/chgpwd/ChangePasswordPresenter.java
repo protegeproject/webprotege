@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.server.auth.SaltProvider;
+import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ChangePasswordData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
