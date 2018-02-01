@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.shared.auth;
 import com.google.common.base.MoreObjects;
 import com.google.common.io.BaseEncoding;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,16 +21,16 @@ public class SaltedPasswordDigest implements IsSerializable {
 
     private byte [] digest;
 
-    /**
-     * For serialization purposes only
-     */
-    private SaltedPasswordDigest() {
-    }
-
-    public SaltedPasswordDigest(byte[] digest) {
+    public SaltedPasswordDigest(@Nonnull byte[] digest) {
         this.digest = checkNotNull(digest);
     }
 
+
+    @GwtSerializationConstructor
+    private SaltedPasswordDigest() {
+    }
+
+    @Nonnull
     public byte[] getBytes() {
         return Arrays.copyOf(digest, digest.length);
     }

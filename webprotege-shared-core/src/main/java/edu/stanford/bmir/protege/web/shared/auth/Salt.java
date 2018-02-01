@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.io.BaseEncoding;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,10 +21,11 @@ public class Salt implements IsSerializable {
     private Salt() {
     }
 
-    public Salt(byte[] bytes) {
+    public Salt(@Nonnull byte[] bytes) {
         this.bytes = checkNotNull(bytes);
     }
 
+    @Nonnull
     public byte[] getBytes() {
         return Arrays.copyOf(bytes, bytes.length);
     }
