@@ -2,8 +2,11 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -24,23 +27,20 @@ public class ProjectId implements Serializable, IsSerializable {
     private String id = "";
 
     /**
-     * Default no-args constructor for GWT serialization purposes.
-     */
-    private ProjectId() {
-    }
-
-    /**
      * Constructs a ProjectId.
      * @param id The lexical Id of the project.  Not <code>null</code>.  The specified id must be formatted according
      * to the regular expression for UUIDs.  See {@link UUIDUtil#getIdRegExp()}
      * @throws NullPointerException if the id parameter is <code>null</code>.
      */
-    private ProjectId(String id) throws ProjectIdFormatException{
+    private ProjectId(@Nonnull String id) throws ProjectIdFormatException{
         this.id = checkFormat(checkNotNull(id));
     }
 
+    @GwtSerializationConstructor
+    private ProjectId() {
+    }
 
-    public static boolean isWelFormedProjectId(String candidateId) {
+    public static boolean isWelFormedProjectId(@Nonnull String candidateId) {
         return UUIDUtil.isWellFormed(candidateId);
     }
 
@@ -50,7 +50,8 @@ public class ProjectId implements Serializable, IsSerializable {
      * @return The specified string.
      * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
      */
-    private static String checkFormat(String id) throws ProjectIdFormatException {
+    @Nonnull
+    private static String checkFormat(@Nonnull String id) throws ProjectIdFormatException {
         if(!UUIDUtil.isWellFormed(id)) {
             throw new ProjectIdFormatException(id);
         }
@@ -67,12 +68,14 @@ public class ProjectId implements Serializable, IsSerializable {
      * @throws  NullPointerException if {@code uuid} is {@code null}.
      * @throws ProjectIdFormatException if {@code uuid} does not match the UUID pattern specified by {@link UUIDUtil#UUID_PATTERN}.
      */
-    public static ProjectId get(String uuid) throws ProjectIdFormatException {
+    @Nonnull
+    public static ProjectId get(@Nonnull String uuid) throws ProjectIdFormatException {
         return new ProjectId(uuid);
     }
 
 
-    public static Optional<ProjectId> getFromNullable(String uuid) throws ProjectIdFormatException {
+    @Nonnull
+    public static Optional<ProjectId> getFromNullable(@Nullable String uuid) throws ProjectIdFormatException {
         if(uuid == null || uuid.isEmpty()) {
             return Optional.empty();
         }
@@ -81,6 +84,7 @@ public class ProjectId implements Serializable, IsSerializable {
         }
     }
 
+    @Nonnull
     public String getId() {
         return id;
     }
