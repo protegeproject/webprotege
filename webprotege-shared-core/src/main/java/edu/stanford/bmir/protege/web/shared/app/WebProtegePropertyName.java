@@ -7,6 +7,8 @@ package edu.stanford.bmir.protege.web.shared.app;
  * Date: 19/07/2013
  */
 
+import edu.stanford.bmir.protege.web.shared.annotations.WebProtegePropertiesDocumentation;
+
 import javax.annotation.Nullable;
 import java.util.Optional;
 
