@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.ontology.id;
+package edu.stanford.bmir.protege.web.shared.ontology;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import org.semanticweb.owlapi.model.OWLOntologyID;

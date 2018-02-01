@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.ontology.id;
+package edu.stanford.bmir.protege.web.shared.ontology;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
