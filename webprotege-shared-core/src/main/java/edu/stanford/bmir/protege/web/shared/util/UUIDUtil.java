@@ -26,7 +26,6 @@ public class UUIDUtil {
      * Checks that the specified string matches the UUID pattern {@link #UUID_PATTERN}.
      * @param id The string to check.
      * @return The specified string.
-     * @throws ProjectIdFormatException if the specified string does not match the UUID pattern.
      */
     public static boolean isWellFormed(@Nonnull String id) {
         MatchResult result = REG_EXP.exec(checkNotNull(id));
