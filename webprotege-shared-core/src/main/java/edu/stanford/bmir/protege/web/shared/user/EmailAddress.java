@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
+
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,29 +17,29 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class EmailAddress implements Serializable {
 
-    private String emailAddress;
+    private String address;
 
+    @GwtSerializationConstructor
     private EmailAddress() {
     }
 
-    public EmailAddress(String emailAddress) {
-        if(emailAddress == null) {
-            throw new NullPointerException("emailAddress must not be null");
-        }
-        this.emailAddress = emailAddress;
+    public EmailAddress(@Nonnull String address) {
+        checkNotNull(address);
+        this.address = address;
     }
 
     public boolean isEmpty() {
-        return emailAddress.isEmpty();
+        return address.isEmpty();
     }
 
+    @Nonnull
     public String getEmailAddress() {
-        return emailAddress;
+        return address;
     }
 
     @Override
     public int hashCode() {
-        return emailAddress.hashCode();
+        return address.hashCode();
     }
 
     @Override
@@ -47,14 +51,14 @@ public class EmailAddress implements Serializable {
             return false;
         }
         EmailAddress other = (EmailAddress) obj;
-        return emailAddress.equals(other.emailAddress);
+        return address.equals(other.address);
     }
 
 
     @Override
     public String toString() {
         return toStringHelper("EmailAddress")
-                .addValue(emailAddress)
+                .addValue(address)
                 .toString();
     }
 }
