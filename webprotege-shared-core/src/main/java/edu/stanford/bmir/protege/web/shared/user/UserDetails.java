@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -38,7 +39,9 @@ public class UserDetails implements Serializable {
      * @param emailAddress The email address of the user.  Not {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.
      */
-    public UserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
+    public UserDetails(@Nonnull UserId userId,
+                       @Nonnull String displayName,
+                       @Nonnull Optional<String> emailAddress) {
         this.userId = checkNotNull(userId);
         this.displayName = checkNotNull(displayName);
         this.emailAddress = emailAddress.orElse(null);
@@ -56,14 +59,21 @@ public class UserDetails implements Serializable {
      * @param emailAddress The email address of the user.  Not {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.
      */
-    public static UserDetails getUserDetails(UserId userId, String displayName, String emailAddress) {
+    @Nonnull
+    public static UserDetails getUserDetails(@Nonnull UserId userId,
+                                             @Nonnull String displayName,
+                                             @Nonnull String emailAddress) {
         return new UserDetails(userId, displayName, Optional.of(emailAddress));
     }
 
-    public static UserDetails getUserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
+    @Nonnull
+    public static UserDetails getUserDetails(@Nonnull UserId userId,
+                                             @Nonnull String displayName,
+                                             @Nonnull Optional<String> emailAddress) {
         return new UserDetails(userId, displayName, emailAddress);
     }
 
+    @Nonnull
     public static UserDetails getGuestUserDetails() {
         return GUEST_DETAILS;
     }
@@ -73,6 +83,7 @@ public class UserDetails implements Serializable {
      * Gets the {@link UserId} that identifies the user that these details pertain to.
      * @return The {@link UserId}.  Not {@code null}.
      */
+    @Nonnull
     public UserId getUserId() {
         return userId;
     }
@@ -81,6 +92,7 @@ public class UserDetails implements Serializable {
      * Gets the display name for the user.
      * @return A String representing the display name.  Not {@code null}.
      */
+    @Nonnull
     public String getDisplayName() {
         return displayName;
     }
@@ -89,6 +101,7 @@ public class UserDetails implements Serializable {
      * Gets the email address for the user.
      * @return The {@link EmailAddress}.  Not {@code null}.
      */
+    @Nonnull
     public Optional<String> getEmailAddress() {
         return Optional.ofNullable(emailAddress);
     }
