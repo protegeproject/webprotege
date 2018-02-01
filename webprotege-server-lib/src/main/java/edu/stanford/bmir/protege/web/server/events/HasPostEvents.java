@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;

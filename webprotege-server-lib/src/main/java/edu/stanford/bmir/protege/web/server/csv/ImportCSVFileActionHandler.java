@@ -6,16 +6,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventList;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

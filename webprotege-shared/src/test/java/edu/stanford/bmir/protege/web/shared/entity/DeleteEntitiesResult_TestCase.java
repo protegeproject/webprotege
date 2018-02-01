@@ -2,7 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

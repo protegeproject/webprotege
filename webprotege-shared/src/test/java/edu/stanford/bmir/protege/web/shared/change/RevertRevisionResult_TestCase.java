@@ -2,7 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

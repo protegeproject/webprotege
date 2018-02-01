@@ -7,9 +7,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventList;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 import javax.inject.Inject;
@@ -211,8 +211,8 @@ public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, H
         }
 
         /**
-         * Gets the {@link edu.stanford.bmir.protege.web.shared.events.EventTag} for this bucket.
-         * @return The {@link edu.stanford.bmir.protege.web.shared.events.EventTag} of this bucket.  Not {@code null}.
+         * Gets the {@link EventTag} for this bucket.
+         * @return The {@link EventTag} of this bucket.  Not {@code null}.
          */
         public EventTag getTag() {
             return tag;

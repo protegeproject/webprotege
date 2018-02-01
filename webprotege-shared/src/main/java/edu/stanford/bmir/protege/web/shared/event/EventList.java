@@ -1,6 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.events;
-
-import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
+package edu.stanford.bmir.protege.web.shared.event;
 
 import java.io.Serializable;
 import java.util.ArrayList;

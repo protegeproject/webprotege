@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameAction;
 import org.semanticweb.owlapi.model.OWLOntology;

@@ -4,8 +4,6 @@ import com.google.gwt.user.client.rpc.CustomFieldSerializer;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
-import edu.stanford.bmir.protege.web.shared.events.ProjectEventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;

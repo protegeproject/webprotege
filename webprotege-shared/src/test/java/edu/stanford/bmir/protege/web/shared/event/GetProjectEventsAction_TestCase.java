@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.event;
 
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.Matchers;
 import org.junit.Before;

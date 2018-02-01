@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.events;
+package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
