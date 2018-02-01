@@ -168,5 +168,6 @@
         <module>webprotege-server</module>
         <module>webprotege-cli</module>
         <module>webprotege-client</module>
+        <module>webprotege-shared-core</module>
     </modules>
 </project>

@@ -14,6 +14,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>edu.stanford.protege</groupId>
+            <artifactId>webprotege-shared-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
         </dependency>
