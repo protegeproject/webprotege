@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
-
 import javax.annotation.Nonnull;
 import java.io.Serializable;
 

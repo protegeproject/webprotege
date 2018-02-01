@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.gwt.place.shared.Place;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.common.base.Objects;
 import com.google.gwt.place.shared.Place;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionItem;
 import edu.stanford.bmir.protege.web.shared.form.FormId;
