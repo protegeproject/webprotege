@@ -3,7 +3,11 @@ package edu.stanford.bmir.protege.web.shared.user;
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -46,11 +50,12 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
 
     /**
      * Gets a UserId using the userName as the identifier.
-     * @param userName The userName.  May be {@code null}.
+     * @param userName The userName.
      * @return A UserId with the specified user name.  If userName is {@code null} then the distinguished UserId
      * that represents the null user (anyone) will be returned.
      */
-    public static UserId getUserId(String userName) {
+    @Nonnull
+    public static UserId getUserId(@Nullable String userName) {
         if(userName == null) {
             return GUEST_USER_ID;
         }
@@ -63,6 +68,7 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * Gets the id of the guest user.  The guest user is a distinguished id which indicates a non-logged in user.
      * @return The {@link UserId} of the guest user.  Not {@code null}.
      */
+    @Nonnull
     public static UserId getGuest() {
         return GUEST_USER_ID;
     }
@@ -72,14 +78,8 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * Constructs a UserId using the userName as the identifier.
      * @param userName The userName.  May be {@code null}.
      */
-    private UserId(String userName) {
-        if(userName == null) {
-            this.userName = GUEST_USER_NAME;
-        }
-        else {
-            this.userName = userName;    
-        }
-        
+    private UserId(@Nonnull String userName) {
+        this.userName = checkNotNull(userName);
     }
 
 
@@ -87,6 +87,7 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * Gets the user name of the user that this id represents.
      * @return A string representing the user name.  Not {@code null}.
      */
+    @Nonnull
     public String getUserName() {
         return userName;
     }
