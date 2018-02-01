@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.shared.access;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
-import java.util.Comparator;
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,26 +13,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Jan 2017
  */
-public class ActionId implements IsSerializable, Comparator<ActionId> {
+public class RoleId implements IsSerializable {
 
     private String id;
 
     @GwtSerializationConstructor
-    private ActionId() {
+    private RoleId() {
     }
 
-    public ActionId(String id) {
+    public RoleId(@Nonnull String id) {
         this.id = checkNotNull(id);
     }
 
-
+    @Nonnull
     public String getId() {
         return id;
-    }
-
-    @Override
-    public int compare(ActionId o1, ActionId o2) {
-        return this.id.compareTo(o2.id);
     }
 
     @Override
@@ -40,10 +35,10 @@ public class ActionId implements IsSerializable, Comparator<ActionId> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ActionId)) {
+        if (!(obj instanceof RoleId)) {
             return false;
         }
-        ActionId other = (ActionId) obj;
+        RoleId other = (RoleId) obj;
         return this.id.equals(other.id);
     }
 
@@ -55,7 +50,7 @@ public class ActionId implements IsSerializable, Comparator<ActionId> {
 
     @Override
     public String toString() {
-        return toStringHelper("ActionId")
+        return toStringHelper("RoleId")
                 .addValue(id)
                 .toString();
     }
