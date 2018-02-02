@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.access;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
@@ -21,11 +23,13 @@ public class RoleId implements IsSerializable {
     private RoleId() {
     }
 
+    @JsonCreator
     public RoleId(@Nonnull String id) {
         this.id = checkNotNull(id);
     }
 
     @Nonnull
+    @JsonValue
     public String getId() {
         return id;
     }
