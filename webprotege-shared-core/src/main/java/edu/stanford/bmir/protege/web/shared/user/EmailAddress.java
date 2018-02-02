@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ public class EmailAddress implements Serializable {
     private EmailAddress() {
     }
 
+    @JsonCreator
     public EmailAddress(@Nonnull String address) {
         checkNotNull(address);
         this.address = address;
@@ -33,6 +36,7 @@ public class EmailAddress implements Serializable {
     }
 
     @Nonnull
+    @JsonValue
     public String getEmailAddress() {
         return address;
     }
