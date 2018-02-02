@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
@@ -69,6 +71,7 @@ public class ProjectId implements Serializable, IsSerializable {
      * @throws ProjectIdFormatException if {@code uuid} does not match the UUID pattern specified by {@link UUIDUtil#UUID_PATTERN}.
      */
     @Nonnull
+    @JsonCreator
     public static ProjectId get(@Nonnull String uuid) throws ProjectIdFormatException {
         return new ProjectId(uuid);
     }
@@ -85,6 +88,7 @@ public class ProjectId implements Serializable, IsSerializable {
     }
 
     @Nonnull
+    @JsonValue
     public String getId() {
         return id;
     }
