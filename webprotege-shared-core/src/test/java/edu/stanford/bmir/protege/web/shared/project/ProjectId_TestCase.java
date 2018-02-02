@@ -14,7 +14,7 @@ import static junit.framework.Assert.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/20/13
  */
-public class ProjectIdTestCase {
+public class ProjectId_TestCase {
 
     @Test
     public void equalsShouldReturnTrueForObjectsWithSameId() {
