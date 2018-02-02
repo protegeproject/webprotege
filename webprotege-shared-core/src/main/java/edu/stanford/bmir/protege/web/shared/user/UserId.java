@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -55,6 +57,7 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * that represents the null user (anyone) will be returned.
      */
     @Nonnull
+    @JsonCreator
     public static UserId getUserId(@Nullable String userName) {
         if(userName == null) {
             return GUEST_USER_ID;
@@ -88,6 +91,7 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * @return A string representing the user name.  Not {@code null}.
      */
     @Nonnull
+    @JsonValue
     public String getUserName() {
         return userName;
     }
