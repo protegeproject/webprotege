@@ -11,6 +11,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guava.version>20.0</guava.version>
+        <!-- WebProtege Specific Properties -->
+        <mail.smtp.host/>
+        <mail.smtp.auth/>
+        <mail.smtp.port/>
+        <application.analytics/>
     </properties>
 
     <dependencyManagement>
@@ -163,6 +168,60 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <!-- Profile for local development of WebProtege -->
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <data.directory>/srv/webprotege</data.directory>
+            </properties>
+        </profile>
+        <!-- Profile for producing a deployment on a particular machine -->
+        <profile>
+            <id>deployment</id>
+            <properties>
+                <data.directory>/srv/webprotege</data.directory>
+            </properties>
+        </profile>
+        <!-- Profile for producing a release of WebProtege that people can download and install locally -->
+        <profile>
+            <id>webprotege.release</id>
+            <properties>
+                <data.directory>/srv/webprotege</data.directory>
+            </properties>
+        </profile>
+        <!-- Profile for deployment of WebProtege to webprotege.stanford.edu -->
+        <profile>
+            <id>webprotege.stanford.edu</id>
+            <properties>
+                <data.directory>/srv/protege/webprotege-data/</data.directory>
+                <mail.smtp.from.wp.personalName>WebProtege</mail.smtp.from.wp.personalName>
+                <mail.smtp.host>smtp-unencrypted.stanford.edu</mail.smtp.host>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.port>25</mail.smtp.port>
+                <!-- Insert the code for google analytics.  This code is not inserted by default. -->
+                <application.analytics>
+                    <![CDATA[
+                    <script type="text/javascript">
+                        var _gaq = _gaq || [];
+                        _gaq.push(['_setAccount', 'UA-32498293-1']);
+                        _gaq.push(['_trackPageview']);
+                        (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                        })();
+                    </script>
+                    ]]>
+                </application.analytics>
+            </properties>
+        </profile>
+    </profiles>
+
     <modules>
         <module>webprotege-shared</module>
         <module>webprotege-server-lib</module>
