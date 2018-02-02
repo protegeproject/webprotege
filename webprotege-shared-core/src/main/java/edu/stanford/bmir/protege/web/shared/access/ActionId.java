@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.access;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
@@ -22,11 +24,13 @@ public class ActionId implements IsSerializable, Comparator<ActionId> {
     private ActionId() {
     }
 
+    @JsonCreator
     public ActionId(@Nonnull String id) {
         this.id = checkNotNull(id);
     }
 
     @Nonnull
+    @JsonValue
     public String getId() {
         return id;
     }
