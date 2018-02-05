@@ -29,7 +29,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>

@@ -31,7 +31,6 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.1.0</version>
-                <scope>provided</scope>
             </dependency>
 
             <!-- Use specific version of guava for all subprojects -->
@@ -52,7 +51,6 @@
                 <groupId>com.google.dagger</groupId>
                 <artifactId>dagger-compiler</artifactId>
                 <version>2.4</version>
-                <scope>provided</scope>
             </dependency>
 
             <!-- Testing Dependencies -->
@@ -114,7 +112,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
-                    <moduleName>webprotege</moduleName>
+                    <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
                     <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
                 </configuration>
             </plugin>
