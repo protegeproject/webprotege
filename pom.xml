@@ -12,6 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guava.version>20.0</guava.version>
         <dagger.version>2.7</dagger.version>
+        <owlapi.version>4.3.2</owlapi.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>
         <mail.smtp.auth/>
@@ -63,7 +64,7 @@
             <dependency>
                 <groupId>net.sourceforge.owlapi</groupId>
                 <artifactId>owlapi-distribution</artifactId>
-                <version>4.3.2</version>
+                <version>${owlapi.version}</version>
             </dependency>
 
             <!-- Testing Dependencies -->
