@@ -53,19 +53,13 @@
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger-compiler</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>com.google.auto.factory</groupId>
             <artifactId>auto-factory</artifactId>
             <version>1.0-beta3</version>
             <scope>provided</scope>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.0.4</version>
         </dependency>
 
         <dependency>
