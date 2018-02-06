@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>webprotege-server-lib</artifactId>
+            <artifactId>webprotege-server-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
