@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -26,16 +28,14 @@ public abstract class AuthenticatedActionHandler<A extends AbstractAuthenticatio
     private final ChapResponseChecker chapResponseChecker;
 
     @Nonnull
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticatedActionHandler.class);
 
     public AuthenticatedActionHandler(@Nonnull ChapSessionManager chapSessionManager,
                                       @Nonnull AuthenticationManager authenticationManager,
-                                      @Nonnull ChapResponseChecker chapResponseChecker,
-                                      @Nonnull WebProtegeLogger logger) {
+                                      @Nonnull ChapResponseChecker chapResponseChecker) {
         this.chapSessionManager = chapSessionManager;
         this.authenticationManager = authenticationManager;
         this.chapResponseChecker = chapResponseChecker;
-        this.logger = logger;
     }
 
     @Nonnull
@@ -44,12 +44,12 @@ public abstract class AuthenticatedActionHandler<A extends AbstractAuthenticatio
         UserId userId = action.getUserId();
         Optional<SaltedPasswordDigest> passwordDigest = authenticationManager.getSaltedPasswordDigest(userId);
         if (!passwordDigest.isPresent()) {
-            logger.info("Authentication attempt, but no digest of salted password set for user %s", userId);
+            logger.info("Authentication attempt, but no digest of salted password set for user {}", userId);
             return createAuthenticationFailedResult();
         }
         Optional<ChapSession> chapDataOptional = chapSessionManager.retrieveChallengeMessage(action.getChapSessionId());
         if (!chapDataOptional.isPresent()) {
-            logger.info("Challenge expired for user %s", userId);
+            logger.info("Challenge expired for user {}", userId);
             return createAuthenticationFailedResult();
         }
         ChapSession chapSession = chapDataOptional.get();

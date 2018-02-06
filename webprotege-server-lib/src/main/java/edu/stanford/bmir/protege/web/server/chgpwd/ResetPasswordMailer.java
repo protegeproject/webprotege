@@ -2,13 +2,14 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,7 +26,7 @@ public class ResetPasswordMailer {
 
     private final SendMailImpl sendMailImpl;
 
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ResetPasswordMailer.class);
 
     private final TemplateEngine templateEngine;
 
@@ -40,14 +41,12 @@ public class ResetPasswordMailer {
                                TemplateEngine templateEngine,
                                @PasswordResetEmailTemplate FileContents templateFile,
                                PlaceUrl placeUrl,
-                               ApplicationNameSupplier applicationNameSupplier,
-                               WebProtegeLogger logger) {
+                               ApplicationNameSupplier applicationNameSupplier) {
         this.sendMailImpl = sendMailImpl;
         this.templateEngine = templateEngine;
         this.templateFile = templateFile;
         this.placeUrl = placeUrl;
         this.applicationNameSupplier = applicationNameSupplier;
-        this.logger = logger;
     }
 
     public void sendEmail(@Nonnull UserId userId,

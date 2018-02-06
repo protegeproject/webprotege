@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import javax.servlet.http.HttpSession;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -21,7 +19,7 @@ public class RequestContext {
      * @param userId The {@link UserId}.  Not {@code null}.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    public RequestContext(UserId userId, HttpSession session) {
+    public RequestContext(UserId userId) {
         this.userId = checkNotNull(userId, "userId must not be null");
     }
 

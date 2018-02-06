@@ -46,9 +46,6 @@ public class PerformLoginActionHandler_TestCase {
     private ChapResponseChecker responseChecker;
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private PerformLoginAction action;
 
     @Mock
@@ -93,7 +90,6 @@ public class PerformLoginActionHandler_TestCase {
                                                 sessionManager,
                                                 authenticationManager,
                                                 responseChecker,
-                                                logger,
                                                 userInSessionFactory);
         when(action.getUserId()).thenReturn(userId);
         Optional<UserDetails> userDetailsOpt = Optional.of(userDetails);

@@ -59,9 +59,6 @@ public class CommentNotificationEmailGenerator_TestCase {
     private Comment comment;
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private UserId creator;
 
     @Mock
@@ -89,7 +86,7 @@ public class CommentNotificationEmailGenerator_TestCase {
         generator = new CommentNotificationEmailGenerator(templateFile,
                                                           templateEngine,
                                                           applicationNameSupplier,
-                                                          placeUrl, logger
+                                                          placeUrl
         );
     }
 

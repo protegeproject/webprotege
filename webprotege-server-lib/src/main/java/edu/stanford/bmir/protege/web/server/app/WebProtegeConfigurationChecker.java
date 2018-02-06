@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.server.init.ConfigurationTask;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 import java.util.Set;
 
 /**
@@ -22,10 +21,10 @@ public class WebProtegeConfigurationChecker {
         this.configurationTasks = configurationTasks;
     }
 
-    public boolean performConfiguration(ServletContext servletContext) throws WebProtegeConfigurationException {
+    public boolean performConfiguration() throws WebProtegeConfigurationException {
 
         for(ConfigurationTask task : configurationTasks) {
-            task.run(servletContext);
+            task.run();
         }
 
         return true;

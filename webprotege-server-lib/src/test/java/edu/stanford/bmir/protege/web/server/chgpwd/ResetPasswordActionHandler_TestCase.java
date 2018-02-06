@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
@@ -52,9 +51,6 @@ public class ResetPasswordActionHandler_TestCase {
     private ResetPasswordActionHandler handler;
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private UserId userId;
 
     @Mock
@@ -76,7 +72,7 @@ public class ResetPasswordActionHandler_TestCase {
     public void setUp() throws Exception {
         handler = new ResetPasswordActionHandler(userDetailsManager,
                 authenticationManager,
-                saltProvider, passwordDigestAlgorithm, mailer, logger);
+                saltProvider, passwordDigestAlgorithm, mailer);
 
         when(action.getResetPasswordData()).thenReturn(data);
         when(data.getEmailAddress()).thenReturn(EMAIL_ADDRESS);

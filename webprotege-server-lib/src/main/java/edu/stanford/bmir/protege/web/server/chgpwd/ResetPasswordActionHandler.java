@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,7 +42,7 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
 
     private final ResetPasswordMailer mailer;
 
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ResetPasswordActionHandler.class);
 
 
     @Inject
@@ -48,14 +50,12 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
                                       AuthenticationManager authenticationManager,
                                       SaltProvider saltProvider,
                                       PasswordDigestAlgorithm passwordDigestAlgorithm,
-                                      ResetPasswordMailer mailer,
-                                      WebProtegeLogger logger) {
+                                      ResetPasswordMailer mailer) {
         this.userDetailsManager = userDetailsManager;
         this.authenticationManager = authenticationManager;
         this.saltProvider = saltProvider;
         this.passwordDigestAlgorithm = passwordDigestAlgorithm;
         this.mailer = mailer;
-        this.logger = logger;
     }
 
     @Nonnull
@@ -98,8 +98,8 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
             mailer.sendEmail(userId.get(), emailAddress, pwd, ex -> {
                 throw new RuntimeException(ex);
             });
-            logger.info("The password for %s has been reset.  " +
-                            "An email has been sent to %s that contains the new password.",
+            logger.info("The password for {} has been reset.  " +
+                            "An email has been sent to {} that contains the new password.",
                     userId.get().getUserName(),
                     emailAddress
             );

@@ -63,9 +63,6 @@ public class PerspectiveFileManager_TestCase {
     @Mock
     private PerspectiveDataCopier perspectiveDataCopier;
 
-    @Mock
-    private WebProtegeLogger logger;
-
     @Before
     public void setUp() throws Exception {
         File tempFolder = temporaryFolder.newFolder();
@@ -75,8 +72,7 @@ public class PerspectiveFileManager_TestCase {
         when(projectDirectoryFactory.getProjectDirectory(projectId)).thenReturn(PROJECT_DIRECTORY);
         fileManager = new PerspectiveFileManager(defaultPerspectivesDirectory,
                                                  projectDirectoryFactory,
-                                                 algorithmProvider,
-                                                 logger);
+                                                 algorithmProvider);
     }
 
     @Test

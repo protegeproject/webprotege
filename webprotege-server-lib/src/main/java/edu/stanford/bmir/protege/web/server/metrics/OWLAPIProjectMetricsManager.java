@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Iterator;
@@ -32,7 +34,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @ProjectSingleton
 public class OWLAPIProjectMetricsManager {
 
-    public final WebProtegeLogger logger;
+    public final Logger logger = LoggerFactory.getLogger(OWLAPIProjectMetricsManager.class);
 
     private List<MetricCalculator> metrics = Lists.newArrayList();
 
@@ -53,10 +55,8 @@ public class OWLAPIProjectMetricsManager {
     @Inject
     public OWLAPIProjectMetricsManager(ProjectId projectId,
                                        List<MetricCalculator> metrics,
-                                       HasPostEvents<ProjectEvent<?>> eventBus,
-                                       WebProtegeLogger logger) {
+                                       HasPostEvents<ProjectEvent<?>> eventBus) {
         this.projectId = projectId;
-        this.logger = logger;
         this.eventBus = eventBus;
         this.metrics.addAll(metrics);
         markAllAsDirty();
@@ -93,7 +93,7 @@ public class OWLAPIProjectMetricsManager {
                     MetricValue metricValue = metric.computeValue();
                     valueCache.put(metric, metricValue);
                 } catch (Exception e) {
-                    logger.error(e);
+                    logger.error("Error", e);
                     // Mark as not computed
                     valueCache.put(metric, null);
                 }

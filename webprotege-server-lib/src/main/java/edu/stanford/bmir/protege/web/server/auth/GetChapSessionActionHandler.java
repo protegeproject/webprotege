@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionAction;
 import edu.stanford.bmir.protege.web.shared.auth.GetChapSessionResult;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -25,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetChapSessionActionHandler implements ApplicationActionHandler<GetChapSessionAction, GetChapSessionResult> {
 
-    private WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(GetChapSessionActionHandler.class);
 
     private ChapSessionManager chapSessionManager;
 
@@ -33,11 +35,9 @@ public class GetChapSessionActionHandler implements ApplicationActionHandler<Get
 
     @Inject
     public GetChapSessionActionHandler(ChapSessionManager chapSessionManager,
-                                       AuthenticationManager authenticationManager,
-                                       WebProtegeLogger logger) {
+                                       AuthenticationManager authenticationManager) {
         this.chapSessionManager = checkNotNull(chapSessionManager);
         this.authenticationManager = checkNotNull(authenticationManager);
-        this.logger = logger;
     }
 
     @Nonnull
@@ -62,7 +62,7 @@ public class GetChapSessionActionHandler implements ApplicationActionHandler<Get
         }
         Optional<Salt> salt = authenticationManager.getSalt(userId);
         if(!salt.isPresent()) {
-            logger.info("Attempt to authenticate non-existing user: %s", userId);
+            logger.info("Attempt to authenticate non-existing user: {}", userId);
             return new GetChapSessionResult(Optional.empty());
         }
         ChapSession challengeMessage = chapSessionManager.getSession(salt.get());

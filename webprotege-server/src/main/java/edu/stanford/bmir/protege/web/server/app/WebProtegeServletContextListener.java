@@ -39,7 +39,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
             servletContext.addListener(serverComponent.getSessionListener());
 
-            serverComponent.getWebProtegeConfigurationChecker().performConfiguration(servletContext);
+            serverComponent.getWebProtegeConfigurationChecker().performConfiguration();
 
             Runtime runtime = Runtime.getRuntime();
             logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));

@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.server.node.JsonNodeSerializer;
 import edu.stanford.protege.widgetmap.shared.node.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -26,12 +28,11 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
 
     private final PerspectiveFileManager perspectiveFileManager;
 
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(PerspectiveLayoutStoreImpl.class);
 
     @Inject
-    public PerspectiveLayoutStoreImpl(PerspectiveFileManager perspectiveFileManager, WebProtegeLogger logger) {
+    public PerspectiveLayoutStoreImpl(PerspectiveFileManager perspectiveFileManager) {
         this.perspectiveFileManager = perspectiveFileManager;
-        this.logger = logger;
     }
 
     @Nonnull
@@ -90,7 +91,7 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
                 String serialization = serializer.serialize(layout.getRootNode().get());
                 Files.write(serialization.getBytes(Charsets.UTF_8), file);
             } catch (IOException e) {
-                logger.error(e);
+                logger.error("An error occurred whilst writing the perspective: {} {} {}", projectId, userId, projectId, e);
             }
         }
         else {

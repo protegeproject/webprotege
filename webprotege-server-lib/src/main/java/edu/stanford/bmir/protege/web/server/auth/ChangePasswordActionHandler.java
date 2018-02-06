@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -23,8 +22,8 @@ public class ChangePasswordActionHandler extends AuthenticatedActionHandler<Chan
 
 
     @Inject
-    public ChangePasswordActionHandler(ChapSessionManager chapSessionManager, AuthenticationManager authMan, ChapResponseChecker chapResponseChecker, WebProtegeLogger logger) {
-        super(chapSessionManager, authMan, chapResponseChecker, logger);
+    public ChangePasswordActionHandler(ChapSessionManager chapSessionManager, AuthenticationManager authMan, ChapResponseChecker chapResponseChecker) {
+        super(chapSessionManager, authMan, chapResponseChecker);
         this.authenticationManager = authMan;
     }
 

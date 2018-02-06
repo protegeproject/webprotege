@@ -51,9 +51,6 @@ public class ResetPasswordMailer_TestCase {
     private SendMailImpl sendMailImpl;
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private UserId userId;
 
     @Mock
@@ -74,7 +71,7 @@ public class ResetPasswordMailer_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        mailer = new ResetPasswordMailer(sendMailImpl, templateEngine, templateFile, placeUrl, appNameSupplier, logger);
+        mailer = new ResetPasswordMailer(sendMailImpl, templateEngine, templateFile, placeUrl, appNameSupplier);
         when(userId.getUserName()).thenReturn(THE_USER_NAME);
         when(placeUrl.getApplicationUrl()).thenReturn(THE_APPLICATION_URL);
         when(templateEngine.populateTemplate(anyString(), anyMap())).thenReturn(THE_POPULATED_TEMPLATE);

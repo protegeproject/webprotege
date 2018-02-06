@@ -47,9 +47,6 @@ public class SendMailImplTestCase {
     private Message message;
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private ApplicationNameSupplier applicationNameSupplier;
 
     @Mock

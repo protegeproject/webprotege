@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -29,17 +31,15 @@ import static java.util.stream.Collectors.toMap;
  */
 public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettingsManager {
 
-    private final WebProtegeLogger logger;
+    private final Logger logger = LoggerFactory.getLogger(ProjectSharingSettingsManagerImpl.class);
 
     private final AccessManager accessManager;
 
     private final HasGetUserIdByUserIdOrEmail userLookup;
 
     @Inject
-    public ProjectSharingSettingsManagerImpl(WebProtegeLogger logger,
-                                             AccessManager accessManager,
+    public ProjectSharingSettingsManagerImpl(AccessManager accessManager,
                                              HasGetUserIdByUserIdOrEmail userLookup) {
-        this.logger = logger;
         this.accessManager = accessManager;
         this.userLookup = userLookup;
     }
@@ -94,7 +94,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                                                roles);
             }
             else {
-                logger.info(projectId, "User in sharing setting not found.  An email invitation needs to be sent");
+                logger.info("User in sharing setting not found.  An email invitation needs to be sent");
                 // TODO
                 // We need to send the user an email invitation
             }

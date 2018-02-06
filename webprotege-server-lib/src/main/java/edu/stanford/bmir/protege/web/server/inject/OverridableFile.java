@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OverridableFile implements Supplier<File> {
 
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(OverridableFile.class);
 
     private final String relativePathName;
 
@@ -31,18 +33,16 @@ public class OverridableFile implements Supplier<File> {
 
     @Inject
     public OverridableFile(@Nonnull String relativePathName,
-                           @Nonnull @DataDirectory File dataDirectory,
-                           @Nonnull WebProtegeLogger logger) {
+                           @Nonnull @DataDirectory File dataDirectory) {
         this.dataDirectory = checkNotNull(dataDirectory);
         this.relativePathName = checkNotNull(relativePathName);
-        this.logger = logger;
     }
 
     @Nonnull
     public synchronized File get() {
         File overridingFile = new File(dataDirectory, relativePathName);
         if (overridingFile.exists()) {
-            logger.info("Providing %s file from overriden file (%s)" ,
+            logger.info("Providing {} file from overriden file ({})" ,
                         relativePathName,
                         overridingFile.getAbsolutePath());
             return overridingFile;
@@ -50,7 +50,7 @@ public class OverridableFile implements Supplier<File> {
         else {
             // Load from class path
             Optional<File> fileFromClassPath = getFileFromClassPath();
-            logger.info("Providing %s file from class path" ,
+            logger.info("Providing {} file from class path" ,
                         relativePathName);
             return fileFromClassPath.orElse(overridingFile);
         }
@@ -64,13 +64,13 @@ public class OverridableFile implements Supplier<File> {
             }
             URL templateUrl = getClass().getResource("/" + relativePathName);
             if (templateUrl == null) {
-                logger.info("Unable to locate %s template file on class path: /", relativePathName);
+                logger.info("Unable to locate {} template file on class path: /", relativePathName);
                 return Optional.empty();
             }
             classPathFile = new File(templateUrl.toURI());
             return Optional.of(classPathFile);
         } catch (URISyntaxException e) {
-            logger.error(e);
+            logger.error("An error occurred whilst attempting to obtain a file from the class path", e);
             return Optional.empty();
         }
     }

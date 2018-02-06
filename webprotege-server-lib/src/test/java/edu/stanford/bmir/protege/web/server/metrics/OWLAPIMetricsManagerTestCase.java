@@ -42,9 +42,6 @@ public class OWLAPIMetricsManagerTestCase {
     protected List<OWLOntologyChange> changes;
 
     @Mock
-    protected WebProtegeLogger logger;
-
-    @Mock
     protected HasPostEvents<ProjectEvent<?>> eventBus;
 
     private OWLAPIProjectMetricsManager metricsManager;
@@ -54,7 +51,7 @@ public class OWLAPIMetricsManagerTestCase {
     public void setUp() throws Exception {
         List<MetricCalculator> metricList = new ArrayList<>();
         metricList.add(metric);
-        metricsManager = new OWLAPIProjectMetricsManager(projectId, metricList, eventBus, logger);
+        metricsManager = new OWLAPIProjectMetricsManager(projectId, metricList, eventBus);
     }
 
     @Test

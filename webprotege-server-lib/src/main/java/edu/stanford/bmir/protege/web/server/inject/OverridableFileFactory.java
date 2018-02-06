@@ -17,16 +17,12 @@ public class OverridableFileFactory {
 
     private File dataDirectory;
 
-    private WebProtegeLogger logger;
-
     @Inject
-    public OverridableFileFactory(@Nonnull @DataDirectory File dataDirectory,
-                                  @Nonnull WebProtegeLogger logger) {
+    public OverridableFileFactory(@Nonnull @DataDirectory File dataDirectory) {
         this.dataDirectory = checkNotNull(dataDirectory);
-        this.logger = checkNotNull(logger);
     }
 
     public OverridableFile getOverridableFile(@Nonnull String relativePathName) {
-        return new OverridableFile(relativePathName, dataDirectory, logger);
+        return new OverridableFile(relativePathName, dataDirectory);
     }
 }

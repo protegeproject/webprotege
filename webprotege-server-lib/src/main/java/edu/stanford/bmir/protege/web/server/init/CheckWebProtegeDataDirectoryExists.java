@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.init;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 import java.io.File;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,7 +24,7 @@ public class CheckWebProtegeDataDirectoryExists implements ConfigurationTask {
     }
 
     @Override
-    public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
+    public void run() throws WebProtegeConfigurationException {
        if(!dataDirectory.exists()) {
            throw new WebProtegeConfigurationException(
                    getDataDirectoryDoesNotExistsMessage(dataDirectory)

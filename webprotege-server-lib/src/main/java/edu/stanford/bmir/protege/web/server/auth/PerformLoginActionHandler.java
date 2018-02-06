@@ -52,9 +52,8 @@ public class PerformLoginActionHandler extends AuthenticatedActionHandler<Perfor
                                      @Nonnull ChapSessionManager chapSessionManager,
                                      @Nonnull AuthenticationManager authenticationManager,
                                      @Nonnull ChapResponseChecker chapResponseChecker,
-                                     @Nonnull WebProtegeLogger logger,
                                      @Nonnull UserInSessionFactory userInSessionFactory) {
-        super(chapSessionManager, authenticationManager, chapResponseChecker, logger);
+        super(chapSessionManager, authenticationManager, chapResponseChecker);
         this.activityManager = checkNotNull(activityManager);
         this.userInSessionFactory = userInSessionFactory;
     }

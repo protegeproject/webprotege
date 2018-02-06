@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.init;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 import java.io.*;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public class CheckDataDirectoryIsReadableAndWritable implements ConfigurationTas
     }
 
     @Override
-    public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
+    public void run() throws WebProtegeConfigurationException {
         File testFile = new File(dataDirectory, "write.test." + UUID.randomUUID() + ".txt");
         try {
             try {

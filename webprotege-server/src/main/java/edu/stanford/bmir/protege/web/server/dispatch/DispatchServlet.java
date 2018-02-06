@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
-import edu.stanford.bmir.protege.web.server.app.ServerSingleton;
 import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -48,7 +44,7 @@ public class DispatchServlet extends WebProtegeRemoteServiceServlet implements D
         UserId userId = getUserInSession();
         HttpServletRequest request = getThreadLocalRequest();
         HttpSession session = request.getSession();
-        final RequestContext requestContext = new RequestContext(userId, session);
+        final RequestContext requestContext = new RequestContext(userId);
         final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSessionImpl(session));
         return executor.execute(action, requestContext, executionContext);
     }

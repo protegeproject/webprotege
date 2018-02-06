@@ -40,9 +40,6 @@ public class PasswordResetMailer_IT {
     private final String theAppName = "TheAppName";
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private SendMailImpl sendMailImpl;
 
     @Mock
@@ -66,15 +63,14 @@ public class PasswordResetMailer_IT {
     public void setUp() throws Exception {
         when(placeUrl.getApplicationUrl()).thenReturn(applicationUrl);
         when(appNameProvider.get()).thenReturn(theAppName);
-        OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"), logger);
+        OverridableFile overridableFile = new OverridableFile(TEMPLATE_PATH, new File("/tmp/data"));
         FileContents templateFile = new FileContents(overridableFile);
         TemplateEngine templateEngine = new TemplateEngine(DefaultMustacheFactory::new);
         ResetPasswordMailer mailer = new ResetPasswordMailer(sendMailImpl,
                                                              templateEngine,
                                                              templateFile,
                                                              placeUrl,
-                                                             appNameProvider,
-                                                             logger);
+                                                             appNameProvider);
         mailer.sendEmail(userId, emailAddress, theNewPassword, e -> {});
         verify(sendMailImpl, times(1)).sendMail(
                 eq(singletonList(emailAddress)),

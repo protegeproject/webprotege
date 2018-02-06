@@ -53,6 +53,13 @@
                 <version>2.4</version>
             </dependency>
 
+            <!-- Use specific version of the OWL API -->
+            <dependency>
+                <groupId>net.sourceforge.owlapi</groupId>
+                <artifactId>owlapi-distribution</artifactId>
+                <version>4.3.2</version>
+            </dependency>
+
             <!-- Testing Dependencies -->
             <dependency>
                 <groupId>org.hamcrest</groupId>

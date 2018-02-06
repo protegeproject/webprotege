@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.inject.DbHost;
 import edu.stanford.bmir.protege.web.server.inject.DbPort;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,7 +28,7 @@ public class CheckMongoDBConnectionTask implements ConfigurationTask {
     }
 
     @Override
-    public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
+    public void run() throws WebProtegeConfigurationException {
         try {
             MongoClient mongoClient = new MongoClient(dbHost, dbPort);
             mongoClient.getDatabaseNames();

@@ -63,7 +63,6 @@
                   <exclude>com.google.code.gson:gson</exclude>
                   <exclude>com.fasterxml.jackson.core:jackson-core</exclude>
                   <exclude>commons-collections:commons-collections</exclude>
-                  <exclude>org.codehaus.janino*</exclude>
                   <exlcude>javax.activation:activation</exlcude>
                   <exlcude>org.tukaani:xz</exlcude>
                   <exclude>org.glassfish:javax.json</exclude>

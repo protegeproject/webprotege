@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.server.app.WebProtegeSessionListener;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
 import edu.stanford.bmir.protege.web.server.user.UserActivityManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -30,9 +29,6 @@ public class WebProtegeSessionListener_TestCase {
 
     @Mock
     private UserActivityManager activityManager;
-
-    @Mock
-    private WebProtegeLogger logger;
 
     @Mock
     private HttpSessionEvent sessionEvent;

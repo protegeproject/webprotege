@@ -28,9 +28,6 @@ public class GetChapSessionActionHandler_TestCase {
     private GetChapSessionActionHandler handler;
 
     @Mock
-    private WebProtegeLogger logger;
-
-    @Mock
     private ChapSessionManager sessionManager;
 
     @Mock
@@ -60,7 +57,7 @@ public class GetChapSessionActionHandler_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetChapSessionActionHandler(sessionManager, authenticationManager, logger);
+        handler = new GetChapSessionActionHandler(sessionManager, authenticationManager);
         when(authenticationManager.getSalt(userId)).thenReturn(java.util.Optional.of(salt));
         when(authenticationManager.getSaltedPasswordDigest(userId)).thenReturn(java.util.Optional.of(saltedPasswordDigest));
         when(sessionManager.getSession(salt)).thenReturn(chapSession);

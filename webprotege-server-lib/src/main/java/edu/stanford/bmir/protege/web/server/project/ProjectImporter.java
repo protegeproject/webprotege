@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.inject.project.*;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreImpl;
@@ -19,6 +18,8 @@ import org.semanticweb.owlapi.change.AddImportData;
 import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import javax.annotation.Nonnull;
@@ -44,8 +45,6 @@ public class ProjectImporter {
 
     private final RevisionStoreImpl revisionStore;
 
-    private final WebProtegeLogger logger;
-
     private final UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor;
 
     private final File dataDirectory;
@@ -54,7 +53,6 @@ public class ProjectImporter {
     public ProjectImporter(ProjectId projectId,
                            @Nonnull @UploadsDirectory File uploadsDirectory,
                            @Nonnull @DataDirectory File dataDirectory,
-                           WebProtegeLogger logger,
                            UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor) {
         this.projectId = projectId;
         this.dataDirectory = checkNotNull(dataDirectory);
@@ -65,7 +63,6 @@ public class ProjectImporter {
         this.revisionStore = new RevisionStoreImpl(projectId,
                                                    new ChangeHistoryFileProvider(projectDirectory).get(),
                                                    new OWLDataFactoryImpl());
-        this.logger = logger;
         this.uploadedProjectSourcesExtractor = uploadedProjectSourcesExtractor;
         this.revisionStore.load();
     }

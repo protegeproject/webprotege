@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.perspective;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,17 +22,15 @@ public class PerspectiveDataCopier {
 
     private static final String DEFAULT_PERSPECTIVE_DATA_RESOURCE_PATH = "/default-perspective-data";
 
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(PerspectiveDataCopier.class);
 
     private final File defaultPerspectiveDataDirectory;
 
 
 
     @Inject
-    public PerspectiveDataCopier(@Nonnull @DefaultPerspectiveDataDirectory File defaultPerspectiveDataDirectory,
-                                 WebProtegeLogger logger) {
+    public PerspectiveDataCopier(@Nonnull @DefaultPerspectiveDataDirectory File defaultPerspectiveDataDirectory) {
         this.defaultPerspectiveDataDirectory = defaultPerspectiveDataDirectory;
-        this.logger = logger;
     }
 
     public void copyDefaultPerspectiveData() {

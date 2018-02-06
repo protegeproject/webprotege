@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -31,7 +33,7 @@ public class CommentNotificationEmailGenerator {
 
     private final FileContents templateFile;
 
-    private final WebProtegeLogger webProtegeLogger;
+    private static final Logger logger = LoggerFactory.getLogger(CommentNotificationEmailGenerator.class);
 
     private final PlaceUrl placeUrl;
 
@@ -41,11 +43,9 @@ public class CommentNotificationEmailGenerator {
     public CommentNotificationEmailGenerator(@Nonnull @CommentNotificationEmailTemplate FileContents templateFile,
                                              @Nonnull TemplateEngine templateEngine,
                                              @Nonnull ApplicationNameSupplier applicationNameSupplier,
-                                             @Nonnull PlaceUrl placeUrl,
-                                             @Nonnull WebProtegeLogger webProtegeLogger) {
+                                             @Nonnull PlaceUrl placeUrl) {
         this.templateEngine = templateEngine;
         this.templateFile = templateFile;
-        this.webProtegeLogger = webProtegeLogger;
         this.placeUrl = placeUrl;
         this.applicationNameSupplier = applicationNameSupplier;
     }
@@ -73,7 +73,7 @@ public class CommentNotificationEmailGenerator {
             String template = templateFile.getContents();
             return templateEngine.populateTemplate(template, objects);
         } catch (Exception e) {
-            webProtegeLogger.error(e);
+            logger.error("An error occurred whilst generating the body for a comment notification email", e);
             return String.format("Invalid template file: %s (Cause: %s)" ,
                                  templateFile.getFile().getName(),
                                  e.getMessage());

@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -26,7 +28,7 @@ public class ProjectImporterFactory {
     private final File dataDirectory;
 
     @Nonnull
-    private final WebProtegeLogger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ProjectImporterFactory.class);
 
     @Nonnull
     private final UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor;
@@ -35,16 +37,14 @@ public class ProjectImporterFactory {
     public ProjectImporterFactory(
             @Nonnull @UploadsDirectory File uploadsDirectory,
             @Nonnull @DataDirectory File dataDirectory,
-            @Nonnull UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor,
-            @Nonnull WebProtegeLogger logger) {
+            @Nonnull UploadedProjectSourcesExtractor uploadedProjectSourcesExtractor) {
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
         this.dataDirectory = checkNotNull(dataDirectory);
         this.uploadedProjectSourcesExtractor = checkNotNull(uploadedProjectSourcesExtractor);
-        this.logger = checkNotNull(logger);
     }
 
     @Nonnull
     public ProjectImporter getProjectImporter(@Nonnull ProjectId projectId) {
-        return new ProjectImporter(projectId, uploadsDirectory, dataDirectory, logger, uploadedProjectSourcesExtractor);
+        return new ProjectImporter(projectId, uploadsDirectory, dataDirectory, uploadedProjectSourcesExtractor);
     }
 }
