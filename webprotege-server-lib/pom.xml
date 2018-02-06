@@ -183,17 +183,11 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.pegdown</groupId>
             <artifactId>pegdown</artifactId>
             <version>1.6.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>graphtree</artifactId>
