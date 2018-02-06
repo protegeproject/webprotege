@@ -128,12 +128,6 @@
         </dependency>
 
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-
-        <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>widgetmap</artifactId>
             <version>2.1.0</version>
