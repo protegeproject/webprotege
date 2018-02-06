@@ -60,13 +60,6 @@
                 <version>${dagger.version}</version>
             </dependency>
 
-            <!-- Use specific version of the OWL API -->
-            <dependency>
-                <groupId>net.sourceforge.owlapi</groupId>
-                <artifactId>owlapi-distribution</artifactId>
-                <version>${owlapi.version}</version>
-            </dependency>
-
             <!-- Testing Dependencies -->
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -89,6 +82,12 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit-dep</artifactId>
+                <version>4.10</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
                 <version>4.10</version>
                 <scope>test</scope>
             </dependency>

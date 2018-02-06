@@ -17,12 +17,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>webprotege-server-lib</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi-distribution</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
