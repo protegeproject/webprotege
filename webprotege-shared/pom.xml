@@ -55,7 +55,19 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>4.3.1</version>
+            <version>4.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-gwt</artifactId>
+            <version>4.3.2.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sourceforge.owlapi</groupId>
+                    <artifactId>owlapi-gwt-client-side-emul</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
