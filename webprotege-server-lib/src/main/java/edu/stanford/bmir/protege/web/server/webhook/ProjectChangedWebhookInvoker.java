@@ -1,18 +1,18 @@
 package edu.stanford.bmir.protege.web.server.webhook;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.UUID;
+import java.util.List;
 
 import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.PROJECT_CHANGED;
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 /**
  * Matthew Horridge
@@ -22,18 +22,21 @@ import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 @ProjectSingleton
 public class ProjectChangedWebhookInvoker {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProjectChangedWebhookInvoker.class);
+
     @Nonnull
     private final ProjectId projectId;
 
     @Nonnull
-    private final WebhookExecutor webhookExecutor;
+    private final JsonPayloadWebhookExecutor webhookExecutor;
 
     @Nonnull
     private final WebhookRepository webhookRepository;
 
+
     @Inject
     public ProjectChangedWebhookInvoker(@Nonnull ProjectId projectId,
-                                        @Nonnull WebhookExecutor webhookExecutor,
+                                        @Nonnull JsonPayloadWebhookExecutor webhookExecutor,
                                         @Nonnull WebhookRepository webhookRepository) {
         this.projectId = projectId;
         this.webhookExecutor = webhookExecutor;
@@ -43,22 +46,12 @@ public class ProjectChangedWebhookInvoker {
     public void invoke(@Nonnull UserId userId,
                        @Nonnull RevisionNumber revisionNumber,
                        long timestamp) {
-        ProjectChangedWebhookPayload payload = new ProjectChangedWebhookPayload(projectId.getId(),
-                                                                                userId.getUserName(),
+        ProjectChangedWebhookPayload payload = new ProjectChangedWebhookPayload(projectId,
+                                                                                userId,
                                                                                 revisionNumber.getValueAsInt(),
                                                                                 timestamp);
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        String jsonPayload = gson.toJson(payload);
-        webhookRepository.getProjectWebhooks(projectId, PROJECT_CHANGED)
-                .forEach( webhook -> {
-                    String payloadUrl = webhook.getPayloadUrl();
-                    String invocationId = UUID.randomUUID().toString();
-                    webhookExecutor.submit(new WebhookInvocation(invocationId,
-                                                                 payloadUrl,
-                                                                 jsonPayload,
-                                                                 APPLICATION_JSON));
-                });
+
+        List<ProjectWebhook> webhooks = webhookRepository.getProjectWebhooks(projectId, PROJECT_CHANGED);
+        webhookExecutor.submit(payload, webhooks);
     }
 }

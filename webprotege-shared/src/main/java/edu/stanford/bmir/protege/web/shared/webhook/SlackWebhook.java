@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook.PROJECT_
                 )
         }
 )
-public class SlackWebhook implements IsSerializable {
+public class SlackWebhook implements Webhook, IsSerializable {
 
 
     public static final String PROJECT_ID = "projectId";

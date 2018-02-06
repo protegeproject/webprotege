@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Indexes({
                  @Index(fields = {@Field(value = ProjectWebhook.PROJECT_ID), @Field(ProjectWebhook.SUBSCRIBED_TO_EVENTS)}, options = @IndexOptions(unique = true))
          })
-public class ProjectWebhook implements HasProjectId {
+public class ProjectWebhook implements Webhook, HasProjectId {
 
     public static final String PROJECT_ID = "projectId";
 

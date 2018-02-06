@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.server.webhook;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+
 import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,17 +15,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProjectChangedWebhookPayload {
 
     @Nonnull
-    private final String projectId;
+    private final ProjectId projectId;
 
     @Nonnull
-    private final String userId;
+    private final UserId userId;
 
     private final long revisionNumber;
 
     private long timestamp;
 
-    public ProjectChangedWebhookPayload(@Nonnull String projectId,
-                                        @Nonnull String userId,
+    public ProjectChangedWebhookPayload(@Nonnull ProjectId projectId,
+                                        @Nonnull UserId userId,
                                         long revisionNumber,
                                         long timestamp) {
         this.projectId = checkNotNull(projectId);
@@ -32,12 +35,12 @@ public class ProjectChangedWebhookPayload {
     }
 
     @Nonnull
-    public String getProjectId() {
+    public ProjectId getProjectId() {
         return projectId;
     }
 
     @Nonnull
-    public String getUserId() {
+    public UserId getUserId() {
         return userId;
     }
 

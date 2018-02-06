@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
@@ -249,5 +250,10 @@ public class ApplicationModule {
     @Provides
     public ApplicationSettings provideApplicationSettings(ApplicationSettingsManager manager) {
         return manager.getApplicationSettings();
+    }
+
+    @Provides
+    public ObjectMapper provideObjectMapper() {
+        return new ObjectMapper();
     }
 }
