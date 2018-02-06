@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filemanager;
 
 import com.google.common.io.BaseEncoding;
-import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -24,7 +23,7 @@ public class CustomizationDirectoryManager {
     private final File baseDirectory;
 
     @Inject
-    public CustomizationDirectoryManager(@Assisted File baseDirectory) {
+    public CustomizationDirectoryManager(File baseDirectory) {
         this.baseDirectory = baseDirectory;
     }
 

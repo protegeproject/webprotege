@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
 
-import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
@@ -24,7 +23,9 @@ public class UserIsProjectOwnerValidator implements RequestValidator {
     private ProjectId projectId;
 
     @Inject
-    public UserIsProjectOwnerValidator(@Assisted ProjectId projectId, @Assisted UserId userId, ProjectDetailsManager projectDetailsManager) {
+    public UserIsProjectOwnerValidator(ProjectId projectId,
+                                       UserId userId,
+                                       ProjectDetailsManager projectDetailsManager) {
         this.projectDetailsManager = projectDetailsManager;
         this.userId = userId;
         this.projectId = projectId;

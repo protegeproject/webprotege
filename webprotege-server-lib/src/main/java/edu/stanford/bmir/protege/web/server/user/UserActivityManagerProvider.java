@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import com.google.inject.Provider;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 /**
  * Matthew Horridge
