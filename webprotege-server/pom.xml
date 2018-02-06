@@ -30,6 +30,11 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.3</version>
+        </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
