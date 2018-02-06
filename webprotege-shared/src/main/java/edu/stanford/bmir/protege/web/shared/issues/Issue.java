@@ -11,7 +11,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +34,7 @@ public class Issue implements IsSerializable {
 
     private long createdAt;
 
-    @Null
+    @Nullable
     private Long updatedAt;
 
     @Nonnull

@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guava.version>20.0</guava.version>
+        <dagger.version>2.7</dagger.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>
         <mail.smtp.auth/>
@@ -49,8 +50,13 @@
             <!-- Dependency Injection via Dagger -->
             <dependency>
                 <groupId>com.google.dagger</groupId>
+                <artifactId>dagger</artifactId>
+                <version>${dagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.dagger</groupId>
                 <artifactId>dagger-compiler</artifactId>
-                <version>2.4</version>
+                <version>${dagger.version}</version>
             </dependency>
 
             <!-- Use specific version of the OWL API -->
