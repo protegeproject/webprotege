@@ -157,6 +157,9 @@
                         <sourceLevel>1.8</sourceLevel>
                         <failOnError>true</failOnError>
                         <classpathScope>compile+runtime</classpathScope>
+                        <moduleName>edu.stanford.bmir.protege.web.client.WebProtege</moduleName>
+                        <startupUrls>WebProtege.jsp</startupUrls>
+                        <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
                     </configuration>
                 </plugin>
                 <plugin>
