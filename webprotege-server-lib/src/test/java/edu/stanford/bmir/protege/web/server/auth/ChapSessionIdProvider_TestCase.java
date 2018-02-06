@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.auth;
 
-import edu.stanford.bmir.protege.web.server.auth.ChapSessionIdProvider;
 import edu.stanford.bmir.protege.web.shared.auth.ChapSessionId;
 import org.junit.Before;
 import org.junit.Test;

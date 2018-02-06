@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -11,8 +11,10 @@ import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import org.semanticweb.owlapi.model.*;
 

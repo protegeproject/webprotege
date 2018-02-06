@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

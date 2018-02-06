@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.mail.MessageHeader;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
-import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;

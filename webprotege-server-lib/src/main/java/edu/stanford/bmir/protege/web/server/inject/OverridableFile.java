@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

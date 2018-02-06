@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.mail;
 
 import edu.stanford.bmir.protege.web.server.app.ApplicationHostSupplier;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

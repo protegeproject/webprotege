@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.server.app;
 
-import edu.stanford.bmir.protege.web.server.app.ApplicationPreferences;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import org.hamcrest.Matchers;
 import org.junit.Before;

@@ -4,20 +4,20 @@ import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRendere
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.hierarchy.AnnotationPropertyHierarchyParentAddedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.AnnotationPropertyHierarchyParentRemovedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.ANNOTATION_PROPERTY_HIERARCHY;
-import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.DATA_PROPERTY_HIERARCHY;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 

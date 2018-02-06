@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
-import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.Comment;

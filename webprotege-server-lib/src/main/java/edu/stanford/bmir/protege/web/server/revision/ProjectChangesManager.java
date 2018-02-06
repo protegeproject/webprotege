@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
-import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;

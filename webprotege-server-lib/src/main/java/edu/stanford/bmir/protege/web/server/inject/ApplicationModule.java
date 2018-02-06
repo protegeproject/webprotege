@@ -22,8 +22,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryI
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
-import edu.stanford.bmir.protege.web.server.logging.DefaultLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
@@ -138,12 +136,6 @@ public class ApplicationModule {
     @Provides
     public DispatchServiceExecutor provideDispatchServiceExecutor(DispatchServiceExecutorImpl impl) {
         return impl;
-    }
-
-    @ApplicationSingleton
-    @Provides
-    public WebProtegeLogger provideWebProtegeLogger(DefaultLogger logger) {
-        return logger;
     }
 
     @Provides

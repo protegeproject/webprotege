@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.ApplicationResource;
 import edu.stanford.bmir.protege.web.server.access.ProjectResource;
@@ -15,6 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInVa
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
+import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;

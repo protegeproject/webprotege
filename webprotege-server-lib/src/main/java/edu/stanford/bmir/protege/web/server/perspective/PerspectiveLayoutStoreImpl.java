@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveLayout;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

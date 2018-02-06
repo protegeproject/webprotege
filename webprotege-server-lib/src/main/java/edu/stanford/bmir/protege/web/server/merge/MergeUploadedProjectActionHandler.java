@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
-import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
-import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
+import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.diff.OntologyDiff2OntologyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -16,6 +17,8 @@ import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
+import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;

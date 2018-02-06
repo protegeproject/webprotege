@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
-import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
+import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;

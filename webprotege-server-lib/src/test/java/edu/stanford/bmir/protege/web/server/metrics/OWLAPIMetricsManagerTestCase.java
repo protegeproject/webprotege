@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metrics;
 
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -11,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +100,5 @@ public class OWLAPIMetricsManagerTestCase {
         when(metric.computeValue()).thenThrow(exception);
         List<MetricValue> values = metricsManager.getMetrics();
         assertThat(values.isEmpty(), is(true));
-        // Make sure that the exception is logged.
-        verify(logger, times(1)).error(exception);
     }
 }

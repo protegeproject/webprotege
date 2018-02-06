@@ -14,9 +14,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS;
-import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.ADDRESS_CHANGED;
-import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.ADDRESS_UNCHANGED;
+import static edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult.Result.*;
 
 /**
  * Author: Matthew Horridge<br>

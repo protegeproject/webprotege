@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.app.WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME;
 
 /**
  * Matthew Horridge

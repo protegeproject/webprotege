@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.shared.app.ApplicationScheme;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

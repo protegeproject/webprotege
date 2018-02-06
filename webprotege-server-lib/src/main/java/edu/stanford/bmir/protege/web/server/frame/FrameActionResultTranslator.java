@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
+import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 
 import javax.annotation.Nonnull;
 

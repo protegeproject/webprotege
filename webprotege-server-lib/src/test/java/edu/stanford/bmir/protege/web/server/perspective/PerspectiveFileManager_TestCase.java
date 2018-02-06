@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

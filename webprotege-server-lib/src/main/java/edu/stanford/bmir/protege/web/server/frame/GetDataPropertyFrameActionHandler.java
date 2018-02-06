@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -9,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

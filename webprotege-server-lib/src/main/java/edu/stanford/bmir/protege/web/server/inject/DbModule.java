@@ -11,8 +11,6 @@ import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import javax.inject.Singleton;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

@@ -17,7 +17,6 @@ import java.util.UUID;
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.*;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 /**

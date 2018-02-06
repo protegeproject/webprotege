@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
-import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.server.templates.TemplateObjectsBuilder;
 import edu.stanford.bmir.protege.web.shared.user.UserId;

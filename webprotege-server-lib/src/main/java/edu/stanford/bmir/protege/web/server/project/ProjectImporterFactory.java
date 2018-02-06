@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

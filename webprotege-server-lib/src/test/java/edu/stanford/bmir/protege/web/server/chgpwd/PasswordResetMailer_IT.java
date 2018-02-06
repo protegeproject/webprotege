@@ -2,12 +2,11 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.filemanager.FileContents;
 import edu.stanford.bmir.protege.web.server.inject.OverridableFile;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SendMailImpl;
-import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.templates.TemplateEngine;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;

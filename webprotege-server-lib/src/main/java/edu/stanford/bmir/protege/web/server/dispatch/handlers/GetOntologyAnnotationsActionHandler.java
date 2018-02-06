@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -10,6 +8,8 @@ import edu.stanford.bmir.protege.web.server.frame.PropertyValueComparator;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import org.semanticweb.owlapi.model.OWLAnnotation;

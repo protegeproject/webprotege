@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.individuals;
 
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
@@ -10,6 +8,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;

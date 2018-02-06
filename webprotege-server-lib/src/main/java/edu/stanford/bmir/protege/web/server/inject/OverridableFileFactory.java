@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.File;

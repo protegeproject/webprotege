@@ -4,7 +4,10 @@ import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRendere
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.hierarchy.ObjectPropertyHierarchyParentAddedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.ObjectPropertyHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.EntityType;

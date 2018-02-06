@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
