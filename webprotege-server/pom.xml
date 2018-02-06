@@ -20,10 +20,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
@@ -40,11 +36,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.dagger</groupId>
-            <artifactId>dagger-compiler</artifactId>
         </dependency>
 
     </dependencies>

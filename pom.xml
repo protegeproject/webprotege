@@ -114,6 +114,7 @@
                 <configuration>
                     <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
                     <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
+                    <classpathScope>compile+runtime</classpathScope>
                 </configuration>
             </plugin>
         </plugins>
@@ -142,6 +143,7 @@
                     <configuration>
                         <sourceLevel>1.8</sourceLevel>
                         <failOnError>true</failOnError>
+                        <classpathScope>compile+runtime</classpathScope>
                     </configuration>
                 </plugin>
                 <plugin>

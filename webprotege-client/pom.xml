@@ -192,6 +192,7 @@
                 <configuration>
                     <moduleName>edu.stanford.bmir.protege.web.WebProtege</moduleName>
                     <moduleShortName>webprotege</moduleShortName>
+                    <classpathScope>compile+runtime</classpathScope>
                 </configuration>
             </plugin>
         </plugins>
