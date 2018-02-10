@@ -157,12 +157,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new SharingSettingsActivity(presenter, sharingSettingsPlace);
         }
 
-//        if(place instanceof CollectionViewPlace) {
-//            CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
-//            CollectionPresenter collectionPresenter = getCollectionPresenter(collectionViewPlace);
-////            lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
-//            return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
-//        }
+        if(place instanceof CollectionViewPlace) {
+            CollectionViewPlace collectionViewPlace = (CollectionViewPlace) place;
+            CollectionPresenter collectionPresenter = getCollectionPresenter(collectionViewPlace);
+//            lastUser = Optional.of(loggedInUserProvider.getCurrentUserId());
+            return new CollectionViewActivity(collectionPresenter, collectionViewPlace);
+        }
 
         return null;
     }
