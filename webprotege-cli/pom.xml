@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>edu.stanford.protege</groupId>
+        <artifactId>webprotege</artifactId>
+        <version>3.0.1-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>webprotege-cli</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>webprotege-server-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-impl</artifactId>
+            <version>4.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>edu.stanford.bmir.protege.web.server.cmdline.WebProtegeCli</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <artifactSet>
+                                <excludes>
+                                    <exlclude>com.google.gwt:gwt-servlet</exlclude>
+                                    <exclude>javax.mail:mail</exclude>
+                                    <exclude>net.sf.opencsv:opencsv</exclude>
+                                    <exclude>edu.stanford.protege:widgetmap</exclude>
+                                    <exclude>com.google.guava:guava-gwt</exclude>
+                                    <exclude>edu.stanford.protege:graphtree</exclude>
+                                    <exclude>org.mockito:mockito-all</exclude>
+                                    <exclude>com.google.inject:guice</exclude>
+                                    <exclude>com.google.inject.extensions:guice-assistedinject</exclude>
+                                    <exclude>com.google.inject.extensions:guice-multibindings</exclude>
+                                    <exclude>com.github.spullara.mustache.java:compiler</exclude>
+                                    <exclude>org.ow2.asm:asm*</exclude>
+                                    <exclude>org.apache.velocity:velocity</exclude>
+                                    <exclude>org.apache.httpcomponents*</exclude>
+                                    <exclude>javax.validation:validation-api</exclude>
+                                    <exclude>aopalliance:aopalliance</exclude>
+                                    <exclude>commons-fileupload:commons-fileupload</exclude>
+                                    <exclude>edu.stanford.protege:codemirror-gwt</exclude>
+                                    <exlcude>com.google.jsinterop</exlcude>
+                                    <exclude>net.sf.trove4j:trove4j</exclude>
+                                    <exclude>org.pegdown:pegdown</exclude>
+                                    <exclude>org.parboiled</exclude>
+                                    <exclude>net.sourceforge.owlapi:binaryowl</exclude>
+                                    <exclude>org.w3c.css:sac</exclude>
+                                    <exclude>com.google.code.gson:gson</exclude>
+                                    <exclude>com.fasterxml.jackson.core:jackson-core</exclude>
+                                    <exclude>commons-collections:commons-collections</exclude>
+                                    <exlcude>javax.activation:activation</exlcude>
+                                    <exlcude>org.tukaani:xz</exlcude>
+                                    <exclude>org.glassfish:javax.json</exclude>
+                                    <exclude>edu.stanford.protege:protege-owlapi-extensions</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

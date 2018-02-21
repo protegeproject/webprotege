@@ -1,0 +1,38 @@
+@external .wp-*;
+
+.wp-toolbar {
+    background-color: literal("var(--view-toolbar--background-color)");
+    padding-bottom: 1px;
+}
+
+.wp-toolbar__btn {
+    margin: 1px;
+    border: none;
+    color: #505050;
+    height: 20px;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 400;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 2px;
+}
+
+.wp-toolbar__btn--highlighted {
+    color: dodgerblue;
+}
+
+.wp-toolbar__btn:hover:enabled {
+    background-color: #707070;
+    color: #ffffff;
+}
+
+.wp-toolbar__btn:active:enabled {
+    background-color: #424242;
+    color: #ffffff;
+}
+
+.wp-toolbar__btn:disabled {
+    color: #aaaaaa;
+    cursor: default;
+}

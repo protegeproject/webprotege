@@ -1,0 +1,149 @@
+@external wp-*;
+
+.wp-btn {
+    border: none;
+    border-radius: 2px;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease-in-out;
+    -moz-transition: background-color 0.15s ease-in-out;
+    -webkit-transition: background-color 0.15s ease-in-out;
+}
+
+.wp-btn--page {
+    height: 2.4em;
+    line-height: 2.4em;
+    padding: 0 20px;
+    min-width: 8em;
+
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+.wp-btn--page-small {
+    background-color: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.wp-btn--page-small:hover {
+    background-color: #505050;
+    color: #fff;
+}
+
+.wp-btn--dialog {
+    flex-grow: 0;
+    min-width: 100px;
+    height: 1.8em;
+    line-height: 1.8em;
+    padding: 0 20px;
+
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+.wp-btn--primary {
+    color: #fff;
+    background-color: #6c1a91;
+}
+
+.wp-btn--primary:hover {
+    background-color: #501c70;
+}
+
+.wp-btn--primary:disabled {
+    background-color: lightgray;
+    cursor: default;
+}
+
+.wp-btn--alternate {
+    color: #fff;
+    background-color: #db5e33;
+}
+
+.wp-btn--alternate:hover {
+    background-color: #bc4d26;
+}
+
+.wp-btn--alternate:disabled {
+    background-color: lightgray;
+    cursor: default;
+}
+
+.wp-btn--escape {
+    color: #fff;
+    background-color: #959ea7;
+}
+
+.wp-btn--escape:hover {
+    background-color: #737c85;
+}
+
+.wp-btn--accept {
+    color: #fff;
+    background-color: #6c1a91;
+}
+
+.wp-btn--accept:hover {
+    background-color: #501c70;
+}
+
+.wp-btn-add-tab {
+    border: none;
+    background-color: transparent;
+    font-weight: 400;
+}
+
+.wp-btn-add-tab:hover {
+    background-color: #505050;
+    color: white;
+    cursor: pointer;
+}
+
+.wp-btn-delete {
+    background-color: #aaaaaa;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.wp-btn-delete:hover {
+    background-color: #e00000;
+}
+
+.wp-btn-delete:focus {
+    background-color: #e00000;
+    outline-offset: 0;
+}
+
+.wp-btn-delete:disabled {
+    background-color: #dddddd;
+    cursor: default;
+}
+
+.wp-topbar__btn {
+    border: none;
+    line-height: 18px;
+    cursor: pointer;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: 400;
+    background-color: transparent;
+    color: inherit;
+}
+
+.wp-topbar__btn:hover {
+    color: #101010;
+}
+

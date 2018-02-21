@@ -1,0 +1,47 @@
+<html>
+<head>
+    <style>
+        .main {
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        .userName {
+            font-weight: bold;
+        }
+        .entityName {
+            font-weight: bold;
+        }
+        .projectName {
+            font-weight: bold;
+        }
+        .comment {
+            padding: 20px 10px 10px;
+        }
+        .footer {
+            padding-top: 20px;
+            font-size: 10px;
+            color: #707070;
+            line-height: 1.5;
+        }
+        blockquote {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #d0d0d0;
+            color: #a0a0a0;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div>
+        <span class="userName">{{comment.createdBy.userName}}</span> posted a comment on <span class="entityName"><a href="{{{entity.url}}}">{{entity.browserText}}</a></span> in <span class="projectName">{{project.displayName}}</span>
+    </div>
+    <div class="comment">
+        {{{comment.renderedBody}}}
+    </div>
+    <div class="footer">
+        View this comment on <a href="{{{entity.url}}}">{{application.name}}</a>.<br>
+        You you received this email because you are a participant in the project <a href="{{{project.url}}}">{{project.displayName}}</a>.
+    </div>
+</div>
+</body></html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app
+		xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		version="3.0">
+	
+	<!-- Filters -->
+
+	<filter>
+		<filter-name>WebProtegeWebAppFilter</filter-name>
+		<filter-class>edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>WebProtegeWebAppFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+
+	<!-- Listener for initializing and disposing WebProtege -->
+	
+	<listener>
+		<listener-class>edu.stanford.bmir.protege.web.server.app.WebProtegeServletContextListener</listener-class>
+	</listener>
+
+	<!-- Default page to serve -->
+	
+	<welcome-file-list>
+		<welcome-file>WebProtege.jsp</welcome-file>
+	</welcome-file-list>
+
+
+	<!-- Error pages -->
+	
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/configuration-error.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/forbidden.jsp</location>
+	</error-page>
+
+
+	<!-- Security constraints -->
+	
+	<security-constraint>
+		<display-name>excluded</display-name>
+		<web-resource-collection>
+			<web-resource-name>No Access</web-resource-name>
+			<url-pattern>/protege.properties</url-pattern>
+		</web-resource-collection>
+		<web-resource-collection>
+			<web-resource-name>No Access</web-resource-name>
+			<url-pattern>/setup.sh</url-pattern>
+		</web-resource-collection>
+		<auth-constraint />
+		<user-data-constraint>
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+</web-app>

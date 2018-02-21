@@ -1,0 +1,56 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
+             xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.obo">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .main {
+            border: 5px solid #f0f0f0;
+            padding: 5px;
+        }
+        .synonymBlock {
+            display: flex;
+            flex-direction: row;
+        }
+        .synonymTypeField {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
+        .synonymField {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .textBoxStyle {
+            line-height: 20px;
+            border-bottom: 1px solid #e0e0e0 !important;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .xrefsBlock {
+            margin-top: 5px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <div class="{style.synonymBlock}">
+            <div class="{style.synonymTypeField}">
+                <!--<g:Label text="Type" addStyleNames="{wp.style.formLabel}"/>-->
+                <g:ListBox ui:field="synonymTypeField" visibleItemCount="1"/>
+            </div>
+            <div class="{style.synonymField}">
+                <!--<g:Label text="Synonym" addStyleNames="{wp.style.formLabel}"/>-->
+                <text:PlaceholderTextBox ui:field="synonymField" placeholder="Enter synonym"
+                        addStyleNames="{style.textBoxStyle}"/>
+                <div class="{style.xrefsBlock}">
+                    <!--<g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>-->
+                    <obo:XRefListEditor ui:field="xrefListField" enabled="true"/>
+                </div>
+            </div>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

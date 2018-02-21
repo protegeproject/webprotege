@@ -1,0 +1,98 @@
+@external .gwt-TextBox;
+@external .gwt-TextArea;
+@external .gwt-PasswordTextBox;
+@external .gwt-Label;
+@external .gwt-Button;
+
+.outer {
+    padding-top: 20px;
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+
+.inner {
+    padding: 20px 40px;
+    background-color: #f0f0f0;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+}
+
+.buttonBar {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.inner .gwt-TextBox {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background-color: #ffffff;
+    padding: 2px;
+    font-size: 12px;
+}
+
+.inner textarea {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background-color: #ffffff;
+    padding: 2px;
+    font-size: 12px;
+}
+
+.inner .gwt-PasswordTextBox {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background-color: #ffffff;
+    padding: 2px;
+    font-size: 12px;
+}
+
+.inner .gwt-Label {
+    color: #606060;
+    padding-bottom: 4px;
+    padding-top: 10px;
+    font-weight: 500;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    padding-bottom: 30px;
+    padding-top: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.group {
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.inner .errorLabel {
+    color: literal("var(--error--color)");
+    display: none;
+    padding: 0;
+}

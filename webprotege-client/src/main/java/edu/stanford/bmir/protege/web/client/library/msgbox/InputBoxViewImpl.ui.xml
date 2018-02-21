@@ -1,0 +1,8 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+    <g:HTMLPanel>
+        <g:Label ui:field="messageLabel"/>
+        <text:ExpandingTextBox ui:field="inputArea" width="50em" multiline="true" anchorVisible="false"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,43 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:portlet="urn:import:edu.stanford.bmir.protege.web.client.portlet"
+             xmlns:filter="urn:import:edu.stanford.bmir.protege.web.client.filter"
+             xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .parent {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .toolbar {
+            box-sizing: border-box;
+            overflow: hidden;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .contentHolder {
+            display: flex;
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: auto;
+            position: relative;
+        }
+        .menuButton {
+            float: right;
+            padding-top: 2px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.parent}">
+        <g:FlowPanel ui:field="toolbar" addStyleNames="{style.toolbar} {wp.toolbar.toolbar}">
+            <filter:FilterButtonImpl ui:field="filterButton" addStyleNames="{style.menuButton}" visible="false"/>
+        </g:FlowPanel>
+        <portlet:PortletContentHolder ui:field="contentHolder" addStyleNames="{style.contentHolder}"/>
+        <progress:BusyViewImpl ui:field="busyView" visible="false"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

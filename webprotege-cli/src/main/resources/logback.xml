@@ -1,0 +1,13 @@
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level  %highlight(%msg) %n</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="edu.stanford.bmir.protege.web" level="info">
+        <appender-ref ref="stdout"/>
+    </logger>
+    
+</configuration>

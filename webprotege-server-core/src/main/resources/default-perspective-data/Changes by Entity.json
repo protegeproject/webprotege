@@ -1,0 +1,17 @@
+{
+  "direction": "ROW",
+  "children": [
+    {
+      "weight": 0.3,
+      "node": {
+        "portlet": "portlets.ClassHierarchy"
+      }
+    },
+    {
+      "weight": 0.7,
+      "node": {
+        "portlet": "portlets.ChangesByEntity"
+      }
+    }
+  ]
+}

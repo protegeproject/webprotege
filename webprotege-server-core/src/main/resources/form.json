@@ -1,0 +1,183 @@
+{
+  "id": "MyForm",
+  "elements": [
+    {
+      "id" : "Name",
+      "label" : "Name",
+      "fieldDescriptor" : {
+        "type" : "Text",
+        "lineMode" : "SINGLE_LINE"
+      }
+    },
+
+
+    {
+      "id" : "manufacturer",
+      "label" : "Manufacturer",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RADIO_BUTTON",
+        "choices" : [
+          {
+            "label" : "Boeing",
+            "value" : "Boeing"
+          },
+          {
+            "label" : "Airbus",
+            "value" : "Airbus"
+          }
+        ]
+      }
+    },
+
+
+    {
+      "id" : "bodyType",
+      "label" : "Body Type",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RADIO_BUTTON",
+        "choices" : [
+          {
+            "label" : "Narrow Body",
+            "value" : "NarrowBody"
+          },
+          {
+            "label" : "Wide Body",
+            "value" : "WideBody"
+          }
+        ]
+      }
+    },
+
+    {
+      "id" : "role",
+      "label" : "Role",
+      "fieldDescriptor" : {
+        "type" : "Choice",
+        "widgetType" : "RADIO_BUTTON",
+        "choices" : [
+          {
+            "label" : "Passenger",
+            "value" : "Passenger"
+          },
+          {
+            "label" : "Freight",
+            "value" : "Cargo"
+          },
+          {
+            "label" : "Combi (Mixed Pax and Freight)",
+            "value" : "Combi"
+          },
+          {
+            "label" : "Convertible (Between Pax and Freight)",
+            "value" : "Convertible"
+          }
+        ]
+      }
+    },
+
+    {
+      "id" : "description",
+      "label" : "Description",
+      "fieldDescriptor" : {
+        "type" : "Text",
+        "lineMode" : "MULTI_LINE"
+      }
+    },
+
+
+    {
+      "id" : "cruiseSpeed",
+      "label" : "Cruise Speed (Mach)",
+      "fieldDescriptor" : {
+        "type" : "Number",
+        "range" : {
+          "lowerBound" : 0,
+          "upperBound" : 2
+        },
+        "numberFormat" : "0.000"
+      }
+    },
+
+    {
+      "id" : "maxSpeed",
+      "label" : "Max Speed (Mach)",
+      "fieldDescriptor" : {
+        "type" : "Number",
+        "range" : {
+          "lowerBound" : 0,
+          "upperBound" : 2
+        },
+        "numberFormat" : "0.000"
+      }
+    },
+
+    {
+      "id" : "range",
+      "label" : "Max Range (nmi)",
+      "fieldDescriptor" : {
+        "type" : "Number",
+        "range" : {
+          "lowerBound" : 0,
+          "upperBound" : 20000
+        },
+        "numberFormat" : "##,###"
+      }
+    },
+
+    {
+      "id" : "synonyms",
+      "label" : "Synonyms",
+      "fieldDescriptor" : {
+        "type" : "Text",
+        "stringType" : "LANG_STRING",
+        "lineMode" : "MULTI_LINE"
+      },
+      "repeatability" : "REPEATABLE_VERTICAL"
+
+    },
+
+    {
+      "id": "engineConfiguration",
+      "label": "Engine Configuration",
+      "fieldDescriptor": {
+        "type": "Choice",
+        "widgetType": "RADIO_BUTTON",
+        "choices": [
+          {
+            "label": "Wing Mounted Twin Jet",
+            "value": "WingMountedTwinJet"
+          },
+          {
+            "label": "Wing Mounted Quad Jet",
+            "value": "WingMountedQuad"
+          },
+          {
+            "label": "Tail Mounted Twin Jet",
+            "value": "TailMountedTwinJet"
+          },
+          {
+            "label": "Tail Mounted Quad Jet",
+            "value": "TailMountedQuad"
+          },
+          {
+            "label": "Tail Mounted Tri Jet",
+            "value": "TailMountedTriJet"
+          }
+        ]
+      },
+      "repeatability": "NON_REPEATABLE",
+      "required": "REQUIRED",
+      "help": "The engine configuration"
+    },
+
+    {
+      "id" : "depiction",
+      "label" : "Depiction",
+      "fieldDescriptor" : {
+        "type" : "Image"
+      }
+    }
+  ]
+}

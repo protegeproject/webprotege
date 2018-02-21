@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:FlowPanel ui:field="threadContainer" addStyleNames="{style.main} {wp.discussion.discussion}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

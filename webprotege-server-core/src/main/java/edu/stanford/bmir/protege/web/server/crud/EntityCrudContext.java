@@ -1,0 +1,52 @@
+package edu.stanford.bmir.protege.web.server.crud;
+
+import edu.stanford.bmir.protege.web.shared.HasDataFactory;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
+
+import java.util.Optional;
+
+/**
+ * Author: Matthew Horridge<br>
+ * Stanford University<br>
+ * Bio-Medical Informatics Research Group<br>
+ * Date: 08/08/2013
+ */
+public class EntityCrudContext implements HasDataFactory {
+
+    private final OWLOntology targetOntology;
+
+    private final OWLDataFactory dataFactory;
+
+    private final PrefixedNameExpander prefixedNameExpander;
+
+    private final UserId userId;
+
+    public EntityCrudContext(UserId userId, OWLOntology targetOntology, OWLDataFactory dataFactory, PrefixedNameExpander prefixedNameExpander) {
+        this.userId = userId;
+        this.targetOntology = targetOntology;
+        this.dataFactory = dataFactory;
+        this.prefixedNameExpander = prefixedNameExpander;
+    }
+
+    public OWLOntology getTargetOntology() {
+        return targetOntology;
+    }
+
+    public UserId getUserId() {
+        return userId;
+    }
+
+    public OWLDataFactory getDataFactory() {
+        return dataFactory;
+    }
+
+    public PrefixedNameExpander getPrefixedNameExpander() {
+        return prefixedNameExpander;
+    }
+
+    public Optional<String> getTargetLanguage() {
+        return Optional.empty();
+    }
+}

@@ -1,0 +1,31 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
+             xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
+    <ui:style>
+        .container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .list {
+            flex-grow: 1;
+        }
+        .paginatorHolder {
+            flex-grow: 0;
+            background-color: literal("var(--inlay-panel--background-color)");
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.container}">
+        <g:ScrollPanel  addStyleNames="{style.list}">
+            <entitieslist:EntitiesListImpl ui:field="entitiesList"/>
+        </g:ScrollPanel>
+        <g:HTMLPanel addStyleNames="{style.paginatorHolder}">
+            <pagination:PaginatorView ui:field="paginator"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <!-- Choose the logs directory path based on operating system -->
+    <if condition='property("os.name").startsWith("Windows")'>
+        <then>
+            <!-- Windows gets \ProgramData\WebProtege\Logs-->
+            <property name="logsdir" value="${logs.directory:-/ProgramData/WebProtege/Logs}"/>
+        </then>
+        <else>
+            <!-- Everything else, e.g. MacOS and Linux gets /var/log/webprotege -->
+            <property name="logsdir" value="${logs.directory:-/var/log/webprotege}"/>
+        </else>
+    </if>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5level  %highlight(%msg) %n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="webprotege" class="ch.qos.logback.core.FileAppender">
+        <file>${logsdir}/webprotege.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="webprotege-all" class="ch.qos.logback.core.FileAppender">
+        <file>${logsdir}/webprotege-all.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="edu.stanford.bmir.protege.web" level="info">
+        <appender-ref ref="webprotege"/>
+        <appender-ref ref="stdout"/>
+    </logger>
+
+    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+        <Name>BrowsingFilter</Name>
+        <Marker>BROWSING</Marker>
+        <OnMatch>DENY</OnMatch>
+    </turboFilter>
+
+
+    <root level="info">
+        <appender-ref ref="webprotege-all"/>
+    </root>
+
+</configuration>

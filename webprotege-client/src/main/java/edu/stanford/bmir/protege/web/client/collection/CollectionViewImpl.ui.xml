@@ -1,0 +1,40 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:widgetmap="urn:import:edu.stanford.protege.widgetmap.client">
+    <ui:style>
+        .flexContainer {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        .collectionTitle {
+            flex-grow: 0;
+            font-size: 14px;
+            padding-bottom: 5px;
+        }
+        .widgetMapContainer {
+            flex-grow: 1;
+            padding: 2px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .widgetMap {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            box-sizing: border-box;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.flexContainer}">
+        <g:Label ui:field="collectionTitle" addStyleNames="{style.collectionTitle}"/>
+        <g:SimplePanel addStyleNames="{style.widgetMapContainer}">
+            <widgetmap:WidgetMapPanel ui:field="widgetMap" addStyleNames="{style.widgetMap}"/>
+        </g:SimplePanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

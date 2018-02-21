@@ -1,0 +1,18 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        .outer {
+            display: flex;
+            flex-direction: row;
+        }
+        .toolTip {
+            width: 200px;
+            padding-left: 20px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.outer}">
+        <g:ListBox ui:field="listBox" visibleItemCount="8"/>
+        <g:Label ui:field="tooltipField" addStyleNames="{style.toolTip}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,27 @@
+package edu.stanford.bmir.protege.web.server.inject;
+
+import dagger.Subcomponent;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
+import edu.stanford.bmir.protege.web.server.project.Project;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 3 Oct 2016
+ */
+@Subcomponent(
+        modules = {
+            ProjectModule.class
+        }
+)
+@ProjectSingleton
+public interface ProjectComponent {
+
+    @Deprecated
+    Project getProject();
+
+    ProjectActionHandlerRegistry getActionHandlerRegistry();
+}
+

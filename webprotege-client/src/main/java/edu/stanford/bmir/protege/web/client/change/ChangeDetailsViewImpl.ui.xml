@@ -1,0 +1,137 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:diff="urn:import:edu.stanford.bmir.protege.web.client.diff"
+             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.library.timelabel"
+>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+
+    <ui:style>
+        .main {
+            padding: 2px;
+            margin-left: 10px;
+            padding-left: 20px;
+            padding-bottom: 10px;
+            border-left: 1px solid #ededed;
+        }
+
+        .subjectsField {
+            font-size: 12px;
+            color: darkgray;
+            padding-bottom: 2px;
+            padding-left: 24px;
+        }
+
+
+        .revertButton {
+            border: none;
+            background: none;
+            color: #c0c0c0;
+            border-radius: 3px;
+            padding: 4px;
+            padding-top: 1px;
+            padding-bottom: 2px;
+            cursor: pointer;
+            line-height: 10px;
+        }
+
+        .revertButton:hover {
+            background-color: #ababab;
+            color: #ffffff;
+        }
+
+        .revertButtonContent {
+            font-size: 24px;
+            bottom: -5px;
+        }
+
+        .highLevelDescription {
+            font-size: 12px;
+            font-weight: bold;
+            color: gray;
+        }
+
+        .author {
+            font-size: 12px;
+            color: darkgray;
+            padding-top: 2px;
+            padding-left: 1px;
+            padding-bottom: 3px;
+        }
+
+        .diffView {
+            padding: 2px;
+            padding-left: 10px;
+        }
+
+        .timestampField {
+            display: inline;
+        }
+
+        .tooManyChangesMessage {
+            font-size: 12px;
+            color: darkgray;
+            background-color: rgb(255, 250, 230);
+            padding: 4px;
+        }
+
+        .userIcon {
+            display: inline-block;
+            padding-right: 2px;
+            padding-left: 2px;
+        }
+        .container {
+            display: inline-block; width: 100%
+        }
+        .main:hover {
+            background-color: #f0f0f0;
+        }
+
+        .rightContainer {
+            float: right;
+        }
+
+        .revisionField {
+            font-size: 10px;
+            color: #ffffff;
+            background-color: #aaaaaa;
+            padding: 1px;
+            margin-right: 5px;
+            font-weight: bold;
+            border-radius: 2px;
+            padding-left: 2px;
+            padding-right: 2px;
+            cursor: pointer;
+        }
+        .revisionField:hover {
+            background-color: #707070;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{style.container}">
+            <div>
+                <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
+                <g:HTMLPanel addStyleNames="{style.rightContainer}">
+                    <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
+                </g:HTMLPanel>
+
+            </div>
+            <div class="{style.author}">
+                <g:SimplePanel ui:field="authorUserIcon" addStyleNames="{style.userIcon}"/>
+                <g:InlineLabel ui:field="authorField"/>
+                <ui:text from="{msg.change_authored}"/>
+                <g:InlineLabel ui:field="changeCountField"/>
+                <ui:text from="{msg.change_changes}"/>
+                <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
+            </div>
+            <div class="{style.subjectsField}">
+                <g:InlineHTML ui:field="subjectsField"/>
+            </div>
+            <g:Label ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
+            <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
+            <g:Label ui:field="hiddenChangesCount" addStyleNames="{style.tooManyChangesMessage}"/>
+        </g:HTMLPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

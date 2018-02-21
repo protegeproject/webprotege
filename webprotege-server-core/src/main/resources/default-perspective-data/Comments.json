@@ -1,0 +1,17 @@
+{
+  "direction": "ROW",
+  "children": [
+    {
+      "weight": 0.3,
+      "node": {
+        "portlet": "portlets.CommentedEntities"
+      }
+    },
+    {
+      "weight": 0.7,
+      "node": {
+        "portlet": "portlets.Comments"
+      }
+    }
+  ]
+}

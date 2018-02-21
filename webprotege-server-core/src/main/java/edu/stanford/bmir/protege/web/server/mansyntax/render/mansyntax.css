@@ -1,0 +1,177 @@
+body {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+}
+
+input {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 12px;
+}
+
+td {
+    font-family: verdana, arial, helvetica, sans-serif;
+    font-size: 12px;
+    vertical-align: top;
+}
+
+tr {
+    border-bottom: 1px solid;
+}
+
+.ms-frame {
+    margin-bottom: 30px;
+    /*border-bottom: 1px solid #f3f3f3;*/
+    padding-bottom: 5px;
+}
+
+.ms-frame-subject {
+    font-weight: bold;
+}
+
+.ms-frame-kw {
+    color: #02178E;
+    font-weight: bold;
+}
+
+.ms-frame-block {
+    margin-left: 30px;
+}
+
+.ms-section {
+    margin-top: 10px;
+}
+
+.ms-section-block {
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+.ms-section-item {
+    line-height: 1.3em;
+    padding-bottom: 3px;
+    padding-top:3px;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.ms-section-item:hover {
+    background-color: #ededed;
+}
+
+.ms-section-kw {
+    color: #02178E;
+    font-weight: bold;
+}
+
+.ms-quantifier-kw {
+    color: #c600c6;
+    font-weight: bold;
+}
+
+.cm-quantifier {
+    color: #c600c6;
+    font-weight: bold;
+}
+
+.ms-connective-kw {
+    color: cornflowerblue;
+    font-weight: bold;
+}
+
+.ms-literal {
+    color: #bb7200;
+}
+
+.ms-expr-block {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ms-lang-tag {
+    color: #a9a9a9;
+}
+
+.ms-literal-datatype {
+    color: #a9a9a9;
+}
+
+.ms-sep {
+    color: #a9a9a9;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.ms-l-par {
+    color: #a9a9a9;
+}
+
+.ms-r-par {
+    color: #a9a9a9;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.ms-img {
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid #f5f5f5;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.ms-img img {
+    max-width: 150px;
+}
+
+.ms-ont-id {
+    color: #bca7a8;
+}
+
+.ms-item-ce {
+    background: url("images/tree/class.png") no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.ms-item-ind {
+    background: url("images/tree/individual.png") no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.ms-item-anno {
+    background: url("images/tree/annotation-property.png") no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.ms-item-prop {
+    background: url("images/tree/property.png") no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.ms-item-dr {
+    background: url("images/tree/datarange.png") no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.ms-literal p:only-child {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.ms-annotations {
+    border-left: solid 4px #f1f1f1;
+    margin-bottom: 4px;
+    margin-left: 22px;
+    padding-left: 5px;
+    margin-top: 4px;
+}
+
+.ms-annotations-block {
+    padding-left: 20px;
+}
+
+.ms-nested-annotation {
+    /*	border-top: 1px dotted #f4f4f4;*/
+}
+

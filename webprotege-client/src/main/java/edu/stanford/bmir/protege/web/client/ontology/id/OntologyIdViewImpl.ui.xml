@@ -1,0 +1,27 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <g:HTMLPanel>
+
+        <table width="95%">
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right">
+                    <g:Label text="Ontology IRI" styleName="{wp.style.formLabel}" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="ontologyIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <g:Label text="Version IRI" addStyleNames="{wp.style.formLabel} web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="versionIRIField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>
