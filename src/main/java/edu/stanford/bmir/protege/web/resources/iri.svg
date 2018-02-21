@@ -1,9 +1,0 @@
-<?xml version="1.0" standalone="yes"?>
-<?xml-stylesheet href="css/WebProtege.css" type="text/css"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="color:#B8C1CC;">
-    <rect x="2" y="6" width="5" height="6" stroke="#B8C1CC" stroke-width="2" fill="none"/>
-    <rect x="10" y="6" width="5" height="6" stroke="#B8C1CC" stroke-width="2" fill="none"/>
-    <line x1="4" y1="9" x2="13" y2="9" style="stroke:currentColor" stroke-width="2"/>
-</svg>
