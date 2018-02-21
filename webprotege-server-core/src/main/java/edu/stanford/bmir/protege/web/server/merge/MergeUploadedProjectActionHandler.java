@@ -105,7 +105,7 @@ public class MergeUploadedProjectActionHandler extends AbstractProjectActionHand
 
             @Override
             public Boolean getRenamedResult(Boolean result, RenameMap renameMap) {
-                return null;
+                return true;
             }
 
             @Nonnull
