@@ -4,7 +4,7 @@ WebProtégé
 What is WebProtégé?
 -------------------
 
-WebProtégé is a free, open source collaborative ontology development environment for the Web.
+WebProtégé is a free, open source collaborative ontology development environment.
 
 It provides the following features:
 - Support for editing OWL 2 ontologies
@@ -16,7 +16,8 @@ It provides the following features:
 - Multiple file formats for upload and download of ontologies (supported formats: RDF/XML, Turtle, OWL/XML, OBO, and others)
 
 WebProtégé runs as a Web application. End users access it through their Web browsers.
-They do not need to download nor install any software. We encourage end users to use our hosted solution at:
+They do not need to download or install any software. We encourage end-users to use
+
 https://webprotege.stanford.edu
 
 If you have downloaded the webprotege war file from GitHub, and would like to deploy it on your own server,
