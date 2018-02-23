@@ -124,10 +124,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
         Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
-        if(expandedPrefixName.isPresent()) {
-            return expandedPrefixName.get();
-        }
-        return createIRI(prefix, ontology);
+        return expandedPrefixName.orElseGet(() -> createIRI(prefix, ontology));
     }
 
 
