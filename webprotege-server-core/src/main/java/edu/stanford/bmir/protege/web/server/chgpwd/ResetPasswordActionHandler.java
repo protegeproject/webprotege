@@ -104,10 +104,10 @@ public class ResetPasswordActionHandler implements ApplicationActionHandler<Rese
             );
             return new ResetPasswordResult(SUCCESS);
         } catch (Exception e) {
-            logger.info("Could not reset the user password " +
+            logger.error("Could not reset the user password " +
                                 "associated with the email " +
                                 "address {}.  The following " +
-                                "error occurred: {}.", emailAddress, e.getMessage());
+                                "error occurred: {}.", emailAddress, e.getMessage(), e);
             return new ResetPasswordResult(INTERNAL_ERROR);
         }
     }
