@@ -42,6 +42,13 @@ public class ProjectPrefixes {
         return new ProjectPrefixes(projectId, ImmutableMap.of());
     }
 
+    /**
+     * Creates a project prefixes object for the specified project and the specified prefixes.
+     * @param projectId The projectId that identifies the project.
+     * @param prefixes The prefixes.  A map of prefix names to prefixes.  Neither prefix names or prefixes are allowed
+     *                 to be null.  Prefix names must end with colons.
+     * @return The created {@link ProjectPrefixes}.
+     */
     public static ProjectPrefixes get(@Nonnull ProjectId projectId,
                                       @Nonnull Map<String, String> prefixes) {
         checkNotNull(projectId);
