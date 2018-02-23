@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -26,10 +28,37 @@ public class ProjectPrefixes {
     @Nonnull
     private final ImmutableMap<String, String > prefixes;
 
-    public ProjectPrefixes(@Nonnull ProjectId projectId,
+    private ProjectPrefixes(@Nonnull ProjectId projectId,
                            @Nonnull Map<String, String> prefixes) {
         this.projectId = projectId;
         this.prefixes = ImmutableMap.copyOf(prefixes);
+    }
+
+    /**
+     * Gets an empty project prefixes for the specified project id.
+     * @param projectId The project id.
+     */
+    public static ProjectPrefixes get(@Nonnull ProjectId projectId) {
+        return new ProjectPrefixes(projectId, ImmutableMap.of());
+    }
+
+    public static ProjectPrefixes get(@Nonnull ProjectId projectId,
+                                      @Nonnull Map<String, String> prefixes) {
+        checkNotNull(projectId);
+        checkNotNull(prefixes);
+        for(Map.Entry<String, String> entry : prefixes.entrySet()) {
+            if(entry.getKey() == null) {
+                throw new NullPointerException("Null prefix names are not allowed");
+            }
+            if(!entry.getKey().endsWith(":")) {
+                throw new IllegalArgumentException("Prefix names must end with a colon");
+            }
+            if(entry.getValue() == null) {
+                throw new NullPointerException("Prefixes must not be null.  " +
+                                                       "Prefix pointed to by " + entry.getKey() + " is null.");
+            }
+        }
+        return new ProjectPrefixes(projectId, prefixes);
     }
 
     @Nonnull

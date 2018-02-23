@@ -38,7 +38,7 @@ public class ProjectPrefixesStore {
                                                    .field(PROJECT_ID).equal(projectId)
                                                    .get();
         if(projectPrefixes == null) {
-            return new ProjectPrefixes(projectId, ImmutableMap.of());
+            return ProjectPrefixes.get(projectId);
         }
         else {
             return projectPrefixes;
