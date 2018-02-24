@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import org.mongodb.morphia.annotations.Entity;

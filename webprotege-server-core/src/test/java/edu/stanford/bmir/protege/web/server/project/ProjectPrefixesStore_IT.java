@@ -2,17 +2,13 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.MongoClient;
-import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectPrefixes;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-
-import java.util.Collections;
 
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMongoClient;
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMorphia;
