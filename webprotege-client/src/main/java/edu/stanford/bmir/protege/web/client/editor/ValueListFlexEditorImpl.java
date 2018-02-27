@@ -253,7 +253,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     private void handleValueEditorValueChanged() {
         dirty = true;
         ValueChangeEvent.fire(this, getValue());
-        ensureBlank();
+        updateEnabled();
     }
 
     private void handleValueEditorDirtyChanged(DirtyChangedEvent event) {
