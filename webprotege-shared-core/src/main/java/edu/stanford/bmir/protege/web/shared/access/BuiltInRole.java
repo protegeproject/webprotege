@@ -93,6 +93,7 @@ public enum BuiltInRole {
                     EDIT_PROJECT_SETTINGS,
                     EDIT_SHARING_SETTINGS,
                     EDIT_NEW_ENTITY_SETTINGS,
+                    EDIT_PROJECT_PREFIXES,
                     UPLOAD_AND_MERGE),
 
 
