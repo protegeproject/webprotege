@@ -1,0 +1,36 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .editorFields {
+            display: flex;
+            flex-direction: row;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+        .prefixNameField {
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 100px;
+            font-family: courier, serif;
+        }
+        .prefixNameField::-webkit-contacts-auto-fill-button {
+            visibility: hidden;
+        }
+        .prefixField {
+            flex-grow: 1;
+            flex-shrink: 1;
+            font-family: courier, serif;
+        }
+        .prefixField::-webkit-contacts-auto-fill-button {
+            visibility: hidden;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.editorFields}">
+            <text:PlaceholderTextBox ui:field="prefixNameField" placeholder="Prefix name"
+                                     addStyleNames="{style.prefixNameField}"/>
+            <text:PlaceholderTextBox ui:field="prefixField" placeholder="Prefix" addStyleNames="{style.prefixField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
