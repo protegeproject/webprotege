@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;
 
@@ -17,17 +19,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * perform any proper checking of prefix names or prefixes.  The only requirement is that
  * prefix names must be terminated with a colon.
  */
-public class PrefixDeclaration {
+public class PrefixDeclaration implements IsSerializable {
 
-    private final String prefixName;
+    private String prefixName;
 
-    private final String prefix;
+    private String prefix;
 
 
     private PrefixDeclaration(@Nonnull String prefixName,
                               @Nonnull String prefix) {
         this.prefixName = checkNotNull(prefixName);
         this.prefix = checkNotNull(prefix);
+    }
+
+    @GwtSerializationConstructor
+    private PrefixDeclaration() {
     }
 
     /**
