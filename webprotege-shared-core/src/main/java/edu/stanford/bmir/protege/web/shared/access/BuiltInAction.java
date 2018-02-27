@@ -105,6 +105,8 @@ public enum BuiltInAction {
 
     EDIT_NEW_ENTITY_SETTINGS,
 
+    EDIT_PROJECT_PREFIXES,
+
     UPLOAD_AND_MERGE
 //    MANAGE_PROJECT
 
