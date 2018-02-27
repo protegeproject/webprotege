@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 22 Feb 2018
  */
 @Entity(noClassnameStored = true)
-public class ProjectPrefixes {
+public class PrefixDeclarations {
 
     public static final String PROJECT_ID = "_id";
 
@@ -30,8 +30,8 @@ public class ProjectPrefixes {
     @Nonnull
     private final Map<String, String> prefixes;
 
-    private ProjectPrefixes(@Nonnull ProjectId projectId,
-                            @Nonnull Map<String, String> prefixes) {
+    private PrefixDeclarations(@Nonnull ProjectId projectId,
+                               @Nonnull Map<String, String> prefixes) {
         this.projectId = checkNotNull(projectId);
         this.prefixes = ImmutableMap.copyOf(checkNotNull(prefixes));
     }
@@ -40,8 +40,8 @@ public class ProjectPrefixes {
      * Gets an empty project prefixes for the specified project id.
      * @param projectId The project id.
      */
-    public static ProjectPrefixes get(@Nonnull ProjectId projectId) {
-        return new ProjectPrefixes(projectId, ImmutableMap.of());
+    public static PrefixDeclarations get(@Nonnull ProjectId projectId) {
+        return new PrefixDeclarations(projectId, ImmutableMap.of());
     }
 
     /**
@@ -49,10 +49,10 @@ public class ProjectPrefixes {
      * @param projectId The projectId that identifies the project.
      * @param prefixes The prefixes.  A map of prefix names to prefixes.  Neither prefix names or prefixes are allowed
      *                 to be null.  Prefix names must end with colons.
-     * @return The created {@link ProjectPrefixes}.
+     * @return The created {@link PrefixDeclarations}.
      */
-    public static ProjectPrefixes get(@Nonnull ProjectId projectId,
-                                      @Nonnull Map<String, String> prefixes) {
+    public static PrefixDeclarations get(@Nonnull ProjectId projectId,
+                                         @Nonnull Map<String, String> prefixes) {
         checkNotNull(projectId);
         checkNotNull(prefixes);
         for(Map.Entry<String, String> entry : prefixes.entrySet()) {
@@ -67,7 +67,7 @@ public class ProjectPrefixes {
                                                        "Prefix pointed to by " + entry.getKey() + " is null.");
             }
         }
-        return new ProjectPrefixes(projectId, prefixes);
+        return new PrefixDeclarations(projectId, prefixes);
     }
 
     @Nonnull
@@ -96,10 +96,10 @@ public class ProjectPrefixes {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ProjectPrefixes)) {
+        if (!(obj instanceof PrefixDeclarations)) {
             return false;
         }
-        ProjectPrefixes other = (ProjectPrefixes) obj;
+        PrefixDeclarations other = (PrefixDeclarations) obj;
         return this.projectId.equals(other.projectId)
                 && this.prefixes.equals(other.prefixes);
     }
@@ -107,7 +107,7 @@ public class ProjectPrefixes {
 
     @Override
     public String toString() {
-        return toStringHelper("ProjectPrefixes")
+        return toStringHelper("PrefixDeclarations")
                           .addValue(projectId)
                           .add("prefixes", prefixes)
                           .toString();

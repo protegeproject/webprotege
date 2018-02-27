@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectPrefixes_TestCase {
+public class PrefixDeclarations_TestCase {
 
     private static final String PREFIX_NAME_A = "a:";
 
@@ -29,65 +29,65 @@ public class ProjectPrefixes_TestCase {
 
     private Map<String, String> prefixes;
 
-    private ProjectPrefixes projectPrefixes;
+    private PrefixDeclarations prefixDeclarations;
 
     @Before
     public void setUp() {
         prefixes = new HashMap<>();
         prefixes.put(PREFIX_NAME_A, PREFIX_A);
         prefixes.put(PREFIX_NAME_B, PREFIX_B);
-        projectPrefixes = ProjectPrefixes.get(projectId, prefixes);
+        prefixDeclarations = PrefixDeclarations.get(projectId, prefixes);
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(projectPrefixes, is(projectPrefixes));
+        assertThat(prefixDeclarations, is(prefixDeclarations));
     }
 
     @Test
     @SuppressWarnings("ObjectEqualsNull")
     public void shouldNotBeEqualToNull() {
-        assertThat(projectPrefixes.equals(null), is(false));
+        assertThat(prefixDeclarations.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(projectPrefixes, is(ProjectPrefixes.get(projectId, prefixes)));
+        assertThat(prefixDeclarations, is(PrefixDeclarations.get(projectId, prefixes)));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(projectPrefixes.hashCode(), is(ProjectPrefixes.get(projectId, prefixes).hashCode()));
+        assertThat(prefixDeclarations.hashCode(), is(PrefixDeclarations.get(projectId, prefixes).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(projectPrefixes.toString(), startsWith("ProjectPrefixes"));
+        assertThat(prefixDeclarations.toString(), startsWith("PrefixDeclarations"));
     }
 
     @Test
     public void should_getProjectId() {
-        assertThat(projectPrefixes.getProjectId(), is(projectId));
+        assertThat(prefixDeclarations.getProjectId(), is(projectId));
     }
 
     @Test
     public void should_getPrefixes() {
-        assertThat(projectPrefixes.getPrefixes(), is(prefixes));
+        assertThat(prefixDeclarations.getPrefixes(), is(prefixes));
     }
 
     @Test
     public void should_getPrefixForPrefixName() {
-        assertThat(projectPrefixes.getPrefixForPrefixName(PREFIX_NAME_A), is(Optional.of(PREFIX_A)));
+        assertThat(prefixDeclarations.getPrefixForPrefixName(PREFIX_NAME_A), is(Optional.of(PREFIX_A)));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_IllegalArgumentException_forInvalidPrefixName() {
-        assertThat(projectPrefixes.getPrefixForPrefixName("a"), is(Optional.of("")));
+        assertThat(prefixDeclarations.getPrefixForPrefixName("a"), is(Optional.of("")));
     }
 
     @Test
     public void should_not_getPrefixForNonExistantPrefixName() {
-        assertThat(projectPrefixes.getPrefixForPrefixName("x:"), is(Optional.empty()));
+        assertThat(prefixDeclarations.getPrefixForPrefixName("x:"), is(Optional.empty()));
     }
 
 

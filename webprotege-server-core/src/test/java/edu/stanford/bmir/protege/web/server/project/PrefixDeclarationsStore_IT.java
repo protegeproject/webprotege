@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.MongoClient;
+import edu.stanford.bmir.protege.web.shared.project.PrefixDeclarations;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectPrefixes;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
  * Stanford Center for Biomedical Informatics Research
  * 23 Feb 2018
  */
-public class ProjectPrefixesStore_IT {
+public class PrefixDeclarationsStore_IT {
 
     private final ProjectId projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
 
@@ -29,7 +29,7 @@ public class ProjectPrefixesStore_IT {
 
     private Datastore datastore;
 
-    private ProjectPrefixes projectPrefixes;
+    private PrefixDeclarations prefixDeclarations;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +39,7 @@ public class ProjectPrefixesStore_IT {
         store = new ProjectPrefixesStore(datastore);
         ImmutableMap.Builder<String, String> prefixesMap = ImmutableMap.builder();
         prefixesMap.put("a:", "http://ont.org/a/");
-        projectPrefixes = ProjectPrefixes.get(
+        prefixDeclarations = PrefixDeclarations.get(
                 projectId,
                 prefixesMap.build()
         );
@@ -47,22 +47,22 @@ public class ProjectPrefixesStore_IT {
 
     @Test
     public void shouldSavePrefixes() {
-        store.save(projectPrefixes);
-        assertThat(datastore.getCount(ProjectPrefixes.class), is(1L));
+        store.save(prefixDeclarations);
+        assertThat(datastore.getCount(PrefixDeclarations.class), is(1L));
     }
 
     @Test
     public void shouldNotCreateDuplicates() {
-        store.save(projectPrefixes);
-        store.save(projectPrefixes);
-        assertThat(datastore.getCount(ProjectPrefixes.class), is(1L));
+        store.save(prefixDeclarations);
+        store.save(prefixDeclarations);
+        assertThat(datastore.getCount(PrefixDeclarations.class), is(1L));
     }
 
     @Test
     public void shouldRetrivePrefixes() {
-        store.save(projectPrefixes);
-        ProjectPrefixes prefixes = store.find(projectId);
-        assertThat(prefixes, is(projectPrefixes));
+        store.save(prefixDeclarations);
+        PrefixDeclarations prefixes = store.find(projectId);
+        assertThat(prefixes, is(prefixDeclarations));
     }
 
     @After
