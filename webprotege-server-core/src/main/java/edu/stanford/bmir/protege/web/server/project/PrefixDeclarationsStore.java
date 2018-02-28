@@ -15,14 +15,14 @@ import static edu.stanford.bmir.protege.web.shared.project.PrefixDeclarations.PR
  * Stanford Center for Biomedical Informatics Research
  * 22 Feb 2018
  */
-public class ProjectPrefixesStore {
+public class ProjectPrefixDeclarationsStore {
 
     @Nonnull
     private final Datastore datastore;
 
 
     @Inject
-    public ProjectPrefixesStore(@Nonnull Datastore datastore) {
+    public ProjectPrefixDeclarationsStore(@Nonnull Datastore datastore) {
         this.datastore = checkNotNull(datastore);
     }
 
