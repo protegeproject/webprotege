@@ -25,7 +25,7 @@ public class PrefixDeclarationsStore_IT {
 
     private final ProjectId projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
 
-    private ProjectPrefixesStore store;
+    private PrefixDeclarationsStore store;
 
     private Datastore datastore;
 
@@ -36,7 +36,7 @@ public class PrefixDeclarationsStore_IT {
         Morphia morphia = createMorphia();
         MongoClient client = createMongoClient();
         datastore = morphia.createDatastore(client, getTestDbName());
-        store = new ProjectPrefixesStore(datastore);
+        store = new PrefixDeclarationsStore(datastore);
         ImmutableMap.Builder<String, String> prefixesMap = ImmutableMap.builder();
         prefixesMap.put("a:", "http://ont.org/a/");
         prefixDeclarations = PrefixDeclarations.get(
