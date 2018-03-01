@@ -66,6 +66,9 @@ public class ChangeManager implements HasApplyChanges {
     private final AccessManager accessManager;
 
     @Nonnull
+    private final PrefixDeclarationsStore prefixDeclarationsStore;
+
+    @Nonnull
     private final ProjectDetailsRepository projectDetailsRepository;
 
     @Nonnull
@@ -123,7 +126,7 @@ public class ChangeManager implements HasApplyChanges {
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
                          @Nonnull AccessManager accessManager,
-                         @Nonnull ProjectDetailsRepository projectDetailsRepository,
+                         @Nonnull PrefixDeclarationsStore prefixDeclarationsStore, @Nonnull ProjectDetailsRepository projectDetailsRepository,
                          @Nonnull ProjectChangedWebhookInvoker projectChangedWebhookInvoker,
                          @Nonnull EventManager<ProjectEvent<?>> projectEventManager,
                          @Nonnull Provider<EventTranslatorManager> eventTranslatorManagerProvider,
@@ -139,6 +142,7 @@ public class ChangeManager implements HasApplyChanges {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.accessManager = accessManager;
+        this.prefixDeclarationsStore = prefixDeclarationsStore;
         this.projectDetailsRepository = projectDetailsRepository;
         this.projectChangedWebhookInvoker = projectChangedWebhookInvoker;
         this.projectEventManager = projectEventManager;
@@ -514,8 +518,11 @@ public class ChangeManager implements HasApplyChanges {
 
     }
 
-    public EntityCrudContext getEntityCrudContext(UserId userId) {
-        PrefixedNameExpander expander = PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build();
+    private EntityCrudContext getEntityCrudContext(UserId userId) {
+        PrefixedNameExpander.Builder builder = PrefixedNameExpander.builder();
+        prefixDeclarationsStore.find(projectId).getPrefixes().forEach(builder::withPrefixNamePrefix);
+        builder.withNamespaces(Namespaces.values());
+        PrefixedNameExpander expander = builder.build();
         return new EntityCrudContext(userId, rootOntology, dataFactory, expander);
     }
 
