@@ -7,10 +7,7 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.shared.project.GetProjectPrefixDeclarationsAction;
-import edu.stanford.bmir.protege.web.shared.project.GetProjectPrefixDeclarationsResult;
-import edu.stanford.bmir.protege.web.shared.project.PrefixDeclaration;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -22,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.YES;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_PREFIXES;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
@@ -83,7 +81,10 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
 
                                            @Override
                                            public void handleSuccess(GetProjectPrefixDeclarationsResult result) {
-                                               view.setPrefixDeclarations(result.getPrefixDeclarations());
+                                               List<PrefixDeclaration> prefixDeclarations = result.getPrefixDeclarations();
+                                               prefixDeclarations.sort(comparing(PrefixDeclaration::getPrefixName)
+                                                                               .thenComparing(PrefixDeclaration::getPrefix));
+                                               view.setPrefixDeclarations(prefixDeclarations);
                                            }
                                        });
         container.setWidget(view);
@@ -108,6 +109,9 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                                       this::applyChanges,
                                       NO);
 
+        }
+        else {
+            applyChanges();
         }
     }
 
@@ -143,7 +147,8 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     }
 
     private void applyChanges() {
-
+        dispatchServiceManager.execute(new SetProjectPrefixDeclarationsAction(projectId, view.getPrefixDeclarations()),
+                                       result -> MessageBox.showMessage("Changes Applied"));
     }
 
 }
