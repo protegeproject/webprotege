@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .editorFields {
             display: flex;
@@ -29,8 +30,8 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.editorFields}">
-            <text:PlaceholderTextBox ui:field="prefixNameField" placeholder="Prefix name"
+            <text:PlaceholderTextBox ui:field="prefixNameField" placeholder="{msg.prefixes_prefixname}"
                                      addStyleNames="{style.prefixNameField}"/>
-            <text:PlaceholderTextBox ui:field="prefixField" placeholder="Prefix" addStyleNames="{style.prefixField}"/>
+            <text:PlaceholderTextBox ui:field="prefixField" placeholder="{msg.prefixes_prefix}" addStyleNames="{style.prefixField}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

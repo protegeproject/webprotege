@@ -67,14 +67,34 @@ public class PrefixDeclarationEditor extends Composite implements ValueEditor<Pr
 
     @UiHandler("prefixField")
     protected void prefixEdited(KeyUpEvent event) {
+        normalizePrefix();
         dirty = true;
         ValueChangeEvent.fire(this, getValue());
     }
 
+    /**
+     * Normalize the prefix name by replacing spaces with underscores and appending a colon
+     * to the prefix name if the user has not already done this.
+     */
     private void normalizePrefixName() {
-        String prefixName = getPrefixName();
-        if(!prefixName.isEmpty() && !prefixName.endsWith(":")) {
-            prefixNameField.setValue(prefixName + ":");
+        String prefixName = prefixNameField.getValue().trim();
+        String normalizedPrefixName = prefixName.replace(" ", "_");
+        if(!normalizedPrefixName.isEmpty() && !normalizedPrefixName.endsWith(":")) {
+            normalizedPrefixName = normalizedPrefixName + ":";
+        }
+        if (!normalizedPrefixName.equals(prefixName)) {
+            prefixNameField.setValue(normalizedPrefixName);
+        }
+    }
+
+    /**
+     * Normalize the prefix by replacing spaces with underscores.
+     */
+    private void normalizePrefix() {
+        String prefix = prefixField.getValue();
+        String normalizedPrefix = prefix.replace(" ", "_");
+        if(!normalizedPrefix.equals(prefix)) {
+            prefixField.setValue(normalizedPrefix);
         }
     }
 
@@ -105,6 +125,7 @@ public class PrefixDeclarationEditor extends Composite implements ValueEditor<Pr
     @Override
     public Optional<PrefixDeclaration> getValue() {
         normalizePrefixName();
+        normalizePrefix();
         String prefixName = getPrefixName();
         String prefix = getPrefix();
         if(prefix.isEmpty()) {
@@ -135,11 +156,12 @@ public class PrefixDeclarationEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return prefixNameField.isEnabled();
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-
+        prefixNameField.setEnabled(enabled);
+        prefixField.setEnabled(enabled);
     }
 }
