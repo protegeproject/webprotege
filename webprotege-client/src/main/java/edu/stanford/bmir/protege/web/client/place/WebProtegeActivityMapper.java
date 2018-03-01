@@ -113,6 +113,14 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new ProjectSettingsActivity(projectComponent.getProjectSettingsPresenter(),
                                                projectSettingsPlace.getNextPlace());
         }
+        if(place instanceof ProjectPrefixDeclarationsPlace) {
+            ProjectPrefixDeclarationsPlace projectPrefixDeclarationsPlace = (ProjectPrefixDeclarationsPlace) place;
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(
+                    new ClientProjectModule(projectPrefixDeclarationsPlace.getProjectId())
+            );
+            return new ProjectPrefixDeclarationsActivity(projectPrefixDeclarationsPlace.getProjectId(),
+                                                         projectComponent.getProjectPrefixesPresenter());
+        }
         if(place instanceof LoginPlace) {
             if(!loggedInUserProvider.getCurrentUserId().isGuest()) {
                 Scheduler.get().scheduleFinally(() -> placeController.goTo(new ProjectListPlace()));
