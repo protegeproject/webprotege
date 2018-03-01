@@ -64,4 +64,22 @@ public class PrefixDeclaration_TestCase {
     public void shouldNotPremitPrefixNameThatDoesNotEndWithColon() {
         PrefixDeclaration decl = PrefixDeclaration.get("a", "http://something.com/");
     }
+
+    @Test
+    public void shouldReportSlashAsACommonTerminatingCharacter() {
+        PrefixDeclaration decl = PrefixDeclaration.get("a:", "http://something.com/ont/");
+        assertThat(decl.isPrefixWithCommonTerminatingCharacter(), is(true));
+    }
+
+    @Test
+    public void shouldReportHashAsACommonTerminatingCharacter() {
+        PrefixDeclaration decl = PrefixDeclaration.get("a:", "http://something.com/ont#");
+        assertThat(decl.isPrefixWithCommonTerminatingCharacter(), is(true));
+    }
+
+    @Test
+    public void shouldReportUnderscoreAsACommonTerminatingCharacter() {
+        PrefixDeclaration decl = PrefixDeclaration.get("a:", "http://something.com/ont_");
+        assertThat(decl.isPrefixWithCommonTerminatingCharacter(), is(true));
+    }
 }

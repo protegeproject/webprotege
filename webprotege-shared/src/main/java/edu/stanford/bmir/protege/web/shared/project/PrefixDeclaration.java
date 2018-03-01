@@ -53,6 +53,18 @@ public class PrefixDeclaration implements IsSerializable {
     }
 
     /**
+     *  Determines if the prefix in this declaration has a common terminating character.  The vast majority
+     * of well-known prefixes end with either a slash or a hash (according to prefix.cc).  Here, we also allow
+     * an underscore as a common terminating character in order to support the kinds of prefixes used
+     * for OBO identifiers.
+     * @return true if the prefix associated with this prefix declaration ends with a slash (/), hash (#) or
+     * underscore (_), otherwise false.
+     */
+    public boolean isPrefixWithCommonTerminatingCharacter() {
+        return prefix.endsWith("/") || prefix.endsWith("#") || prefix.endsWith("_");
+    }
+
+    /**
      * Constructs a prefix declaration from the specified prefix name and the specified prefix.
      * @param prefixName The prefix name. Any string terminated by a colon is accepted here.
      *                   If the prefix name does not end with a colon then an {@link IllegalArgumentException} will be thrown.
