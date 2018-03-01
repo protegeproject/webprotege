@@ -13,3 +13,5 @@ logs/
 
 velocity.log.*
 *.log
+
+dependency-reduced-pom.xml
