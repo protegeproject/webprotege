@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
@@ -7,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.place.ProjectPrefixDeclarationsPlace;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
 import javax.annotation.Nonnull;
@@ -14,6 +17,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.NO;
@@ -42,15 +46,20 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final PlaceController placeController;
+
     @Inject
     public ProjectPrefixDeclarationsPresenter(@Nonnull ProjectId projectId,
                                               @Nonnull ProjectPrefixDeclarationsView view,
                                               @Nonnull PermissionScreener permissionScreener,
-                                              @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                              @Nonnull DispatchServiceManager dispatchServiceManager,
+                                              @Nonnull PlaceController placeController) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.placeController = checkNotNull(placeController);
     }
 
     @Override
@@ -61,6 +70,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                                            () -> {
                                                displayProjectPrefixes(container);
                                                view.setApplyChangesHandler(this::handleApplyChanges);
+                                               getNextPlace().ifPresent(np -> view.setCancelChangesHandler(this::cancelChanges));
                                            });
     }
 
@@ -148,7 +158,36 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
 
     private void applyChanges() {
         dispatchServiceManager.execute(new SetProjectPrefixDeclarationsAction(projectId, view.getPrefixDeclarations()),
-                                       result -> MessageBox.showMessage("Changes Applied"));
+                                       result -> handleChangesApplied());
+    }
+
+    private void cancelChanges() {
+        Optional<Place> nextPlace = getNextPlace();
+        if (nextPlace == null) {
+            return;
+        }
+        nextPlace.ifPresent(placeController::goTo);
+    }
+
+    /**
+     * Gets the next place
+     * @return The next place to go to.  Possibly empty inidicating the next place is not specified.
+     */
+    private Optional<Place> getNextPlace() {
+        Place place = placeController.getWhere();
+        if(!(place instanceof ProjectPrefixDeclarationsPlace)) {
+            return Optional.empty();
+        }
+        ProjectPrefixDeclarationsPlace prefixesPlace = (ProjectPrefixDeclarationsPlace) place;
+        return prefixesPlace.getNextPlace();
+    }
+
+    private void handleChangesApplied() {
+        Optional<Place> nextPlace = getNextPlace();
+        nextPlace.ifPresent(placeController::goTo);
+        if(!nextPlace.isPresent()) {
+            MessageBox.showMessage("Changes Applied", "Your changes have been applied.");
+        }
     }
 
 }

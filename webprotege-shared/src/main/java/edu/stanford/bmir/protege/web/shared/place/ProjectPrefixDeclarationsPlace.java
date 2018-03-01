@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
-import com.google.common.base.Objects;
 import com.google.gwt.place.shared.Place;
 import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+
+import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,14 +21,29 @@ public class ProjectPrefixDeclarationsPlace extends Place implements HasProjectI
     @Nonnull
     private final ProjectId projectId;
 
+    @Nonnull
+    private final Optional<Place> nextPlace;
+
     public ProjectPrefixDeclarationsPlace(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
+        this.nextPlace = Optional.empty();
+    }
+
+    public ProjectPrefixDeclarationsPlace(@Nonnull ProjectId projectId,
+                                          @Nonnull Optional<Place> nextPlace) {
+        this.projectId = checkNotNull(projectId);
+        this.nextPlace = checkNotNull(nextPlace);
     }
 
     @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    @Nonnull
+    public Optional<Place> getNextPlace() {
+        return nextPlace;
     }
 
     @Override

@@ -57,6 +57,7 @@ public class ProjectPrefixDeclarationsViewImpl extends Composite implements Proj
         prefixesEditor = new ValueListFlexEditorImpl<>(PrefixDeclarationEditor::new);
         initWidget(ourUiBinder.createAndBindUi(this));
         prefixesEditor.setEnabled(true);
+        cancelButton.setVisible(false);
     }
 
     @UiHandler("prefixesEditor")
@@ -98,6 +99,7 @@ public class ProjectPrefixDeclarationsViewImpl extends Composite implements Proj
 
     @Override
     public void setCancelChangesHandler(@Nonnull CancelChangesHandler handler) {
+        cancelButton.setVisible(true);
         this.cancelChangesHandler = checkNotNull(handler);
     }
 
