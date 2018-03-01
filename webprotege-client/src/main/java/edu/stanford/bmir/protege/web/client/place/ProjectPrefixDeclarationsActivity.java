@@ -9,8 +9,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.gwt.thirdparty.guava.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge
