@@ -372,4 +372,9 @@ public class ClientApplicationModule {
     CreateNewProjectView providesCreateNewProjectView(CreateNewProjectViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    ProjectPrefixDeclarationsView provideProjectPrefixesView(ProjectPrefixDeclarationsViewImpl impl) {
+        return impl;
+    }
 }
