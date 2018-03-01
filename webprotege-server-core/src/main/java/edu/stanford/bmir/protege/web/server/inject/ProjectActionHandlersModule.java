@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHand
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.obo.*;
 import edu.stanford.bmir.protege.web.server.perspective.*;
+import edu.stanford.bmir.protege.web.server.project.GetProjectPrefixDeclarationsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
@@ -489,6 +490,11 @@ public class ProjectActionHandlersModule {
 
     @Provides(type = SET)
     public ProjectActionHandler providesMoveHierarchyNodeActionHandler(MoveHierarchyNodeActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetProjectPrefixDeclarationsActionHandler(GetProjectPrefixDeclarationsActionHandler handler) {
         return handler;
     }
 }
