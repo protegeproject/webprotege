@@ -734,6 +734,13 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Prefix")
     @Key("prefixes.prefix")
     String prefixes_prefix();
+
+    @DefaultMessage("Project Prefixes")
+    @Key("prefixes.edit")
+    String prefixes_edit();
+
+
+
     
     @DefaultMessage("Web Hooks")
     @Key("projectSettings.webHooks")

@@ -377,4 +377,10 @@ public class ClientApplicationModule {
     ProjectPrefixDeclarationsView provideProjectPrefixesView(ProjectPrefixDeclarationsViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EditProjectPrefixDeclarationsHandler provideEditProjectPrefixDeclarationsHandler(EditProjectPrefixDeclarationsHandlerImpl impl) {
+        return impl;
+    }
+
 }
