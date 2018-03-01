@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,10 @@ public class SetProjectPrefixDeclarationsAction implements ProjectAction<SetProj
                                               @Nonnull List<PrefixDeclaration> prefixDeclarations) {
         this.projectId = checkNotNull(projectId);
         this.prefixDeclarations = new ArrayList<>(checkNotNull(prefixDeclarations));
+    }
+
+    @GwtSerializationConstructor
+    private SetProjectPrefixDeclarationsAction() {
     }
 
     @Nonnull
