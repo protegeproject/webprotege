@@ -4,8 +4,10 @@ import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -14,20 +16,20 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
+@ApplicationSingleton
 public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
 
     public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
 
     private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
 
-    private static final UUIDSuffixKit INSTANCE = new UUIDSuffixKit();
-
-    private UUIDSuffixKit() {
+    @Inject
+    public UUIDSuffixKit() {
         super(ID, "Auto-generated Universally Unique Id (UUID)");
     }
 
-    public static UUIDSuffixKit get() {
-        return INSTANCE;
+    public static EntityCrudKitId getId() {
+        return ID;
     }
 
     @Override

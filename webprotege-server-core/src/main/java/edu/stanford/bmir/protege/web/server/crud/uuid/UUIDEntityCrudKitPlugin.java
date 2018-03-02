@@ -7,7 +7,10 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 /**
@@ -18,13 +21,17 @@ import javax.inject.Inject;
  */
 public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UUIDEntityCrudKitHandler, UUIDSuffixSettings, ChangeSetEntityCrudSession> {
 
+    @Nonnull
+    private UUIDSuffixKit kit;
+
     @Inject
-    public UUIDEntityCrudKitPlugin() {
+    public UUIDEntityCrudKitPlugin(@Nonnull UUIDSuffixKit kit) {
+        this.kit = checkNotNull(kit);
     }
 
     @Override
     public EntityCrudKit<UUIDSuffixSettings> getEntityCrudKit() {
-        return UUIDSuffixKit.get();
+        return kit;
     }
 
     @Override

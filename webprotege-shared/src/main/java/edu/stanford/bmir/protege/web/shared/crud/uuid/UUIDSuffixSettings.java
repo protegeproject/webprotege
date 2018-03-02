@@ -24,7 +24,7 @@ public class UUIDSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public EntityCrudKitId getKitId() {
-        return UUIDSuffixKit.get().getKitId();
+        return UUIDSuffixKit.getId();
     }
 
     @Override

@@ -40,7 +40,7 @@ public class UUIDSuffixSettingsTestCase {
     @Test
     public void getKitIdMatchesUUIDDescriptorId() {
         UUIDSuffixSettings settings = new UUIDSuffixSettings();
-        assertEquals(UUIDSuffixKit.get().getKitId(), settings.getKitId());
+        assertEquals(UUIDSuffixKit.getId(), settings.getKitId());
     }
 
 }

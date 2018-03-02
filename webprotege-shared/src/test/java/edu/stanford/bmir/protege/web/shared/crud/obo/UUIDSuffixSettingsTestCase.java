@@ -17,7 +17,7 @@ public class UUIDSuffixSettingsTestCase {
     @Test
     public void getKitIdReturnsExpectedId() {
         UUIDSuffixSettings suffixSettings = new UUIDSuffixSettings();
-        assertEquals(UUIDSuffixKit.get().getKitId(), suffixSettings.getKitId());
+        assertEquals(UUIDSuffixKit.getId(), suffixSettings.getKitId());
     }
 
     @Test
