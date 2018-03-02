@@ -33,6 +33,7 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         presenter.start(eventBus);
         portletUi.setWidget(presenter.getView());
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
