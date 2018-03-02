@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
+import edu.stanford.bmir.protege.web.client.user.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
@@ -43,11 +44,8 @@ public class OBOIdSuffixSettingsEditor extends Composite implements EntityCrudKi
     protected ValueListFlexEditorImpl<UserIdRange> userRangeTable;
 
     @Inject
-    protected Provider<UserIdRangeEditor> userIdRangeEditorProvider;
-
-    @Inject
-    public OBOIdSuffixSettingsEditor() {
-        userRangeTable = new ValueListFlexEditorImpl<>(() -> userIdRangeEditorProvider.get());
+    public OBOIdSuffixSettingsEditor(UserIdSuggestOracle suggestOracle) {
+        userRangeTable = new ValueListFlexEditorImpl<>(() -> new UserIdRangeEditorImpl(suggestOracle));
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
