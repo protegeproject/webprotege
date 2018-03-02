@@ -5,7 +5,9 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
+@ApplicationSingleton
 public class EntityCrudKitRegistry {
-
-    private static final EntityCrudKitRegistry instance = new EntityCrudKitRegistry();
 
     private List<EntityCrudKit<?>> kits = new ArrayList<>();
 
@@ -29,8 +30,8 @@ public class EntityCrudKitRegistry {
 
     private final Map<EntityCrudKitId, EntityCrudKitPlugin<?,?, ?>> id2Plugin = Maps.newHashMap();
 
-
-    private EntityCrudKitRegistry() {
+    @Inject
+    public EntityCrudKitRegistry() {
         EntityCrudKitPluginManager pluginManager = EntityCrudKitPluginManager.get();
         List<EntityCrudKitPlugin<?,?,?>> plugins = pluginManager.getPlugins();
         for(EntityCrudKitPlugin<?,?,?> plugin : plugins) {
@@ -41,13 +42,8 @@ public class EntityCrudKitRegistry {
         }
     }
 
-    public static EntityCrudKitRegistry get() {
-        return instance;
-    }
-
-
     public List<EntityCrudKit<?>> getKits() {
-        return kits;
+        return new ArrayList<>(kits);
     }
 
     private boolean isValidKitId(EntityCrudKitId id) {

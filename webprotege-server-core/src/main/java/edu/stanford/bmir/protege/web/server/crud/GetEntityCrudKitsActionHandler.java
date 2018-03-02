@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -22,8 +24,12 @@ import java.util.List;
  */
 public class GetEntityCrudKitsActionHandler implements ApplicationActionHandler<GetEntityCrudKitsAction, GetEntityCrudKitsResult> {
 
+    @Nonnull
+    private final EntityCrudKitRegistry entityCrudKitRegistry;
+
     @Inject
-    public GetEntityCrudKitsActionHandler() {
+    public GetEntityCrudKitsActionHandler(@Nonnull EntityCrudKitRegistry entityCrudKitRegistry) {
+        this.entityCrudKitRegistry = checkNotNull(entityCrudKitRegistry);
     }
 
     @Nonnull
@@ -41,8 +47,7 @@ public class GetEntityCrudKitsActionHandler implements ApplicationActionHandler<
     @Nonnull
     @Override
     public GetEntityCrudKitsResult execute(@Nonnull GetEntityCrudKitsAction action, @Nonnull ExecutionContext executionContext) {
-        List<EntityCrudKit<?>> kits = new ArrayList<>();
-        kits.addAll(EntityCrudKitRegistry.get().getKits());
+        List<EntityCrudKit<?>> kits = entityCrudKitRegistry.getKits();
         return new GetEntityCrudKitsResult(kits);
     }
 }

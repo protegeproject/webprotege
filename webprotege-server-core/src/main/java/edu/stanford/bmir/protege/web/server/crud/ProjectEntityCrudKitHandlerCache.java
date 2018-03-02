@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -25,12 +26,17 @@ public class ProjectEntityCrudKitHandlerCache {
 
     private final ProjectEntityCrudKitSettingsRepository repository;
 
+    private final EntityCrudKitRegistry registry;
+
     private EntityCrudKitHandler<?, ?> cachedHandler;
 
     @Inject
-    public ProjectEntityCrudKitHandlerCache(ProjectEntityCrudKitSettingsRepository repository, ProjectId projectId) {
+    public ProjectEntityCrudKitHandlerCache(@Nonnull ProjectEntityCrudKitSettingsRepository repository,
+                                            @Nonnull ProjectId projectId,
+                                            @Nonnull EntityCrudKitRegistry registry) {
         this.repository = checkNotNull(repository);
         this.projectId = checkNotNull(projectId);
+        this.registry = checkNotNull(registry);
     }
 
     /**
@@ -40,7 +46,7 @@ public class ProjectEntityCrudKitHandlerCache {
     public synchronized EntityCrudKitHandler<?, ?> getHandler() {
         EntityCrudKitSettings<?> settings = getCurrentSettings();
         if (isCachedHandlerStale(settings)) {
-            cachedHandler = EntityCrudKitRegistry.get().getHandler(settings);
+            cachedHandler = registry.getHandler(settings);
         }
         return cachedHandler;
     }
