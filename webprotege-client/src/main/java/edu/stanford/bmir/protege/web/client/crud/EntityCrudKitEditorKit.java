@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.crud;
 
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
-
 import java.io.Serializable;
 
 /**
@@ -11,8 +9,6 @@ import java.io.Serializable;
  * Date: 08/08/2013
  */
 public interface EntityCrudKitEditorKit extends Serializable {
-
-    EntityCrudKit getDescriptor();
 
     EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor();
 }

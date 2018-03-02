@@ -24,7 +24,7 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public EntityCrudKitId getKitId() {
-        return SuppliedNameSuffixKit.get().getKitId();
+        return SuppliedNameSuffixKit.getId();
     }
 
     public WhiteSpaceTreatment getWhiteSpaceTreatment() {

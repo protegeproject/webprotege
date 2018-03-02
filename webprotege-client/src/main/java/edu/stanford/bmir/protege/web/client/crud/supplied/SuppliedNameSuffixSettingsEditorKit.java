@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.crud.supplied;
 
-import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitEditorKit;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,11 +10,6 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
  * Date: 14/08/2013
  */
 public class SuppliedNameSuffixSettingsEditorKit implements EntityCrudKitEditorKit {
-
-    @Override
-    public EntityCrudKit getDescriptor() {
-        return SuppliedNameSuffixKit.get();
-    }
 
     @Override
     public EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor() {

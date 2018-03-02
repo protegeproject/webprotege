@@ -8,7 +8,10 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,13 +21,17 @@ import javax.inject.Inject;
  */
 public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<SuppliedNameSuffixEntityCrudKitHandler, SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> {
 
+    @Nonnull
+    private final SuppliedNameSuffixKit kit;
+
     @Inject
-    public SuppliedNameSuffixEntityCrudKitPlugin() {
+    public SuppliedNameSuffixEntityCrudKitPlugin(@Nonnull SuppliedNameSuffixKit kit) {
+        this.kit = checkNotNull(kit);
     }
 
     @Override
     public EntityCrudKit<SuppliedNameSuffixSettings> getEntityCrudKit() {
-        return SuppliedNameSuffixKit.get();
+        return kit;
     }
 
     @Override

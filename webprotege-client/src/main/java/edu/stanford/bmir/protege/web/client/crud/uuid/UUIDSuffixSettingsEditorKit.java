@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.crud.uuid;
 
 
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitEditorKit;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,11 +11,6 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
  * Date: 13/08/2013
  */
 public class UUIDSuffixSettingsEditorKit implements EntityCrudKitEditorKit {
-
-    @Override
-    public EntityCrudKit getDescriptor() {
-        return UUIDSuffixKit.get();
-    }
 
     @Override
     public EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor() {

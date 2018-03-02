@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import org.semanticweb.owlapi.model.IRI;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**

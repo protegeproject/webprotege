@@ -39,6 +39,6 @@ public class SuppliedNameSuffixSettingsTestCase {
     @Test
     public void getKitIdMatchesSuppliedNameDescriptorId() {
         SuppliedNameSuffixSettings settings = new SuppliedNameSuffixSettings();
-        assertEquals(SuppliedNameSuffixKit.get().getKitId(), settings.getKitId());
+        assertEquals(SuppliedNameSuffixKit.getId(), settings.getKitId());
     }
 }

@@ -50,7 +50,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public EntityCrudKitId getKitId() {
-        return SuppliedNameSuffixKit.get().getKitId();
+        return SuppliedNameSuffixKit.getId();
     }
 
     @Override

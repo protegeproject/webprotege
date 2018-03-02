@@ -4,8 +4,10 @@ import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.semanticweb.owlapi.model.IRI;
 
+import javax.inject.Inject;
 import java.util.Optional;
 
 /**
@@ -14,18 +16,18 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
+@ApplicationSingleton
 public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSettings> {
 
     private static final EntityCrudKitId ID = EntityCrudKitId.get("SuppliedNameSuffix");
 
-    private static final SuppliedNameSuffixKit INSTANCE = new SuppliedNameSuffixKit();
-
-    private SuppliedNameSuffixKit() {
+    @Inject
+    public SuppliedNameSuffixKit() {
         super(ID, "Supplied name");
     }
 
-    public static SuppliedNameSuffixKit get() {
-        return INSTANCE;
+    public static EntityCrudKitId getId() {
+        return ID;
     }
 
     @Override

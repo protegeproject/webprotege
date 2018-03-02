@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.crud.obo;
 
-import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitEditorKit;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,11 +10,6 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
  * Date: 14/08/2013
  */
 public class OBOIdSuffixSettingsEditorKit implements EntityCrudKitEditorKit {
-
-    @Override
-    public EntityCrudKit getDescriptor() {
-        return OBOIdSuffixKit.get();
-    }
 
     @Override
     public EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor() {
