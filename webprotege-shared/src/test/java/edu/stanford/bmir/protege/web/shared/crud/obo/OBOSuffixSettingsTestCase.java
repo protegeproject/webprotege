@@ -50,7 +50,7 @@ public class OBOSuffixSettingsTestCase {
     @Test
     public void getKitIdReturnsTheCorrectId() {
         OBOIdSuffixSettings settings = new OBOIdSuffixSettings();
-        assertEquals(OBOIdSuffixKit.get().getKitId(), settings.getKitId());
+        assertEquals(OBOIdSuffixKit.getId(), settings.getKitId());
     }
 
     @Test

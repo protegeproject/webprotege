@@ -8,7 +8,10 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,13 +21,17 @@ import javax.inject.Inject;
  */
 public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOIdSuffixEntityCrudKitHandler, OBOIdSuffixSettings, OBOIdSession> {
 
+    @Nonnull
+    private final OBOIdSuffixKit kit;
+
     @Inject
-    public OBOIdSuffixEntityCrudKitPlugin() {
+    public OBOIdSuffixEntityCrudKitPlugin(@Nonnull OBOIdSuffixKit kit) {
+        this.kit = checkNotNull(kit);
     }
 
     @Override
     public EntityCrudKit<OBOIdSuffixSettings> getEntityCrudKit() {
-        return OBOIdSuffixKit.get();
+        return kit;
     }
 
     @Override

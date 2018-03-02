@@ -149,7 +149,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     }
 
     private EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor(EntityCrudKit<?> crudKit) {
-        if(crudKit.getKitId().equals(OBOIdSuffixKit.get().getKitId())) {
+        if(crudKit.getKitId().equals(OBOIdSuffixKit.getId())) {
             return oboIdSuffixSettingsEditorProvider.get();
         }
         else if(crudKit.getKitId().equals(UUIDSuffixKit.getId())) {

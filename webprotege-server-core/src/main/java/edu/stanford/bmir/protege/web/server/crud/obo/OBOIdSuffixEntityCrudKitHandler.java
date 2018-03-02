@@ -52,7 +52,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
     @Override
     public EntityCrudKitId getKitId() {
-        return OBOIdSuffixKit.get().getKitId();
+        return OBOIdSuffixKit.getId();
     }
 
 
