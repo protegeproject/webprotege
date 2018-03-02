@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -15,6 +17,11 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
  * Date: 8/19/13
  */
 public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOIdSuffixEntityCrudKitHandler, OBOIdSuffixSettings, OBOIdSession> {
+
+    @Inject
+    public OBOIdSuffixEntityCrudKitPlugin() {
+    }
+
     @Override
     public EntityCrudKit<OBOIdSuffixSettings> getEntityCrudKit() {
         return OBOIdSuffixKit.get();

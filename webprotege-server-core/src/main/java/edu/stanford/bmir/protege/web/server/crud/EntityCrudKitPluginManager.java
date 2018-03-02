@@ -1,13 +1,16 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,15 +21,14 @@ import java.util.List;
 @ApplicationSingleton
 public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugin<?,?,?>> {
 
+    private final ImmutableList<EntityCrudKitPlugin<?,?,?>> plugins;
+
     @Inject
-    public EntityCrudKitPluginManager() {
+    public EntityCrudKitPluginManager(@Nonnull Set<EntityCrudKitPlugin<?,?,?>> plugins) {
+        this.plugins = ImmutableList.copyOf(plugins);
     }
 
     public List<EntityCrudKitPlugin<?,?,?>> getPlugins() {
-        List<EntityCrudKitPlugin<?,?,?>> plugins = Lists.newArrayList();
-        plugins.add(new UUIDEntityCrudKitPlugin());
-        plugins.add(new OBOIdSuffixEntityCrudKitPlugin());
-        plugins.add(new SuppliedNameSuffixEntityCrudKitPlugin());
         return plugins;
     }
 }

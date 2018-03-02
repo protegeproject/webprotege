@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 
+import javax.inject.Inject;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,6 +17,10 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
  * Date: 8/19/13
  */
 public class UUIDEntityCrudKitPlugin implements EntityCrudKitPlugin<UUIDEntityCrudKitHandler, UUIDSuffixSettings, ChangeSetEntityCrudSession> {
+
+    @Inject
+    public UUIDEntityCrudKitPlugin() {
+    }
 
     @Override
     public EntityCrudKit<UUIDSuffixSettings> getEntityCrudKit() {

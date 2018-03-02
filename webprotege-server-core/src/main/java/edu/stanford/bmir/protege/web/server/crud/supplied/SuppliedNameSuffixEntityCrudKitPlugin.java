@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -15,6 +17,10 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSett
  * Date: 8/19/13
  */
 public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<SuppliedNameSuffixEntityCrudKitHandler, SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> {
+
+    @Inject
+    public SuppliedNameSuffixEntityCrudKitPlugin() {
+    }
 
     @Override
     public EntityCrudKit<SuppliedNameSuffixSettings> getEntityCrudKit() {

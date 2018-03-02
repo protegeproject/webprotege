@@ -14,8 +14,12 @@ import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepository;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemDataRepositoryImpl;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsConverter;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
+import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
@@ -50,6 +54,8 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static dagger.Provides.Type.SET;
 
 /**
  * Matthew Horridge
@@ -247,5 +253,21 @@ public class ApplicationModule {
     @Provides
     public ObjectMapper provideObjectMapper() {
         return new ObjectMapper();
+    }
+
+
+    @Provides(type = SET)
+    public EntityCrudKitPlugin<?,?,?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides(type = SET)
+    public EntityCrudKitPlugin<?,?,?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
+        return plugin;
+    }
+
+    @Provides(type = SET)
+    public EntityCrudKitPlugin<?,?,?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
+        return plugin;
     }
 }
