@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsI
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.*;
 import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
+import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
@@ -231,7 +232,7 @@ public class ComputeProjectMergeActionHandler extends AbstractProjectActionHandl
                     public String getLang() {
                         return hasLang.getLang();
                     }
-                }
+                }, new LocalNameExtractor()
                 )
         );
 

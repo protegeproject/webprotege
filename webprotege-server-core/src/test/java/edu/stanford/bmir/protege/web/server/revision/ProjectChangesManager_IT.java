@@ -70,7 +70,8 @@ public class ProjectChangesManager_IT {
         WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 new HasAnnotationAssertionAxiomsImpl(rootOntology),
-                () -> ""
+                () -> "",
+                new LocalNameExtractor()
         );
         WebProtegeShortFormProvider webProtegeShortFormProvider = new WebProtegeShortFormProvider(iriShortFormProvider);
         WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider = new WebProtegeOntologyIRIShortFormProvider(

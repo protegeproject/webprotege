@@ -62,7 +62,8 @@ public class WebProtegeIRIShortFormProvider_TestCase {
         shortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 annotationAssertionAxiomsProvider,
-                languageProvider
+                languageProvider,
+                new LocalNameExtractor()
         );
     }
 

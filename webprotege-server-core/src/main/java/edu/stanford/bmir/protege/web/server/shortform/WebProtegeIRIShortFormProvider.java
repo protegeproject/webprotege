@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,46 +23,49 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
+    private static final String PREFIXED_NAME_SEPARATOR = ":";
+
     private final HasAnnotationAssertionAxioms annotationAssertionAxiomProvider;
 
     private final HasLang languageProvider;
+
+    private final LocalNameExtractor localNameExtractor;
 
     private final ImmutableList<IRI> labellingIRIs;
 
     private final ImmutableMap<String, String> prefix2PrefixNameMap;
 
     @Inject
-    public WebProtegeIRIShortFormProvider(ImmutableList<IRI> labellingIRIs, HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
+    public WebProtegeIRIShortFormProvider(ImmutableList<IRI> labellingIRIs,
+                                          HasAnnotationAssertionAxioms annotationAssertionAxiomProvider,
+                                          HasLang languageProvider,
+                                          LocalNameExtractor localNameExtractor) {
 
         this.labellingIRIs = checkNotNull(labellingIRIs);
         this.annotationAssertionAxiomProvider = checkNotNull(annotationAssertionAxiomProvider);
         this.languageProvider = checkNotNull(languageProvider);
+        this.localNameExtractor = localNameExtractor;
 
         ImmutableMap.Builder<String, String> prefixIRI2PrefixNameMapBuilder = ImmutableMap.builder();
         for (Namespaces ns : Namespaces.values()) {
             if (ns.isInUse()) {
-                prefixIRI2PrefixNameMapBuilder.put(ns.getPrefixIRI(), ns.getPrefixName());
+                prefixIRI2PrefixNameMapBuilder.put(ns.getPrefixIRI(), ns.getPrefixName() + PREFIXED_NAME_SEPARATOR);
             }
         }
         prefix2PrefixNameMap = prefixIRI2PrefixNameMapBuilder.build();
     }
 
-
-    private Optional<String> getBuiltInPrefix(IRI iri) {
-        String iriNS = iri.getNamespace();
-        if (prefix2PrefixNameMap.containsKey(iriNS)) {
-            return Optional.of(iriNS);
-        } else {
-            return Optional.empty();
-        }
-    }
-
     @Nonnull
     @Override
     public String getShortForm(@Nonnull IRI iri) {
-        Optional<String> builtInPrefix = getBuiltInPrefix(iri);
-        if (builtInPrefix.isPresent()) {
-            return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + iri.getFragment();
+        String localName = localNameExtractor.getLocalName(iri);
+        if (!localName.isEmpty()) {
+            String iriString = iri.toString();
+            String prefix = iriString.substring(0, iriString.length() - localName.length());
+            String prefixName = prefix2PrefixNameMap.get(prefix);
+            if(prefixName != null) {
+                return prefixName + localName;
+            }
         }
         int matchedIndex = Integer.MAX_VALUE;
         boolean matchedDefaultLang = false;
@@ -79,7 +81,7 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
                     matchedIndex = index;
                     renderingValue = ax.getValue();
                 }
-                if (index == matchedIndex || index == Integer.MAX_VALUE) {
+                if (index == matchedIndex) {
                     final OWLAnnotationValue value = ax.getValue();
                     if (value instanceof OWLLiteral) {
                         OWLLiteral litValue = (OWLLiteral) value;
@@ -88,7 +90,8 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
                             if (lang.equals(defaultLanguage)) {
                                 matchedDefaultLang = true;
                                 renderingValue = litValue;
-                            } else if (!matchedDefaultLang) {
+                            }
+                            else if (!matchedDefaultLang) {
                                 renderingValue = litValue;
                             }
                         }
@@ -101,32 +104,19 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
         }
         if (renderingValue instanceof OWLLiteral) {
             return ((OWLLiteral) renderingValue).getLiteral();
-        } else {
+        }
+        else {
             try {
-                String trailingPart = getTrailingPart(iri.toString());
-                if(trailingPart.isEmpty()) {
+                if (localName.isEmpty()) {
                     String decodedIri = URLDecoder.decode(iri.toString(), "UTF-8");
                     return "<" + decodedIri + ">";
                 }
                 else {
-                    return URLDecoder.decode(trailingPart, "UTF-8");
+                    return URLDecoder.decode(localName, "UTF-8");
                 }
             } catch (IllegalArgumentException | UnsupportedEncodingException e) {
                 return iri.toQuotedString();
             }
         }
-    }
-
-    @Nonnull
-    private String getTrailingPart(@Nonnull String iriString) {
-        int hashIndex = iriString.lastIndexOf("#");
-        if(hashIndex != -1 && hashIndex < iriString.length() - 1) {
-            return iriString.substring(hashIndex + 1);
-        }
-        int slashIndex = iriString.lastIndexOf("/");
-        if(slashIndex != -1 && slashIndex < iriString.length() - 1) {
-            return iriString.substring(slashIndex + 1);
-        }
-        return "";
     }
 }
