@@ -189,9 +189,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         Optional<EntityCrudKitSuffixSettingsEditor> editor = updateEditor(true);
         String decodedPrefix = URL.decode(object.getPrefixSettings().getIRIPrefix());
         iriPrefixEditor.setText(decodedPrefix);
-        if (editor.isPresent()) {
-            editor.get().setValue(object.getSuffixSettings());
-        }
+        editor.ifPresent(suffixSettingsEditor -> suffixSettingsEditor.setValue(object.getSuffixSettings()));
         prefixIsDirty = false;
         validatePrefix();
     }
@@ -219,10 +217,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         }
         EntityCrudKitSuffixSettingsEditor editor = selEditor.get();
         Optional<?> editedValue = editor.getValue();
-        if(!editedValue.isPresent()) {
-            return Optional.empty();
-        }
-        return Optional.of(new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) editedValue.get()));
+        return editedValue.map(o -> new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) o));
     }
 
     @Override
