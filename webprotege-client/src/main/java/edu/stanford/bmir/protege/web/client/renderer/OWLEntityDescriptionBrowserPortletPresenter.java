@@ -57,15 +57,14 @@ public class OWLEntityDescriptionBrowserPortletPresenter extends AbstractWebProt
         eventBus.addProjectEventHandler(getProjectId(),
                                         AnnotationPropertyFrameChangedEvent.TYPE,
                                         event -> handleEntityChange(event.getEntity()));
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        if (entity.isPresent()) {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entity.get()),
-                                           this,
-                                           result -> html.setHTML(result.getRendering()));
-        }
+        entity.ifPresent(owlEntity -> dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), owlEntity),
+                                                                     this,
+                                                                     result -> html.setHTML(result.getRendering())));
     }
 
 
