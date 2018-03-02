@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -13,16 +15,11 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
+@ApplicationSingleton
 public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugin<?,?,?>> {
 
-    private static EntityCrudKitPluginManager instance = new EntityCrudKitPluginManager();
-
-    private EntityCrudKitPluginManager() {
-
-    }
-
-    public static EntityCrudKitPluginManager get() {
-        return instance;
+    @Inject
+    public EntityCrudKitPluginManager() {
     }
 
     public List<EntityCrudKitPlugin<?,?,?>> getPlugins() {

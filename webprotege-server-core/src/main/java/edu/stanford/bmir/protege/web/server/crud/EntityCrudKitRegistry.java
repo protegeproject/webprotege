@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,8 +32,7 @@ public class EntityCrudKitRegistry {
     private final Map<EntityCrudKitId, EntityCrudKitPlugin<?,?, ?>> id2Plugin = Maps.newHashMap();
 
     @Inject
-    public EntityCrudKitRegistry() {
-        EntityCrudKitPluginManager pluginManager = EntityCrudKitPluginManager.get();
+    public EntityCrudKitRegistry(@Nonnull EntityCrudKitPluginManager pluginManager) {
         List<EntityCrudKitPlugin<?,?,?>> plugins = pluginManager.getPlugins();
         for(EntityCrudKitPlugin<?,?,?> plugin : plugins) {
             EntityCrudKit<?> kit = plugin.getEntityCrudKit();
