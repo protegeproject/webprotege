@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.supplied;
 
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -75,18 +76,47 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             EntityShortForm shortForm,
             EntityCrudContext context,
             OntologyChangeList.Builder<E> changeListBuilder) {
+
+        // The supplied name can either be a fully quoted IRI, a prefixed name or some other string
         final OWLDataFactory dataFactory = context.getDataFactory();
         final IRI iri;
-        String suppliedName = shortForm.getShortForm();
-        String label;
+        final String suppliedName = shortForm.getShortForm();
+        final String label;
         Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
         if (parsedIRI.isPresent()) {
+            // IRI supplied as a quoted IRI
             iri = parsedIRI.get();
-            label = suppliedName.substring(1, suppliedName.length() - 1);
+            LocalNameExtractor localNameExtractor = new LocalNameExtractor();
+            // The label is the local name, if present, otherwise it's the IRI
+            String localName = localNameExtractor.getLocalName(iri);
+            if(localName.isEmpty()) {
+                label = suppliedName.substring(1, suppliedName.length() - 1);
+            }
+            else {
+                label = localName;
+            }
         }
         else {
-            iri = createEntityIRI(shortForm, context.getPrefixedNameExpander());
-            label = suppliedName;
+            // IRI supplied as a prefixed name
+            PrefixedNameExpander prefixedNameExpander = context.getPrefixedNameExpander();
+            Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(shortForm.getShortForm());
+            if (expandedPrefixName.isPresent()) {
+                iri = expandedPrefixName.get();
+                // The label is the local name
+                int sepIndex = suppliedName.indexOf(":");
+                if (sepIndex + 1 < suppliedName.length()) {
+                    label = suppliedName.substring(sepIndex + 1);
+                }
+                else {
+                    label = suppliedName;
+                }
+            }
+            else {
+                // Suffix of IRI
+                iri = createEntityIRI(shortForm);
+                // Label is supplied name
+                label = suppliedName;
+            }
         }
         E entity = dataFactory.getOWLEntity(entityType, iri);
         OWLDeclarationAxiom ax = dataFactory.getOWLDeclarationAxiom(entity);
@@ -98,14 +128,10 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         return entity;
     }
 
-    private IRI createEntityIRI(EntityShortForm shortForm, PrefixedNameExpander prefixedNameExpander) {
+    private IRI createEntityIRI(EntityShortForm shortForm) {
         try {
             WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
             String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
-            Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(transformedShortForm);
-            if (expandedPrefixName.isPresent()) {
-                return expandedPrefixName.get();
-            }
             String escapedShortForm = URLEncoder.encode(transformedShortForm, "UTF-8");
             return IRI.create(prefixSettings.getIRIPrefix() + escapedShortForm);
         } catch (UnsupportedEncodingException e) {
@@ -124,8 +150,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         OWLEntityRenamer renamer = new OWLEntityRenamer(context.getTargetOntology().getOWLOntologyManager(),
                                                         context.getTargetOntology().getImportsClosure());
         List<OWLOntologyChange> changeList = renamer.changeIRI(entity,
-                                                               createEntityIRI(shortForm,
-                                                                               context.getPrefixedNameExpander()));
+                                                               createEntityIRI(shortForm));
         changeListBuilder.addAll(changeList);
     }
 
