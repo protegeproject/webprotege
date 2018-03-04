@@ -106,11 +106,11 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     }
 
     @Test
-    public void shouldAddLabelEqualToPrefixedName() {
+    public void shouldAddLabelEqualToLocalName() {
         String suppliedName = "owl:Thing";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
         handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
-        verifyHasLabelEqualTo(suppliedName);
+        verifyHasLabelEqualTo("Thing");
     }
 
     @Test
@@ -120,7 +120,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(entityShortForm.getShortForm()).thenReturn(shortForm);
         OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
         assertThat(cls.getIRI(), is(equalTo(IRI.create(expectedIRI))));
-        verifyHasLabelEqualTo(expectedIRI);
+        verifyHasLabelEqualTo("A");
     }
 
 
