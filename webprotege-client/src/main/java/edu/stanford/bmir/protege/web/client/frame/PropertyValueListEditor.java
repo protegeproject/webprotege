@@ -33,7 +33,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
     private PropertyValueGridGrammar grammar = PropertyValueGridGrammar.getClassGrammar();
 
     @Inject
-    public PropertyValueListEditor(ProjectId projectId, final Provider<PrimitiveDataEditorImpl> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
+    public PropertyValueListEditor(final Provider<PrimitiveDataEditorImpl> primitiveDataEditorProvider) {
         this.editor = new ValueListFlexEditorImpl<>(
                 () -> {
                     PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl(primitiveDataEditorProvider.get(), primitiveDataEditorProvider.get());
