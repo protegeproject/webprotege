@@ -723,7 +723,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             hideErrorLabel();
             return;
         }
-        showErrorLabel();
+        // This showed a confusing message about the entity not existing.  Hide the error label for now.
+        hideErrorLabel();
     }
 
     private boolean isCurrentEntityTypeAllowed() {
