@@ -74,7 +74,9 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
     @Inject
-    public ClassFrameEditor(ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager,  PropertyValueListEditor annotations, PropertyValueListEditor properties) {
+    public ClassFrameEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
+                            PropertyValueListEditor annotations,
+                            PropertyValueListEditor properties) {
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.classes = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
