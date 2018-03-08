@@ -58,7 +58,7 @@ public class EntitySuggestOracle extends SuggestOracle {
         dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new DispatchServiceCallback<LookupEntitiesResult>() {
             @Override
             public void handleSuccess(LookupEntitiesResult result) {
-                List<EntitySuggestion> suggestions = new ArrayList<EntitySuggestion>();
+                List<EntitySuggestion> suggestions = new ArrayList<>();
                 for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                     suggestions.add(new EntitySuggestion(entity.getOWLEntityData(), entity.getDisplayText()));
                 }

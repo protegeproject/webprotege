@@ -49,11 +49,13 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
         StringBuilder sb = new StringBuilder();
         String browserText = visualEntity.getBrowserText();
         if (browserTextMatchStart < browserText.length() && browserTextMatchEnd <= browserText.length()) {
+            sb.append("<div>");
             sb.append(browserText.substring(0, browserTextMatchStart));
             sb.append("<span class=\"web-protege-entity-match-substring\">");
             sb.append(browserText.substring(browserTextMatchStart, browserTextMatchEnd));
             sb.append("</span>");
             sb.append(browserText.substring(browserTextMatchEnd));
+            sb.append("</div>");
         }
         else {
             sb.append(browserText);
