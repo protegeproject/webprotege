@@ -17,7 +17,7 @@
         }
         .rendering {
             display: inline-block;
-            vertical-align: top;
+            vertical-align: baseline;
             white-space: nowrap;
             padding-top: 1px;
         }
