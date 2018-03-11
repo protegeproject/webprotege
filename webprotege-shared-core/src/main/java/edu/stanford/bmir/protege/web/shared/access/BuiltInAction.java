@@ -62,6 +62,8 @@ public enum BuiltInAction {
 
     DELETE_DATATYPE,
 
+    MERGE_ENTITIES,
+
 
     CREATE_ISSUE,
 

@@ -76,6 +76,7 @@ public enum BuiltInRole {
                    EDIT_ONTOLOGY_ANNOTATIONS,
                    CREATE_CLASS,
                    DELETE_CLASS,
+                   MERGE_ENTITIES,
                    CREATE_PROPERTY,
                    DELETE_PROPERTY,
                    CREATE_INDIVIDUAL,
