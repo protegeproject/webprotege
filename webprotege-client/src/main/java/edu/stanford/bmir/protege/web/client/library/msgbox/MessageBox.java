@@ -171,7 +171,13 @@ public class MessageBox {
     public static void showConfirmBox(String mainMessage, String subMessage,
                                       DialogButton escapeButton, DialogButton acceptButton,
                                       Runnable acceptHandler, DialogButton defaultButton) {
-        final MessageBoxView messageBoxView = createMessageBox(MessageStyle.QUESTION, mainMessage, subMessage);
+        showConfirmBox(MessageStyle.QUESTION, mainMessage, subMessage, escapeButton, () -> {}, acceptButton, acceptHandler, defaultButton);
+    }
+
+    public static void showConfirmBox(MessageStyle messageStyle, String mainMessage, String subMessage,
+                                      DialogButton escapeButton, Runnable escapeHandler, DialogButton acceptButton,
+                                      Runnable acceptHandler, DialogButton defaultButton) {
+        final MessageBoxView messageBoxView = createMessageBox(messageStyle, mainMessage, subMessage);
         List<DialogButton> buttonList = asList(
                 escapeButton,
                 acceptButton
@@ -196,6 +202,10 @@ public class MessageBox {
         controller.setDialogButtonHandler(acceptButton, (data, closer) -> {
             closer.hide();
             acceptHandler.run();
+        });
+        controller.setDialogButtonHandler(escapeButton, (data, closer) -> {
+            closer.hide();
+            escapeHandler.run();
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.show();
