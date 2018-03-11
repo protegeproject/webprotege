@@ -985,4 +985,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Watch")
     @Key("watch")
     String watch();
+
+    @DefaultMessage("Merge Into...")
+    @Key("merge.mergeInto")
+    String merge_mergeInto();
 }
