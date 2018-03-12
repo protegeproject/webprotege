@@ -37,13 +37,17 @@ public class MergeEntitiesWorkflow {
 
     @Nonnull
     private final SelectionModel selectionModel;
+
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
+
     @Nonnull
     private HandlerRegistration selectionHandlerRegistration = () -> {};
+
     @Nonnull
     private Optional<OWLEntity> sourceEntity = Optional.empty();
 
+    private boolean inMerge = false;
 
     @Inject
     public MergeEntitiesWorkflow(@Nonnull ProjectId projectId,
@@ -72,11 +76,16 @@ public class MergeEntitiesWorkflow {
                                   CANCEL,
                                   this::end,
                                   DialogButton.get(messages.merge_selectEntityToMergeInto(typeNameL)),
+                                  // We don't do anything apart from wait for the selection to change
                                   () -> {},
                                   CANCEL);
     }
 
     private void handleSelectionChanged(EntitySelectionChangedEvent event) {
+        if(inMerge) {
+            return;
+        }
+        inMerge = true;
         Optional<OWLEntity> sel = selectionModel.getSelection();
         if (sel.equals(sourceEntity)) {
             startTargetSelection();
@@ -115,5 +124,6 @@ public class MergeEntitiesWorkflow {
 
     private void end() {
         selectionHandlerRegistration.removeHandler();
+        inMerge = false;
     }
 }
