@@ -989,4 +989,26 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Merge Into...")
     @Key("merge.mergeInto")
     String merge_mergeInto();
+
+    @DefaultMessage("Merge {0}")
+    @Key("merge.mergeEntity")
+    String merge_mergeEntity(String typeName);
+
+    @DefaultMessage("Select {0} to Merge Into")
+    @Key("merge.selectEntityToMergeInto")
+    String merge_selectEntityToMergeInto(String lowerCaseTypeName);
+
+
+    @DefaultMessage("This operation will merge the selected {0} into another {0}.<br><br>" +
+            "In the next step you should select another {0}. The currently selected {0} will be merged into this {0}.")
+    @Key("merge.description")
+    String merge_description(String lowerCaseTypeName);
+
+    @DefaultMessage("Merge {0}")
+    @Key("merge.mergeEntities")
+    String merge_mergeEntities(String typePluralName);
+
+    @DefaultMessage("Do you want to merge entities?")
+    @Key("merge.confirmMessage")
+    String merge_confirmMergeMessage();
 }

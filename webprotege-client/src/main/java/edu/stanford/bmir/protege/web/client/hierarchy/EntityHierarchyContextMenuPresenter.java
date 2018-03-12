@@ -6,8 +6,11 @@ import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
@@ -19,6 +22,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MERGE_ENTITIES;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
 /**
@@ -42,20 +46,30 @@ public class EntityHierarchyContextMenuPresenter {
     @Nonnull
     private final UIAction deleteEntityAction;
 
+    @Nonnull
+    private final MergeEntitiesUiAction mergeEntitiesAction;
+
     @Nullable
     private PopupMenu contextMenu;
+
+    @Nonnull
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
 
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
                                                @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
-                                               @Provided Messages messages) {
+                                               @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided Messages messages,
+                                               @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.messages = checkNotNull(messages);
         this.treeWidget = checkNotNull(treeWidget);
         this.model = checkNotNull(model);
         this.createEntityAction = checkNotNull(createEntityAction);
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
+        this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
+        this.permissionChecker = checkNotNull(permissionChecker);
     }
 
     /**
@@ -79,6 +93,8 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(createEntityAction);
         contextMenu.addItem(deleteEntityAction);
         contextMenu.addSeparator();
+        contextMenu.addItem(mergeEntitiesAction);
+        contextMenu.addSeparator();
         contextMenu.addItem(messages.tree_pruneBranchToRoot(), this::pruneSelectedNodesToRoot);
         contextMenu.addItem(messages.tree_pruneAllBranchesToRoot(), this::pruneToKey);
         contextMenu.addItem(messages.tree_clearPruning(), this::clearPruning);
@@ -87,6 +103,11 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu.addItem(messages.showDirectLink(), this::showUrlForSelection);
         contextMenu.addSeparator();
         contextMenu.addItem(messages.refreshTree(), this::handleRefresh);
+
+        // This needs tidying somehow.  We don't do this for other actions.
+        mergeEntitiesAction.setEnabled(false);
+        permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
+
     }
 
 
