@@ -28,6 +28,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
+import static edu.stanford.bmir.protege.web.client.ui.ElementalUtil.isWidgetOrDescendantWidgetActive;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ONTOLOGY;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 
@@ -102,6 +103,13 @@ public class EditorPresenter implements HasDispose {
         return editorHolder;
     }
 
+    /**
+     * Determines if the editor is active (has the focus).
+     * @return true if the editor is active, otherwise false.
+     */
+    public boolean isActive() {
+        return isWidgetOrDescendantWidgetActive(getView());
+    }
 
     public void setHasBusy(@Nonnull HasBusy hasBusy) {
         this.hasBusy = checkNotNull(hasBusy);

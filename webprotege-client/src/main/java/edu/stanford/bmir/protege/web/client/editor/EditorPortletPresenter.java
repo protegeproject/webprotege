@@ -3,10 +3,14 @@ package edu.stanford.bmir.protege.web.client.editor;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.EntityFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
+import elemental.client.Browser;
+import elemental.dom.Element;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -73,6 +77,9 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
                                             event -> editorPresenter.updatePermissionBasedItems());
         eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
                                             event -> editorPresenter.updatePermissionBasedItems());
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
+                                        this::handleClassFrameChangedEvent);
         editorPresenter.setEntityDisplay(this);
         handleAfterSetEntity(getSelectedEntity());
     }
@@ -90,6 +97,17 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         }
     }
 
+    private void handleClassFrameChangedEvent(ClassFrameChangedEvent event) {
+        if(displayedTypes.contains(CLASS) && getSelectedEntity().equals(Optional.of(event.getEntity()))) {
+            reloadEditorIfNotActive();
+        }
+    }
+
+    private void reloadEditorIfNotActive() {
+        if(!editorPresenter.isActive()) {
+            handleAfterSetEntity(getSelectedEntity());
+        }
+    }
 
 
     private boolean isDisplayedType(Optional<OWLEntity> entity) {
@@ -97,10 +115,7 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     public static Optional<OWLEntityContext> getEditorContext(Optional<OWLEntity> sel, ProjectId projectId) {
-        if(!sel.isPresent()) {
-            return Optional.empty();
-        }
-        return Optional.of(new OWLEntityContext(projectId, sel.get()));
+        return sel.map(owlEntity -> new OWLEntityContext(projectId, owlEntity));
     }
 
     @Override
