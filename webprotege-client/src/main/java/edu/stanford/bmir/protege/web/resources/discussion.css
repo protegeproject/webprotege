@@ -105,6 +105,8 @@
 
 .wp-comment__body ul, ol {
     margin: 10px;
+    margin-left: 2px;
+    padding-left: 20px;
 }
 
 .wp-comment__body ul li {
