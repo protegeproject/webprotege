@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.library.popupmenu;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
@@ -59,8 +60,17 @@ public class PopupMenu {
     }
 
     public void show(int x, int y) {
-        popupPanel.setPopupPosition(x, y);
-        popupPanel.show();
+        popupPanel.setPopupPositionAndShow((offsetWidth, offsetHeight) -> {
+            int clientHeight = Window.getClientHeight();
+            int availableHeight = clientHeight - y;
+            if(offsetHeight > availableHeight) {
+                int yDiff = offsetHeight - availableHeight;
+                popupPanel.setPopupPosition(x, y - yDiff - 10);
+            }
+            else {
+                popupPanel.setPopupPosition(x, y);
+            }
+        });
         lastInvoker = Optional.empty();
         resetSelectionAndFocusMenu();
 
