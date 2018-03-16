@@ -6,8 +6,11 @@ import edu.stanford.bmir.protege.web.server.collection.CollectionItemConverter;
 import edu.stanford.bmir.protege.web.server.form.FormDataConverter;
 import edu.stanford.bmir.protege.web.server.form.FormDataValueConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
+import edu.stanford.bmir.protege.web.server.renderer.ColorConverter;
+import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import edu.stanford.bmir.protege.web.server.user.UserActivityRecord;
 import edu.stanford.bmir.protege.web.shared.issues.EntityDiscussionThread;
+import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.converters.Converters;
 import org.mongodb.morphia.mapping.Mapper;
@@ -45,6 +48,12 @@ public class MorphiaProvider implements Provider<Morphia> {
     @Nonnull
     private final FormIdConverter formIdConverter;
 
+    @Nonnull
+    private final TagIdConverter tagIdConverter;
+
+    @Nonnull
+    private ColorConverter colorConverter;
+
 
     @Inject
     public MorphiaProvider(@Nonnull UserIdConverter userIdConverter,
@@ -53,7 +62,9 @@ public class MorphiaProvider implements Provider<Morphia> {
                            @Nonnull ThreadIdConverter threadIdConverter,
                            @Nonnull CommentIdConverter commentIdConverter,
                            @Nonnull CollectionIdConverter collectionIdConverter,
-                           @Nonnull FormIdConverter formIdConverter) {
+                           @Nonnull FormIdConverter formIdConverter,
+                           @Nonnull TagIdConverter tagIdConverter,
+                           @Nonnull ColorConverter colorConverter) {
         this.userIdConverter = userIdConverter;
         this.entityConverter = entityConverter;
         this.projectIdConverter = projectIdConverter;
@@ -61,6 +72,8 @@ public class MorphiaProvider implements Provider<Morphia> {
         this.commentIdConverter = commentIdConverter;
         this.collectionIdConverter = collectionIdConverter;
         this.formIdConverter = formIdConverter;
+        this.tagIdConverter = tagIdConverter;
+        this.colorConverter = colorConverter;
     }
 
     @Override
@@ -83,6 +96,8 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(new FormDataConverter(formDataValueConverter));
         converters.addConverter(collectionIdConverter);
         converters.addConverter(formIdConverter);
+        converters.addConverter(tagIdConverter);
+        converters.addConverter(colorConverter);
         converters.addConverter(new CollectionIdConverter());
         converters.addConverter(new CollectionItemConverter());
         morphia.map(EntityDiscussionThread.class);
