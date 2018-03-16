@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
@@ -22,6 +24,7 @@ public class TagId implements IsSerializable {
         this.id = checkNotNull(id);
     }
 
+    @JsonCreator
     @Nonnull
     public static TagId getId(@Nonnull String id) {
         if(!UUIDUtil.isWellFormed(checkNotNull(id))) {
@@ -30,6 +33,7 @@ public class TagId implements IsSerializable {
         return new TagId(id);
     }
 
+    @JsonValue
     @Nonnull
     public String getId() {
         return id;
