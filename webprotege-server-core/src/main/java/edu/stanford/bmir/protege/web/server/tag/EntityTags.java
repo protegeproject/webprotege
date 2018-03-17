@@ -12,7 +12,9 @@ import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.PROJECT_ID;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.ENTITY;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.TAGS;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -20,14 +22,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Entity(noClassnameStored = true)
 @Indexes(
-        {@Index(
-                fields = {@Field(value = "projectId"), @Field("entity")},
-                options = @IndexOptions(unique = true)),
-        @Index(
-                fields = @Field(value = "tags")
-        )
+        {
+                @Index(fields = {@Field(value = PROJECT_ID), @Field(ENTITY)}, options = @IndexOptions(unique = true)),
+                @Index(fields = @Field(value = TAGS))
         })
 public class EntityTags {
+
+    public static final String PROJECT_ID = "projectId";
+
+    public static final String ENTITY = "entity";
+
+    public static final String TAGS = "tags";
 
     @Nonnull
     private final ProjectId projectId;

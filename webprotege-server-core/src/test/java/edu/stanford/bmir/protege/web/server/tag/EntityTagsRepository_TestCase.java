@@ -33,10 +33,6 @@ public class EntityTagsRepository_TestCase {
 
     private EntityTagsRepository repository;
 
-    private Datastore datastore;
-
-    private Morphia morphia;
-
     private MongoClient mongoClient;
 
     private OWLEntity entity;
@@ -48,9 +44,9 @@ public class EntityTagsRepository_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        morphia = createMorphia();
+        Morphia morphia = createMorphia();
         mongoClient = createMongoClient();
-        datastore = morphia.createDatastore(mongoClient, getTestDbName());
+        Datastore datastore = morphia.createDatastore(mongoClient, getTestDbName());
         repository = new EntityTagsRepository(datastore);
         repository.ensureIndexes();
         entity = new OWLClassImpl(IRI.create("http://stuff.com/entities/A"));

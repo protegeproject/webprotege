@@ -16,6 +16,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.ENTITY;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.PROJECT_ID;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.TAGS;
 
 /**
  * Matthew Horridge
@@ -58,7 +61,7 @@ public class EntityTagsRepository implements Repository {
             writeLock.lock();
             Query<EntityTags> query = tagWithProjectIdAndEntity(projectId, entity);
             UpdateOperations<EntityTags> updateOps = datastore.createUpdateOperations(EntityTags.class);
-            updateOps.addToSet("tags", tagId);
+            updateOps.addToSet(TAGS, tagId);
             datastore.update(query, updateOps);
         } finally {
             writeLock.unlock();
@@ -70,7 +73,7 @@ public class EntityTagsRepository implements Repository {
             writeLock.lock();
             Query<EntityTags> query = tagWithProjectIdAndEntity(projectId, entity);
             UpdateOperations<EntityTags> updateOps = datastore.createUpdateOperations(EntityTags.class);
-            updateOps.removeAll("tags", tagId);
+            updateOps.removeAll(TAGS, tagId);
             datastore.update(query, updateOps);
         } finally {
             writeLock.unlock();
@@ -79,8 +82,8 @@ public class EntityTagsRepository implements Repository {
 
     private Query<EntityTags> tagWithProjectIdAndEntity(ProjectId projectId, OWLEntity entity) {
          return datastore.createQuery(EntityTags.class)
-                     .field("projectId").equal(projectId)
-                     .field("entity").equal(entity);
+                         .field(PROJECT_ID).equal(projectId)
+                         .field(ENTITY).equal(entity);
     }
 
     public List<EntityTags> findByEntity(ProjectId projectId, OWLEntity entity) {
@@ -96,7 +99,7 @@ public class EntityTagsRepository implements Repository {
         try {
             readLock.lock();
             return datastore.find(EntityTags.class)
-                            .field("tags")
+                            .field(TAGS)
                             .equal(tagId).asList();
         } finally {
             readLock.unlock();
