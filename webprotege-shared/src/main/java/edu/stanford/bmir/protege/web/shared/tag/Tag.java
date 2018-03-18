@@ -29,8 +29,6 @@ import static edu.stanford.bmir.protege.web.shared.tag.Tag.TAG_LABEL;
 @Indexes(
         {
                 // Note, in addition to the unique indexes here, tag ids are globally unique
-                // Tags are unique within a project
-                @Index(fields = {@Field(TAG_ID), @Field(PROJECT_ID)}, options = @IndexOptions(unique = true)),
                 // Labels are unique within a project
                 @Index(fields = {@Field(PROJECT_ID), @Field(TAG_LABEL)}, options = @IndexOptions(unique = true))
         }
