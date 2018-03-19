@@ -32,6 +32,18 @@ public class GetEntityTagsAction implements ProjectAction<GetEntityTagsResult> {
     private GetEntityTagsAction() {
     }
 
+    /**
+     * Gets an action that gets the tags for an entity in a project.
+     * @param projectId The project id.
+     * @param entity The entity.
+     */
+    @Nonnull
+    public static GetEntityTagsAction getEntityTags(@Nonnull ProjectId projectId,
+                                                    @Nonnull OWLEntity entity) {
+        return new GetEntityTagsAction(projectId, entity);
+    }
+
+    @Nonnull
     public OWLEntity getEntity() {
         return entity;
     }
