@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
@@ -22,6 +23,10 @@ public class TagId implements IsSerializable {
 
     private TagId(@Nonnull String id) {
         this.id = checkNotNull(id);
+    }
+
+    @GwtSerializationConstructor
+    private TagId() {
     }
 
     @JsonCreator

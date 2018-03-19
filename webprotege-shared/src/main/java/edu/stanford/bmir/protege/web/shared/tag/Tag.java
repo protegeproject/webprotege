@@ -14,7 +14,6 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.tag.Tag.PROJECT_ID;
-import static edu.stanford.bmir.protege.web.shared.tag.Tag.TAG_ID;
 import static edu.stanford.bmir.protege.web.shared.tag.Tag.TAG_LABEL;
 
 /**
@@ -48,14 +47,14 @@ public class Tag implements IsSerializable {
     /**
      * The JSON field name for the tag label.
      */
-    public static final String TAG_LABEL = "tagLabel";
+    public static final String TAG_LABEL = "label";
 
     @Id
     private TagId tagId;
 
     private ProjectId projectId;
 
-    private String tagLabel;
+    private String label;
 
     private String description;
 
@@ -67,7 +66,7 @@ public class Tag implements IsSerializable {
      * Creates a Tag.
      * @param tagId The tag id.
      * @param projectId The project id of the project that the tag belongs to.
-     * @param tagLabel The label for the tag.  This must not be empty.
+     * @param label The label for the tag.  This must not be empty.
      * @param description An optional description for the tag.  This may be empty.
      * @param color A color for the tag.  This is the foreground color of the tag in the user interface.
      * @param backgroundColor A background color for the tag.  This is the background color of the tag in the user
@@ -76,14 +75,14 @@ public class Tag implements IsSerializable {
     @JsonCreator
     public Tag(@Nonnull TagId tagId,
                @Nonnull ProjectId projectId,
-               @Nonnull String tagLabel,
+               @Nonnull String label,
                @Nonnull String description,
                @Nonnull Color color,
                @Nonnull Color backgroundColor) {
         this.tagId = checkNotNull(tagId);
         this.projectId = checkNotNull(projectId);
-        this.tagLabel = checkNotNull(tagLabel);
-        checkArgument(!tagLabel.isEmpty(), "Tag label cannot be empty");
+        this.label = checkNotNull(label);
+        checkArgument(!label.isEmpty(), "Tag label cannot be empty");
         this.description = checkNotNull(description);
         this.color = checkNotNull(color);
         this.backgroundColor = checkNotNull(backgroundColor);
@@ -122,8 +121,8 @@ public class Tag implements IsSerializable {
      * Gets the human readable name for the tag.
      */
     @Nonnull
-    public String getTagLabel() {
-        return tagLabel;
+    public String getLabel() {
+        return label;
     }
 
     /**
@@ -146,7 +145,7 @@ public class Tag implements IsSerializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(tagId, projectId, tagLabel, description, color, backgroundColor);
+        return Objects.hashCode(tagId, projectId, label, description, color, backgroundColor);
     }
 
     @Override
@@ -160,7 +159,7 @@ public class Tag implements IsSerializable {
         Tag other = (Tag) obj;
         return this.tagId.equals(other.tagId)
                 && this.projectId.equals(other.projectId)
-                && this.tagLabel.equals(other.tagLabel)
+                && this.label.equals(other.label)
                 && this.description.equals(other.description)
                 && this.color.equals(other.color)
                 && this.backgroundColor.equals(other.backgroundColor);
@@ -171,7 +170,7 @@ public class Tag implements IsSerializable {
     public String toString() {
         return toStringHelper("Tag")
                 .addValue(tagId)
-                .add("label", tagLabel)
+                .add("label", label)
                 .add("color", color)
                 .add("background-color", backgroundColor)
                 .toString();
