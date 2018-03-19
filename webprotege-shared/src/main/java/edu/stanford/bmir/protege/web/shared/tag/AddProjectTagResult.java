@@ -31,7 +31,12 @@ public class AddProjectTagResult implements Result {
         this.addedTag = null;
     }
 
-    @Nullable
+    /**
+     * Gets the tag if it was added.
+     * @return The tag.  If the tag was not added (likely due to a duplicate label, for example)
+     * then the return value will be empty.
+     */
+    @Nonnull
     public Optional<Tag> getAddedTag() {
         return Optional.ofNullable(addedTag);
     }
