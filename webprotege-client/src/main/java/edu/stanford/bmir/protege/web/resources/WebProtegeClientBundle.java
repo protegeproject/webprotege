@@ -114,6 +114,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtege.css")
     WebProtegeCss style();
 
+    @Source("tags.css")
+    Tags tags();
+
     @Source("topbar.css")
     TopBar laf();
 
@@ -212,6 +215,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String noSelection();
 
         String helpText();
+    }
+
+    interface Tags extends CssResource {
+        @ClassName("wp-tag")
+        String tag();
     }
 
     interface TopBar extends CssResource {
