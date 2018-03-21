@@ -71,7 +71,7 @@ public class Tag_TestCase {
 
     @Test
     public void shouldReturnSupplied_tagLabel() {
-        assertThat(tag.getTagLabel(), is(this.tagLabel));
+        assertThat(tag.getLabel(), is(this.tagLabel));
     }
 
     @SuppressWarnings("ConstantConditions")
