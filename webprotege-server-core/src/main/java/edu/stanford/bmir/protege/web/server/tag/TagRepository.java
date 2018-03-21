@@ -8,6 +8,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class TagRepository implements Repository {
     @Nonnull
     private final Datastore datastore;
 
+    @Inject
     public TagRepository(@Nonnull Datastore datastore) {
         this.datastore = checkNotNull(datastore);
     }
