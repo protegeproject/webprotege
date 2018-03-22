@@ -1,6 +1,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .tagListContainer {
+            padding-top: 2px;
+            padding-right: 2px;
+            padding-left: 2px;
+        }
+    </ui:style>
     <g:HTMLPanel>
-
+        <g:SimplePanel ui:field="tagListViewContainer" addStyleNames="{style.tagListContainer}"/>
+        <g:SimplePanel ui:field="editorViewContainer"/>
     </g:HTMLPanel>
 </ui:UiBinder>
