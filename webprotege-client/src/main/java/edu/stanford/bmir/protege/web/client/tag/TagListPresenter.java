@@ -91,14 +91,14 @@ public class TagListPresenter {
         view.clear();
     }
 
-    private void setTags(Collection<Tag> tags) {
+    private void setTags(@Nonnull Collection<Tag> tags) {
         List<TagView> tagViews = tags.stream()
                                      .map(this::createTagViewForTag)
                                      .collect(toList());
         view.setTagViews(tagViews);
     }
 
-    private TagView createTagViewForTag(Tag tag) {
+    private TagView createTagViewForTag(@Nonnull Tag tag) {
         TagView tagView = tagViewProvider.get();
         tagView.setLabel(tag.getLabel());
         tagView.setDescription(tag.getDescription());
