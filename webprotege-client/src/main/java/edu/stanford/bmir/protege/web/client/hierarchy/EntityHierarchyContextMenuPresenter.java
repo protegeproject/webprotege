@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.entity.MergeEntitiesUiAction;
 import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -49,6 +50,9 @@ public class EntityHierarchyContextMenuPresenter {
     @Nonnull
     private final MergeEntitiesUiAction mergeEntitiesAction;
 
+    @Nonnull
+    private final EditEntityTagsUiAction editEntityTagsAction;
+
     @Nullable
     private PopupMenu contextMenu;
 
@@ -61,6 +65,7 @@ public class EntityHierarchyContextMenuPresenter {
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
                                                @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
+                                               @Provided @Nonnull EditEntityTagsUiAction editEntityTagsAction,
                                                @Provided Messages messages,
                                                @Provided @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
         this.messages = checkNotNull(messages);
@@ -69,6 +74,7 @@ public class EntityHierarchyContextMenuPresenter {
         this.createEntityAction = checkNotNull(createEntityAction);
         this.deleteEntityAction = checkNotNull(deleteEntityAction);
         this.mergeEntitiesAction = checkNotNull(mergeEntitiesAction);
+        this.editEntityTagsAction = checkNotNull(editEntityTagsAction);
         this.permissionChecker = checkNotNull(permissionChecker);
     }
 
@@ -92,6 +98,8 @@ public class EntityHierarchyContextMenuPresenter {
         contextMenu = new PopupMenu();
         contextMenu.addItem(createEntityAction);
         contextMenu.addItem(deleteEntityAction);
+        contextMenu.addSeparator();
+        contextMenu.addItem(editEntityTagsAction);
         contextMenu.addSeparator();
         contextMenu.addItem(mergeEntitiesAction);
         contextMenu.addSeparator();
