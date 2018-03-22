@@ -45,6 +45,7 @@ public class TagViewImpl extends Composite implements TagView {
         sinkEvents(Event.ONMOUSEOUT);
         sinkEvents(Event.ONMOUSEOVER);
         sinkEvents(Event.ONMOUSEWHEEL);
+        sinkEvents(Event.ONCONTEXTMENU);
     }
 
     @Override
@@ -95,5 +96,10 @@ public class TagViewImpl extends Composite implements TagView {
     @Override
     public HandlerRegistration addMouseWheelHandler(MouseWheelHandler handler) {
         return label.addHandler(handler, MouseWheelEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addContextMenuHandler(ContextMenuHandler handler) {
+        return label.addHandler(handler, ContextMenuEvent.getType());
     }
 }

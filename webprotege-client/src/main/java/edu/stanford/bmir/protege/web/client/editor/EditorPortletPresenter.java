@@ -1,25 +1,24 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.EntityFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
-import elemental.client.Browser;
-import elemental.dom.Element;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
 import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
 import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
@@ -36,20 +35,25 @@ import static org.semanticweb.owlapi.model.EntityType.*;
         tooltip = "Displays a simple property-value oriented description of the selected class, property or individual for viewing and editing.")
 public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-    private EditorPresenter editorPresenter;
+    private final EditorPortletView view;
 
-    private final Widget editorView;
+    private final TagListPresenter tagListPresenter;
+
+    private final EditorPresenter editorPresenter;
 
     private final Set<EntityType<?>> displayedTypes = new HashSet<>();
 
     @Inject
     public EditorPortletPresenter(
-            SelectionModel selectionModel,
-            final ProjectId projectId,
-            EditorPresenter editorPresenter) {
+            @Nonnull ProjectId projectId,
+            @Nonnull SelectionModel selectionModel,
+            @Nonnull EditorPortletView view,
+            @Nonnull TagListPresenter tagListPresenter,
+            @Nonnull EditorPresenter editorPresenter) {
         super(selectionModel, projectId);
-        this.editorPresenter = editorPresenter;
-        editorView = editorPresenter.getView();
+        this.view = checkNotNull(view);
+        this.tagListPresenter = checkNotNull(tagListPresenter);
+        this.editorPresenter = checkNotNull(editorPresenter);
         displayedTypes.addAll(Arrays.asList(
                 CLASS,
                 OBJECT_PROPERTY,
@@ -67,20 +71,15 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.setWidget(editorView);
+        portletUi.setWidget(view);
         editorPresenter.updatePermissionBasedItems();
         editorPresenter.setHasBusy(portletUi);
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        ON_PERMISSIONS_CHANGED,
-                                        event -> editorPresenter.updatePermissionBasedItems());
-        eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
-                                            event -> editorPresenter.updatePermissionBasedItems());
-        eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
-                                            event -> editorPresenter.updatePermissionBasedItems());
+        editorPresenter.start(view.getEditorViewContainer(), eventBus);
         eventBus.addProjectEventHandler(getProjectId(),
                                         ClassFrameChangedEvent.CLASS_FRAME_CHANGED,
                                         this::handleClassFrameChangedEvent);
         editorPresenter.setEntityDisplay(this);
+        tagListPresenter.start(view.getTagListViewContainer(), eventBus);
         handleAfterSetEntity(getSelectedEntity());
     }
 
@@ -89,11 +88,13 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
         if(!entity.isPresent()  || !isDisplayedType(entity)) {
             setNothingSelectedVisible(true);
             setDisplayedEntity(Optional.empty());
+            tagListPresenter.clear();
         }
         else {
             setNothingSelectedVisible(false);
             final Optional<OWLEntityContext> editorContext = getEditorContext(entity, getProjectId());
             editorPresenter.setEditorContext(editorContext);
+            tagListPresenter.setEntity(entity.get());
         }
     }
 

@@ -19,6 +19,8 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.collection.*;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
+import edu.stanford.bmir.protege.web.client.editor.EditorPortletView;
+import edu.stanford.bmir.protege.web.client.editor.EditorPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesView;
 import edu.stanford.bmir.protege.web.client.entity.DeprecatedEntitiesViewImpl;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
@@ -399,4 +401,8 @@ public class ClientApplicationModule {
         return impl;
     }
 
+    @Provides
+    EditorPortletView provideEditorPortletView(EditorPortletViewImpl impl) {
+        return impl;
+    }
 }

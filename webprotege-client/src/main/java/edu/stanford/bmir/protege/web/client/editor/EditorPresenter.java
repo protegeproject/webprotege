@@ -4,11 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -18,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
-import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -53,6 +49,9 @@ public class EditorPresenter implements HasDispose {
 
     private final SimplePanel editorHolder = new SimplePanel();
 
+    @Nonnull
+    private final ProjectId projectId;
+
     private Optional<EditorState<?, ?, ?, ?>> lastEditorState = Optional.empty();
 
     private HandlerRegistration valueChangedReg;
@@ -77,19 +76,32 @@ public class EditorPresenter implements HasDispose {
     private HasBusy hasBusy = busy -> {};
 
     @Inject
-    public EditorPresenter(DispatchServiceManager dispatchServiceManager,
+    public EditorPresenter(@Nonnull ProjectId projectId, DispatchServiceManager dispatchServiceManager,
                            ContextMapper contextMapper,
                            LoggedInUserProjectPermissionChecker permissionChecker) {
+        this.projectId = projectId;
         this.contextMapper = contextMapper;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
+    }
+
+    public void start(@Nonnull AcceptsOneWidget container, @Nonnull WebProtegeEventBus eventBus) {
+        container.setWidget(editorHolder);
+        eventBus.addProjectEventHandler(projectId,
+                                        ON_PERMISSIONS_CHANGED,
+                                        event -> updatePermissionBasedItems());
+        eventBus.addApplicationEventHandler(ON_USER_LOGGED_IN,
+                                            event -> updatePermissionBasedItems());
+        eventBus.addApplicationEventHandler(ON_USER_LOGGED_OUT,
+                                            event -> updatePermissionBasedItems());
+
     }
 
     public HandlerRegistration addEditorContextChangedHandler(EditorContextChangedHandler handler) {
         return handlerManager.addHandler(EditorContextChangedEvent.TYPE, handler);
     }
 
-    public Widget getView() {
+    private Widget getView() {
         return editorHolder;
     }
 
