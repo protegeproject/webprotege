@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
@@ -106,7 +104,6 @@ public class TagListPresenter {
         tagView.setDescription(tag.getDescription());
         tagView.setColor(tag.getColor());
         tagView.setBackgroundColor(tag.getBackgroundColor());
-        tagView.addContextMenuHandler(event -> showContextMenu(tagView, event));
         return tagView;
     }
 
@@ -114,10 +111,5 @@ public class TagListPresenter {
         if(currentEntity.equals(Optional.of(event.getEntity()))) {
             setTags(event.getTags());
         }
-    }
-
-    private void showContextMenu(@Nonnull TagView tagView,
-                                 @Nonnull ContextMenuEvent event) {
-
     }
 }
