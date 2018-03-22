@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeRenderer;
@@ -10,6 +11,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -59,6 +62,18 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
                 }
                 sb.append("'/>");
             });
+        Collection<Tag> tags = node.getTags();
+        tags.forEach(tag -> {
+            sb.append("<div title='")
+              .append(tag.getDescription())
+              .append("' class='wp-tag' style='margin-left: 4px; color:")
+              .append(tag.getColor().getHex())
+              .append("; background-color:")
+              .append(tag.getBackgroundColor().getHex())
+              .append("; pointer-events: auto;'>");
+            sb.append(tag.getLabel());
+            sb.append("</div>");
+        });
         sb.append("</div>");
         return sb.toString();
     }

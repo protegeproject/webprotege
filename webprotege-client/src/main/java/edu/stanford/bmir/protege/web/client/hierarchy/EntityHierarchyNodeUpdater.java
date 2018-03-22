@@ -70,7 +70,8 @@ public class EntityHierarchyNodeUpdater {
                     event.getNewBrowserText(),
                     node.isDeprecated(),
                     node.getWatches(),
-                    node.getOpenCommentCount());
+                    node.getOpenCommentCount(),
+                    node.getTags());
             model.updateNode(updatedNode);
         });
     }
@@ -106,7 +107,8 @@ public class EntityHierarchyNodeUpdater {
                 node.getBrowserText(),
                 node.isDeprecated(),
                 updatedWatches,
-                node.getOpenCommentCount());
+                node.getOpenCommentCount(),
+                node.getTags());
         model.updateNode(updatedNode);
     }
 
@@ -121,7 +123,8 @@ public class EntityHierarchyNodeUpdater {
                         node.getBrowserText(),
                         node.isDeprecated(),
                         node.getWatches(),
-                        event.getOpenCommentCountForEntity());
+                        event.getOpenCommentCountForEntity(),
+                        node.getTags());
                 model.updateNode(updatedNode);
             });
         });
@@ -138,7 +141,8 @@ public class EntityHierarchyNodeUpdater {
                         node.getBrowserText(),
                         node.isDeprecated(),
                         node.getWatches(),
-                        event.getOpenCommentsCountForEntity());
+                        event.getOpenCommentsCountForEntity(),
+                        node.getTags());
                 model.updateNode(updatedNode);
             });
         });
@@ -154,7 +158,8 @@ public class EntityHierarchyNodeUpdater {
                     node.getBrowserText(),
                     event.isDeprecated(),
                     node.getWatches(),
-                    node.getOpenCommentCount());
+                    node.getOpenCommentCount(),
+                    node.getTags());
             model.updateNode(updatedNode);
         });
     }

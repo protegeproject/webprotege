@@ -1,17 +1,20 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.protege.gwt.graphtree.shared.tree.HasTextRendering;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -33,16 +36,20 @@ public class EntityHierarchyNode implements IsSerializable, Serializable, Compar
 
     private int openCommentCount;
 
+    private Collection<Tag> tags;
+
     public EntityHierarchyNode(@Nonnull OWLEntity entity,
                                @Nonnull String browserText,
                                boolean deprecated,
                                @Nonnull Set<Watch> watches,
-                               int openCommentCount) {
+                               int openCommentCount,
+                               Collection<Tag> tags) {
         this.entity = checkNotNull(entity);
         this.browserText = checkNotNull(browserText);
         this.deprecated = deprecated;
         this.watches = ImmutableSet.copyOf(watches);
         this.openCommentCount = openCommentCount;
+        this.tags = ImmutableList.copyOf(tags);
     }
 
     @GwtSerializationConstructor
@@ -62,6 +69,9 @@ public class EntityHierarchyNode implements IsSerializable, Serializable, Compar
         return entity;
     }
 
+    public Collection<Tag> getTags() {
+        return ImmutableList.copyOf(tags);
+    }
 
     public boolean isDeprecated() {
         return deprecated;
