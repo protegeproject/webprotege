@@ -12,12 +12,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
+import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
+import edu.stanford.bmir.protege.web.client.tag.TagListView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -26,7 +27,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -43,6 +44,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ClassFrameEditor extends SimplePanel implements ValueEditor<LabelledFrame<ClassFrame>>, ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
 
+    private final TagListPresenter tagListPresenter;
+
+    @UiField(provided = true)
+    protected TagListView tagListView;
+
     @UiField
     protected TextBox iriField;
 
@@ -54,6 +60,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
 
     @UiField(provided = true)
     protected final PrimitiveDataListEditor classes;
+
 
     private LabelledFrame<ClassFrame> lastClassFrame;
 
@@ -76,7 +83,10 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
     @Inject
     public ClassFrameEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                             PropertyValueListEditor annotations,
-                            PropertyValueListEditor properties) {
+                            PropertyValueListEditor properties,
+                            TagListPresenter tagListPresenter) {
+        this.tagListPresenter = tagListPresenter;
+        this.tagListView = tagListPresenter.getView();
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.classes = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
@@ -90,6 +100,11 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);
+    }
+
+    @Override
+    public void setTags(@Nonnull Collection<Tag> tags) {
+        tagListPresenter.setTags(tags);
     }
 
     public void setValue(final LabelledFrame<ClassFrame> lcf) {

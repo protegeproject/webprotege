@@ -7,8 +7,10 @@ import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.inject.Inject;
+import java.util.Collection;
 
 /**
  * Author: Matthew Horridge<br>
@@ -38,6 +40,12 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
     @Override
     public LabelledFrame<ClassFrame> extractObject(GetClassFrameResult result) {
         return result.getFrame();
+    }
+
+
+    @Override
+    public Collection<Tag> extractTags(GetClassFrameResult result) {
+        return result.getTags();
     }
 
     @Override

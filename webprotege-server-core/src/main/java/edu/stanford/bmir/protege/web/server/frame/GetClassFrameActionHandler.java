@@ -4,12 +4,16 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.tag.EntityTagsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.util.Collection;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 
@@ -36,13 +42,18 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Nonnull
     private final Provider<ClassFrameTranslator> translatorProvider;
 
+    @Nonnull
+    private final EntityTagsManager entityTagsManager;
+
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull RenderingManager renderingManager,
-                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
+                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider,
+                                      @Nonnull EntityTagsManager entityTagsManager) {
         super(accessManager);
         this.renderingManager = renderingManager;
         this.translatorProvider = translatorProvider;
+        this.entityTagsManager = entityTagsManager;
     }
 
     /**
@@ -64,17 +75,20 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Nonnull
     @Override
     public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
+        OWLClass subject = action.getSubject();
         FrameActionResultTranslator<ClassFrame, OWLClassData> translator = new FrameActionResultTranslator<>(
                 renderingManager,
                 translatorProvider.get(),
-                renderingManager.getRendering(action.getSubject()));
+                renderingManager.getRendering(subject));
         LabelledFrame<ClassFrame> f = translator.doIT();
+        ProjectId projectId = action.getProjectId();
         logger.info(BROWSING,
-                     "{} {} retrieved Class frame for {} ({})",
-                    action.getProjectId(),
+                    "{} {} retrieved Class frame for {} ({})",
+                    projectId,
                     executionContext.getUserId(),
-                    action.getSubject(),
+                    subject,
                     f.getDisplayName());
-        return new GetClassFrameResult(f);
+        Collection<Tag> tags = entityTagsManager.getTags(projectId, subject);
+        return new GetClassFrameResult(f, tags);
     }
 }

@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Matthew Horridge
@@ -12,18 +16,25 @@ public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassF
 
     private LabelledFrame<ClassFrame> frame;
 
+    private Collection<Tag> tags;
+
     /**
      * For serialization purposes only
      */
     private GetClassFrameResult() {
     }
 
-    public GetClassFrameResult(LabelledFrame<ClassFrame> frame) {
+    public GetClassFrameResult(LabelledFrame<ClassFrame> frame, Collection<Tag> tags) {
         this.frame = frame;
+        this.tags = new ArrayList<>(tags);
     }
 
     public LabelledFrame<ClassFrame> getFrame() {
         return frame;
+    }
+
+    public Collection<Tag> getTags() {
+        return new ArrayList<>(tags);
     }
 
     /**

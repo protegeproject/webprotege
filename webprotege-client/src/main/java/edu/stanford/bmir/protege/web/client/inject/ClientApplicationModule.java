@@ -50,6 +50,7 @@ import edu.stanford.bmir.protege.web.client.search.SearchView;
 import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;
 import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
+import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
@@ -380,6 +381,21 @@ public class ClientApplicationModule {
 
     @Provides
     EditProjectPrefixDeclarationsHandler provideEditProjectPrefixDeclarationsHandler(EditProjectPrefixDeclarationsHandlerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TagListView provideTagsView(TagListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TagView provideTagView(TagViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityTagsSelectorView provideEntityTagsSelectorView(EntityTagsSelectorViewImpl impl) {
         return impl;
     }
 

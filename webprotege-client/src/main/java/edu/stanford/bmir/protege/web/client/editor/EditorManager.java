@@ -3,6 +3,10 @@ package edu.stanford.bmir.protege.web.client.editor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,4 +25,8 @@ public interface EditorManager<C extends EditorCtx, V, A extends Action<R>, R ex
     A createAction(C editorContext);
 
     V extractObject(R result);
+
+    default Collection<Tag> extractTags(R result) {
+        return Collections.emptyList();
+    }
 }

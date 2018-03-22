@@ -1,12 +1,15 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.frame'
-             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
+             xmlns:tag="urn:import:edu.stanford.bmir.protege.web.client.tag">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+
+        <tag:TagListView ui:field="tagListView"/>
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>

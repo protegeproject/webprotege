@@ -195,6 +195,7 @@ public class EditorPresenter implements HasDispose {
                 final EditorView<O> editorView = editorManager.getView(editorCtx);
                 editorView.setEntityDisplay(entityDisplay);
                 editorView.setValue(value);
+                editorView.setTags(editorManager.extractTags(result));
                 valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
                 final Widget editorWidget = editorView.asWidget();
                 editorHolder.setWidget(editorWidget);
