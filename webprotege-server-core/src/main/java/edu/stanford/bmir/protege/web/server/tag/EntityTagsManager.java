@@ -104,9 +104,8 @@ public class EntityTagsManager {
      * @param entity     The entity.
      * @param fromTagIds The set of tags to update from.
      * @param toTagIds   The set of tags to update to.
-     * @return true if the tags changes, otherwise false;
      */
-    public boolean updateTags(@Nonnull OWLEntity entity,
+    public void updateTags(@Nonnull OWLEntity entity,
                               @Nonnull Set<TagId> fromTagIds,
                               @Nonnull Set<TagId> toTagIds) {
         try {
@@ -131,7 +130,6 @@ public class EntityTagsManager {
                                                               entity,
                                                               getTags(entity)));
             }
-            return changed;
         } finally {
             writeLock.unlock();
         }
