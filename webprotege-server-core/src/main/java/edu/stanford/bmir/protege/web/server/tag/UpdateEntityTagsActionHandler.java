@@ -3,6 +3,10 @@ package edu.stanford.bmir.protege.web.server.tag;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.shared.event.EventList;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.tag.UpdateEntityTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.UpdateEntityTagsResult;
 
@@ -19,12 +23,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class UpdateEntityTagsActionHandler extends AbstractProjectActionHandler<UpdateEntityTagsAction, UpdateEntityTagsResult> {
 
     @Nonnull
+    private final EventManager<ProjectEvent<?>> eventEventManager;
+
+    @Nonnull
     private final EntityTagsManager entityTagsManager;
 
     @Inject
     public UpdateEntityTagsActionHandler(@Nonnull AccessManager accessManager,
-                                         @Nonnull EntityTagsManager entityTagsManager) {
+                                         @Nonnull EventManager<ProjectEvent<?>> eventEventManager, @Nonnull EntityTagsManager entityTagsManager) {
         super(accessManager);
+        this.eventEventManager = checkNotNull(eventEventManager);
         this.entityTagsManager = checkNotNull(entityTagsManager);
     }
 
@@ -36,10 +44,14 @@ public class UpdateEntityTagsActionHandler extends AbstractProjectActionHandler<
 
     @Nonnull
     @Override
-    public UpdateEntityTagsResult execute(@Nonnull UpdateEntityTagsAction action, @Nonnull ExecutionContext executionContext) {
+    public UpdateEntityTagsResult execute(@Nonnull UpdateEntityTagsAction action,
+                                          @Nonnull ExecutionContext executionContext) {
+
+        EventTag startTag = eventEventManager.getCurrentTag();
         entityTagsManager.updateTags(action.getEntity(),
                                      action.getFromTagIds(),
                                      action.getToTagIds());
-        return new UpdateEntityTagsResult();
+        EventList<ProjectEvent<?>> events = eventEventManager.getEventsFromTag(startTag);
+        return new UpdateEntityTagsResult(events);
     }
 }
