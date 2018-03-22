@@ -63,9 +63,6 @@ public class EditorPresenter implements HasDispose {
 
     private int counter = 0;
 
-    private HandlerRegistrationManager handlerRegistrationManager;
-
-
     private EntityDisplay entityDisplay = entityData -> {};
 
 
@@ -80,19 +77,12 @@ public class EditorPresenter implements HasDispose {
     private HasBusy hasBusy = busy -> {};
 
     @Inject
-    public EditorPresenter(ProjectId projectId,
-                           EventBus eventBus,
-                           DispatchServiceManager dispatchServiceManager,
+    public EditorPresenter(DispatchServiceManager dispatchServiceManager,
                            ContextMapper contextMapper,
                            LoggedInUserProjectPermissionChecker permissionChecker) {
         this.contextMapper = contextMapper;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
-        this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
-
-        handlerRegistrationManager.registerHandlerToProject(projectId, ON_PERMISSIONS_CHANGED, event -> updatePermissionBasedItems());
-        handlerRegistrationManager.registerHandler(ON_USER_LOGGED_IN, event -> updatePermissionBasedItems());
-        handlerRegistrationManager.registerHandler(ON_USER_LOGGED_OUT, event -> updatePermissionBasedItems());
     }
 
     public HandlerRegistration addEditorContextChangedHandler(EditorContextChangedHandler handler) {
@@ -215,7 +205,6 @@ public class EditorPresenter implements HasDispose {
 
     @Override
     public void dispose() {
-        handlerRegistrationManager.removeHandlers();
     }
 
 
