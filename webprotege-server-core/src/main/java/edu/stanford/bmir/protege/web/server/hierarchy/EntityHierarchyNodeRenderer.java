@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.tag.EntityTagsManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -22,28 +23,32 @@ public class EntityHierarchyNodeRenderer {
     private final ProjectId projectId;
 
     @Nonnull
-    private BrowserTextProvider browserTextProvider;
+    private final BrowserTextProvider browserTextProvider;
 
     @Nonnull
-    private DeprecatedEntityChecker deprecatedEntityChecker;
+    private final DeprecatedEntityChecker deprecatedEntityChecker;
 
     @Nonnull
-    private WatchManager watchManager;
+    private final WatchManager watchManager;
 
     @Nonnull
-    private EntityDiscussionThreadRepository discussionThreadRepository;
+    private final EntityDiscussionThreadRepository discussionThreadRepository;
+
+    @Nonnull
+    private final EntityTagsManager entityTagsManager;
 
     @Inject
     public EntityHierarchyNodeRenderer(@Nonnull ProjectId projectId,
                                        @Nonnull BrowserTextProvider browserTextProvider,
                                        @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
                                        @Nonnull WatchManager watchManager,
-                                       @Nonnull EntityDiscussionThreadRepository discussionThreadRepository) {
+                                       @Nonnull EntityDiscussionThreadRepository discussionThreadRepository, @Nonnull EntityTagsManager entityTagsManager) {
         this.projectId = checkNotNull(projectId);
         this.browserTextProvider = checkNotNull(browserTextProvider);
         this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);
         this.watchManager = checkNotNull(watchManager);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
+        this.entityTagsManager = checkNotNull(entityTagsManager);
     }
 
     /**
@@ -58,6 +63,7 @@ public class EntityHierarchyNodeRenderer {
                 browserTextProvider.getOWLEntityBrowserText(entity).orElse(""),
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity),
-                discussionThreadRepository.getOpenCommentsCount(projectId, entity));
+                discussionThreadRepository.getOpenCommentsCount(projectId, entity),
+                entityTagsManager.getTags(projectId, entity));
     }
 }
