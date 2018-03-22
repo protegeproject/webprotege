@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -8,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
@@ -23,6 +25,7 @@ import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent
 import static edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent.ON_ENTITY_DEPRECATED;
 import static edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent.ON_COMMENT_POSTED;
 import static edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent.ON_STATUS_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent.ON_ENTITY_TAGS_CHANGED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent.ON_WATCH_ADDED;
 import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_WATCH_REMOVED;
 
@@ -58,6 +61,7 @@ public class EntityHierarchyNodeUpdater {
         eventBus.addProjectEventHandler(projectId, ON_COMMENT_POSTED, this::handleCommentPosted);
         eventBus.addProjectEventHandler(projectId, ON_STATUS_CHANGED, this::handleDiscussionThreadStatusChanged);
         eventBus.addProjectEventHandler(projectId, ON_ENTITY_DEPRECATED, this::handleEntityDeprecatedChanged);
+        eventBus.addProjectEventHandler(projectId, ON_ENTITY_TAGS_CHANGED, this::handleEntityTagsChanged);
     }
 
     private void handleBrowserTextChanged(BrowserTextChangedEvent event) {
@@ -160,6 +164,22 @@ public class EntityHierarchyNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     node.getTags());
+            model.updateNode(updatedNode);
+        });
+    }
+
+    private void handleEntityTagsChanged(EntityTagsChangedEvent event) {
+        if (model == null) {
+            throw createHierarchyModelIsNullException();
+        }
+        model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
+            EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+                    node.getEntity(),
+                    node.getBrowserText(),
+                    node.isDeprecated(),
+                    node.getWatches(),
+                    node.getOpenCommentCount(),
+                    event.getTags());
             model.updateNode(updatedNode);
         });
     }
