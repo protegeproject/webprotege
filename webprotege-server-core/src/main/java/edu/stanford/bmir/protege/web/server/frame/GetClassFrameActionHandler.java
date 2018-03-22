@@ -88,7 +88,7 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
                     executionContext.getUserId(),
                     subject,
                     f.getDisplayName());
-        Collection<Tag> tags = entityTagsManager.getTags(projectId, subject);
+        Collection<Tag> tags = entityTagsManager.getTags(subject);
         return new GetClassFrameResult(f, tags);
     }
 }

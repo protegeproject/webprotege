@@ -64,6 +64,6 @@ public class EntityHierarchyNodeRenderer {
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity),
                 discussionThreadRepository.getOpenCommentsCount(projectId, entity),
-                entityTagsManager.getTags(projectId, entity));
+                entityTagsManager.getTags(entity));
     }
 }

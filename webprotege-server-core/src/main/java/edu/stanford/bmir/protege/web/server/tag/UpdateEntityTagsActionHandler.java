@@ -37,8 +37,7 @@ public class UpdateEntityTagsActionHandler extends AbstractProjectActionHandler<
     @Nonnull
     @Override
     public UpdateEntityTagsResult execute(@Nonnull UpdateEntityTagsAction action, @Nonnull ExecutionContext executionContext) {
-        entityTagsManager.updateTags(action.getProjectId(),
-                                     action.getEntity(),
+        entityTagsManager.updateTags(action.getEntity(),
                                      action.getFromTagIds(),
                                      action.getToTagIds());
         return new UpdateEntityTagsResult();

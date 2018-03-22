@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
@@ -12,7 +13,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toMap;
@@ -22,7 +22,11 @@ import static java.util.stream.Collectors.toMap;
  * Stanford Center for Biomedical Informatics Research
  * 19 Mar 2018
  */
+@ProjectSingleton
 public class EntityTagsManager {
+
+    @Nonnull
+    private final ProjectId projectId;
 
     @Nonnull
     private final EntityTagsRepository repository;
@@ -37,21 +41,22 @@ public class EntityTagsManager {
     private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
-    public EntityTagsManager(@Nonnull EntityTagsRepository repository,
+    public EntityTagsManager(@Nonnull ProjectId projectId,
+                             @Nonnull EntityTagsRepository repository,
                              @Nonnull TagRepository tagRepository) {
+        this.projectId = checkNotNull(projectId);
         this.repository = checkNotNull(repository);
         this.tagRepository = checkNotNull(tagRepository);
     }
 
     /**
-     * Gets the tags for the specified entity in the specified project.
-     * @param projectId The project.
+     * Gets the tags for the specified entity.
+     *
      * @param entity The entity.
-     * @return The tags that tag the specified entity in the specified project.
+     * @return The tags that tag the specified entity.
      */
     @Nonnull
-    public Collection<Tag> getTags(@Nonnull ProjectId projectId,
-                                   @Nonnull OWLEntity entity) {
+    public Collection<Tag> getTags(@Nonnull OWLEntity entity) {
         checkNotNull(projectId);
         checkNotNull(entity);
         try {
@@ -59,7 +64,7 @@ public class EntityTagsManager {
             Map<TagId, Tag> tagsById = tagRepository.findTagsByProjectId(projectId).stream()
                                                     .collect(toMap(Tag::getTagId, tag -> tag));
             Optional<EntityTags> entityTags = repository.findByEntity(projectId, entity);
-            if(!entityTags.isPresent()) {
+            if (!entityTags.isPresent()) {
                 return Collections.emptySet();
             }
             return entityTags.get().getTags().stream()
@@ -72,11 +77,11 @@ public class EntityTagsManager {
     }
 
     /**
-     * Gets the tags that are available for a given project.
-     * @param projectId The project Id.
+     * Gets the tags that are available for the project that this manager is
+     * associated with.
      */
     @Nonnull
-    public Collection<Tag> getProjectTags(@Nonnull ProjectId projectId) {
+    public Collection<Tag> getProjectTags() {
         try {
             readLock.lock();
             return tagRepository.findTagsByProjectId(projectId);
@@ -87,16 +92,15 @@ public class EntityTagsManager {
 
     /**
      * Updates the entity tags for a given entity.  A diff will be performed to compute the changes required.
-     * @param projectId The project containing the entity.
-     * @param entity The entity.
+     *
+     * @param entity     The entity.
      * @param fromTagIds The set of tags to update from.
-     * @param toTagIds The set of tags to update to.
+     * @param toTagIds   The set of tags to update to.
      * @return true if the tags changes, otherwise false;
      */
-    public boolean updateTags(@Nonnull ProjectId projectId,
-                           @Nonnull OWLEntity entity,
-                           @Nonnull Set<TagId> fromTagIds,
-                           @Nonnull Set<TagId> toTagIds) {
+    public boolean updateTags(@Nonnull OWLEntity entity,
+                              @Nonnull Set<TagId> fromTagIds,
+                              @Nonnull Set<TagId> toTagIds) {
         try {
             writeLock.lock();
             Optional<EntityTags> existingTags = repository.findByEntity(projectId,
