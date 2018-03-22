@@ -220,6 +220,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
     interface Tags extends CssResource {
         @ClassName("wp-tag")
         String tag();
+
+        @ClassName("wp-tag--tag-list-tag")
+        String tagTagListTag();
+
+        @ClassName("wp-tag--hierarchy-node-tag")
+        String tagHierarchyNodeTag();
     }
 
     interface TopBar extends CssResource {
