@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.tag;
 
 import com.google.common.base.Objects;
 import com.google.web.bindery.event.shared.Event;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -32,6 +33,10 @@ public class EntityTagsChangedEvent extends ProjectEvent<EntityTagsChangedHandle
         super(checkNotNull(projectId));
         this.entity = checkNotNull(entity);
         this.tags = checkNotNull(tags);
+    }
+
+    @GwtSerializationConstructor
+    private EntityTagsChangedEvent() {
     }
 
     @Nonnull
