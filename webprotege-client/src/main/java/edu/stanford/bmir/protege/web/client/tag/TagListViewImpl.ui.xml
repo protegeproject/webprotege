@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .tags {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        .tags div+div {
+            margin-right: 10px;
+        }
+    </ui:style>
+    <g:HTMLPanel ui:field="tagViewsContainer" addStyleNames="{style.tags}">
+    </g:HTMLPanel>
+</ui:UiBinder>

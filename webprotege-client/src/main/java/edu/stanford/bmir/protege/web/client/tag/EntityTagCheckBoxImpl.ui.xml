@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:tag="urn:import:edu.stanford.bmir.protege.web.client.tag">
+    <ui:style>
+        @external .gwt-CheckBox;
+        @external .wp-tag;
+        .main {
+            display: flex;
+            align-items: baseline;
+            cursor: pointer;
+        }
+        .main .gwt-CheckBox label {
+            display: none;
+        }
+        .tag {
+            width: 100%;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+        .tag .wp-tag {
+            font-size: 12px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:CheckBox ui:field="checkBox"/>
+        <tag:TagViewImpl ui:field="tagView" addStyleNames="{style.tag}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
