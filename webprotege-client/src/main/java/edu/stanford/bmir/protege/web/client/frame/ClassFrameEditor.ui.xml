@@ -9,8 +9,6 @@
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
 
-        <tag:TagListView ui:field="tagListView"/>
-
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="iriField" width="100%"/>

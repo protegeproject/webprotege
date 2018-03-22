@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,8 +13,4 @@ import java.util.List;
 public interface EditorView<O> extends ValueEditor<O> {
 
     void setEntityDisplay(@Nonnull EntityDisplay entityDisplay);
-
-    default void setTags(@Nonnull Collection<Tag> tags) {
-
-    }
 }

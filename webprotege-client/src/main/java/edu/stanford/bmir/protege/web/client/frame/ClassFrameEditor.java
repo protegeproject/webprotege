@@ -44,11 +44,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ClassFrameEditor extends SimplePanel implements ValueEditor<LabelledFrame<ClassFrame>>, ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
 
-    private final TagListPresenter tagListPresenter;
-
-    @UiField(provided = true)
-    protected TagListView tagListView;
-
     @UiField
     protected TextBox iriField;
 
@@ -83,10 +78,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
     @Inject
     public ClassFrameEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                             PropertyValueListEditor annotations,
-                            PropertyValueListEditor properties,
-                            TagListPresenter tagListPresenter) {
-        this.tagListPresenter = tagListPresenter;
-        this.tagListView = tagListPresenter.getView();
+                            PropertyValueListEditor properties) {
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.classes = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
@@ -100,11 +92,6 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);
-    }
-
-    @Override
-    public void setTags(@Nonnull Collection<Tag> tags) {
-        tagListPresenter.setTags(tags);
     }
 
     public void setValue(final LabelledFrame<ClassFrame> lcf) {
