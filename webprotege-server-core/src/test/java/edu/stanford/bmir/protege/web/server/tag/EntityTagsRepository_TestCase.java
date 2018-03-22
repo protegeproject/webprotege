@@ -15,6 +15,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMongoClient;
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMorphia;
@@ -62,22 +63,21 @@ public class EntityTagsRepository_TestCase {
     @Test
     public void shouldSaveEntityTags() {
         repository.save(entityTags);
-        assertThat(repository.findByEntity(projectId, entity), hasItem(entityTags));
+        assertThat(repository.findByEntity(projectId, entity), is(Optional.of(entityTags)));
     }
 
     @Test
     public void shouldNotSaveDuplicateEntityTags() {
         repository.save(entityTags);
         repository.save(entityTags);
-        List<EntityTags> retrievedTags = repository.findByEntity(projectId, entity);
-        assertThat(retrievedTags, hasItem(entityTags));
-        assertThat(retrievedTags.size(), is(1));
+        Optional<EntityTags> retrievedTags = repository.findByEntity(projectId, entity);
+        assertThat(retrievedTags, is(Optional.of(entityTags)));
     }
 
     @Test
     public void shouldFindByTag() {
         repository.save(entityTags);
-        assertThat(repository.findByTagId(tagIdA), hasItem(entityTags));
+        assertThat(repository.findByTagId(tagIdA), is(Optional.of(entityTags)));
     }
 
     @Test
@@ -85,15 +85,15 @@ public class EntityTagsRepository_TestCase {
         repository.save(entityTags);
         TagId theTagId = TagId.getId("12345678-abcd-abcd-abcd-123456789abc");
         repository.addTag(projectId, entity, theTagId);
-        assertThat(repository.findByTagId(theTagId), hasSize(1));
+        assertThat(repository.findByTagId(theTagId).isPresent(), is(true));
     }
 
     @Test
     public void shouldRemoveTag() {
         repository.save(entityTags);
         repository.removeTag(projectId, entity, tagIdA);
-        assertThat(repository.findByTagId(tagIdA), is(empty()));
-        assertThat(repository.findByTagId(tagIdB), hasSize(1));
+        assertThat(repository.findByTagId(tagIdA).isPresent(), is(false));
+        assertThat(repository.findByTagId(tagIdB).isPresent(), is(true));
     }
 
     @After
