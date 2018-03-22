@@ -79,7 +79,6 @@ public class TagListPresenter {
      * @param entity The entity.
      */
     public void setEntity(@Nonnull OWLEntity entity) {
-        view.clear();
         currentEntity = Optional.of(entity);
         dispatchServiceManager.execute(new GetEntityTagsAction(projectId,
                                                                entity),
@@ -95,7 +94,6 @@ public class TagListPresenter {
     }
 
     private void setTags(Collection<Tag> tags) {
-        view.clear();
         List<TagView> tagViews = tags.stream()
                                      .map(this::createTagViewForTag)
                                      .collect(toList());
