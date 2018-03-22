@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
+import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -34,6 +37,10 @@ public class EntityTagsManager {
     @Nonnull
     private final TagRepository tagRepository;
 
+    @Nonnull
+    private final HasPostEvents<ProjectEvent<?>> eventBus;
+
+
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final Lock readLock = readWriteLock.readLock();
@@ -43,10 +50,11 @@ public class EntityTagsManager {
     @Inject
     public EntityTagsManager(@Nonnull ProjectId projectId,
                              @Nonnull EntityTagsRepository repository,
-                             @Nonnull TagRepository tagRepository) {
+                             @Nonnull TagRepository tagRepository, @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
         this.projectId = checkNotNull(projectId);
         this.repository = checkNotNull(repository);
         this.tagRepository = checkNotNull(tagRepository);
+        this.eventBus = checkNotNull(eventBus);
     }
 
     /**
@@ -117,7 +125,13 @@ public class EntityTagsManager {
                                                        entity,
                                                        new ArrayList<>(nextTagIds));
             repository.save(nextEntityTags);
-            return !existingTags.equals(Optional.of(nextEntityTags));
+            boolean changed = !existingTags.equals(Optional.of(nextEntityTags));
+            if(changed) {
+                eventBus.postEvent(new EntityTagsChangedEvent(projectId,
+                                                              entity,
+                                                              getTags(entity)));
+            }
+            return changed;
         } finally {
             writeLock.unlock();
         }
