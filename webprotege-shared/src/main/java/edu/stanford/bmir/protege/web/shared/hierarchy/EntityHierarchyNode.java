@@ -107,12 +107,13 @@ public class EntityHierarchyNode implements IsSerializable, Serializable, Compar
                 && this.browserText.equals(other.browserText)
                 && this.deprecated == other.deprecated
                 && this.openCommentCount == other.openCommentCount
-                && this.watches.equals(other.watches);
+                && this.watches.equals(other.watches)
+                && this.tags.equals(other.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(entity, browserText, deprecated, openCommentCount, watches);
+        return Objects.hashCode(entity, browserText, deprecated, openCommentCount, watches, tags);
     }
 
 
@@ -124,6 +125,7 @@ public class EntityHierarchyNode implements IsSerializable, Serializable, Compar
                 .add("deprecated", deprecated)
                 .add("openComments", openCommentCount)
                 .add("watches", watches)
+                .add("tags", tags)
                 .toString();
     }
 
