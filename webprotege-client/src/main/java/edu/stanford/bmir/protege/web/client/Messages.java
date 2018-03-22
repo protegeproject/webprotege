@@ -1011,4 +1011,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Do you want to merge entities?")
     @Key("merge.confirmMessage")
     String merge_confirmMergeMessage();
+
+    @DefaultMessage("Tags...")
+    @Key("tags.edit")
+    String tags_edit();
 }
