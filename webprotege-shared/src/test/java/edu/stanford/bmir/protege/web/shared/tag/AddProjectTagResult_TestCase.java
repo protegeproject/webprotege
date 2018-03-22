@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -36,7 +38,7 @@ public class AddProjectTagResult_TestCase {
 
     @Test
     public void shouldReturnSupplied_addedTag() {
-        assertThat(result.getAddedTag(), is(this.addedTag));
+        assertThat(result.getAddedTag(), is(Optional.of(this.addedTag)));
     }
 
     @Test
