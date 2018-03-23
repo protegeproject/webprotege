@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -12,4 +13,5 @@ import java.util.List;
  */
 public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled {
 
+    void setDeleteConfirmationPrompt(@Nonnull DeleteConfirmationPrompt<O> prompt);
 }

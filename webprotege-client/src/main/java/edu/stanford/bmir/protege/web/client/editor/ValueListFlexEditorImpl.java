@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,9 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private String placeholder = "";
 
+    // Don't prompt by default
+    private DeleteConfirmationPrompt<O> deleteConfirmationPrompt = (value, callback) -> callback.deleteValue(true);
+
     @UiField
     HTMLPanel container;
 
@@ -61,6 +65,11 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         valueChangeHandler = event -> handleValueEditorValueChanged();
         dirtyChangedHandler = event -> handleValueEditorDirtyChanged(event);
         updateEnabled();
+    }
+
+    @Override
+    public void setDeleteConfirmationPrompt(@Nonnull DeleteConfirmationPrompt<O> prompt) {
+        this.deleteConfirmationPrompt = checkNotNull(prompt);
     }
 
     @Override
@@ -154,7 +163,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
             editorContainer.setEnabled(enabled);
 
             // Don't enabled the delete button for the last row if it is a blank row
-            if (i < container.getWidgetCount() - 1 || !enabled) {
+            if (i < container.getWidgetCount() - 1 || currentEditors.get(i).getValue().isPresent() || !enabled) {
                 editorContainer.setDeleteButtonVisible(enabled);
             }
         }
@@ -225,15 +234,23 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
     }
 
     private void handleDelete(ValueEditor<O> editor) {
-        Optional<List<O>> before = getValue();
-        removeEditor(editor);
-        ensureBlank();
-        dirty = true;
-        fireEvent(new DirtyChangedEvent());
-        Optional<List<O>> after = getValue();
-        if (!after.equals(before)) {
-            ValueChangeEvent.fire(this, after);
+        Optional<O> value = editor.getValue();
+        if(!value.isPresent()) {
+            return;
         }
+        deleteConfirmationPrompt.shouldDeleteValue(value.get(), delete -> {
+            if (delete) {
+                Optional<List<O>> before = getValue();
+                removeEditor(editor);
+                ensureBlank();
+                dirty = true;
+                fireEvent(new DirtyChangedEvent());
+                Optional<List<O>> after = getValue();
+                if (!after.equals(before)) {
+                    ValueChangeEvent.fire(this, after);
+                }
+            }
+        });
     }
 
     private void removeEditor(ValueEditor<O> editor) {
