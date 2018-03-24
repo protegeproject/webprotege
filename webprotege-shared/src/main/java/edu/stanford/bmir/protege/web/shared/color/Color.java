@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.renderer;
+package edu.stanford.bmir.protege.web.shared.color;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -13,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padStart;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.toHexString;
+import static java.lang.Math.abs;
 
 /**
  * Matthew Horridge
@@ -85,6 +86,13 @@ public class Color implements IsSerializable {
                       hexValue.substring(5, 7));
     }
 
+    /**
+     * Get a color from the hex rgb values.
+     * @param red A string of two characters representing the hex value for the red component.
+     * @param green A string of two characters representing the hex value for the green component.
+     * @param blue A string of two characters representing the hex value for the blue component.
+     * @return The corresponding color.
+     */
     public static Color getHex(@Nonnull String red,
                                @Nonnull String green,
                                @Nonnull String blue) {
@@ -95,6 +103,66 @@ public class Color implements IsSerializable {
         checkArgument(green.length() == 2, "Invalid length for green hex component");
         checkArgument(blue.length() == 2, "Invalid length for blue hex component");
         return new Color(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16));
+    }
+
+    /**
+     * Get a color from Hue, Saturation and Lightness values.
+     * @param hue The value for the hue.  This must be in the range of 0 to 360 (inclusive)
+     * @param saturation The value for the saturation.  This must be in the range of 0 to 1 (inclusive)
+     * @param lightness The value for the lightness.  This must be in the range of 0 to 1 (inclusive)
+     * @return The corresponding color.
+     */
+    public static Color getHSL(double hue, double saturation, double lightness) {
+        checkArgument(0 <= hue && hue <= 360, "hue must be a value from 0 to 360");
+        checkArgument(0 <= saturation && saturation <= 1, "saturation must be a value from 0 to 1");
+        checkArgument(0 <= lightness && lightness <= 1, "lightness must be a value from 0 to 1");
+
+        // https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL
+        double c = (1 - abs(2 * lightness - 1)) * saturation;
+        double hp = hue / 60;
+        double x = c * (1 - abs(hp % 2 - 1));
+        double r1, g1, b1;
+        if(hp <= 1) {
+            r1 = c;
+            g1 = x;
+            b1 = 0;
+        }
+        else if(hp <= 2) {
+            r1 = x;
+            g1 = c;
+            b1 = 0;
+        }
+        else if(hp <= 3) {
+            r1 = 0;
+            g1 = c;
+            b1 = x;
+        }
+        else if(hp <= 4) {
+            r1 = 0;
+            g1 = x;
+            b1 = c;
+        }
+        else if(hp <= 5) {
+            r1 = x;
+            g1 = 0;
+            b1 = c;
+        }
+        else {
+            r1 = c;
+            g1 = 0;
+            b1 = x;
+        }
+        double m = lightness - 0.5 * c;
+        int r, g, b;
+        r = (int) ((r1 + m) * 255);
+        g = (int) ((g1 + m) * 255);
+        b = (int) ((b1 + m) * 255);
+        return getRGB(r, g, b);
+
+    }
+
+    public static Color getWhite() {
+        return getRGB(255, 255, 255);
     }
 
     /**

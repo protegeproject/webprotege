@@ -1,6 +1,7 @@
 
-package edu.stanford.bmir.protege.web.shared.renderer;
+package edu.stanford.bmir.protege.web.shared.color;
 
+import edu.stanford.bmir.protege.web.shared.color.Color;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,6 +102,14 @@ public class Color_TestCase {
     @Test
     public void should_getHex() {
         assertThat(color.getHex(), is("#ff0a78"));
+    }
+
+    @Test
+    public void should_getHSLColor() {
+        Color c = Color.getHSL(0, 1, 0.5);
+        assertThat(c.getRed(), is(255));
+        assertThat(c.getGreen(), is(0));
+        assertThat(c.getBlue(), is(0));
     }
 
 }
