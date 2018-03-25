@@ -82,6 +82,19 @@ public class EntityTagsRepository implements Repository {
         }
     }
 
+    public void removeTag(ProjectId projectId, TagId tagId) {
+        try {
+            writeLock.lock();
+            Query<EntityTags> query = datastore.createQuery(EntityTags.class)
+                                               .field(PROJECT_ID).equal(projectId);
+            UpdateOperations<EntityTags> updateOps = datastore.createUpdateOperations(EntityTags.class);
+            updateOps.removeAll(TAGS, tagId);
+            datastore.update(query, updateOps);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
     private Query<EntityTags> tagWithProjectIdAndEntity(ProjectId projectId, OWLEntity entity) {
          return datastore.createQuery(EntityTags.class)
                          .field(PROJECT_ID).equal(projectId)

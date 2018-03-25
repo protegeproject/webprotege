@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.tag.TagId.createTagId;
@@ -34,7 +33,7 @@ public class TagsManager {
     private final ProjectId projectId;
 
     @Nonnull
-    private final EntityTagsRepository repository;
+    private final EntityTagsRepository entityTagsRepository;
 
     @Nonnull
     private final TagRepository tagRepository;
@@ -51,10 +50,10 @@ public class TagsManager {
 
     @Inject
     public TagsManager(@Nonnull ProjectId projectId,
-                       @Nonnull EntityTagsRepository repository,
+                       @Nonnull EntityTagsRepository entityTagsRepository,
                        @Nonnull TagRepository tagRepository, @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
         this.projectId = checkNotNull(projectId);
-        this.repository = checkNotNull(repository);
+        this.entityTagsRepository = checkNotNull(entityTagsRepository);
         this.tagRepository = checkNotNull(tagRepository);
         this.eventBus = checkNotNull(eventBus);
     }
@@ -73,7 +72,7 @@ public class TagsManager {
             readLock.lock();
             Map<TagId, Tag> tagsById = tagRepository.findTagsByProjectId(projectId).stream()
                                                     .collect(toMap(Tag::getTagId, tag -> tag));
-            Optional<EntityTags> entityTags = repository.findByEntity(projectId, entity);
+            Optional<EntityTags> entityTags = entityTagsRepository.findByEntity(projectId, entity);
             if (!entityTags.isPresent()) {
                 return Collections.emptySet();
             }
@@ -95,10 +94,10 @@ public class TagsManager {
     public Collection<OWLEntity> getTaggedEntities(@Nonnull TagId tagId) {
         try {
             readLock.lock();
-            return repository.findByTagId(tagId)
-                             .stream()
-                             .map(EntityTags::getEntity)
-                             .collect(toSet());
+            return entityTagsRepository.findByTagId(tagId)
+                                       .stream()
+                                       .map(EntityTags::getEntity)
+                                       .collect(toSet());
         } finally {
             readLock.unlock();
         }
@@ -125,6 +124,22 @@ public class TagsManager {
         try {
             checkNotNull(projectTags);
             writeLock.lock();
+            Set<TagId> tagIds = projectTags.stream()
+                                           .map(TagData::getTagId)
+                                           .filter(Optional::isPresent)
+                                           .map(Optional::get)
+                                           .collect(toSet());
+            // Remove current tags
+            getProjectTags().stream()
+                            .map(Tag::getTagId)
+                            .peek(tagId -> {
+                                if (!tagIds.contains(tagId)) {
+                                    // Remove entity tag
+                                    entityTagsRepository.removeTag(projectId, tagId);
+                                }
+                            })
+                            .forEach(tagRepository::deleteTag);
+            // Set fresh tags
             List<Tag> tags = projectTags.stream()
                                         .map(tagData -> new Tag(
                                                 tagData.getTagId()
@@ -155,8 +170,8 @@ public class TagsManager {
                            @Nonnull Set<TagId> toTagIds) {
         try {
             writeLock.lock();
-            Optional<EntityTags> existingTags = repository.findByEntity(projectId,
-                                                                        entity);
+            Optional<EntityTags> existingTags = entityTagsRepository.findByEntity(projectId,
+                                                                                  entity);
             Set<TagId> nextTagIds = new HashSet<>();
             existingTags.ifPresent(entityTags -> nextTagIds.addAll(entityTags.getTags()));
             fromTagIds.stream()
@@ -168,7 +183,7 @@ public class TagsManager {
             EntityTags nextEntityTags = new EntityTags(projectId,
                                                        entity,
                                                        new ArrayList<>(nextTagIds));
-            repository.save(nextEntityTags);
+            entityTagsRepository.save(nextEntityTags);
             boolean changed = !existingTags.equals(Optional.of(nextEntityTags));
             if (changed) {
                 eventBus.postEvent(new EntityTagsChangedEvent(projectId,
