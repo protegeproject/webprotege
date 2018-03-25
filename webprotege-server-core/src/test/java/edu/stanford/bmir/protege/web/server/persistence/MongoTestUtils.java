@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
-import edu.stanford.bmir.protege.web.server.renderer.ColorConverter;
+import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import org.mongodb.morphia.Morphia;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;

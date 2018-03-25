@@ -2,14 +2,11 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.Color;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;

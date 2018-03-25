@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.access.*;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.renderer.ColorConverter;
+import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;

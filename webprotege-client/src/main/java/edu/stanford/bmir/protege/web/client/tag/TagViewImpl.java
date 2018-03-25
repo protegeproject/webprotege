@@ -8,8 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import edu.stanford.bmir.protege.web.shared.renderer.Color;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

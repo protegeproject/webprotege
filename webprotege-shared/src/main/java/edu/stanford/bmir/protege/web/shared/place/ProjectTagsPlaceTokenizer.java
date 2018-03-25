@@ -4,6 +4,8 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.util.Optional;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -37,7 +39,7 @@ public class ProjectTagsPlaceTokenizer implements WebProtegePlaceTokenizer<Proje
         String projectIdString = matchResult.getGroup(1);
         if(ProjectId.isWelFormedProjectId(projectIdString)) {
             ProjectId projectId = ProjectId.get(projectIdString);
-            return new ProjectTagsPlace(projectId);
+            return new ProjectTagsPlace(projectId, Optional.empty());
         }
         else {
             return null;

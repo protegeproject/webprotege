@@ -42,6 +42,8 @@ import edu.stanford.bmir.protege.web.server.search.PerformEntitySearchActionHand
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.tag.GetEntityTagsActionHandler;
+import edu.stanford.bmir.protege.web.server.tag.GetProjectTagsActionHandler;
+import edu.stanford.bmir.protege.web.server.tag.SetProjectTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.tag.UpdateEntityTagsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
@@ -521,4 +523,15 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler providesUpdateEntityTagsActionHandler(UpdateEntityTagsActionHandler handler) {
         return handler;
     }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesGetProjectTagsActionHandler(GetProjectTagsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides(type = SET)
+    public ProjectActionHandler providesSetProjectTagsActionHandler(SetProjectTagsActionHandler handler) {
+        return handler;
+    }
+
 }

@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -36,7 +38,7 @@ public class ProjectTagsPlaceTokenizer_TestCase {
 
     @Test
     public void shouldGenerateToken() {
-        ProjectTagsPlace place = new ProjectTagsPlace(ProjectId.get(PROJECT_ID));
+        ProjectTagsPlace place = new ProjectTagsPlace(ProjectId.get(PROJECT_ID), Optional.empty());
         String token = tokenizer.getToken(place);
         assertThat(token, is(PLACE_TOKEN));
     }

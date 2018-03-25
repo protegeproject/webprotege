@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
@@ -57,6 +58,10 @@ import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
+import edu.stanford.bmir.protege.web.client.color.ColorSwatchView;
+import edu.stanford.bmir.protege.web.client.color.ColorSwatchViewImpl;
+import edu.stanford.bmir.protege.web.client.color.ColorSwatchWellView;
+import edu.stanford.bmir.protege.web.client.color.ColorSwatchWellViewImpl;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
@@ -404,5 +409,25 @@ public class ClientApplicationModule {
     @Provides
     EditorPortletView provideEditorPortletView(EditorPortletViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    ProjectTagsView provideProjectTagsView(ProjectTagsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ColorSwatchView provideColorSwatchView(ColorSwatchViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ColorSwatchWellView provideColorSwatchWellView(ColorSwatchWellViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    PopupPanel providePopupPanel() {
+        return new PopupPanel(true, true);
     }
 }

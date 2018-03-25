@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.renderer.Color;
+import edu.stanford.bmir.protege.web.shared.color.Color;
 
 import javax.annotation.Nonnull;
 

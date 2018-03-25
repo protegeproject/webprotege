@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.tag.EditProjectTagsUIActionHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 import javax.annotation.Nonnull;
@@ -34,6 +35,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private final EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler;
+
+    private final EditProjectTagsUIActionHandler editProjectTagsUIActionHandler;
 
     private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.settings()) {
         @Override
@@ -63,19 +66,28 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         }
     };
 
+    private AbstractUiAction editProjectTags = new AbstractUiAction(MESSAGES.tags_EditProjectTags()) {
+        @Override
+        public void execute() {
+            editProjectTagsUIActionHandler.handleEditProjectTags();
+        }
+    };
+
     @Inject
     public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
                                 ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
-                                EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler) {
+                                EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
+                                EditProjectTagsUIActionHandler editProjectTagsUIActionHandler) {
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.showFreshEntitySettingsHandler = showFreshEntitySettingsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
+        this.editProjectTagsUIActionHandler = editProjectTagsUIActionHandler;
         setupActions();
     }
 
@@ -92,6 +104,8 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
                                         canEdit -> editNewEntitySettings.setEnabled(canEdit));
         permissionChecker.hasPermission(EDIT_PROJECT_PREFIXES,
                                         canEdit -> editProjectPrefixes.setEnabled(canEdit));
+        permissionChecker.hasPermission(EDIT_PROJECT_TAGS,
+                                        canEdit -> editProjectTags.setEnabled(canEdit));
     }
 
     public void dispose() {
@@ -105,6 +119,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     private void setupActions() {
         view.addMenuAction(editProjectSettings);
         view.addMenuAction(editNewEntitySettings);
+        view.addMenuAction(editProjectTags);
         view.addMenuAction(editProjectPrefixes);
         view.addMenuAction(uploadAndMerge);
 

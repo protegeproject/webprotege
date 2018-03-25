@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.persistence.*;
-import edu.stanford.bmir.protege.web.server.renderer.ColorConverter;
+import edu.stanford.bmir.protege.web.server.color.ColorConverter;
 import edu.stanford.bmir.protege.web.server.tag.TagIdConverter;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;

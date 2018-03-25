@@ -69,7 +69,8 @@ public enum BuiltInRole {
     OBJECT_COMMENTER(PROJECT_VIEWER,
                      CREATE_OBJECT_COMMENT,
                      EDIT_OWN_OBJECT_COMMENT,
-                     SET_OBJECT_COMMENT_STATUS),
+                     SET_OBJECT_COMMENT_STATUS,
+                     EDIT_ENTITY_TAGS),
 
     PROJECT_EDITOR(OBJECT_COMMENTER,
                    EDIT_ONTOLOGY,
@@ -95,7 +96,8 @@ public enum BuiltInRole {
                     EDIT_SHARING_SETTINGS,
                     EDIT_NEW_ENTITY_SETTINGS,
                     EDIT_PROJECT_PREFIXES,
-                    UPLOAD_AND_MERGE),
+                    UPLOAD_AND_MERGE,
+                    EDIT_PROJECT_TAGS),
 
 
     // Roles that relate to the UI

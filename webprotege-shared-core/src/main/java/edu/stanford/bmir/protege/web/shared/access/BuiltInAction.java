@@ -64,6 +64,8 @@ public enum BuiltInAction {
 
     MERGE_ENTITIES,
 
+    EDIT_ENTITY_TAGS,
+
 
     CREATE_ISSUE,
 
@@ -109,8 +111,9 @@ public enum BuiltInAction {
 
     EDIT_PROJECT_PREFIXES,
 
+    EDIT_PROJECT_TAGS,
+
     UPLOAD_AND_MERGE
-//    MANAGE_PROJECT
 
     ;
 

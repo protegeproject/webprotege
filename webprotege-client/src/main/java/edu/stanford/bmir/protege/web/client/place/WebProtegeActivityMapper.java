@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.inject.ClientApplicationComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectComponent;
 import edu.stanford.bmir.protege.web.client.inject.ClientProjectModule;
 import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
+import edu.stanford.bmir.protege.web.client.tag.ProjectTagsActivity;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
@@ -120,6 +121,15 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             );
             return new ProjectPrefixDeclarationsActivity(projectPrefixDeclarationsPlace.getProjectId(),
                                                          projectComponent.getProjectPrefixesPresenter());
+        }
+        if(place instanceof ProjectTagsPlace) {
+            ProjectTagsPlace projectTagsPlace = (ProjectTagsPlace) place;
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(
+                    new ClientProjectModule(projectTagsPlace.getProjectId())
+            );
+            return new ProjectTagsActivity(projectTagsPlace.getProjectId(),
+                                           projectComponent.getProjectTagsPresenter(),
+                                           projectTagsPlace.getNextPlace());
         }
         if(place instanceof LoginPlace) {
             if(!loggedInUserProvider.getCurrentUserId().isGuest()) {

@@ -39,6 +39,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new ProjectSettingsPlaceTokenizer());
         tokenizers.add(new AdminPlaceTokenizer());
         tokenizers.add(new ProjectPrefixDeclarationsPlaceTokenizer());
+        tokenizers.add(new ProjectTagsPlaceTokenizer());
         tokenizers.add(new CollectionViewPlaceTokenizer());
     }
 

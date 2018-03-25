@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -19,7 +20,7 @@ public class GetProjectTagsResult implements Result {
 
     private List<Tag> tags;
 
-    public GetProjectTagsResult(@Nonnull List<Tag> tags) {
+    public GetProjectTagsResult(@Nonnull Collection<Tag> tags) {
         this.tags = new ArrayList<>(checkNotNull(tags));
     }
 

@@ -1015,4 +1015,13 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Tags...")
     @Key("tags.edit")
     String tags_edit();
+
+    @DefaultMessage("Project Tags")
+    @Key("tags.projectTagsTitle")
+    String tags_projectTagsTitle();
+
+    @DefaultMessage("Tags")
+    @Key("tags.editProjectTags")
+    String tags_EditProjectTags();
+
 }

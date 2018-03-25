@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
 
+import java.util.Optional;
+
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,14 +22,24 @@ public class ProjectTagsPlace extends Place implements HasProjectId {
     @Nonnull
     private final ProjectId projectId;
 
-    public ProjectTagsPlace(@Nonnull ProjectId projectId) {
+    @Nonnull
+    private final Optional<Place> nextPlace;
+
+    public ProjectTagsPlace(@Nonnull ProjectId projectId,
+                            @Nonnull Optional<Place> nextPlace) {
         this.projectId = checkNotNull(projectId);
+        this.nextPlace = checkNotNull(nextPlace);
     }
 
     @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    @Nonnull
+    public Optional<Place> getNextPlace() {
+        return nextPlace;
     }
 
     @Override

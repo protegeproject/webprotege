@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import edu.stanford.bmir.protege.web.shared.tag.TagData;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -18,6 +19,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.tag.TagId.createTagId;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -133,5 +136,27 @@ public class EntityTagsManager {
         } finally {
             writeLock.unlock();
         }
+    }
+
+    public void setProjectTags(@Nonnull List<TagData> projectTags) {
+        try {
+            checkNotNull(projectTags);
+            writeLock.lock();
+            List<Tag> tags = projectTags.stream()
+                                           .map(tagData -> new Tag(
+                                                   tagData.getTagId()
+                                                          .orElse(createTagId()),
+                                                   projectId,
+                                                   tagData.getLabel(),
+                                                   tagData.getDescription(),
+                                                   tagData.getColor(),
+                                                   tagData.getBackgroundColor()
+                                           ))
+                                           .collect(toList());
+            tagRepository.saveTags(tags);
+        } finally {
+            writeLock.unlock();
+        }
+
     }
 }

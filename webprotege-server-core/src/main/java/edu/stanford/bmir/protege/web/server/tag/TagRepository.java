@@ -40,6 +40,11 @@ public class TagRepository implements Repository {
         datastore.save(tag);
     }
 
+    public void saveTags(@Nonnull Iterable<Tag> tags) {
+        checkNotNull(tags);
+        datastore.save(tags);
+    }
+
     public void deleteTag(@Nonnull TagId tagId) {
         checkNotNull(tagId);
         Query<Tag> query =  datastore.createQuery(Tag.class)
