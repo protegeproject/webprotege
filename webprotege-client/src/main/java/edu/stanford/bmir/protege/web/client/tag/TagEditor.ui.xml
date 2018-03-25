@@ -23,6 +23,13 @@
             flex-shrink: 0;
             cursor: pointer;
         }
+        .usageCount {
+            padding-top: 0 !important;
+            margin-left: 2px;
+            margin-right: 2px;
+            flex-grow: 0;
+            flex-shrink:  0;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <text:PlaceholderTextBox ui:field="tagLabelField" placeholder="Label" addStyleNames="{style.labelField}"/>
@@ -30,5 +37,6 @@
         <g:FocusPanel ui:field="backgroundColorFocusPanel">
             <g:HTMLPanel ui:field="backgroundColorField" addStyleNames="{style.colorWell}"/>
         </g:FocusPanel>
+        <g:Label ui:field="usageField" text="(0 tagged)" addStyleNames="{style.usageCount}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

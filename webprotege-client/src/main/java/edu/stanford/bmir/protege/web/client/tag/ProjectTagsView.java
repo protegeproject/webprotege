@@ -3,9 +3,11 @@ package edu.stanford.bmir.protege.web.client.tag;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
+import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Matthew Horridge
@@ -30,7 +32,7 @@ public interface ProjectTagsView extends IsWidget {
 
     void setCancelButtonVisible(boolean visible);
 
-    void setTags(List<Tag> tags);
+    void setTags(List<Tag> tags, Map<TagId, Integer> usageCount);
 
     List<TagData> getTagData();
 }

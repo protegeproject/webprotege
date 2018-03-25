@@ -77,7 +77,7 @@ public class EntityTagsRepository_TestCase {
     @Test
     public void shouldFindByTag() {
         repository.save(entityTags);
-        assertThat(repository.findByTagId(tagIdA), is(Optional.of(entityTags)));
+        assertThat(repository.findByTagId(tagIdA), hasItem(entityTags));
     }
 
     @Test
@@ -85,15 +85,15 @@ public class EntityTagsRepository_TestCase {
         repository.save(entityTags);
         TagId theTagId = TagId.getId("12345678-abcd-abcd-abcd-123456789abc");
         repository.addTag(projectId, entity, theTagId);
-        assertThat(repository.findByTagId(theTagId).isPresent(), is(true));
+        assertThat(repository.findByTagId(theTagId).size(), is(1));
     }
 
     @Test
     public void shouldRemoveTag() {
         repository.save(entityTags);
         repository.removeTag(projectId, entity, tagIdA);
-        assertThat(repository.findByTagId(tagIdA).isPresent(), is(false));
-        assertThat(repository.findByTagId(tagIdB).isPresent(), is(true));
+        assertThat(repository.findByTagId(tagIdA).size(), is(0));
+        assertThat(repository.findByTagId(tagIdB).size(), is(1));
     }
 
     @After

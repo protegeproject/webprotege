@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsResult;
-import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
@@ -121,6 +120,6 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
 
     private void displayProjectTags(GetProjectTagsResult result) {
         List<Tag> tags = result.getTags();
-        view.setTags(tags);
+        view.setTags(tags, result.getTagUsage());
     }
 }

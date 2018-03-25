@@ -31,16 +31,20 @@ public class TagData implements IsSerializable {
 
     private Color backgroundColor;
 
+    private int usageCount = 0;
+
     public TagData(@Nonnull Optional<TagId> tagId,
                    @Nonnull String label,
                    @Nonnull String description,
                    @Nonnull Color color,
-                   @Nonnull Color backgroundColor) {
+                   @Nonnull Color backgroundColor,
+                   int usageCount) {
         this.tagId = tagId.orElse(null);
         this.label = checkNotNull(label);
         this.description = checkNotNull(description);
         this.color = checkNotNull(color);
         this.backgroundColor = checkNotNull(backgroundColor);
+        this.usageCount = usageCount;
     }
 
     @GwtSerializationConstructor
@@ -72,9 +76,13 @@ public class TagData implements IsSerializable {
         return backgroundColor;
     }
 
+    public int getUsageCount() {
+        return usageCount;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(tagId, label, description, color, backgroundColor);
+        return Objects.hashCode(tagId, label, description, color, backgroundColor, usageCount);
     }
 
     @Override
@@ -90,7 +98,8 @@ public class TagData implements IsSerializable {
                 && this.label.equals(other.label)
                 && this.description.equals(other.description)
                 && this.color.equals(other.color)
-                && this.backgroundColor.equals(other.backgroundColor);
+                && this.backgroundColor.equals(other.backgroundColor)
+                && this.usageCount == other.usageCount;
     }
 
 

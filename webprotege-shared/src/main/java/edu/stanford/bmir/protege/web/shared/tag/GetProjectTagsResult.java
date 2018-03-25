@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,8 +19,12 @@ public class GetProjectTagsResult implements Result {
 
     private List<Tag> tags;
 
-    public GetProjectTagsResult(@Nonnull Collection<Tag> tags) {
+    private Map<TagId, Integer> tagUsage;
+
+    public GetProjectTagsResult(@Nonnull Collection<Tag> tags,
+                                @Nonnull Map<TagId, Integer> tagUsage) {
         this.tags = new ArrayList<>(checkNotNull(tags));
+        this.tagUsage = new HashMap<>(tagUsage);
     }
 
     @GwtSerializationConstructor
@@ -33,9 +36,14 @@ public class GetProjectTagsResult implements Result {
         return new ArrayList<>(tags);
     }
 
+    @Nonnull
+    public Map<TagId, Integer> getTagUsage() {
+        return new HashMap<>(tagUsage);
+    }
+
     @Override
     public int hashCode() {
-        return tags.hashCode();
+        return Objects.hashCode(tags, tagUsage);
     }
 
     @Override
@@ -47,7 +55,8 @@ public class GetProjectTagsResult implements Result {
             return false;
         }
         GetProjectTagsResult other = (GetProjectTagsResult) obj;
-        return this.tags.equals(other.tags);
+        return this.tags.equals(other.tags)
+                && this.tagUsage.equals(other.tagUsage);
     }
 
 
@@ -55,6 +64,7 @@ public class GetProjectTagsResult implements Result {
     public String toString() {
         return toStringHelper("GetProjectTagsResult")
                 .addValue(tags)
+                .add("usage", tagUsage)
                 .toString();
     }
 }

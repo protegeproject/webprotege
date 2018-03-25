@@ -6,10 +6,18 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsResult;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import edu.stanford.bmir.protege.web.shared.tag.TagId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PROJECT_TAGS;
@@ -46,6 +54,10 @@ public class GetProjectTagsActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     @Override
     public GetProjectTagsResult execute(@Nonnull GetProjectTagsAction action, @Nonnull ExecutionContext executionContext) {
-        return new GetProjectTagsResult(tagsManager.getProjectTags());
+        Collection<Tag> projectTags = tagsManager.getProjectTags();
+        Map<TagId, Integer> usage = new HashMap<>();
+        projectTags.forEach(tag -> usage.put(tag.getTagId(),
+                                             tagsManager.getTaggedEntities(tag.getTagId()).size()));
+        return new GetProjectTagsResult(projectTags, usage);
     }
 }

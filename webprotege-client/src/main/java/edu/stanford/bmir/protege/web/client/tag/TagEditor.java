@@ -37,13 +37,6 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
 
     private static TagEditorUiBinder ourUiBinder = GWT.create(TagEditorUiBinder.class);
 
-    @Inject
-    public TagEditor(@Nonnull ColorSwatchPresenter colorSwatchPresenter) {
-        this.colorSwatchPresenter = checkNotNull(colorSwatchPresenter);
-        this.colorSwatchPresenter.setColorSelectedHandler(this::handleColorSelected);
-        initWidget(ourUiBinder.createAndBindUi(this));
-    }
-
     private Optional<TagId> tagId = Optional.empty();
 
     private boolean enabled = true;
@@ -63,7 +56,19 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
     @UiField
     FocusPanel backgroundColorFocusPanel;
 
+    @UiField
+    Label usageField;
+
     private Color backgroundColor = Color.getRGB(0, 0, 0);
+
+    private int usage = 0;
+
+    @Inject
+    public TagEditor(@Nonnull ColorSwatchPresenter colorSwatchPresenter) {
+        this.colorSwatchPresenter = checkNotNull(colorSwatchPresenter);
+        this.colorSwatchPresenter.setColorSelectedHandler(this::handleColorSelected);
+        initWidget(ourUiBinder.createAndBindUi(this));
+    }
 
     @UiHandler("tagLabelField")
     protected void handleTagLabelChanged(ValueChangeEvent<String> event) {
@@ -110,6 +115,8 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
         descriptionField.setValue(tag.getDescription());
         backgroundColor = tag.getBackgroundColor();
         backgroundColorField.getElement().getStyle().setBackgroundColor(tag.getBackgroundColor().getHex());
+        usageField.setText("(" + Integer.toString(tag.getUsageCount()) + " tagged)");
+        usage = tag.getUsageCount();
     }
 
     @Override
@@ -119,6 +126,8 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
         descriptionField.setValue("");
         backgroundColor = Color.getRGB(0, 0, 0);
         backgroundColorField.getElement().getStyle().clearBackgroundColor();
+        usageField.setText("(0 tagged)");
+        usage = 0;
     }
 
     @Override
@@ -130,7 +139,8 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
                                       getTagLabel(),
                                       descriptionField.getValue().trim(),
                                       Color.getWhite(),
-                                      backgroundColor);
+                                      backgroundColor,
+                                      usage);
         return Optional.of(tagData);
     }
 

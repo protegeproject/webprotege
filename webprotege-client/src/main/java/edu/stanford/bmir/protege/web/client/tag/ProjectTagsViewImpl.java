@@ -17,12 +17,13 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle;
 import edu.stanford.bmir.protege.web.client.color.ColorSwatchPresenter;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
+import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -64,7 +65,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
         tagsEditor.setDeleteConfirmationPrompt((value, callback) -> {
             MessageBox.showConfirmBox(MessageStyle.QUESTION,
                                       "Delete tag",
-                                      "Are you sure that you want to delete the " + value.getLabel() + " tag?",
+                                      "Are you sure that you want to delete the " + value.getLabel() + " tag?  This tag is used to tag " + value.getUsageCount() + " entities.",
                                       DialogButton.CANCEL,
                                       () -> callback.deleteValue(false),
                                       DialogButton.get("Delete Tag"),
@@ -111,13 +112,14 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     }
 
     @Override
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<Tag> tags, Map<TagId, Integer> usageCount) {
         List<TagData> tagData = tags.stream()
                                     .map(tag -> new TagData(Optional.of(tag.getTagId()),
                                                             tag.getLabel(),
                                                             tag.getDescription(),
                                                             tag.getColor(),
-                                                            tag.getBackgroundColor()))
+                                                            tag.getBackgroundColor(),
+                                                            usageCount.getOrDefault(tag.getTagId(), 0)))
                                     .collect(toList());
         tagsEditor.setValue(tagData);
     }

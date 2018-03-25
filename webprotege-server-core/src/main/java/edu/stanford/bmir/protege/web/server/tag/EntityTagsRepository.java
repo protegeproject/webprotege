@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -96,12 +97,13 @@ public class EntityTagsRepository implements Repository {
         }
     }
 
-    public Optional<EntityTags> findByTagId(TagId tagId) {
+    public Collection<EntityTags> findByTagId(TagId tagId) {
         try {
             readLock.lock();
-            return Optional.ofNullable(datastore.find(EntityTags.class)
-                                                .field(TAGS)
-                                                .equal(tagId).get());
+            return datastore.find(EntityTags.class)
+                            .field(TAGS)
+                            .equal(tagId)
+                            .asList();
         } finally {
             readLock.unlock();
         }

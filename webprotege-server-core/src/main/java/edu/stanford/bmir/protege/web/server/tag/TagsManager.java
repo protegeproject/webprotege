@@ -20,8 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.tag.TagId.createTagId;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 /**
  * Matthew Horridge
@@ -81,7 +80,25 @@ public class TagsManager {
             return entityTags.get().getTags().stream()
                              .map(tagsById::get)
                              .filter(Objects::nonNull)
-                             .collect(Collectors.toList());
+                             .collect(toList());
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    /**
+     * Gets the entities that have been tagged with the specified tag.
+     *
+     * @param tagId The tag id.
+     */
+    @Nonnull
+    public Collection<OWLEntity> getTaggedEntities(@Nonnull TagId tagId) {
+        try {
+            readLock.lock();
+            return repository.findByTagId(tagId)
+                             .stream()
+                             .map(EntityTags::getEntity)
+                             .collect(toSet());
         } finally {
             readLock.unlock();
         }
@@ -102,6 +119,31 @@ public class TagsManager {
     }
 
     /**
+     * Sets the tags for the project that this manager is associated with.
+     */
+    public void setProjectTags(@Nonnull Collection<TagData> projectTags) {
+        try {
+            checkNotNull(projectTags);
+            writeLock.lock();
+            List<Tag> tags = projectTags.stream()
+                                        .map(tagData -> new Tag(
+                                                tagData.getTagId()
+                                                       .orElse(createTagId()),
+                                                projectId,
+                                                tagData.getLabel(),
+                                                tagData.getDescription(),
+                                                tagData.getColor(),
+                                                tagData.getBackgroundColor()
+                                        ))
+                                        .collect(toList());
+            tagRepository.saveTags(tags);
+        } finally {
+            writeLock.unlock();
+        }
+
+    }
+
+    /**
      * Updates the entity tags for a given entity.  A diff will be performed to compute the changes required.
      *
      * @param entity     The entity.
@@ -109,8 +151,8 @@ public class TagsManager {
      * @param toTagIds   The set of tags to update to.
      */
     public void updateTags(@Nonnull OWLEntity entity,
-                              @Nonnull Set<TagId> fromTagIds,
-                              @Nonnull Set<TagId> toTagIds) {
+                           @Nonnull Set<TagId> fromTagIds,
+                           @Nonnull Set<TagId> toTagIds) {
         try {
             writeLock.lock();
             Optional<EntityTags> existingTags = repository.findByEntity(projectId,
@@ -128,7 +170,7 @@ public class TagsManager {
                                                        new ArrayList<>(nextTagIds));
             repository.save(nextEntityTags);
             boolean changed = !existingTags.equals(Optional.of(nextEntityTags));
-            if(changed) {
+            if (changed) {
                 eventBus.postEvent(new EntityTagsChangedEvent(projectId,
                                                               entity,
                                                               getTags(entity)));
@@ -136,30 +178,5 @@ public class TagsManager {
         } finally {
             writeLock.unlock();
         }
-    }
-
-    /**
-     * Sets the tags for the project that this manager is associated with.
-     */
-    public void setProjectTags(@Nonnull Collection<TagData> projectTags) {
-        try {
-            checkNotNull(projectTags);
-            writeLock.lock();
-            List<Tag> tags = projectTags.stream()
-                                           .map(tagData -> new Tag(
-                                                   tagData.getTagId()
-                                                          .orElse(createTagId()),
-                                                   projectId,
-                                                   tagData.getLabel(),
-                                                   tagData.getDescription(),
-                                                   tagData.getColor(),
-                                                   tagData.getBackgroundColor()
-                                           ))
-                                           .collect(toList());
-            tagRepository.saveTags(tags);
-        } finally {
-            writeLock.unlock();
-        }
-
     }
 }
