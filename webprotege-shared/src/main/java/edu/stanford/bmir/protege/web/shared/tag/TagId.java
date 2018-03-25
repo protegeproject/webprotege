@@ -3,11 +3,14 @@ package edu.stanford.bmir.protege.web.shared.tag;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.MoreObjects;
+import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.util.UUIDUtil;
 
 import javax.annotation.Nonnull;
+
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,6 +39,14 @@ public class TagId implements IsSerializable {
             throw new IllegalArgumentException("Malformed tag id: " + id);
         }
         return new TagId(id);
+    }
+
+    /**
+     * Creates a fresh tag with a new UUID.  Note that this only works on the server.
+     */
+    @GwtIncompatible
+    public static TagId createTagId() {
+        return getId(UUID.randomUUID().toString());
     }
 
     @JsonValue
