@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.library.dlg.DialogButton;
@@ -60,15 +61,16 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     private CancelChangesHandler cancelChangesHandler = () -> {};
 
     @Inject
-    public ProjectTagsViewImpl(@Nonnull Provider<ColorSwatchPresenter> colorSwatchPresenter) {
+    public ProjectTagsViewImpl(@Nonnull Provider<ColorSwatchPresenter> colorSwatchPresenter,
+                               @Nonnull Messages messages) {
         tagsEditor = new ValueListFlexEditorImpl<>(() -> new TagEditor(colorSwatchPresenter.get()));
         tagsEditor.setDeleteConfirmationPrompt((value, callback) -> {
             MessageBox.showConfirmBox(MessageStyle.QUESTION,
-                                      "Delete tag",
-                                      "Are you sure that you want to delete the " + value.getLabel() + " tag?  This tag is used to tag " + value.getUsageCount() + " entities.",
+                                      messages.tags_deleteTag(),
+                                      messages.tags_deleteConfirmationMessage(value.getLabel(), value.getUsageCount()),
                                       DialogButton.CANCEL,
                                       () -> callback.deleteValue(false),
-                                      DialogButton.get("Delete Tag"),
+                                      DialogButton.get(messages.tags_deleteTag()),
                                       () -> callback.deleteValue(true),
                                       DialogButton.CANCEL);
         });

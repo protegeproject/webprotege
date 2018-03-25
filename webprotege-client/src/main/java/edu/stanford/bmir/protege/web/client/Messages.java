@@ -1,6 +1,11 @@
 package edu.stanford.bmir.protege.web.client;
 
 
+import com.google.gwt.i18n.client.LocalizableResource;
+
+import static com.google.gwt.i18n.client.LocalizableResource.*;
+
+@DefaultLocale()
 public interface Messages extends com.google.gwt.i18n.client.Messages {
 
     
@@ -1019,6 +1024,19 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Project Tags")
     @Key("tags.projectTagsTitle")
     String tags_projectTagsTitle();
+
+    @DefaultMessage("Delete Tag")
+    @Key("tags.deleteTag")
+    String tags_deleteTag();
+
+    @DefaultMessage("The tag <strong>{0}</strong> is used to tag <strong>{1,number}&nbsp;entities</strong>.  Are you sure that you want to delete this tag?" +
+            "<br><br>" +
+            "This operation cannot be undone.")
+    @AlternateMessage({"one", "The tag <strong>{0}</strong> is used to tag <strong>one entity</strong>.  Are you sure that you want to delete this tag?" +
+            "<br><br>" +
+            "This operation cannot be undone."})
+    @Key("tags.deleteConfirmationMessage")
+    String tags_deleteConfirmationMessage(String tagLabel, @PluralCount int usageCount);
 
     @DefaultMessage("Tags")
     @Key("tags.editProjectTags")
