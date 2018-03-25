@@ -138,7 +138,10 @@ public class TagsManager {
         }
     }
 
-    public void setProjectTags(@Nonnull List<TagData> projectTags) {
+    /**
+     * Sets the tags for the project that this manager is associated with.
+     */
+    public void setProjectTags(@Nonnull Collection<TagData> projectTags) {
         try {
             checkNotNull(projectTags);
             writeLock.lock();
