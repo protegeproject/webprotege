@@ -30,7 +30,7 @@ import static edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction.setP
  * Stanford Center for Biomedical Informatics Research
  * 22 Mar 2018
  */
-public class ProjectTagsPresenter implements Presenter {
+public class ProjectTagsPresenter implements Presenter, HasBusy {
 
     @Nonnull
     private final ProjectId projectId;
@@ -56,6 +56,9 @@ public class ProjectTagsPresenter implements Presenter {
     @Nonnull
     private Optional<Place> nextPlace = Optional.empty();
 
+    @Nonnull
+    private Optional<AcceptsOneWidget> container = Optional.empty();
+
     @Inject
     public ProjectTagsPresenter(@Nonnull ProjectId projectId, @Nonnull ProjectTagsView view,
                                 @Nonnull BusyView busyView,
@@ -72,6 +75,7 @@ public class ProjectTagsPresenter implements Presenter {
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
+        this.container = Optional.of(container);
         view.setCancelButtonVisible(nextPlace.isPresent());
         view.setApplyChangesHandler(this::handleApplyChanges);
         view.setCancelChangesHandler(this::handleCancelChanges);
@@ -85,7 +89,16 @@ public class ProjectTagsPresenter implements Presenter {
                 container.setWidget(forbiddenView);
             }
         });
+    }
 
+    @Override
+    public void setBusy(boolean busy) {
+        if(busy) {
+            container.ifPresent(c -> c.setWidget(busyView));
+        }
+        else {
+            container.ifPresent(c -> c.setWidget(view));
+        }
     }
 
     public void setNextPlace(@Nonnull Optional<Place> nextPlace) {

@@ -22,11 +22,11 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PRO
 public class GetProjectTagsActionHandler extends AbstractProjectActionHandler<GetProjectTagsAction, GetProjectTagsResult> {
 
     @Nonnull
-    private final EntityTagsManager tagsManager;
+    private final TagsManager tagsManager;
 
     @Inject
     public GetProjectTagsActionHandler(@Nonnull AccessManager accessManager,
-                                       @Nonnull EntityTagsManager tagsManager) {
+                                       @Nonnull TagsManager tagsManager) {
         super(accessManager);
         this.tagsManager = checkNotNull(tagsManager);
     }

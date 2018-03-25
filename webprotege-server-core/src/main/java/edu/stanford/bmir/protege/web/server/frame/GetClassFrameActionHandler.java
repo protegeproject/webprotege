@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.server.tag.EntityTagsManager;
+import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -43,17 +43,17 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     private final Provider<ClassFrameTranslator> translatorProvider;
 
     @Nonnull
-    private final EntityTagsManager entityTagsManager;
+    private final TagsManager tagsManager;
 
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull RenderingManager renderingManager,
                                       @Nonnull Provider<ClassFrameTranslator> translatorProvider,
-                                      @Nonnull EntityTagsManager entityTagsManager) {
+                                      @Nonnull TagsManager tagsManager) {
         super(accessManager);
         this.renderingManager = renderingManager;
         this.translatorProvider = translatorProvider;
-        this.entityTagsManager = entityTagsManager;
+        this.tagsManager = tagsManager;
     }
 
     /**
@@ -88,7 +88,7 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
                     executionContext.getUserId(),
                     subject,
                     f.getDisplayName());
-        Collection<Tag> tags = entityTagsManager.getTags(subject);
+        Collection<Tag> tags = tagsManager.getTags(subject);
         return new GetClassFrameResult(f, tags);
     }
 }

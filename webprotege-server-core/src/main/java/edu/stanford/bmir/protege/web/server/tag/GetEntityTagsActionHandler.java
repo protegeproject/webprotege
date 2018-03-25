@@ -21,13 +21,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class GetEntityTagsActionHandler extends AbstractProjectActionHandler<GetEntityTagsAction, GetEntityTagsResult> {
 
     @Nonnull
-    private final EntityTagsManager entityTagsManager;
+    private final TagsManager tagsManager;
 
     @Inject
     public GetEntityTagsActionHandler(@Nonnull AccessManager accessManager,
-                                      @Nonnull EntityTagsManager entityTagsManager) {
+                                      @Nonnull TagsManager tagsManager) {
         super(accessManager);
-        this.entityTagsManager = checkNotNull(entityTagsManager);
+        this.tagsManager = checkNotNull(tagsManager);
     }
 
     @Nonnull
@@ -41,7 +41,7 @@ public class GetEntityTagsActionHandler extends AbstractProjectActionHandler<Get
     public GetEntityTagsResult execute(@Nonnull GetEntityTagsAction action, @Nonnull ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
         OWLEntity entity = action.getEntity();
-        return new GetEntityTagsResult(entityTagsManager.getTags(entity),
-                                       entityTagsManager.getProjectTags());
+        return new GetEntityTagsResult(tagsManager.getTags(entity),
+                                       tagsManager.getProjectTags());
     }
 }

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.tag;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.ProjectActionHandler;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsResult;
@@ -23,13 +22,13 @@ import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_PRO
 public class SetProjectTagsActionHandler extends AbstractProjectActionHandler<SetProjectTagsAction, SetProjectTagsResult> {
 
     @Nonnull
-    private final EntityTagsManager entityTagsManager;
+    private final TagsManager tagsManager;
 
     @Inject
     public SetProjectTagsActionHandler(@Nonnull AccessManager accessManager,
-                                       @Nonnull EntityTagsManager entityTagsManager) {
+                                       @Nonnull TagsManager tagsManager) {
         super(accessManager);
-        this.entityTagsManager = checkNotNull(entityTagsManager);
+        this.tagsManager = checkNotNull(tagsManager);
     }
 
     @Nonnull
@@ -47,7 +46,7 @@ public class SetProjectTagsActionHandler extends AbstractProjectActionHandler<Se
     @Nonnull
     @Override
     public SetProjectTagsResult execute(@Nonnull SetProjectTagsAction action, @Nonnull ExecutionContext executionContext) {
-        entityTagsManager.setProjectTags(action.getTagData());
+        tagsManager.setProjectTags(action.getTagData());
         return new SetProjectTagsResult();
     }
 }

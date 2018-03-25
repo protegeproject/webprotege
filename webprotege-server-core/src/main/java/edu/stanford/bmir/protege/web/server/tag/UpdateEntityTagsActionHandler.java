@@ -26,14 +26,14 @@ public class UpdateEntityTagsActionHandler extends AbstractProjectActionHandler<
     private final EventManager<ProjectEvent<?>> eventEventManager;
 
     @Nonnull
-    private final EntityTagsManager entityTagsManager;
+    private final TagsManager tagsManager;
 
     @Inject
     public UpdateEntityTagsActionHandler(@Nonnull AccessManager accessManager,
-                                         @Nonnull EventManager<ProjectEvent<?>> eventEventManager, @Nonnull EntityTagsManager entityTagsManager) {
+                                         @Nonnull EventManager<ProjectEvent<?>> eventEventManager, @Nonnull TagsManager tagsManager) {
         super(accessManager);
         this.eventEventManager = checkNotNull(eventEventManager);
-        this.entityTagsManager = checkNotNull(entityTagsManager);
+        this.tagsManager = checkNotNull(tagsManager);
     }
 
     @Nonnull
@@ -48,9 +48,9 @@ public class UpdateEntityTagsActionHandler extends AbstractProjectActionHandler<
                                           @Nonnull ExecutionContext executionContext) {
 
         EventTag startTag = eventEventManager.getCurrentTag();
-        entityTagsManager.updateTags(action.getEntity(),
-                                     action.getFromTagIds(),
-                                     action.getToTagIds());
+        tagsManager.updateTags(action.getEntity(),
+                               action.getFromTagIds(),
+                               action.getToTagIds());
         EventList<ProjectEvent<?>> events = eventEventManager.getEventsFromTag(startTag);
         return new UpdateEntityTagsResult(events);
     }

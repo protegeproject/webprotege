@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toMap;
  * 19 Mar 2018
  */
 @ProjectSingleton
-public class EntityTagsManager {
+public class TagsManager {
 
     @Nonnull
     private final ProjectId projectId;
@@ -51,9 +51,9 @@ public class EntityTagsManager {
     private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
-    public EntityTagsManager(@Nonnull ProjectId projectId,
-                             @Nonnull EntityTagsRepository repository,
-                             @Nonnull TagRepository tagRepository, @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
+    public TagsManager(@Nonnull ProjectId projectId,
+                       @Nonnull EntityTagsRepository repository,
+                       @Nonnull TagRepository tagRepository, @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
         this.projectId = checkNotNull(projectId);
         this.repository = checkNotNull(repository);
         this.tagRepository = checkNotNull(tagRepository);
