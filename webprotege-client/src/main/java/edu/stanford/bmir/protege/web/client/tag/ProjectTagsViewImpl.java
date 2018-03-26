@@ -67,23 +67,11 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
 
     @Inject
     public ProjectTagsViewImpl(@Nonnull Provider<ColorSwatchPresenter> colorSwatchPresenter,
-                               @Nonnull Messages messages) {
+                               @Nonnull Messages messages,
+                               @Nonnull DeleteProjectTagConfirmationPrompt deletePrompt) {
         tagsEditor = new ValueListFlexEditorImpl<>(() -> new TagEditor(colorSwatchPresenter.get()));
         this.messages = checkNotNull(messages);
-        tagsEditor.setDeleteConfirmationPrompt((value, callback) -> {
-            if(value.getUsageCount() == 0) {
-                callback.deleteValue(true);
-                return;
-            }
-            MessageBox.showConfirmBox(QUESTION,
-                                      messages.tags_deleteTag(),
-                                      messages.tags_deleteConfirmationMessage(value.getLabel(), value.getUsageCount()),
-                                      CANCEL,
-                                      () -> callback.deleteValue(false),
-                                      DialogButton.get(messages.tags_deleteTag()),
-                                      () -> callback.deleteValue(true),
-                                      CANCEL);
-        });
+        tagsEditor.setDeleteConfirmationPrompt(deletePrompt);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
