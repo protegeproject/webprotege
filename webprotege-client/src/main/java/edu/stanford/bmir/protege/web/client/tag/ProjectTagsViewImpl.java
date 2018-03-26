@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
+import static edu.stanford.bmir.protege.web.client.library.msgbox.MessageStyle.QUESTION;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -73,14 +75,14 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
                 callback.deleteValue(true);
                 return;
             }
-            MessageBox.showConfirmBox(MessageStyle.QUESTION,
+            MessageBox.showConfirmBox(QUESTION,
                                       messages.tags_deleteTag(),
                                       messages.tags_deleteConfirmationMessage(value.getLabel(), value.getUsageCount()),
-                                      DialogButton.CANCEL,
+                                      CANCEL,
                                       () -> callback.deleteValue(false),
                                       DialogButton.get(messages.tags_deleteTag()),
                                       () -> callback.deleteValue(true),
-                                      DialogButton.CANCEL);
+                                      CANCEL);
         });
         initWidget(ourUiBinder.createAndBindUi(this));
     }
