@@ -3,7 +3,10 @@ package edu.stanford.bmir.protege.web.server.tag;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.event.EventTag;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsResult;
 
@@ -24,11 +27,16 @@ public class SetProjectTagsActionHandler extends AbstractProjectActionHandler<Se
     @Nonnull
     private final TagsManager tagsManager;
 
+    @Nonnull
+    private final EventManager<ProjectEvent<?>> eventEventManager;
+
     @Inject
     public SetProjectTagsActionHandler(@Nonnull AccessManager accessManager,
-                                       @Nonnull TagsManager tagsManager) {
+                                       @Nonnull TagsManager tagsManager,
+                                       @Nonnull EventManager<ProjectEvent<?>> eventEventManager) {
         super(accessManager);
         this.tagsManager = checkNotNull(tagsManager);
+        this.eventEventManager = checkNotNull(eventEventManager);
     }
 
     @Nonnull
@@ -46,7 +54,8 @@ public class SetProjectTagsActionHandler extends AbstractProjectActionHandler<Se
     @Nonnull
     @Override
     public SetProjectTagsResult execute(@Nonnull SetProjectTagsAction action, @Nonnull ExecutionContext executionContext) {
+        EventTag eventTag = eventEventManager.getCurrentTag();
         tagsManager.setProjectTags(action.getTagData());
-        return new SetProjectTagsResult();
+        return new SetProjectTagsResult(eventEventManager.getEventsFromTag(eventTag));
     }
 }

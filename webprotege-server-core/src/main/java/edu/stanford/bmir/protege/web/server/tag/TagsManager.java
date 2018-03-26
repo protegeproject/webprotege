@@ -4,10 +4,7 @@ import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
-import edu.stanford.bmir.protege.web.shared.tag.TagData;
-import edu.stanford.bmir.protege.web.shared.tag.TagId;
+import edu.stanford.bmir.protege.web.shared.tag.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -51,7 +48,8 @@ public class TagsManager {
     @Inject
     public TagsManager(@Nonnull ProjectId projectId,
                        @Nonnull EntityTagsRepository entityTagsRepository,
-                       @Nonnull TagRepository tagRepository, @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
+                       @Nonnull TagRepository tagRepository,
+                       @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
         this.projectId = checkNotNull(projectId);
         this.entityTagsRepository = checkNotNull(entityTagsRepository);
         this.tagRepository = checkNotNull(tagRepository);
@@ -120,42 +118,64 @@ public class TagsManager {
     /**
      * Sets the tags for the project that this manager is associated with.
      */
-    public void setProjectTags(@Nonnull Collection<TagData> projectTags) {
+    public void setProjectTags(@Nonnull Collection<TagData> newProjectTags) {
+        checkNotNull(newProjectTags);
+        Collection<Tag> currentProjectTags = getProjectTags();
+        Set<OWLEntity> modifiedEntityTags = new HashSet<>();
         try {
-            checkNotNull(projectTags);
             writeLock.lock();
-            Set<TagId> tagIds = projectTags.stream()
-                                           .map(TagData::getTagId)
-                                           .filter(Optional::isPresent)
-                                           .map(Optional::get)
-                                           .collect(toSet());
+            Set<TagId> tagIds = newProjectTags.stream()
+                                              .map(TagData::getTagId)
+                                              .filter(Optional::isPresent)
+                                              .map(Optional::get)
+                                              .collect(toSet());
             // Remove current tags
-            getProjectTags().stream()
-                            .map(Tag::getTagId)
-                            .peek(tagId -> {
-                                if (!tagIds.contains(tagId)) {
-                                    // Remove entity tag
-                                    entityTagsRepository.removeTag(projectId, tagId);
-                                }
-                            })
-                            .forEach(tagRepository::deleteTag);
+            currentProjectTags.stream()
+                              .map(Tag::getTagId)
+                              .peek(tagId -> {
+                                  if (!tagIds.contains(tagId)) {
+                                      // Record modified entity tags
+                                      entityTagsRepository.findByTagId(tagId).stream()
+                                                          .map(EntityTags::getEntity)
+                                                          .forEach(modifiedEntityTags::add);
+                                      // Remove tag from entity
+                                      entityTagsRepository.removeTag(projectId, tagId);
+                                  }
+                              })
+                              .forEach(tagRepository::deleteTag);
             // Set fresh tags
-            List<Tag> tags = projectTags.stream()
-                                        .map(tagData -> new Tag(
-                                                tagData.getTagId()
-                                                       .orElse(createTagId()),
-                                                projectId,
-                                                tagData.getLabel(),
-                                                tagData.getDescription(),
-                                                tagData.getColor(),
-                                                tagData.getBackgroundColor()
-                                        ))
-                                        .collect(toList());
+            List<Tag> tags = newProjectTags.stream()
+                                           .map(tagData -> new Tag(
+                                                   tagData.getTagId()
+                                                          .orElse(createTagId()),
+                                                   projectId,
+                                                   tagData.getLabel(),
+                                                   tagData.getDescription(),
+                                                   tagData.getColor(),
+                                                   tagData.getBackgroundColor()
+                                           ))
+                                           .peek(tag -> {
+                                               // Find the modified entities for this tag
+                                               entityTagsRepository.findByTagId(tag.getTagId()).stream()
+                                                                   .map(EntityTags::getEntity)
+                                                                   .forEach(modifiedEntityTags::add);
+                                           })
+                                           .collect(toList());
             tagRepository.saveTags(tags);
         } finally {
             writeLock.unlock();
         }
-
+        Set<Tag> oldProjectTags = new HashSet<>(currentProjectTags);
+        Set<Tag> projectTags = new HashSet<>(getProjectTags());
+        if (!oldProjectTags.equals(projectTags)) {
+            List<ProjectEvent<?>> events = new ArrayList<>();
+            for(OWLEntity entity : modifiedEntityTags) {
+                EntityTagsChangedEvent event = new EntityTagsChangedEvent(projectId, entity, getTags(entity));
+                events.add(event);
+            }
+            events.add(new ProjectTagsChangedEvent(projectId, projectTags));
+            eventBus.postEvents(events);
+        }
     }
 
     /**
