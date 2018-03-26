@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -14,15 +15,18 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetProjectTagsResult;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
+import edu.stanford.bmir.protege.web.shared.tag.TagData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
 import static edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction.setProjectTags;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Matthew Horridge
@@ -105,7 +109,16 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
     }
 
     private void handleApplyChanges() {
-        dispatchServiceManager.execute(setProjectTags(projectId, view.getTagData()),
+        List<TagData> tagData = view.getTagData();
+        Set<String> labels = new HashSet<>();
+        for(TagData td : tagData) {
+            boolean added = labels.add(td.getLabel());
+            if(!added) {
+                view.showDuplicateTagAlert(td.getLabel());
+                return;
+            }
+        }
+        dispatchServiceManager.execute(setProjectTags(projectId, tagData),
                                        result -> nextPlace.ifPresent(placeController::goTo));
     }
 

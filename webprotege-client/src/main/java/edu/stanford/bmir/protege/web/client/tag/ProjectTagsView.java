@@ -32,7 +32,10 @@ public interface ProjectTagsView extends IsWidget {
 
     void setCancelButtonVisible(boolean visible);
 
-    void setTags(List<Tag> tags, Map<TagId, Integer> usageCount);
+    void setTags(@Nonnull List<Tag> tags, Map<TagId, Integer> usageCount);
 
+    @Nonnull
     List<TagData> getTagData();
+
+    void showDuplicateTagAlert(@Nonnull String label);
 }

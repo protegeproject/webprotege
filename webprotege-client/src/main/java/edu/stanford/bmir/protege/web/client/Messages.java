@@ -1032,7 +1032,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("The tag <strong>{0}</strong> is used to tag <strong>{1,number}&nbsp;entities</strong>.  Are you sure that you want to delete this tag?" +
             "<br><br>" +
             "This operation cannot be undone.")
-    @AlternateMessage({"one", "The tag <strong>{0}</strong> is used to tag <strong>one entity</strong>.  Are you sure that you want to delete this tag?" +
+    @AlternateMessage({
+            "one", "The tag <strong>{0}</strong> is used to tag <strong>one entity</strong>.  Are you sure that you want to delete this tag?" +
             "<br><br>" +
             "This operation cannot be undone."})
     @Key("tags.deleteConfirmationMessage")
@@ -1046,4 +1047,11 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("tags.displayTags")
     String tags_DisplayTags();
 
+    @DefaultMessage("Duplicate Tag")
+    @Key("tags.duplicateTag.title")
+    String tags_duplicateTag_Title();
+
+    @DefaultMessage("The label <strong>{0}</strong> is used for more that one tag.<br><br>" +
+            "Please edit the labels so that a unique label is used for each tag.")
+    String tags_duplicateTag_Message(String label);
 }

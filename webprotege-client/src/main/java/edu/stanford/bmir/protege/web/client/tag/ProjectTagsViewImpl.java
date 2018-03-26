@@ -56,6 +56,9 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     @UiField(provided = true)
     ValueListEditor<TagData> tagsEditor;
 
+    @Nonnull
+    private final Messages messages;
+
     private ApplyChangesHandler applyChangesHandler = () -> {};
 
     private CancelChangesHandler cancelChangesHandler = () -> {};
@@ -64,6 +67,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     public ProjectTagsViewImpl(@Nonnull Provider<ColorSwatchPresenter> colorSwatchPresenter,
                                @Nonnull Messages messages) {
         tagsEditor = new ValueListFlexEditorImpl<>(() -> new TagEditor(colorSwatchPresenter.get()));
+        this.messages = checkNotNull(messages);
         tagsEditor.setDeleteConfirmationPrompt((value, callback) -> {
             MessageBox.showConfirmBox(MessageStyle.QUESTION,
                                       messages.tags_deleteTag(),
@@ -114,7 +118,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     }
 
     @Override
-    public void setTags(List<Tag> tags, Map<TagId, Integer> usageCount) {
+    public void setTags(@Nonnull List<Tag> tags, Map<TagId, Integer> usageCount) {
         List<TagData> tagData = tags.stream()
                                     .map(tag -> new TagData(Optional.of(tag.getTagId()),
                                                             tag.getLabel(),
@@ -126,9 +130,16 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
         tagsEditor.setValue(tagData);
     }
 
+    @Nonnull
     @Override
     public List<TagData> getTagData() {
         return tagsEditor.getValue()
                          .orElse(emptyList());
+    }
+
+    @Override
+    public void showDuplicateTagAlert(@Nonnull String label) {
+        MessageBox.showAlert(messages.tags_duplicateTag_Title(),
+                             messages.tags_duplicateTag_Message(label));
     }
 }
