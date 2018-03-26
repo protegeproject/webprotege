@@ -3,13 +3,15 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
+import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -74,6 +76,12 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     @Nonnull
     private final EntityHierarchyDropHandler dropHandler;
 
+    @Nonnull
+    private final FilterView filterView;
+
+    @Nonnull
+    private final TagVisibilityPresenter tagVisibilityPresenter;
+
     private boolean transmittingSelectionFromTree = false;
 
     @Inject
@@ -89,7 +97,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull CreateEntityPresenter createEntityPresenter,
                                           @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                           @Nonnull HierarchyActionStatePresenter actionStatePresenter,
-                                          @Nonnull EntityHierarchyDropHandler dropHandler) {
+                                          @Nonnull EntityHierarchyDropHandler dropHandler,
+                                          @Nonnull FilterView filterView,
+                                          @Nonnull TagVisibilityPresenter tagVisibilityPresenter) {
         super(selectionModel, projectId);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
@@ -114,10 +124,11 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.deleteEntityPresenter = deleteEntityPresenter;
         this.actionStatePresenter = actionStatePresenter;
         this.dropHandler = dropHandler;
-
-
+        this.filterView = checkNotNull(filterView);
+        this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
     }
+
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
@@ -132,6 +143,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         portletUi.addAction(watchClassAction);
         portletUi.addAction(searchAction);
         portletUi.setWidget(treeWidget);
+        portletUi.setFilterView(filterView);
 
         actionStatePresenter.registerAction(CREATE_CLASS, createClassAction);
         actionStatePresenter.registerAction(DELETE_CLASS, deleteClassAction);
@@ -151,6 +163,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                            createClassAction,
                                            deleteClassAction)
                                    .install();
+
+        tagVisibilityPresenter.start(filterView, treeWidget);
         setSelectionInTree(getSelectedEntity());
     }
 

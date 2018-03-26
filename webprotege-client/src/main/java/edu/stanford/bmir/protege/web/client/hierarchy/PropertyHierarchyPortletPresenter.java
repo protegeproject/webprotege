@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
@@ -101,6 +103,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider;
 
+    @Nonnull
+    private final FilterView filterView;
+
+    @Nonnull
+    private final TagVisibilityPresenter tagVisibilityPresenter;
+
     private boolean transmittingSelection = false;
 
     @Inject
@@ -114,12 +122,16 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> objectPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree,
                                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
-                                             @Nonnull EntityHierarchyTreeNodeRenderer renderer, @Nonnull CreateEntityPresenter createEntityPresenter,
+                                             @Nonnull EntityHierarchyTreeNodeRenderer renderer,
+                                             @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
-                                             @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory, @Nonnull WatchPresenter watchPresenter,
+                                             @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
+                                             @Nonnull WatchPresenter watchPresenter,
                                              @Nonnull SearchDialogController searchDialogController,
                                              @Nonnull HierarchyActionStatePresenter actionStatePresenter,
-                                             @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider) {
+                                             @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider,
+                                             @Nonnull FilterView filterView,
+                                             @Nonnull TagVisibilityPresenter tagVisibilityPresenter) {
         super(selectionModel, projectId);
         this.view = view;
         this.messages = messages;
@@ -141,6 +153,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         this.searchDialogController = searchDialogController;
         this.actionStatePresenter = actionStatePresenter;
         this.entityHierarchyDropHandlerProvider = entityHierarchyDropHandlerProvider;
+        this.filterView = filterView;
+        this.tagVisibilityPresenter = tagVisibilityPresenter;
     }
 
     @Override
@@ -149,6 +163,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         portletUi.addAction(deleteAction);
         portletUi.addAction(watchAction);
         portletUi.addAction(searchAction);
+        portletUi.setFilterView(filterView);
 
         actionStatePresenter.registerAction(CREATE_PROPERTY, createAction);
         actionStatePresenter.registerAction(DELETE_PROPERTY, deleteAction);
@@ -174,6 +189,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
         view.setHierarchyIdSelectedHandler(this::handleHierarchyChanged);
 
         view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
+
+        tagVisibilityPresenter.start(filterView, view);
 
         setSelectionInTree(getSelectedEntity());
         portletUi.setWidget(view);

@@ -226,6 +226,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-tag--hierarchy-node-tag")
         String tagHierarchyNodeTag();
+
+        @ClassName("wp-tags-view--tags-hidden")
+        String tagsHidden();
     }
 
     interface TopBar extends CssResource {

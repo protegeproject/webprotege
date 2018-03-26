@@ -22,3 +22,11 @@
     margin-left: 4px;
     pointer-events: auto;
 }
+
+.wp-tags-view--tags-hidden {
+
+}
+
+.wp-tags-view--tags-hidden .wp-tag {
+    visibility: collapse;
+}
