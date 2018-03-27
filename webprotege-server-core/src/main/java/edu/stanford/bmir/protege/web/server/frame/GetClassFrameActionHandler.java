@@ -42,18 +42,13 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Nonnull
     private final Provider<ClassFrameTranslator> translatorProvider;
 
-    @Nonnull
-    private final TagsManager tagsManager;
-
     @Inject
     public GetClassFrameActionHandler(@Nonnull AccessManager accessManager,
                                       @Nonnull RenderingManager renderingManager,
-                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider,
-                                      @Nonnull TagsManager tagsManager) {
+                                      @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
         super(accessManager);
         this.renderingManager = renderingManager;
         this.translatorProvider = translatorProvider;
-        this.tagsManager = tagsManager;
     }
 
     /**
@@ -88,7 +83,6 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
                     executionContext.getUserId(),
                     subject,
                     f.getDisplayName());
-        Collection<Tag> tags = tagsManager.getTags(subject);
-        return new GetClassFrameResult(f, tags);
+        return new GetClassFrameResult(f);
     }
 }
