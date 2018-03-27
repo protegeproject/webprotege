@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.tag.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -45,6 +46,9 @@ public class TagsManager {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
+    @Nullable
+    private Map<TagId, Tag> projectTags;
+
     @Inject
     public TagsManager(@Nonnull ProjectId projectId,
                        @Nonnull EntityTagsRepository entityTagsRepository,
@@ -68,8 +72,7 @@ public class TagsManager {
         checkNotNull(entity);
         try {
             readLock.lock();
-            Map<TagId, Tag> tagsById = tagRepository.findTagsByProjectId(projectId).stream()
-                                                    .collect(toMap(Tag::getTagId, tag -> tag));
+            Map<TagId, Tag> tagsById = getProjectTagsByProjectId();
             Optional<EntityTags> entityTags = entityTagsRepository.findByEntity(projectId, entity);
             if (!entityTags.isPresent()) {
                 return Collections.emptySet();
@@ -78,6 +81,20 @@ public class TagsManager {
                              .map(tagsById::get)
                              .filter(Objects::nonNull)
                              .collect(toList());
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    @Nonnull
+    private Map<TagId, Tag> getProjectTagsByProjectId() {
+        try {
+            readLock.lock();
+            if (projectTags == null) {
+                projectTags = tagRepository.findTagsByProjectId(projectId).stream()
+                                           .collect(toMap(Tag::getTagId, tag -> tag));
+            }
+            return projectTags;
         } finally {
             readLock.unlock();
         }
@@ -109,7 +126,7 @@ public class TagsManager {
     public Collection<Tag> getProjectTags() {
         try {
             readLock.lock();
-            return tagRepository.findTagsByProjectId(projectId);
+            return new ArrayList<>(getProjectTagsByProjectId().values());
         } finally {
             readLock.unlock();
         }
@@ -124,6 +141,7 @@ public class TagsManager {
         Set<OWLEntity> modifiedEntityTags = new HashSet<>();
         try {
             writeLock.lock();
+            projectTags = null;
             Set<TagId> tagIds = newProjectTags.stream()
                                               .map(TagData::getTagId)
                                               .filter(Optional::isPresent)
@@ -169,7 +187,7 @@ public class TagsManager {
         Set<Tag> projectTags = new HashSet<>(getProjectTags());
         if (!oldProjectTags.equals(projectTags)) {
             List<ProjectEvent<?>> events = new ArrayList<>();
-            for(OWLEntity entity : modifiedEntityTags) {
+            for (OWLEntity entity : modifiedEntityTags) {
                 EntityTagsChangedEvent event = new EntityTagsChangedEvent(projectId, entity, getTags(entity));
                 events.add(event);
             }
