@@ -18,6 +18,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -65,116 +67,118 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     }
 
 
-
     private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
         BidirectionalShortFormProvider sfp = renderingManager.getShortFormProvider();
-        Set<OWLEntityDataMatch> matches = new TreeSet<>();
+        List<OWLEntityDataMatch> matches = new ArrayList<>();
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
-        for(String shortForm : sfp.getShortForms()) {
-            java.util.Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
-            if(result.isPresent()) {
+        Set<OWLEntity> addedEntities = new HashSet<>();
+        for (String shortForm : sfp.getShortForms()) {
+            Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
+            if (result.isPresent()) {
                 Set<OWLEntity> entities = sfp.getEntities(shortForm);
-                for(OWLEntity matchingEntity : entities) {
-                    Optional<OWLEntityData> match = toOWLEntityData(matchingEntity, entityLookupRequest,
-                                                                    renderingManager);
-                    if(match.isPresent()) {
-                        EntityNameMatchResult resultValue = result.get();
-                        matches.add(new OWLEntityDataMatch(match.get(), resultValue));
-                    }
-                    // BAD
-                    if(matches.size() >= 1000) {
-                        break;
+                for (OWLEntity matchingEntity : entities) {
+                    if (!addedEntities.contains(matchingEntity)) {
+                        Optional<OWLEntityData> match = toOWLEntityData(matchingEntity, entityLookupRequest,
+                                                                        renderingManager);
+                        if (match.isPresent()) {
+                            EntityNameMatchResult resultValue = result.get();
+                            matches.add(new OWLEntityDataMatch(match.get(), resultValue));
+                            addedEntities.add(matchingEntity);
+                        }
+                        // BAD
+                        if (matches.size() >= 1000) {
+                            break;
+                        }
                     }
                 }
             }
             // BAD
-            if(matches.size() >= 1000) {
+            if (matches.size() >= 10000) {
                 break;
             }
         }
-        List<EntityLookupResult> result = new ArrayList<>();
-        for(OWLEntityDataMatch match : matches) {
-            OWLEntityData entityData = match.getEntityData();
-            result.add(new EntityLookupResult(entityData,
-                                              match.getMatchResult(),
-                                              placeUrl.getEntityUrl(projectId, entityData.getEntity())));
-        }
-        Collections.sort(result);
-        if(result.size() >= entityLookupRequest.getSearchLimit()) {
-            result = new ArrayList<>(result.subList(0, entityLookupRequest.getSearchLimit()));
-        }
-        return result;
+        return matches.stream()
+                      .sorted()
+                      .limit(entityLookupRequest.getSearchLimit())
+                      .map(this::toEntityLookupResult)
+                      .collect(toList());
+    }
+
+    private EntityLookupResult toEntityLookupResult(OWLEntityDataMatch match) {
+        return new EntityLookupResult(match.getEntityData(),
+                                      match.getMatchResult(),
+                                      placeUrl.getEntityUrl(projectId, match.getEntityData().getEntity()));
     }
 
 
     private Optional<OWLEntityData> toOWLEntityData(OWLEntity matchingEntity, final EntityLookupRequest entityLookupRequest, final RenderingManager rm) {
         return matchingEntity.accept(new OWLEntityVisitorEx<Optional<OWLEntityData>>() {
-                            @Nonnull
-                            public Optional<OWLEntityData> visit(@Nonnull OWLClass cls) {
-                                if(entityLookupRequest.isSearchType(EntityType.CLASS)) {
-                                    String browserText = rm.getBrowserText(cls);
-                                    return Optional.of(new OWLClassData(cls, browserText));
-                                }
-                                else {
-                                    return Optional.empty();
-                                }
-                            }
+            @Nonnull
+            public Optional<OWLEntityData> visit(@Nonnull OWLClass cls) {
+                if (entityLookupRequest.isSearchType(EntityType.CLASS)) {
+                    String browserText = rm.getBrowserText(cls);
+                    return Optional.of(new OWLClassData(cls, browserText));
+                }
+                else {
+                    return Optional.empty();
+                }
+            }
 
-                            @Nonnull
-                            public Optional<OWLEntityData> visit(@Nonnull OWLObjectProperty property) {
-                                if(entityLookupRequest.isSearchType(EntityType.OBJECT_PROPERTY)) {
-                                    String browserText = rm.getBrowserText(property);
-                                    return Optional.of(new OWLObjectPropertyData(property, browserText));
-                                }
-                                else {
-                                    return Optional.empty();
-                                }
-                            }
+            @Nonnull
+            public Optional<OWLEntityData> visit(@Nonnull OWLObjectProperty property) {
+                if (entityLookupRequest.isSearchType(EntityType.OBJECT_PROPERTY)) {
+                    String browserText = rm.getBrowserText(property);
+                    return Optional.of(new OWLObjectPropertyData(property, browserText));
+                }
+                else {
+                    return Optional.empty();
+                }
+            }
 
-                            @Nonnull
-                            public Optional<OWLEntityData> visit(@Nonnull OWLDataProperty property) {
-                                if(entityLookupRequest.isSearchType(EntityType.DATA_PROPERTY)) {
-                                    String browserText = rm.getBrowserText(property);
-                                    return Optional.of(new OWLDataPropertyData(property, browserText));
-                                }
-                                else {
-                                    return Optional.empty();
-                                }
-                            }
+            @Nonnull
+            public Optional<OWLEntityData> visit(@Nonnull OWLDataProperty property) {
+                if (entityLookupRequest.isSearchType(EntityType.DATA_PROPERTY)) {
+                    String browserText = rm.getBrowserText(property);
+                    return Optional.of(new OWLDataPropertyData(property, browserText));
+                }
+                else {
+                    return Optional.empty();
+                }
+            }
 
-                            @Nonnull
-                            public Optional<OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
-                                if(entityLookupRequest.isSearchType(EntityType.NAMED_INDIVIDUAL)) {
-                                    String browserText = rm.getBrowserText(individual);
-                                    return Optional.of(new OWLNamedIndividualData(individual, browserText));
-                                }
-                                else {
-                                    return Optional.empty();
-                                }
-                            }
+            @Nonnull
+            public Optional<OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
+                if (entityLookupRequest.isSearchType(EntityType.NAMED_INDIVIDUAL)) {
+                    String browserText = rm.getBrowserText(individual);
+                    return Optional.of(new OWLNamedIndividualData(individual, browserText));
+                }
+                else {
+                    return Optional.empty();
+                }
+            }
 
-                            @Nonnull
-                            public Optional<OWLEntityData> visit(@Nonnull OWLDatatype datatype) {
-                                if(entityLookupRequest.isSearchType(EntityType.DATATYPE)) {
-                                    String browserText = rm.getBrowserText(datatype);
-                                    return Optional.of(new OWLDatatypeData(datatype, browserText));
-                                }
-                                else {
-                                    return Optional.empty();
-                                }
-                            }
+            @Nonnull
+            public Optional<OWLEntityData> visit(@Nonnull OWLDatatype datatype) {
+                if (entityLookupRequest.isSearchType(EntityType.DATATYPE)) {
+                    String browserText = rm.getBrowserText(datatype);
+                    return Optional.of(new OWLDatatypeData(datatype, browserText));
+                }
+                else {
+                    return Optional.empty();
+                }
+            }
 
-                            @Nonnull
-                            public Optional<OWLEntityData> visit(@Nonnull OWLAnnotationProperty property) {
-                                if(entityLookupRequest.isSearchType(EntityType.ANNOTATION_PROPERTY)) {
-                                    String browserText = rm.getBrowserText(property);
-                                    return Optional.of(new OWLAnnotationPropertyData(property, browserText));
-                                }
-                                else {
-                                    return Optional.empty();
-                                }
-                            }
-                        });
+            @Nonnull
+            public Optional<OWLEntityData> visit(@Nonnull OWLAnnotationProperty property) {
+                if (entityLookupRequest.isSearchType(EntityType.ANNOTATION_PROPERTY)) {
+                    String browserText = rm.getBrowserText(property);
+                    return Optional.of(new OWLAnnotationPropertyData(property, browserText));
+                }
+                else {
+                    return Optional.empty();
+                }
+            }
+        });
     }
 
     private static class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {
@@ -199,7 +203,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         @Override
         public int compareTo(@Nonnull OWLEntityDataMatch owlEntityDataMatch) {
             int diff = this.matchResult.compareTo(owlEntityDataMatch.matchResult);
-            if(diff != 0) {
+            if (diff != 0) {
                 return diff;
             }
             return visualEntity.compareToIgnorePrefixNames(owlEntityDataMatch.getEntityData());
