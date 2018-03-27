@@ -56,11 +56,15 @@ public class EntityDiscussionThreadRepository {
 
     public int getOpenCommentsCount(@Nonnull ProjectId projectId,
                                     @Nonnull OWLEntity entity) {
-        return findThreads(projectId, entity).stream()
-                                             .filter(thread -> thread.getStatus() == Status.OPEN)
-                                             .map(thread -> thread.getComments().size())
-                                             .reduce((left, right) -> left + right)
-                                             .orElse(0);
+        return datastore.createQuery(EntityDiscussionThread.class)
+                        .disableValidation()
+                        .field(PROJECT_ID).equal(projectId)
+                        .field(ENTITY).equal(entity)
+                        .field(STATUS).equal(Status.OPEN)
+                        .asList()
+                        .stream().map(thread -> thread.getComments().size())
+                        .reduce((left, right) -> left + right)
+                        .orElse(0);
     }
 
     public void saveThread(@Nonnull EntityDiscussionThread thread) {
