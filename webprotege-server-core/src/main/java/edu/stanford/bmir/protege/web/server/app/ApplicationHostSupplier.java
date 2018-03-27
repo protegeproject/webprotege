@@ -11,15 +11,15 @@ import java.util.function.Supplier;
  */
 public class ApplicationHostSupplier implements Supplier<String> {
 
-    private final ApplicationSettingsManager applicationSettingsManager;
+    private final ApplicationPreferencesStore applicationPreferencesStore;
 
     @Inject
-    public ApplicationHostSupplier(@Nonnull ApplicationSettingsManager applicationSettingsManager) {
-        this.applicationSettingsManager = applicationSettingsManager;
+    public ApplicationHostSupplier(@Nonnull ApplicationPreferencesStore applicationPreferencesStore) {
+        this.applicationPreferencesStore = applicationPreferencesStore;
     }
 
     @Nonnull
     public String get() {
-        return applicationSettingsManager.getApplicationSettings().getApplicationLocation().getHost();
+        return applicationPreferencesStore.getApplicationPreferences().getApplicationLocation().getHost();
     }
 }

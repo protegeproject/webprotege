@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import org.mongodb.morphia.Datastore;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -28,6 +29,9 @@ public class ApplicationPreferencesStore implements Repository {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
+    @Nullable
+    private ApplicationPreferences cachedPreferences = null;
+
     @Inject
     public ApplicationPreferencesStore(@Nonnull Datastore datastore) {
         this.datastore = checkNotNull(datastore);
@@ -40,6 +44,9 @@ public class ApplicationPreferencesStore implements Repository {
 
     @Nonnull
     public ApplicationPreferences getApplicationPreferences() {
+        if(cachedPreferences != null) {
+            return cachedPreferences;
+        }
         readLock.lock();
         try {
             ApplicationPreferences applicationPreferences = datastore.get(ApplicationPreferences.class, ApplicationPreferences.ID);
@@ -47,6 +54,7 @@ public class ApplicationPreferencesStore implements Repository {
                 applicationPreferences = DefaultApplicationPreferences.get();
                 datastore.save(applicationPreferences);
             }
+            cachedPreferences = applicationPreferences;
             return applicationPreferences;
         } finally {
             readLock.unlock();
@@ -57,6 +65,7 @@ public class ApplicationPreferencesStore implements Repository {
     public void setApplicationPreferences(@Nonnull ApplicationPreferences preferences) {
         writeLock.lock();
         try {
+            cachedPreferences = preferences;
             datastore.save(checkNotNull(preferences));
 
         } finally {
