@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.access.RoleId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.CountOptions;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 
@@ -147,7 +148,7 @@ public class AccessManagerImpl implements AccessManager {
     public boolean hasPermission(@Nonnull Subject subject, @Nonnull Resource resource, @Nonnull ActionId actionId) {
         Query<RoleAssignment> query = withUserOrAnyUserAndTarget(subject, resource)
                 .field(ACTION_CLOSURE).equal(actionId.getId());
-        return query.count() > 0;
+        return query.count(new CountOptions().limit(1)) == 1;
     }
 
     @Override
