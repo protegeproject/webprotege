@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.MERGE_ENTITIES;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 
@@ -115,6 +116,8 @@ public class EntityHierarchyContextMenuPresenter {
         // This needs tidying somehow.  We don't do this for other actions.
         mergeEntitiesAction.setEnabled(false);
         permissionChecker.hasPermission(MERGE_ENTITIES, mergeEntitiesAction::setEnabled);
+        editEntityTagsAction.setEnabled(false);
+        permissionChecker.hasPermission(EDIT_ENTITY_TAGS, editEntityTagsAction::setEnabled);
 
     }
 
