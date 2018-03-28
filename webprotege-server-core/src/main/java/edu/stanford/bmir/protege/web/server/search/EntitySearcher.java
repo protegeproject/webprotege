@@ -2,12 +2,18 @@ package edu.stanford.bmir.protege.web.server.search;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
+import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jdt.core.search.SearchMatch;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
@@ -17,10 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -67,6 +70,15 @@ public class EntitySearcher {
     @Nonnull
     private final String searchString;
 
+
+    @Nonnull
+    private final TagsManager tagsManager;
+
+    private final Map<String, Tag> tagsByLabel = new HashMap<>();
+
+    private final Multimap<OWLEntity, Tag> tagsByEntity = HashMultimap.create();
+
+
     @Nonnull
     private final String[] searchWords;
 
@@ -85,7 +97,8 @@ public class EntitySearcher {
                            @Nonnull Supplier<Stream<OWLEntity>> entityStreamSupplier,
                            @Nonnull HasGetRendering renderingSupplier,
                            @Nonnull Set<EntityType<?>> entityTypes,
-                           @Nonnull String searchString) {
+                           @Nonnull String searchString,
+                           @Nonnull TagsManager tagsManager) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.entityStreamSupplier = checkNotNull(entityStreamSupplier);
@@ -93,9 +106,11 @@ public class EntitySearcher {
         this.entityTypes = new HashSet<>(checkNotNull(entityTypes));
         this.searchString = checkNotNull(searchString);
         this.searchWords = searchString.split("\\s+");
+        this.tagsManager = checkNotNull(tagsManager);
     }
 
     public static EntitySearcher get(@Nonnull ProjectId projectId,
+                                     @Nonnull TagsManager tagsManager,
                                      @Nonnull UserId userId,
                                      @Nonnull Supplier<Stream<OWLEntity>> entityStreamSupplier,
                                      @Nonnull HasGetRendering renderingSupplier,
@@ -106,7 +121,8 @@ public class EntitySearcher {
                                   entityStreamSupplier,
                                   renderingSupplier,
                                   entityTypes,
-                                  searchString);
+                                  searchString,
+                                  tagsManager);
     }
 
     /**
@@ -178,12 +194,16 @@ public class EntitySearcher {
         matchCounter.reset();
         searchCounter.reset();
         results.clear();
+        tagsByLabel.clear();
+        tagsManager.getProjectTags().forEach(tag -> tagsByLabel.put(tag.getLabel(), tag));
+        tagsByEntity.clear();
+        tagsByEntity.putAll(tagsManager.getTags(projectId));
         Pattern searchPattern = compileSearchPattern(searchWords);
         entityStreamSupplier.get()
                             .filter(this::isRequiredEntityType)
                             .peek(this::incrementSearchCounter)
                             .map(this::performMatch)
-                            .filter(m -> m != null)
+                            .filter(Objects::nonNull)
                             .peek(this::incrementMatchCounter)
                             .sorted()
                             .skip(skip)
@@ -223,17 +243,29 @@ public class EntitySearcher {
         matchCounter.increment();
     }
 
-    private static EntitySearchResult toSearchResult(Pattern searchPattern, SearchMatch ren) {
+    private EntitySearchResult toSearchResult(Pattern searchPattern, SearchMatch ren) {
         OWLEntityData ed = ren.getEntityData();
         String rendering = ed.getBrowserText();
         StringBuilder highlighted = new StringBuilder();
         highlightSearchResult(searchPattern, rendering, highlighted);
-        if (!ren.isMatchedRendering()) {
+        if (ren.getMatchType() == MatchType.IRI) {
             // Matched the IRI remainder
             highlighted.append("<div class=\"searchedIri\">");
             IRI iri = ed.getEntity().getIRI();
             highlightSearchResult(searchPattern, iri.toString(), highlighted);
             highlighted.append("</div>");
+        }
+        if(ren.getMatchType() == MatchType.TAG) {
+            for(Tag tag : tagsByEntity.get(ed.getEntity())) {
+                if (searchString.equalsIgnoreCase(tag.getLabel())) {
+                    highlighted.append("<div class='wp-tag wp-tag--inline-tag' style='display: inline-block; color: ")
+                               .append(tag.getColor().getHex())
+                               .append("; background-color:")
+                               .append(tag.getBackgroundColor().getHex()).append(";'>");
+                    highlighted.append(tag.getLabel());
+                    highlighted.append("</div>");
+                }
+            }
         }
         return new EntitySearchResult(ed,
                                       displayName(),
@@ -243,36 +275,45 @@ public class EntitySearcher {
     @Nullable
     private SearchMatch performMatch(@Nonnull OWLEntity e) {
         OWLEntityData rendering = renderingSupplier.getRendering(e);
-        boolean matchedRendering = true;
-        // All search words must be found
-        for (String searchWord : searchWords) {
-            if (!StringUtils.containsIgnoreCase(rendering.getBrowserText(),
-                                                searchWord)) {
-                matchedRendering = false;
-                break;
+        MatchType matchType = null;
+        if(tagsByLabel.containsKey(searchString)) {
+            for (Tag tag : tagsByEntity.get(e)) {
+                if (tag.getLabel().equals(searchString)) {
+                    matchType = MatchType.TAG;
+                    break;
+                }
             }
         }
+        if (matchType == null) {
+            matchType = MatchType.RENDERING;
+            // All search words must be found
+            for (String searchWord : searchWords) {
+                if (!StringUtils.containsIgnoreCase(rendering.getBrowserText(),
+                                                    searchWord)) {
+                    matchType = null;
+                    break;
+                }
+            }
+        }
+
         // If we didn't match the rendering then search the IRI remainder
-        boolean matchedIRI = true;
         IRI entityIri = rendering.getEntity().getIRI();
-        if (!matchedRendering && entityIri.toString()
+        if (matchType == null && entityIri.toString()
                                           .startsWith(Obo2OWLConstants.DEFAULT_IRI_PREFIX)) {
+            matchType = MatchType.IRI;
             Optional<String> remainder = entityIri.getRemainder();
             if (remainder.isPresent()) {
                 for (String searchWord : searchWords) {
                     if (!StringUtils.containsIgnoreCase(remainder.get(),
                                                         searchWord)) {
-                        matchedIRI = false;
+                        matchType = null;
                         break;
                     }
                 }
             }
         }
-        else {
-            matchedIRI = false;
-        }
-        if (matchedRendering || matchedIRI) {
-            return new SearchMatch(searchWords, rendering, matchedRendering);
+        if (matchType != null) {
+            return new SearchMatch(searchWords, rendering, matchType);
         }
         else {
             return null;
@@ -314,6 +355,12 @@ public class EntitySearcher {
         }
     }
 
+    private enum MatchType {
+        RENDERING,
+        IRI,
+        TAG
+    }
+
     private static class SearchMatch implements Comparable<SearchMatch> {
 
 
@@ -321,22 +368,22 @@ public class EntitySearcher {
 
         private final OWLEntityData entityData;
 
-        private final boolean matchedRendering;
+        private final MatchType matchType;
 
         public SearchMatch(@Nonnull String[] searchWords,
                            @Nonnull OWLEntityData entityData,
-                           boolean matchedRendering) {
+                           @Nonnull MatchType matchType) {
             this.searchWords = searchWords;
             this.entityData = entityData;
-            this.matchedRendering = matchedRendering;
+            this.matchType = matchType;
         }
 
         public OWLEntityData getEntityData() {
             return entityData;
         }
 
-        public boolean isMatchedRendering() {
-            return matchedRendering;
+        public MatchType getMatchType() {
+            return matchType;
         }
 
         @Override

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
+import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -39,15 +40,20 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
     @RootOntology
     private final OWLOntology rootOntology;
 
+    @Nonnull
+    private final TagsManager tagsManager;
+
     @Inject
     public PerformEntitySearchActionHandler(@Nonnull AccessManager accessManager,
                                             @Nonnull ProjectId projectId,
                                             @Nonnull HasGetRendering renderer,
-                                            @Nonnull @RootOntology OWLOntology rootOntology) {
+                                            @Nonnull @RootOntology OWLOntology rootOntology,
+                                            @Nonnull TagsManager tagsManager) {
         super(accessManager);
         this.projectId = projectId;
         this.renderer = renderer;
         this.rootOntology = rootOntology;
+        this.tagsManager = tagsManager;
     }
 
     @Nonnull
@@ -63,13 +69,14 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
         Set<EntityType<?>> entityTypes = action.getEntityTypes();
         String searchString = action.getSearchString();
         EntitySearcher entitySearcher = EntitySearcher.get(projectId,
-                                                           executionContext.getUserId(),
+                                                           tagsManager, executionContext.getUserId(),
                                                            () -> entityStream(entityTypes,
                                                                               rootOntology,
                                                                               Imports.INCLUDED),
                                                            renderer,
                                                            entityTypes,
-                                                           searchString);
+                                                           searchString
+        );
         PageRequest pageRequest = action.getPageRequest();
         int pageSize = pageRequest.getPageSize();
         entitySearcher.setLimit(pageSize);

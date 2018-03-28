@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -84,6 +86,26 @@ public class TagsManager {
         } finally {
             readLock.unlock();
         }
+    }
+
+    @Nonnull
+    public Multimap<OWLEntity, Tag> getTags(@Nonnull ProjectId projectId) {
+        readLock.lock();
+        try {
+            Multimap<OWLEntity, Tag> result = HashMultimap.create();
+            Map<OWLEntity, EntityTags> tagsByEntity = entityTagsRepository.findByProject(projectId);
+            Map<TagId, Tag> tagsById = getProjectTagsByProjectId();
+            tagsByEntity.forEach((entity, tags) -> {
+                tags.getTags().stream()
+                    .map(tagsById::get)
+                    .filter(Objects::nonNull)
+                    .forEach(tag -> result.put(entity, tag));
+            });
+            return result;
+        } finally {
+            readLock.unlock();
+        }
+
     }
 
     @Nonnull

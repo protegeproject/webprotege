@@ -66,7 +66,7 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         tags.forEach(tag -> {
             sb.append("<div title='")
               .append(tag.getDescription())
-              .append("' class='wp-tag wp-tag--hierarchy-node-tag' style='color:")
+              .append("' class='wp-tag wp-tag--inline-tag' style='color:")
               .append(tag.getColor().getHex())
               .append("; background-color:")
               .append(tag.getBackgroundColor().getHex())

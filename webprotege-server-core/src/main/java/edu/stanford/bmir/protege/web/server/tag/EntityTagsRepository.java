@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.tag;
 
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
@@ -11,16 +12,17 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.tag.EntityTags.ENTITY;
-import static edu.stanford.bmir.protege.web.server.tag.EntityTags.PROJECT_ID;
-import static edu.stanford.bmir.protege.web.server.tag.EntityTags.TAGS;
+import static edu.stanford.bmir.protege.web.server.tag.EntityTags.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Matthew Horridge
@@ -96,9 +98,22 @@ public class EntityTagsRepository implements Repository {
     }
 
     private Query<EntityTags> tagWithProjectIdAndEntity(ProjectId projectId, OWLEntity entity) {
-         return datastore.createQuery(EntityTags.class)
-                         .field(PROJECT_ID).equal(projectId)
-                         .field(ENTITY).equal(entity);
+        return datastore.createQuery(EntityTags.class)
+                        .field(PROJECT_ID).equal(projectId)
+                        .field(ENTITY).equal(entity);
+    }
+
+    public Map<OWLEntity, EntityTags> findByProject(ProjectId projectId) {
+        try {
+            readLock.lock();
+            return datastore.createQuery(EntityTags.class)
+                            .field(PROJECT_ID).equal(projectId)
+                            .asList()
+                            .stream()
+                            .collect(toMap(EntityTags::getEntity, tags -> tags));
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public Optional<EntityTags> findByEntity(ProjectId projectId, OWLEntity entity) {

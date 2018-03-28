@@ -224,8 +224,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-tag--tag-list-tag")
         String tagTagListTag();
 
-        @ClassName("wp-tag--hierarchy-node-tag")
-        String tagHierarchyNodeTag();
+        @ClassName("wp-tag--inline-tag")
+        String tagHierarchyInlineTag();
 
         @ClassName("wp-tags-view--tags-hidden")
         String tagsHidden();
