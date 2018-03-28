@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.shared.app.StatusCodes;
 
 /**
  * Matthew Horridge
@@ -53,6 +54,10 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
 
     @Override
     public void displayIncompatibleRemoteServiceExceptionErrorMessage() {
+        displayReloadBrowserMessage();
+    }
+
+    private void displayReloadBrowserMessage() {
         MessageBox.showMessage(
                 getMessages().error_refreshBrowser() ,
                 getMessages().error_upgraded() );
@@ -63,7 +68,10 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
         GWT.log("InvocationException: " + exception.getClass().getName() + ": " + exception.getMessage(), exception);
         if (exception instanceof StatusCodeException) {
             StatusCodeException statusCodeException = (StatusCodeException) exception;
-            if (statusCodeException.getStatusCode() != 0) {
+            if(statusCodeException.getStatusCode() == StatusCodes.UPDATED) {
+                displayReloadBrowserMessage();
+            }
+            else if (statusCodeException.getStatusCode() != 0) {
                 displayMessageBox(statusCodeException.getStatusText(),
                                   getMessages().error_webProtegeHasEncounteredAnErrorPleaseTryAgain() + "<br>" +
                                   getMessages().error_statusCode() + ": " + statusCodeException.getStatusCode() + " (" + statusCodeException

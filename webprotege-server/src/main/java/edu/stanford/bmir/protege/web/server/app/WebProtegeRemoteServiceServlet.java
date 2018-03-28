@@ -5,11 +5,15 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.shared.app.StatusCodes;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,7 +61,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
 
     @Override
     public String processCall(String payload) throws SerializationException {
-        // TODO: Log timing in here
         return super.processCall(payload);
     }
 
@@ -65,7 +68,19 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
         logger.error(e, getUserInSession(), request);
-        super.doUnexpectedFailure(e);
+        if(e instanceof SerializationException) {
+            HttpServletResponse response = getThreadLocalResponse();
+            response.reset();
+            try {
+                response.setContentType("text/plain");
+                response.sendError(StatusCodes.UPDATED, "WebProtege has been updated. Please refresh your browser");
+            } catch (IOException ex) {
+                logger.error(ex);
+            }
+        }
+        else {
+            super.doUnexpectedFailure(e);
+        }
     }
 
     @Override
@@ -81,17 +96,4 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         }
         return super.doGetSerializationPolicy(request, moduleBaseURL, strongName);
     }
-
-//    private void dumpHeaders(HttpServletRequest request) {
-//        System.out.println("Headers");
-//        Enumeration<String> headerNames = request.getHeaderNames();
-//        while(headerNames.hasMoreElements()) {
-//            String s = headerNames.nextElement();
-//            System.out.print(s);
-//            System.out.print("  --->  ");
-//            System.out.println(request.getHeader(s));
-//        }
-//        System.out.println();
-//        System.out.println();
-//    }
 }
