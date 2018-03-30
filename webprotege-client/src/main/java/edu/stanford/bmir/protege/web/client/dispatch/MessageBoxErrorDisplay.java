@@ -58,9 +58,9 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
     }
 
     private void displayReloadBrowserMessage() {
-        MessageBox.showMessage(
+        displayMessageBox(
                 getMessages().error_refreshBrowser() ,
-                getMessages().error_upgraded() );
+                getMessages().error_upgraded());
     }
 
     @Override
