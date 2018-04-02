@@ -106,7 +106,9 @@ public class LoginPresenter implements Presenter {
                 new AuthenticatedDispatchServiceCallback<PerformLoginResult>() {
                     @Override
                     public void handleAuthenticationResponse(@Nonnull AuthenticationResponse authenticationResponse) {
-
+                        if(authenticationResponse == AuthenticationResponse.FAIL) {
+                            view.showLoginFailedErrorMessage();
+                        }
                     }
 
                     @Override
