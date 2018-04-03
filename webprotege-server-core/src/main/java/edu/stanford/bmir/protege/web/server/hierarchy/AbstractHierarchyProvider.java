@@ -52,8 +52,7 @@ public abstract class AbstractHierarchyProvider<N> implements HierarchyProvider<
 
     private void getAncestors(Set<N> results, N object) {
         for (N parent : getParents(object)) {
-            if (!results.contains(parent)) {
-                results.add(parent);
+            if (results.add(parent)) {
                 getAncestors(results, parent);
             }
         }

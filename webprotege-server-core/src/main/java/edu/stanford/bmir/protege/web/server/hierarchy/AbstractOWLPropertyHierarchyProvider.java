@@ -1,14 +1,21 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 
 /**
@@ -19,13 +26,18 @@ import java.util.Set;
  */
 public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLPropertyRange, E extends OWLPropertyExpression, P extends E> extends AbstractHierarchyProvider<P> {
 
+    private static Logger logger = LoggerFactory.getLogger(AbstractOWLPropertyHierarchyProvider.class);
+
+    private final ProjectId projectId;
+
     private final OWLOntology rootOntology;
 
     private Set<P> subPropertiesOfRoot;
 
     private P root;
 
-    public AbstractOWLPropertyHierarchyProvider(@RootOntology OWLOntology rootOntology, P root) {
+    public AbstractOWLPropertyHierarchyProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, P root) {
+        this.projectId = projectId;
         this.subPropertiesOfRoot = new HashSet<>();
         this.rootOntology = rootOntology;
         this.root = root;
@@ -38,6 +50,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
         super.dispose();
     }
 
+    protected abstract String getHierarchyName();
 
     public void handleChanges(List<? extends OWLOntologyChange> changes) {
         Set<P> properties = new HashSet<>(getPropertiesReferencedInChange(changes));
@@ -97,6 +110,8 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
 
 
     private void rebuildRoots() {
+        logger.info("{} Rebuilding {} hierarchy", projectId, getHierarchyName());
+        Stopwatch stopwatch = Stopwatch.createStarted();
         subPropertiesOfRoot.clear();
         for (OWLOntology ontology : getOntologies()) {
             for (P prop : getReferencedProperties(ontology)) {
@@ -105,6 +120,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
                 }
             }
         }
+        logger.info("{} Rebuilt {} hierarchy in {} ms", projectId, getHierarchyName(), stopwatch.elapsed(MILLISECONDS));
     }
 
 

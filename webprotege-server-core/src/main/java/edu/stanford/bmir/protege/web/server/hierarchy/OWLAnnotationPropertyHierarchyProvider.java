@@ -1,17 +1,23 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
 
+import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * Author: drummond<br>
@@ -24,14 +30,20 @@ import java.util.Set;
 @ProjectSingleton
 public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyProvider<OWLAnnotationProperty> {
 
-    private OWLOntology rootOntology;
+    private static final Logger logger = LoggerFactory.getLogger(OWLAnnotationPropertyHierarchyProvider.class);
 
-    private Set<OWLAnnotationProperty> roots;
+    private final ProjectId projectId;
 
-    private OWLAnnotationPropertyProvider annotationPropertyProvider;
+    private final OWLOntology rootOntology;
+
+    private final Set<OWLAnnotationProperty> roots;
+
+    private final OWLAnnotationPropertyProvider annotationPropertyProvider;
+
 
     @Inject
-    public OWLAnnotationPropertyHierarchyProvider(@RootOntology OWLOntology rootOntology, OWLAnnotationPropertyProvider annotationPropertyProvider) {
+    public OWLAnnotationPropertyHierarchyProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, OWLAnnotationPropertyProvider annotationPropertyProvider) {
+        this.projectId = projectId;
         this.roots = new HashSet<>();
         this.rootOntology = rootOntology;
         this.annotationPropertyProvider = annotationPropertyProvider;
@@ -43,17 +55,12 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
         return Collections.unmodifiableSet(roots);
     }
 
-    private Set<OWLOntology> getOntologies() {
+    private Collection<OWLOntology> getOntologies() {
         return rootOntology.getImportsClosure();
     }
 
     public boolean containsReference(OWLAnnotationProperty object) {
-        for (OWLOntology ont : getOntologies()) {
-            if (ont.getAnnotationPropertiesInSignature().contains(object)) {
-                return true;
-            }
-        }
-        return false;
+        return rootOntology.containsEntityInSignature(object, Imports.INCLUDED);
     }
 
 
@@ -91,7 +98,6 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
     public Set<OWLAnnotationProperty> getParents(OWLAnnotationProperty object) {
         Set<OWLAnnotationProperty> result = new HashSet<>();
-
         for (OWLOntology ont : getOntologies()) {
             for (OWLSubAnnotationPropertyOfAxiom ax : ont.getSubAnnotationPropertyOfAxioms(object)){
                 if (ax.getSubProperty().equals(object)){
@@ -157,41 +163,30 @@ public class OWLAnnotationPropertyHierarchyProvider extends AbstractHierarchyPro
 
 
     private boolean isRoot(OWLAnnotationProperty prop) {
-
         // We deem a property to be a root property if it doesn't have
         // any super properties (i.e. it is not on
         // the LHS of a subproperty axiom
         // Assume the property is a root property to begin with
         boolean isRoot = getParents(prop).isEmpty();
-        if (isRoot && containsReference(prop)) {
-            return true;
-        }
-        else {
-            // Additional condition: If we have  P -> Q and Q -> P, then
-            // there is no path to the root, so put P and Q as root properties
-            // Collapse any cycles and force properties that are equivalent
-            // through cycles to appear at the root.
-            return getAncestors(prop).contains(prop);
-        }
+        // Additional condition: If we have  P -> Q and Q -> P, then
+        // there is no path to the root, so put P and Q as root properties
+        // Collapse any cycles and force properties that are equivalent
+        // through cycles to appear at the root.
+        return isRoot && containsReference(prop) || getAncestors(prop).contains(prop);
     }
 
 
     private void rebuildRoots() {
         roots.clear();
-
-        final Set<OWLAnnotationProperty> annotationProperties = new HashSet<>();
-
-        for (OWLOntology ont : getOntologies()) {
-            annotationProperties.addAll(ont.getAnnotationPropertiesInSignature());
-        }
-        for (OWLAnnotationProperty prop : annotationProperties) {
-            if (isRoot(prop)) {
-                roots.add(prop);
-            }
-        }
-
-        for (IRI uri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS){
-            roots.add(annotationPropertyProvider.getOWLAnnotationProperty(uri));
-        }
+        logger.info("{} Rebuilding annotation property hierarchy", projectId);
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        Collection<OWLAnnotationProperty> annotationProperties = rootOntology.getAnnotationPropertiesInSignature(Imports.INCLUDED);
+        annotationProperties.stream()
+                            .filter(this::isRoot)
+                            .forEach(roots::add);
+        OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS.stream()
+                .map(annotationPropertyProvider::getOWLAnnotationProperty)
+                .forEach(roots::add);
+        logger.info("{} Rebuilt annotation property hierarchy provider in {} ms", projectId, stopwatch.elapsed(MILLISECONDS));
     }
 }

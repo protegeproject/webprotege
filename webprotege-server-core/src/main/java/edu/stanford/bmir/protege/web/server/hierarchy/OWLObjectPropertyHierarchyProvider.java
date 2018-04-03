@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -21,10 +22,14 @@ import java.util.Set;
 public class OWLObjectPropertyHierarchyProvider extends AbstractOWLPropertyHierarchyProvider<OWLClassExpression, OWLObjectPropertyExpression, OWLObjectProperty> {
 
     @Inject
-    public OWLObjectPropertyHierarchyProvider(@RootOntology OWLOntology rootOntology, @ObjectPropertyHierarchyRoot OWLObjectProperty root) {
-        super(rootOntology, root);
+    public OWLObjectPropertyHierarchyProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, @ObjectPropertyHierarchyRoot OWLObjectProperty root) {
+        super(projectId, rootOntology, root);
     }
 
+    @Override
+    protected String getHierarchyName() {
+        return "object property";
+    }
 
     protected Set<OWLObjectProperty> getPropertiesReferencedInChange(List<? extends OWLOntologyChange> changes) {
         Set<OWLObjectProperty> properties = new HashSet<>();

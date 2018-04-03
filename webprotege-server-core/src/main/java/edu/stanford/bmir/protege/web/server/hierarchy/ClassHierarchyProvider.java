@@ -1,20 +1,26 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.protege.owlapi.inference.cls.ChildClassExtractor;
 import org.protege.owlapi.inference.cls.ParentClassExtractor;
 import org.protege.owlapi.inference.orphan.TerminalElementFinder;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.search.EntitySearcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.stream.Collectors.toList;
 
 
@@ -26,6 +32,10 @@ import static java.util.stream.Collectors.toList;
  */
 @ProjectSingleton
 public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassHierarchyProvider.class);
+
+    private final ProjectId projectId;
 
     /*
      * It is not safe to set the collection of ontologies to a HashSet or TreeSet.
@@ -41,8 +51,9 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     private final Set<OWLClass> nodesToUpdate = new HashSet<>();
 
     @Inject
-    public ClassHierarchyProvider(@Nonnull @RootOntology OWLOntology rootOntology,
+    public ClassHierarchyProvider(ProjectId projectId, @Nonnull @RootOntology OWLOntology rootOntology,
                                   @Nonnull @ClassHierarchyRoot OWLClass rootCls) {
+        this.projectId = checkNotNull(projectId);
         this.root = checkNotNull(rootCls);
         this.rootOntology = checkNotNull(rootOntology);
         rootFinder = new TerminalElementFinder<>(cls -> {
@@ -61,12 +72,15 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
     }
 
     private void rebuildImplicitRoots() {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        logger.info("{} Rebuilding class hierarchy", projectId);
         rootFinder.clear();
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             Set<OWLClass> ref = ont.getClassesInSignature();
             rootFinder.appendTerminalElements(ref);
         }
         rootFinder.finish();
+        logger.info("{} Rebuilt class hierarchy in {} ms", projectId, stopwatch.elapsed(MILLISECONDS));
     }
 
     public void dispose() {
