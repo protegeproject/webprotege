@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.upload;
 
-import edu.stanford.bmir.protege.web.server.app.ServerSingleton;
+import edu.stanford.bmir.protege.web.server.util.FileContentsSizeCalculator;
+import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.upload.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
@@ -114,9 +115,16 @@ public class FileUploadServlet extends HttpServlet {
                         File uploadedFile = createServerSideFile();
                         item.write(uploadedFile);
                         long sizeInBytes = uploadedFile.length();
-                        logger.info("File size is {} bytes. Stored uploaded file with name {}", sizeInBytes, uploadedFile.getName());
-                        resp.setStatus(HttpServletResponse.SC_CREATED);
-                        sendSuccessMessage(resp, uploadedFile.getName());
+                        long computedFileSizeInBytes = computeFileSize(uploadedFile);
+                        logger.info("File size is {} bytes.  Computed file size is {} bytes.", sizeInBytes, computedFileSizeInBytes);
+                        if(computedFileSizeInBytes > maxUploadSizeSupplier.get()) {
+                            sendFileSizeTooLargeResponse(resp);
+                        }
+                        else {
+                            logger.info("Stored uploaded file with name {}", uploadedFile.getName());
+                            resp.setStatus(HttpServletResponse.SC_CREATED);
+                            sendSuccessMessage(resp, uploadedFile.getName());
+                        }
                         return;
                     }
                 }
@@ -129,10 +137,7 @@ public class FileUploadServlet extends HttpServlet {
 
         }
         catch (FileUploadBase.FileSizeLimitExceededException | FileUploadBase.SizeLimitExceededException e) {
-            logger.info("File upload failed because the file exceeds the maximum allowed size.");
-            sendErrorMessage(resp, String.format("The file that you attempted to upload is too large.  " +
-                                                         "Files must not exceed %d MB.",
-                                                 maxUploadSizeSupplier.get() / (1024 * 1024)));
+            sendFileSizeTooLargeResponse(resp);
         }
         catch (FileUploadBase.FileUploadIOException | FileUploadBase.IOFileUploadException e) {
             logger.info("File upload failed because an IOException occurred: {}", e.getMessage(), e);
@@ -150,7 +155,14 @@ public class FileUploadServlet extends HttpServlet {
             sendErrorMessage(resp, "File upload failed");
         }
     }
-    
+
+    private void sendFileSizeTooLargeResponse(HttpServletResponse resp) throws IOException {
+        logger.info("File upload failed because the file exceeds the maximum allowed size.");
+        sendErrorMessage(resp, String.format("The file that you attempted to upload is too large.  " +
+                                                     "Files (or zipped file contents) must not exceed %d MB.",
+                                             maxUploadSizeSupplier.get() / (1024 * 1024)));
+    }
+
     private void sendSuccessMessage(HttpServletResponse response, String fileName) throws IOException {
         PrintWriter writer = response.getWriter();
         writeJSONPairs(writer,
@@ -200,6 +212,11 @@ public class FileUploadServlet extends HttpServlet {
     private File createServerSideFile() throws IOException {
         uploadsDirectory.mkdirs();
         return File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, uploadsDirectory);
+    }
+
+    private long computeFileSize(@Nonnull File uploadedFile) throws IOException {
+        FileContentsSizeCalculator sizeCalculator = new FileContentsSizeCalculator(new ZipInputStreamChecker());
+        return sizeCalculator.getContentsSize(uploadedFile);
     }
     
     private static class Pair {
