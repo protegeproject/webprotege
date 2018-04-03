@@ -14,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.validation.constraints.Null;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
@@ -209,7 +211,6 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
 
 
     public Set<OWLClass> getParents(OWLClass object) {
-        ParentClassExtractor parentClassExtractor = new ParentClassExtractor();
         // If the object is thing then there are no
         // parents
         if (object.equals(root)) {
@@ -221,7 +222,7 @@ public class ClassHierarchyProvider extends AbstractHierarchyProvider<OWLClass> 
             result.add(root);
         }
         // Not a root, so must have another parent
-        parentClassExtractor.reset();
+        ParentClassExtractor parentClassExtractor = new ParentClassExtractor();
         parentClassExtractor.setCurrentClass(object);
         for (OWLOntology ont : getOntologies()) {
             for (OWLAxiom ax : ont.getAxioms(object, Imports.EXCLUDED)) {
