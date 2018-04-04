@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -147,6 +148,7 @@ public class RevisionStoreImpl implements RevisionStore {
             }
             final ImmutableList.Builder<Revision> revisionsBuilder = ImmutableList.builder();
             try {
+                logger.info("{} Loading change history", projectId);
                 Stopwatch stopwatch = Stopwatch.createStarted();
                 BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
                 final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(changeHistoryFile));
