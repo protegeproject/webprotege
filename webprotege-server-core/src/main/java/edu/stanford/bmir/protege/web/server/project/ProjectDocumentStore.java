@@ -14,6 +14,9 @@ import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.FileDocumentSource;
+import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
+import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
+import org.semanticweb.owlapi.io.StreamDocumentSource;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.slf4j.Logger;
@@ -21,8 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -175,12 +177,14 @@ public class ProjectDocumentStore {
             OWLOntologyLoaderConfiguration config = new OWLOntologyLoaderConfiguration();
             config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
             config = config.setReportStackTraces(true);
-            FileDocumentSource documentSource = new FileDocumentSource(rootOntologyDocument);
+            // It is safe to turn of illegal punning fixing as we've already parsed (and saved) the ontology
+            // using a manager with this turned on.
+            config = config.setRepairIllegalPunnings(false);
             logger.info("{} Loading root ontology imports closure.", projectId);
-            OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(documentSource, config);
+            ProjectInputSource projectInputSource = new ProjectInputSource(rootOntologyDocument);
+            OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(projectInputSource, config);
             importsCacheManager.cacheImports(rootOntology);
             return rootOntology;
-
         } finally {
             long t1 = System.currentTimeMillis();
             logger.info("{} Ontology loading completed in {} ms.", projectId, (t1 - t0) );
