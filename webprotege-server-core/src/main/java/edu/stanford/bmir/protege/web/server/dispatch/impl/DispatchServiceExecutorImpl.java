@@ -5,13 +5,15 @@ import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import edu.stanford.bmir.protege.web.shared.project.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
-    private static final Logger logger = Logger.getLogger(DispatchServiceExecutorImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DispatchServiceExecutorImpl.class.getName());
 
     @Nonnull
     private final ApplicationActionHandlerRegistry handlerRegistry;
@@ -46,13 +48,17 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         ActionHandler<A, R> actionHandler = null;
+        final Thread thread = Thread.currentThread();
+        String threadName = thread.getName();
         if(action instanceof ProjectAction) {
             ProjectAction projectAction = (ProjectAction) action;
             ProjectId projectId = projectAction.getProjectId();
+            setTemporaryThreadName(thread, action, projectId);
             ProjectActionHandlerRegistry actionHanderRegistry = projectManager.getActionHandlerRegistry(projectId);
             actionHandler = actionHanderRegistry.getActionHandler(action);
         }
         else {
+            setTemporaryThreadName(thread, action, null);
             actionHandler = handlerRegistry.getActionHandler(action);
         }
 
@@ -69,9 +75,44 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         } catch (PermissionDeniedException e) {
             throw e;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "An error occurred whilst executing an action", e);
+            logger.error("An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e);
         }
+        finally {
+            thread.setName(threadName);
+        }
+    }
+
+    /**
+     * Sets the name of a thread so that it contains details of the action (and target project) being executed
+     * @param thread The thread.
+     * @param action The action.
+     * @param projectId The optional project id.
+     */
+    private static void setTemporaryThreadName(@Nonnull Thread thread,
+                                               @Nonnull Action<?> action,
+                                               @Nullable ProjectId projectId) {
+        String tempThreadName;
+        final ProjectId targetProjectId;
+        if(projectId != null) {
+            targetProjectId = projectId;
+        }
+        else if(action instanceof HasProjectId) {
+            targetProjectId = ((HasProjectId) action).getProjectId();
+        }
+        else {
+            targetProjectId = null;
+        }
+        if(targetProjectId == null) {
+            tempThreadName = String.format("[DispatchService] %s",
+                                           action.getClass().getSimpleName());
+        }
+        else {
+            tempThreadName = String.format("[DispatchService] %s %s",
+                          action.getClass().getSimpleName(),
+                          targetProjectId);
+        }
+        thread.setName(tempThreadName);
     }
 
     private PermissionDeniedException getPermissionDeniedException(@Nonnull UserId userId,
