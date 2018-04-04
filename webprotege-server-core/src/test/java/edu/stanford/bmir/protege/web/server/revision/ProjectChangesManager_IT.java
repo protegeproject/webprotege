@@ -102,7 +102,7 @@ public class ProjectChangesManager_IT {
                 dataFactory,
                 new EntityIRICheckerImpl(rootOntology),
                 new DeprecatedEntityCheckerImpl(rootOntology),
-                new WebProtegeBidirectionalShortFormProvider(rootOntology, webProtegeShortFormProvider),
+                new WebProtegeBidirectionalShortFormProvider(projectId, rootOntology, webProtegeShortFormProvider),
                 ontologyIRIShortFormProvider,
                 new NullHighlightedEntityChecker()
         );

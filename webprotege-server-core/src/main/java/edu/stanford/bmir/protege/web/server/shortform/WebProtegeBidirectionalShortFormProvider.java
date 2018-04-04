@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.apache.commons.lang.time.StopWatch;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
@@ -9,14 +13,19 @@ import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,21 +36,32 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * This class is thread safe.
  * </p>
  */
+@ProjectSingleton
 public class WebProtegeBidirectionalShortFormProvider implements BidirectionalShortFormProvider {
 
-    private OWLOntology rootOntology;
+    private static final Logger logger = LoggerFactory.getLogger(WebProtegeBidirectionalShortFormProvider.class);
 
-    private BidirectionalShortFormProviderAdapterEx delegate;
+    private final ProjectId projectId;
+
+    private final OWLOntology rootOntology;
+
+    private final BidirectionalShortFormProviderAdapterEx delegate;
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     @Inject
-    public WebProtegeBidirectionalShortFormProvider(@RootOntology OWLOntology rootOntology, ShortFormProvider shortFormProvider) {
+    public WebProtegeBidirectionalShortFormProvider(ProjectId projectId, @RootOntology OWLOntology rootOntology, ShortFormProvider shortFormProvider) {
+        this.projectId = projectId;
         this.rootOntology = rootOntology;
         final Set<OWLOntology> importsClosure = rootOntology.getImportsClosure();
+        logger.info("{} Building short form provider", projectId);
+        int priority = Thread.currentThread().getPriority();
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        Stopwatch stopwatch = Stopwatch.createStarted();
         delegate = new BidirectionalShortFormProviderAdapterEx(importsClosure, shortFormProvider);
         setupBuiltinObjectRenderings(rootOntology);
-
+        Thread.currentThread().setPriority(priority);
+        logger.info("{} Built short form provider in {} ms", projectId, stopwatch.elapsed(MILLISECONDS));
         OWLOntologyManager manager = rootOntology.getOWLOntologyManager();
         manager.addOntologyChangeListener(new OWLOntologyChangeListener() {
             public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) throws OWLException {
