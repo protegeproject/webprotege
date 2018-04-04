@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.ProjectActionHandlerRegistry;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -124,7 +126,8 @@ public class ProjectCache {
     public Optional<Project> getProjectIfActive(ProjectId projectId) {
         try {
             READ_LOCK.lock();
-            if(!isActive(projectId)) {
+            boolean active = isActive(projectId);
+            if(!active) {
                 return Optional.empty();
             }
             else {
@@ -162,7 +165,15 @@ public class ProjectCache {
         ProjectComponent projectComponent = projectId2ProjectComponent.get(projectId);
         if (projectComponent == null) {
             logger.info("Request for unloaded project {}.", projectId.getId());
+            Stopwatch stopwatch = Stopwatch.createStarted();
             projectComponent = projectComponentFactory.createProjectComponent(projectId);
+            // Force instantiation of the project graph.
+            // This needs to be done in a nicer way, but this approach works for now.
+            projectComponent.getProject();
+            stopwatch.stop();
+            logger.info("{}  Instantiated project component in {} ms",
+                        projectId,
+                        stopwatch.elapsed(TimeUnit.MILLISECONDS));
             projectId2ProjectComponent.put(projectId, projectComponent);
         }
         return projectComponent;
@@ -205,7 +216,7 @@ public class ProjectCache {
     public boolean isActive(ProjectId projectId) {
         try {
             READ_LOCK.lock();
-            return lastAccessMap.containsKey(projectId);
+            return projectId2ProjectComponent.containsKey(projectId) && lastAccessMap.containsKey(projectId);
         }
         finally {
             READ_LOCK.unlock();
