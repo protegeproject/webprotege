@@ -31,7 +31,7 @@ public class FrameActionResultTranslator<F extends EntityFrame<E>, E extends OWL
     }
 
     public LabelledFrame<F> doIT() {
-        String browserText = renderingManager.getBrowserText(subject.getEntity());
+        String browserText = renderingManager.getShortForm(subject.getEntity());
         final F frame = translator.getFrame(subject);
         return new LabelledFrame<>(browserText, frame);
 //        L labelledFrame = createLabelledFrame(browserText, frame);

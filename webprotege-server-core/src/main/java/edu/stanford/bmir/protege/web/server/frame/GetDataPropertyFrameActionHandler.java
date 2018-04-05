@@ -57,7 +57,7 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
         DataPropertyFrameTranslator translator = translatorProvider.get();
         final DataPropertyFrame frame = translator.getFrame(renderingManager.getRendering(action.getSubject())
         );
-        String displayName = renderingManager.getBrowserText(action.getSubject());
+        String displayName = renderingManager.getShortForm(action.getSubject());
         logger.info(BROWSING,
                     "{} {} retrieved DataProperty frame for {} ({})",
                     action.getProjectId(),

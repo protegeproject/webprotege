@@ -60,7 +60,7 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
         AnnotationPropertyFrame frame = translator.getFrame(
                 renderingManager.getRendering(action.getSubject())
         );
-        String label = renderingManager.getBrowserText(action.getSubject());
+        String label = renderingManager.getShortForm(action.getSubject());
         LabelledFrame<AnnotationPropertyFrame> labelledFrame = new LabelledFrame<>(label, frame);
         logger.info(BROWSING,
                      "{} {} retrieved AnnotationProperty frame for {} ({})",

@@ -116,8 +116,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             @Nonnull
             public Optional<OWLEntityData> visit(@Nonnull OWLClass cls) {
                 if (entityLookupRequest.isSearchType(EntityType.CLASS)) {
-                    String browserText = rm.getBrowserText(cls);
-                    return Optional.of(new OWLClassData(cls, browserText));
+                    OWLEntityData data = rm.getRendering(cls);
+                    return Optional.of(data);
                 }
                 else {
                     return Optional.empty();
@@ -127,8 +127,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             @Nonnull
             public Optional<OWLEntityData> visit(@Nonnull OWLObjectProperty property) {
                 if (entityLookupRequest.isSearchType(EntityType.OBJECT_PROPERTY)) {
-                    String browserText = rm.getBrowserText(property);
-                    return Optional.of(new OWLObjectPropertyData(property, browserText));
+                    OWLEntityData data = rm.getRendering(property);
+                    return Optional.of(data);
                 }
                 else {
                     return Optional.empty();
@@ -138,8 +138,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             @Nonnull
             public Optional<OWLEntityData> visit(@Nonnull OWLDataProperty property) {
                 if (entityLookupRequest.isSearchType(EntityType.DATA_PROPERTY)) {
-                    String browserText = rm.getBrowserText(property);
-                    return Optional.of(new OWLDataPropertyData(property, browserText));
+                    OWLEntityData data = rm.getRendering(property);
+                    return Optional.of(data);
                 }
                 else {
                     return Optional.empty();
@@ -149,8 +149,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             @Nonnull
             public Optional<OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
                 if (entityLookupRequest.isSearchType(EntityType.NAMED_INDIVIDUAL)) {
-                    String browserText = rm.getBrowserText(individual);
-                    return Optional.of(new OWLNamedIndividualData(individual, browserText));
+                    OWLEntityData data = rm.getRendering(individual);
+                    return Optional.of(data);
                 }
                 else {
                     return Optional.empty();
@@ -160,8 +160,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             @Nonnull
             public Optional<OWLEntityData> visit(@Nonnull OWLDatatype datatype) {
                 if (entityLookupRequest.isSearchType(EntityType.DATATYPE)) {
-                    String browserText = rm.getBrowserText(datatype);
-                    return Optional.of(new OWLDatatypeData(datatype, browserText));
+                    OWLEntityData data = rm.getRendering(datatype);
+                    return Optional.of(data);
                 }
                 else {
                     return Optional.empty();
@@ -171,8 +171,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
             @Nonnull
             public Optional<OWLEntityData> visit(@Nonnull OWLAnnotationProperty property) {
                 if (entityLookupRequest.isSearchType(EntityType.ANNOTATION_PROPERTY)) {
-                    String browserText = rm.getBrowserText(property);
-                    return Optional.of(new OWLAnnotationPropertyData(property, browserText));
+                    OWLEntityData data = rm.getRendering(property);
+                    return Optional.of(data);
                 }
                 else {
                     return Optional.empty();

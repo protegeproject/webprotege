@@ -12,5 +12,6 @@ import java.util.Optional;
  */
 public interface BrowserTextProvider {
 
+    @Deprecated
     Optional<String> getOWLEntityBrowserText(OWLEntity entity);
 }

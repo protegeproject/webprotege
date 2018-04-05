@@ -166,6 +166,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
 
 
+    @Deprecated
     @Override
     public Optional<String> getOWLEntityBrowserText(OWLEntity entity) {
         String shortForm = shortFormProvider.getShortForm(entity);
@@ -199,6 +200,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
      * @param object The object.
      * @return The browser text for the object.
      */
+    @Deprecated
     public String getBrowserText(OWLObject object) {
 //        if (object instanceof OWLEntity || object instanceof IRI) {
 //            owlObjectRenderer.setShortFormProvider(shortFormProvider);
@@ -229,7 +231,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return builder.toString();
     }
 
-    public String getHTMLBrowserText(OWLObject object) {
+    private String getHTMLBrowserText(OWLObject object) {
         return getHTMLBrowserText(object, entity -> false);
     }
 
@@ -242,32 +244,8 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return getHTMLBrowserText(object, entity -> highlightedPhrases.contains(getShortForm(entity)));
     }
 
-    public String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
+    private String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
         return renderer.render(object, highlightChecker, deprecatedEntityChecker);
-    }
-
-
-    /**
-     * Selects a single entity from a set of entities.  The selection procedure works by sorting the entities in the
-     * set and selecting the first entity.  This makes the choice of entity more predictable over multiple calls for
-     * a given set.
-     * @param entities The entities.  MUST NOT BE EMPTY!
-     * @return A selected entity that is contained in the supplied set of entities.
-     * @throws IllegalArgumentException if the set of entities is empty.
-     */
-    public static OWLEntity selectEntity(Set<OWLEntity> entities) throws IllegalArgumentException {
-        if (entities.isEmpty()) {
-            throw new IllegalArgumentException("Set of entities must not be empty");
-        }
-        else if (entities.size() == 1) {
-            return entities.iterator().next();
-        }
-        else {
-            List<OWLEntity> entitiesList = new ArrayList<>();
-            entitiesList.addAll(entities);
-            Collections.sort(entitiesList);
-            return entitiesList.get(0);
-        }
     }
 
     public OWLEntityData getRendering(OWLEntity entity) {

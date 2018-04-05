@@ -42,7 +42,8 @@ public class EntityHierarchyNodeRenderer {
                                        @Nonnull BrowserTextProvider browserTextProvider,
                                        @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
                                        @Nonnull WatchManager watchManager,
-                                       @Nonnull EntityDiscussionThreadRepository discussionThreadRepository, @Nonnull TagsManager tagsManager) {
+                                       @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
+                                       @Nonnull TagsManager tagsManager) {
         this.projectId = checkNotNull(projectId);
         this.browserTextProvider = checkNotNull(browserTextProvider);
         this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);

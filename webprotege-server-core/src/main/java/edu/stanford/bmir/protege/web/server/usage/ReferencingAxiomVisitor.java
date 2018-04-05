@@ -70,11 +70,11 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
                 return translate((OWLEntity) predicate, axiom);
             }
         }
-        final String useageOfBrowserText = renderingManager.getBrowserText(usageOf);
+        final String useageOfBrowserText = renderingManager.getShortForm(usageOf);
         String rendering = renderingManager.getHTMLBrowserText(axiom, Collections.singleton(useageOfBrowserText));
         Optional<String> subjectRendering;
         if(axiomSubject.isPresent()) {
-            subjectRendering = Optional.of(renderingManager.getBrowserText(axiomSubject.get()));
+            subjectRendering = Optional.of(renderingManager.getShortForm(axiomSubject.get()));
         }
         else {
             subjectRendering = Optional.empty();
