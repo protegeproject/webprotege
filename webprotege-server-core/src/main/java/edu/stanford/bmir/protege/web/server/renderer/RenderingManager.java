@@ -288,46 +288,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return new OWLDatatypeData(datatype, getShortForm(datatype));
     }
     
-    
-    
-    public Map<OWLEntity, OWLEntityData> getRendering(Set<OWLEntity> entities) {
-        final Map<OWLEntity, OWLEntityData> result = new HashMap<>();
-        for(OWLEntity entity : entities) {
-            entity.accept(new OWLEntityVisitor() {
-                @Override
-                public void visit(@Nonnull OWLClass owlClass) {
-                    result.put(owlClass, getRendering(owlClass));
-                }
-
-                @Override
-                public void visit(@Nonnull OWLObjectProperty property) {
-                    result.put(property, getRendering(property));
-                }
-
-                @Override
-                public void visit(@Nonnull OWLDataProperty property) {
-                    result.put(property, getRendering(property));
-                }
-
-                @Override
-                public void visit(@Nonnull OWLNamedIndividual individual) {
-                    result.put(individual, getRendering(individual));
-                }
-
-                @Override
-                public void visit(@Nonnull OWLDatatype owlDatatype) {
-                    result.put(owlDatatype, getRendering(owlDatatype));
-                }
-
-                @Override
-                public void visit(@Nonnull OWLAnnotationProperty property) {
-                    result.put(property, getRendering(property));
-                }
-            });
-        }
-        return result;
-    }
-
     public void dispose() {
     }
 }
