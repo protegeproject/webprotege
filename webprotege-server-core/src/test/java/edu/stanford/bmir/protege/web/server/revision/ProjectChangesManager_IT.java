@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityCheckerImpl;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.EntityIRICheckerImpl;
-import edu.stanford.bmir.protege.web.server.mansyntax.render.NullHighlightedEntityChecker;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
@@ -98,11 +96,15 @@ public class ProjectChangesManager_IT {
                 dataFactory
         );
         RenderingManager renderingManager = new RenderingManager(
-                rootOntology,
-                dataFactory,
                 new DeprecatedEntityCheckerImpl(rootOntology),
                 new WebProtegeBidirectionalShortFormProvider(projectId, rootOntology, webProtegeShortFormProvider),
-                new NullHighlightedEntityChecker()
+                new ManchesterSyntaxObjectRenderer(
+                        webProtegeShortFormProvider,
+                        new EntityIRICheckerImpl(rootOntology),
+                        LiteralStyle.BRACKETED,
+                        new DefaultHttpLinkRenderer(),
+                        new MarkdownLiteralRenderer()
+                )
         );
 
         AxiomComparatorImpl axiomComparator = new AxiomComparatorImpl(

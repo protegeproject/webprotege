@@ -13,10 +13,6 @@ import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
-import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,58 +30,19 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     private final BidirectionalShortFormProvider shortFormProvider;
 
-    // An immutable map of IRI to OWLEntity for built in entities.
-    private final ImmutableMap<IRI, OWLEntity> builtInEntities;
-
     private final DeprecatedEntityChecker deprecatedEntityChecker;
 
-    private final OWLOntology rootOntology;
-
-    private final ManchesterSyntaxObjectRenderer renderer;
+    private final ManchesterSyntaxObjectRenderer htmlManchesterSyntaxRenderer;
 
     private final OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
 
     @Inject
-    public RenderingManager(@RootOntology OWLOntology rootOnt,
-                            OWLDataFactory dataFactory,
-                            DeprecatedEntityChecker deprecatedChecker,
+    public RenderingManager(DeprecatedEntityChecker deprecatedChecker,
                             BidirectionalShortFormProvider shortFormProvider,
-                            HighlightedEntityChecker highlightedEntityChecker) {
-        this.rootOntology = rootOnt;
+                            ManchesterSyntaxObjectRenderer objectRenderer) {
         this.shortFormProvider = shortFormProvider;
-        this.renderer = new ManchesterSyntaxObjectRenderer(
-                getShortFormProvider(),
-                new EntityIRICheckerImpl(rootOntology),
-                LiteralStyle.BRACKETED,
-                new DefaultHttpLinkRenderer(),
-                new MarkdownLiteralRenderer());
-
-        ImmutableMap.Builder<IRI, OWLEntity> builtInEntities = ImmutableMap.builder();
-
-        putEntity(dataFactory.getOWLThing(), builtInEntities);
-        putEntity(dataFactory.getOWLNothing(), builtInEntities);
-        putEntity(dataFactory.getOWLTopObjectProperty(), builtInEntities);
-        putEntity(dataFactory.getOWLBottomObjectProperty(), builtInEntities);
-        putEntity(dataFactory.getOWLTopDataProperty(), builtInEntities);
-        putEntity(dataFactory.getOWLBottomDataProperty(), builtInEntities);
-        for (IRI iri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS) {
-            putEntity(dataFactory.getOWLAnnotationProperty(iri), builtInEntities);
-        }
-        for(DublinCoreVocabulary vocabulary : DublinCoreVocabulary.values()) {
-            OWLAnnotationProperty prop = dataFactory.getOWLAnnotationProperty(vocabulary.getIRI());
-            putEntity(prop, builtInEntities);
-        }
-        for (OWLAnnotationProperty prop : SKOSVocabulary.getAnnotationProperties(dataFactory)) {
-            putEntity(prop, builtInEntities);
-        }
-        for (OWL2Datatype dt : OWL2Datatype.values()) {
-            OWLDatatype datatype = dataFactory.getOWLDatatype(dt.getIRI());
-            putEntity(datatype, builtInEntities);
-        }
-        this.builtInEntities = builtInEntities.build();
-
+        this.htmlManchesterSyntaxRenderer = objectRenderer;
         this.deprecatedEntityChecker = deprecatedChecker;
-
         owlObjectRenderer.setShortFormProvider(shortFormProvider);
     }
 
@@ -146,10 +103,8 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
         return getHTMLBrowserText(object, entity -> highlightedPhrases.contains(getShortForm(entity)));
     }
 
-
-
     private String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
-        return renderer.render(object, highlightChecker, deprecatedEntityChecker);
+        return htmlManchesterSyntaxRenderer.render(object, highlightChecker, deprecatedEntityChecker);
     }
 
     public OWLEntityData getRendering(OWLEntity entity) {
