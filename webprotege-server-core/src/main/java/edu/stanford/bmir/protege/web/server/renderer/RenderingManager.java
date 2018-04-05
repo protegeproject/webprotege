@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -44,15 +42,6 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
         this.htmlManchesterSyntaxRenderer = objectRenderer;
         this.deprecatedEntityChecker = deprecatedChecker;
         owlObjectRenderer.setShortFormProvider(shortFormProvider);
-    }
-
-    /**
-     * Adds an {@link OWLEntity} to a map, so that they entity is keyed by its {@link IRI}.
-     * @param entity The entity to add.  Not null.
-     * @param map The map to add the entity to. Not null.
-     */
-    private static void putEntity(OWLEntity entity, ImmutableMap.Builder<IRI, OWLEntity> map) {
-        map.put(entity.getIRI(), entity);
     }
 
     public BidirectionalShortFormProvider getShortFormProvider() {
