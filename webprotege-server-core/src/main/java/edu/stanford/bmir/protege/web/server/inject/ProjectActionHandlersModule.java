@@ -35,7 +35,6 @@ import edu.stanford.bmir.protege.web.server.project.GetProjectPrefixDeclarations
 import edu.stanford.bmir.protege.web.server.project.SetProjectPrefixDeclarationsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
-import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetHeadRevisionNumberActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.GetRevisionSummariesActionHandler;
 import edu.stanford.bmir.protege.web.server.search.PerformEntitySearchActionHandler;
@@ -209,12 +208,6 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler provideGetEntityRenderingActionHandler(GetEntityRenderingActionHandler handler) {
         return handler;
     }
-
-    @Provides(type = SET)
-    public ProjectActionHandler provideGetEntityDataActionHandler(GetEntityDataActionHandler handler) {
-        return handler;
-    }
-
 
     @Provides(type = SET)
     public ProjectActionHandler provideGetDataPropertyFrameActionHandler(GetDataPropertyFrameActionHandler handler) {
