@@ -28,7 +28,7 @@ public class BuiltInShortFormCache {
     private final ShortFormCache shortFormCache;
 
     @Inject
-    private BuiltInShortFormCache(@Nonnull ShortFormCache shortFormCache) {
+    public BuiltInShortFormCache(@Nonnull ShortFormCache shortFormCache) {
         this.shortFormCache = checkNotNull(shortFormCache);
     }
 

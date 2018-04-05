@@ -29,19 +29,14 @@ import java.util.Set;
 public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Set<OWLEntity>, DeleteEntitiesAction, DeleteEntitiesResult> {
 
     @Nonnull
-    private final RenderingManager renderer;
-
-    @Nonnull
     private final DeleteEntitiesChangeListGeneratorFactory factory;
 
     @Inject
     public DeleteEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull EventManager<ProjectEvent<?>> eventManager,
                                        @Nonnull HasApplyChanges applyChanges,
-                                       @Nonnull RenderingManager renderer,
                                        @Nonnull DeleteEntitiesChangeListGeneratorFactory factory) {
         super(accessManager, eventManager, applyChanges);
-        this.renderer = renderer;
         this.factory = factory;
     }
 
@@ -62,10 +57,6 @@ public class DeleteEntitiesActionHandler extends AbstractProjectChangeHandler<Se
                                                                          ExecutionContext executionContext) {
 
         return factory.create(action.getEntities());
-    }
-
-    private String getBrowserText(OWLEntity e) {
-        return renderer.getRendering(e).getBrowserText();
     }
 
     @Override
