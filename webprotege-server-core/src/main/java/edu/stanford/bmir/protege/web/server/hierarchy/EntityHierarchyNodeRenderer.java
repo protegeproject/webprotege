@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
-import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -23,7 +23,8 @@ public class EntityHierarchyNodeRenderer {
     private final ProjectId projectId;
 
     @Nonnull
-    private final BrowserTextProvider browserTextProvider;
+    private final RenderingManager renderingManager
+            ;
 
     @Nonnull
     private final DeprecatedEntityChecker deprecatedEntityChecker;
@@ -39,13 +40,13 @@ public class EntityHierarchyNodeRenderer {
 
     @Inject
     public EntityHierarchyNodeRenderer(@Nonnull ProjectId projectId,
-                                       @Nonnull BrowserTextProvider browserTextProvider,
+                                       @Nonnull RenderingManager renderingManager,
                                        @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
                                        @Nonnull WatchManager watchManager,
                                        @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
                                        @Nonnull TagsManager tagsManager) {
         this.projectId = checkNotNull(projectId);
-        this.browserTextProvider = checkNotNull(browserTextProvider);
+        this.renderingManager = checkNotNull(renderingManager);
         this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);
         this.watchManager = checkNotNull(watchManager);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
@@ -61,7 +62,7 @@ public class EntityHierarchyNodeRenderer {
     public EntityHierarchyNode render(@Nonnull OWLEntity entity) {
         return new EntityHierarchyNode(
                 entity,
-                browserTextProvider.getOWLEntityBrowserText(entity).orElse(""),
+                renderingManager.getShortForm(entity),
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity),
                 discussionThreadRepository.getOpenCommentsCount(projectId, entity),

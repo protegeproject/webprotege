@@ -5,7 +5,6 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
-import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -32,7 +31,7 @@ import java.util.*;
  *
  */
 @ProjectSingleton
-public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasGetRendering, HasHtmlBrowserText {
+public class RenderingManager implements HasGetFrameRendering, HasGetRendering, HasHtmlBrowserText {
 
     private final BidirectionalShortFormProvider shortFormProvider;
 
@@ -160,22 +159,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
             return entitiesInSig;
         }
         return Collections.emptySet();
-    }
-
-
-
-
-
-    @Deprecated
-    @Override
-    public Optional<String> getOWLEntityBrowserText(OWLEntity entity) {
-        String shortForm = shortFormProvider.getShortForm(entity);
-        if(shortForm == null) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(shortForm);
-        }
     }
 
     /**

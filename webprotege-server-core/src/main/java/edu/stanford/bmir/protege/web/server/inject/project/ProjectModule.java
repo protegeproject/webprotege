@@ -37,7 +37,6 @@ import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandlerImpl;
-import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -246,11 +245,6 @@ public class ProjectModule {
     @Provides
     public IRIShortFormProvider provideIriShortFormProvider(WebProtegeIRIShortFormProvider provider) {
         return provider;
-    }
-
-    @Provides
-    public BrowserTextProvider provideBrowserTextProvider(RenderingManager renderingManager) {
-        return renderingManager;
     }
 
     @Provides
