@@ -191,6 +191,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
      * @param entity The entity.
      * @return The entity short form. Not null.
      */
+    @Nonnull
     public String getShortForm(OWLEntity entity) {
         return shortFormProvider.getShortForm(entity);
     }
@@ -287,7 +288,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     public OWLDatatypeData getRendering(OWLDatatype datatype) {
         return new OWLDatatypeData(datatype, getShortForm(datatype));
     }
-    
+
     public void dispose() {
     }
 }

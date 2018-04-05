@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
-import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -29,7 +29,7 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     private final OWLOntology rootOntology;
 
-    private final BrowserTextProvider browserTextProvider;
+    private final RenderingManager renderingManager;
 
     private final HasGetRevisionSummary hasGetRevisionSummary;
 
@@ -38,12 +38,12 @@ public class HighLevelEventGenerator implements EventTranslator {
     @Inject
     public HighLevelEventGenerator(ProjectId projectId,
                                    OWLOntology rootOntology,
-                                   BrowserTextProvider browserTextProvider,
+                                   RenderingManager renderingManager,
                                    HasGetEntitiesWithIRI hasGetEntitiesWithIRI,
                                    HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
-        this.browserTextProvider = browserTextProvider;
+        this.renderingManager = renderingManager;
         this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
         this.hasGetRevisionSummary = hasGetRevisionSummary;
     }
@@ -163,7 +163,7 @@ public class HighLevelEventGenerator implements EventTranslator {
         if(subject instanceof OWLEntity) {
             OWLEntity entity = (OWLEntity) subject;
             if (rootOntology.containsEntityInSignature(entity)) {
-                String browserText = browserTextProvider.getOWLEntityBrowserText(entity).orElse("");
+                String browserText = renderingManager.getShortForm(entity);
                 changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
             }
         }
@@ -180,7 +180,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                       .map(element -> (OWLEntity) element)
                       .filter(rootOntology::containsEntityInSignature)
                       .forEach(entity -> {
-                          String browserText = browserTextProvider.getOWLEntityBrowserText(entity).orElse("");
+                          String browserText = renderingManager.getShortForm(entity);
                           changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
                       });
 
