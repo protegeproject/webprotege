@@ -23,11 +23,16 @@ public class GetEntityRenderingActionHandler extends AbstractProjectActionHandle
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final ManchesterSyntaxEntityFrameRenderer frameRenderer;
+
     @Inject
     public GetEntityRenderingActionHandler(@Nonnull AccessManager accessManager,
-                                           @Nonnull RenderingManager renderingManager) {
+                                           @Nonnull RenderingManager renderingManager,
+                                           @Nonnull ManchesterSyntaxEntityFrameRenderer frameRenderer) {
         super(accessManager);
         this.renderingManager = renderingManager;
+        this.frameRenderer = frameRenderer;
     }
 
     @Nonnull
@@ -47,7 +52,9 @@ public class GetEntityRenderingActionHandler extends AbstractProjectActionHandle
     public GetEntityRenderingResult execute(@Nonnull GetEntityRenderingAction action,
                                             @Nonnull ExecutionContext executionContext) {
         OWLEntity entity = action.getEntity();
-        return new GetEntityRenderingResult(renderingManager.getFrameRendering(entity),
+        StringBuilder sb = new StringBuilder();
+        frameRenderer.render(entity, sb);
+        return new GetEntityRenderingResult(sb.toString(),
                                             renderingManager.getRendering(entity));
     }
 }

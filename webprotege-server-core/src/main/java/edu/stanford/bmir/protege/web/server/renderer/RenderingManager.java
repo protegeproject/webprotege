@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
-import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -31,21 +30,15 @@ import java.util.*;
  *
  */
 @ProjectSingleton
-public class RenderingManager implements HasGetFrameRendering, HasGetRendering, HasHtmlBrowserText {
+public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     private final BidirectionalShortFormProvider shortFormProvider;
 
     // An immutable map of IRI to OWLEntity for built in entities.
     private final ImmutableMap<IRI, OWLEntity> builtInEntities;
 
-    private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
-
-    private final EntityIRIChecker entityIRIChecker;
-
     private final DeprecatedEntityChecker deprecatedEntityChecker;
 
-    private final HighlightedEntityChecker highlightEntityChecker;
-    
     private final OWLOntology rootOntology;
 
     private final ManchesterSyntaxObjectRenderer renderer;
@@ -55,14 +48,11 @@ public class RenderingManager implements HasGetFrameRendering, HasGetRendering, 
     @Inject
     public RenderingManager(@RootOntology OWLOntology rootOnt,
                             OWLDataFactory dataFactory,
-                            EntityIRIChecker entityIRIChecker,
                             DeprecatedEntityChecker deprecatedChecker,
                             BidirectionalShortFormProvider shortFormProvider,
-                            OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                             HighlightedEntityChecker highlightedEntityChecker) {
         this.rootOntology = rootOnt;
         this.shortFormProvider = shortFormProvider;
-        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.renderer = new ManchesterSyntaxObjectRenderer(
                 getShortFormProvider(),
                 new EntityIRICheckerImpl(rootOntology),
@@ -94,11 +84,7 @@ public class RenderingManager implements HasGetFrameRendering, HasGetRendering, 
         }
         this.builtInEntities = builtInEntities.build();
 
-        this.entityIRIChecker = entityIRIChecker;
-
         this.deprecatedEntityChecker = deprecatedChecker;
-
-        this.highlightEntityChecker = highlightedEntityChecker;
 
         owlObjectRenderer.setShortFormProvider(shortFormProvider);
     }
@@ -159,14 +145,6 @@ public class RenderingManager implements HasGetFrameRendering, HasGetRendering, 
     }
 
     /**
-     * Gets all of the short forms (browser text) of all entities.
-     * @return A set of short forms for all entities.
-     */
-    public Set<String> getShortForms() {
-        return shortFormProvider.getShortForms();
-    }
-
-    /**
      * Gets the short for for the specified entity.
      * @param entity The entity.
      * @return The entity short form. Not null.
@@ -183,33 +161,7 @@ public class RenderingManager implements HasGetFrameRendering, HasGetRendering, 
      */
     @Deprecated
     public String getBrowserText(OWLObject object) {
-//        if (object instanceof OWLEntity || object instanceof IRI) {
-//            owlObjectRenderer.setShortFormProvider(shortFormProvider);
-//        }
-//        else {
-//            owlObjectRenderer.setShortFormProvider(new EscapingShortFormProvider(shortFormProvider));
-//        }
         return owlObjectRenderer.render(object);
-    }
-
-    @Override
-    public String getFrameRendering(OWLObject subject) {
-        if(!(subject instanceof OWLEntity)) {
-            return "";
-        }
-        OWLEntity entity = (OWLEntity) subject;
-        ManchesterSyntaxObjectRenderer objectRenderer = new ManchesterSyntaxObjectRenderer(shortFormProvider,
-                entityIRIChecker,
-                LiteralStyle.REGULAR,
-                new DefaultHttpLinkRenderer(),
-                new MarkdownLiteralRenderer());
-        ManchesterSyntaxEntityFrameRenderer renderer = new ManchesterSyntaxEntityFrameRenderer(
-                rootOntology,
-                shortFormProvider, ontologyIRIShortFormProvider, objectRenderer,
-                highlightEntityChecker, deprecatedEntityChecker, new DefaultItemStyleProvider(), NestedAnnotationStyle.COMPACT);
-        StringBuilder builder = new StringBuilder();
-        renderer.render(entity, builder);
-        return builder.toString();
     }
 
     private String getHTMLBrowserText(OWLObject object) {
@@ -224,6 +176,8 @@ public class RenderingManager implements HasGetFrameRendering, HasGetRendering, 
     public String getHTMLBrowserText(OWLObject object, final Set<String> highlightedPhrases) {
         return getHTMLBrowserText(object, entity -> highlightedPhrases.contains(getShortForm(entity)));
     }
+
+
 
     private String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
         return renderer.render(object, highlightChecker, deprecatedEntityChecker);

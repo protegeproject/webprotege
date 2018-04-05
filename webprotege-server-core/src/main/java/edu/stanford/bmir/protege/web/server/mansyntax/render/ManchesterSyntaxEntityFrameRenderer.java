@@ -5,12 +5,14 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
  *         Bio-Medical Informatics Research Group
  *         Date: 20/02/2014
  */
+@ProjectSingleton
 public class ManchesterSyntaxEntityFrameRenderer {
 
     private OWLOntology rootOntology;
@@ -63,6 +66,7 @@ public class ManchesterSyntaxEntityFrameRenderer {
 
     private final ElementTagRenderer annotationsBlockTagRenderer = new ElementRenderer("div", "ms-annotations-block");
 
+    @Inject
     public ManchesterSyntaxEntityFrameRenderer(OWLOntology rootOntology,
                                                ShortFormProvider shortFormProvider,
                                                OntologyIRIShortFormProvider ontologyIRIShortFormProvider,

@@ -27,6 +27,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecuto
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
 import edu.stanford.bmir.protege.web.server.mail.*;
+import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutStore;
@@ -269,5 +270,30 @@ public class ApplicationModule {
     @Provides(type = SET)
     public EntityCrudKitPlugin<?,?,?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
         return plugin;
+    }
+
+    @Provides
+    LiteralStyle provideDefaultLiteralStyle() {
+        return LiteralStyle.REGULAR;
+    }
+
+    @Provides
+    HttpLinkRenderer provideDefaultHttpLinkRenderer(DefaultHttpLinkRenderer renderer) {
+        return renderer;
+    }
+
+    @Provides
+    LiteralRenderer provideLiteralRenderer(MarkdownLiteralRenderer renderer) {
+        return renderer;
+    }
+
+    @Provides
+    ItemStyleProvider provideItemStyleProvider(DefaultItemStyleProvider provider) {
+        return provider;
+    }
+
+    @Provides
+    NestedAnnotationStyle provideNestedAnnotationStyle() {
+        return NestedAnnotationStyle.COMPACT;
     }
 }

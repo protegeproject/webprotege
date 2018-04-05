@@ -100,10 +100,8 @@ public class ProjectChangesManager_IT {
         RenderingManager renderingManager = new RenderingManager(
                 rootOntology,
                 dataFactory,
-                new EntityIRICheckerImpl(rootOntology),
                 new DeprecatedEntityCheckerImpl(rootOntology),
                 new WebProtegeBidirectionalShortFormProvider(projectId, rootOntology, webProtegeShortFormProvider),
-                ontologyIRIShortFormProvider,
                 new NullHighlightedEntityChecker()
         );
 

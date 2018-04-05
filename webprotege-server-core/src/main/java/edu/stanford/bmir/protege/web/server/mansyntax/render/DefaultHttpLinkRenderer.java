@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax.render;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class DefaultHttpLinkRenderer implements HttpLinkRenderer {
 
     private List<LinkRendererPlugin> pluginList = new ArrayList<>();
 
+    @Inject
     public DefaultHttpLinkRenderer() {
         pluginList.add(new WikipediaXRefLinkRenderer());
         pluginList.add(new ImageLinkRenderer());
