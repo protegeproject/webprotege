@@ -531,6 +531,20 @@ public class ProjectModule {
         return OBONamespaceCache.get(rootOntology);
     }
 
+    @Provides
+    MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary) {
+        return dictionary;
+    }
+
+    @Provides
+    ShortFormCache provideShortFormCache() {
+        return ShortFormCache.create();
+    }
+
+    @Provides
+    BuiltInShortFormDictionary provideBuiltInShortFormCache() {
+        return BuiltInShortFormDictionary.create(provideShortFormCache());
+    }
 
 
 
