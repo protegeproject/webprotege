@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -12,6 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 4 Apr 2018
  */
+@ProjectSingleton
 public class LocalNameShortFormCache {
 
     @Nonnull

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import org.semanticweb.owlapi.model.IRI;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.*;
 
@@ -17,22 +17,24 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
  * Stanford Center for Biomedical Informatics Research
  * 4 Apr 2018
  */
+@ProjectSingleton
 public class DictionaryManager {
 
     @Nonnull
-    private final Dictionary dictionary;
+    private final MultiLingualDictionary dictionary;
 
     @Nonnull
-    private final BuiltInShortFormCache builtInShortFormCache;
+    private final BuiltInShortFormDictionary builtInShortFormDictionary;
 
     @Nonnull
     private final LocalNameShortFormCache localNameShortFormCache;
 
-    public DictionaryManager(@Nonnull Dictionary dictionary,
-                             @Nonnull BuiltInShortFormCache builtInShortFormCache,
+    @Inject
+    public DictionaryManager(@Nonnull MultiLingualDictionary dictionary,
+                             @Nonnull BuiltInShortFormDictionary builtInShortFormDictionary,
                              @Nonnull LocalNameShortFormCache localNameShortFormCache) {
         this.dictionary = checkNotNull(dictionary);
-        this.builtInShortFormCache = checkNotNull(builtInShortFormCache);
+        this.builtInShortFormDictionary = checkNotNull(builtInShortFormDictionary);
         this.localNameShortFormCache = checkNotNull(localNameShortFormCache);
     }
 
@@ -41,21 +43,18 @@ public class DictionaryManager {
     }
 
     @Nonnull
-    public String getShortForm(@Nonnull OWLEntity entity, @Nonnull String prefLang) {
+    public String getShortForm(@Nonnull OWLEntity entity,
+                               @Nonnull List<DictionaryLanguage> languages) {
         // Built in short form
         if (entity.isBuiltIn()) {
-            final String builtInEntityShortForm = builtInShortFormCache.getShortForm(entity, "");
-            if(!builtInEntityShortForm.isEmpty()) {
+            final String builtInEntityShortForm = builtInShortFormDictionary.getShortForm(entity, null);
+            if(builtInEntityShortForm != null) {
                 return builtInEntityShortForm;
             }
         }
-        // Preferred language short form on rdfs:label (may be empty)
-        final String prefLangShortForm = dictionary.getShortForm(entity, RDFS_LABEL.getIRI(), prefLang, "");
-        if(!prefLangShortForm.isEmpty()) {
-            return prefLangShortForm;
+        synchronized (this) {
+            return dictionary.getShortForm(entity, languages, "");
         }
-        // Fall back to local name
-        return localNameShortFormCache.getShortForm(entity);
     }
 
 }

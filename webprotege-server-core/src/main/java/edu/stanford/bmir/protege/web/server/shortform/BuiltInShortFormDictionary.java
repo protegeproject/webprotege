@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
@@ -10,7 +8,7 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
@@ -22,30 +20,31 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.*;
  * 4 Apr 2018
  */
 @ApplicationSingleton
-public class BuiltInShortFormCache {
+public class BuiltInShortFormDictionary {
 
     @Nonnull
     private final ShortFormCache shortFormCache;
 
-    @Inject
-    public BuiltInShortFormCache(@Nonnull ShortFormCache shortFormCache) {
+    private BuiltInShortFormDictionary(@Nonnull ShortFormCache shortFormCache) {
         this.shortFormCache = checkNotNull(shortFormCache);
     }
 
-    public String getShortForm(OWLEntity entity, String defaultShortForm) {
+    @Nullable
+    public String getShortForm(OWLEntity entity, @Nullable String defaultShortForm) {
         return shortFormCache.getShortFormOrElse(entity.getIRI(), (i) -> defaultShortForm);
     }
 
-    public BuiltInShortFormCache create(@Nonnull ShortFormCache cache) {
-        BuiltInShortFormCache builtInShortFormCache = new BuiltInShortFormCache(cache);
-        builtInShortFormCache.load();
-        return builtInShortFormCache;
+    public static BuiltInShortFormDictionary create(@Nonnull ShortFormCache cache) {
+        BuiltInShortFormDictionary builtInShortFormDictionary = new BuiltInShortFormDictionary(cache);
+        builtInShortFormDictionary.load();
+        return builtInShortFormDictionary;
     }
 
     private void load() {
         loadBuiltInOwlVocabulary();
         loadBuiltInDublinCoreVocabulary();
         loadBuiltInSkosVocabulary();
+        loadOwl2Datatypes();
     }
 
     private void loadBuiltInOwlVocabulary() {

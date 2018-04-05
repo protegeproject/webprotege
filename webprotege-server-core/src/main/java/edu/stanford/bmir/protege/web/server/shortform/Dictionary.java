@@ -1,48 +1,84 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import com.google.common.collect.ImmutableList;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 3 Apr 2018
+ * 4 Apr 2018
+ *
+ * A dictionary that maps IRIs to short forms for a given {@link DictionaryLanguage}.
  */
-@ProjectSingleton
-public interface Dictionary {
+public class Dictionary {
+
+    private static final int DEFAULT_CAPACITY = 100;
 
     @Nonnull
-    Collection<String> getLangs();
-
+    private final ShortFormCache shortFormCache;
 
     @Nonnull
-    Collection<OWLEntity> getEntities(@Nonnull IRI annotationPropertyIri,
-                                      @Nonnull String preferredLang,
-                                      @Nonnull String shortForm);
+    private DictionaryLanguage language;
+
+    private Dictionary(@Nonnull ShortFormCache shortFormCache,
+                       @Nonnull DictionaryLanguage language) {
+        this.shortFormCache = checkNotNull(shortFormCache);
+        this.language = checkNotNull(language);
+    }
+
+    public static Dictionary create(@Nonnull DictionaryLanguage language) {
+        return createWithCapacity(DEFAULT_CAPACITY, language);
+    }
+
+    public static Dictionary createWithCapacity(int capacity,
+                                                @Nonnull DictionaryLanguage language) {
+        return new Dictionary(ShortFormCache.createWithCapacity(capacity),
+                              language);
+    }
+
+    @Nonnull
+    public DictionaryLanguage getLanguage() {
+        return language;
+    }
 
     /**
-     * Gets the short form for an entity.
-     *
-     * @param entity                The entity.
-     * @param annotationPropertyIri The preferred annotation property IRI that provides the short form.
-     * @param lang                  The language tag.  A short form for this language tag will be
-     *                              returned, if it exists.  If there is no short form for this language tag
-     *                              then the specified default short form will be returned.
-     * @param defaultShortForm      The default short form that is returned if there is no short form for the
-     *                              specified language tag.
-     * @return The short form.
+     * Gets the number of IRIs that are mapped to short forms by this {@link Dictionary}
      */
-    @Nonnull
-    String getShortForm(@Nonnull OWLEntity entity,
-                        @Nonnull IRI annotationPropertyIri,
-                        @Nonnull String lang,
-                        @Nonnull String defaultShortForm);
+    public int size() {
+        return shortFormCache.size();
+    }
 
-    void handleChanges(@Nonnull List<? extends OWLOntologyChange> changes);
+    public void put(@Nonnull IRI iri, @Nonnull String shortForm) {
+        shortFormCache.put(iri, shortForm);
+    }
+
+    public void putAll(@Nonnull Map<IRI, String> shortForms) {
+        shortFormCache.putAll(shortForms);
+    }
+
+    public void remove(@Nonnull IRI iri) {
+        shortFormCache.remove(iri);
+    }
+
+    public void clear() {
+        shortFormCache.clear();
+    }
+
+
+
+    public String getShortFormOrElse(@Nonnull IRI iri, @Nonnull Function<IRI, String> defaultShortFormSupplier) {
+        return shortFormCache.getShortFormOrElse(iri, defaultShortFormSupplier);
+    }
+
+    @Nonnull
+    public Collection<IRI> getIri(@Nonnull String shortForm) {
+        return ImmutableList.copyOf(shortFormCache.getIri(shortForm));
+    }
 }

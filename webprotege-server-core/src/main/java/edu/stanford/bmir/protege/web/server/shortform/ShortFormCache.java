@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,10 +29,14 @@ public class ShortFormCache {
     @Nonnull
     private final Map<IRI, String> iri2ShortFormMap;
 
-    private ShortFormCache(@Nonnull Multimap<String, IRI> shortForm2IriMap,
-                            @Nonnull Map<IRI, String> iri2ShortFormMap) {
-        this.shortForm2IriMap = checkNotNull(shortForm2IriMap);
-        this.iri2ShortFormMap = checkNotNull(iri2ShortFormMap);
+    @Inject
+    public ShortFormCache() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    private ShortFormCache(int capacity) {
+        this.shortForm2IriMap = HashMultimap.create(capacity, 1);
+        this.iri2ShortFormMap = new HashMap<>(DEFAULT_CAPACITY);
     }
 
     @Nonnull
@@ -41,12 +46,11 @@ public class ShortFormCache {
 
     @Nonnull
     public static ShortFormCache createWithCapacity(int capacity) {
-        return new ShortFormCache(HashMultimap.create(capacity, 1),
-                                   new HashMap<>(capacity));
+        return new ShortFormCache(capacity);
     }
 
     /**
-     * Gets the number of IRIs that are mapped to short forms by this {@link DictionaryCache}
+     * Gets the number of IRIs that are mapped to short forms by this {@link Dictionary}
      */
     public int size() {
         return iri2ShortFormMap.size();
@@ -55,6 +59,13 @@ public class ShortFormCache {
     public void put(@Nonnull IRI iri, @Nonnull String shortForm) {
         iri2ShortFormMap.put(checkNotNull(iri), checkNotNull(shortForm));
         shortForm2IriMap.put(shortForm, iri);
+    }
+
+    public void putAll(@Nonnull Map<IRI, String> shortForms) {
+        shortForms.forEach((iri, sf) -> {
+            iri2ShortFormMap.put(iri, sf);
+            shortForm2IriMap.put(sf, iri);
+        });
     }
 
     public void remove(@Nonnull IRI iri) {

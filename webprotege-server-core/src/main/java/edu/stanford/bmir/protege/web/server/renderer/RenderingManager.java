@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.renderer;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -26,6 +28,7 @@ import java.util.*;
 @ProjectSingleton
 public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
+    private DictionaryManager dictionaryManager;
     private final BidirectionalShortFormProvider shortFormProvider;
 
     private final DeprecatedEntityChecker deprecatedEntityChecker;
@@ -35,9 +38,11 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     private final OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
 
     @Inject
-    public RenderingManager(DeprecatedEntityChecker deprecatedChecker,
+    public RenderingManager(DictionaryManager dictionaryManager,
+                            DeprecatedEntityChecker deprecatedChecker,
                             BidirectionalShortFormProvider shortFormProvider,
                             ManchesterSyntaxObjectRenderer objectRenderer) {
+        this.dictionaryManager = dictionaryManager;
         this.shortFormProvider = shortFormProvider;
         this.htmlManchesterSyntaxRenderer = objectRenderer;
         this.deprecatedEntityChecker = deprecatedChecker;
@@ -66,7 +71,8 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
      */
     @Nonnull
     public String getShortForm(OWLEntity entity) {
-        return shortFormProvider.getShortForm(entity);
+        return dictionaryManager.getShortForm(entity,
+                                              Collections.singletonList(DictionaryLanguage.rdfsLabel("")));
     }
 
     /**

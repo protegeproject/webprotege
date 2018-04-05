@@ -96,6 +96,9 @@ public class ProjectChangesManager_IT {
                 dataFactory
         );
         RenderingManager renderingManager = new RenderingManager(
+                new DictionaryManager(new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(rootOntology), new DictionaryUpdater(rootOntology)),
+                                      BuiltInShortFormDictionary.create(new ShortFormCache()),
+                                      new LocalNameShortFormCache(new ShortFormCache(), new LocalNameExtractor())),
                 new DeprecatedEntityCheckerImpl(rootOntology),
                 new WebProtegeBidirectionalShortFormProvider(projectId, rootOntology, webProtegeShortFormProvider),
                 new ManchesterSyntaxObjectRenderer(
