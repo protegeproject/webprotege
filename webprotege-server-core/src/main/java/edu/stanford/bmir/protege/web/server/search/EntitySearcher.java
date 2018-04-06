@@ -1,23 +1,25 @@
 package edu.stanford.bmir.protege.web.server.search;
 
-import com.google.common.base.Optional;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
+import edu.stanford.bmir.protege.web.server.shortform.ShortFormMatch;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
-import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jdt.core.search.SearchMatch;
-import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,15 +27,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.search.SearchField.displayName;
+import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 /**
@@ -46,23 +47,29 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
  */
 public class EntitySearcher {
 
-    private static final Logger logger = LoggerFactory.getLogger(EntitySearcher.class);
-
     /**
      * The default limit for the returned results.
      */
     public static final int DEFAULT_LIMIT = 50;
 
+    private static final Logger logger = LoggerFactory.getLogger(EntitySearcher.class);
+
     @Nonnull
     private final ProjectId projectId;
 
     @Nonnull
-    private final UserId userId;
+    private final OWLOntology rootOntology;
 
     @Nonnull
-    private final Supplier<Stream<OWLEntity>> entityStreamSupplier;
+    private final UserId userId;
 
-    private HasGetRendering renderingSupplier;
+    //    @Nonnull
+//    private final Supplier<Stream<OWLEntity>> entityStreamSupplier;
+    @Nonnull
+    private final DictionaryManager dictionaryManager;
+
+    @Nonnull
+    private final LanguageManager languageManager;
 
     @Nonnull
     private final Set<EntityType<?>> entityTypes;
@@ -70,14 +77,12 @@ public class EntitySearcher {
     @Nonnull
     private final String searchString;
 
-
     @Nonnull
     private final TagsManager tagsManager;
 
     private final Map<String, Tag> tagsByLabel = new HashMap<>();
 
     private final Multimap<OWLEntity, Tag> tagsByEntity = HashMultimap.create();
-
 
     @Nonnull
     private final String[] searchWords;
@@ -88,41 +93,60 @@ public class EntitySearcher {
 
     private final List<EntitySearchResult> results = new ArrayList<>();
 
+    private HasGetRendering renderingSupplier;
+
     private int skip = 0;
 
     private int limit = DEFAULT_LIMIT;
 
-    private EntitySearcher(@Nonnull ProjectId projectId,
-                           @Nonnull UserId userId,
-                           @Nonnull Supplier<Stream<OWLEntity>> entityStreamSupplier,
-                           @Nonnull HasGetRendering renderingSupplier,
-                           @Nonnull Set<EntityType<?>> entityTypes,
-                           @Nonnull String searchString,
-                           @Nonnull TagsManager tagsManager) {
+    @AutoFactory
+    public EntitySearcher(@Provided @Nonnull ProjectId projectId,
+                          @Provided @Nonnull OWLOntology rootOntology,
+                          @Provided @Nonnull HasGetRendering renderingSupplier,
+                          @Provided @Nonnull DictionaryManager dictionaryManager,
+                          @Provided @Nonnull LanguageManager languageManager,
+                          @Nonnull Set<EntityType<?>> entityTypes,
+                          @Provided @Nonnull TagsManager tagsManager,
+                          @Nonnull String searchString,
+                          @Nonnull UserId userId) {
         this.projectId = checkNotNull(projectId);
+        this.rootOntology = rootOntology;
         this.userId = checkNotNull(userId);
-        this.entityStreamSupplier = checkNotNull(entityStreamSupplier);
         this.renderingSupplier = checkNotNull(renderingSupplier);
+        this.dictionaryManager = dictionaryManager;
+        this.languageManager = languageManager;
         this.entityTypes = new HashSet<>(checkNotNull(entityTypes));
         this.searchString = checkNotNull(searchString);
         this.searchWords = searchString.split("\\s+");
         this.tagsManager = checkNotNull(tagsManager);
     }
 
-    public static EntitySearcher get(@Nonnull ProjectId projectId,
-                                     @Nonnull TagsManager tagsManager,
-                                     @Nonnull UserId userId,
-                                     @Nonnull Supplier<Stream<OWLEntity>> entityStreamSupplier,
-                                     @Nonnull HasGetRendering renderingSupplier,
-                                     @Nonnull Set<EntityType<?>> entityTypes,
-                                     @Nonnull String searchString) {
-        return new EntitySearcher(projectId,
-                                  userId,
-                                  entityStreamSupplier,
-                                  renderingSupplier,
-                                  entityTypes,
-                                  searchString,
-                                  tagsManager);
+    private static Pattern compileSearchPattern(String[] searchWords) {
+        StringBuilder searchWordsPattern = new StringBuilder();
+        for (int i = 0; i < searchWords.length; i++) {
+            searchWordsPattern.append(Pattern.quote(searchWords[i]));
+            if (i < searchWords.length - 1) {
+                searchWordsPattern.append("|");
+            }
+        }
+        return Pattern.compile(searchWordsPattern.toString(), CASE_INSENSITIVE);
+    }
+
+    private static void highlightSearchResult(Pattern searchPattern, String rendering, StringBuilder highlighted) {
+        Matcher matcher = searchPattern.matcher(rendering);
+        int cur = 0;
+        while (matcher.find()) {
+            int start = matcher.start();
+            highlighted.append(rendering.substring(cur, start));
+            highlighted.append("<strong>");
+            int end = matcher.end();
+            highlighted.append(rendering.substring(start, end));
+            highlighted.append("</strong>");
+            cur = end;
+        }
+        if (cur < rendering.length()) {
+            highlighted.append(rendering.substring(cur));
+        }
     }
 
     /**
@@ -186,9 +210,40 @@ public class EntitySearcher {
         return new ArrayList<>(results);
     }
 
-    /**
-     * Invokes the entity searcher to perform a search.
-     */
+//    /**
+//     * Invokes the entity searcher to perform a search.
+//     */
+//    private void legacy_invoke() {
+//        Stopwatch stopwatch = Stopwatch.createStarted();
+//        matchCounter.reset();
+//        searchCounter.reset();
+//        results.clear();
+//        tagsByLabel.clear();
+//        tagsManager.getProjectTags().forEach(tag -> tagsByLabel.put(tag.getLabel(), tag));
+//        tagsByEntity.clear();
+//        tagsByEntity.putAll(tagsManager.getTags(projectId));
+//        Pattern searchPattern = compileSearchPattern(searchWords);
+//        entityStreamSupplier.get()
+//                            .filter(this::isRequiredEntityType)
+//                            .peek(this::incrementSearchCounter)
+//                            .map(this::performMatch)
+//                            .filter(Objects::nonNull)
+//                            .peek(this::incrementMatchCounter)
+//                            .sorted()
+//                            .skip(skip)
+//                            .limit(limit)
+//                            .map(m -> toSearchResult(searchPattern, m))
+//                            .forEach(results::add);
+//        logger.info(BROWSING,
+//                    "{} {} Performed entity search for \"{}\".  Found {} matches in {} entities in {} ms.",
+//                    projectId,
+//                    userId,
+//                    searchString,
+//                    matchCounter.getCounter(),
+//                    searchCounter.getCounter(),
+//                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
+//    }
+
     public void invoke() {
         Stopwatch stopwatch = Stopwatch.createStarted();
         matchCounter.reset();
@@ -199,40 +254,29 @@ public class EntitySearcher {
         tagsByEntity.clear();
         tagsByEntity.putAll(tagsManager.getTags(projectId));
         Pattern searchPattern = compileSearchPattern(searchWords);
-        entityStreamSupplier.get()
-                            .filter(this::isRequiredEntityType)
-                            .peek(this::incrementSearchCounter)
-                            .map(this::performMatch)
-                            .filter(Objects::nonNull)
-                            .peek(this::incrementMatchCounter)
-                            .sorted()
-                            .skip(skip)
-                            .limit(limit)
-                            .map(m -> toSearchResult(searchPattern, m))
-                            .forEach(results::add);
+        dictionaryManager.getShortFormsContaining(asList(searchWords),
+                                                  languageManager.getLanguages())
+                         .filter(this::isRequiredEntityType)
+                         .map(this::performMatch)
+                         .filter(Objects::nonNull)
+                         .peek(this::incrementMatchCounter)
+                         .sorted()
+                         .skip(skip)
+                         .limit(limit)
+                         .map(m -> toSearchResult(searchPattern, m))
+                         .forEach(results::add);
         logger.info(BROWSING,
-                    "{} {} Performed entity search for \"{}\".  Found {} matches in {} entities in {} ms.",
+                    "{} {} Performed entity search for \"{}\".  Found {} matches in {} ms.",
                     projectId,
                     userId,
                     searchString,
                     matchCounter.getCounter(),
-                    searchCounter.getCounter(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
+
     }
 
-    private boolean isRequiredEntityType(OWLEntity e) {
-        return entityTypes.contains(e.getEntityType());
-    }
-
-    private static Pattern compileSearchPattern(String[] searchWords) {
-        StringBuilder searchWordsPattern = new StringBuilder();
-        for (int i = 0; i < searchWords.length; i++) {
-            searchWordsPattern.append(Pattern.quote(searchWords[i]));
-            if (i < searchWords.length - 1) {
-                searchWordsPattern.append("|");
-            }
-        }
-        return Pattern.compile(searchWordsPattern.toString(), CASE_INSENSITIVE);
+    private boolean isRequiredEntityType(ShortFormMatch m) {
+        return entityTypes.contains(m.getEntity().getEntityType());
     }
 
     private void incrementSearchCounter(OWLEntity entity) {
@@ -244,19 +288,19 @@ public class EntitySearcher {
     }
 
     private EntitySearchResult toSearchResult(Pattern searchPattern, SearchMatch ren) {
-        OWLEntityData ed = ren.getEntityData();
-        String rendering = ed.getBrowserText();
+        ShortFormMatch match = ren.getMatch();
+        String shortForm = match.getShortForm();
         StringBuilder highlighted = new StringBuilder();
-        highlightSearchResult(searchPattern, rendering, highlighted);
+        highlightSearchResult(searchPattern, shortForm, highlighted);
         if (ren.getMatchType() == MatchType.IRI) {
             // Matched the IRI remainder
             highlighted.append("<div class=\"searchedIri\">");
-            IRI iri = ed.getEntity().getIRI();
+            IRI iri = match.getEntity().getIRI();
             highlightSearchResult(searchPattern, iri.toString(), highlighted);
             highlighted.append("</div>");
         }
-        if(ren.getMatchType() == MatchType.TAG) {
-            for(Tag tag : tagsByEntity.get(ed.getEntity())) {
+        if (ren.getMatchType() == MatchType.TAG) {
+            for (Tag tag : tagsByEntity.get(match.getEntity())) {
                 if (searchString.equalsIgnoreCase(tag.getLabel())) {
                     highlighted.append("<div class='wp-tag wp-tag--inline-tag' style='display: inline-block; color: ")
                                .append(tag.getColor().getHex())
@@ -267,17 +311,16 @@ public class EntitySearcher {
                 }
             }
         }
-        return new EntitySearchResult(ed,
+        return new EntitySearchResult(DataFactory.getOWLEntityData(match.getEntity(), shortForm),
                                       displayName(),
                                       highlighted.toString());
     }
 
     @Nullable
-    private SearchMatch performMatch(@Nonnull OWLEntity e) {
-        OWLEntityData rendering = renderingSupplier.getRendering(e);
+    private SearchMatch performMatch(@Nonnull ShortFormMatch m) {
         MatchType matchType = null;
-        if(tagsByLabel.containsKey(searchString)) {
-            for (Tag tag : tagsByEntity.get(e)) {
+        if (tagsByLabel.containsKey(searchString)) {
+            for (Tag tag : tagsByEntity.get(m.getEntity())) {
                 if (tag.getLabel().equals(searchString)) {
                     matchType = MatchType.TAG;
                     break;
@@ -285,58 +328,32 @@ public class EntitySearcher {
             }
         }
         if (matchType == null) {
-            matchType = MatchType.RENDERING;
-            // All search words must be found
-            for (String searchWord : searchWords) {
-                if (!StringUtils.containsIgnoreCase(rendering.getBrowserText(),
-                                                    searchWord)) {
-                    matchType = null;
-                    break;
-                }
+            if (m.getLanguage().isAnnotationBased()) {
+                matchType = MatchType.RENDERING;
             }
         }
 
         // If we didn't match the rendering then search the IRI remainder
-        IRI entityIri = rendering.getEntity().getIRI();
-        if (matchType == null && entityIri.toString()
-                                          .startsWith(Obo2OWLConstants.DEFAULT_IRI_PREFIX)) {
+        IRI entityIri = m.getEntity().getIRI();
+        if (matchType == null && !m.getLanguage().isAnnotationBased()) {
+            // Used to do this
+            // entityIri.toString().startsWith(Obo2OWLConstants.DEFAULT_IRI_PREFIX)
             matchType = MatchType.IRI;
-            Optional<String> remainder = entityIri.getRemainder();
-            if (remainder.isPresent()) {
-                for (String searchWord : searchWords) {
-                    if (!StringUtils.containsIgnoreCase(remainder.get(),
-                                                        searchWord)) {
-                        matchType = null;
-                        break;
-                    }
-                }
-            }
         }
         if (matchType != null) {
-            return new SearchMatch(searchWords, rendering, matchType);
+            return new SearchMatch(searchWords, m, matchType);
         }
         else {
             return null;
         }
     }
 
-    private static void highlightSearchResult(Pattern searchPattern, String rendering, StringBuilder highlighted) {
-        Matcher matcher = searchPattern.matcher(rendering);
-        int cur = 0;
-        while (matcher.find()) {
-            int start = matcher.start();
-            highlighted.append(rendering.substring(cur, start));
-            highlighted.append("<strong>");
-            int end = matcher.end();
-            highlighted.append(rendering.substring(start, end));
-            highlighted.append("</strong>");
-            cur = end;
-        }
-        if (cur < rendering.length()) {
-            highlighted.append(rendering.substring(cur));
-        }
-    }
 
+    private enum MatchType {
+        RENDERING,
+        IRI,
+        TAG
+    }
 
     private static class Counter {
 
@@ -355,31 +372,32 @@ public class EntitySearcher {
         }
     }
 
-    private enum MatchType {
-        RENDERING,
-        IRI,
-        TAG
-    }
-
     private static class SearchMatch implements Comparable<SearchMatch> {
 
+        private static final int BEFORE = -1;
+
+        private static final int AFTER = 1;
 
         private final String[] searchWords;
 
-        private final OWLEntityData entityData;
+        private final ShortFormMatch match;
 
         private final MatchType matchType;
 
+        private final static Comparator<SearchMatch> comparator = Comparator.comparing(SearchMatch::getMatchType)
+                                                                            .thenComparing(m -> m.getMatch().getFirstMatchIndex())
+                                                                            .thenComparing(m -> m.getMatch().getShortForm());
+
         public SearchMatch(@Nonnull String[] searchWords,
-                           @Nonnull OWLEntityData entityData,
+                           @Nonnull ShortFormMatch match,
                            @Nonnull MatchType matchType) {
-            this.searchWords = searchWords;
-            this.entityData = entityData;
-            this.matchType = matchType;
+            this.searchWords = checkNotNull(searchWords);
+            this.match = checkNotNull(match);
+            this.matchType = checkNotNull(matchType);
         }
 
-        public OWLEntityData getEntityData() {
-            return entityData;
+        public ShortFormMatch getMatch() {
+            return match;
         }
 
         public MatchType getMatchType() {
@@ -388,17 +406,7 @@ public class EntitySearcher {
 
         @Override
         public int compareTo(@Nonnull SearchMatch other) {
-            for (String searchWord : searchWords) {
-                int usStart = StringUtils.indexOfIgnoreCase(entityData.getBrowserText(), searchWord);
-                int otherStart = StringUtils.indexOfIgnoreCase(other.entityData.getBrowserText(), searchWord);
-                if (usStart < otherStart) {
-                    return -1;
-                }
-                else if (otherStart < usStart) {
-                    return 1;
-                }
-            }
-            return entityData.getBrowserText().compareToIgnoreCase(other.entityData.getBrowserText());
+            return comparator.compare(this, other);
         }
     }
 }

@@ -96,19 +96,17 @@ public class ProjectChangesManager_IT {
                 dataFactory
         );
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(rootOntology), new DictionaryUpdater(rootOntology)),
-                                      BuiltInShortFormDictionary.create(new ShortFormCache()),
-                                      new LocalNameShortFormCache(new ShortFormCache(), new LocalNameExtractor())),
+                new DictionaryManager(new MultiLingualDictionaryImpl(projectId, rootOntology, new DictionaryBuilder(rootOntology), new DictionaryUpdater(rootOntology)),
+                                      new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 new DeprecatedEntityCheckerImpl(rootOntology),
-                new WebProtegeBidirectionalShortFormProvider(projectId, rootOntology, webProtegeShortFormProvider),
                 new ManchesterSyntaxObjectRenderer(
                         webProtegeShortFormProvider,
                         new EntityIRICheckerImpl(rootOntology),
                         LiteralStyle.BRACKETED,
                         new DefaultHttpLinkRenderer(),
                         new MarkdownLiteralRenderer()
-                )
-        );
+                ),
+                new LanguageManager());
 
         AxiomComparatorImpl axiomComparator = new AxiomComparatorImpl(
                 new AxiomBySubjectComparator(

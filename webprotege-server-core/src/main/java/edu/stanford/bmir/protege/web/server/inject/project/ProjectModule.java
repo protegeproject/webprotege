@@ -49,7 +49,6 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
@@ -79,6 +78,12 @@ public class ProjectModule {
     @ProjectSingleton
     OWLDataFactory providesDataFactory() {
         return new OWLDataFactoryImpl();
+    }
+
+    @Provides
+    @ProjectSingleton
+    public OWLEntityProvider providesOWLEntityProvider(OWLDataFactory dataFactory) {
+        return dataFactory;
     }
 
     @Provides
@@ -122,11 +127,6 @@ public class ProjectModule {
     @ProjectSingleton
     public OWLOntology provideRootOntology(RootOntologyProvider provider) {
         return provider.get();
-    }
-
-    @Provides
-    public OWLEntityProvider provideOWLEntityProvider(OWLDataFactory dataFactory) {
-        return dataFactory;
     }
 
     @Provides
@@ -255,12 +255,6 @@ public class ProjectModule {
     @Provides
     public HasLang provideHasLang() {
         return () -> "en";
-    }
-
-    @Provides
-    @ProjectSingleton
-    public BidirectionalShortFormProvider provideBidirectionalShortFormProvider(WebProtegeBidirectionalShortFormProvider provider) {
-        return provider;
     }
 
     @Provides
@@ -532,7 +526,9 @@ public class ProjectModule {
     }
 
     @Provides
-    MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary) {
+    MultiLingualDictionary provideDictionary(MultiLingualDictionaryImpl dictionary, LanguageManager languageManager) {
+        // Preload existing languages to avoid delays after loading in the UI
+        dictionary.loadLanguages(languageManager.getLanguages());
         return dictionary;
     }
 
@@ -542,11 +538,9 @@ public class ProjectModule {
     }
 
     @Provides
-    BuiltInShortFormDictionary provideBuiltInShortFormCache() {
-        return BuiltInShortFormDictionary.create(provideShortFormCache());
+    BuiltInShortFormDictionary provideBuiltInShortFormDictionary(ShortFormCache cache, OWLEntityProvider provider) {
+        BuiltInShortFormDictionary dictionary = new BuiltInShortFormDictionary(cache, provider);
+        dictionary.load();
+        return dictionary;
     }
-
-
-
-
 }

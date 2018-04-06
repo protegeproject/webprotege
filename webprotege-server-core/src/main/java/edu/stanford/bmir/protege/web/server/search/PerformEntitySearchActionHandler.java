@@ -43,17 +43,21 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
     @Nonnull
     private final TagsManager tagsManager;
 
+    @Nonnull
+    private final EntitySearcherFactory entitySearcherFactory;
+
     @Inject
     public PerformEntitySearchActionHandler(@Nonnull AccessManager accessManager,
                                             @Nonnull ProjectId projectId,
                                             @Nonnull HasGetRendering renderer,
                                             @Nonnull @RootOntology OWLOntology rootOntology,
-                                            @Nonnull TagsManager tagsManager) {
+                                            @Nonnull TagsManager tagsManager, @Nonnull EntitySearcherFactory entitySearcherFactory) {
         super(accessManager);
         this.projectId = projectId;
         this.renderer = renderer;
         this.rootOntology = rootOntology;
         this.tagsManager = tagsManager;
+        this.entitySearcherFactory = entitySearcherFactory;
     }
 
     @Nonnull
@@ -68,15 +72,9 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
                                              @Nonnull ExecutionContext executionContext) {
         Set<EntityType<?>> entityTypes = action.getEntityTypes();
         String searchString = action.getSearchString();
-        EntitySearcher entitySearcher = EntitySearcher.get(projectId,
-                                                           tagsManager, executionContext.getUserId(),
-                                                           () -> entityStream(entityTypes,
-                                                                              rootOntology,
-                                                                              Imports.INCLUDED),
-                                                           renderer,
-                                                           entityTypes,
-                                                           searchString
-        );
+        EntitySearcher entitySearcher = entitySearcherFactory.create(entityTypes,
+                                                                     searchString,
+                                                                     executionContext.getUserId());
         PageRequest pageRequest = action.getPageRequest();
         int pageSize = pageRequest.getPageSize();
         entitySearcher.setLimit(pageSize);

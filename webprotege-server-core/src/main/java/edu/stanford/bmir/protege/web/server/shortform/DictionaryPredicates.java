@@ -30,6 +30,6 @@ public class DictionaryPredicates {
     public static boolean isDictionaryFor(@Nonnull Dictionary dictionary,
                                           @Nonnull IRI annotationPropertyIri,
                                           @Nonnull String lang) {
-        return dictionary.getLanguage().isLanguageFor(annotationPropertyIri, lang);
+        return dictionary.getLanguage().matches(annotationPropertyIri, lang);
     }
 }

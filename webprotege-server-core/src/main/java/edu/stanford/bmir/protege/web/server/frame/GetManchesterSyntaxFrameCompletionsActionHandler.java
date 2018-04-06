@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.renderer.ManchesterSyntaxKeywords;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
@@ -23,7 +23,6 @@ import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,7 +39,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final DictionaryManager dictionaryManager;
 
     @Nonnull
     private final WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider;
@@ -54,12 +53,12 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     @Inject
     public GetManchesterSyntaxFrameCompletionsActionHandler(@Nonnull AccessManager accessManager,
-                                                            @Nonnull RenderingManager renderingManager,
+                                                            @Nonnull DictionaryManager dictionaryManager,
                                                             @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                                                             @Nonnull @RootOntology OWLOntology rootOntology,
                                                             @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
         super(accessManager);
-        this.renderingManager = renderingManager;
+        this.dictionaryManager = dictionaryManager;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.rootOntology = rootOntology;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
@@ -114,15 +113,14 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         List<AutoCompletionMatch> matches = Lists.newArrayList();
         Set<EntityType<?>> expectedEntityTypes = Sets.newHashSet(ManchesterSyntaxFrameParser.getExpectedEntityTypes(e));
         if(!expectedEntityTypes.isEmpty()) {
-            BidirectionalShortFormProvider shortFormProvider = renderingManager.getShortFormProvider();
-            for(String shortForm : shortFormProvider.getShortForms()) {
+            for(String shortForm : dictionaryManager.getShortForms()) {
                 EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
                 Optional<EntityNameMatchResult> match = entityNameMatcher.findIn(shortForm);
                 if(match.isPresent()) {
-                    Set<OWLEntity> entities = shortFormProvider.getEntities(shortForm);
+                    Collection<OWLEntity> entities = dictionaryManager.getEntities(shortForm);
                     for(OWLEntity entity : entities) {
                         if(expectedEntityTypes.contains(entity.getEntityType())) {
-                            EscapingShortFormProvider escapingShortFormProvider = new EscapingShortFormProvider(shortFormProvider);
+                            EscapingShortFormProvider escapingShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
                             AutoCompletionChoice choice = new AutoCompletionChoice(escapingShortFormProvider.getShortForm(entity), shortForm, "", fromPos, toPos);
                             AutoCompletionMatch autoCompletionMatch = new AutoCompletionMatch(
                                     match.get(),

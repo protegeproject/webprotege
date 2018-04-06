@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
@@ -52,8 +53,6 @@ import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandle
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentAction;
 import edu.stanford.bmir.protege.web.shared.issues.DeleteEntityCommentResult;
 
-import static dagger.Provides.Type.SET;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -62,467 +61,467 @@ import static dagger.Provides.Type.SET;
 @Module
 public class ProjectActionHandlersModule {
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetProjectSettingsActionHandler(GetProjectSettingsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetProjectSettingsActionHandler(SetProjectSettingsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideUpdateClassFrameActionHandler(UpdateClassFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetObjectPropertyFrameActionHandler(GetObjectPropertyFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideUpdateObjectPropertyFrameHandler(UpdateObjectPropertyFrameHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideUpdateDataPropertyFrameHandler(UpdateDataPropertyFrameHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetAnnotationPropertyFrameActionHandler(
             GetAnnotationPropertyFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideUpdateAnnotationPropertyFrameActionHandler(
             UpdateAnnotationPropertyFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetNamedIndividualFrameActionHandler(
             GetNamedIndividualFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideUpdateNamedIndividualFrameHandler(UpdateNamedIndividualFrameHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetOntologyFramesActionHandler(GetOntologyFramesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetRootOntologyIdActionHandler(GetRootOntologyIdActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetOntologyAnnotationsActionHandler(
             GetOntologyAnnotationsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetOntologyAnnotationsActionHandler(
             SetOntologyAnnotationsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCreateClassesActionHandler(CreateClassesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCreateObjectPropertyActionHandler(CreateObjectPropertiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCreateDataPropertiesActionHandler(CreateDataPropertiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCreateAnnotationPropertiesActionHandler(
             CreateAnnotationPropertiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCreateNamedIndividualsActionHandler(
             CreateNamedIndividualsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideLookupEntitiesActionHandler(LookupEntitiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideAddWatchActionHandler(AddWatchActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideRemoveWatchActionHandler(RemoveWatchActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetEntityWatchesActionHandler(SetEntityWatchesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetWatchesActionHandler(GetWatchesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideImportCSVFileActionHandler(ImportCSVFileActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetUsageActionHandler(GetUsageActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetIndividualsActionHandler(GetIndividualsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetEntityRenderingActionHandler(GetEntityRenderingActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetDataPropertyFrameActionHandler(GetDataPropertyFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetMetricsActionHandler(GetMetricsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetEntityCrudKitSettingsActionHandler(
             SetEntityCrudKitSettingsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetEntityCrudKitSettingsActionHandler(
             GetEntityCrudKitSettingsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetManchesterSyntaxFrameActionHandler(
             GetManchesterSyntaxFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetManchesterSyntaxFrameActionHandler(
             SetManchesterSyntaxFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCheckManchesterSyntaxFrameActionHandler(
             CheckManchesterSyntaxFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetManchesterSyntaxFrameCompletionsActionHandler(
             GetManchesterSyntaxFrameCompletionsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetProjectSharingSettingsActionHandler(
             GetProjectSharingSettingsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetProjectSharingSettingsActionHandler(
             SetProjectSharingSettingsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetHeadRevisionNumberActionHandler(
             GetHeadRevisionNumberActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetRevisionSummariesActionHandler(GetRevisionSummariesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideComputeProjectMergeActionHandler(ComputeProjectMergeActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideMergeUploadedProjectActionHandler(MergeUploadedProjectActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetProjectChangesActionHandler(GetProjectChangesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetWatchedEntityChangesActionHandler(
             GetWatchedEntityChangesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideRevertRevisionActionHandler(RevertRevisionActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetPerspectiveLayoutActionHandler(GetPerspectiveLayoutActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetPerspectiveLayoutActionHandler(SetPerspectiveLayoutActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetPerspectivesActionHandler(GetPerspectivesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetPerspectivesActionHandler(SetPerspectivesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetFormDescriptorActionHander(GetFormDescriptorActionHander handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetIssuesActionHandler(GetIssuesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetDiscussionThreadsActionHandler(GetEntityDiscussionThreadsHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideCreateEntityDiscussionThreadActionHandler(CreateEntityDiscussionThreadHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideAddEntityCommentActionHandler(AddEntityCommentHandler handler) {
         return handler;
     }
 
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler<DeleteEntityCommentAction, DeleteEntityCommentResult> provideDeleteEntityCommentActionHandler(DeleteEntityCommentHandler handler) {
         return handler;
     }
 
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideEditCommentAction(EditCommentActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideSetDiscussionThreadStatusHandler(SetDiscussionThreadStatusHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideGetCommentedEntitiesActionHandler(GetCommentedEntitiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler provideResetPerspectiveLayoutActionHandler(ResetPerspectiveLayoutActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesPerformEntitySearchActionHandler(PerformEntitySearchActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesDeleteEntitiesActionHandler(DeleteEntitiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetDeprecatedEntitiesActionHandler(GetDeprecatedEntitiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetClassFrameActionHandler(GetClassFrameActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboTermIdActionHandler(GetOboTermIdActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboTermDefinitionActionHandler(GetOboTermDefinitionActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboNamespacesActionHandler(GetOboNamespacesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetOboTermIdActionHandler(SetOboTermIdActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetOboTermDefinitionActionHandler(SetOboTermDefinitionActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboTermRelationshipsActionHandler(GetOboTermRelationshipsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboTermCrossProductsActionHandler(GetOboTermCrossProductsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetOboTermCrossProductsActionHandler(SetOboTermCrossProductsActionHandler handler) {
         return handler;
     }
 
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboTermSynonymsActionHandler(GetOboTermSynonymsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetOboTermSynonymsActionHandler(SetOboTermSynonymsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetOboTermXRefsActionHandler(GetOboTermXRefsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetOboTermXRefsActionHandler(SetOboTermXRefsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetFormDataHandler(SetFormDataActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetCollectionElementsActionHandler(GetCollectionItemsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesCreateCollectionItemsActionHandler(CreateCollectionItemsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetClassHierarchyChildrenActionHandler(GetEntityHierarchyChildrenActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetHierarchyPathsToRootActionHandler(GetHierarchyPathsToRootActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetHierarchyRootsActionHandler(GetHierarchyRootsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesMoveHierarchyNodeActionHandler(MoveHierarchyNodeActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetProjectPrefixDeclarationsActionHandler(GetProjectPrefixDeclarationsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetProjectPrefixDeclarationsActionHandler(SetProjectPrefixDeclarationsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesMergeClassesActionHandler(MergeEntitiesActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetEntityTagsActionHandler(GetEntityTagsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesUpdateEntityTagsActionHandler(UpdateEntityTagsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesGetProjectTagsActionHandler(GetProjectTagsActionHandler handler) {
         return handler;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public ProjectActionHandler providesSetProjectTagsActionHandler(SetProjectTagsActionHandler handler) {
         return handler;
     }

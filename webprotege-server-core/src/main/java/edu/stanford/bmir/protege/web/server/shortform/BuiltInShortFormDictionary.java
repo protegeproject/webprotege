@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLEntityProvider;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -9,6 +12,10 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.semanticweb.owlapi.model.EntityType.ANNOTATION_PROPERTY;
@@ -19,28 +26,34 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.*;
  * Stanford Center for Biomedical Informatics Research
  * 4 Apr 2018
  */
-@ApplicationSingleton
+@ProjectSingleton
 public class BuiltInShortFormDictionary {
 
     @Nonnull
     private final ShortFormCache shortFormCache;
 
-    private BuiltInShortFormDictionary(@Nonnull ShortFormCache shortFormCache) {
+    @Nonnull
+    private final OWLEntityProvider entityProvider;
+
+    @Inject
+    public BuiltInShortFormDictionary(@Nonnull ShortFormCache shortFormCache,
+                                      @Nonnull OWLEntityProvider entityProvider) {
         this.shortFormCache = checkNotNull(shortFormCache);
+        this.entityProvider = checkNotNull(entityProvider);
     }
 
     @Nullable
     public String getShortForm(OWLEntity entity, @Nullable String defaultShortForm) {
-        return shortFormCache.getShortFormOrElse(entity.getIRI(), (i) -> defaultShortForm);
+        return shortFormCache.getShortFormOrElse(entity, (i) -> defaultShortForm);
     }
 
-    public static BuiltInShortFormDictionary create(@Nonnull ShortFormCache cache) {
-        BuiltInShortFormDictionary builtInShortFormDictionary = new BuiltInShortFormDictionary(cache);
-        builtInShortFormDictionary.load();
-        return builtInShortFormDictionary;
+    @Nonnull
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings) {
+        return shortFormCache.getShortFormsContaining(searchStrings, (entity, shortForm, index)
+                -> new ShortFormMatch(entity, shortForm, DictionaryLanguage.localName(), index));
     }
 
-    private void load() {
+    public void load() {
         loadBuiltInOwlVocabulary();
         loadBuiltInDublinCoreVocabulary();
         loadBuiltInSkosVocabulary();
@@ -48,46 +61,58 @@ public class BuiltInShortFormDictionary {
     }
 
     private void loadBuiltInOwlVocabulary() {
-        put(OWL_THING);
-        put(OWL_NOTHING);
-        put(OWL_TOP_OBJECT_PROPERTY);
-        put(OWL_BOTTOM_OBJECT_PROPERTY);
-        put(OWL_TOP_DATA_PROPERTY);
-        put(OWL_BOTTOM_DATA_PROPERTY);
+        putClass(OWL_THING);
+        putClass(OWL_NOTHING);
+        putObjectProperty(OWL_TOP_OBJECT_PROPERTY);
+        putObjectProperty(OWL_BOTTOM_OBJECT_PROPERTY);
+        putDataProperty(OWL_TOP_DATA_PROPERTY);
+        putDataProperty(OWL_BOTTOM_DATA_PROPERTY);
 
-        put(OWL_VERSION_INFO);
-        put(OWL_BACKWARD_COMPATIBLE_WITH);
-        put(OWL_PRIOR_VERSION);
-        put(OWL_INCOMPATIBLE_WITH);
-        put(OWL_DEPRECATED);
+        putAnnotationProperty(OWL_VERSION_INFO);
+        putAnnotationProperty(OWL_BACKWARD_COMPATIBLE_WITH);
+        putAnnotationProperty(OWL_PRIOR_VERSION);
+        putAnnotationProperty(OWL_INCOMPATIBLE_WITH);
+        putAnnotationProperty(OWL_DEPRECATED);
 
-        put(RDFS_LABEL);
-        put(RDFS_COMMENT);
-        put(RDFS_SEE_ALSO);
-        put(RDFS_IS_DEFINED_BY);
+        putAnnotationProperty(RDFS_LABEL);
+        putAnnotationProperty(RDFS_COMMENT);
+        putAnnotationProperty(RDFS_SEE_ALSO);
+        putAnnotationProperty(RDFS_IS_DEFINED_BY);
     }
 
-    private void put(@Nonnull OWLRDFVocabulary v) {
-        shortFormCache.put(v.getIRI(), v.getPrefixedName());
+    private void putClass(OWLRDFVocabulary vocabulary) {
+        shortFormCache.put(entityProvider.getOWLClass(vocabulary.getIRI()), vocabulary.getPrefixedName());
+    }
+
+    private void putAnnotationProperty(OWLRDFVocabulary vocabulary) {
+        shortFormCache.put(entityProvider.getOWLAnnotationProperty(vocabulary.getIRI()), vocabulary.getPrefixedName());
+    }
+
+    private void putObjectProperty(OWLRDFVocabulary vocabulary) {
+        shortFormCache.put(entityProvider.getOWLObjectProperty(vocabulary.getIRI()), vocabulary.getPrefixedName());
+    }
+
+    private void putDataProperty(OWLRDFVocabulary vocabulary) {
+        shortFormCache.put(entityProvider.getOWLDataProperty(vocabulary.getIRI()), vocabulary.getPrefixedName());
     }
 
     private void loadBuiltInDublinCoreVocabulary() {
         for(DublinCoreVocabulary v : DublinCoreVocabulary.values()) {
-            shortFormCache.put(v.getIRI(), v.getPrefixedName());
+            shortFormCache.put(entityProvider.getOWLAnnotationProperty(v.getIRI()), v.getPrefixedName());
         }
     }
 
     private void loadBuiltInSkosVocabulary() {
         for(SKOSVocabulary v : SKOSVocabulary.values()) {
             if (v.getEntityType().equals(ANNOTATION_PROPERTY)) {
-                shortFormCache.put(v.getIRI(), v.getPrefixedName());
+                shortFormCache.put(entityProvider.getOWLAnnotationProperty(v.getIRI()), v.getPrefixedName());
             }
         }
     }
 
     private void loadOwl2Datatypes() {
         for(OWL2Datatype d : OWL2Datatype.values()) {
-            shortFormCache.put(d.getIRI(), d.getPrefixedName());
+            shortFormCache.put(entityProvider.getOWLDatatype(d.getIRI()), d.getPrefixedName());
         }
     }
 

@@ -10,10 +10,10 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A short form provider which wraps a non-escaping short form provider to ensure that short forms with spaces
@@ -21,16 +21,16 @@ import java.util.Set;
  */
 public class EscapingShortFormProvider implements BidirectionalShortFormProvider {
 
-    private BidirectionalShortFormProvider delegate;
+    private DictionaryManager delegate;
 
-    public EscapingShortFormProvider(BidirectionalShortFormProvider delegate) {
-        this.delegate = delegate;
+    public EscapingShortFormProvider(@Nonnull DictionaryManager delegate) {
+        this.delegate = checkNotNull(delegate);
     }
 
     @Override
     public Set<OWLEntity> getEntities(String s) {
         String stripped = getStripped(s);
-        return delegate.getEntities(stripped);
+        return new HashSet<>(delegate.getEntities(stripped));
     }
 
     private String getStripped(String s) {
@@ -46,12 +46,12 @@ public class EscapingShortFormProvider implements BidirectionalShortFormProvider
 
     @Override
     public OWLEntity getEntity(String s) {
-        return delegate.getEntity(getStripped(s));
+        return delegate.getEntities(getStripped(s)).stream().findFirst().orElse(null);
     }
 
     @Override
     public Set<String> getShortForms() {
-        Set<String> rawShortForms = delegate.getShortForms();
+        Collection<String> rawShortForms = delegate.getShortForms();
         List<String> escapedShortForms = new ArrayList<>(rawShortForms.size() + 1);
         for(String rawShortForm : rawShortForms) {
             String escapedShortForm = getEscapedShortForm(rawShortForm);
@@ -77,11 +77,16 @@ public class EscapingShortFormProvider implements BidirectionalShortFormProvider
 
     @Override
     public String getShortForm(OWLEntity entity) {
-        return getEscapedShortForm(delegate.getShortForm(entity));
+        return getEscapedShortForm(delegate.getShortForm(entity, Arrays.asList(
+                DictionaryLanguage.rdfsLabel("en"),
+                DictionaryLanguage.skosPrefLabel("*"),
+                DictionaryLanguage.rdfsLabel("*"),
+                DictionaryLanguage.localName()
+        )));
     }
 
     @Override
     public void dispose() {
-        delegate.dispose();
+
     }
 }

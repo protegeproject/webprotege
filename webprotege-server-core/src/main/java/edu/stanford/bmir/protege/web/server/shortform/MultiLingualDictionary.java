@@ -6,9 +6,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -21,26 +22,21 @@ public interface MultiLingualDictionary {
     @Nonnull
     Collection<DictionaryLanguage> getLanguages();
 
-//    /**
-//     * Gets the short form for an entity.
-//     *
-//     * @param entity           The entity.
-//     * @param language         The preferred {@link DictionaryLanguage}. A short form for this language will be
-//     *                         returned, if it exists.  If there is no short form for this language
-//     *                         then the specified default short form will be returned.
-//     * @param defaultShortForm The default short form that is returned if there is no short form for the
-//     *                         specified language.
-//     * @return The short form.
-//     */
-//    @Nullable
-//    String getShortForm(@Nonnull OWLEntity entity,
-//                        @Nonnull DictionaryLanguage language,
-//                        @Nullable String defaultShortForm);
+    void loadLanguages(List<DictionaryLanguage> languages);
 
     @Nonnull
     String getShortForm(@Nonnull OWLEntity entity,
                         @Nonnull List<DictionaryLanguage> languages,
                         @Nonnull String defaultShortForm);
 
+    @Nonnull
+    Collection<String> getShortForms();
+
+    @Nonnull
+    Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+                                        @Nonnull List<DictionaryLanguage> languages);
+
     void handleChanges(@Nonnull List<? extends OWLOntologyChange> changes);
+
+    Collection<OWLEntity> getEntities(@Nonnull String shortForm);
 }

@@ -56,13 +56,13 @@ public class DictionaryLanguage_TestCase {
 
     @Test
     public void shouldReturn_true_For_isLanguageFor() {
-        assertThat(dictionaryLanguage.isLanguageFor(annotationIri, lang), is(true));
+        assertThat(dictionaryLanguage.matches(annotationIri, lang), is(true));
     }
 
     @Test
     public void shouldReturn_false_For_isLanguageFor() {
-        assertThat(dictionaryLanguage.isLanguageFor(annotationIri, "other-lang"), is(false));
-        assertThat(dictionaryLanguage.isLanguageFor(mock(IRI.class), lang), is(false));
+        assertThat(dictionaryLanguage.matches(annotationIri, "other-lang"), is(false));
+        assertThat(dictionaryLanguage.matches(mock(IRI.class), lang), is(false));
     }
 
 }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
@@ -30,7 +31,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
 
     private SearchType searchType = SearchType.getDefault();
 
-    private Set<EntityType<?>> searchedEntityTypes = new HashSet<EntityType<?>>();
+    private ImmutableSet<EntityType<?>> searchedEntityTypes = ImmutableSet.of();
     
     private int searchLimit = DEFAULT_MATCH_LIMIT;
 
@@ -78,7 +79,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
             throw new IllegalArgumentException("Search limit must not be less than zero");
         }
         this.searchLimit = searchLimit;
-        this.searchedEntityTypes = new HashSet<>(checkNotNull(searchedEntityTypes));
+        this.searchedEntityTypes = ImmutableSet.copyOf(checkNotNull(searchedEntityTypes));
     }
 
     /**
@@ -107,7 +108,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
     }
 
     public Set<EntityType<?>> getSearchedEntityTypes() {
-        return new HashSet<>(searchedEntityTypes);
+        return searchedEntityTypes;
     }
 
     @Override

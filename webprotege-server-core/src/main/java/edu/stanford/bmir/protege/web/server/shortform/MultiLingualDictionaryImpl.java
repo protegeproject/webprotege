@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -12,15 +13,21 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 3 Apr 2018
  */
+@ProjectSingleton
 public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiLingualDictionaryImpl.class);
@@ -29,7 +36,9 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     private final ProjectId projectId;
 
     @Nonnull
-    private final Map<DictionaryLanguage, Dictionary> dictionaries = new HashMap<>();
+    private final Map<DictionaryLanguage, Dictionary> dictionaries = new ConcurrentHashMap<>();
+
+    private OWLOntology rootOntology;
 
     @Nonnull
     private DictionaryUpdater dictionaryUpdater;
@@ -39,11 +48,18 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     @Inject
     public MultiLingualDictionaryImpl(@Nonnull ProjectId projectId,
+                                      @Nonnull OWLOntology rootOntology,
                                       @Nonnull DictionaryBuilder dictionaryBuilder,
                                       @Nonnull DictionaryUpdater dictionaryUpdater) {
         this.projectId = checkNotNull(projectId);
+        this.rootOntology = checkNotNull(rootOntology);
         this.dictionaryUpdater = checkNotNull(dictionaryUpdater);
         this.dictionaryBuilder = checkNotNull(dictionaryBuilder);
+    }
+
+    @Override
+    public void loadLanguages(List<DictionaryLanguage> languages) {
+        findDictionaries(languages);
     }
 
     @Nonnull
@@ -52,17 +68,42 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         return new ArrayList<>(dictionaries.keySet());
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public String getShortForm(@Nonnull OWLEntity entity,
                                @Nonnull List<DictionaryLanguage> languages,
                                @Nullable String defaultShortForm) {
         List<Dictionary> dictionaries = findDictionaries(languages);
         return dictionaries.stream()
-                           .map(dictionary -> dictionary.getShortFormOrElse(entity.getIRI(), (i) -> null))
+                           .map(dictionary -> dictionary.getShortFormOrElse(entity, (i) -> null))
                            .filter(Objects::nonNull)
                            .findFirst()
                            .orElse(defaultShortForm);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<String> getShortForms() {
+        List<String> result = new ArrayList<>();
+        for (Dictionary dictionary : dictionaries.values()) {
+            result.addAll(dictionary.getShortForms());
+        }
+        return result;
+    }
+
+    @Nonnull
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchString,
+                                               @Nonnull List<DictionaryLanguage> languages) {
+        return findDictionaries(languages).stream()
+                                          .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString));
+
+    }
+
+    @Override
+    public Collection<OWLEntity> getEntities(@Nonnull String shortForm) {
+        return dictionaries.values().stream()
+                           .flatMap(dictionary -> dictionary.getEntities(shortForm).stream())
+                           .collect(toSet());
     }
 
     @Override
@@ -82,21 +123,28 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
             }
             result.add(dictionary);
         }
-        buildDictionaries(dictionariesToBuild);
+        if (!dictionariesToBuild.isEmpty()) {
+            buildDictionaries(dictionariesToBuild);
+        }
         return result;
     }
 
     private void buildDictionaries(@Nonnull List<Dictionary> dictionaries) {
-        logger.info("{} Creating dictionary for <{}> and lang='{}'",
+        if (dictionaries.isEmpty()) {
+            return;
+        }
+        List<DictionaryLanguage> langs = dictionaries.stream().map(Dictionary::getLanguage).collect(toList());
+        logger.info("{} Building dictionaries for {}",
                     projectId,
-                    dictionaries);
+                    langs);
         Stopwatch stopwatch = Stopwatch.createStarted();
         dictionaryBuilder.buildAll(dictionaries);
         dictionaries.forEach(dictionary -> this.dictionaries.put(dictionary.getLanguage(), dictionary));
         stopwatch.stop();
-        logger.info("{} Created dictionary for <{}> and langs='{}' in {} ms",
+
+        logger.info("{} Built dictionaries for {} in {}",
                     projectId,
-                    dictionaries,
-                    stopwatch.elapsed(MILLISECONDS));
+                    langs,
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
     }
 }

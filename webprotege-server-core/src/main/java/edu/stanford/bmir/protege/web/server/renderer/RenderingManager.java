@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.server.renderer;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
-import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,7 +28,6 @@ import java.util.*;
 public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     private DictionaryManager dictionaryManager;
-    private final BidirectionalShortFormProvider shortFormProvider;
 
     private final DeprecatedEntityChecker deprecatedEntityChecker;
 
@@ -37,20 +35,17 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     private final OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
 
+    private final LanguageManager languageManager;
+
     @Inject
     public RenderingManager(DictionaryManager dictionaryManager,
                             DeprecatedEntityChecker deprecatedChecker,
-                            BidirectionalShortFormProvider shortFormProvider,
-                            ManchesterSyntaxObjectRenderer objectRenderer) {
+                            ManchesterSyntaxObjectRenderer objectRenderer, LanguageManager languageManager) {
         this.dictionaryManager = dictionaryManager;
-        this.shortFormProvider = shortFormProvider;
         this.htmlManchesterSyntaxRenderer = objectRenderer;
         this.deprecatedEntityChecker = deprecatedChecker;
-        owlObjectRenderer.setShortFormProvider(shortFormProvider);
-    }
-
-    public BidirectionalShortFormProvider getShortFormProvider() {
-        return shortFormProvider;
+        this.languageManager = languageManager;
+        owlObjectRenderer.setShortFormProvider(new ShortFormAdapter(dictionaryManager));
     }
 
     /**
@@ -59,9 +54,8 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
      * @return A set of entities that have the specified short form.  The set will be empty if no such
      * entities with the specified short form exist.
      */
-    @Deprecated
-    public Set<OWLEntity> getEntities(String shortForm) {
-        return shortFormProvider.getEntities(shortForm);
+    public Collection<OWLEntity> getEntities(String shortForm) {
+        return dictionaryManager.getEntities(shortForm);
     }
 
     /**
@@ -71,8 +65,7 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
      */
     @Nonnull
     public String getShortForm(OWLEntity entity) {
-        return dictionaryManager.getShortForm(entity,
-                                              Collections.singletonList(DictionaryLanguage.rdfsLabel("")));
+        return dictionaryManager.getShortForm(entity, languageManager.getLanguages());
     }
 
     /**

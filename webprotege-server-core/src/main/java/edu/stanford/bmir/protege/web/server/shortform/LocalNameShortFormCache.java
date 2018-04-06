@@ -30,14 +30,14 @@ public class LocalNameShortFormCache {
     }
 
     public String getShortForm(OWLEntity entity) {
-        String localNameShortForm = shortFormCache.getShortFormOrElse(entity.getIRI(), (i) -> null);
+        String localNameShortForm = shortFormCache.getShortFormOrElse(entity, (i) -> null);
         if(localNameShortForm == null) {
             String localName = localNameExtractor.getLocalName(entity.getIRI());
             if(localName.isEmpty()) {
                 return entity.getIRI().toString();
             }
             else {
-                shortFormCache.put(entity.getIRI(), localName);
+                shortFormCache.put(entity, localName);
                 return localName;
             }
         }

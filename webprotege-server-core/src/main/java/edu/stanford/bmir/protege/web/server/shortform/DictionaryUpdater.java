@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.Set;
 
@@ -29,22 +29,23 @@ public class DictionaryUpdater {
 
     public void update(@Nonnull Dictionary dictionary,
                        @Nonnull List<? extends OWLOntologyChange> changes) {
-        Set<IRI> affectedIris = changes.stream()
-                                       .filter(OWLOntologyChange::isAxiomChange)
-                                       .map(OWLOntologyChange::getAxiom)
-                                       .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
-                                       .map(ax -> (OWLAnnotationAssertionAxiom) ax)
-                                       .filter(ax -> isAxiomForDictionary(ax, dictionary))
-                                       .map(ax -> (IRI) ax.getSubject())
-                                       .collect(toSet());
-        affectedIris.forEach(dictionary::remove);
-        affectedIris.forEach(iri -> {
-            rootOntology.getAnnotationAssertionAxioms(iri).stream()
+        Set<OWLEntity> affectedEntities = changes.stream()
+                                                 .filter(OWLOntologyChange::isAxiomChange)
+                                                 .map(OWLOntologyChange::getAxiom)
+                                                 .filter(ax -> ax instanceof OWLAnnotationAssertionAxiom)
+                                                 .map(ax -> (OWLAnnotationAssertionAxiom) ax)
+                                                 .filter(ax -> isAxiomForDictionary(ax, dictionary))
+                                                 .map(ax -> (IRI) ax.getSubject())
+                                                 .flatMap(iri -> rootOntology.getEntitiesInSignature(iri, Imports.INCLUDED).stream())
+                                                 .collect(toSet());
+        affectedEntities.forEach(dictionary::remove);
+        affectedEntities.forEach(entity -> {
+            rootOntology.getAnnotationAssertionAxioms(entity.getIRI()).stream()
                         .filter(ax -> isAxiomForDictionary(ax, dictionary))
                         .forEach(ax -> {
                             OWLLiteral literal = (OWLLiteral) ax.getValue();
                             String lexicalValue = literal.getLiteral();
-                            dictionary.put(iri, lexicalValue);
+                            dictionary.put(entity, lexicalValue);
                         });
         });
     }

@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Maps;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -15,13 +15,14 @@ import java.util.Map;
 */
 public class WebProtegeOWLEntityChecker implements OWLEntityChecker {
 
-    private BidirectionalShortFormProvider shortFormProvider;
+    private DictionaryManager dictionaryManager;
 
     private Map<String, OWLEntityData> freshEntitiesMap = Maps.newHashMap();
 
     @Inject
-    public WebProtegeOWLEntityChecker(BidirectionalShortFormProvider shortFormProvider, HasFreshEntities freshEntities) {
-        this.shortFormProvider = shortFormProvider;
+    public WebProtegeOWLEntityChecker(HasFreshEntities freshEntities,
+                                      DictionaryManager dictionaryManager) {
+        this.dictionaryManager = dictionaryManager;
         for(OWLEntityData data : freshEntities.getFreshEntities()) {
             freshEntitiesMap.put(stripQuotes(data.getBrowserText()), data);
         }
@@ -35,7 +36,7 @@ public class WebProtegeOWLEntityChecker implements OWLEntityChecker {
                 return (E) entity;
             }
         }
-        for(OWLEntity entity : shortFormProvider.getEntities(stripQuotes(s))) {
+        for(OWLEntity entity : dictionaryManager.getEntities(stripQuotes(s))) {
             if(entity.getEntityType() == entityType) {
                 return (E) entity;
             }

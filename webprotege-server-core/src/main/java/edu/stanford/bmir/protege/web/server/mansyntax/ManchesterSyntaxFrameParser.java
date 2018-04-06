@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
@@ -21,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
  */
@@ -30,16 +33,15 @@ public class ManchesterSyntaxFrameParser {
 
     private final OWLDataFactory dataFactory;
 
-    private final BidirectionalShortFormProvider shortFormProvider;
-
     private final OWLOntologyChecker ontologyChecker;
+
+    private final DictionaryManager dictionaryManager;
 
     @Inject
     public ManchesterSyntaxFrameParser(@RootOntology OWLOntology rootOntology,
-                                       BidirectionalShortFormProvider shortFormProvider,
                                        OWLOntologyChecker ontologyChecker,
-                                       OWLDataFactory dataFactory) {
-        this.shortFormProvider = shortFormProvider;
+                                       OWLDataFactory dataFactory, DictionaryManager dictionaryManager) {
+        this.dictionaryManager = checkNotNull(dictionaryManager);
         this.ontologyChecker = ontologyChecker;
         this.dataFactory = dataFactory;
         this.rootOntology = rootOntology;
@@ -47,8 +49,8 @@ public class ManchesterSyntaxFrameParser {
 
     public Set<OntologyAxiomPair> parse(String syntax, HasFreshEntities hasFreshEntities) throws ParserException {
         OWLEntityChecker entityChecker = new WebProtegeOWLEntityChecker(
-                shortFormProvider,
-                hasFreshEntities
+                hasFreshEntities,
+                dictionaryManager
         );
         ManchesterOWLSyntaxFramesParser parser = new ManchesterOWLSyntaxFramesParser(dataFactory, entityChecker);
         parser.setOWLOntologyChecker(ontologyChecker);

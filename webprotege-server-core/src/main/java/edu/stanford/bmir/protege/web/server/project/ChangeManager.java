@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
@@ -90,7 +91,7 @@ public class ChangeManager implements HasApplyChanges {
     private final OWLDataFactory dataFactory;
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final DictionaryManager dictionaryManager;
 
     @Nonnull
     private final ProjectDocumentStore documentStore;
@@ -133,8 +134,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache,
                          @Nonnull RevisionManager changeManager,
                          @Nonnull OWLDataFactory dataFactory,
-                         @Nonnull RenderingManager renderingManager,
-                         @Nonnull ProjectDocumentStore documentStore,
+                         @Nonnull DictionaryManager dictionaryManager, @Nonnull ProjectDocumentStore documentStore,
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
@@ -150,7 +150,7 @@ public class ChangeManager implements HasApplyChanges {
         this.entityCrudKitHandlerCache = entityCrudKitHandlerCache;
         this.changeManager = changeManager;
         this.dataFactory = dataFactory;
-        this.renderingManager = renderingManager;
+        this.dictionaryManager = dictionaryManager;
         this.documentStore = documentStore;
         this.classHierarchyProvider = classHierarchyProvider;
         this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
@@ -528,7 +528,7 @@ public class ChangeManager implements HasApplyChanges {
 
     @SuppressWarnings("unchecked")
     private <E extends OWLEntity> Optional<E> getEntityOfTypeIfPresent(EntityType<E> entityType, String shortName) {
-        for (OWLEntity entity : renderingManager.getEntities(shortName)) {
+        for (OWLEntity entity : dictionaryManager.getEntities(shortName)) {
             if (entity.isType(entityType)) {
                 return Optional.of((E) entity);
             }

@@ -17,6 +17,8 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
  */
 public class DictionaryLanguage {
 
+    private int hashCode = -1;
+
     private static final DictionaryLanguage LOCAL_NAME_LANGUAGE = new DictionaryLanguage(null, "");
 
     @Nullable
@@ -77,7 +79,11 @@ public class DictionaryLanguage {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(annotationPropertyIri, lang);
+        if(hashCode != -1) {
+            return hashCode;
+        }
+        hashCode = Objects.hashCode(annotationPropertyIri, lang);
+        return hashCode;
     }
 
 
@@ -89,8 +95,16 @@ public class DictionaryLanguage {
                 .toString();
     }
 
-    public boolean isLanguageFor(@Nonnull IRI annotationPropertyIri, @Nonnull String lang) {
-        return Objects.equal(this.annotationPropertyIri, annotationPropertyIri)
-                && this.lang.equals(lang);
+    public boolean matches(@Nonnull IRI annotationPropertyIri, @Nonnull String lang) {
+        return matchesAnnotationProperty(annotationPropertyIri)
+                && matchesLang(lang);
+    }
+
+    private boolean matchesLang(@Nonnull String lang) {
+        return this.lang.equals(lang) || this.lang.equals("*");
+    }
+
+    private boolean matchesAnnotationProperty(@Nonnull IRI annotationPropertyIri) {
+        return Objects.equal(this.annotationPropertyIri, annotationPropertyIri);
     }
 }

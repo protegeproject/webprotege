@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoDatabase;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
@@ -55,8 +56,6 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static dagger.Provides.Type.SET;
 
 /**
  * Matthew Horridge
@@ -257,17 +256,17 @@ public class ApplicationModule {
     }
 
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public EntityCrudKitPlugin<?,?,?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
         return plugin;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public EntityCrudKitPlugin<?,?,?> provideOBOIdPlugin(OBOIdSuffixEntityCrudKitPlugin plugin) {
         return plugin;
     }
 
-    @Provides(type = SET)
+    @Provides @IntoSet
     public EntityCrudKitPlugin<?,?,?> provideSuppliedNamePlugin(SuppliedNameSuffixEntityCrudKitPlugin plugin) {
         return plugin;
     }

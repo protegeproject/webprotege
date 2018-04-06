@@ -5,13 +5,15 @@ import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,15 +39,25 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final DictionaryManager dictionaryManager;
+
+    @Nonnull
+    private final LanguageManager languageManager;
+
     @Inject
     public LookupEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
                                        @Nonnull PlaceUrl placeUrl,
-                                       @Nonnull RenderingManager renderingManager) {
+                                       @Nonnull RenderingManager renderingManager,
+                                       @Nonnull DictionaryManager dictionaryManager,
+                                       @Nonnull LanguageManager languageManager) {
         super(accessManager);
         this.projectId = projectId;
         this.placeUrl = placeUrl;
         this.renderingManager = renderingManager;
+        this.dictionaryManager = dictionaryManager;
+        this.languageManager = languageManager;
     }
 
     @Nonnull
@@ -68,117 +80,36 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
 
 
     private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
-        BidirectionalShortFormProvider sfp = renderingManager.getShortFormProvider();
-        List<OWLEntityDataMatch> matches = new ArrayList<>();
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         Set<OWLEntity> addedEntities = new HashSet<>();
-        for (String shortForm : sfp.getShortForms()) {
-            Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
-            if (result.isPresent()) {
-                Set<OWLEntity> entities = sfp.getEntities(shortForm);
-                for (OWLEntity matchingEntity : entities) {
-                    if (!addedEntities.contains(matchingEntity)) {
-                        Optional<OWLEntityData> match = toOWLEntityData(matchingEntity, entityLookupRequest,
-                                                                        renderingManager);
-                        if (match.isPresent()) {
-                            EntityNameMatchResult resultValue = result.get();
-                            matches.add(new OWLEntityDataMatch(match.get(), resultValue));
-                            addedEntities.add(matchingEntity);
-                        }
-                        // BAD
-                        if (matches.size() >= 1000) {
-                            break;
-                        }
-                    }
-                }
-            }
-            // BAD
-            if (matches.size() >= 10000) {
-                break;
-            }
-        }
-        return matches.stream()
-                      .sorted()
-                      .limit(entityLookupRequest.getSearchLimit())
-                      .map(this::toEntityLookupResult)
-                      .collect(toList());
+        return dictionaryManager.getShortFormsContaining(Collections.singletonList(entityLookupRequest.getSearchString()),
+                                                         languageManager.getLanguages())
+                                // This is arbitary and possibly leads to bad completion results
+                                .limit(3000)
+                                .filter(match -> entityLookupRequest.getSearchedEntityTypes().contains(match.getEntity().getEntityType()))
+                                .filter(match -> !addedEntities.contains(match.getEntity()))
+                                .peek(match -> addedEntities.add(match.getEntity()))
+                                .map(match -> {
+                                    String shortForm = match.getShortForm();
+                                    Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
+                                    return result.map(entityNameMatchResult -> {
+                                        OWLEntity entity = match.getEntity();
+                                        OWLEntityData entityData = DataFactory.getOWLEntityData(entity, match.getShortForm());
+                                        return new OWLEntityDataMatch(entityData, entityNameMatchResult);
+                                    }).orElse(null);
+                                })
+                                .filter(Objects::nonNull)
+                                .sorted()
+                                .limit(entityLookupRequest.getSearchLimit())
+                                .map(this::toEntityLookupResult)
+                                .collect(toList());
+
     }
 
     private EntityLookupResult toEntityLookupResult(OWLEntityDataMatch match) {
         return new EntityLookupResult(match.getEntityData(),
                                       match.getMatchResult(),
                                       placeUrl.getEntityUrl(projectId, match.getEntityData().getEntity()));
-    }
-
-
-    private Optional<OWLEntityData> toOWLEntityData(OWLEntity matchingEntity, final EntityLookupRequest entityLookupRequest, final RenderingManager rm) {
-        return matchingEntity.accept(new OWLEntityVisitorEx<Optional<OWLEntityData>>() {
-            @Nonnull
-            public Optional<OWLEntityData> visit(@Nonnull OWLClass cls) {
-                if (entityLookupRequest.isSearchType(EntityType.CLASS)) {
-                    OWLEntityData data = rm.getRendering(cls);
-                    return Optional.of(data);
-                }
-                else {
-                    return Optional.empty();
-                }
-            }
-
-            @Nonnull
-            public Optional<OWLEntityData> visit(@Nonnull OWLObjectProperty property) {
-                if (entityLookupRequest.isSearchType(EntityType.OBJECT_PROPERTY)) {
-                    OWLEntityData data = rm.getRendering(property);
-                    return Optional.of(data);
-                }
-                else {
-                    return Optional.empty();
-                }
-            }
-
-            @Nonnull
-            public Optional<OWLEntityData> visit(@Nonnull OWLDataProperty property) {
-                if (entityLookupRequest.isSearchType(EntityType.DATA_PROPERTY)) {
-                    OWLEntityData data = rm.getRendering(property);
-                    return Optional.of(data);
-                }
-                else {
-                    return Optional.empty();
-                }
-            }
-
-            @Nonnull
-            public Optional<OWLEntityData> visit(@Nonnull OWLNamedIndividual individual) {
-                if (entityLookupRequest.isSearchType(EntityType.NAMED_INDIVIDUAL)) {
-                    OWLEntityData data = rm.getRendering(individual);
-                    return Optional.of(data);
-                }
-                else {
-                    return Optional.empty();
-                }
-            }
-
-            @Nonnull
-            public Optional<OWLEntityData> visit(@Nonnull OWLDatatype datatype) {
-                if (entityLookupRequest.isSearchType(EntityType.DATATYPE)) {
-                    OWLEntityData data = rm.getRendering(datatype);
-                    return Optional.of(data);
-                }
-                else {
-                    return Optional.empty();
-                }
-            }
-
-            @Nonnull
-            public Optional<OWLEntityData> visit(@Nonnull OWLAnnotationProperty property) {
-                if (entityLookupRequest.isSearchType(EntityType.ANNOTATION_PROPERTY)) {
-                    OWLEntityData data = rm.getRendering(property);
-                    return Optional.of(data);
-                }
-                else {
-                    return Optional.empty();
-                }
-            }
-        });
     }
 
     private static class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {

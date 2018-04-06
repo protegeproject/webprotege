@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.IntoSet;
 import edu.stanford.bmir.protege.web.server.init.CheckDataDirectoryIsReadableAndWritable;
 import edu.stanford.bmir.protege.web.server.init.CheckMongoDBConnectionTask;
 import edu.stanford.bmir.protege.web.server.init.CheckWebProtegeDataDirectoryExists;
@@ -15,17 +16,17 @@ import edu.stanford.bmir.protege.web.server.init.ConfigurationTask;
 @Module
 public class ConfigurationTasksModule {
 
-    @Provides(type = Provides.Type.SET)
+    @Provides @IntoSet
     public ConfigurationTask provideCheckWebProtegeDataDirectoryExists(CheckWebProtegeDataDirectoryExists check) {
         return check;
     }
 
-    @Provides(type = Provides.Type.SET)
+    @Provides @IntoSet
     public ConfigurationTask provideCheckDataDirectoryIsReadableAndWritable(CheckDataDirectoryIsReadableAndWritable check) {
         return check;
     }
 
-    @Provides(type = Provides.Type.SET)
+    @Provides @IntoSet
     public ConfigurationTask provideCheckMongoDBConnectionTask(CheckMongoDBConnectionTask check) {
         return check;
     }

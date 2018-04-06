@@ -2,13 +2,13 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +24,8 @@ import static org.semanticweb.owlapi.model.AxiomType.ANNOTATION_ASSERTION;
  */
 public class DictionaryBuilder {
 
+    private static final Logger logger = LoggerFactory.getLogger(DictionaryBuilder.class);
+
     @Nonnull
     private final OWLOntology rootOntology;
 
@@ -36,7 +38,7 @@ public class DictionaryBuilder {
      * Builds a dictionary.
      */
     public void build(@Nonnull Dictionary dictionary) {
-         buildAll(singletonList(dictionary));
+        buildAll(singletonList(dictionary));
     }
 
     /**
@@ -45,8 +47,8 @@ public class DictionaryBuilder {
     public void buildAll(List<Dictionary> dictionaries) {
         List<Dictionary> annotationBasedDictionaries = new ArrayList<>();
         Dictionary localNameDictionary = null;
-        for(Dictionary dictionary : dictionaries) {
-            if(dictionary.getLanguage().isAnnotationBased()) {
+        for (Dictionary dictionary : dictionaries) {
+            if (dictionary.getLanguage().isAnnotationBased()) {
                 annotationBasedDictionaries.add(dictionary);
             }
             else {
@@ -54,37 +56,38 @@ public class DictionaryBuilder {
             }
         }
         buildAnnotationBasedDictionaries(annotationBasedDictionaries);
-        if(localNameDictionary != null) {
+        if (localNameDictionary != null) {
             buildLocalNameDictionary(localNameDictionary);
         }
     }
 
     private void buildLocalNameDictionary(Dictionary localNameDictionary) {
         LocalNameExtractor extractor = new LocalNameExtractor();
-        rootOntology.getSignature(Imports.INCLUDED).stream()
-                    .map(OWLNamedObject::getIRI)
-                    .forEach(iri -> {
-                        String shortForm = extractor.getLocalName(iri);
-                        if(!shortForm.isEmpty()) {
-                            localNameDictionary.put(iri, shortForm);
+        rootOntology.getSignature(Imports.INCLUDED)
+                    .forEach(entity -> {
+                        String shortForm = extractor.getLocalName(entity.getIRI());
+                        if (!shortForm.isEmpty()) {
+                            localNameDictionary.put(entity, shortForm);
                         }
                     });
     }
 
     private void buildAnnotationBasedDictionaries(List<Dictionary> annotationBasedDictionaries) {
-        if(annotationBasedDictionaries.isEmpty()) {
+        if (annotationBasedDictionaries.isEmpty()) {
             return;
         }
         rootOntology.getImportsClosure().stream()
                     .flatMap(ont -> ont.getAxioms(ANNOTATION_ASSERTION).stream())
                     .forEach(ax -> {
                         annotationBasedDictionaries.stream()
-                                    .filter(dictionary -> isAxiomForDictionary(ax, dictionary))
-                                    .forEach(dictionary -> {
-                                        IRI iri = (IRI) ax.getSubject();
-                                        String literal = ((OWLLiteral) ax.getValue()).getLiteral();
-                                        dictionary.put(iri, literal);
-                                    });
+                                                   .filter(dictionary -> isAxiomForDictionary(ax, dictionary))
+                                                   .forEach(dictionary -> {
+                                                       IRI iri = (IRI) ax.getSubject();
+                                                       String literal = ((OWLLiteral) ax.getValue()).getLiteral();
+                                                       rootOntology.getEntitiesInSignature(iri, Imports.INCLUDED).forEach(entity -> {
+                                                           dictionary.put(entity, literal);
+                                                       });
+                                                   });
                     });
     }
 }

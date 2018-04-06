@@ -4,8 +4,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeBidirectionalShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxFrameRenderer;
@@ -29,17 +29,17 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
     private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
     @Nonnull
-    private final WebProtegeBidirectionalShortFormProvider shortFormProvider;
+    private final DictionaryManager dictionaryManager;
 
     @Inject
     public GetManchesterSyntaxFrameActionHandler(@Nonnull AccessManager accessManager,
                                                  @Nonnull HasImportsClosure importsClosure,
                                                  @Nonnull OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
-                                                 @Nonnull WebProtegeBidirectionalShortFormProvider shortFormProvider) {
+                                                 @Nonnull DictionaryManager dictionaryManager) {
         super(accessManager);
         this.importsClosure = importsClosure;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
-        this.shortFormProvider = shortFormProvider;
+        this.dictionaryManager = dictionaryManager;
     }
 
     @Nonnull
@@ -47,7 +47,7 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
     public GetManchesterSyntaxFrameResult execute(@Nonnull GetManchesterSyntaxFrameAction action,
                                                   @Nonnull ExecutionContext executionContext) {
         StringWriter writer = new StringWriter();
-        EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(shortFormProvider);
+        EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
         final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer, entityShortFormProvider);
         frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
         frameRenderer.setRenderExtensions(true);
