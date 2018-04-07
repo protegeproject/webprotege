@@ -8,6 +8,7 @@ import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.HasGetRendering;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
+import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
 import edu.stanford.bmir.protege.web.server.shortform.ShortFormMatch;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -46,6 +47,10 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
  * Instances of this class are not thread safe.
  */
 public class EntitySearcher {
+
+    private static final Pattern OBO_ID_PATTERN = Pattern.compile("([a-z]|[A-Z]+)_([0-9]+)");
+
+    private final LocalNameExtractor localNameExtractor = new LocalNameExtractor();
 
     /**
      * The default limit for the returned results.
@@ -289,20 +294,36 @@ public class EntitySearcher {
 
     private EntitySearchResult toSearchResult(Pattern searchPattern, SearchMatch ren) {
         ShortFormMatch match = ren.getMatch();
-        String shortForm = match.getShortForm();
+        String rendering;
+        if(ren.getMatchType() == MatchType.IRI) {
+            rendering = dictionaryManager.getShortForm(match.getEntity(), languageManager.getLanguages());
+        }
+        else {
+            rendering = match.getShortForm();
+        }
         StringBuilder highlighted = new StringBuilder();
-        highlightSearchResult(searchPattern, shortForm, highlighted);
-        if (ren.getMatchType() == MatchType.IRI) {
-            // Matched the IRI remainder
-            highlighted.append("<div class=\"searchedIri\">");
+        highlightSearchResult(searchPattern, rendering, highlighted);
+        String localName = localNameExtractor.getLocalName(ren.getMatch().getEntity().getIRI());
+        Matcher matcher = OBO_ID_PATTERN.matcher(localName);
+        if(matcher.matches()) {
+            highlighted.append("<div style='color: #c0c0c0; margin-left: 5px;'>");
+            highlightSearchResult(searchPattern, matcher.group(1), highlighted);
+            highlighted.append(":");
+            highlightSearchResult(searchPattern, matcher.group(2), highlighted);
+            highlighted.append("<div>");
+        }
+        else if (ren.getMatchType() == MatchType.IRI) {
+            // Matched the IRI local name
+            highlighted.append("<div style='color: #c0c0c0; margin-left: 5px;'>");
             IRI iri = match.getEntity().getIRI();
             highlightSearchResult(searchPattern, iri.toString(), highlighted);
             highlighted.append("</div>");
         }
+
         if (ren.getMatchType() == MatchType.TAG) {
             for (Tag tag : tagsByEntity.get(match.getEntity())) {
                 if (searchString.equalsIgnoreCase(tag.getLabel())) {
-                    highlighted.append("<div class='wp-tag wp-tag--inline-tag' style='display: inline-block; color: ")
+                    highlighted.append("<div class='wp-tag wp-tag--inline-tag' style='color: ")
                                .append(tag.getColor().getHex())
                                .append("; background-color:")
                                .append(tag.getBackgroundColor().getHex()).append(";'>");
@@ -311,7 +332,7 @@ public class EntitySearcher {
                 }
             }
         }
-        return new EntitySearchResult(DataFactory.getOWLEntityData(match.getEntity(), shortForm),
+        return new EntitySearchResult(DataFactory.getOWLEntityData(match.getEntity(), rendering),
                                       displayName(),
                                       highlighted.toString());
     }

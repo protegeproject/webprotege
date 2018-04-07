@@ -19,8 +19,8 @@ public class LanguageManager {
     private final ImmutableList<DictionaryLanguage> languages = ImmutableList.of(
             DictionaryLanguage.rdfsLabel("en"),
             DictionaryLanguage.skosPrefLabel("en"),
-            DictionaryLanguage.rdfsLabel(ANY_LANG),
-            DictionaryLanguage.skosPrefLabel(ANY_LANG),
+            DictionaryLanguage.rdfsLabel(""),
+            DictionaryLanguage.skosPrefLabel(""),
             DictionaryLanguage.localName()
     );
 

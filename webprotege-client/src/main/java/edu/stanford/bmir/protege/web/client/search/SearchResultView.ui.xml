@@ -4,6 +4,9 @@
     <ui:style>
         @external .searchedIri;
         .main {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
             font-size: 12px;
             white-space: nowrap;
             padding-bottom: 2px;
@@ -13,13 +16,14 @@
         }
         .icon {
             display: inline-block;
-            vertical-align: top;
+            flex-grow: 0;
         }
         .rendering {
-            display: inline-block;
-            vertical-align: baseline;
+            display: flex;
+            align-items: baseline;
+            flex-direction: row;
             white-space: nowrap;
-            padding-top: 1px;
+            flex-grow: 1;
         }
         .main .searchedIri {
             color: #707070 !important;
