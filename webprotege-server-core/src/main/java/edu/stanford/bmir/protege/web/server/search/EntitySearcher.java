@@ -306,7 +306,7 @@ public class EntitySearcher {
         String localName = localNameExtractor.getLocalName(ren.getMatch().getEntity().getIRI());
         Matcher matcher = OBO_ID_PATTERN.matcher(localName);
         if(matcher.matches()) {
-            highlighted.append("<div style='color: #c0c0c0; margin-left: 5px;'>");
+            highlighted.append("<div style='color: #b4b4b4; margin-left: 5px;'>");
             highlightSearchResult(searchPattern, matcher.group(1), highlighted);
             highlighted.append(":");
             highlightSearchResult(searchPattern, matcher.group(2), highlighted);
@@ -314,7 +314,7 @@ public class EntitySearcher {
         }
         else if (ren.getMatchType() == MatchType.IRI) {
             // Matched the IRI local name
-            highlighted.append("<div style='color: #c0c0c0; margin-left: 5px;'>");
+            highlighted.append("<div style='color: #b4b4b4; margin-left: 5px;'>");
             IRI iri = match.getEntity().getIRI();
             highlightSearchResult(searchPattern, iri.toString(), highlighted);
             highlighted.append("</div>");
