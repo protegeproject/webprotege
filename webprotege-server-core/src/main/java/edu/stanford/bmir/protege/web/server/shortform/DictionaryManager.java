@@ -2,14 +2,12 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,14 +21,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DictionaryManager {
 
     @Nonnull
+    private final LanguageManager languageManager;
+
+    @Nonnull
     private final MultiLingualDictionary dictionary;
 
     @Nonnull
     private final BuiltInShortFormDictionary builtInShortFormDictionary;
 
     @Inject
-    public DictionaryManager(@Nonnull MultiLingualDictionary dictionary,
+    public DictionaryManager(@Nonnull LanguageManager languageManager,
+                             @Nonnull MultiLingualDictionary dictionary,
                              @Nonnull BuiltInShortFormDictionary builtInShortFormDictionary) {
+        this.languageManager = checkNotNull(languageManager);
         this.dictionary = checkNotNull(dictionary);
         this.builtInShortFormDictionary = checkNotNull(builtInShortFormDictionary);
     }
@@ -47,6 +50,11 @@ public class DictionaryManager {
             return builtInEntityShortForm;
         }
         return dictionary.getShortForm(entity, languages, "");
+    }
+
+    @Nonnull
+    public String getShortForm(@Nonnull OWLEntity entity) {
+        return getShortForm(entity, languageManager.getLanguages());
     }
 
     @Nonnull

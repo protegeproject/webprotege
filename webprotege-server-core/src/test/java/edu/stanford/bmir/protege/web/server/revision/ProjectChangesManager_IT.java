@@ -95,8 +95,9 @@ public class ProjectChangesManager_IT {
                 rootOntology,
                 dataFactory
         );
+        LanguageManager languageManager = new LanguageManager();
         RenderingManager renderingManager = new RenderingManager(
-                new DictionaryManager(new MultiLingualDictionaryImpl(projectId, rootOntology, new DictionaryBuilder(rootOntology), new DictionaryUpdater(rootOntology)),
+                new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, rootOntology, new DictionaryBuilder(rootOntology), new DictionaryUpdater(rootOntology)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
                 new DeprecatedEntityCheckerImpl(rootOntology),
                 new ManchesterSyntaxObjectRenderer(
@@ -105,8 +106,7 @@ public class ProjectChangesManager_IT {
                         LiteralStyle.BRACKETED,
                         new DefaultHttpLinkRenderer(),
                         new MarkdownLiteralRenderer()
-                ),
-                new LanguageManager());
+                ));
 
         AxiomComparatorImpl axiomComparator = new AxiomComparatorImpl(
                 new AxiomBySubjectComparator(

@@ -35,16 +35,13 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     private final OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
 
-    private final LanguageManager languageManager;
-
     @Inject
     public RenderingManager(DictionaryManager dictionaryManager,
                             DeprecatedEntityChecker deprecatedChecker,
-                            ManchesterSyntaxObjectRenderer objectRenderer, LanguageManager languageManager) {
+                            ManchesterSyntaxObjectRenderer objectRenderer) {
         this.dictionaryManager = dictionaryManager;
         this.htmlManchesterSyntaxRenderer = objectRenderer;
         this.deprecatedEntityChecker = deprecatedChecker;
-        this.languageManager = languageManager;
         owlObjectRenderer.setShortFormProvider(new ShortFormAdapter(dictionaryManager));
     }
 
@@ -65,7 +62,7 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
      */
     @Nonnull
     public String getShortForm(OWLEntity entity) {
-        return dictionaryManager.getShortForm(entity, languageManager.getLanguages());
+        return dictionaryManager.getShortForm(entity);
     }
 
     /**
