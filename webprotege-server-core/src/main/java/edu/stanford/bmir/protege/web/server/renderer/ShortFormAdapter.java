@@ -27,7 +27,7 @@ public class ShortFormAdapter implements ShortFormProvider {
     @Nonnull
     @Override
     public String getShortForm(@Nonnull OWLEntity entity) {
-        return dictionaryManager.getShortForms().stream().findFirst().orElse("");
+        return dictionaryManager.getShortForm(entity);
     }
 
     @Override
