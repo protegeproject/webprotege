@@ -69,8 +69,8 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         checkNotNull(defaultShortForm);
         List<Dictionary> dictionaries = findDictionaries(languages);
         return dictionaries.stream()
-                           .map(dictionary -> dictionary.getShortFormOrElse(entity, (i) -> null))
-                           .filter(Objects::nonNull)
+                           .map(dictionary -> dictionary.getShortForm(entity, ""))
+                           .filter(shortForm -> !shortForm.isEmpty())
                            .findFirst()
                            .orElse(defaultShortForm);
     }
@@ -93,7 +93,7 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
                                          @Nonnull List<DictionaryLanguage> languages) {
         List<Dictionary> dictionaries = findDictionaries(languages);
         return dictionaries.stream()
-                           .flatMap(dictionary -> dictionary.getEntities(shortForm).stream());
+                           .flatMap(dictionary -> dictionary.getEntities(shortForm));
     }
 
     @Override

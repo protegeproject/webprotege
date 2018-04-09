@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import com.google.common.collect.ImmutableList;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -19,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 4 Apr 2018
  *
  * A dictionary that maps entities to short forms for a given {@link DictionaryLanguage}.
+ * This class is thread safe, but consistency is not guaranteed for multiple readers or writers.
  */
 public class Dictionary {
 
@@ -46,6 +46,9 @@ public class Dictionary {
                               language);
     }
 
+    /**
+     * Gets the language that this dictionary is for.
+     */
     @Nonnull
     public DictionaryLanguage getLanguage() {
         return language;
@@ -58,35 +61,55 @@ public class Dictionary {
         return shortFormCache.size();
     }
 
-    public void put(@Nonnull OWLEntity entity, @Nonnull String shortForm) {
-        shortFormCache.put(entity, shortForm);
+    /**
+     * Creates an entry in this dictionary that maps the specified entity to the specified short form.
+     * @param entity The entity.
+     * @param shortForm The short form.
+     */
+    public void put(@Nonnull OWLEntity entity,
+                    @Nonnull String shortForm) {
+        shortFormCache.put(checkNotNull(entity), checkNotNull(shortForm));
     }
 
+    /**
+     * Removes the specified entity from this dictionary.
+     */
     public void remove(@Nonnull OWLEntity entity) {
         shortFormCache.remove(entity);
     }
 
+    /**
+     * Clears this dictionary of all entries.
+     */
     public void clear() {
         shortFormCache.clear();
     }
 
-    public Collection<String> getShortForms() {
-        return shortFormCache.getShortForms();
-    }
-
-    public String getShortFormOrElse(@Nonnull OWLEntity entity, @Nonnull Function<OWLEntity, String> defaultShortFormSupplier) {
-        return shortFormCache.getShortFormOrElse(entity, defaultShortFormSupplier);
+    /**
+     * Gets the short form for the specified entity.
+     * @param entity The entity.
+     * @param defaultShortForm A default short form that will be returned if this entity does not
+     *                         contain an entry for the specified entity.
+     */
+    @Nonnull
+    public String getShortForm(@Nonnull OWLEntity entity,
+                               @Nonnull String defaultShortForm) {
+        return shortFormCache.getShortFormOrElse(entity,
+                                                 (e) -> defaultShortForm);
     }
 
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes) {
-        return shortFormCache.getShortFormsContaining(searchStrings, entityTypes, (entity, shortForm, firstMatchIndex) ->
-                new ShortFormMatch(entity, shortForm, language, firstMatchIndex));
+        ShortFormMatchFunction supplier = (entity, shortForm, firstMatchIndex) ->
+                new ShortFormMatch(entity, shortForm, language, firstMatchIndex);
+        return shortFormCache.getShortFormsContaining(searchStrings,
+                                                      entityTypes,
+                                                      supplier);
     }
 
     @Nonnull
-    public Collection<OWLEntity> getEntities(@Nonnull String shortForm) {
-        return ImmutableList.copyOf(shortFormCache.getEntities(shortForm));
+    public Stream<OWLEntity> getEntities(@Nonnull String shortForm) {
+        return shortFormCache.getEntities(shortForm).stream();
     }
 }
