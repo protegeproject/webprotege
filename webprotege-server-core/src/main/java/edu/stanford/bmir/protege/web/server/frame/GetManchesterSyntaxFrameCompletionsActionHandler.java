@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.renderer.ManchesterSyntaxKeywords;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsResult;
@@ -29,12 +28,18 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.server.shortform.ShortFormQuotingUtils.getQuotedShortForm;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 20/03/2014
  */
 public class GetManchesterSyntaxFrameCompletionsActionHandler
         extends AbstractProjectActionHandler<GetManchesterSyntaxFrameCompletionsAction, GetManchesterSyntaxFrameCompletionsResult> {
+
+    private static final int SEARCH_LIMIT = 3000;
 
     private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
 
@@ -51,21 +56,17 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     @Nonnull
     private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
 
-    @Nonnull
-    private final EscapingShortFormProvider escapingShortFormProvider;
-
     @Inject
     public GetManchesterSyntaxFrameCompletionsActionHandler(@Nonnull AccessManager accessManager,
                                                             @Nonnull DictionaryManager dictionaryManager,
                                                             @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                                                             @Nonnull @RootOntology OWLOntology rootOntology,
-                                                            @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, @Nonnull EscapingShortFormProvider escapingShortFormProvider) {
+                                                            @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
         super(accessManager);
         this.dictionaryManager = dictionaryManager;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.rootOntology = rootOntology;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
-        this.escapingShortFormProvider = escapingShortFormProvider;
     }
 
     @Nonnull
@@ -113,47 +114,54 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         return new GetManchesterSyntaxFrameCompletionsResult(AutoCompletionResult.emptyResult());
     }
 
-    private List<AutoCompletionChoice> getEntityAutocompletionChoices(GetManchesterSyntaxFrameCompletionsAction action, ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
-        List<AutoCompletionMatch> matches = Lists.newArrayList();
+    private List<AutoCompletionChoice> getEntityAutocompletionChoices(@Nonnull GetManchesterSyntaxFrameCompletionsAction action, ParserException e,
+                                                                      @Nonnull EditorPosition fromPos,
+                                                                      @Nonnull EditorPosition toPos,
+                                                                      @Nonnull String lastWordPrefix) {
         Set<EntityType<?>> expectedEntityTypes = Sets.newHashSet(ManchesterSyntaxFrameParser.getExpectedEntityTypes(e));
-        if(!expectedEntityTypes.isEmpty()) {
-            for(String shortForm : dictionaryManager.getShortForms()) {
-                EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
-                Optional<EntityNameMatchResult> match = entityNameMatcher.findIn(shortForm);
-                if(match.isPresent()) {
-                    Collection<OWLEntity> entities = dictionaryManager.getEntities(shortForm);
-                    for(OWLEntity entity : entities) {
-                        if(expectedEntityTypes.contains(entity.getEntityType())) {
-                            AutoCompletionChoice choice = new AutoCompletionChoice(escapingShortFormProvider.getShortForm(entity), shortForm, "", fromPos, toPos);
-                            AutoCompletionMatch autoCompletionMatch = new AutoCompletionMatch(
-                                    match.get(),
-                                        choice
-                            );
-                            matches.add(autoCompletionMatch);
-                        }
-                    }
+        EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
 
-                }
-            }
-        }
-        Collections.sort(matches);
-        List<AutoCompletionChoice> result = Lists.newArrayList();
-        for(AutoCompletionMatch match : matches) {
-            result.add(match.getAutoCompletionChoice());
-            if(result.size() == action.getEntityTypeSuggestLimit()) {
-                break;
-            }
-        }
-        return result;
-
+        Set<OWLEntity> candidateEntities = new HashSet<>();
+        return dictionaryManager.getShortFormsContaining(singletonList(lastWordPrefix))
+                                .filter(match -> expectedEntityTypes.contains(match.getEntity().getEntityType()))
+                                // Don't show duplicate entities with different short forms.
+                                .filter(match -> !candidateEntities.contains(match.getEntity()))
+                                .peek(match -> candidateEntities.add(match.getEntity()))
+                                // This is a bit arbitrary - however, the user will need to type more characters
+                                // to find the match they want in any case, because we only display around 20
+                                // choices in the auto completer box.  Note that we will process up to this
+                                // limit as we perform a sort further down in this pipeline.
+                                .limit(SEARCH_LIMIT)
+                                // Map to an AutoCompletionChoice because this allows proper sorting for
+                                // better results
+                                .map(match -> {
+                                    String shortForm = match.getShortForm();
+                                    Optional<EntityNameMatchResult> matchResult = entityNameMatcher.findIn(shortForm);
+                                    return matchResult.map(mr -> {
+                                        OWLEntity entity = match.getEntity();
+                                        String quotedShortForm = getQuotedShortForm(shortForm);
+                                        AutoCompletionChoice choice = new AutoCompletionChoice(quotedShortForm,
+                                                                                               shortForm, "",
+                                                                                               fromPos, toPos);
+                                        return new AutoCompletionMatch(matchResult.get(), choice);
+                                    }).orElse(null);
+                                })
+                                .filter(Objects::nonNull)
+                                .sorted()
+                                .limit(action.getEntityTypeSuggestLimit())
+                                .map(AutoCompletionMatch::getAutoCompletionChoice)
+                                .collect(toList());
     }
 
-    private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
+    private List<AutoCompletionChoice> getNameOntologyAutocompletionChoices(ParserException e,
+                                                                            EditorPosition fromPos,
+                                                                            EditorPosition toPos,
+                                                                            String lastWordPrefix) {
         List<AutoCompletionChoice> choices = Lists.newArrayList();
-        if(e.isOntologyNameExpected()) {
-            for(OWLOntology ont : rootOntology.getImportsClosure()) {
+        if (e.isOntologyNameExpected()) {
+            for (OWLOntology ont : rootOntology.getImportsClosure()) {
                 String ontologyName = ontologyIRIShortFormProvider.getShortForm(ont);
-                if(lastWordPrefix.isEmpty() || ontologyName.toLowerCase().startsWith(lastWordPrefix)) {
+                if (lastWordPrefix.isEmpty() || ontologyName.toLowerCase().startsWith(lastWordPrefix)) {
                     choices.add(new AutoCompletionChoice(ontologyName, ontologyName, "cm-ontology-list", fromPos, toPos));
                 }
             }
@@ -164,11 +172,11 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     private List<AutoCompletionChoice> getKeywordAutoCompletionChoices(ParserException e, EditorPosition fromPos, EditorPosition toPos, String lastWordPrefix) {
         Set<String> expectedKeywords = e.getExpectedKeywords();
         List<AutoCompletionChoice> expectedKeywordChoices = Lists.newArrayList();
-        for(String expectedKeyword : expectedKeywords) {
-            if(lastWordPrefix.isEmpty() || expectedKeyword.toLowerCase().contains(lastWordPrefix)) {
+        for (String expectedKeyword : expectedKeywords) {
+            if (lastWordPrefix.isEmpty() || expectedKeyword.toLowerCase().contains(lastWordPrefix)) {
                 Optional<ManchesterOWLSyntax> kw = syntaxStyles.getKeyword(expectedKeyword);
                 String style = "";
-                if(kw.isPresent()) {
+                if (kw.isPresent()) {
                     style = syntaxStyles.getStyleName(kw.get());
                 }
                 expectedKeywordChoices.add(new AutoCompletionChoice(expectedKeyword, expectedKeyword, style, fromPos, toPos));
@@ -188,9 +196,9 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     }
 
     private int getLastWordIndex(String syntax, int from) {
-        for(int i = from - 1; i > -1; i--) {
+        for (int i = from - 1; i > -1; i--) {
             char ch = syntax.charAt(i);
-            if(isNonWordChar(ch)) {
+            if (isNonWordChar(ch)) {
                 return i + 1;
             }
         }
@@ -198,9 +206,9 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     }
 
     private int getWordEnd(String syntax, int from) {
-        for(int i = from; i < syntax.length(); i++) {
+        for (int i = from; i < syntax.length(); i++) {
             char ch = syntax.charAt(from);
-            if(isNonWordChar(ch)) {
+            if (isNonWordChar(ch)) {
                 return from;
             }
         }
@@ -241,7 +249,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         @Override
         public int compareTo(@Nonnull AutoCompletionMatch autoCompletionMatch) {
             int diff = this.matchResult.compareTo(autoCompletionMatch.matchResult);
-            if(diff != 0) {
+            if (diff != 0) {
                 return diff;
             }
             return autoCompletionChoice.getDisplayText().compareToIgnoreCase(autoCompletionMatch.autoCompletionChoice.getDisplayText());

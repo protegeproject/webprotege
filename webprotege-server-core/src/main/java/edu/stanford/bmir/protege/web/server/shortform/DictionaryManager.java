@@ -82,4 +82,9 @@ public class DictionaryManager {
                 dictionary.getShortFormsContaining(searchStrings, languages)
         );
     }
+
+    @Nonnull
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings) {
+        return getShortFormsContaining(searchStrings, languageManager.getLanguages());
+    }
 }
