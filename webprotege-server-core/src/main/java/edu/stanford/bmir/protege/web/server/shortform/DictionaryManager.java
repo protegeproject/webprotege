@@ -70,13 +70,8 @@ public class DictionaryManager {
     }
 
     @Nonnull
-    public Collection<String> getShortForms() {
-        return dictionary.getShortForms();
-    }
-
-    @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
-                                                       @Nonnull List<DictionaryLanguage> languages) {
+                                                          @Nonnull List<DictionaryLanguage> languages) {
         return Streams.concat(
                 builtInShortFormDictionary.getShortFormsContaining(searchStrings),
                 dictionary.getShortFormsContaining(searchStrings, languages)
