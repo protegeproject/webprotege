@@ -216,14 +216,14 @@ public class ChangeManager implements HasApplyChanges {
     /**
      * Applies ontology changes to the ontologies contained within a project.
      *
-     * @param userId                     The userId of the user applying the changes.  Not {@code null}.
-     * @param changeListGenerator        A generator which creates a list of changes (based on the state of the project at
-     *                                   the time of change application).  The idea behind passing in a change generator is that the list of changes to
-     *                                   be applied can be created based on the state of the project immediately before they are applied.  This is
-     *                                   necessary where the changes depend on the structure/state of the ontology.  This method guarantees that no third
-     *                                   party
-     *                                   ontology changes will take place between the {@link ChangeListGenerator#generateChanges(ChangeGenerationContext)}
-     *                                   method being called and the changes being applied.
+     * @param userId              The userId of the user applying the changes.  Not {@code null}.
+     * @param changeListGenerator A generator which creates a list of changes (based on the state of the project at
+     *                            the time of change application).  The idea behind passing in a change generator is that the list of changes to
+     *                            be applied can be created based on the state of the project immediately before they are applied.  This is
+     *                            necessary where the changes depend on the structure/state of the ontology.  This method guarantees that no third
+     *                            party
+     *                            ontology changes will take place between the {@link ChangeListGenerator#generateChanges(ChangeGenerationContext)}
+     *                            method being called and the changes being applied.
      * @return A {@link ChangeApplicationResult} that describes the changes which took place an any renaminings.
      * @throws NullPointerException      if any parameters are {@code null}.
      * @throws PermissionDeniedException if the user identified by {@code userId} does not have permssion to write to
@@ -409,8 +409,8 @@ public class ChangeManager implements HasApplyChanges {
      * @return The renamed (or untouched if no rename was necessary) result.
      */
     private <R> R getRenamedResult(ChangeListGenerator<R> changeListGenerator,
-                                             R result,
-                                             RenameMap renameMap) {
+                                   R result,
+                                   RenameMap renameMap) {
         return changeListGenerator.getRenamedResult(result, renameMap);
     }
 
@@ -535,12 +535,11 @@ public class ChangeManager implements HasApplyChanges {
 
     @SuppressWarnings("unchecked")
     private <E extends OWLEntity> Optional<E> getEntityOfTypeIfPresent(EntityType<E> entityType, String shortName) {
-        for (OWLEntity entity : dictionaryManager.getEntities(shortName)) {
-            if (entity.isType(entityType)) {
-                return Optional.of((E) entity);
-            }
-        }
-        return Optional.empty();
+        return dictionaryManager.getEntities(shortName)
+                                .filter(entity -> entity.getEntityType().equals(entityType))
+                                .map(entity -> (E) entity)
+                                .findFirst();
+
     }
 
 

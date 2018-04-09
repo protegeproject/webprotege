@@ -50,8 +50,9 @@ public class DictionaryManager {
      *                  be performed on the non-quoted version of the specified short form.
      * @return The entities that exactly match the specified short form.
      */
-    public Collection<OWLEntity> getEntities(@Nonnull String shortForm) {
-        return dictionary.getEntities(ShortFormQuotingUtils.getUnquotedShortForm(shortForm));
+    public Stream<OWLEntity> getEntities(@Nonnull String shortForm) {
+        return dictionary.getEntities(ShortFormQuotingUtils.getUnquotedShortForm(shortForm),
+                                      languageManager.getLanguages());
     }
 
     @Nonnull
@@ -73,12 +74,14 @@ public class DictionaryManager {
 
     @Nonnull
     public String getQuotedShortForm(@Nonnull OWLEntity entity) {
-        return getQuotedShortForm(entity, languageManager.getLanguages());
+        return getQuotedShortForm(entity,
+                                  languageManager.getLanguages());
     }
 
     @Nonnull
     public String getShortForm(@Nonnull OWLEntity entity) {
-        return getShortForm(entity, languageManager.getLanguages());
+        return getShortForm(entity,
+                            languageManager.getLanguages());
     }
 
     /**
@@ -108,6 +111,7 @@ public class DictionaryManager {
     }
 
     public void update(@Nonnull Collection<OWLEntity> entities) {
-        dictionary.update(entities);
+        dictionary.update(entities,
+                          languageManager.getLanguages());
     }
 }

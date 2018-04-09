@@ -13,11 +13,12 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -28,6 +29,10 @@ import static java.util.stream.Collectors.toSet;
 public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiLingualDictionaryImpl.class);
+
+    @Nonnull
+    private final Lock writeLock = new ReentrantLock();
+
 
     @Nonnull
     private final ProjectId projectId;
@@ -51,14 +56,9 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     }
 
     @Override
-    public void loadLanguages(List<DictionaryLanguage> languages) {
+    public void loadLanguages(@Nonnull List<DictionaryLanguage> languages) {
+        // It's suffices to ask for the dictionaries corresponding to these languages
         findDictionaries(languages);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<DictionaryLanguage> getLanguages() {
-        return new ArrayList<>(dictionaries.keySet());
     }
 
     @Nonnull
@@ -82,58 +82,84 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         if (entityTypes.isEmpty()) {
             return Stream.empty();
         }
-        return findDictionaries(languages).stream()
-                                          .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString, entityTypes));
+        List<Dictionary> dictionaries = findDictionaries(languages);
+        return dictionaries.stream()
+                           .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString, entityTypes));
 
     }
 
     @Override
-    public Collection<OWLEntity> getEntities(@Nonnull String shortForm) {
-        return dictionaries.values().stream()
-                           .flatMap(dictionary -> dictionary.getEntities(shortForm).stream())
-                           .collect(toSet());
+    public Stream<OWLEntity> getEntities(@Nonnull String shortForm,
+                                         @Nonnull List<DictionaryLanguage> languages) {
+        List<Dictionary> dictionaries = findDictionaries(languages);
+        return dictionaries.stream()
+                           .flatMap(dictionary -> dictionary.getEntities(shortForm).stream());
+    }
+
+    @Override
+    public void update(@Nonnull Collection<OWLEntity> entities,
+                       @Nonnull List<DictionaryLanguage> languages) {
+        logger.debug("Updating dictionary entries for {} entities", entities.size());
+        findDictionaries(languages).forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
     }
 
     @Nonnull
     private List<Dictionary> findDictionaries(@Nonnull List<DictionaryLanguage> languages) {
-        final List<Dictionary> result = new ArrayList<>();
-        final List<Dictionary> dictionariesToBuild = new ArrayList<>();
+        final List<Dictionary> foundDictionaries = new ArrayList<>();
+        final List<DictionaryLanguage> dictionariesToBuild = new ArrayList<>();
         for (DictionaryLanguage language : languages) {
             Dictionary dictionary = dictionaries.get(language);
             if (dictionary == null) {
-                dictionary = Dictionary.create(language);
-                dictionariesToBuild.add(dictionary);
+                // At this moment, we need to build a dictionary for this language
+                // We might not need to build it in the end if someone builds it before us...
+                dictionariesToBuild.add(language);
             }
-            result.add(dictionary);
+            else {
+                foundDictionaries.add(dictionary);
+            }
         }
         if (!dictionariesToBuild.isEmpty()) {
             buildDictionaries(dictionariesToBuild);
+            return languages.stream()
+                            .map(dictionaries::get)
+                            .collect(toList());
         }
-        return result;
+        else {
+            return foundDictionaries;
+        }
+
     }
 
-    private void buildDictionaries(@Nonnull List<Dictionary> dictionaries) {
-        if (dictionaries.isEmpty()) {
+    private void buildDictionaries(@Nonnull List<DictionaryLanguage> languages) {
+        if (languages.isEmpty()) {
             return;
         }
-        List<DictionaryLanguage> langs = dictionaries.stream().map(Dictionary::getLanguage).collect(toList());
-        logger.info("{} Building dictionaries for {}",
-                    projectId,
-                    langs);
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        dictionaryBuilder.buildAll(dictionaries);
-        dictionaries.forEach(dictionary -> this.dictionaries.put(dictionary.getLanguage(), dictionary));
-        stopwatch.stop();
+        try {
+            // Prevent others from building the same dictionaries at the same time.  Dictionaries
+            // can still be read whilst building is taking place.  Others may make requests for a
+            // dictionary that is alread being built but they will not get to build this themselves.
+            writeLock.lock();
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            logger.info("{} Building dictionaries for {}",
+                        projectId,
+                        languages);
+            List<Dictionary> dictionariesThatNeedBuilding =
+                    languages.stream()
+                             .filter(lang -> !dictionaries.containsKey(lang))
+                             .map(Dictionary::create)
+                             .collect(toList());
 
-        logger.info("{} Built dictionaries for {} in {}",
-                    projectId,
-                    langs,
-                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
-    }
+            dictionaryBuilder.buildAll(dictionariesThatNeedBuilding);
+            dictionariesThatNeedBuilding.forEach(dictionary -> dictionaries.put(dictionary.getLanguage(),
+                                                                                dictionary));
+            stopwatch.stop();
+            logger.info("{} Built dictionaries for {} in {}",
+                        projectId,
+                        languages,
+                        stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        } finally {
+            writeLock.unlock();
+        }
 
-    @Override
-    public void update(@Nonnull Collection<OWLEntity> entities) {
-        logger.debug("Updating dictionary entries for {} entities", entities.size());
-        dictionaries.values().forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
     }
 }
