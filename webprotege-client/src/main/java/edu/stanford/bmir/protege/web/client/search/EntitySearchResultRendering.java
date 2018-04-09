@@ -68,7 +68,7 @@ public class EntitySearchResultRendering {
         @Nonnull
         @Override
         public DataResource visit(@Nonnull OWLAnnotationProperty property) {
-            return BUNDLE.svgIndividualIcon();
+            return BUNDLE.svgAnnotationPropertyIcon();
         }
     };
 
