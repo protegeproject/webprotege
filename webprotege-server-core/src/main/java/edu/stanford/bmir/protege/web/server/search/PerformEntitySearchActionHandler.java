@@ -14,14 +14,11 @@ import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchAction;
 import edu.stanford.bmir.protege.web.shared.search.PerformEntitySearchResult;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
-
-import static edu.stanford.bmir.protege.web.server.util.ProtegeStreams.entityStream;
 
 /**
  * Matthew Horridge
@@ -89,7 +86,7 @@ public class PerformEntitySearchActionHandler extends AbstractProjectActionHandl
         int pageCount = (totalSearchResults / pageSize) + 1;
         Page<EntitySearchResult> page = new Page<>(pageNumber > pageCount ? 1 : pageNumber,
                                                    pageCount, results, totalSearchResults);
-        return new PerformEntitySearchResult(totalSearchResults, page);
+        return new PerformEntitySearchResult(searchString, totalSearchResults, page);
     }
 }
 

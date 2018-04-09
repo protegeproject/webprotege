@@ -15,6 +15,8 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class PerformEntitySearchResult implements Result {
 
+    private String searchString;
+
     private int totalResultCount;
 
     private Page<EntitySearchResult> results;
@@ -23,10 +25,17 @@ public class PerformEntitySearchResult implements Result {
     private PerformEntitySearchResult() {
     }
 
-    public PerformEntitySearchResult(int totalResultCount,
+    public PerformEntitySearchResult(@Nonnull String searchString,
+                                     int totalResultCount,
                                      @Nonnull Page<EntitySearchResult> results) {
+        this.searchString = searchString;
         this.totalResultCount = totalResultCount;
         this.results = results;
+    }
+
+    @Nonnull
+    public String getSearchString() {
+        return searchString;
     }
 
     public int getTotalResultCount() {

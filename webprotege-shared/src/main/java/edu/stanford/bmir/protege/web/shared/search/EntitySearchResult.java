@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import javax.annotation.Nonnull;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -28,19 +30,22 @@ public class EntitySearchResult implements IsSerializable {
     public EntitySearchResult(@Nonnull OWLEntityData matchedEntity,
                               @Nonnull SearchField field,
                               @Nonnull String fieldRendering) {
-        this.matchedEntity = matchedEntity;
-        this.field = field;
-        this.fieldRendering = fieldRendering;
+        this.matchedEntity = checkNotNull(matchedEntity);
+        this.field = checkNotNull(field);
+        this.fieldRendering = checkNotNull(fieldRendering);
     }
 
+    @Nonnull
     public OWLEntityData getMatchedEntity() {
         return matchedEntity;
     }
 
+    @Nonnull
     public SearchField getField() {
         return field;
     }
 
+    @Nonnull
     public String getFieldRendering() {
         return fieldRendering;
     }
