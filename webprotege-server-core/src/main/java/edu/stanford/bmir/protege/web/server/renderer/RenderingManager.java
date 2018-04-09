@@ -46,16 +46,6 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     /**
-     * Gets the set of entities that match a given entity short form.
-     * @param shortForm The entity short form.
-     * @return A set of entities that have the specified short form.  The set will be empty if no such
-     * entities with the specified short form exist.
-     */
-    public Collection<OWLEntity> getEntities(String shortForm) {
-        return dictionaryManager.getEntities(shortForm);
-    }
-
-    /**
      * Gets the short for for the specified entity.
      * @param entity The entity.
      * @return The entity short form. Not null.
