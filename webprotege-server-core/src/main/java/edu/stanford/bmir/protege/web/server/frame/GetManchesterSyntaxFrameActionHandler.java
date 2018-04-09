@@ -49,7 +49,7 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
                                                   @Nonnull ExecutionContext executionContext) {
         StringWriter writer = new StringWriter();
         final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer,
-                                                                                                    new ShortFormAdapter(dictionaryManager));
+                                                                                                    new EscapingShortFormProvider(dictionaryManager));
         frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
         frameRenderer.setRenderExtensions(true);
 //        frameRenderer.setRenderOntologyLists(true);
