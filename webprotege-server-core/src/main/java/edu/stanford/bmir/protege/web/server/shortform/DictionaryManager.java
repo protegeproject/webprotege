@@ -41,8 +41,14 @@ public class DictionaryManager {
         this.builtInShortFormDictionary = checkNotNull(builtInShortFormDictionary);
     }
 
+    /**
+     * Gets the entities that exactly match the specified short form
+     * @param shortForm The short form.  The short form may be quoted.  If it is, the match will
+     *                  be performed on the non-quoted version of the specified short form.
+     * @return The entities that exactly match the specified short form.
+     */
     public Collection<OWLEntity> getEntities(@Nonnull String shortForm) {
-        return dictionary.getEntities(shortForm);
+        return dictionary.getEntities(ShortFormQuotingUtils.getUnquotedShortForm(shortForm));
     }
 
     @Nonnull
