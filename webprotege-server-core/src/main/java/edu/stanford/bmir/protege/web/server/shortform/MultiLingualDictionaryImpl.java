@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -93,9 +94,13 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchString,
+                                               @Nonnull Set<EntityType<?>> entityTypes,
                                                @Nonnull List<DictionaryLanguage> languages) {
+        if(entityTypes.isEmpty()) {
+            return Stream.empty();
+        }
         return findDictionaries(languages).stream()
-                                          .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString));
+                                          .flatMap(dictionary -> dictionary.getShortFormsContaining(searchString, entityTypes));
 
     }
 

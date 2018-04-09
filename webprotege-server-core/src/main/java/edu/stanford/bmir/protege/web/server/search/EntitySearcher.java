@@ -243,13 +243,12 @@ public class EntitySearcher {
                    })
                    .sorted(comparing(EntitySearchResult::getFieldRendering))
                    .forEach(results::add);
-        System.out.printf("Matched %d,  Filled %d, Limit %d\n", matchCounter.getCounter(), filledCounter.getCounter(), limit);
         int limitRemainder = limit - filledCounter.getCounter();
         if (limitRemainder > 0) {
             int skipRemainder = Math.max(skip - filledCounter.getCounter(), 0);
             dictionaryManager.getShortFormsContaining(asList(searchWords),
+                                                      entityTypes,
                                                       languageManager.getLanguages())
-                             .filter(this::isRequiredEntityType)
                              .map(this::performMatch)
                              .filter(Objects::nonNull)
                              .peek(this::incrementMatchCounter)
@@ -268,10 +267,6 @@ public class EntitySearcher {
                     matchCounter.getCounter(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-    }
-
-    private boolean isRequiredEntityType(ShortFormMatch m) {
-        return entityTypes.contains(m.getEntity().getEntityType());
     }
 
     private void incrementSearchCounter(OWLEntity entity) {

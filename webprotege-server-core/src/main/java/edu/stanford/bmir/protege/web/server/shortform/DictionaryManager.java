@@ -2,13 +2,16 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,17 +72,29 @@ public class DictionaryManager {
         return getShortForm(entity, languageManager.getLanguages());
     }
 
+    /**
+     * Gets the short forms containing the specified search strings.
+     * @param searchStrings The search strings
+     * @param entityTypes The types of entities to be matched.
+     * @param languages The languages of the short forms.
+     * @return A stream of matching short forms.
+     */
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+                                                          @Nonnull Set<EntityType<?>> entityTypes,
                                                           @Nonnull List<DictionaryLanguage> languages) {
         return Streams.concat(
-                builtInShortFormDictionary.getShortFormsContaining(searchStrings),
-                dictionary.getShortFormsContaining(searchStrings, languages)
+                builtInShortFormDictionary.getShortFormsContaining(searchStrings, entityTypes),
+                dictionary.getShortFormsContaining(searchStrings, entityTypes, languages)
         );
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings) {
-        return getShortFormsContaining(searchStrings, languageManager.getLanguages());
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+                                                          @Nonnull Set<EntityType<?>> entityTypes) {
+        if(entityTypes.isEmpty()) {
+            return Stream.empty();
+        }
+        return getShortFormsContaining(searchStrings, entityTypes, languageManager.getLanguages());
     }
 }

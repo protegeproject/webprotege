@@ -119,11 +119,13 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                                                                       @Nonnull EditorPosition toPos,
                                                                       @Nonnull String lastWordPrefix) {
         Set<EntityType<?>> expectedEntityTypes = Sets.newHashSet(ManchesterSyntaxFrameParser.getExpectedEntityTypes(e));
+        if(expectedEntityTypes.isEmpty()) {
+            return Collections.emptyList();
+        }
         EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
 
         Set<OWLEntity> candidateEntities = new HashSet<>();
-        return dictionaryManager.getShortFormsContaining(singletonList(lastWordPrefix))
-                                .filter(match -> expectedEntityTypes.contains(match.getEntity().getEntityType()))
+        return dictionaryManager.getShortFormsContaining(singletonList(lastWordPrefix), expectedEntityTypes)
                                 // Don't show duplicate entities with different short forms.
                                 .filter(match -> !candidateEntities.contains(match.getEntity()))
                                 .peek(match -> candidateEntities.add(match.getEntity()))

@@ -83,10 +83,10 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         Set<OWLEntity> addedEntities = new HashSet<>();
         return dictionaryManager.getShortFormsContaining(Collections.singletonList(entityLookupRequest.getSearchString()),
+                                                         entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
                                 // This is arbitary and possibly leads to bad completion results
                                 .limit(3000)
-                                .filter(match -> entityLookupRequest.getSearchedEntityTypes().contains(match.getEntity().getEntityType()))
                                 .filter(match -> !addedEntities.contains(match.getEntity()))
                                 .peek(match -> addedEntities.add(match.getEntity()))
                                 .map(match -> {

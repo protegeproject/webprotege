@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableList;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -77,8 +79,9 @@ public class Dictionary {
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings) {
-        return shortFormCache.getShortFormsContaining(searchStrings, (entity, shortForm, firstMatchIndex) ->
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+                                                          @Nonnull Set<EntityType<?>> entityTypes) {
+        return shortFormCache.getShortFormsContaining(searchStrings, entityTypes, (entity, shortForm, firstMatchIndex) ->
                 new ShortFormMatch(entity, shortForm, language, firstMatchIndex));
     }
 

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -14,9 +14,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
-import static org.apache.commons.lang.StringUtils.indexOfIgnoreCase;
 
 /**
  * Matthew Horridge
@@ -104,19 +101,32 @@ public class ShortFormCache {
         return new ArrayList<>(shortForm2EntityMap.keySet());
     }
 
+    /**
+     * Gets the short forms containing the specified search strings.
+     * @param searchStrings The search strings.
+     * @param entityTypes The types of entities to be matched.  If empty then no entities will be matched.
+     * @param matchFunction A function that produces a {@link ShortFormMatch}
+     * @return A stream of short form matches that contain the specified search strings.
+     */
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
-                                                                        @Nonnull ShortFormMatchFunction matchFunction) {
+                                                          @Nonnull Set<EntityType<?>> entityTypes,
+                                                          @Nonnull ShortFormMatchFunction matchFunction) {
+        if(entityTypes.isEmpty()) {
+            return Stream.empty();
+        }
         ImmutableList<String> lowerCaseSearchStrings = searchStrings.stream()
-                .map(String::toLowerCase)
-                .collect(ImmutableList.toImmutableList());
+                                                                    .map(String::toLowerCase)
+                                                                    .collect(ImmutableList.toImmutableList());
+        boolean matchAllEntityTypes = entityTypes.containsAll(EntityType.values());
         return entity2ShortFormMap.entrySet().stream()
+                                  .filter(e -> matchAllEntityTypes || entityTypes.contains(e.getKey().getEntityType()))
                                   .map(e -> {
                                       int firstMatchIndex = Integer.MAX_VALUE;
-                                      for(String searchString : lowerCaseSearchStrings) {
+                                      for (String searchString : lowerCaseSearchStrings) {
                                           int index = e.getValue().indexOfIgnoreCase(searchString);
-                                          if(index != -1) {
-                                              if(index < firstMatchIndex) {
+                                          if (index != -1) {
+                                              if (index < firstMatchIndex) {
                                                   firstMatchIndex = index;
                                               }
                                           }
@@ -143,7 +153,7 @@ public class ShortFormCache {
         public static ShortForm create(@Nonnull String shortForm) {
             String lc = shortForm.toLowerCase();
             String lowerCaseShortForm;
-            if(lc.equals(shortForm)) {
+            if (lc.equals(shortForm)) {
                 lowerCaseShortForm = shortForm;
             }
             else {

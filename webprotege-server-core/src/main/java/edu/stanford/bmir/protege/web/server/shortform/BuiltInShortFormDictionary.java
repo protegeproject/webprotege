@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,8 +50,14 @@ public class BuiltInShortFormDictionary {
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings) {
-        return shortFormCache.getShortFormsContaining(searchStrings, (entity, shortForm, index)
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+                                                          @Nonnull Set<EntityType<?>> entityTypes) {
+        if(entityTypes.isEmpty()) {
+            return Stream.empty();
+        }
+        return shortFormCache.getShortFormsContaining(searchStrings,
+                                                      entityTypes,
+                                                      (entity, shortForm, index)
                 -> new ShortFormMatch(entity, shortForm, DictionaryLanguage.localName(), index));
     }
 
