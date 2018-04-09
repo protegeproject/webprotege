@@ -53,6 +53,18 @@ public class DictionaryManager {
     }
 
     @Nonnull
+    public String getQuotedShortForm(@Nonnull OWLEntity entity,
+                                     @Nonnull List<DictionaryLanguage> languages) {
+        String shortForm = getShortForm(entity, languages);
+        return ShortFormQuotingUtils.getQuotedShortForm(shortForm);
+    }
+
+    @Nonnull
+    public String getQuotedShortForm(@Nonnull OWLEntity entity) {
+        return getQuotedShortForm(entity, languageManager.getLanguages());
+    }
+
+    @Nonnull
     public String getShortForm(@Nonnull OWLEntity entity) {
         return getShortForm(entity, languageManager.getLanguages());
     }

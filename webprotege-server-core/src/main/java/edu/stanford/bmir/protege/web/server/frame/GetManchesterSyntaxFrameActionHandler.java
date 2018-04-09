@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
@@ -47,8 +48,8 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractProjectAction
     public GetManchesterSyntaxFrameResult execute(@Nonnull GetManchesterSyntaxFrameAction action,
                                                   @Nonnull ExecutionContext executionContext) {
         StringWriter writer = new StringWriter();
-        EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
-        final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer, entityShortFormProvider);
+        final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(importsClosure.getImportsClosure(), writer,
+                                                                                                    new ShortFormAdapter(dictionaryManager));
         frameRenderer.setOntologyIRIShortFormProvider(ontologyIRIShortFormProvider);
         frameRenderer.setRenderExtensions(true);
 //        frameRenderer.setRenderOntologyLists(true);

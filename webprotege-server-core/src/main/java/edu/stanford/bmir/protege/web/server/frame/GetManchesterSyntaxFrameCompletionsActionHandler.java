@@ -51,17 +51,21 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     @Nonnull
     private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
 
+    @Nonnull
+    private final EscapingShortFormProvider escapingShortFormProvider;
+
     @Inject
     public GetManchesterSyntaxFrameCompletionsActionHandler(@Nonnull AccessManager accessManager,
                                                             @Nonnull DictionaryManager dictionaryManager,
                                                             @Nonnull WebProtegeOntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                                                             @Nonnull @RootOntology OWLOntology rootOntology,
-                                                            @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
+                                                            @Nonnull Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider, @Nonnull EscapingShortFormProvider escapingShortFormProvider) {
         super(accessManager);
         this.dictionaryManager = dictionaryManager;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
         this.rootOntology = rootOntology;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
+        this.escapingShortFormProvider = escapingShortFormProvider;
     }
 
     @Nonnull
@@ -120,7 +124,6 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
                     Collection<OWLEntity> entities = dictionaryManager.getEntities(shortForm);
                     for(OWLEntity entity : entities) {
                         if(expectedEntityTypes.contains(entity.getEntityType())) {
-                            EscapingShortFormProvider escapingShortFormProvider = new EscapingShortFormProvider(dictionaryManager);
                             AutoCompletionChoice choice = new AutoCompletionChoice(escapingShortFormProvider.getShortForm(entity), shortForm, "", fromPos, toPos);
                             AutoCompletionMatch autoCompletionMatch = new AutoCompletionMatch(
                                     match.get(),
