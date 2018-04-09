@@ -16,10 +16,10 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchy
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdatesProcessor;
 import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
@@ -56,12 +56,65 @@ import static java.util.stream.Collectors.toList;
 @ProjectSingleton
 public class ChangeManager implements HasApplyChanges {
 
+    private static final OWLOntologyChangeVisitorEx<Boolean> EFFECTIVE_CHANGE_FILTER = new OWLOntologyChangeVisitorEx<Boolean>() {
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull AddAxiom addAxiom) {
+            return !addAxiom.getOntology().containsAxiom(addAxiom.getAxiom());
+        }
+
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull RemoveAxiom removeAxiom) {
+            return removeAxiom.getOntology().containsAxiom(removeAxiom.getAxiom());
+        }
+
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull SetOntologyID setOntologyID) {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull AddImport addImport) {
+            return !addImport.getOntology().getImportsDeclarations().contains(addImport.getImportDeclaration());
+        }
+
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull RemoveImport removeImport) {
+            return removeImport.getOntology()
+                               .getImportsDeclarations()
+                               .contains(removeImport.getImportDeclaration());
+        }
+
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull AddOntologyAnnotation addOntologyAnnotation) {
+            return !addOntologyAnnotation.getOntology()
+                                         .getAnnotations()
+                                         .contains(addOntologyAnnotation.getAnnotation());
+        }
+
+        @Nonnull
+        @Override
+        public Boolean visit(@Nonnull RemoveOntologyAnnotation removeOntologyAnnotation) {
+            return removeOntologyAnnotation.getOntology()
+                                           .getAnnotations()
+                                           .contains(removeOntologyAnnotation.getAnnotation());
+        }
+    };
+
     @Nonnull
     private final ProjectId projectId;
 
     @Nonnull
     @RootOntology
     private final OWLOntology rootOntology;
+
+    @Nonnull
+    private final DictionaryUpdatesProcessor dictionaryUpdatesProcessor;
 
     @Nonnull
     private final AccessManager accessManager;
@@ -126,7 +179,7 @@ public class ChangeManager implements HasApplyChanges {
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
-                         @Nonnull AccessManager accessManager,
+                         @Nonnull DictionaryUpdatesProcessor dictionaryUpdatesProcessor, @Nonnull AccessManager accessManager,
                          @Nonnull PrefixDeclarationsStore prefixDeclarationsStore, @Nonnull ProjectDetailsRepository projectDetailsRepository,
                          @Nonnull ProjectChangedWebhookInvoker projectChangedWebhookInvoker,
                          @Nonnull EventManager<ProjectEvent<?>> projectEventManager,
@@ -141,6 +194,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, @Nonnull UserInSessionFactory userInSessionFactory) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
+        this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
         this.accessManager = accessManager;
         this.prefixDeclarationsStore = prefixDeclarationsStore;
         this.projectDetailsRepository = projectDetailsRepository;
@@ -298,7 +352,7 @@ public class ChangeManager implements HasApplyChanges {
                 R renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
-                    Revision rev = logAndBroadcastAppliedChanges(userId, changeListGenerator, finalResult);
+                    Revision rev = logAndProcessAppliedChanges(userId, changeListGenerator, finalResult);
                     revision = Optional.of(rev);
                     projectDetailsRepository.setModified(projectId, rev.getTimestamp(), userId);
                 }
@@ -339,55 +393,7 @@ public class ChangeManager implements HasApplyChanges {
     }
 
     private boolean isEffectiveChange(OWLOntologyChange chg) {
-        return chg.accept(new OWLOntologyChangeVisitorEx<Boolean>() {
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull AddAxiom addAxiom) {
-                return !addAxiom.getOntology().containsAxiom(addAxiom.getAxiom());
-            }
-
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull RemoveAxiom removeAxiom) {
-                return removeAxiom.getOntology().containsAxiom(removeAxiom.getAxiom());
-            }
-
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull SetOntologyID setOntologyID) {
-                return false;
-            }
-
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull AddImport addImport) {
-                return !addImport.getOntology().getImportsDeclarations().contains(addImport.getImportDeclaration());
-            }
-
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull RemoveImport removeImport) {
-                return removeImport.getOntology()
-                                   .getImportsDeclarations()
-                                   .contains(removeImport.getImportDeclaration());
-            }
-
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull AddOntologyAnnotation addOntologyAnnotation) {
-                return !addOntologyAnnotation.getOntology()
-                                             .getAnnotations()
-                                             .contains(addOntologyAnnotation.getAnnotation());
-            }
-
-            @Nonnull
-            @Override
-            public Boolean visit(@Nonnull RemoveOntologyAnnotation removeOntologyAnnotation) {
-                return removeOntologyAnnotation.getOntology()
-                                               .getAnnotations()
-                                               .contains(removeOntologyAnnotation.getAnnotation());
-            }
-        });
+        return chg.accept(EFFECTIVE_CHANGE_FILTER);
     }
 
     private List<OWLOntologyChange> getMinimisedChanges(List<OWLOntologyChange> allChangesIncludingRenames) {
@@ -409,9 +415,9 @@ public class ChangeManager implements HasApplyChanges {
     }
 
 
-    private <R> Revision logAndBroadcastAppliedChanges(UserId userId,
-                                                       ChangeListGenerator<R> changeList,
-                                                       ChangeApplicationResult<R> finalResult) {
+    private <R> Revision logAndProcessAppliedChanges(UserId userId,
+                                                     ChangeListGenerator<R> changeList,
+                                                     ChangeApplicationResult<R> finalResult) {
         // Generate a description for the changes that were actually applied
         String changeDescription = changeList.getMessage(finalResult);
         // Log the changes
@@ -429,7 +435,8 @@ public class ChangeManager implements HasApplyChanges {
         objectPropertyHierarchyProvider.handleChanges(changes);
         dataPropertyHierarchyProvider.handleChanges(changes);
         annotationPropertyHierarchyProvider.handleChanges(changes);
-//        metricsManager.handleOntologyChanges(changes);
+        dictionaryUpdatesProcessor.handleChanges(changes);
+//        metricsManager.handleChanges(changes);
 
         return revision;
     }

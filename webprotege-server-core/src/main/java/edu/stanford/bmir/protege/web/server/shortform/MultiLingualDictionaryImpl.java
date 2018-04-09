@@ -5,13 +5,10 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +17,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -39,8 +35,6 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     @Nonnull
     private final Map<DictionaryLanguage, Dictionary> dictionaries = new ConcurrentHashMap<>();
 
-    private OWLOntology rootOntology;
-
     @Nonnull
     private DictionaryUpdater dictionaryUpdater;
 
@@ -49,11 +43,9 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
 
     @Inject
     public MultiLingualDictionaryImpl(@Nonnull ProjectId projectId,
-                                      @Nonnull OWLOntology rootOntology,
                                       @Nonnull DictionaryBuilder dictionaryBuilder,
                                       @Nonnull DictionaryUpdater dictionaryUpdater) {
         this.projectId = checkNotNull(projectId);
-        this.rootOntology = checkNotNull(rootOntology);
         this.dictionaryUpdater = checkNotNull(dictionaryUpdater);
         this.dictionaryBuilder = checkNotNull(dictionaryBuilder);
     }
@@ -73,7 +65,8 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     @Override
     public String getShortForm(@Nonnull OWLEntity entity,
                                @Nonnull List<DictionaryLanguage> languages,
-                               @Nullable String defaultShortForm) {
+                               @Nonnull String defaultShortForm) {
+        checkNotNull(defaultShortForm);
         List<Dictionary> dictionaries = findDictionaries(languages);
         return dictionaries.stream()
                            .map(dictionary -> dictionary.getShortFormOrElse(entity, (i) -> null))
@@ -83,20 +76,10 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     }
 
     @Nonnull
-    @Override
-    public Collection<String> getShortForms() {
-        List<String> result = new ArrayList<>();
-        for (Dictionary dictionary : dictionaries.values()) {
-            result.addAll(dictionary.getShortForms());
-        }
-        return result;
-    }
-
-    @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchString,
-                                               @Nonnull Set<EntityType<?>> entityTypes,
-                                               @Nonnull List<DictionaryLanguage> languages) {
-        if(entityTypes.isEmpty()) {
+                                                          @Nonnull Set<EntityType<?>> entityTypes,
+                                                          @Nonnull List<DictionaryLanguage> languages) {
+        if (entityTypes.isEmpty()) {
             return Stream.empty();
         }
         return findDictionaries(languages).stream()
@@ -109,11 +92,6 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
         return dictionaries.values().stream()
                            .flatMap(dictionary -> dictionary.getEntities(shortForm).stream())
                            .collect(toSet());
-    }
-
-    @Override
-    public void handleChanges(@Nonnull List<? extends OWLOntologyChange> changes) {
-        dictionaries.values().forEach(dictionary -> dictionaryUpdater.update(dictionary, changes));
     }
 
     @Nonnull
@@ -151,5 +129,11 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
                     projectId,
                     langs,
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
+    }
+
+    @Override
+    public void update(@Nonnull Collection<OWLEntity> entities) {
+        logger.debug("Updating dictionary entries for {} entities", entities.size());
+        dictionaries.values().forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
     }
 }

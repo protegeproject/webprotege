@@ -2,18 +2,21 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.change.AxiomChangeData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Matthew Horridge
@@ -102,5 +105,9 @@ public class DictionaryManager {
             return Stream.empty();
         }
         return getShortFormsContaining(searchStrings, entityTypes, languageManager.getLanguages());
+    }
+
+    public void update(@Nonnull Collection<OWLEntity> entities) {
+        dictionary.update(entities);
     }
 }

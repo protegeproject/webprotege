@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -32,14 +33,11 @@ public interface MultiLingualDictionary {
                         @Nonnull String defaultShortForm);
 
     @Nonnull
-    Collection<String> getShortForms();
-
-    @Nonnull
     Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
                                         @Nonnull Set<EntityType<?>> entityTypes,
                                         @Nonnull List<DictionaryLanguage> languages);
 
-    void handleChanges(@Nonnull List<? extends OWLOntologyChange> changes);
+    void update(@Nonnull Collection<OWLEntity> entities);
 
     Collection<OWLEntity> getEntities(@Nonnull String shortForm);
 }
