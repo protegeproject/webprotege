@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
 import edu.stanford.bmir.protege.web.server.shortform.LocalNameExtractor;
 import edu.stanford.bmir.protege.web.server.shortform.ShortFormMatch;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
+import edu.stanford.bmir.protege.web.server.util.Counter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
@@ -362,23 +363,6 @@ public class EntitySearcher {
         RENDERING,
         IRI,
         TAG
-    }
-
-    private static class Counter {
-
-        private int counter;
-
-        public void increment() {
-            counter++;
-        }
-
-        public int getCounter() {
-            return counter;
-        }
-
-        public void reset() {
-            counter = 0;
-        }
     }
 
     private static class SearchMatch implements Comparable<SearchMatch> {
