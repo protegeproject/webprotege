@@ -46,7 +46,7 @@ public class BuiltInShortFormDictionary {
 
     @Nullable
     public String getShortForm(OWLEntity entity, @Nullable String defaultShortForm) {
-        return shortFormCache.getShortFormOrElse(entity, (i) -> defaultShortForm);
+        return shortFormCache.getShortFormOrElse(entity, defaultShortForm);
     }
 
     @Nonnull

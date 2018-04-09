@@ -95,7 +95,7 @@ public class Dictionary {
     public String getShortForm(@Nonnull OWLEntity entity,
                                @Nonnull String defaultShortForm) {
         return shortFormCache.getShortFormOrElse(entity,
-                                                 (e) -> defaultShortForm);
+                                                 defaultShortForm);
     }
 
     @Nonnull
@@ -110,6 +110,6 @@ public class Dictionary {
 
     @Nonnull
     public Stream<OWLEntity> getEntities(@Nonnull String shortForm) {
-        return shortFormCache.getEntities(shortForm).stream();
+        return shortFormCache.getEntities(shortForm);
     }
 }

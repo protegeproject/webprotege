@@ -7,10 +7,13 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,16 +22,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 4 Apr 2018
+ *
+ * Instances of this class are threadsafe.  Note, however, that consistency is not guaranteed when
+ * iterating over results.  Short forms may be added or removed or changed whilst readers are iterating
+ * over results.
  */
 public class ShortFormCache {
 
     private static final int DEFAULT_CAPACITY = 100;
 
+
     @Nonnull
-    private final Multimap<String, OWLEntity> shortForm2EntityMap;
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    @Nonnull
+    private final Lock readLock = readWriteLock.readLock();
+
+    @Nonnull
+    private final Lock writeLock = readWriteLock.writeLock();
+
 
     @Nonnull
     private final Map<OWLEntity, ShortForm> entity2ShortFormMap;
+
+    @Nonnull
+    private final Multimap<String, OWLEntity> shortForm2EntityMap;
+
 
     @Inject
     public ShortFormCache() {
@@ -36,8 +55,14 @@ public class ShortFormCache {
     }
 
     private ShortFormCache(int capacity) {
-        this.shortForm2EntityMap = HashMultimap.create(capacity, 1);
+        // We still need a concurrent hash map for streaming purposes.  The lock in this class
+        // just ensures that both maps are in sync.
         this.entity2ShortFormMap = new ConcurrentHashMap<>(DEFAULT_CAPACITY);
+        // It might be wasteful to build this map up front.  It's only really used if
+        // users edit the project.  Creating it upfront makes it easier to make things
+        // thread safe, but consider building this lazily.
+        this.shortForm2EntityMap = HashMultimap.create(capacity, 1);
+
     }
 
     @Nonnull
@@ -57,48 +82,100 @@ public class ShortFormCache {
         return entity2ShortFormMap.size();
     }
 
-    public void put(@Nonnull OWLEntity entity, @Nonnull String shortForm) {
-        entity2ShortFormMap.put(checkNotNull(entity), ShortForm.create(checkNotNull(shortForm)));
-        shortForm2EntityMap.put(shortForm, entity);
+    /**
+     * Adds an entry that maps the specified entity to the specified short form.
+     * @param entity The entity.
+     * @param shortForm The short form.
+     */
+    public void put(@Nonnull OWLEntity entity,
+                    @Nonnull String shortForm) {
+        try {
+            writeLock.lock();
+            entity2ShortFormMap.put(checkNotNull(entity), ShortForm.create(checkNotNull(shortForm)));
+            shortForm2EntityMap.put(shortForm, entity);
+        } finally {
+            writeLock.unlock();
+        }
     }
 
+    /**
+     * Adds entries for all of the entries contains in the specified map of entities to short forms.
+     */
     public void putAll(@Nonnull Map<OWLEntity, String> shortForms) {
-        shortForms.forEach((entity, sf) -> {
-            entity2ShortFormMap.put(entity, ShortForm.create(sf));
-            shortForm2EntityMap.put(sf, entity);
-        });
+        try {
+            writeLock.lock();
+            shortForms.forEach((entity, sf) -> {
+                entity2ShortFormMap.put(entity, ShortForm.create(sf));
+                shortForm2EntityMap.put(sf, entity);
+            });
+        } finally {
+            writeLock.unlock();
+        }
     }
 
+    /**
+     * Removes the entry for the specified entity.
+     */
     public void remove(@Nonnull OWLEntity entity) {
-        ShortForm shortForm = entity2ShortFormMap.remove(checkNotNull(entity));
-        if (shortForm != null) {
-            shortForm2EntityMap.removeAll(shortForm);
+        try {
+            writeLock.lock();
+            ShortForm shortForm = entity2ShortFormMap.remove(checkNotNull(entity));
+            if (shortForm != null) {
+                shortForm2EntityMap.removeAll(shortForm);
+            }
+        } finally {
+            writeLock.unlock();
         }
+
     }
 
+    /**
+     * Clears this cache.
+     */
     public void clear() {
-        shortForm2EntityMap.clear();
-        entity2ShortFormMap.clear();
-    }
-
-    public String getShortFormOrElse(@Nonnull OWLEntity entity, @Nonnull Function<OWLEntity, String> defaultShortFormSupplier) {
-        ShortForm shortForm = entity2ShortFormMap.get(entity);
-        if (shortForm == null) {
-            return defaultShortFormSupplier.apply(entity);
+        try {
+            writeLock.lock();
+            shortForm2EntityMap.clear();
+            entity2ShortFormMap.clear();
+        } finally {
+            writeLock.unlock();
         }
-        else {
-            return shortForm.getShortForm();
+
+    }
+
+    /**
+     * Gets the short form for the specified entity.  If no such short form exists then the specified
+     * default short form is returned.
+     */
+    public String getShortFormOrElse(@Nonnull OWLEntity entity,
+                                     @Nullable String defaultShortForm) {
+        try {
+            readLock.lock();
+            ShortForm shortForm = entity2ShortFormMap.get(entity);
+            if (shortForm == null) {
+                return defaultShortForm;
+            }
+            else {
+                return shortForm.getShortForm();
+            }
+        } finally {
+            readLock.unlock();
         }
+
     }
 
+    /**
+     * Gets the entities that have the specified short form.  This must be an exact match.
+     * @param shortForm The short form.
+     */
     @Nonnull
-    public Collection<OWLEntity> getEntities(@Nonnull String shortForm) {
-        return ImmutableList.copyOf(shortForm2EntityMap.get(shortForm));
-    }
-
-    @Nonnull
-    public Collection<String> getShortForms() {
-        return new ArrayList<>(shortForm2EntityMap.keySet());
+    public Stream<OWLEntity> getEntities(@Nonnull String shortForm) {
+        try {
+            readLock.lock();
+            return ImmutableList.copyOf(shortForm2EntityMap.get(shortForm)).stream();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
@@ -112,31 +189,36 @@ public class ShortFormCache {
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes,
                                                           @Nonnull ShortFormMatchFunction matchFunction) {
-        if(entityTypes.isEmpty()) {
-            return Stream.empty();
-        }
-        ImmutableList<String> lowerCaseSearchStrings = searchStrings.stream()
-                                                                    .map(String::toLowerCase)
-                                                                    .collect(ImmutableList.toImmutableList());
-        boolean matchAllEntityTypes = entityTypes.containsAll(EntityType.values());
-        return entity2ShortFormMap.entrySet().stream()
-                                  .filter(e -> matchAllEntityTypes || entityTypes.contains(e.getKey().getEntityType()))
-                                  .map(e -> {
-                                      int firstMatchIndex = Integer.MAX_VALUE;
-                                      for (String searchString : lowerCaseSearchStrings) {
-                                          int index = e.getValue().indexOfIgnoreCase(searchString);
-                                          if (index != -1) {
-                                              if (index < firstMatchIndex) {
-                                                  firstMatchIndex = index;
+        try {
+            if(entityTypes.isEmpty()) {
+                return Stream.empty();
+            }
+            ImmutableList<String> lowerCaseSearchStrings = searchStrings.stream()
+                                                                        .map(String::toLowerCase)
+                                                                        .collect(ImmutableList.toImmutableList());
+            boolean matchAllEntityTypes = entityTypes.containsAll(EntityType.values());
+            readLock.lock();
+            return entity2ShortFormMap.entrySet().stream()
+                                      .filter(e -> matchAllEntityTypes || entityTypes.contains(e.getKey().getEntityType()))
+                                      .map(e -> {
+                                          int firstMatchIndex = Integer.MAX_VALUE;
+                                          for (String searchString : lowerCaseSearchStrings) {
+                                              int index = e.getValue().indexOfIgnoreCase(searchString);
+                                              if (index != -1) {
+                                                  if (index < firstMatchIndex) {
+                                                      firstMatchIndex = index;
+                                                  }
+                                              }
+                                              else {
+                                                  return null;
                                               }
                                           }
-                                          else {
-                                              return null;
-                                          }
-                                      }
-                                      return matchFunction.createMatch(e.getKey(), e.getValue().getShortForm(), firstMatchIndex);
-                                  })
-                                  .filter(Objects::nonNull);
+                                          return matchFunction.createMatch(e.getKey(), e.getValue().getShortForm(), firstMatchIndex);
+                                      })
+                                      .filter(Objects::nonNull);
+        } finally {
+            readLock.unlock();
+        }
     }
 
     private static class ShortForm {
