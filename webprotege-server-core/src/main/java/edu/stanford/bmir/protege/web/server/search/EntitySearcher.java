@@ -134,15 +134,21 @@ public class EntitySearcher {
         int cur = 0;
         while (matcher.find()) {
             int start = matcher.start();
-            highlighted.append(rendering.substring(cur, start));
-            highlighted.append("<strong>");
+            if (cur != start) {
+                highlighted.append("<span style='white-space: pre;'>");
+                highlighted.append(rendering.substring(cur, start));
+                highlighted.append("</span>");
+            }
+            highlighted.append("<strong span style='white-space: pre;'>");
             int end = matcher.end();
             highlighted.append(rendering.substring(start, end));
             highlighted.append("</strong>");
             cur = end;
         }
         if (cur < rendering.length()) {
+            highlighted.append("<span style='white-space: pre;'>");
             highlighted.append(rendering.substring(cur));
+            highlighted.append("</span>");
         }
     }
 

@@ -19,6 +19,8 @@ public class LanguageManager {
     private final ImmutableList<DictionaryLanguage> languages = ImmutableList.of(
             DictionaryLanguage.rdfsLabel("en"),
             DictionaryLanguage.skosPrefLabel("en"),
+            // ISO 639-3.  Used in placed in the NCBI Taxonomy
+            DictionaryLanguage.skosPrefLabel("eng"),
             DictionaryLanguage.rdfsLabel(""),
             DictionaryLanguage.skosPrefLabel(""),
             DictionaryLanguage.localName()
