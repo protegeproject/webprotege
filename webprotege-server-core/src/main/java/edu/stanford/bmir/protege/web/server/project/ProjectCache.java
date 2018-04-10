@@ -171,7 +171,7 @@ public class ProjectCache {
             // This needs to be done in a nicer way, but this approach works for now.
             projectComponent.getProject();
             stopwatch.stop();
-            logger.info("{}  Instantiated project component in {} ms",
+            logger.info("{} Instantiated project component in {} ms",
                         projectId,
                         stopwatch.elapsed(TimeUnit.MILLISECONDS));
             projectId2ProjectComponent.put(projectId, projectComponent);
