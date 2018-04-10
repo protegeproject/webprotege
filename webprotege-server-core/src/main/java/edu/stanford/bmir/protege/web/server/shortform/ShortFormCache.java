@@ -139,12 +139,13 @@ public class ShortFormCache {
     }
 
     /**
-     * Gets the short forms containing the specified search strings.
+     * Gets the short forms matching the specified search strings.  The returned short forms match all
+     * the specified search strings.
      *
      * @param searchStrings The search strings.
      * @param entityTypes   The types of entities to be matched.  If empty then no entities will be matched.
      * @param matchFunction A function that produces a {@link ShortFormMatch}
-     * @return A stream of short form matches that contain the specified search strings.
+     * @return A stream of short form matches that match the specified search strings.
      */
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
@@ -166,9 +167,11 @@ public class ShortFormCache {
                                           SearchString searchString = searchStrings.get(i);
                                           int index = scanner.indexOf(searchString, 0);
                                           matchPositions[i] = index;
-                                          if (index != -1) {
-                                              matchCount++;
+                                          if (index == -1) {
+                                              // Search is boolean AND
+                                              return null;
                                           }
+                                          matchCount++;
                                       }
                                       if (matchCount > 0) {
                                           return matchFunction.createMatch(e.getKey(),
@@ -182,18 +185,6 @@ public class ShortFormCache {
                                   })
                                   .filter(Objects::nonNull);
     }
-
-//    private Pattern getSearchPattern(List<String> words) {
-//        String pattern = words.stream()
-//                              .map(String::toLowerCase)
-//                              .map(Pattern::quote)
-//                              // Start on a word boundary
-//                              .map(word -> "\\b" + word)
-//                              .reduce((left, right) -> left + "|" + right)
-//                              .orElse("");
-//        System.out.println("Pattern: " + pattern);
-//        return Pattern.compile(pattern);
-//    }
 
     private static class ShortForm {
 
