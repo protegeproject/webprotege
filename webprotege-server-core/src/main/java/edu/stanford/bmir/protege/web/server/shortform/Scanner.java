@@ -60,8 +60,7 @@ public class Scanner {
     }
 
     private boolean isCaseTransition(char ch) {
-        return Character.isUpperCase(ch) && (Character.isLowerCase(previousCh)
-                || (position + 1 < shortForm.length() && Character.isLowerCase(position + 1)));
+        return Character.isUpperCase(ch) && !Character.isUpperCase(previousCh);
     }
 
     private boolean isWordBoundaryTransition(char ch) {
