@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.renderer.ManchesterSyntaxKeywords;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameCompletionsResult;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.server.shortform.SearchString.parseSearchString;
 import static edu.stanford.bmir.protege.web.server.shortform.ShortFormQuotingUtils.getQuotedShortForm;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -125,7 +127,8 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         EntityNameMatcher entityNameMatcher = new EntityNameMatcher(lastWordPrefix);
 
         Set<OWLEntity> candidateEntities = new HashSet<>();
-        return dictionaryManager.getShortFormsContaining(singletonList(lastWordPrefix), expectedEntityTypes)
+        return dictionaryManager.getShortFormsContaining(singletonList(parseSearchString(lastWordPrefix)),
+                                                         expectedEntityTypes)
                                 // Don't show duplicate entities with different short forms.
                                 .filter(match -> !candidateEntities.contains(match.getEntity()))
                                 .peek(match -> candidateEntities.add(match.getEntity()))

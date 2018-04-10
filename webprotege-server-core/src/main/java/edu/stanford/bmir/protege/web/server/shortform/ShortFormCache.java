@@ -146,35 +146,50 @@ public class ShortFormCache {
      * @return A stream of short form matches that contain the specified search strings.
      */
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes,
                                                           @Nonnull ShortFormMatchFunction matchFunction) {
         if (entityTypes.isEmpty()) {
             return Stream.empty();
         }
-        ImmutableList<String> lowerCaseSearchStrings = searchStrings.stream()
-                                                                    .map(String::toLowerCase)
-                                                                    .collect(ImmutableList.toImmutableList());
         boolean matchAllEntityTypes = entityTypes.containsAll(EntityType.values());
         return entity2ShortFormMap.entrySet().stream()
                                   .filter(e -> matchAllEntityTypes || entityTypes.contains(e.getKey().getEntityType()))
                                   .map(e -> {
                                       int firstMatchIndex = Integer.MAX_VALUE;
-                                      for (String searchString : lowerCaseSearchStrings) {
-                                          int index = e.getValue().indexOfIgnoreCase(searchString);
+                                      ShortForm shortForm = e.getValue();
+                                      Scanner scanner = new Scanner(shortForm.shortForm,
+                                                                    shortForm.lowerCaseShortForm);
+                                      for (SearchString searchString : searchStrings) {
+                                          int index = scanner.indexOf(searchString, 0);
                                           if (index != -1) {
                                               if (index < firstMatchIndex) {
                                                   firstMatchIndex = index;
                                               }
-                                          }
-                                          else {
-                                              return null;
+                                              break;
                                           }
                                       }
-                                      return matchFunction.createMatch(e.getKey(), e.getValue().getShortForm(), firstMatchIndex);
+                                      if (firstMatchIndex != Integer.MAX_VALUE) {
+                                          return matchFunction.createMatch(e.getKey(), shortForm.getShortForm(), firstMatchIndex);
+                                      }
+                                      else {
+                                          return null;
+                                      }
                                   })
                                   .filter(Objects::nonNull);
     }
+
+//    private Pattern getSearchPattern(List<String> words) {
+//        String pattern = words.stream()
+//                              .map(String::toLowerCase)
+//                              .map(Pattern::quote)
+//                              // Start on a word boundary
+//                              .map(word -> "\\b" + word)
+//                              .reduce((left, right) -> left + "|" + right)
+//                              .orElse("");
+//        System.out.println("Pattern: " + pattern);
+//        return Pattern.compile(pattern);
+//    }
 
     private static class ShortForm {
 

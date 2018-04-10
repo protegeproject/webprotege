@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
+import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.server.shortform.SearchString.parseSearchString;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -82,7 +84,7 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         Set<OWLEntity> addedEntities = new HashSet<>();
-        return dictionaryManager.getShortFormsContaining(Collections.singletonList(entityLookupRequest.getSearchString()),
+        return dictionaryManager.getShortFormsContaining(Collections.singletonList(parseSearchString(entityLookupRequest.getSearchString())),
                                                          entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
                                 // This is arbitary and possibly leads to bad completion results

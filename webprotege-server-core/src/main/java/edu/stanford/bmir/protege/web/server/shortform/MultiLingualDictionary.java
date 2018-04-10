@@ -55,7 +55,7 @@ public interface MultiLingualDictionary {
      * @return A stream of short forms.
      */
     @Nonnull
-    Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+    Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                         @Nonnull Set<EntityType<?>> entityTypes,
                                         @Nonnull List<DictionaryLanguage> languages);
 

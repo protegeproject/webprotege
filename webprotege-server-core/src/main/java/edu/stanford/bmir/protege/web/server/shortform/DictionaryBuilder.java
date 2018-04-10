@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.server.util.Counter;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.slf4j.Logger;
@@ -28,10 +30,15 @@ public class DictionaryBuilder {
     private static final Logger logger = LoggerFactory.getLogger(DictionaryBuilder.class);
 
     @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final OWLOntology rootOntology;
 
     @Inject
-    public DictionaryBuilder(@Nonnull OWLOntology rootOntology) {
+    public DictionaryBuilder(@Nonnull ProjectId projectId,
+                             @Nonnull OWLOntology rootOntology) {
+        this.projectId = checkNotNull(projectId);
         this.rootOntology = checkNotNull(rootOntology);
     }
 
@@ -77,8 +84,10 @@ public class DictionaryBuilder {
         if (annotationBasedDictionaries.isEmpty()) {
             return;
         }
+        Counter counter = new Counter();
         rootOntology.getImportsClosure().stream()
                     .flatMap(ont -> ont.getAxioms(ANNOTATION_ASSERTION).stream())
+                    .peek(counter::increment)
                     .forEach(ax -> {
                         annotationBasedDictionaries.stream()
                                                    .filter(dictionary -> isAxiomForDictionary(ax, dictionary))
@@ -90,5 +99,8 @@ public class DictionaryBuilder {
                                                        });
                                                    });
                     });
+        logger.info("{} Processed {} axioms in order to build annotation based dictionaries",
+                    projectId,
+                    counter.getCounter());
     }
 }

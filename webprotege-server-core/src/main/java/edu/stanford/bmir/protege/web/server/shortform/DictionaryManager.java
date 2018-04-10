@@ -92,7 +92,7 @@ public class DictionaryManager {
      * @return A stream of matching short forms.
      */
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes,
                                                           @Nonnull List<DictionaryLanguage> languages) {
         return Streams.concat(
@@ -102,7 +102,7 @@ public class DictionaryManager {
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes) {
         if(entityTypes.isEmpty()) {
             return Stream.empty();

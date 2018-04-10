@@ -99,7 +99,7 @@ public class Dictionary {
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes) {
         ShortFormMatchFunction supplier = (entity, shortForm, firstMatchIndex) ->
                 new ShortFormMatch(entity, shortForm, language, firstMatchIndex);

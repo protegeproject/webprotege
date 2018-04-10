@@ -76,7 +76,7 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchString,
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchString,
                                                           @Nonnull Set<EntityType<?>> entityTypes,
                                                           @Nonnull List<DictionaryLanguage> languages) {
         if (entityTypes.isEmpty()) {

@@ -50,7 +50,7 @@ public class BuiltInShortFormDictionary {
     }
 
     @Nonnull
-    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<String> searchStrings,
+    public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes) {
         if(entityTypes.isEmpty()) {
             return Stream.empty();
