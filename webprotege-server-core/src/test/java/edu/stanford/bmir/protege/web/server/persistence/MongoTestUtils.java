@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import com.mongodb.MongoClient;
+import edu.stanford.bmir.protege.web.server.app.DisposableObjectManager;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.form.FormIdConverter;
 import edu.stanford.bmir.protege.web.server.inject.MongoClientProvider;
@@ -19,7 +20,7 @@ public class MongoTestUtils {
     private static final String TEST_DB_NAME = "webprotege-test";
 
     public static MongoClient createMongoClient() {
-        return new MongoClientProvider("localhost", 27017).get();
+        return new MongoClientProvider("localhost", 27017, new DisposableObjectManager()).get();
     }
 
     public static Morphia createMorphia() {

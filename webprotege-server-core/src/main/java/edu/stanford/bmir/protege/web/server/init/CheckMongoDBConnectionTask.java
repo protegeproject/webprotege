@@ -5,6 +5,7 @@ import com.mongodb.MongoTimeoutException;
 import edu.stanford.bmir.protege.web.server.inject.DbHost;
 import edu.stanford.bmir.protege.web.server.inject.DbPort;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,12 +18,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CheckMongoDBConnectionTask implements ConfigurationTask {
 
+    @Nonnull
+    private final MongoClient mongoClient;
+
     private final String dbHost;
 
     private final int dbPort;
 
     @Inject
-    public CheckMongoDBConnectionTask(@DbHost String dbHost, @DbPort int dbPort) {
+    public CheckMongoDBConnectionTask(@Nonnull MongoClient mongoClient,
+                                      @DbHost String dbHost, @DbPort int dbPort) {
+        this.mongoClient = checkNotNull(mongoClient);
         this.dbHost = checkNotNull(dbHost);
         this.dbPort = dbPort;
     }
@@ -30,9 +36,7 @@ public class CheckMongoDBConnectionTask implements ConfigurationTask {
     @Override
     public void run() throws WebProtegeConfigurationException {
         try {
-            MongoClient mongoClient = new MongoClient(dbHost, dbPort);
-            mongoClient.getDatabaseNames();
-            mongoClient.close();
+            mongoClient.listDatabaseNames().first();
         } catch (MongoTimeoutException e) {
             throw new WebProtegeConfigurationException(getUnknownHostErrorMessage());
         }

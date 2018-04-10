@@ -56,6 +56,13 @@ public class WebProtegeServletContextListener implements ServletContextListener 
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.info(WebProtegeMarker, "WebProtege Destroyed");
+        logger.info(WebProtegeMarker, "Shutting down WebProtege");
+        ServletContext servletContext = servletContextEvent.getServletContext();
+        ServerComponent serverComponent = (ServerComponent) servletContext.getAttribute(ServerComponent.class.getName());
+        if(serverComponent != null) {
+            logger.info(WebProtegeMarker, "Disposing of objects");
+            serverComponent.getDisposableObjectManager().dispose();
+        }
+        logger.info(WebProtegeMarker, "WebProtege shutdown complete");
     }
 }

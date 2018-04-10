@@ -51,5 +51,7 @@ public interface ServerComponent {
 
     ProjectComponent getProjectComponent(ProjectModule module);
 
+    DisposableObjectManager getDisposableObjectManager();
+
 
 }
