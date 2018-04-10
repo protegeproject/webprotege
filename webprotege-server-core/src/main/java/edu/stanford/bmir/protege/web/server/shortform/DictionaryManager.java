@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

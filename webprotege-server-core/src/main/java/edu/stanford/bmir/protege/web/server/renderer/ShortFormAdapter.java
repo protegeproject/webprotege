@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
@@ -14,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 5 Apr 2018
  */
+@ProjectSingleton
 public class ShortFormAdapter implements ShortFormProvider {
 
     @Nonnull

@@ -28,6 +28,7 @@ import edu.stanford.bmir.protege.web.server.project.ChangeManager;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ShortFormAdapter;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
@@ -238,8 +239,8 @@ public class ProjectModule {
     }
 
     @Provides
-    public ShortFormProvider provideShortFormProvider(WebProtegeShortFormProvider provider) {
-        return provider;
+    public ShortFormProvider provideShortFormProvider(ShortFormAdapter shortFormAdapter) {
+        return shortFormAdapter;
     }
 
     @Provides
