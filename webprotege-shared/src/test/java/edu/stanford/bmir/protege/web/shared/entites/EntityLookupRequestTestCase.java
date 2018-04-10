@@ -71,15 +71,6 @@ public class EntityLookupRequestTestCase {
     }
 
     @Test
-    public void getSearchedEntityTypesReturnsCopy() {
-        Set<EntityType<?>> types = new HashSet<EntityType<?>>();
-        types.add(EntityType.CLASS);
-        EntityLookupRequest request = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 20, types);
-        request.getSearchedEntityTypes().add(EntityType.OBJECT_PROPERTY);
-        assertEquals(types, request.getSearchedEntityTypes());
-    }
-
-    @Test
     public void getSearchStringReturnsSuppliedString() {
         EntityLookupRequest request = new EntityLookupRequest("Test");
         assertEquals("Test", request.getSearchString());
