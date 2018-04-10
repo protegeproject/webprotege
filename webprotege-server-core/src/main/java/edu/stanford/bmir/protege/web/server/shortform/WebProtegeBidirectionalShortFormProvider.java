@@ -36,6 +36,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * This class is thread safe.
  * </p>
  */
+@Deprecated
 @ProjectSingleton
 public class WebProtegeBidirectionalShortFormProvider implements BidirectionalShortFormProvider {
 

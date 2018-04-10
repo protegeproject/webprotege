@@ -14,6 +14,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/04/2012
  */
+@Deprecated
 @ProjectSingleton
 public class WebProtegeShortFormProvider implements ShortFormProvider {
 
