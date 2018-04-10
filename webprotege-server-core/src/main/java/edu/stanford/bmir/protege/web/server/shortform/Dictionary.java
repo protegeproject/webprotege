@@ -4,10 +4,8 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -101,8 +99,8 @@ public class Dictionary {
     @Nonnull
     public Stream<ShortFormMatch> getShortFormsContaining(@Nonnull List<SearchString> searchStrings,
                                                           @Nonnull Set<EntityType<?>> entityTypes) {
-        ShortFormMatchFunction supplier = (entity, shortForm, firstMatchIndex) ->
-                new ShortFormMatch(entity, shortForm, language, firstMatchIndex);
+        ShortFormMatchFunction supplier = (entity, shortForm, matchCount, matchPositions) ->
+                new ShortFormMatch(entity, shortForm, language, matchCount, matchPositions);
         return shortFormCache.getShortFormsContaining(searchStrings,
                                                       entityTypes,
                                                       supplier);

@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
@@ -57,8 +55,8 @@ public class BuiltInShortFormDictionary {
         }
         return shortFormCache.getShortFormsContaining(searchStrings,
                                                       entityTypes,
-                                                      (entity, shortForm, index)
-                -> new ShortFormMatch(entity, shortForm, DictionaryLanguage.localName(), index));
+                                                      (entity, shortForm, matchCount, matchPositions)
+                -> new ShortFormMatch(entity, shortForm, DictionaryLanguage.localName(), matchCount, matchPositions));
     }
 
     public void load() {

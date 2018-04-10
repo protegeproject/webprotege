@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.primitives.ImmutableIntArray;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -153,24 +154,27 @@ public class ShortFormCache {
             return Stream.empty();
         }
         boolean matchAllEntityTypes = entityTypes.containsAll(EntityType.values());
+        final int [] matchPositions = new int [searchStrings.size()];
         return entity2ShortFormMap.entrySet().stream()
                                   .filter(e -> matchAllEntityTypes || entityTypes.contains(e.getKey().getEntityType()))
                                   .map(e -> {
-                                      int firstMatchIndex = Integer.MAX_VALUE;
                                       ShortForm shortForm = e.getValue();
                                       Scanner scanner = new Scanner(shortForm.shortForm,
                                                                     shortForm.lowerCaseShortForm);
-                                      for (SearchString searchString : searchStrings) {
+                                      int matchCount = 0;
+                                      for (int i = 0; i < searchStrings.size(); i++) {
+                                          SearchString searchString = searchStrings.get(i);
                                           int index = scanner.indexOf(searchString, 0);
+                                          matchPositions[i] = index;
                                           if (index != -1) {
-                                              if (index < firstMatchIndex) {
-                                                  firstMatchIndex = index;
-                                              }
-                                              break;
+                                              matchCount++;
                                           }
                                       }
-                                      if (firstMatchIndex != Integer.MAX_VALUE) {
-                                          return matchFunction.createMatch(e.getKey(), shortForm.getShortForm(), firstMatchIndex);
+                                      if (matchCount > 0) {
+                                          return matchFunction.createMatch(e.getKey(),
+                                                                           shortForm.getShortForm(),
+                                                                           matchCount,
+                                                                           ImmutableIntArray.copyOf(matchPositions));
                                       }
                                       else {
                                           return null;

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
-import org.semanticweb.owlapi.model.IRI;
+import com.google.common.primitives.ImmutableIntArray;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -14,6 +14,9 @@ import javax.annotation.Nonnull;
 public interface ShortFormMatchFunction {
 
     @Nonnull
-    ShortFormMatch createMatch(@Nonnull OWLEntity entity, @Nonnull String shortForm, int firstMatchIndex);
+    ShortFormMatch createMatch(@Nonnull OWLEntity entity,
+                               @Nonnull String shortForm,
+                               int matchCount,
+                               @Nonnull ImmutableIntArray matchPositions);
 
 }
