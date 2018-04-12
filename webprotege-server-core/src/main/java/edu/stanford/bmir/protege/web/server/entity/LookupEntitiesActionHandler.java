@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
+import com.google.common.primitives.ImmutableIntArray;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.app.PlaceUrl;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
@@ -13,13 +14,16 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
+import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchType;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
+import edu.stanford.bmir.protege.web.shared.search.PrefixNameMatchType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.server.shortform.SearchString.parseSearchString;
 import static java.util.stream.Collectors.toList;
@@ -84,24 +88,37 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
     private List<EntityLookupResult> lookupEntities(final EntityLookupRequest entityLookupRequest) {
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         Set<OWLEntity> addedEntities = new HashSet<>();
-        return dictionaryManager.getShortFormsContaining(Collections.singletonList(parseSearchString(entityLookupRequest.getSearchString())),
+        List<SearchString> searchStrings = Stream.of(entityLookupRequest.getSearchString().split("\\s+|_|:"))
+                .map(SearchString::parseSearchString)
+                .collect(toList());
+        System.out.println(searchStrings);
+        return dictionaryManager.getShortFormsContaining(searchStrings,
                                                          entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
-                                // This is arbitary and possibly leads to bad completion results
+                                // This is arbitrary and possibly leads to bad completion results.  We need to
+                                // see how things work in practice when users type in enough to get the right
+                                // result.
                                 .limit(3000)
                                 .filter(match -> !addedEntities.contains(match.getEntity()))
                                 .peek(match -> addedEntities.add(match.getEntity()))
-                                .map(match -> {
-                                    String shortForm = match.getShortForm();
-                                    Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
-                                    return result.map(entityNameMatchResult -> {
-                                        OWLEntity entity = match.getEntity();
-                                        OWLEntityData entityData = DataFactory.getOWLEntityData(entity, match.getShortForm());
-                                        return new OWLEntityDataMatch(entityData, entityNameMatchResult);
-                                    }).orElse(null);
-                                })
-                                .filter(Objects::nonNull)
                                 .sorted()
+                                .map(match -> {
+                                    // TODO: Change this so that all positions are returned in the result
+                                    ImmutableIntArray matchPositions = match.getMatchPositions();
+                                    int first = 0;
+                                    int start = matchPositions.get(first);
+                                    int length = searchStrings.get(first).getSearchString().length();
+                                    EntityNameMatchResult result = new EntityNameMatchResult(
+                                            start,
+                                            start + length,
+                                            // We sort things here now, so just make everything a substring match
+                                            EntityNameMatchType.SUB_STRING_MATCH,
+                                            PrefixNameMatchType.NOT_IN_PREFIX_NAME
+                                    );
+                                    OWLEntityData ed = DataFactory.getOWLEntityData(match.getEntity(),
+                                                                                    match.getShortForm());
+                                    return new OWLEntityDataMatch(ed, result);
+                                })
                                 .limit(entityLookupRequest.getSearchLimit())
                                 .map(this::toEntityLookupResult)
                                 .collect(toList());
