@@ -42,6 +42,8 @@ public class ProjectDetailsRepository_IT {
 
     private ProjectId otherProjectId = getProjectId();
 
+    private MongoClient mongoClient;
+
     private static ProjectId getProjectId() {
         return ProjectId.get(UUID.randomUUID().toString());
     }
@@ -58,7 +60,7 @@ public class ProjectDetailsRepository_IT {
 
     @Before
     public void setUp() {
-        MongoClient mongoClient = MongoTestUtils.createMongoClient();
+        mongoClient = MongoTestUtils.createMongoClient();
         database = mongoClient.getDatabase(MongoTestUtils.getTestDbName());
         repository = new ProjectDetailsRepository(database, new ProjectDetailsConverter());
         projectDetails = new ProjectDetails(projectId,
@@ -78,6 +80,7 @@ public class ProjectDetailsRepository_IT {
     @After
     public void cleanUp() {
         database.drop();
+        mongoClient.close();
     }
 
     @Test
