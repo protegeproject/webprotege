@@ -68,5 +68,6 @@ public class PrefixDeclarationsStore_IT {
     @After
     public void tearDown() {
         datastore.getDB().dropDatabase();
+        datastore.getDB().getMongo().close();
     }
 }
