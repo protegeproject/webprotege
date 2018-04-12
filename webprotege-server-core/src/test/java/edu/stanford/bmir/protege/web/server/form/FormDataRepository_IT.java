@@ -98,7 +98,7 @@ public class FormDataRepository_IT {
 
     @After
     public void tearDown() throws Exception {
+        datastore.getDB().dropDatabase();
         mongoClient.close();
-//        datastore.getDB().dropDatabase();
     }
 }
