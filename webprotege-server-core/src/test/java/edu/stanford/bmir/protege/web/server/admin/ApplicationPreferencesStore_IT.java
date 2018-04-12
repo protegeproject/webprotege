@@ -52,6 +52,7 @@ public class ApplicationPreferencesStore_IT {
     @After
     public void tearDown() {
         mongoClient.dropDatabase(MongoTestUtils.getTestDbName());
+        mongoClient.close();
     }
 
     @Test
