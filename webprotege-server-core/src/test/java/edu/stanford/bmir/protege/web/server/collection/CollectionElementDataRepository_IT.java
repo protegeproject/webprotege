@@ -94,5 +94,6 @@ public class CollectionElementDataRepository_IT {
     @After
     public void tearDown() throws Exception {
         datastore.getDB().dropDatabase();
+        datastore.getDB().getMongo().close();
     }
 }
