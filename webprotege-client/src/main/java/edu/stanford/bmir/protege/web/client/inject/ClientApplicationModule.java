@@ -45,6 +45,9 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
@@ -67,6 +70,7 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 
 /**
  * Author: Matthew Horridge<br>
@@ -429,5 +433,10 @@ public class ClientApplicationModule {
     @Provides
     PopupPanel providePopupPanel() {
         return new PopupPanel(true, true);
+    }
+
+    @Provides
+    PrimitiveDataEditorImageView providePrimitiveDataEditorView(PrimitiveDataEditorImageViewImpl imageView) {
+        return imageView;
     }
 }

@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.library.text;
 
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasFocusHandlers;
-import com.google.gwt.event.dom.client.HasKeyUpHandlers;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -14,7 +11,10 @@ import edu.stanford.bmir.protege.web.client.anchor.HasAnchor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.library.common.HasTextRendering;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,7 +26,7 @@ import javax.inject.Inject;
  *     using a GWT {@link SuggestBox}.
  * </p>
  */
-public class ExpandingTextBox extends Composite implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasAnchor, HasOneWidget {
+public class ExpandingTextBox extends Composite implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, HasAnchor, HasOneWidget {
 
     private final ExpandingTextBoxImpl impl;
 
@@ -212,6 +212,11 @@ public class ExpandingTextBox extends Composite implements Focusable, HasText, H
         return impl.addFocusHandler(handler);
     }
 
+    @Override
+    public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        return impl.addBlurHandler(handler);
+    }
+
     public void setOracle(SuggestOracle suggestOracle) {
         impl.setSuggestOracle(suggestOracle);
     }
@@ -263,5 +268,21 @@ public class ExpandingTextBox extends Composite implements Focusable, HasText, H
     @Override
     public void setTabIndex(int index) {
         impl.setTabIndex(index);
+    }
+
+    /**
+     * Sets the minimum height for this expanding text box.  The value for this height should be
+     * a valid CSS value for the min-height property.
+     * @param minHeight The minimum height.
+     */
+    public void setMinHeight(@Nonnull String minHeight) {
+        impl.setMinHeight(checkNotNull(minHeight));
+    }
+
+    /**
+     * Clears the minimum height for this expanding text box.
+     */
+    public void clearMinHeight() {
+        impl.clearMinHeight();
     }
 }

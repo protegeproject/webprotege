@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .main {
+            height: auto;
+            alignment-baseline: center;
+            flex-grow: 0;
+            flex-shrink: 1;
+            padding-top: 1px;
+            padding-bottom: 1px;
+            cursor: pointer;
+        }
+        .image {
+            box-sizing: border-box;
+            max-width: 120px;
+            height: auto;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: block;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.linkIconInset}">
+        <img src="" class="{style.image}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

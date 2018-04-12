@@ -7,7 +7,7 @@
         .main {
             display: flex;
             flex-direction: row;
-            align-items: baseline;
+            align-items: start;
         }
         .main .gwt-SuggestBox {
             border: 1px solid transparent;

@@ -78,7 +78,7 @@
 
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main}" ui:field="outer">
             <pre class="{wp.style.classIconInset}"><span/><br/></pre>
             <g:SuggestBox ui:field="suggestBox"/>
             <g:Anchor addStyleNames="{style.button-loc}" text="&#x25B6;" title="Navigate to entity" ui:field="anchor"/>

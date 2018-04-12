@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.library.text;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
@@ -33,7 +35,7 @@ import static edu.stanford.bmir.protege.web.client.library.text.ExpandingTextBox
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/12/2012
  */
-public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasAcceptKeyHandler, HasText, HasEnabled, HasPlaceholder, HasValueChangeHandlers<String>, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasAnchor {
+public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasAcceptKeyHandler, HasText, HasEnabled, HasPlaceholder, HasValueChangeHandlers<String>, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasBlurHandlers, HasAnchor {
 
     /**
      * For internal use.  The name of the element which has inner text set to size the suggest box to fit its content.
@@ -60,6 +62,9 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         }
     };
 
+    // The CSS min-height property.  Note that in GWT the property name has to be specified in camel case
+    private static final String MIN_HEIGHT = "minHeight";
+
 
     private SuggestOracle delegateSuggestOracle = EMPTY_SUGGEST_ORACLE;
 
@@ -68,7 +73,6 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     private String placeholder = "";
 
     private boolean requestingFocus = false;
-
 
     interface ExpandingTextBoxImplUiBinder extends UiBinder<HTMLPanel, ExpandingTextBoxImpl> {
 
@@ -81,6 +85,9 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
 
     @UiField
     protected Anchor anchor;
+
+    @UiField
+    HTMLPanel outer;
 
     private ExpandingTextBoxMode mode = SINGLE_LINE;
 
@@ -318,6 +325,11 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         return suggestBox.getValueBox().addFocusHandler(handler);
     }
 
+    @Override
+    public HandlerRegistration addBlurHandler(BlurHandler handler) {
+        return suggestBox.getValueBox().addBlurHandler(handler);
+    }
+
     /**
      * Adds a {@link com.google.gwt.event.dom.client.KeyUpEvent} handler.
      * @param handler the key up handler
@@ -372,4 +384,33 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     public void setTabIndex(int index) {
         suggestBox.setTabIndex(index);
     }
+
+    /**
+     * Sets the minimum height for this expanding text box.
+     * @param minHeight The minimum height.  This should be a valid CSS property value for height.
+     */
+    public void setMinHeight(@Nonnull String minHeight) {
+        Element preElement = getPreElement();
+        Style style = preElement.getStyle();
+        style.setProperty(MIN_HEIGHT, minHeight);
+    }
+
+    public void clearMinHeight() {
+        Element preElement = getPreElement();
+        Style style = preElement.getStyle();
+        style.clearProperty(MIN_HEIGHT);
+    }
+
+    @Nonnull
+    private Element getPreElement() {
+        Element element = outer.getElement();
+        NodeList<Element> pre = element.getElementsByTagName("pre");
+        if(pre.getLength() > 0) {
+            return pre.getItem(0);
+        }
+        else {
+            throw new RuntimeException("Cannot find pre element");
+        }
+    }
+
 }
