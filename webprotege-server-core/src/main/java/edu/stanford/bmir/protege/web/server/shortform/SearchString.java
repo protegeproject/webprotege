@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import javax.annotation.Nonnull;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -46,5 +48,13 @@ public class SearchString {
 
     public boolean matches(@Nonnull String string, int start) {
         return string.startsWith(searchString, start);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("SearchString")
+                .addValue(rawSearchString)
+                .toString();
     }
 }
