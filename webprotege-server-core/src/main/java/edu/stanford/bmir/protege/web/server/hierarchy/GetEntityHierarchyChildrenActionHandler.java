@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
@@ -18,6 +19,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator.alphaNumerically;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
 import static java.util.Comparator.comparing;
 
@@ -79,7 +81,7 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
                          .filter(child -> isNotDeprecatedTopLevelEntity(parent, child))
                          .map(child -> nodeRenderer.toGraphNode(child, hierarchyProvider.get()))
                          .forEach(childNode -> successorMap.add(parentNode, childNode));
-        successorMap.sort(comparing(GraphNode::getUserObject));
+        successorMap.sort(comparing(node -> node.getUserObject().getBrowserText(), alphaNumerically()));
         return new GetHierarchyChildrenResult(successorMap.build());
     }
 
