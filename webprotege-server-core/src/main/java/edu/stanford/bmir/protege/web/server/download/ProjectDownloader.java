@@ -1,13 +1,15 @@
 package edu.stanford.bmir.protege.web.server.download;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.app.ApplicationNameSupplier;
+import edu.stanford.bmir.protege.web.server.project.PrefixDeclarationsStore;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLOntologyStorageException;
+import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
+import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import javax.inject.Inject;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -45,26 +48,32 @@ public class ProjectDownloader {
     private final Project project;
 
     @Nonnull
-    private final String applicationName;
+    private final ApplicationNameSupplier applicationNameSupplier;
+
+    @Nonnull
+    private final PrefixDeclarationsStore prefixDeclarationsStore;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
-     *
-     * @param project  The project to be downloaded.  Not <code>null</code>.
+     *  @param project  The project to be downloaded.  Not <code>null</code>.
      * @param revision The revision of the project to be downloaded.
      * @param format   The format which the project should be downloaded in.
+     * @param prefixDeclarationsStore The prefix declarations store that is used to retrieve customised prefixes
      */
+    @AutoFactory
     @Inject
     public ProjectDownloader(@Nonnull String fileName,
                              @Nonnull Project project,
                              @Nonnull RevisionNumber revision,
                              @Nonnull DownloadFormat format,
-                             @Nonnull String applicationName) {
+                             @Provided @Nonnull ApplicationNameSupplier applicationNameSupplier,
+                             @Provided @Nonnull PrefixDeclarationsStore prefixDeclarationsStore) {
         this.project = project;
         this.revision = revision;
         this.format = format;
         this.fileName = fileName;
-        this.applicationName = checkNotNull(applicationName);
+        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
+        this.prefixDeclarationsStore = checkNotNull(prefixDeclarationsStore);
     }
 
     public void writeProject(OutputStream outputStream) throws IOException {
@@ -98,7 +107,7 @@ public class ProjectDownloader {
             logger.info(
                     "Project download failed because the root ontology could not be retrived from the manager.  Project: ",
                     project.getProjectId());
-            throw new RuntimeException("The ontology could not be downloaded from " + applicationName + ".  Please contact the administrator.");
+            throw new RuntimeException("The ontology could not be downloaded from " + applicationNameSupplier.get() + ".  Please contact the administrator.");
         }
     }
 
@@ -115,8 +124,14 @@ public class ProjectDownloader {
             baseFolder = baseFolder + "-REVISION-" + (revisionNumber.isHead() ? "HEAD" : revisionNumber.getValue());
             ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
             zipOutputStream.putNextEntry(rootOntologyEntry);
+            OWLDocumentFormat documentFormat = format.getDocumentFormat();
+            if(documentFormat.isPrefixOWLOntologyFormat()) {
+                PrefixDocumentFormat prefixDocumentFormat = documentFormat.asPrefixOWLOntologyFormat();
+                Map<String, String> prefixes = prefixDeclarationsStore.find(project.getProjectId()).getPrefixes();
+                prefixes.forEach(prefixDocumentFormat::setPrefix);
+            }
             rootOntology.getOWLOntologyManager()
-                        .saveOntology(rootOntology, format.getDocumentFormat(), zipOutputStream);
+                        .saveOntology(rootOntology, documentFormat, zipOutputStream);
             zipOutputStream.closeEntry();
             int importCount = 0;
             for (OWLOntology ontology : rootOntology.getImportsClosure()) {
@@ -125,7 +140,7 @@ public class ProjectDownloader {
                     ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
                             .getExtension());
                     zipOutputStream.putNextEntry(zipEntry);
-                    ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
+                    ontology.getOWLOntologyManager().saveOntology(ontology, documentFormat, zipOutputStream);
                     zipOutputStream.closeEntry();
                     memoryMonitor.monitorMemoryUsage();
                 }

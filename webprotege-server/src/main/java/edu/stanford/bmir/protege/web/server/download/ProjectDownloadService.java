@@ -45,13 +45,7 @@ public class ProjectDownloadService {
     private final ExecutorService fileTransferExecutor;
 
     @Nonnull
-    private final ProjectManager projectManager;
-
-    @Nonnull
     private final ProjectDetailsManager projectDetailsManager;
-
-    @Nonnull
-    private final ApplicationNameSupplier applicationNameSupplier;
 
     @Nonnull
     private final ProjectDownloadCache projectDownloadCache;
@@ -61,21 +55,21 @@ public class ProjectDownloadService {
 
     private final Striped<Lock> lockStripes = Striped.lazyWeakLock(10);
 
+    @Nonnull
+    private final CreateDownloadTaskFactory createDownloadTaskFactory;
+
     @Inject
     public ProjectDownloadService(@Nonnull @DownloadGeneratorExecutor ExecutorService downloadGeneratorExecutor,
                                   @Nonnull @FileTransferExecutor ExecutorService fileTransferExecutor,
-                                  @Nonnull ProjectManager projectManager,
                                   @Nonnull ProjectDetailsManager projectDetailsManager,
-                                  @Nonnull ApplicationNameSupplier applicationNameSupplier,
                                   @Nonnull ProjectDownloadCache projectDownloadCache,
-                                  @Nonnull HeadRevisionNumberFinder headRevisionNumberFinder) {
+                                  @Nonnull HeadRevisionNumberFinder headRevisionNumberFinder, @Nonnull CreateDownloadTaskFactory createDownloadTaskFactory) {
         this.downloadGeneratorExecutor = checkNotNull(downloadGeneratorExecutor);
         this.fileTransferExecutor = checkNotNull(fileTransferExecutor);
-        this.projectManager = checkNotNull(projectManager);
         this.projectDetailsManager = checkNotNull(projectDetailsManager);
-        this.applicationNameSupplier = checkNotNull(applicationNameSupplier);
         this.projectDownloadCache = checkNotNull(projectDownloadCache);
         this.headRevisionNumberFinder = checkNotNull(headRevisionNumberFinder);
+        this.createDownloadTaskFactory = checkNotNull(createDownloadTaskFactory);
     }
 
     public void downloadProject(@Nonnull UserId requester,
@@ -125,14 +119,12 @@ public class ProjectDownloadService {
                             requester);
                 return;
             }
-            CreateDownloadTask task = new CreateDownloadTask(projectManager,
-                                                             projectId,
-                                                             requester,
-                                                             getProjectDisplayName(projectId),
-                                                             revisionNumber,
-                                                             downloadFormat,
-                                                             applicationNameSupplier.get(),
-                                                             downloadPath);
+            CreateDownloadTask task = createDownloadTaskFactory.create(projectId,
+                                                                       requester,
+                                                                       getProjectDisplayName(projectId),
+                                                                       revisionNumber,
+                                                                       downloadFormat,
+                                                                       downloadPath);
             logger.info("{} {} Submitted request to create download to queue", projectId, requester);
             Future<?> futureOfCreateDownload = downloadGeneratorExecutor.submit(task);
             try {

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.download;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.project.Project;
 import edu.stanford.bmir.protege.web.server.project.ProjectManager;
 import edu.stanford.bmir.protege.web.server.util.MemoryMonitor;
@@ -43,27 +45,28 @@ class CreateDownloadTask implements Callable<Void> {
     private final DownloadFormat format;
 
     @Nonnull
-    private final String applicationName;
-
-    @Nonnull
     private final Path downloadPath;
 
-    public CreateDownloadTask(@Nonnull ProjectManager projectManager,
+    @Nonnull
+    private final ProjectDownloaderFactory projectDownloaderFactory;
+
+    @AutoFactory
+    public CreateDownloadTask(@Provided @Nonnull ProjectManager projectManager,
                               @Nonnull ProjectId projectId,
                               @Nonnull UserId userId,
                               @Nonnull String projectDisplayName,
                               @Nonnull RevisionNumber revisionNumber,
                               @Nonnull DownloadFormat format,
-                              @Nonnull String applicationName,
-                              @Nonnull Path destinationPath) {
+                              @Nonnull Path destinationPath,
+                              @Provided @Nonnull ProjectDownloaderFactory projectDownloaderFactory) {
         this.projectManager = projectManager;
         this.projectId = projectId;
         this.userId = userId;
         this.projectDisplayName = projectDisplayName;
         this.revisionNumber = revisionNumber;
         this.format = format;
-        this.applicationName = applicationName;
         this.downloadPath = destinationPath;
+        this.projectDownloaderFactory = projectDownloaderFactory;
     }
 
     @Override
@@ -80,11 +83,10 @@ class CreateDownloadTask implements Callable<Void> {
         memoryMonitor.monitorMemoryUsage();
         Project project = projectManager.getProject(projectId, userId);
         memoryMonitor.monitorMemoryUsage();
-        ProjectDownloader downloader = new ProjectDownloader(projectDisplayName,
-                                                             project,
-                                                             revisionNumber,
-                                                             format,
-                                                             applicationName);
+        ProjectDownloader downloader = projectDownloaderFactory.create(projectDisplayName,
+                                                                       project,
+                                                                       revisionNumber,
+                                                                       format);
         logger.info("{} {} Writing download to file: {}", projectId, userId, downloadPath);
         Files.createDirectories(downloadPath.getParent());
         try (BufferedOutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(downloadPath))) {
