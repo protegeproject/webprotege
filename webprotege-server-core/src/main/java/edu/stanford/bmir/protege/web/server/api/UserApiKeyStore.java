@@ -52,6 +52,13 @@ public interface UserApiKeyStore extends Repository {
     void dropApiKey(@Nonnull UserId userId, @Nonnull ApiKeyId keyId);
 
     /**
+     * Sets the api key records for the given user.
+     * @param userId The {@link UserId} that specifies the user who the keys should be set for.
+     * @param records The records.
+     */
+    void setApiKeys(@Nonnull UserId userId, List<ApiKeyRecord> records);
+
+    /**
      * Gets the user that owns the specified api key.  This allows a user to be looked up from
      * an incoming api key.
      * @param apiKey The hashed api key.
