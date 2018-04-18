@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.api;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.core.shared.GwtIncompatible;
 
 import javax.annotation.Nonnull;
@@ -33,6 +34,8 @@ public class ApiKey {
         return new ApiKey(uuid);
     }
 
+    @JsonValue
+    @Nonnull
     public String getId() {
         return id;
     }

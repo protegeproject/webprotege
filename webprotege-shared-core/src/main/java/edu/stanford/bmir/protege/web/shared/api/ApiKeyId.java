@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.api;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -39,6 +40,7 @@ public class ApiKeyId implements IsSerializable {
         return valueOf(UUID.randomUUID().toString());
     }
 
+    @JsonValue
     @Nonnull
     public String getId() {
         return id;
