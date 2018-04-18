@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.api;
 
 import com.google.common.io.BaseEncoding;
-import org.hamcrest.Matchers;
+import edu.stanford.bmir.protege.web.shared.api.ApiKey;
 import org.junit.Before;
 import org.junit.Test;
 

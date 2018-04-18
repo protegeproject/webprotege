@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.api;
 
+import edu.stanford.bmir.protege.web.shared.api.ApiKey;
+
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.regex.Matcher;

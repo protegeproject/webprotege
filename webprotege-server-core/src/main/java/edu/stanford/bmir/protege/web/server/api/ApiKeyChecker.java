@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.api;
 
+import edu.stanford.bmir.protege.web.shared.api.ApiKey;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
