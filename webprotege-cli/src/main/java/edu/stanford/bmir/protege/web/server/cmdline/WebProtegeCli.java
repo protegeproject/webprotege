@@ -2,15 +2,25 @@ package edu.stanford.bmir.protege.web.server.cmdline;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.logging.LogManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Arrays.asList;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 7 Nov 2017
  */
 public class WebProtegeCli {
 
+    private static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+
+    static {
+        root.setLevel(Level.ERROR);
+        LogManager.getLogManager().reset();
+    }
 
     private Map<String, Cmd> commands = new TreeMap<>();
 
