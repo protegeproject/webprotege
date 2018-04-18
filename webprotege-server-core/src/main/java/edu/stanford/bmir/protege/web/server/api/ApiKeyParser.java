@@ -14,8 +14,7 @@ public class ApiKeyParser {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private static final Pattern PATTERN = Pattern.compile("apikey\\s+(.+)",
-                                                           Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN = Pattern.compile("apikey\\s+(.+)", Pattern.CASE_INSENSITIVE);
 
     /**
      * Parses the API key from the specified header value.  The header value is expected to be the string
