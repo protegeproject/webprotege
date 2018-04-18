@@ -1,6 +1,7 @@
 
-package edu.stanford.bmir.protege.web.server.api;
+package edu.stanford.bmir.protege.web.shared.api;
 
+import edu.stanford.bmir.protege.web.shared.api.ApiKey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,6 +1,10 @@
-package edu.stanford.bmir.protege.web.server.api;
+package edu.stanford.bmir.protege.web.shared.api;
+
+import com.google.gwt.core.shared.GwtIncompatible;
 
 import javax.annotation.Nonnull;
+
+import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,6 +24,13 @@ public class ApiKey {
 
     public static ApiKey valueOf(@Nonnull String id) {
         return new ApiKey(checkNotNull(id));
+    }
+
+    @GwtIncompatible
+    @Nonnull
+    public static ApiKey generateApiKey() {
+        String uuid = UUID.randomUUID().toString();
+        return new ApiKey(uuid);
     }
 
     public String getId() {
