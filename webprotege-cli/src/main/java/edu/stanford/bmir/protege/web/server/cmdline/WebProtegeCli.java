@@ -21,7 +21,8 @@ public class WebProtegeCli {
     public static WebProtegeCli create() {
         return new WebProtegeCli(asList(
                 new CreateAdminAccountCmd(),
-                new RebuildPermissionsCmd()
+                new RebuildPermissionsCmd(),
+                new GenerateApiKeyCmd()
         ));
     }
 
