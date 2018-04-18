@@ -53,13 +53,14 @@ public class GenerateApiKeyCmd extends Cmd {
         console.printf("Please enter a purpose for the API key\n");
         String purpose = console.readLine();
 
-        console.printf("Generating api key...\n");
+        console.printf("Generating api key...");
 
         ApiKey key = keyManager.generateApiKeyForUser(UserId.getUserId(userName.trim()), purpose.trim());
         mongoClient.close();
 
         console.printf("\n");
-        console.printf("Generated API key: %s\n", key.getKey());
+        console.printf("Generated API key:\n\n");
+        console.printf("    %s\n\n", key.getKey());
         console.printf("Please keep this API key safe.  Treat it as a password.\n");
         console.printf("You should NOT distribute it or store it in version control repositories.\n");
         console.printf("This API key cannot be recovered.  You will need to generate a new key if you lose this one.\n");
