@@ -29,7 +29,7 @@ public class ApiKeyHasher {
         // Since an API Key is a secure random UUID we don't really
         // need to salt it
         String base16Encoding = Hashing.sha256()
-                                       .hashString(apiKey.getId(), StandardCharsets.UTF_8)
+                                       .hashString(apiKey.getKey(), StandardCharsets.UTF_8)
                                        .toString();
         return HashedApiKey.valueOf(base16Encoding);
     }

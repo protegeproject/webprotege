@@ -17,14 +17,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ApiKey {
 
-    private final String id;
+    private final String key;
 
-    private ApiKey(String id) {
-        this.id = id;
+    private ApiKey(String key) {
+        this.key = key;
     }
 
-    public static ApiKey valueOf(@Nonnull String id) {
-        return new ApiKey(checkNotNull(id));
+    public static ApiKey valueOf(@Nonnull String key) {
+        return new ApiKey(checkNotNull(key));
     }
 
     @GwtIncompatible
@@ -36,13 +36,13 @@ public class ApiKey {
 
     @JsonValue
     @Nonnull
-    public String getId() {
-        return id;
+    public String getKey() {
+        return key;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return key.hashCode();
     }
 
     @Override
@@ -54,14 +54,14 @@ public class ApiKey {
             return false;
         }
         ApiKey other = (ApiKey) obj;
-        return this.id.equals(other.id);
+        return this.key.equals(other.key);
     }
 
 
     @Override
     public String toString() {
         return toStringHelper("ApiKey")
-                .addValue(id)
+                .addValue(key)
                 .toString();
     }
 }

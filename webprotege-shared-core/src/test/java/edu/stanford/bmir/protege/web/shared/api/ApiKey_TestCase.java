@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.shared.api;
 
-import edu.stanford.bmir.protege.web.shared.api.ApiKey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +50,7 @@ public class ApiKey_TestCase {
 
     @Test
     public void should_getId() {
-        assertThat(apiKey.getId(), is(LEXICAL_VALUE));
+        assertThat(apiKey.getKey(), is(LEXICAL_VALUE));
     }
 
 }
