@@ -76,6 +76,10 @@ public class ProjectId implements Serializable, IsSerializable {
         return new ProjectId(uuid);
     }
 
+    public static ProjectId valueOf(@Nonnull String uuid) throws ProjectIdFormatException {
+        return get(uuid);
+    }
+
 
     @Nonnull
     public static Optional<ProjectId> getFromNullable(@Nullable String uuid) throws ProjectIdFormatException {
