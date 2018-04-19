@@ -73,7 +73,7 @@ public class DictionaryLanguage_TestCase {
 
     @Test
     public void shouldReturnSuppliedLang() {
-        assertThat(dictionaryLanguage.getLang(), is(dictionaryLanguage));
+        assertThat(dictionaryLanguage.getLang(), is(lang));
     }
 
 }
