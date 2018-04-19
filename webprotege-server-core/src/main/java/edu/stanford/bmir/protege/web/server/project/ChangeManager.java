@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
+import edu.stanford.bmir.protege.web.server.shortform.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdatesProcessor;
 import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker;
@@ -117,6 +118,9 @@ public class ChangeManager implements HasApplyChanges {
     private final DictionaryUpdatesProcessor dictionaryUpdatesProcessor;
 
     @Nonnull
+    private final ActiveLanguagesManager activeLanguagesManager;
+
+    @Nonnull
     private final AccessManager accessManager;
 
     @Nonnull
@@ -179,7 +183,7 @@ public class ChangeManager implements HasApplyChanges {
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
-                         @Nonnull DictionaryUpdatesProcessor dictionaryUpdatesProcessor, @Nonnull AccessManager accessManager,
+                         @Nonnull DictionaryUpdatesProcessor dictionaryUpdatesProcessor, @Nonnull ActiveLanguagesManager activeLanguagesManager, @Nonnull AccessManager accessManager,
                          @Nonnull PrefixDeclarationsStore prefixDeclarationsStore, @Nonnull ProjectDetailsRepository projectDetailsRepository,
                          @Nonnull ProjectChangedWebhookInvoker projectChangedWebhookInvoker,
                          @Nonnull EventManager<ProjectEvent<?>> projectEventManager,
@@ -195,6 +199,7 @@ public class ChangeManager implements HasApplyChanges {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
+        this.activeLanguagesManager = activeLanguagesManager;
         this.accessManager = accessManager;
         this.prefixDeclarationsStore = prefixDeclarationsStore;
         this.projectDetailsRepository = projectDetailsRepository;
@@ -435,6 +440,7 @@ public class ChangeManager implements HasApplyChanges {
         objectPropertyHierarchyProvider.handleChanges(changes);
         dataPropertyHierarchyProvider.handleChanges(changes);
         annotationPropertyHierarchyProvider.handleChanges(changes);
+        activeLanguagesManager.handleChanges(changes);
         dictionaryUpdatesProcessor.handleChanges(changes);
 //        metricsManager.handleChanges(changes);
 

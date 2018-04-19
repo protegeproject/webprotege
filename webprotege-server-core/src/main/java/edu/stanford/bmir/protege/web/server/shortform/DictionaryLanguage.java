@@ -17,15 +17,22 @@ import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
  */
 public class DictionaryLanguage {
 
-    private int hashCode = -1;
-
     private static final DictionaryLanguage LOCAL_NAME_LANGUAGE = new DictionaryLanguage(null, "");
+
 
     @Nullable
     private final IRI annotationPropertyIri;
 
     @Nonnull
     private final String lang;
+
+    private int hashCode = -1;
+
+
+    private DictionaryLanguage(@Nullable IRI annotationPropertyIri, @Nonnull String lang) {
+        this.annotationPropertyIri = annotationPropertyIri;
+        this.lang = lang;
+    }
 
     /**
      * Creates a {@link DictionaryLanguage} that is not for any annotation property or any lang.
@@ -37,8 +44,9 @@ public class DictionaryLanguage {
 
     /**
      * Creates a {@link DictionaryLanguage} that is for the specified annotation property and lang
+     *
      * @param annotationPropertyIri The annotation property
-     * @param lang The language.  May be empty.
+     * @param lang                  The language.  May be empty.
      */
     @Nonnull
     public static DictionaryLanguage create(@Nonnull IRI annotationPropertyIri, @Nonnull String lang) {
@@ -55,9 +63,14 @@ public class DictionaryLanguage {
         return DictionaryLanguage.create(SKOSVocabulary.PREFLABEL.getIRI(), lang);
     }
 
-    private DictionaryLanguage(@Nullable IRI annotationPropertyIri, @Nonnull String lang) {
-        this.annotationPropertyIri = annotationPropertyIri;
-        this.lang = lang;
+    @Nullable
+    public IRI getAnnotationPropertyIri() {
+        return annotationPropertyIri;
+    }
+
+    @Nonnull
+    public String getLang() {
+        return lang;
     }
 
     public boolean isAnnotationBased() {
@@ -79,7 +92,7 @@ public class DictionaryLanguage {
 
     @Override
     public int hashCode() {
-        if(hashCode != -1) {
+        if (hashCode != -1) {
             return hashCode;
         }
         hashCode = Objects.hashCode(annotationPropertyIri, lang);

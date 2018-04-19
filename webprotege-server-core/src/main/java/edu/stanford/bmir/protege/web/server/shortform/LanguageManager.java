@@ -2,9 +2,14 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -14,23 +19,14 @@ import java.util.List;
 @ProjectSingleton
 public class LanguageManager {
 
-    private static final String ANY_LANG = "*";
-
-    private final ImmutableList<DictionaryLanguage> languages = ImmutableList.of(
-            DictionaryLanguage.rdfsLabel("en"),
-            DictionaryLanguage.skosPrefLabel("en"),
-            // ISO 639-3.  Used in placed in the NCBI Taxonomy
-            DictionaryLanguage.skosPrefLabel("eng"),
-            DictionaryLanguage.rdfsLabel(""),
-            DictionaryLanguage.skosPrefLabel(""),
-            DictionaryLanguage.localName()
-    );
+    private final ActiveLanguagesManager activeLanguagesManager;
 
     @Inject
-    public LanguageManager() {
+    public LanguageManager(@Nonnull ActiveLanguagesManager extractor) {
+        this.activeLanguagesManager = checkNotNull(extractor);
     }
 
-    public ImmutableList<DictionaryLanguage> getLanguages() {
-        return languages;
+    public synchronized ImmutableList<DictionaryLanguage> getLanguages() {
+        return activeLanguagesManager.getLanguagesRankedByUsage();
     }
 }

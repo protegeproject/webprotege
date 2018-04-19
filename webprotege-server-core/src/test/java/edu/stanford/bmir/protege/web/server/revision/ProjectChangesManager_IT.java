@@ -95,7 +95,8 @@ public class ProjectChangesManager_IT {
                 rootOntology,
                 dataFactory
         );
-        LanguageManager languageManager = new LanguageManager();
+        LanguageManager languageManager = new LanguageManager(new ActiveLanguagesManager(projectId,
+                                                                                         rootOntology));
         RenderingManager renderingManager = new RenderingManager(
                 new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(rootOntology)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),
