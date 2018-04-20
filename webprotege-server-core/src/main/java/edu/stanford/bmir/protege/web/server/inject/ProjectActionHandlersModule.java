@@ -526,4 +526,14 @@ public class ProjectActionHandlersModule {
         return handler;
     }
 
+    @Provides @IntoSet
+    public ProjectActionHandler providesAddAxiomActionHandler(AddAxiomsActionHandler handler) {
+        return handler;
+    }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesDeleteAxiomActionHandler(DeleteAxiomsActionHandler handler) {
+        return handler;
+    }
+
 }

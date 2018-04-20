@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.server.api;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.process.internal.RequestScoped;
+import edu.stanford.bmir.protege.web.server.api.resources.ProjectsResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 

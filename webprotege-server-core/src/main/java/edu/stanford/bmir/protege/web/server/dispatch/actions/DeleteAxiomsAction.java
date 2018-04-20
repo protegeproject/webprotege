@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
 import javax.annotation.Nonnull;
-
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,11 +12,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 18 Apr 2018
- *
- * This is a server side action.  It won't work on the client.
+ * 20 Apr 2018
  */
-public class AddAxiomsAction implements ProjectAction<AddAxiomsResult> {
+public class DeleteAxiomsAction implements ProjectAction<DeleteAxiomsResult> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -28,17 +25,15 @@ public class AddAxiomsAction implements ProjectAction<AddAxiomsResult> {
     @Nonnull
     private final String commitMessage;
 
-    public AddAxiomsAction(@Nonnull ProjectId projectId,
-                           @Nonnull Stream<OWLAxiom> axioms,
-                           @Nonnull String commitMessage) {
+
+    public DeleteAxiomsAction(@Nonnull ProjectId projectId,
+                              @Nonnull Stream<OWLAxiom> axioms, @Nonnull String commitMessage) {
         this.projectId = checkNotNull(projectId);
         this.axioms = checkNotNull(axioms);
         this.commitMessage = checkNotNull(commitMessage);
     }
 
-
     @Nonnull
-    @Override
     public ProjectId getProjectId() {
         return projectId;
     }

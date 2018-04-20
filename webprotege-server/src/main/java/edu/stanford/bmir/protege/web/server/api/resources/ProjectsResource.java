@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.server.api;
+package edu.stanford.bmir.protege.web.server.api.resources;
 
+import edu.stanford.bmir.protege.web.server.api.ApiRootResource;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -19,11 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProjectsResource implements ApiRootResource {
 
     @Nonnull
-    private final ActionExecutor executor;
+    private final ProjectResourceFactory projectResourceFactory;
 
     @Inject
-    public ProjectsResource(@Nonnull ActionExecutor executor) {
-        this.executor = checkNotNull(executor);
+    public ProjectsResource(@Nonnull ProjectResourceFactory projectResourceFactory) {
+        this.projectResourceFactory = checkNotNull(projectResourceFactory);
     }
 
     /**
@@ -33,6 +34,6 @@ public class ProjectsResource implements ApiRootResource {
      */
     @Path("{projectId : [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}")
     public ProjectResource locateProjectResource(@PathParam("projectId") ProjectId projectId) {
-        return new ProjectResource(projectId, executor);
+        return projectResourceFactory.create(projectId);
     }
 }
