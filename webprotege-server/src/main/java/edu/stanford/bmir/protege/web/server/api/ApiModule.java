@@ -35,6 +35,8 @@ public class ApiModule {
         // token or the api key
         resourceConfig.register(new UserIdBinder());
 
+        resourceConfig.register(new JacksonContextResolver());
+
         // Add injected resources
         apiRootResources.forEach(resourceConfig::register);
 
