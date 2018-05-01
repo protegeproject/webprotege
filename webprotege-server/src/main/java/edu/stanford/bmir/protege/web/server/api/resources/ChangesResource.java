@@ -47,16 +47,10 @@ public class ChangesResource {
     public ImmutableList<RevisionDetails> listChanges(@Context UserId userId,
                                                       @QueryParam("from")
                                                       @DefaultValue("1")
-//                                                      @Size(min = 1)
-//                                                      @Pattern(regexp = "\\d+")
                                                               RevisionNumber from,
                                                       @QueryParam("to")
                                                       @DefaultValue("HEAD")
-//                                                      @Size(min = 1)
-//                                                      @Pattern(regexp = "\\d+|HEAD")
                                                               RevisionNumber to) {
-        System.out.println("FROM " + from);
-        System.out.println("TO " + to);
         return executor.execute(new GetRevisionsAction(projectId, from, to), userId).getRevisions();
     }
 }
