@@ -56,7 +56,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
         Optional<ApiKey> apiKey = parseApiKeyFromHeaders(requestContext);
-        System.out.println("APIKey: " + apiKey);
         final UserId userId;
         if(apiKey.isPresent()) {
             userId = getUserIdFromApiKey(apiKey.get());
@@ -78,7 +77,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     private UserId getUserIdFromApiKey(@Nonnull ApiKey apiKey) {
         Optional<UserId> userIdForApiKey = apiKeyChecker.getUserIdForApiKey(checkNotNull(apiKey));
-        System.out.println("USER ID FROM API KEY: " + userIdForApiKey);
         return userIdForApiKey.orElse(UserId.getGuest());
     }
 
