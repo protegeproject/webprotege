@@ -50,7 +50,13 @@ public class ChangesResource {
                                                               RevisionNumber from,
                                                       @QueryParam("to")
                                                       @DefaultValue("HEAD")
-                                                              RevisionNumber to) {
-        return executor.execute(new GetRevisionsAction(projectId, from, to), userId).getRevisions();
+                                                              RevisionNumber to,
+                                                      @QueryParam("userId")
+                                                              UserId author) {
+        GetRevisionsAction action = new GetRevisionsAction(projectId,
+                                                           from,
+                                                           to,
+                                                           author);
+        return executor.execute(action, userId).getRevisions();
     }
 }

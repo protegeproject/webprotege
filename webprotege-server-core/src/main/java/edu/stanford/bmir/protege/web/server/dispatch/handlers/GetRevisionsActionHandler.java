@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.GetRevisionsAction;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.GetRevisionsResult;
+import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionDetails;
 import edu.stanford.bmir.protege.web.server.revision.RevisionDetailsExtractor;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
@@ -14,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,9 +58,11 @@ public class GetRevisionsActionHandler extends AbstractProjectActionHandler<GetR
         long fromIndex = action.getFrom().getValue() - 1;
         long skip = fromIndex;
         long limit = action.getTo().getValue() - fromIndex;
+        Predicate<Revision> byAuthor = rev -> !action.getAuthor().isPresent() || action.getAuthor().get().equals(rev.getUserId());
         ImmutableList<RevisionDetails> revisionDetails = revisionManager.getRevisions().stream()
                                                                         .skip(skip)
                                                                         .limit(limit)
+                                                                        .filter(byAuthor)
                                                                         .map(extractor::extractRevisionDetails)
                                                                         .collect(ImmutableList.toImmutableList());
         return new GetRevisionsResult(revisionDetails,
