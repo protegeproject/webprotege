@@ -34,6 +34,7 @@ public class ApiModule {
         // Custom injection into the context of the user id identified by the session
         // token or the api key
         resourceConfig.register(new UserIdBinder());
+        resourceConfig.register(new ApiKeyBinder());
 
         resourceConfig.register(new JacksonContextResolver());
 

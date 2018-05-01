@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.api.AuthenticationConstants.AUTHENTICATED_USER_API_KEY;
 import static edu.stanford.bmir.protege.web.server.api.AuthenticationConstants.AUTHENTICATED_USER_ID;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
@@ -68,6 +69,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
         else {
             requestContext.setProperty(AUTHENTICATED_USER_ID, userId);
+            apiKey.ifPresent(key -> requestContext.setProperty(AUTHENTICATED_USER_API_KEY, key));
         }
     }
 
