@@ -423,6 +423,11 @@ public class ChangeManager implements HasApplyChanges {
     private <R> Revision logAndProcessAppliedChanges(UserId userId,
                                                      ChangeListGenerator<R> changeList,
                                                      ChangeApplicationResult<R> finalResult) {
+        List<OWLOntologyChange> changes = finalResult.getChangeList();
+        // Update the rendering first so that a proper change message is generated
+        activeLanguagesManager.handleChanges(changes);
+        dictionaryUpdatesProcessor.handleChanges(changes);
+
         // Generate a description for the changes that were actually applied
         String changeDescription = changeList.getMessage(finalResult);
         // Log the changes
@@ -433,15 +438,12 @@ public class ChangeManager implements HasApplyChanges {
         Revision revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
         // TODO: THis list of "listeners" should be injected
-        List<OWLOntologyChange> changes = finalResult.getChangeList();
         documentStore.saveOntologyChanges(changes);
 
         classHierarchyProvider.handleChanges(changes);
         objectPropertyHierarchyProvider.handleChanges(changes);
         dataPropertyHierarchyProvider.handleChanges(changes);
         annotationPropertyHierarchyProvider.handleChanges(changes);
-        activeLanguagesManager.handleChanges(changes);
-        dictionaryUpdatesProcessor.handleChanges(changes);
 //        metricsManager.handleChanges(changes);
 
         return revision;
