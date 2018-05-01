@@ -121,7 +121,7 @@ public class RevisionManagerImpl implements RevisionManager {
 
     @Nonnull
     @Override
-    public List<Revision> getRevisions() {
+    public ImmutableList<Revision> getRevisions() {
         return revisionStore.getRevisions();
     }
 

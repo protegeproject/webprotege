@@ -35,17 +35,22 @@ public class ProjectResource {
     @Nonnull
     private final AxiomsResourceFactory axiomsResourceFactory;
 
+    @Nonnull
+    private final ChangesResourceFactory changesResourceFactory;
+
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
     @AutoFactory
     @Inject
     public ProjectResource(@Nonnull ProjectId projectId,
                            @Provided @Nonnull ActionExecutor executor,
                            @Provided @Nonnull AccessManager accessManager,
-                           @Provided @Nonnull AxiomsResourceFactory axiomsResourceFactory) {
+                           @Provided @Nonnull AxiomsResourceFactory axiomsResourceFactory,
+                           @Provided @Nonnull ChangesResourceFactory changesResourceFactory) {
         this.projectId = checkNotNull(projectId);
         this.executor = checkNotNull(executor);
-        this.accessManager = accessManager;
-        this.axiomsResourceFactory = axiomsResourceFactory;
+        this.accessManager = checkNotNull(accessManager);
+        this.axiomsResourceFactory = checkNotNull(axiomsResourceFactory);
+        this.changesResourceFactory = checkNotNull(changesResourceFactory);
     }
 
     @GET
@@ -54,6 +59,11 @@ public class ProjectResource {
     public ProjectDetails getProjectDetails(@Context UserId userId) {
         return executor.execute(new GetProjectDetailsAction(projectId), userId)
                        .getProjectDetails();
+    }
+
+    @Path("changes")
+    public ChangesResource getRevisions() {
+        return changesResourceFactory.create(projectId);
     }
 
     @Path("axioms")
