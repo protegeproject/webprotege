@@ -68,6 +68,16 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
     }
 
     /**
+     * Gets a UserId using the userName as the identifier.
+     * @param userName The userName.
+     * @return A UserId with the specified user name.  If userName is {@code null} then the distinguished UserId
+     * that represents the null user (anyone) will be returned.
+     */
+    public static UserId valueOf(@Nullable String userName) {
+        return getUserId(userName);
+    }
+
+    /**
      * Gets the id of the guest user.  The guest user is a distinguished id which indicates a non-logged in user.
      * @return The {@link UserId} of the guest user.  Not {@code null}.
      */
