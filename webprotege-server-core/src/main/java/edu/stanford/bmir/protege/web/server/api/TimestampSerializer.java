@@ -19,6 +19,8 @@ public class TimestampSerializer extends StdSerializer<Long> {
 
     private static final String UTC = "UTC";
 
+    private static final ZoneId ZONE_ID = ZoneId.of(UTC);
+
     public TimestampSerializer() {
         super(Long.class);
     }
@@ -26,9 +28,8 @@ public class TimestampSerializer extends StdSerializer<Long> {
     @Override
     public void serialize(Long l, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         Instant instant = Instant.ofEpochMilli(l);
-        ZoneId zoneId = ZoneId.of(UTC);
-        ZonedDateTime dateTime = ZonedDateTime.ofInstant(instant, zoneId);
-        String formatted = dateTime.format(DateTimeFormatter.ISO_DATE_TIME);
+        ZonedDateTime dateTime = ZonedDateTime.ofInstant(instant, ZONE_ID);
+        String formatted = dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         jsonGenerator.writeString(formatted);
     }
 }
