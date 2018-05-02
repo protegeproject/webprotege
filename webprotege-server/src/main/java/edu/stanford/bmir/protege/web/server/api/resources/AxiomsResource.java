@@ -75,18 +75,6 @@ public class AxiomsResource {
                                 RDF_XML.getMimeType());
     }
 
-    @DELETE
-    @Consumes("application/rdf+xml")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response handleDeleteAxiomsInRdfXml(@Context UserId userId,
-                                               @Context UriInfo uriInfo,
-                                               InputStream inputStream,
-                                               @QueryParam("msg") @DefaultValue(ADDED_EXTERNAL_AXIOMS) String msg) {
-        return loadAndDeleteAxioms(userId, inputStream, msg,
-                                   new RDFXMLDocumentFormat(),
-                                   RDF_XML.getMimeType());
-    }
-
     @POST
     @Consumes("text/ttl")
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,17 +89,6 @@ public class AxiomsResource {
                                 RDF_TURLE.getMimeType());
     }
 
-    @DELETE
-    @Consumes("text/ttl")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response handleDeleteAxiomsInTurtle(@Context UserId userId,
-                                               InputStream inputStream,
-                                               @QueryParam("msg") @DefaultValue(ADDED_EXTERNAL_AXIOMS) String msg) {
-        return loadAndDeleteAxioms(userId, inputStream, msg,
-                                   new RioTurtleDocumentFormat(),
-                                   RDF_TURLE.getMimeType());
-    }
-
     @POST
     @Consumes("text/owl-functional")
     @Produces(MediaType.APPLICATION_JSON)
@@ -124,17 +101,6 @@ public class AxiomsResource {
                                 inputStream, msg,
                                 new FunctionalSyntaxDocumentFormat(),
                                 FUNCTIONAL_SYNTAX.getMimeType());
-    }
-
-    @DELETE
-    @Consumes("text/owl-functional")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response parseDeleteAxiomsInFunctionalSyntax(@Context UserId userId,
-                                                        InputStream inputStream,
-                                                        @QueryParam("msg") @DefaultValue(ADDED_EXTERNAL_AXIOMS) String msg) {
-        return loadAndDeleteAxioms(userId, inputStream, msg,
-                                   new FunctionalSyntaxDocumentFormat(),
-                                   FUNCTIONAL_SYNTAX.getMimeType());
     }
 
     private Response loadAndAddAxioms(@Nonnull UserId userId,
