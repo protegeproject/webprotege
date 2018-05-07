@@ -38,7 +38,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
                           .addMapping("/webprotege/submitfile");
 
             servletContext.addServlet("JerseyContainerServlet", serverComponent.getJerseyServletContainer())
-                          .addMapping("/api/*");
+                          .addMapping("/data/*");
 
             servletContext.addListener(serverComponent.getSessionListener());
 
