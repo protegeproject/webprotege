@@ -61,8 +61,8 @@ public class ProjectResource {
                        .getProjectDetails();
     }
 
-    @Path("changes")
-    public ChangesResource getRevisions() {
+    @Path("revisions")
+    public RevisionsResource getRevisions() {
         return changesResourceFactory.create(projectId);
     }
 

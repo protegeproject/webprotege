@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * The changes within a context of a project
  */
-public class ChangesResource {
+public class RevisionsResource {
 
     private final ProjectId projectId;
 
@@ -35,8 +35,8 @@ public class ChangesResource {
 
     @Inject
     @AutoFactory
-    public ChangesResource(@Nonnull ProjectId projectId,
-                           @Provided @Nonnull ActionExecutor executor) {
+    public RevisionsResource(@Nonnull ProjectId projectId,
+                             @Provided @Nonnull ActionExecutor executor) {
         this.projectId = checkNotNull(projectId);
         this.executor = checkNotNull(executor);
     }
