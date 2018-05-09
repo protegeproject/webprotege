@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
 import edu.stanford.bmir.protege.web.server.access.RoleAssignment;
+import edu.stanford.bmir.protege.web.server.api.ApiKeyIdConverter;
+import edu.stanford.bmir.protege.web.server.api.HashedApiKeyConverter;
 import edu.stanford.bmir.protege.web.server.collection.CollectionIdConverter;
 import edu.stanford.bmir.protege.web.server.collection.CollectionItemConverter;
 import edu.stanford.bmir.protege.web.server.form.FormDataConverter;
@@ -99,6 +101,8 @@ public class MorphiaProvider implements Provider<Morphia> {
         converters.addConverter(colorConverter);
         converters.addConverter(new CollectionIdConverter());
         converters.addConverter(new CollectionItemConverter());
+        converters.addConverter(new HashedApiKeyConverter());
+        converters.addConverter(new ApiKeyIdConverter());
         morphia.map(EntityDiscussionThread.class);
         morphia.map(UserActivityRecord.class);
         morphia.map(RoleAssignment.class);

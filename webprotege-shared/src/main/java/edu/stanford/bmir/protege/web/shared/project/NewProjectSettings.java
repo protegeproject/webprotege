@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.csv.DocumentId;
@@ -35,7 +38,10 @@ public class NewProjectSettings implements IsSerializable {
      * @param projectDescription The desired project description for the new project.  Not {@code null}.
      * @throws NullPointerException if either projectOwner, displayName or projectDescription are null.
      */
-    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription) {
+    @JsonCreator
+    public NewProjectSettings(@JsonProperty("projectOwner") UserId projectOwner,
+                              @JsonProperty("displayName") String displayName,
+                              @JsonProperty("description") String projectDescription) {
         if (displayName == null) {
             throw new NullPointerException("displayName must not be null.");
         }
@@ -95,6 +101,7 @@ public class NewProjectSettings implements IsSerializable {
      * @return <code>true</code> if there is a source documents associated with this {@link NewProjectSettings} object,
      * otherwise <code>false</code>.
      */
+    @JsonIgnore
     public boolean hasSourceDocument() {
         return sourceDocumentId != null;
     }

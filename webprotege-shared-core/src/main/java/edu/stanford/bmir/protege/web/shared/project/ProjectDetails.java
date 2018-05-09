@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -58,6 +59,7 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
      * @param lastModifiedBy A {@link UserId} that identifies the user that last modified the project.
      * @throws NullPointerException if any parameters are {@code null}.
      */
+    @JsonCreator
     public ProjectDetails(@Nonnull ProjectId projectId,
                           @Nonnull String displayName,
                           @Nonnull String description,

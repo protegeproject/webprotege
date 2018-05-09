@@ -37,6 +37,9 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             servletContext.addServlet("FileUploadServlet", serverComponent.getFileUploadServlet())
                           .addMapping("/webprotege/submitfile");
 
+            servletContext.addServlet("JerseyContainerServlet", serverComponent.getJerseyServletContainer())
+                          .addMapping("/data/*");
+
             servletContext.addListener(serverComponent.getSessionListener());
 
             serverComponent.getWebProtegeConfigurationChecker().performConfiguration();
@@ -44,8 +47,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
             Runtime runtime = Runtime.getRuntime();
             logger.info("Max  Memory: {} MB", (runtime.maxMemory() / (1024 * 1024)));
             logger.info(WebProtegeMarker, "Initialized WebProtege");
-        }
-        catch (WebProtegeConfigurationException e) {
+        } catch (WebProtegeConfigurationException e) {
             logger.error(WebProtegeMarker, "Encountered a configuration error during initialization: {}", e.getMessage(), e);
             WebProtegeWebAppFilter.setConfigError(e);
         } catch (Throwable error) {
@@ -59,7 +61,7 @@ public class WebProtegeServletContextListener implements ServletContextListener 
         logger.info(WebProtegeMarker, "Shutting down WebProtege");
         ServletContext servletContext = servletContextEvent.getServletContext();
         ServerComponent serverComponent = (ServerComponent) servletContext.getAttribute(ServerComponent.class.getName());
-        if(serverComponent != null) {
+        if (serverComponent != null) {
             logger.info(WebProtegeMarker, "Disposing of objects");
             serverComponent.getDisposableObjectManager().dispose();
         }

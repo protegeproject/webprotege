@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.revision;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -59,6 +61,14 @@ public class RevisionNumber implements Serializable, IsSerializable, Comparable<
         }
     }
 
+    @Nonnull
+    public static RevisionNumber valueOf(String revisionNumber) {
+        if("HEAD".equalsIgnoreCase(revisionNumber)) {
+            return getHeadRevisionNumber();
+        }
+        return RevisionNumber.getRevisionNumber(Long.parseLong(revisionNumber));
+    }
+
     /**
      * Gets the long value of the this revision number.
      * @return The long value of this revision number
@@ -66,6 +76,8 @@ public class RevisionNumber implements Serializable, IsSerializable, Comparable<
     public long getValue() {
         return value;
     }
+
+    @JsonValue
     public int getValueAsInt() {
         if(value == HEAD) {
             return Integer.MAX_VALUE;

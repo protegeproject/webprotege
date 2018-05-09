@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.access.AccessManagerImpl;
 import edu.stanford.bmir.protege.web.server.access.RoleOracle;
 import edu.stanford.bmir.protege.web.server.access.RoleOracleImpl;
+import edu.stanford.bmir.protege.web.server.api.UserApiKeyStore;
+import edu.stanford.bmir.protege.web.server.api.UserApiKeyStoreImpl;
 import edu.stanford.bmir.protege.web.server.app.ApplicationSettingsManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
@@ -294,5 +296,12 @@ public class ApplicationModule {
     @Provides
     NestedAnnotationStyle provideNestedAnnotationStyle() {
         return NestedAnnotationStyle.COMPACT;
+    }
+
+    @ApplicationSingleton
+    @Provides
+    UserApiKeyStore provideUserApiKeyStore(UserApiKeyStoreImpl impl) {
+        impl.ensureIndexes();
+        return impl;
     }
 }

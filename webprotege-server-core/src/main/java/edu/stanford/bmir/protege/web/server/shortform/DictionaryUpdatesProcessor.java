@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.server.change.HasGetChangeSubjects;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toSet;
@@ -38,9 +39,14 @@ public class DictionaryUpdatesProcessor {
      * Updates all dictionaries in response to the specified list of (applied) ontology changes.
      */
     public void handleChanges(@Nonnull List<OWLOntologyChange> changes) {
-        Set<OWLEntity> affectedEntities = changes.stream()
-                                        .flatMap(change -> changeSubjectsProvider.getChangeSubjects(change).stream())
-                                        .collect(toSet());
+        Stream<OWLEntity> sigStream = changes.stream()
+                                             .flatMap(chg -> chg.getSignature().stream());
+        // Catches annotations
+        Stream<OWLEntity> subjectStream = changes.stream()
+                .flatMap(chg -> changeSubjectsProvider.getChangeSubjects(chg).stream());
+
+        Set<OWLEntity> affectedEntities = Stream.concat(sigStream, subjectStream)
+                                                .collect(toSet());
         dictionaryManager.update(affectedEntities);
     }
 
