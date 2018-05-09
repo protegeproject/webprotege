@@ -71,7 +71,6 @@ public class GetFormDescriptorActionHander extends AbstractProjectActionHandler<
                                              CollectionItem elementId) {
         try {
             URL url = GetFormDescriptorActionHander.class.getResource("/amino-acid-form.json");
-            System.out.println(url);
             InputStream is = GetFormDescriptorActionHander.class.getResourceAsStream("/amino-acid-form.json");
 
             ObjectMapper mapper = new ObjectMapper();

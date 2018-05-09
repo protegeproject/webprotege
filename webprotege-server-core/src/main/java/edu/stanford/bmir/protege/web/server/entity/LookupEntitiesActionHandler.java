@@ -91,7 +91,6 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
         List<SearchString> searchStrings = Stream.of(entityLookupRequest.getSearchString().split("\\s+|_|:"))
                 .map(SearchString::parseSearchString)
                 .collect(toList());
-        System.out.println(searchStrings);
         return dictionaryManager.getShortFormsContaining(searchStrings,
                                                          entityLookupRequest.getSearchedEntityTypes(),
                                                          languageManager.getLanguages())
