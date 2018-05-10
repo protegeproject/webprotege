@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.api.ActionExecutor;
+import edu.stanford.bmir.protege.web.server.api.ResponseUtil;
 import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -64,11 +65,10 @@ public class ProjectResource {
     public Response getProjectDetails(@Context UserId userId, @Context UriInfo uriInfo) {
         ProjectDetails projectDetails = executor.execute(new GetProjectDetailsAction(projectId), userId)
                                                 .getProjectDetails();
-        return Response.ok()
-                       .entity(projectDetails)
-                       .link(uriInfo.getAbsolutePath(), "self")
-                       .link(uriInfo.getAbsolutePathBuilder().path("revisions").build(), "revisions")
-                       .build();
+        ResponseUtil<ProjectDetails> response = new ResponseUtil<>(projectDetails);
+        response.addLink("self", uriInfo.getAbsolutePath());
+        response.addLink("revisions", uriInfo.getAbsolutePathBuilder().path("revisions").build());
+        return response.ok();
     }
 
     @Path("revisions")

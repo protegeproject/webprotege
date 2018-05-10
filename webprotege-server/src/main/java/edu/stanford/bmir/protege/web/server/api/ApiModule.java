@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.api;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import edu.stanford.bmir.protege.web.server.api.exception.PermissionDeniedExceptionMapper;
 import edu.stanford.bmir.protege.web.server.api.exception.UnknownProjectExceptionMapper;
 import edu.stanford.bmir.protege.web.server.api.resources.ProjectsResource;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -40,6 +41,7 @@ public class ApiModule {
         resourceConfig.register(new JacksonContextResolver());
 
         // Exception mappers
+        resourceConfig.register(new PermissionDeniedExceptionMapper());
         resourceConfig.register(new UnknownProjectExceptionMapper());
 
         // Add injected resources

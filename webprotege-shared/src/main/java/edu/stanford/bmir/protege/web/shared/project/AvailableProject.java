@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -19,6 +21,17 @@ import static java.util.Comparator.comparing;
  *
  * Represents information about a project that is available (viewable) for a given user.
  */
+@JsonPropertyOrder({"projectId",
+        "displayName",
+        "description",
+        "owner",
+        "createdAt",
+        "createdBy",
+        "lastModifiedAt",
+        "lastModifiedBy",
+        "inTrash",
+        "trashable",
+        "downloadable"})
 public class AvailableProject implements IsSerializable, Comparable<AvailableProject>, HasProjectId {
 
     public static final long UNKNOWN = 0;
@@ -143,6 +156,7 @@ public class AvailableProject implements IsSerializable, Comparable<AvailablePro
      * @return The details as a {@link ProjectDetails} object.
      */
     @Nonnull
+    @JsonIgnore
     public ProjectDetails getProjectDetails() {
         return projectDetails;
     }
