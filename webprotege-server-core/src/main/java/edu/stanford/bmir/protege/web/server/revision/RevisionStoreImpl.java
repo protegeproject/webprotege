@@ -82,7 +82,7 @@ public class RevisionStoreImpl implements RevisionStore {
             return Optional.empty();
         }
         int index = getRevisionIndexForRevision(revisionNumber);
-        if(index == -1) {
+        if(index < 0 || revisions.size() <= index) {
             return Optional.empty();
         }
         else {

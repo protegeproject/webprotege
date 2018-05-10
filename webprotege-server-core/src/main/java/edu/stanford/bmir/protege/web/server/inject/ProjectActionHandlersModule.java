@@ -541,4 +541,9 @@ public class ProjectActionHandlersModule {
     public ProjectActionHandler providesGetRevisionsActionHandler(GetRevisionsActionHandler handler) {
         return handler;
     }
+
+    @Provides @IntoSet
+    public ProjectActionHandler providesGetRevisionActionHandler(GetRevisionActionHandler handler) {
+        return handler;
+    }
 }

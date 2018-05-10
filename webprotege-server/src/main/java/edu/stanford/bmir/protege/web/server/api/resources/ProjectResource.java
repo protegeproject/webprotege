@@ -11,11 +11,16 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -36,7 +41,7 @@ public class ProjectResource {
     private final AxiomsResourceFactory axiomsResourceFactory;
 
     @Nonnull
-    private final ChangesResourceFactory changesResourceFactory;
+    private final RevisionsResourceFactory changesResourceFactory;
 
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
     @AutoFactory
@@ -45,7 +50,7 @@ public class ProjectResource {
                            @Provided @Nonnull ActionExecutor executor,
                            @Provided @Nonnull AccessManager accessManager,
                            @Provided @Nonnull AxiomsResourceFactory axiomsResourceFactory,
-                           @Provided @Nonnull ChangesResourceFactory changesResourceFactory) {
+                           @Provided @Nonnull RevisionsResourceFactory changesResourceFactory) {
         this.projectId = checkNotNull(projectId);
         this.executor = checkNotNull(executor);
         this.accessManager = checkNotNull(accessManager);
@@ -56,9 +61,14 @@ public class ProjectResource {
     @GET
     @Produces(APPLICATION_JSON)
     @Path("/")
-    public ProjectDetails getProjectDetails(@Context UserId userId) {
-        return executor.execute(new GetProjectDetailsAction(projectId), userId)
-                       .getProjectDetails();
+    public Response getProjectDetails(@Context UserId userId, @Context UriInfo uriInfo) {
+        ProjectDetails projectDetails = executor.execute(new GetProjectDetailsAction(projectId), userId)
+                                                .getProjectDetails();
+        return Response.ok()
+                       .entity(projectDetails)
+                       .link(uriInfo.getAbsolutePath(), "self")
+                       .link(uriInfo.getAbsolutePathBuilder().path("revisions").build(), "revisions")
+                       .build();
     }
 
     @Path("revisions")

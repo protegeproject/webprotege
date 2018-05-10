@@ -4,6 +4,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.api.ActionExecutor;
+import edu.stanford.bmir.protege.web.server.dispatch.actions.GetRevisionAction;
 import edu.stanford.bmir.protege.web.server.dispatch.actions.GetRevisionsAction;
 import edu.stanford.bmir.protege.web.server.revision.RevisionDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -12,11 +13,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.*;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -58,5 +58,26 @@ public class RevisionsResource {
                                                            to,
                                                            author);
         return executor.execute(action, userId).getRevisions();
+    }
+
+    @GET
+    @Path("/{revisionNumber : [0-9]+}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRevision(@Context UserId userId,
+                                @Context UriInfo uriInfo,
+                                @PathParam("revisionNumber") RevisionNumber revisionNumber) {
+            Optional<RevisionDetails> revisionDetails = executor.execute(new GetRevisionAction(projectId, revisionNumber), userId)
+                                                                .getRevisionDetails();
+            if(revisionDetails.isPresent()) {
+                return Response.ok(revisionDetails.get())
+                               .link(uriInfo.getAbsolutePath(), "self")
+                               .link(uriInfo.getAbsolutePathBuilder().path("..").build(), "revisions")
+                               .build();
+            }
+            else {
+                return Response.status(Response.Status.NOT_FOUND)
+                               .location(uriInfo.getAbsolutePath())
+                               .build();
+            }
     }
 }

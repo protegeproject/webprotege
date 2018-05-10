@@ -6,12 +6,15 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.ws.rs.InternalServerErrorException;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,10 +38,20 @@ public class ActionExecutor {
 
     @SuppressWarnings("unchecked")
     public   <A extends Action<R>,  R extends Result> R execute(A action, UserId userId) {
-        RequestContext requestContext = new RequestContext(userId);
-        ExecutionContext executionContext = new ExecutionContext(new Session(userId));
-        DispatchServiceResultContainer resultContainer = executor.execute(action, requestContext, executionContext);
-        return (R) resultContainer.getResult();
+        try {
+            RequestContext requestContext = new RequestContext(userId);
+            ExecutionContext executionContext = new ExecutionContext(new Session(userId));
+            DispatchServiceResultContainer resultContainer = executor.execute(action, requestContext, executionContext);
+            return (R) resultContainer.getResult();
+        } catch (ActionExecutionException e) {
+            Throwable throwable = e.getCause();
+            if(throwable instanceof RuntimeException) {
+                throw ((RuntimeException) throwable);
+            }
+            else {
+                throw new InternalServerErrorException();
+            }
+        }
     }
 
 
