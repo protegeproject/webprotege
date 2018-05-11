@@ -36,6 +36,10 @@ public class ResponseUtil<T> {
         links.put(checkNotNull(rel), checkNotNull(uri).toString());
     }
 
+    public void addLink(@Nonnull String rel, @Nonnull String path) {
+        links.put(checkNotNull(rel), checkNotNull(path));
+    }
+
     @JsonUnwrapped
     @Nonnull
     public T getValue() {

@@ -91,15 +91,6 @@ public class ProjectsResource implements ApiRootResource {
                                 @Nonnull @Context UriInfo uriInfo) {
         GetAvailableProjectsResult result = executor.execute(new GetAvailableProjectsAction(),
                                                              userId);
-        List<ResponseUtil> objects = result.getDetails().stream()
-                                           .map(details -> {
-                                               UriBuilder projectPath = uriInfo.getAbsolutePathBuilder().path(details.getProjectId().getId());
-                                               ResponseUtil<AvailableProject> wrapper = new ResponseUtil<>(details);
-                                               wrapper.addLink("self", projectPath.build());
-                                               wrapper.addLink("revisions", projectPath.path("revisions").build());
-                                               return wrapper;
-                                           })
-                                           .collect(toList());
-        return Response.ok().entity(objects).build();
+        return Response.ok().entity(result.getDetails()).build();
     }
 }

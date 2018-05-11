@@ -65,10 +65,7 @@ public class ProjectResource {
     public Response getProjectDetails(@Context UserId userId, @Context UriInfo uriInfo) {
         ProjectDetails projectDetails = executor.execute(new GetProjectDetailsAction(projectId), userId)
                                                 .getProjectDetails();
-        ResponseUtil<ProjectDetails> response = new ResponseUtil<>(projectDetails);
-        response.addLink("self", uriInfo.getAbsolutePath());
-        response.addLink("revisions", uriInfo.getAbsolutePathBuilder().path("revisions").build());
-        return response.ok();
+        return Response.ok(projectDetails).build();
     }
 
     @Path("revisions")

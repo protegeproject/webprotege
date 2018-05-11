@@ -70,8 +70,6 @@ public class RevisionsResource {
                                                                 .getRevisionDetails();
             if(revisionDetails.isPresent()) {
                 return Response.ok(revisionDetails.get())
-                               .link(uriInfo.getAbsolutePath(), "self")
-                               .link(uriInfo.getAbsolutePathBuilder().path("..").build(), "revisions")
                                .build();
             }
             else {
