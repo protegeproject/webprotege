@@ -37,7 +37,7 @@ public class WatchManagerImpl implements WatchManager {
 
     private final ProjectId projectId;
 
-    private final WatchRecordRepositoryImpl repository;
+    private final WatchRecordRepository repository;
 
     private final IndirectlyWatchedEntitiesFinder indirectlyWatchedEntitiesFinder;
 
@@ -47,7 +47,7 @@ public class WatchManagerImpl implements WatchManager {
 
     @Inject
     public WatchManagerImpl(@Nonnull ProjectId projectId,
-                            @Nonnull WatchRecordRepositoryImpl repository,
+                            @Nonnull WatchRecordRepository repository,
                             @Nonnull IndirectlyWatchedEntitiesFinder indirectlyWatchedEntitiesFinder,
                             @Nonnull WatchTriggeredHandler watchTriggeredHandler,
                             @Nonnull EventManager<ProjectEvent<?>> eventManager) {
