@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.change;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectChangesResult implements Result {
 
-    private ImmutableList<ProjectChange> changes;
+    private Page<ProjectChange> changes;
 
     /**
      * For serialization purposes only
@@ -22,11 +23,11 @@ public class GetProjectChangesResult implements Result {
     private GetProjectChangesResult() {
     }
 
-    public GetProjectChangesResult(ImmutableList<ProjectChange> changes) {
+    public GetProjectChangesResult(Page<ProjectChange> changes) {
         this.changes = checkNotNull(changes);
     }
 
-    public ImmutableList<ProjectChange> getChanges() {
+    public Page<ProjectChange> getChanges() {
         return changes;
     }
 

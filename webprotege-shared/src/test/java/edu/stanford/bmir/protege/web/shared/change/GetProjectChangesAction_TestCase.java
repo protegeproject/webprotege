@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import dagger.Module;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,24 +35,27 @@ public class GetProjectChangesAction_TestCase {
     @Mock
     private ProjectId projectId;
 
+    @Mock
+    private PageRequest pageRequest;
+
     private Optional<OWLEntity> subject = Optional.of(mock(OWLEntity.class));
 
 
     @Before
     public void setUp() throws Exception {
-        action = new GetProjectChangesAction(projectId, subject);
-        otherAction = new GetProjectChangesAction(projectId, subject);
+        action = new GetProjectChangesAction(projectId, subject, pageRequest);
+        otherAction = new GetProjectChangesAction(projectId, subject, pageRequest);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ProjectId_IsNull() {
-        new GetProjectChangesAction(null, subject);
+        new GetProjectChangesAction(null, subject, pageRequest);
     }
 
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Subject_IsNull() {
-        new GetProjectChangesAction(projectId, null);
+        new GetProjectChangesAction(projectId, null, pageRequest);
     }
 
     @Test

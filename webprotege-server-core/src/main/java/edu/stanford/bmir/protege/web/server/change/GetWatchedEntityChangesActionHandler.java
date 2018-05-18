@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesResult;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
 import javax.annotation.Nonnull;
@@ -52,7 +53,8 @@ public class GetWatchedEntityChangesActionHandler extends AbstractProjectActionH
     public GetWatchedEntityChangesResult execute(@Nonnull GetWatchedEntityChangesAction action, @Nonnull ExecutionContext executionContext) {
         Set<Watch> watches = watchManager.getWatches(action.getUserId());
         ImmutableList<ProjectChange> changes = watchedChangesManager.getProjectChangesForWatches(watches);
-        return new GetWatchedEntityChangesResult(changes);
+        Page<ProjectChange> page = new Page<>(1, 1, changes, changes.size());
+        return new GetWatchedEntityChangesResult(page);
     }
 
     @Nonnull

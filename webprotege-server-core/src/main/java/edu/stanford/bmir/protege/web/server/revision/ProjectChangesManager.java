@@ -5,12 +5,14 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.server.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
+import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
@@ -57,12 +59,34 @@ public class ProjectChangesManager {
         this.changeRecordComparator = changeRecordComparator;
     }
 
-    public ImmutableList<ProjectChange> getProjectChanges(Optional<OWLEntity> subject) {
-        ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
-        for (Revision revision : revisionManager.getRevisions()) {
-            getProjectChangesForRevision(revision, subject, changes);
+    public Page<ProjectChange> getProjectChanges(Optional<OWLEntity> subject,
+                                                          PageRequest pageRequest) {
+        ImmutableList<Revision> revisions = revisionManager.getRevisions();
+        if (subject.isPresent()) {
+            // We need to scan revisions to find the ones containing a particular subject
+            // We ignore the page request here.
+            // This needs reworking really, but the number of changes per entity is usually small
+            // so this works for now.
+            ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
+            for (Revision revision : revisions) {
+                getProjectChangesForRevision(revision, subject, changes);
+            }
+            ImmutableList<ProjectChange> theChanges = changes.build();
+            return new Page<>(1, 1, theChanges, theChanges.size());
         }
-        return changes.build();
+        else {
+            // Pages are in reverse order
+            ImmutableList.Builder<ProjectChange> changes = ImmutableList.builder();
+            revisions.reverse().stream()
+                     .skip(pageRequest.getSkip())
+                     .limit(pageRequest.getPageSize())
+                     .forEach(revision -> getProjectChangesForRevision(revision, subject, changes));
+            ImmutableList<ProjectChange> changeList = changes.build();
+            int pageCount = (revisions.size() / pageRequest.getPageSize()) + 1;
+            return new Page<>(pageRequest.getPageNumber(),
+                              pageCount,
+                              changeList, changeList.size());
+        }
     }
 
     public ImmutableList<ProjectChange> getProjectChangesForSubjectInRevision(OWLEntity subject, Revision revision) {

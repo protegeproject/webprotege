@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -25,14 +26,18 @@ public class GetProjectChangesAction implements ProjectAction<GetProjectChangesR
     @Nullable
     private OWLEntity subject;
 
+    private PageRequest pageRequest;
+
     @GwtSerializationConstructor
     private GetProjectChangesAction() {
     }
 
     public GetProjectChangesAction(@Nonnull ProjectId projectId,
-                                   @Nonnull Optional<OWLEntity> subject) {
+                                   @Nonnull Optional<OWLEntity> subject,
+                                   @Nonnull PageRequest pageRequest) {
         this.projectId = checkNotNull(projectId);
         this.subject = checkNotNull(subject).orElse(null);
+        this.pageRequest = checkNotNull(pageRequest);
     }
 
     @Nonnull
@@ -40,8 +45,14 @@ public class GetProjectChangesAction implements ProjectAction<GetProjectChangesR
         return projectId;
     }
 
-    public java.util.Optional<OWLEntity> getSubject() {
+    @Nonnull
+    public Optional<OWLEntity> getSubject() {
         return Optional.ofNullable(subject);
+    }
+
+    @Nonnull
+    public PageRequest getPageRequest() {
+        return pageRequest;
     }
 
     @Override

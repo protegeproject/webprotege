@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ public class GetWatchedEntityChangesResult_TestCase {
     private GetWatchedEntityChangesResult otherResult;
 
     @Mock
-    private ImmutableList<ProjectChange> changes;
+    private Page<ProjectChange> changes;
 
 
     @Before

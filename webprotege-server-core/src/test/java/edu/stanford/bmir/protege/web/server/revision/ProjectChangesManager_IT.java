@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.object.*;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -181,13 +183,15 @@ public class ProjectChangesManager_IT {
 
     @Test
     public void shouldGetChanges() {
-        ImmutableList<ProjectChange> projectChanges = changesManager.getProjectChanges(Optional.empty());
-        assertThat(projectChanges.size(), is(1));
+        Page<ProjectChange> projectChanges = changesManager.getProjectChanges(Optional.empty(),
+                                                                              PageRequest.requestFirstPage());
+        assertThat(projectChanges.getPageElements().size(), is(1));
     }
 
     @Test
     public void shouldContainOntologyChanges() {
-        ImmutableList<ProjectChange> projectChanges = changesManager.getProjectChanges(Optional.empty());
-        assertThat(projectChanges.get(0).getChangeCount(), is(3 * CHANGE_COUNT));
+        Page<ProjectChange> projectChanges = changesManager.getProjectChanges(Optional.empty(),
+                                                                                       PageRequest.requestFirstPage());
+        assertThat(projectChanges.getPageElements().get(0).getChangeCount(), is(3 * CHANGE_COUNT));
     }
 }

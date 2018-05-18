@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -33,6 +34,8 @@ public class GetWatchedEntityChangesAction_TestCase {
     @Mock
     private UserId userId;
 
+    @Mock
+    private PageRequest pageRequest;
 
     @Before
     public void setUp() throws Exception {

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesResult;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,7 +50,8 @@ public class GetProjectChangesActionHandler extends AbstractProjectActionHandler
     @Nonnull
     @Override
     public GetProjectChangesResult execute(@Nonnull final GetProjectChangesAction action, @Nonnull ExecutionContext executionContext) {
-        List<ProjectChange> changeList = changesManager.getProjectChanges(action.getSubject());
-        return new GetProjectChangesResult(ImmutableList.copyOf(changeList));
+        Page<ProjectChange> changeList = changesManager.getProjectChanges(action.getSubject(),
+                                                                          action.getPageRequest());
+        return new GetProjectChangesResult(changeList);
     }
 }

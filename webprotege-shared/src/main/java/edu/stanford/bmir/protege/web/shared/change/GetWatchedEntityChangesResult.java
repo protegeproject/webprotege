@@ -4,6 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,16 +15,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetWatchedEntityChangesResult implements Result {
 
-    private ImmutableList<ProjectChange> changes;
+    private Page<ProjectChange> changes;
 
     private GetWatchedEntityChangesResult() {
     }
 
-    public GetWatchedEntityChangesResult(ImmutableList<ProjectChange> changes) {
+    public GetWatchedEntityChangesResult(Page<ProjectChange> changes) {
         this.changes = checkNotNull(changes);
     }
 
-    public ImmutableList<ProjectChange> getChanges() {
+    public Page<ProjectChange> getChanges() {
         return changes;
     }
 
