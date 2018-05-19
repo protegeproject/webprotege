@@ -24,6 +24,9 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
 
     @Override
     protected Optional<String> getDescriptionForAddAxiomChange(OWLAnnotationAssertionAxiom axiom) {
+        if(axiom.getProperty().isDeprecated()) {
+            return formatter.format("Deprecated %s", axiom.getSubject());
+        }
         return formatter.format("Added annotation (%s  %s) to %s",
                                 axiom.getProperty(),
                                 axiom.getValue(),
@@ -32,6 +35,9 @@ public class AnnotationAssertionChangeMatcher extends AbstractAxiomMatcher<OWLAn
 
     @Override
     protected Optional<String> getDescriptionForRemoveAxiomChange(OWLAnnotationAssertionAxiom axiom) {
+        if(axiom.getProperty().isDeprecated()) {
+            return formatter.format("Undeprecated %s", axiom.getSubject());
+        }
         return formatter.format("Removed annotation (%s  %s) from %s",
                                 axiom.getProperty(),
                                 axiom.getValue(),
