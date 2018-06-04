@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import org.semanticweb.owlapi.formats.*;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
 
+import java.util.function.Supplier;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -12,25 +14,25 @@ import org.semanticweb.owlapi.model.OWLDocumentFormat;
  */
 public enum DownloadFormat {
 
-    RDF_XML(new RDFXMLDocumentFormat(), "application/rdf+xml", DownloadFormatExtension.owl),
+    RDF_XML(RDFXMLDocumentFormat::new, "application/rdf+xml", DownloadFormatExtension.owl),
 
-    RDF_TURLE(new TurtleDocumentFormat(), "text/turtle", DownloadFormatExtension.ttl),
+    RDF_TURLE(TurtleDocumentFormat::new, "text/turtle", DownloadFormatExtension.ttl),
 
-    OWL_XML(new OWLXMLDocumentFormat(), "application/owl+xml", DownloadFormatExtension.owx),
+    OWL_XML(OWLXMLDocumentFormat::new, "application/owl+xml", DownloadFormatExtension.owx),
 
-    MANCHESTER(new ManchesterSyntaxDocumentFormat(), "text/owl-manchester", DownloadFormatExtension.omn),
+    MANCHESTER(ManchesterSyntaxDocumentFormat::new, "text/owl-manchester", DownloadFormatExtension.omn),
 
-    FUNCTIONAL_SYNTAX(new FunctionalSyntaxDocumentFormat(), "text/owl-functional", DownloadFormatExtension.ofn);
+    FUNCTIONAL_SYNTAX(FunctionalSyntaxDocumentFormat::new, "text/owl-functional", DownloadFormatExtension.ofn);
 
 
-    private OWLDocumentFormat DocumentFormat;
+    private final Supplier<OWLDocumentFormat> documentFormatSupplier;
 
-    private String mimeType;
+    private final String mimeType;
 
-    private DownloadFormatExtension extension;
+    private final DownloadFormatExtension extension;
 
-    DownloadFormat(OWLDocumentFormat DocumentFormat, String mimeType, DownloadFormatExtension extension) {
-        this.DocumentFormat = DocumentFormat;
+    DownloadFormat(Supplier<OWLDocumentFormat> documentFormatSupplier, String mimeType, DownloadFormatExtension extension) {
+        this.documentFormatSupplier = documentFormatSupplier;
         this.mimeType = mimeType;
         this.extension = extension;
     }
@@ -41,7 +43,7 @@ public enum DownloadFormat {
     }
 
     public OWLDocumentFormat getDocumentFormat() {
-        return DocumentFormat;
+        return documentFormatSupplier.get();
     }
 
     public String getMimeType() {
