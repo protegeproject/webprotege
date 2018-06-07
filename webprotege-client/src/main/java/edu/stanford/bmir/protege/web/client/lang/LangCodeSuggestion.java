@@ -53,6 +53,10 @@ public class LangCodeSuggestion implements SuggestOracle.Suggestion, Comparable<
         this.query = query.toLowerCase();
     }
 
+    public String getName() {
+        return code.getName();
+    }
+
     public String getPlainRendering() {
         return code.getLang() + " (" + code.getName() + ")";
     }

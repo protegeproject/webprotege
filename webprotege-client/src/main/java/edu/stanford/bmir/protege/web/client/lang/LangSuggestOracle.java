@@ -27,8 +27,17 @@ public class LangSuggestOracle extends SuggestOracle {
         String query = request.getQuery().toLowerCase();
         List<LangCodeSuggestion> suggestions = new ArrayList<>();
         for(LanguageCode code : codes) {
-            if(code.getLang().toLowerCase().contains(query) || code.getName().toLowerCase().contains(query)) {
+            String lang = code.getLang().toLowerCase();
+            int langIndex = lang.indexOf(query);
+            if(langIndex != -1 && isSubLangStart(lang, langIndex)) {
                 suggestions.add(new LangCodeSuggestion(code, query));
+            }
+            else {
+                String name = code.getName();
+                int index = name.toLowerCase().indexOf(query);
+                if(index != -1 && Character.isUpperCase(name.charAt(index))) {
+                    suggestions.add(new LangCodeSuggestion(code, query));
+                }
             }
         }
         Collections.sort(suggestions);
@@ -36,6 +45,12 @@ public class LangSuggestOracle extends SuggestOracle {
             suggestions = suggestions.subList(0, 10);
         }
         callback.onSuggestionsReady(request, new Response(suggestions));
+    }
+
+    private boolean isSubLangStart(String lang, int langIndex) {
+        return langIndex != -1
+                && (langIndex == 0 || langIndex > 0
+                && lang.charAt(langIndex - 1) == '-');
     }
 
     @Override
