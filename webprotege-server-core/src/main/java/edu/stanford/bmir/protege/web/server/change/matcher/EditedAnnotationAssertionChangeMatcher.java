@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.change.matcher;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLObjectStringFormatter;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -51,21 +52,21 @@ public class EditedAnnotationAssertionChangeMatcher implements ChangeMatcher {
                     if (addedLiteral.getLiteral().equals(removedLiteral.getLiteral())) {
                         if (addedLiteral.getLang().isEmpty()) {
                             return formatter.format("Removed language tag '%s' from %s on %s",
-                                    removedLiteral.getLang(),
+                                                    LanguageTagFormatter.format(removedLiteral.getLang()),
                                     added.getProperty(),
                                     removed.getSubject());
                         }
                         else {
                             if (removedLiteral.getLang().isEmpty()) {
                                 return formatter.format("Added language tag '%s' to %s on %s",
-                                        addedLiteral.getLang(),
+                                        LanguageTagFormatter.format(addedLiteral.getLang()),
                                         added.getProperty(),
                                         removed.getSubject());
                             }
                             else {
                                 return formatter.format("Changed language tag (from '%s' to '%s') in %s to %s",
-                                        removedLiteral.getLang(),
-                                        addedLiteral.getLang(),
+                                        LanguageTagFormatter.format(removedLiteral.getLang()),
+                                        LanguageTagFormatter.format(addedLiteral.getLang()),
                                         added.getProperty(),
                                         removed.getSubject());
                             }

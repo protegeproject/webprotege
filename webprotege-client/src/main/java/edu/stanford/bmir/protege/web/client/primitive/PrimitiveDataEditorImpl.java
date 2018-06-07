@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.*;
@@ -766,7 +767,9 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             view.setText(data.getBrowserText());
             if (data instanceof OWLLiteralData) {
                 String lang = ((OWLLiteralData) data).getLiteral().getLang();
-                languageEditor.setValue(lang);
+                if (!languageEditor.getValue().orElse("").equalsIgnoreCase(lang)) {
+                    languageEditor.setValue(LanguageTagFormatter.format(lang));
+                }
             }
             if(selectedSuggestion.isPresent()) {
                 if(!selectedSuggestion.get().getReplacementString().equals(data.getBrowserText())) {
