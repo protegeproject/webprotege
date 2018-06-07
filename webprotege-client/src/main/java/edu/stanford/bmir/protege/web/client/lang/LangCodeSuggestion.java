@@ -25,11 +25,11 @@ public class LangCodeSuggestion implements SuggestOracle.Suggestion, Comparable<
         int index = base.toLowerCase().indexOf(query.toLowerCase());
         String displayString;
         if(index != -1) {
-            displayString = base.substring(0, index)
-                            + "<span style=\"font-weight: bold;\">"
+            displayString = "<div>" + base.substring(0, index)
+                            + "<span class=\"web-protege-entity-match-substring\">"
                             + base.substring(index, index + query.length())
                             + "</span>"
-                            + base.substring(index + query.length());
+                            + base.substring(index + query.length()) + "</div>";
         }
         else {
             displayString = base;
