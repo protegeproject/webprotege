@@ -31,7 +31,7 @@ public class LanguageCode implements Comparable<LanguageCode> {
 
     @Override
     public int compareTo(LanguageCode o) {
-        return this.getLang().compareTo(o.lang);
+        return this.getLang().compareToIgnoreCase(o.lang);
     }
 
     @Override

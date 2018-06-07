@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class LanguageCodeParser {
 
-    private static final RegExp pattern = RegExp.compile("\"(..)\",\"([^\"]+)\"");
+    private static final RegExp pattern = RegExp.compile("\"(.+)\",\"([^\"]+)\"");
 
 
     public List<LanguageCode> parse(String codes) {

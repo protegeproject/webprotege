@@ -27,7 +27,7 @@ public class LangSuggestOracle extends SuggestOracle {
         String query = request.getQuery().toLowerCase();
         List<LangCodeSuggestion> suggestions = new ArrayList<>();
         for(LanguageCode code : codes) {
-            if(code.getLang().contains(query) || code.getName().toLowerCase().contains(query)) {
+            if(code.getLang().toLowerCase().contains(query) || code.getName().toLowerCase().contains(query)) {
                 suggestions.add(new LangCodeSuggestion(code, query));
             }
         }
