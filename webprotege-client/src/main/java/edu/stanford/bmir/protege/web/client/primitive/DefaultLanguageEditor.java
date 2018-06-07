@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.lang.LangSuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
@@ -32,11 +36,8 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
     @Inject
     public DefaultLanguageEditor(LangSuggestOracle oracle) {
         suggestBox = new SuggestBox(oracle);
-        suggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                setDirty(true, EventStrategy.FIRE_EVENTS);
-            }
+        suggestBox.addSelectionHandler(event -> {
+            setDirty(true, EventStrategy.FIRE_EVENTS);
         });
         initWidget(suggestBox);
     }
@@ -52,7 +53,7 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
      */
     @Override
     public boolean isEnabled() {
-        return suggestBox.getTextBox().isEnabled();
+        return suggestBox.getValueBox().isEnabled();
     }
 
     /**
@@ -62,7 +63,7 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
      */
     @Override
     public void setEnabled(boolean enabled) {
-        suggestBox.getTextBox().setEnabled(enabled);
+        suggestBox.getValueBox().setEnabled(enabled);
         if(enabled) {
             setPlaceholderInternal(placeholder);
         }

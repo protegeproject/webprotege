@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -95,5 +96,22 @@ public class LangCodeSuggestion implements SuggestOracle.Suggestion, Comparable<
     @Override
     public int compareTo(@Nonnull LangCodeSuggestion o) {
         return LANG_CODE_SUGGESTION_COMPARATOR.compare(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return code.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof LangCodeSuggestion)) {
+            return false;
+        }
+        LangCodeSuggestion other = (LangCodeSuggestion) obj;
+        return this.code.equals(other.code);
     }
 }
