@@ -26,6 +26,7 @@
         .language-field {
             flex-grow: 0;
             flex-shrink: 0;
+            width: 36px;
             border: 1px solid transparent;
         }
     </ui:style>

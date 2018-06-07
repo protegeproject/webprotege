@@ -32,7 +32,6 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
     @Inject
     public DefaultLanguageEditor(LangSuggestOracle oracle) {
         suggestBox = new SuggestBox(oracle);
-        suggestBox.setWidth("30px");
         suggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
