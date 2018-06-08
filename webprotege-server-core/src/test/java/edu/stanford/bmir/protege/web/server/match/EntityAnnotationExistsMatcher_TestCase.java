@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +12,10 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 /**
