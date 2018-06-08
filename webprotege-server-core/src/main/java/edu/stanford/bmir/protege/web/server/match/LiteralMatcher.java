@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 7 Jun 2018
  */
-public class LiteralMatcher implements AnnotationValueMatcher<OWLLiteral> {
+public class LiteralMatcher implements Matcher<OWLLiteral> {
 
     @Nonnull
     private final Matcher<String> lexicalValueMatcher;
