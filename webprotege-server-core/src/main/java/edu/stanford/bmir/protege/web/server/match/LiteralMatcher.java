@@ -4,6 +4,8 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,4 +39,73 @@ public class LiteralMatcher implements Matcher<OWLLiteral> {
                 && languageTagMatcher.matches(literal.getLang())
                 && datatypeMatcher.matches(literal.getDatatype());
     }
+
+
+    public static LiteralMatcher forLexicalPattern(@Nonnull Pattern pattern) {
+        return new LiteralMatcher(
+                lexicalValue -> pattern.matcher(lexicalValue).find(),
+                langTag -> true,
+                datatype -> true
+        );
+    }
+
+    public static Matcher<OWLLiteral> forPredicate(@Nonnull Predicate<String> predicate) {
+        return new LiteralMatcher(
+                predicate::test,
+                langTag -> true,
+                datatype -> true
+        );
+    }
+
+    public static Matcher<OWLLiteral> forHasAnyLangTag() {
+        return new LiteralMatcher(lexicalValue -> true,
+                                  langTag -> !langTag.isEmpty(),
+                                  datatype -> true);
+    }
+
+    public static Matcher<OWLLiteral> forHasLangTag(@Nonnull String langTagMatch) {
+        return new LiteralMatcher(lexicalValue -> true,
+                                  langTagMatch::equalsIgnoreCase,
+                                  datatype -> true);
+    }
+
+
+    public static Matcher<OWLLiteral> forNoLangTag() {
+        return new LiteralMatcher(lexicalValue -> true,
+                                  String::isEmpty,
+                                  datatype -> true);
+    }
+
+    public static Matcher<OWLLiteral> forXsdBooleanTrue() {
+        return new LiteralMatcher(lexicalValue -> lexicalValue.equalsIgnoreCase("true") || lexicalValue.equals("1"),
+                                  String::isEmpty,
+                                  OWLDatatype::isBoolean);
+    }
+
+    public static Matcher<OWLLiteral> forXsdBooleanFalse() {
+        return new LiteralMatcher(lexicalValue -> !lexicalValue.equalsIgnoreCase("true") && !lexicalValue.equals("1"),
+                                  String::isEmpty,
+                                  OWLDatatype::isBoolean);
+    }
+
+    public static Matcher<OWLLiteral> forEqualTo(double value) {
+        return NumericLiteralMatcher.forEqualTo(value);
+    }
+
+    public static Matcher<OWLLiteral> forLessThan(double value) {
+        return NumericLiteralMatcher.forLessThan(value);
+    }
+
+    public static Matcher<OWLLiteral> forLessThanOrEqualTo(double value) {
+        return NumericLiteralMatcher.forLessThanOrEqualTo(value);
+    }
+
+    public static Matcher<OWLLiteral> forGreaterThan(double value) {
+        return NumericLiteralMatcher.forGreaterThan(value);
+    }
+
+    public static Matcher<OWLLiteral> forGreaterThanOrEqualTo(double value) {
+        return NumericLiteralMatcher.forGreaterThanOrEqualTo(value);
+    }
+
 }
