@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.trigger;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.EntityFrameMatcher;
+import edu.stanford.bmir.protege.web.server.match.Matcher;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -55,7 +56,7 @@ public class TriggerRunner {
         checkContextsSize();
         for (int i = 0; i < triggers.size(); i++) {
             Trigger trigger = triggers.get(i);
-            EntityFrameMatcher matcher = trigger.getMatcher();
+            Matcher<OWLEntity> matcher = trigger.getMatcher();
             if (matcher.matches(checkNotNull(entity))) {
                 List<TriggerAction> triggerActions = trigger.getTriggerActions();
                 List<Object> triggerContexts = contexts.get(i);

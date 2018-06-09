@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.trigger;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.EntityFrameMatcher;
+import edu.stanford.bmir.protege.web.server.match.Matcher;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -15,19 +17,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Trigger {
 
     @Nonnull
-    private final EntityFrameMatcher matcher;
+    private final Matcher<OWLEntity> matcher;
 
     @Nonnull
     private final ImmutableList<TriggerAction> triggerActions;
 
-    public Trigger(@Nonnull EntityFrameMatcher matcher,
+    public Trigger(@Nonnull Matcher<OWLEntity> matcher,
                    @Nonnull ImmutableList<TriggerAction> triggerActions) {
         this.matcher = checkNotNull(matcher);
         this.triggerActions = checkNotNull(triggerActions);
     }
 
     @Nonnull
-    public EntityFrameMatcher getMatcher() {
+    public Matcher<OWLEntity> getMatcher() {
         return matcher;
     }
 
