@@ -23,5 +23,8 @@ public interface RootCriteriaVisitor<R> {
 
     @Nonnull
     R visit(@Nonnull EntityHasConflictingBooleanAnnotationValuesCriteria criteria);
+
+    @Nonnull
+    R visit(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria);
 }
 
