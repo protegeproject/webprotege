@@ -11,6 +11,8 @@ import javax.annotation.Nonnull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
+ *
+ * Criteria for matching any annotation property
  */
 @AutoValue
 @GwtCompatible(serializable = true)
