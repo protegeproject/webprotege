@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 12 Jun 2018
+ *
+ * Criteria that matches any annotation value
  */
 @AutoValue
 @GwtCompatible(serializable = true)
@@ -24,6 +26,9 @@ public abstract class AnyAnnotationValueCriteria implements AnnotationValueCrite
         return new AutoValue_AnyAnnotationValueCriteria();
     }
 
+    /**
+     * A convenicen method that returns an instance of {@link AnyAnnotationPropertyCriteria}.
+     */
     @Nonnull
     @JsonCreator
     public static AnyAnnotationValueCriteria anyValue() {
