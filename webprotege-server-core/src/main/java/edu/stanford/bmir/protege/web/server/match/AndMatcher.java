@@ -20,6 +20,11 @@ public class AndMatcher<T> implements Matcher<T> {
         this.matchers = checkNotNull(matchers);
     }
 
+    @SafeVarargs
+    public static <T> AndMatcher<T> get(Matcher<T> ... matchers) {
+        return new AndMatcher<>(ImmutableList.copyOf(matchers));
+    }
+
     @Override
     public boolean matches(@Nonnull T value) {
         return matchers.stream()
