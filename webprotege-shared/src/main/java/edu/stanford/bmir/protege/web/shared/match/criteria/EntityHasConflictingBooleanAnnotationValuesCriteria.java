@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("EntityHasConflictingBooleanValues")
+@JsonTypeName("EntityHasConflictingBooleanAnnotationValues")
 public abstract class EntityHasConflictingBooleanAnnotationValuesCriteria implements EntityMatchCriteria {
 
     @JsonProperty("property")
