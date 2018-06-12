@@ -6,6 +6,8 @@ import org.semanticweb.owlapi.model.OWLAnnotationValue;
 
 import javax.annotation.Nonnull;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -21,8 +23,8 @@ public class AnnotationMatcher implements Matcher<OWLAnnotation> {
 
     public AnnotationMatcher(@Nonnull Matcher<OWLAnnotationProperty> propertyMatcher,
                              @Nonnull Matcher<OWLAnnotationValue> annotationValueMatcher) {
-        this.propertyMatcher = propertyMatcher;
-        this.annotationValueMatcher = annotationValueMatcher;
+        this.propertyMatcher = checkNotNull(propertyMatcher);
+        this.annotationValueMatcher = checkNotNull(annotationValueMatcher);
     }
 
     @Override
