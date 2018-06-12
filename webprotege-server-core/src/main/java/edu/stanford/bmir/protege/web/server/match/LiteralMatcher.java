@@ -87,25 +87,4 @@ public class LiteralMatcher implements Matcher<OWLLiteral> {
                                   String::isEmpty,
                                   OWLDatatype::isBoolean);
     }
-
-    public static Matcher<OWLLiteral> forEqualTo(double value) {
-        return NumericLiteralMatcher.forEqualTo(value);
-    }
-
-    public static Matcher<OWLLiteral> forLessThan(double value) {
-        return NumericLiteralMatcher.forLessThan(value);
-    }
-
-    public static Matcher<OWLLiteral> forLessThanOrEqualTo(double value) {
-        return NumericLiteralMatcher.forLessThanOrEqualTo(value);
-    }
-
-    public static Matcher<OWLLiteral> forGreaterThan(double value) {
-        return NumericLiteralMatcher.forGreaterThan(value);
-    }
-
-    public static Matcher<OWLLiteral> forGreaterThanOrEqualTo(double value) {
-        return NumericLiteralMatcher.forGreaterThanOrEqualTo(value);
-    }
-
 }

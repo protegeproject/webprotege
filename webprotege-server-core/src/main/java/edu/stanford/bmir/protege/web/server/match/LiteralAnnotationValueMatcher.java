@@ -61,26 +61,6 @@ public class LiteralAnnotationValueMatcher implements Matcher<OWLAnnotationValue
         return forLexicalPattern(Pattern.compile("\\s+"));
     }
 
-    public static Matcher<OWLAnnotationValue> forLessThan(double value) {
-        return new LiteralAnnotationValueMatcher(LiteralMatcher.forLessThan(value));
-    }
-
-    public static Matcher<OWLAnnotationValue> forLessThanOrEqualTo(double value) {
-        return new LiteralAnnotationValueMatcher(LiteralMatcher.forLessThanOrEqualTo(value));
-    }
-
-    public static Matcher<OWLAnnotationValue> forGreaterThan(double value) {
-        return new LiteralAnnotationValueMatcher(LiteralMatcher.forGreaterThan(value));
-    }
-
-    public static Matcher<OWLAnnotationValue> forGreaterThanOrEqualTo(double value) {
-        return new LiteralAnnotationValueMatcher(LiteralMatcher.forGreaterThanOrEqualTo(value));
-    }
-
-    public static Matcher<OWLAnnotationValue> forEqualTo(double value) {
-        return new LiteralAnnotationValueMatcher(LiteralMatcher.forEqualTo(value));
-    }
-
     public static Matcher<OWLAnnotationValue> forAnyValue() {
         return OWLAnnotationValue::isLiteral;
     }
