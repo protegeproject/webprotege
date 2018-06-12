@@ -26,7 +26,7 @@ public class LiteralAnnotationValueMatcher implements Matcher<OWLAnnotationValue
 
     @Override
     public boolean matches(@Nonnull OWLAnnotationValue value) {
-        return value.isLiteral() && literalMatcher.matches((OWLLiteral) value);
+        return value instanceof OWLLiteral && literalMatcher.matches((OWLLiteral) value);
     }
 
     public static Matcher<OWLAnnotationValue> forLexicalPattern(@Nonnull Pattern pattern) {
