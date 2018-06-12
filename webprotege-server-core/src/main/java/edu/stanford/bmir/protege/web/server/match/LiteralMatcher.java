@@ -77,13 +77,13 @@ public class LiteralMatcher implements Matcher<OWLLiteral> {
     }
 
     public static Matcher<OWLLiteral> forXsdBooleanTrue() {
-        return new LiteralMatcher(lexicalValue -> lexicalValue.equalsIgnoreCase("true") || lexicalValue.equals("1"),
+        return new LiteralMatcher(lexicalValue -> lexicalValue.equals("true") || lexicalValue.equals("1"),
                                   String::isEmpty,
                                   OWLDatatype::isBoolean);
     }
 
     public static Matcher<OWLLiteral> forXsdBooleanFalse() {
-        return new LiteralMatcher(lexicalValue -> !lexicalValue.equalsIgnoreCase("true") && !lexicalValue.equals("1"),
+        return new LiteralMatcher(lexicalValue -> !lexicalValue.equals("false") && !lexicalValue.equals("1"),
                                   String::isEmpty,
                                   OWLDatatype::isBoolean);
     }
