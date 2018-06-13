@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @Type(EntityMatchCriteria.class)
 })
-public interface RootCriteria {
+public interface RootCriteria extends Criteria {
 
     <R> R accept(RootCriteriaVisitor<R> visitor);
 }

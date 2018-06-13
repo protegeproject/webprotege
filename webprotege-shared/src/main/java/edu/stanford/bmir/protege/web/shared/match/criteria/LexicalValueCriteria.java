@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
         @Type(StringContainsRegexMatchCriteria.class),
         @Type(NumericValueCriteria.class)
 })
-public interface LexicalValueCriteria {
+public interface LexicalValueCriteria extends Criteria {
 
     <R> R accept(@Nonnull LexicalValueCriteriaVisitor<R> visitor);
 }

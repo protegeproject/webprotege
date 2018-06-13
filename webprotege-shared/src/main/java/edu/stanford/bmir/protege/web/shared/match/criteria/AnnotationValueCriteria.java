@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 @JsonSubTypes(
         @Type(LiteralCriteria.class)
 )
-public interface AnnotationValueCriteria {
+public interface AnnotationValueCriteria extends Criteria {
 
     <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor);
 }

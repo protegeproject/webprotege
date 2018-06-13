@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @Type(AnyDatatypeCriteria.class)
 })
-public interface DatatypeCriteria {
+public interface DatatypeCriteria extends Criteria {
 
     <R> R accept(DatatypeCriteriaVisitor<R> visitor);
 }

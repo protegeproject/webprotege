@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 @JsonSubTypes({
         @Type(LangTagMatchesCriteria.class)
 })
-public interface LangTagCriteria {
+public interface LangTagCriteria extends Criteria {
 
     <R> R accept(@Nonnull LangTagCriteriaVisitor<R> visitor);
 }

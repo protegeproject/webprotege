@@ -13,6 +13,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes(value = {
         @Type(AnyAnnotationSetCriteria.class)
 })
-public interface AnnotationSetCriteria {
+public interface AnnotationSetCriteria extends Criteria {
 
 }

@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
         @Type(IriEqualsCriteria.class),
         @Type(AnyAnnotationPropertyCriteria.class)
 })
-public interface AnnotationPropertyCriteria {
+public interface AnnotationPropertyCriteria extends Criteria {
 
     <R> R accept(@Nonnull AnnotationPropertyCriteriaVisitor<R> visitor);
 }
