@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringEqualsCriteria;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringEqualsCriteriaPresenterFactory implements CriteriaPresenterFactory {
+public class StringEqualsCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
 
     @Nonnull
     private final Provider<StringEqualsCriteriaPresenter> presenterProvider;
@@ -26,12 +27,12 @@ public class StringEqualsCriteriaPresenterFactory implements CriteriaPresenterFa
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "equals";
+        return "is equal to";
     }
 
     @Nonnull
     @Override
-    public CriteriaPresenter createPresenter() {
+    public CriteriaPresenter<LiteralCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

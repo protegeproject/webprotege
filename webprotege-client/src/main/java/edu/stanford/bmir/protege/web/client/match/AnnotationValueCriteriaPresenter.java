@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -15,6 +13,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 13 Jun 2018
  */
 public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePresenter<AnnotationValueCriteria> {
+
+    @Nonnull
+    private final StringEqualsCriteriaPresenterFactory equalsFactory;
 
     @Nonnull
     private final StringStartsWithCriteriaPresenterFactory startsWithFactory;
@@ -57,7 +58,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
 
     @Inject
     public AnnotationValueCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
-                                            @Nonnull StringStartsWithCriteriaPresenterFactory startsWithFactory,
+                                            @Nonnull StringEqualsCriteriaPresenterFactory equalsFactory, @Nonnull StringStartsWithCriteriaPresenterFactory startsWithFactory,
                                             @Nonnull StringEndsWithCriteriaPresenterFactory endsWithFactory,
                                             @Nonnull StringContainsCriteriaPresenterFactory containsFactory,
                                             @Nonnull StringMatchesRegexCriteriaPresenterFactory regexFactory,
@@ -65,6 +66,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
                                             @Nonnull StringContainsRepeatedSpacesCriteriaPresenterFactory repeatedSpacesFactory,
                                             @Nonnull LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory lexicalValueFactory, @Nonnull IriHasAnnotationsCriteriaPresenterFactory iriAnnotationsFactory, @Nonnull NumericValueCriteriaPresenterFactory numericValueFactory, @Nonnull LangTagMatchesCriteriaPresenterFactory langTagMatchesFactory, @Nonnull LangTagIsEmptyCriteriaPresenterFactory emptyLangTagFactory, @Nonnull AnyAnnotationValueCriteriaPresenterFactory anyValueFactory, @Nonnull DateTimeValueCriteriaPresenterFactory dateTimeFactory) {
         super(view);
+        this.equalsFactory = checkNotNull(equalsFactory);
         this.startsWithFactory = checkNotNull(startsWithFactory);
         this.endsWithFactory = checkNotNull(endsWithFactory);
         this.containsFactory = checkNotNull(containsFactory);
@@ -82,9 +84,10 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
 
     @Override
     protected void start(@Nonnull PresenterFactoryRegistry<AnnotationValueCriteria> factoryRegistry) {
+        factoryRegistry.addPresenter(containsFactory);
+        factoryRegistry.addPresenter(equalsFactory);
         factoryRegistry.addPresenter(startsWithFactory);
         factoryRegistry.addPresenter(endsWithFactory);
-        factoryRegistry.addPresenter(containsFactory);
         factoryRegistry.addPresenter(regexFactory);
         factoryRegistry.addPresenter(untrimmedFactory);
         factoryRegistry.addPresenter(repeatedSpacesFactory);
