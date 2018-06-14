@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -30,6 +31,8 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  * 14 Jun 2018
  */
 public class MatchPortletViewImpl extends Composite implements MatchPortletView {
+
+    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getDecimalFormat();
 
     private static MatchPortletViewImplUiBinder ourUiBinder = GWT.create(MatchPortletViewImplUiBinder.class);
 
@@ -79,7 +82,7 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
 
     @Override
     public void setResults(@Nonnull List<OWLEntityData> results) {
-        resultsCount.setText(results.size() + " results");
+        resultsCount.setText(NUMBER_FORMAT.format(results.size()) + " results");
         String rendering = results.stream()
                                   .sorted()
                                   .map(this::render)
