@@ -23,6 +23,8 @@ public interface LexicalValueCriteriaVisitor<R> {
 
     R visit(@Nonnull StringContainsRepeatedSpacesCriteria criteria);
 
+    R visit(@Nonnull StringHasUntrimmedSpaceCriteria criteria);
+
     R visit(@Nonnull StringContainsRegexMatchCriteria criteria);
 
 }

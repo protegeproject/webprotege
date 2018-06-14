@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -11,27 +11,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 13 Jun 2018
+ * 14 Jun 2018
  */
-public class LangTagIsEmptyCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class EntityAnnotationCriteriaPresenterFactory implements CriteriaPresenterFactory<EntityMatchCriteria> {
 
     @Nonnull
-    private final Provider<LangTagIsEmptyCriteriaPresenter> presenterProvider;
+    private final Provider<EntityAnnotationCriteriaPresenter> presenterProvider;
 
     @Inject
-    public LangTagIsEmptyCriteriaPresenterFactory(@Nonnull Provider<LangTagIsEmptyCriteriaPresenter> presenterProvider) {
+    public EntityAnnotationCriteriaPresenterFactory(@Nonnull Provider<EntityAnnotationCriteriaPresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "lang tag is empty";
+        return "annotations match";
     }
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<? extends EntityMatchCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

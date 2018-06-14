@@ -34,7 +34,7 @@ public class StringEqualsCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
+    public Optional<StringEqualsCriteria> getCriteria() {
         return Optional.of(StringEqualsCriteria.get(view.getValue(), view.isIgnoreCase()));
     }
 }

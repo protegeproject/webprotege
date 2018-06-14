@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringContainsRepeatedSpacesCriteria;
 
 import javax.annotation.Nonnull;
@@ -16,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringContainsRepeatedSpacesCriteriaPresenter implements CriteriaPresenter {
+public class StringContainsRepeatedSpacesCriteriaPresenter implements CriteriaPresenter<LiteralMatchesCriteria> {
 
     @Nonnull
     private final BlankCriteriaView view;
@@ -37,7 +38,8 @@ public class StringContainsRepeatedSpacesCriteriaPresenter implements CriteriaPr
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
-        return Optional.of(StringContainsRepeatedSpacesCriteria.get());
+    public Optional<LiteralMatchesCriteria> getCriteria() {
+        StringContainsRepeatedSpacesCriteria lexicalValueCriteria = StringContainsRepeatedSpacesCriteria.get();
+        return Optional.of(LiteralMatchesCriteria.lexicalValueMatches(lexicalValueCriteria));
     }
 }

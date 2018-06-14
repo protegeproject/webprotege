@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  * Represents criteria to match an annotation
  */
 @AutoValue
-public abstract class AnnotationCriteria {
+public abstract class AnnotationCriteria implements Criteria {
 
     private static final String PROPERTY = "property";
 

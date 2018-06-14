@@ -103,15 +103,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.auto.value</groupId>
-            <artifactId>auto-value</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.auto.factory</groupId>
             <artifactId>auto-factory</artifactId>
-            <version>1.0-beta3</version>
+            <version>1.0-beta5</version>
             <optional>true</optional>
         </dependency>
 

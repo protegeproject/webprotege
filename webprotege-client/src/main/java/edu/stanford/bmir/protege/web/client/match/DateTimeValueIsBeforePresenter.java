@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -15,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateTimeValueIsBeforePresenter implements CriteriaPresenter {
+public class DateTimeValueIsBeforePresenter implements CriteriaPresenter<LiteralCriteria> {
 
     @Nonnull
     private final DateTimeView view;
@@ -36,7 +37,7 @@ public class DateTimeValueIsBeforePresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
+    public Optional<LiteralCriteria> getCriteria() {
         return Optional.empty();
     }
 }

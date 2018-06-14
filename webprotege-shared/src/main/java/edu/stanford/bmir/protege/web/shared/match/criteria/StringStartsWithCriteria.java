@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("StringStartsWith")
-public abstract class StringStartsWithCriteria implements SimpleStringMatchCriteria {
+public abstract class StringStartsWithCriteria implements SimpleStringCriteria {
 
     @JsonCreator
     @Nonnull

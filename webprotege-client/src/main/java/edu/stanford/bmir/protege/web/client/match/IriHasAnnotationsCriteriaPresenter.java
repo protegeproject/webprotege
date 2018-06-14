@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.IriCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.IriHasAnnotationsCriteria;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter {
+public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter<IriCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaPresenter delegate;
@@ -38,8 +39,9 @@ public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
-        return delegate.getCriteria()
+    public Optional<IriCriteria> getCriteria() {
+        Optional<? extends AnnotationCriteria> annotationCriteria = delegate.getCriteria();
+        return annotationCriteria
                        .map(criteria -> {
                            ImmutableList<AnnotationCriteria> annoCriteria = ImmutableList.of((AnnotationCriteria) criteria);
                            return IriHasAnnotationsCriteria.get(annoCriteria);

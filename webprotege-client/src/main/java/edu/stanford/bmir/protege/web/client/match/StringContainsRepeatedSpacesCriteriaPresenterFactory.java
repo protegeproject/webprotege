@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -11,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringContainsRepeatedSpacesCriteriaPresenterFactory implements CriteriaPresenterFactory {
+public class StringContainsRepeatedSpacesCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralMatchesCriteria> {
 
     @Nonnull
     private final Provider<StringContainsRepeatedSpacesCriteriaPresenter> presenterProvider;
@@ -29,7 +31,7 @@ public class StringContainsRepeatedSpacesCriteriaPresenterFactory implements Cri
 
     @Nonnull
     @Override
-    public CriteriaPresenter createPresenter() {
+    public CriteriaPresenter<LiteralMatchesCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

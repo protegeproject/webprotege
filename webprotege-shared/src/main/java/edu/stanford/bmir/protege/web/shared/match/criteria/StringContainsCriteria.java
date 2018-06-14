@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +16,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("StringContains")
-public abstract class StringContainsCriteria implements SimpleStringMatchCriteria {
+public abstract class StringContainsCriteria implements SimpleStringCriteria {
 
     @JsonCreator
     @Nonnull

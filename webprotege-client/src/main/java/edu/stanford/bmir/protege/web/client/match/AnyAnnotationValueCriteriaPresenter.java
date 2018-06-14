@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class AnyAnnotationValueCriteriaPresenter implements CriteriaPresenter {
+public class AnyAnnotationValueCriteriaPresenter implements CriteriaPresenter<AnyAnnotationValueCriteria> {
 
     @Nonnull
     private final BlankCriteriaView view;
@@ -37,7 +37,7 @@ public class AnyAnnotationValueCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
+    public Optional<AnyAnnotationValueCriteria> getCriteria() {
         return Optional.of(AnyAnnotationValueCriteria.get());
     }
 }

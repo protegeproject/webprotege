@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagMatchesCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LangMatchesCriteriaPresenter implements CriteriaPresenter {
+public class LangMatchesCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
 
     @Nonnull
     private final LangTagMatchesCriteriaView view;
@@ -37,7 +36,14 @@ public class LangMatchesCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
-        return Optional.of(LangTagMatchesCriteria.get(view.getPattern()));
+    public Optional<LiteralCriteria> getCriteria() {
+        LangTagMatchesCriteria criteria = LangTagMatchesCriteria.get(view.getPattern());
+        return Optional.of(
+                LiteralMatchesCriteria.get(
+                        AnyStringCriteria.get(),
+                        criteria,
+                        AnyDatatypeCriteria.get()
+                )
+        );
     }
 }

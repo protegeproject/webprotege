@@ -11,11 +11,11 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 12 Jun 2018
  */
-public interface CriteriaPresenter {
+public interface CriteriaPresenter<C extends Criteria> {
 
     void start(@Nonnull AcceptsOneWidget container);
 
     void stop();
 
-    Optional<Criteria> getCriteria();
+    Optional<? extends C> getCriteria();
 }

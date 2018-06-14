@@ -18,16 +18,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Displays a single presenter for a criteria object at a time.  The user can choose
  * the displayed presenter via the view.
  */
-public abstract class SelectableCriteriaTypePresenter implements CriteriaPresenter {
+public abstract class SelectableCriteriaTypePresenter<C extends Criteria> implements CriteriaPresenter<C> {
 
     @Nonnull
     private final SelectableCriteriaTypeView view;
 
     @Nonnull
-    private final List<CriteriaPresenterFactory> presenterFactories = new ArrayList<>();
+    private final List<CriteriaPresenterFactory<? extends C>> presenterFactories = new ArrayList<>();
 
     @Nonnull
-    private final Map<String, CriteriaPresenter> presenterMap = new HashMap<>();
+    private final Map<String, CriteriaPresenter<? extends C>> presenterMap = new HashMap<>();
 
     public SelectableCriteriaTypePresenter(@Nonnull SelectableCriteriaTypeView view) {
         this.view = checkNotNull(view);
@@ -36,8 +36,8 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
     @Override
     public final void start(@Nonnull AcceptsOneWidget container) {
         if (presenterFactories.isEmpty()) {
-            List<CriteriaPresenterFactory> factories = new ArrayList<>();
-            start((PresenterFactoryRegistry) factories::add);
+            List<CriteriaPresenterFactory<? extends C>> factories = new ArrayList<>();
+            start((PresenterFactoryRegistry<C>) factories::add);
             setCriteriaPresenterFactories(factories);
         }
 
@@ -51,9 +51,9 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
      *
      * @param factoryRegistry A registry of presenter factories.  SubClasses register specific factories.
      */
-    protected abstract void start(@Nonnull PresenterFactoryRegistry factoryRegistry);
+    protected abstract void start(@Nonnull PresenterFactoryRegistry<C> factoryRegistry);
 
-    private void setCriteriaPresenterFactories(@Nonnull List<CriteriaPresenterFactory> presenterFactories) {
+    private void setCriteriaPresenterFactories(@Nonnull List<CriteriaPresenterFactory<? extends C>> presenterFactories) {
         this.presenterFactories.clear();
         stopAllPresenters();
         this.presenterMap.clear();
@@ -101,7 +101,7 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
     private void displayPresenter(int index) {
         if (index != -1) {
             view.setSelectedName(index);
-            CriteriaPresenterFactory factory = presenterFactories.get(index);
+            CriteriaPresenterFactory<? extends C> factory = presenterFactories.get(index);
             String name = factory.getDisplayName();
             CriteriaPresenter presenter = presenterMap.computeIfAbsent(name, n -> factory.createPresenter());
             presenter.start(view);
@@ -112,18 +112,18 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
+    public Optional<? extends C> getCriteria() {
         return view.getSelectedName()
                    .map(presenterMap::get)
                    .filter(Objects::nonNull)
                    .flatMap(CriteriaPresenter::getCriteria);
     }
 
-    interface PresenterFactoryRegistry {
+    interface PresenterFactoryRegistry<C> {
 
         /**
          * Register a {@link CriteriaPresenterFactory} with this registry
          */
-        void addPresenter(@Nonnull CriteriaPresenterFactory factory);
+        void addPresenter(@Nonnull CriteriaPresenterFactory<? extends C> factory);
     }
 }

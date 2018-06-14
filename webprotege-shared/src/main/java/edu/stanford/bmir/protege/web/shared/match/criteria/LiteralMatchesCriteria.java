@@ -56,4 +56,10 @@ public abstract class LiteralMatchesCriteria implements LiteralCriteria {
     public static LiteralMatchesCriteria lexicalValueMatches(@Nonnull LexicalValueCriteria criteria) {
         return get(criteria, LangTagMatchesCriteria.get(""), AnyDatatypeCriteria.get());
     }
+
+    public static LiteralMatchesCriteria langTagMatches(LangTagMatchesCriteria criteria) {
+        return get(AnyStringCriteria.get(),
+                   criteria,
+                   AnyDatatypeCriteria.get());
+    }
 }

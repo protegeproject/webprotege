@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class AnnotationCriteriaPresenter implements CriteriaPresenter {
+public class AnnotationCriteriaPresenter implements CriteriaPresenter<AnnotationCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaView view;
@@ -43,18 +43,17 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
+    public Optional<? extends AnnotationCriteria> getCriteria() {
         AnnotationPropertyCriteria propertyCriteria = view.getSelectedProperty()
                                                           .map(prop -> (AnnotationPropertyCriteria) IriEqualsCriteria.get(prop))
                                                           .orElse(AnyAnnotationPropertyCriteria.get());
-        Optional<Criteria> criteria = valuePresenter.getCriteria();
-        if(!criteria.isPresent()) {
+        Optional<? extends AnnotationValueCriteria> valueCriteria = valuePresenter.getCriteria();
+        if(!valueCriteria.isPresent()) {
             return Optional.empty();
         }
-        AnnotationValueCriteria valueCriteria = (AnnotationValueCriteria) criteria.get();
         AnnotationCriteria annotationCriteria = AnnotationCriteria.get(
                 propertyCriteria,
-                valueCriteria,
+                valueCriteria.get(),
                 AnyAnnotationSetCriteria.get(),
                 view.getAnnotationPresence()
         );

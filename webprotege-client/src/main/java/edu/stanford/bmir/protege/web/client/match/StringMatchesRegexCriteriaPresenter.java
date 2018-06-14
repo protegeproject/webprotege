@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringContainsRegexMatchCriteria;
 
 import javax.annotation.Nonnull;
@@ -16,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringMatchesRegexCriteriaPresenter implements CriteriaPresenter {
+public class StringMatchesRegexCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
 
     @Nonnull
     private final SimpleStringCriteriaView view;
@@ -37,7 +39,8 @@ public class StringMatchesRegexCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
-        return Optional.of(StringContainsRegexMatchCriteria.get(view.getValue(), view.isIgnoreCase()));
+    public Optional<LiteralCriteria> getCriteria() {
+        StringContainsRegexMatchCriteria lexicalValueCriteria = StringContainsRegexMatchCriteria.get(view.getValue(), view.isIgnoreCase());
+        return Optional.of(LiteralMatchesCriteria.lexicalValueMatches(lexicalValueCriteria));
     }
 }

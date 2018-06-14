@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -9,7 +12,7 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringHasUntrimmedSpaceCriteriaPresenterFactory implements CriteriaPresenterFactory {
+public class StringHasUntrimmedSpaceCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
 
     @Nonnull
     private final Provider<StringHasUntrimmedSpaceCriteriaPresenter> presenterProvider;
@@ -27,7 +30,7 @@ public class StringHasUntrimmedSpaceCriteriaPresenterFactory implements Criteria
 
     @Nonnull
     @Override
-    public CriteriaPresenter createPresenter() {
+    public CriteriaPresenter<LiteralCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

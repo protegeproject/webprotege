@@ -4,6 +4,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -14,7 +16,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class IsDeprecatedCriteriaPresenter implements CriteriaPresenter {
+public class IsDeprecatedCriteriaPresenter implements CriteriaPresenter<EntityMatchCriteria> {
 
     @Inject
     public IsDeprecatedCriteriaPresenter() {
@@ -31,7 +33,7 @@ public class IsDeprecatedCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
+    public Optional<EntityIsDeprecatedCriteria> getCriteria() {
         return Optional.of(EntityIsDeprecatedCriteria.get());
     }
 }

@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
         @Type(StringContainsCriteria.class),
         @Type(StringEqualsCriteria.class)
 })
-public interface SimpleStringMatchCriteria extends LexicalValueCriteria {
+public interface SimpleStringCriteria extends LexicalValueCriteria {
 
     String IGNORE_CASE = "ignoreCase";
 

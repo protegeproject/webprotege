@@ -7,12 +7,16 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,9 +42,11 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         portletUi.addAction(new PortletAction("Show criteria", () -> {
+            Optional<? extends Criteria> criteria = presenter.getCriteria();
+            String s = criteria.map(Object::toString).orElse("Empty");
             InputBox.showDialog("Criteria",
                                 true,
-                                presenter.getCriteria().map(Object::toString).orElse("Empty"),
+                                s,
                                 input -> {});
         }));
         presenter.start(portletUi);

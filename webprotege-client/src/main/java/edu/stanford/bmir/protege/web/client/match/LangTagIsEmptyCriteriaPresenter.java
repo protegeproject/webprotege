@@ -4,6 +4,8 @@ import com.google.googlejavaformat.Op;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagMatchesCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -17,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter {
+public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
 
     @Nonnull
     private final BlankCriteriaView view;
@@ -38,7 +40,9 @@ public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter {
     }
 
     @Override
-    public Optional<Criteria> getCriteria() {
-        return Optional.of(LangTagMatchesCriteria.get(""));
+    public Optional<LiteralCriteria> getCriteria() {
+        return Optional.of(
+                LiteralMatchesCriteria.langTagMatches(LangTagMatchesCriteria.get(""))
+        );
     }
 }

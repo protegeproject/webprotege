@@ -21,10 +21,12 @@ public abstract class StringContainsRegexMatchCriteria implements LexicalValueCr
     @Nonnull
     public abstract String getPattern();
 
+    public abstract boolean isIgnoreCase();
+
     @JsonCreator
     @Nonnull
-    public static StringContainsRegexMatchCriteria get(@Nonnull String pattern) {
-        return new AutoValue_StringContainsRegexMatchCriteria(pattern);
+    public static StringContainsRegexMatchCriteria get(@Nonnull String pattern, boolean ignoreCase) {
+        return new AutoValue_StringContainsRegexMatchCriteria(pattern, ignoreCase);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePresenter {
+public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePresenter<AnnotationValueCriteria> {
 
     @Nonnull
     private final StringStartsWithCriteriaPresenterFactory startsWithFactory;
@@ -80,7 +81,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
     }
 
     @Override
-    protected void start(@Nonnull PresenterFactoryRegistry factoryRegistry) {
+    protected void start(@Nonnull PresenterFactoryRegistry<AnnotationValueCriteria> factoryRegistry) {
         factoryRegistry.addPresenter(startsWithFactory);
         factoryRegistry.addPresenter(endsWithFactory);
         factoryRegistry.addPresenter(containsFactory);
@@ -94,27 +95,5 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(iriAnnotationsFactory);
         factoryRegistry.addPresenter(anyValueFactory);
         factoryRegistry.addPresenter(dateTimeFactory);
-    }
-
-    @Override
-    public Optional<Criteria> getCriteria() {
-        Optional<Criteria> criteria = super.getCriteria();
-        return criteria
-                .filter(c -> c instanceof AnnotationValueCriteria || c instanceof LexicalValueCriteria)
-                .map(c -> {
-                    if (c instanceof AnnotationValueCriteria) {
-                        return c;
-                    }
-                    else if (c instanceof LexicalValueCriteria) {
-                        return LiteralMatchesCriteria.get(
-                                (LexicalValueCriteria) c,
-                                LangTagMatchesCriteria.get(""),
-                                AnyDatatypeCriteria.get()
-                        );
-                    }
-                    else {
-                        throw new RuntimeException();
-                    }
-                });
     }
 }

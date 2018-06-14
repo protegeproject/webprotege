@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("StringEquals")
-public abstract class StringEqualsCriteria implements SimpleStringMatchCriteria {
+public abstract class StringEqualsCriteria implements SimpleStringCriteria {
 
     @JsonCreator
     @Nonnull

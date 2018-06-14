@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -11,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory implements CriteriaPresenterFactory {
+public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
 
     @Nonnull
     private final Provider<LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenter> presenterProvider;
@@ -29,7 +32,7 @@ public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory impl
 
     @Nonnull
     @Override
-    public CriteriaPresenter createPresenter() {
+    public CriteriaPresenter<LiteralCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }
