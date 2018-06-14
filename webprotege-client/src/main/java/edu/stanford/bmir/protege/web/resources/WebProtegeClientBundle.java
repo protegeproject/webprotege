@@ -114,6 +114,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtege.css")
     WebProtegeCss style();
 
+    @Source("datetimepicker.css")
+    DateTimePicker dateTimePicker();
+
     @Source("tags.css")
     Tags tags();
 
@@ -215,6 +218,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String noSelection();
 
         String helpText();
+    }
+
+    interface DateTimePicker extends CssResource {
+        @ClassName("wp-date-time-picker")
+        String picker();
     }
 
     interface Tags extends CssResource {

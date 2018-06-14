@@ -8,10 +8,8 @@ import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
 import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.editor.EntityManagerSelectorImpl;
-import edu.stanford.bmir.protege.web.client.editor.OWLEntityContext;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogViewImpl;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntityDialogView;
 import edu.stanford.bmir.protege.web.client.form.FormView;
@@ -24,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
 import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
+import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -188,4 +187,40 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    BlankCriteriaView provideEntityIsDeprecatedCriteriaView(BlankCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationCriteriaView provideEntityAnnotationCriteriaView(AnnotationCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SelectableCriteriaTypeView provideSelectableCriteriaTypeView(SelectableCriteriaTypeViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SimpleStringCriteriaView provideSimpleStringCriteriaView(SimpleStringCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    NumericValueCriteriaView provideNumericValueCriteriaView(NumericValueCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    LangTagMatchesCriteriaView provideLangTagMatchesCriteriaView(LangTagMatchesCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DateTimeView provideDateTimeView(DateTimeViewImpl impl) {
+        return impl;
+    }
 }
+
+

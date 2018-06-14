@@ -1,0 +1,7 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <g:ListBox ui:field="numericPredicateField" visibleItemCount="1"/>
+        <g:TextBox ui:field="valueField" visibleLength="15" textAlignment="right"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

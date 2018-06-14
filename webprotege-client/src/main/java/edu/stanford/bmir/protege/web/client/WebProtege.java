@@ -54,6 +54,7 @@ public class WebProtege implements EntryPoint {
         BUNDLE.settings().ensureInjected();
         BUNDLE.valueList().ensureInjected();
         BUNDLE.tags().ensureInjected();
+        BUNDLE.dateTimePicker().ensureInjected();
         WidgetMapClientBundle.BUNDLE.style().ensureInjected();
 
         ApplicationPresenter applicationPresenter = WebProtegeClientInjector.get().getApplicationPresenter();

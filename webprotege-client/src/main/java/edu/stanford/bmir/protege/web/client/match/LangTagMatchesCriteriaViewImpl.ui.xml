@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .patternField {
+            font-family: "menlo", monospace;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:TextBox ui:field="patternField" visibleLength="10" text="*" addStyleNames="{style.patternField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

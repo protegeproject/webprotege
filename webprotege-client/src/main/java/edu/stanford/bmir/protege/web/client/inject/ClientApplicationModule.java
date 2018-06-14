@@ -37,6 +37,7 @@ import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutView;
 import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
+import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.perspective.*;

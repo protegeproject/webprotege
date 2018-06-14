@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:client="urn:import:com.google.gwt.user.datepicker.client">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .picker {
+            position: absolute;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <g:TextBox ui:field="dateField"/>
+        <!--<client:DatePicker ui:field="datePicker" visible="false" addStyleNames="{style.picker} {wp.dateTimePicker.picker}"/>-->
+    </g:HTMLPanel>
+</ui:UiBinder>

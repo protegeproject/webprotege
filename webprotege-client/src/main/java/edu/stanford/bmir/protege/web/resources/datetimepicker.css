@@ -1,0 +1,67 @@
+@external .datePicker*;
+@external .wp-date-time-picker;
+
+.wp-date-time-picker {
+    border: 1px solid #e0e0e0;
+}
+
+
+.wp-date-time-picker .datePickerMonthSelector {
+    text-align: center;
+    vertical-align: middle;
+    background-color: literal("var(--inlay-panel--background-color)");
+    width: 100%;
+    font-size: 20px;
+}
+
+.wp-date-time-picker .datePickerDays td {
+
+}
+
+.wp-date-time-picker .datePickerDay:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+
+.wp-date-time-picker .datePickerDayIsToday {
+    border-radius: 20px;
+    background-color: lightpink;
+}
+
+.wp-date-time-picker .datePickerMonth {
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.wp-date-time-picker .datePickerPreviousButton,.datePickerNextButton {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.wp-date-time-picker .datePickerDay,.datePickerWeekdayLabel,.datePickerWeekendLabel {
+    padding: 12px;
+    text-align: center;
+}
+
+.wp-date-time-picker .datePickerWeekdayLabel,.datePickerWeekendLabel {
+    font-weight: bold;
+    background-color: literal("var(--inlay-panel--background-color)");
+}
+
+.wp-date-time-picker .datePickerDayIsFiller {
+    color: #c0c0c0;
+}
+
+.wp-date-time-picker .datePickerDayIsValue {
+    background-color: literal("var(--selected-menu-item--background-color)");
+    color: literal("var(--selected-menu-item--color)");
+    border-radius: 0;
+}
+
+.wp-date-time-picker .datePickerDayIsValue:hover {
+    background-color: literal("var(--selected-menu-item--background-color)");
+    color: literal("var(--selected-menu-item--color)");
+}

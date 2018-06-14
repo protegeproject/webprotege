@@ -1,0 +1,22 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+
+    <ui:style>
+        .propertyField {
+            border: 1px solid #e0e0e0;
+        }
+        .valueField {
+
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor" placeholder="Enter annotation property name" addStyleNames="{style.propertyField}"/>
+        <g:SimplePanel ui:field="valueCriteriaContainer"/>
+        <g:ListBox ui:field="presenceListBox" visibleItemCount="1">
+            <g:item>is present</g:item>
+            <g:item>is absent</g:item>
+        </g:ListBox>
+    </g:HTMLPanel>
+</ui:UiBinder>
