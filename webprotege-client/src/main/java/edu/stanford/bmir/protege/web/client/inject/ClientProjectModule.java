@@ -226,6 +226,16 @@ public class ClientProjectModule {
     MatchPortletView provideMatchPortletView(MatchPortletViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    CriteriaListView provideCriteriaListView(CriteriaListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    CriteriaListCriteriaViewContainer provideCriteriaListCriteriaViewContainer(CriteriaListViewViewContainerImpl impl) {
+        return impl;
+    }
 }
 
 

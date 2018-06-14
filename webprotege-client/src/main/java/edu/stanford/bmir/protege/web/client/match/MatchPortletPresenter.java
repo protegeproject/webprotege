@@ -27,7 +27,7 @@ import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesActi
 public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Nonnull
-    private final RootCriteriaPresenter presenter;
+    private final EntityCriteriaPresenter presenter;
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -38,7 +38,7 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Inject
     public MatchPortletPresenter(@Nonnull SelectionModel selectionModel,
                                  @Nonnull ProjectId projectId,
-                                 @Nonnull RootCriteriaPresenter presenter,
+                                 @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
                                  @Nonnull MatchPortletView view) {
         super(selectionModel, projectId);

@@ -1,0 +1,29 @@
+package edu.stanford.bmir.protege.web.client.match;
+
+import com.google.gwt.user.client.ui.IsWidget;
+
+import javax.annotation.Nonnull;
+
+/**
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 14 Jun 2018
+ */
+public interface CriteriaListView extends IsWidget {
+
+    interface AddCriteriaHandler {
+        void handleAddCriteria();
+    }
+
+    interface RemoveCriteriaHandler {
+        void handleRemoveCriteria(int index);
+    }
+
+    void setAddCriteriaHandler(@Nonnull AddCriteriaHandler handler);
+
+    void setRemoveCriteriaHandler(@Nonnull RemoveCriteriaHandler handler);
+
+    int getCriteriaCount();
+
+    void addCriteriaView(@Nonnull CriteriaListCriteriaViewContainer viewContainer);
+}

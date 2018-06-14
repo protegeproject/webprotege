@@ -23,10 +23,10 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
     private final AnnotationCriteriaView view;
 
     @Nonnull
-    private final AnnotationValueCriteriaPresenter valuePresenter;
+    private final AnnotationValueListCriteriaPresenter valuePresenter;
 
     @Inject
-    public AnnotationCriteriaPresenter(@Nonnull AnnotationCriteriaView view, @Nonnull AnnotationValueCriteriaPresenter valuePresenter) {
+    public AnnotationCriteriaPresenter(@Nonnull AnnotationCriteriaView view, @Nonnull AnnotationValueListCriteriaPresenter valuePresenter) {
         this.view = checkNotNull(view);
         this.valuePresenter = checkNotNull(valuePresenter);
     }
