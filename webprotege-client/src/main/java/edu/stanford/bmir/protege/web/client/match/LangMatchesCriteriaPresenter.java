@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagMatchesCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,5 +34,10 @@ public class LangMatchesCriteriaPresenter implements CriteriaPresenter {
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return Optional.of(LangTagMatchesCriteria.get(view.getPattern()));
     }
 }

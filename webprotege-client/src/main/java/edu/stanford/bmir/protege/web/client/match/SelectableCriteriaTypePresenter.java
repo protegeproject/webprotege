@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -18,13 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * the displayed presenter via the view.
  */
 public abstract class SelectableCriteriaTypePresenter implements CriteriaPresenter {
-
-    interface PresenterFactoryRegistry {
-        /**
-         * Register a {@link CriteriaPresenterFactory} with this registry
-         */
-        void addPresenter(@Nonnull CriteriaPresenterFactory factory);
-    }
 
     @Nonnull
     private final SelectableCriteriaTypeView view;
@@ -54,6 +48,7 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
 
     /**
      * Start the presenter and register presenter factories
+     *
      * @param factoryRegistry A registry of presenter factories.  SubClasses register specific factories.
      */
     protected abstract void start(@Nonnull PresenterFactoryRegistry factoryRegistry);
@@ -72,7 +67,7 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
 
     private void handleSelectedNameChanged() {
         int selIndex = view.getSelectedIndex();
-        if(selIndex != -1) {
+        if (selIndex != -1) {
             displayPresenter(selIndex);
         }
     }
@@ -103,7 +98,6 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
         }
     }
 
-
     private void displayPresenter(int index) {
         if (index != -1) {
             view.setSelectedName(index);
@@ -115,5 +109,21 @@ public abstract class SelectableCriteriaTypePresenter implements CriteriaPresent
         else {
             view.setWidget(new Label("Nothing to select"));
         }
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return view.getSelectedName()
+                   .map(presenterMap::get)
+                   .filter(Objects::nonNull)
+                   .flatMap(CriteriaPresenter::getCriteria);
+    }
+
+    interface PresenterFactoryRegistry {
+
+        /**
+         * Register a {@link CriteriaPresenterFactory} with this registry
+         */
+        void addPresenter(@Nonnull CriteriaPresenterFactory factory);
     }
 }

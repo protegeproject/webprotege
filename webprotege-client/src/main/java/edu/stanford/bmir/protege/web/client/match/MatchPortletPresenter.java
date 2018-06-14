@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,6 +37,12 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
+        portletUi.addAction(new PortletAction("Show criteria", () -> {
+            InputBox.showDialog("Criteria",
+                                true,
+                                presenter.getCriteria().map(Object::toString).orElse("Empty"),
+                                input -> {});
+        }));
         presenter.start(portletUi);
     }
 }

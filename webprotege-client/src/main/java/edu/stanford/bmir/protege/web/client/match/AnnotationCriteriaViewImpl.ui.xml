@@ -14,9 +14,6 @@
     <g:HTMLPanel>
         <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor" placeholder="Enter annotation property name" addStyleNames="{style.propertyField}"/>
         <g:SimplePanel ui:field="valueCriteriaContainer"/>
-        <g:ListBox ui:field="presenceListBox" visibleItemCount="1">
-            <g:item>is present</g:item>
-            <g:item>is absent</g:item>
-        </g:ListBox>
+        <g:ListBox ui:field="presenceListBox" visibleItemCount="1"/>
     </g:HTMLPanel>
 </ui:UiBinder>

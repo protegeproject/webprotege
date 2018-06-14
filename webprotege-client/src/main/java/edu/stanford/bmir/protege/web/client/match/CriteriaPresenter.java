@@ -16,4 +16,6 @@ public interface CriteriaPresenter {
     void start(@Nonnull AcceptsOneWidget container);
 
     void stop();
+
+    Optional<Criteria> getCriteria();
 }

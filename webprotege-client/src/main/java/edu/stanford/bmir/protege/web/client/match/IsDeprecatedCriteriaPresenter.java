@@ -2,9 +2,12 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -25,5 +28,10 @@ public class IsDeprecatedCriteriaPresenter implements CriteriaPresenter {
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return Optional.of(EntityIsDeprecatedCriteria.get());
     }
 }

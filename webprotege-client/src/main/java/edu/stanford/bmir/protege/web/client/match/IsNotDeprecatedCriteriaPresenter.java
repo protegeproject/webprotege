@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsNotDeprecatedCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,5 +35,10 @@ public class IsNotDeprecatedCriteriaPresenter implements CriteriaPresenter {
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return Optional.of(EntityIsNotDeprecatedCriteria.get());
     }
 }

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.NumericPredicate;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.OptionalDouble;
 
 /**
@@ -14,7 +15,7 @@ import java.util.OptionalDouble;
 public interface NumericValueCriteriaView extends IsWidget {
 
     @Nonnull
-    OptionalDouble getValue();
+    Optional<Double> getValue();
 
     void setValue(double value);
 

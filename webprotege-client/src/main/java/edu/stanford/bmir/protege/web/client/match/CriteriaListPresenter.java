@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -22,5 +24,10 @@ public class CriteriaListPresenter implements CriteriaPresenter {
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return Optional.empty();
     }
 }

@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.IriHasAnnotationsCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,5 +35,14 @@ public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter {
     @Override
     public void stop() {
         delegate.stop();
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return delegate.getCriteria()
+                       .map(criteria -> {
+                           ImmutableList<AnnotationCriteria> annoCriteria = ImmutableList.of((AnnotationCriteria) criteria);
+                           return IriHasAnnotationsCriteria.get(annoCriteria);
+                       });
     }
 }

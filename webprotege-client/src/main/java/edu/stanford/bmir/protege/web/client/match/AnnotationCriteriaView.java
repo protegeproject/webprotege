@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.match;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,9 @@ public interface AnnotationCriteriaView extends IsWidget {
 
     void setSelectedProperty(@Nonnull OWLAnnotationPropertyData data);
 
-    Optional<OWLAnnotationPropertyData> getSelectedProperty();
+    Optional<OWLAnnotationProperty> getSelectedProperty();
+
+    AnnotationPresence getAnnotationPresence();
 
     @Nonnull
     AcceptsOneWidget getValueCriteriaViewContainer();

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.NumericPredicate;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
@@ -59,11 +60,11 @@ public class NumericValueCriteriaViewImpl extends Composite implements NumericVa
 
     @Nonnull
     @Override
-    public OptionalDouble getValue() {
+    public Optional<Double> getValue() {
         try {
-            return OptionalDouble.of(Double.parseDouble(valueField.getText().trim()));
+            return Optional.of(Double.parseDouble(valueField.getText().trim()));
         } catch (NumberFormatException e) {
-            return OptionalDouble.empty();
+            return Optional.empty();
         }
     }
 

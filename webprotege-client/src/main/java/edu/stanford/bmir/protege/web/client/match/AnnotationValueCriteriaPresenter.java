@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
+
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -91,5 +94,27 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(iriAnnotationsFactory);
         factoryRegistry.addPresenter(anyValueFactory);
         factoryRegistry.addPresenter(dateTimeFactory);
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        Optional<Criteria> criteria = super.getCriteria();
+        return criteria
+                .filter(c -> c instanceof AnnotationValueCriteria || c instanceof LexicalValueCriteria)
+                .map(c -> {
+                    if (c instanceof AnnotationValueCriteria) {
+                        return c;
+                    }
+                    else if (c instanceof LexicalValueCriteria) {
+                        return LiteralMatchesCriteria.get(
+                                (LexicalValueCriteria) c,
+                                LangTagMatchesCriteria.get(""),
+                                AnyDatatypeCriteria.get()
+                        );
+                    }
+                    else {
+                        throw new RuntimeException();
+                    }
+                });
     }
 }

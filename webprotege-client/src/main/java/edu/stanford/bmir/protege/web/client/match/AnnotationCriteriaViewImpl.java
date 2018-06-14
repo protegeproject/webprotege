@@ -12,11 +12,14 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityAnnotationCriteria;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
@@ -37,12 +40,19 @@ public class AnnotationCriteriaViewImpl extends Composite implements AnnotationC
     @UiField
     SimplePanel valueCriteriaContainer;
 
+    @UiField
+    ListBox presenceListBox;
+
 
     @Inject
     public AnnotationCriteriaViewImpl(@Nonnull PrimitiveDataEditorImpl primitiveDataEditor) {
         this.propertyEditor = primitiveDataEditor;
         this.propertyEditor.setAllowedType(PrimitiveType.ANNOTATION_PROPERTY, true);
         initWidget(ourUiBinder.createAndBindUi(this));
+        Stream.of(AnnotationPresence.values())
+              .forEach(presence -> presenceListBox.addItem("is " + presence.name().toLowerCase(),
+                                                           presence.name()));
+        presenceListBox.setSelectedIndex(0);
     }
 
     @Override
@@ -51,8 +61,13 @@ public class AnnotationCriteriaViewImpl extends Composite implements AnnotationC
     }
 
     @Override
-    public Optional<OWLAnnotationPropertyData> getSelectedProperty() {
-        return null;
+    public Optional<OWLAnnotationProperty> getSelectedProperty() {
+        return propertyEditor.getValue().map(entityData -> (OWLAnnotationProperty) entityData.getObject());
+    }
+
+    @Override
+    public AnnotationPresence getAnnotationPresence() {
+        return AnnotationPresence.values()[presenceListBox.getSelectedIndex()];
     }
 
     @Nonnull
