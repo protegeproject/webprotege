@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.StringContainsRegexMatchCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -30,5 +34,10 @@ public class StringMatchesRegexCriteriaPresenter implements CriteriaPresenter {
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public Optional<Criteria> getCriteria() {
+        return Optional.of(StringContainsRegexMatchCriteria.get(view.getValue(), view.isIgnoreCase()));
     }
 }
