@@ -1,0 +1,41 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .criteriaContainer {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+        }
+        .executeButton {
+            align-self: flex-start;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+        .resultsCount {
+            margin-top: 5px;
+            font-size: large;
+            margin-bottom: 3px;
+        }
+        .resultsContainer {
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow-y: scroll;
+            border: 1px solid #f0f0f0;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:InlineLabel text="Query" addStyleNames="{style.resultsCount} {wp.style.formLabel}"/>
+        <g:SimplePanel ui:field="criteriaContainer" addStyleNames="{style.criteriaContainer}"/>
+        <g:Button ui:field="executeButton" text="Execute" addStyleNames="{style.executeButton} {wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.acceptButton}"/>
+        <g:InlineLabel ui:field="resultsCount" text="Results" addStyleNames="{style.resultsCount} {wp.style.formLabel}"/>
+        <g:FlowPanel ui:field="resultsContainer" addStyleNames="{style.resultsContainer}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

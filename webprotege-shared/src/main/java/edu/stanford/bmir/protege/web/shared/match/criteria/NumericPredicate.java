@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import javax.annotation.Nonnull;
 
@@ -10,7 +11,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 10 Jun 2018
  */
-public enum NumericPredicate {
+public enum NumericPredicate implements IsSerializable {
 
     GREATER_THAN(">") {
         @Override
@@ -97,11 +98,14 @@ public enum NumericPredicate {
         }
     };
 
-    private final String symbol;
+    private String symbol;
 
     @JsonCreator
     NumericPredicate(String symbol) {
         this.symbol = symbol;
+    }
+
+    NumericPredicate() {
     }
 
     @JsonValue

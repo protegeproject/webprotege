@@ -221,6 +221,11 @@ public class ClientProjectModule {
     DateTimeView provideDateTimeView(DateTimeViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    MatchPortletView provideMatchPortletView(MatchPortletViewImpl impl) {
+        return impl;
+    }
 }
 
 

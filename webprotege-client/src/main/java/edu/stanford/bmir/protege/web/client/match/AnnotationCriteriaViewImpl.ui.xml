@@ -12,7 +12,7 @@
         }
     </ui:style>
     <g:HTMLPanel>
-        <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor" placeholder="Enter annotation property name" addStyleNames="{style.propertyField}"/>
+        <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor" placeholder="Enter annotation property name" showLinksForEntities="false" addStyleNames="{style.propertyField}"/>
         <g:SimplePanel ui:field="valueCriteriaContainer"/>
         <g:ListBox ui:field="presenceListBox" visibleItemCount="1"/>
     </g:HTMLPanel>

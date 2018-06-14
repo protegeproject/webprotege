@@ -1,15 +1,14 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Label;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -18,13 +17,17 @@ import java.util.Optional;
  */
 public class IsDeprecatedCriteriaPresenter implements CriteriaPresenter<EntityMatchCriteria> {
 
+    @Nonnull
+    private final BlankCriteriaView view;
+
     @Inject
-    public IsDeprecatedCriteriaPresenter() {
+    public IsDeprecatedCriteriaPresenter(@Nonnull BlankCriteriaView view) {
+        this.view = checkNotNull(view);
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container) {
-        container.setWidget(new Label("Is Deprecated View"));
+        container.setWidget(view);
     }
 
     @Override

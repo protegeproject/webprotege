@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 
@@ -26,16 +23,29 @@ public abstract class NumericValueCriteria implements LexicalValueCriteria {
 
     @Nonnull
     @JsonProperty(PREDICATE)
-    public abstract NumericPredicate getPredicate();
+    public NumericPredicate getPredicate() {
+        return NumericPredicate.valueOf(getName());
+    }
 
+    @JsonIgnore
+    protected abstract String getName();
+
+    // This weirdness is due to a problem I'm having with GWT serializing embedded enums
+    // if the enum isn't reachable in a way other than through a custom field serializer
     public abstract double getValue();
 
+
+
+    @Nonnull
+    public static NumericValueCriteria get(@Nonnull String name, @JsonProperty(VALUE) double value) {
+        return new AutoValue_NumericValueCriteria(name, value);
+    }
 
     @JsonCreator
     @Nonnull
     public static NumericValueCriteria get(@Nonnull @JsonProperty(PREDICATE) NumericPredicate predicate,
                                            @JsonProperty(VALUE) double value) {
-        return new AutoValue_NumericValueCriteria(predicate, value);
+        return new AutoValue_NumericValueCriteria(predicate.name(), value);
     }
 
     @Nonnull

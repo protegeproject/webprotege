@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.match.criteria;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 
 import javax.annotation.Nonnull;
@@ -15,6 +16,7 @@ import javax.annotation.Nonnull;
  * Represents criteria to match an annotation
  */
 @AutoValue
+@GwtCompatible(serializable = true)
 public abstract class AnnotationCriteria implements Criteria {
 
     private static final String PROPERTY = "property";
@@ -40,7 +42,7 @@ public abstract class AnnotationCriteria implements Criteria {
                                          @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
                                          @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria,
                                          @Nonnull @JsonProperty(PRESENCE) AnnotationPresence presence) {
-        return new AutoValue_AnnotationCriteria(propertyCriteria, valueCriteria, presence, annotationSetCriteria);
+        return new AutoValue_AnnotationCriteria(propertyCriteria, valueCriteria, presence == AnnotationPresence.PRESENT, annotationSetCriteria);
     }
 
     /**
@@ -73,9 +75,13 @@ public abstract class AnnotationCriteria implements Criteria {
     @Nonnull
     public abstract AnnotationValueCriteria getAnnotationValueCriteria();
 
+    public abstract boolean isPresent();
+
     @JsonProperty(PRESENCE)
     @Nonnull
-    public abstract AnnotationPresence getPresence();
+    public AnnotationPresence getPresence() {
+        return isPresent() ? AnnotationPresence.PRESENT : AnnotationPresence.ABSENT;
+    }
 
     @JsonProperty(ANNOTATIONS)
     @Nonnull

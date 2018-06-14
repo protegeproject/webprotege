@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.library.msgbox.InputBoxHandler;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -19,6 +16,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction.getMatchingEntities;
 
 /**
  * Matthew Horridge
@@ -31,24 +29,41 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     @Nonnull
     private final RootCriteriaPresenter presenter;
 
+    @Nonnull
+    private final DispatchServiceManager dispatchServiceManager;
+
+    @Nonnull
+    private final MatchPortletView view;
+
     @Inject
     public MatchPortletPresenter(@Nonnull SelectionModel selectionModel,
                                  @Nonnull ProjectId projectId,
-                                 @Nonnull RootCriteriaPresenter presenter) {
+                                 @Nonnull RootCriteriaPresenter presenter,
+                                 @Nonnull DispatchServiceManager dispatchServiceManager,
+                                 @Nonnull MatchPortletView view) {
         super(selectionModel, projectId);
         this.presenter = checkNotNull(presenter);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.view = checkNotNull(view);
     }
 
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
-        portletUi.addAction(new PortletAction("Show criteria", () -> {
-            Optional<? extends Criteria> criteria = presenter.getCriteria();
-            String s = criteria.map(Object::toString).orElse("Empty");
-            InputBox.showDialog("Criteria",
-                                true,
-                                s,
-                                input -> {});
-        }));
-        presenter.start(portletUi);
+        view.setExecuteHandler(this::handleExecute);
+        portletUi.setWidget(view);
+        presenter.start(view.getCriteriaContainer());
+    }
+
+    private void displayResult(GetMatchingEntitiesResult result) {
+        view.setResults(result.getEntities());
+    }
+
+    private void handleExecute() {
+        Optional<? extends Criteria> criteria = presenter.getCriteria();
+        String s = criteria.map(Object::toString).orElse("Empty");
+        criteria.ifPresent(c -> {
+            dispatchServiceManager.execute(getMatchingEntities(getProjectId(), c),
+                                           this::displayResult);
+        });
     }
 }

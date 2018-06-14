@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.primitive.EntityLinkMode;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -53,6 +54,7 @@ public class AnnotationCriteriaViewImpl extends Composite implements AnnotationC
               .forEach(presence -> presenceListBox.addItem("is " + presence.name().toLowerCase(),
                                                            presence.name()));
         presenceListBox.setSelectedIndex(0);
+        primitiveDataEditor.setEntityLinkMode(EntityLinkMode.DO_NOT_SHOW_LINKS_FOR_ENTITIES);
     }
 
     @Override

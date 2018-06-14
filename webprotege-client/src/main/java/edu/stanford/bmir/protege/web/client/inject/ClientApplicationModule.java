@@ -53,6 +53,7 @@ import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.projectmanager.*;
+import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.search.SearchView;
 import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;

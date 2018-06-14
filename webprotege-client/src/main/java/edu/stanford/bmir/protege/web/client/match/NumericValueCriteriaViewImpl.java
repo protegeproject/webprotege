@@ -50,19 +50,18 @@ public class NumericValueCriteriaViewImpl extends Composite implements NumericVa
 
     @UiHandler("valueField")
     protected void handleValueChanged(ValueChangeEvent<String> event) {
-        try {
-            double d = DECIMAL_FORMAT.parse(valueField.getText().trim());
-            valueField.setText(DECIMAL_FORMAT.format(d));
-        } catch (NumberFormatException e) {
-            // TODO: Set error message
-        }
+            getValue().ifPresent(d -> valueField.setText(DECIMAL_FORMAT.format(d)));
+    }
+
+    private double parseEnteredValue() {
+        return DECIMAL_FORMAT.parse(valueField.getText().trim());
     }
 
     @Nonnull
     @Override
     public Optional<Double> getValue() {
         try {
-            return Optional.of(Double.parseDouble(valueField.getText().trim()));
+            return Optional.of(parseEnteredValue());
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
