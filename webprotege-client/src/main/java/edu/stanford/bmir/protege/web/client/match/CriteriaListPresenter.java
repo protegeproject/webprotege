@@ -2,14 +2,13 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -64,7 +63,7 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
         presenter.start(viewContainer);
         view.addCriteriaView(viewContainer);
         criteriaPresenters.add(presenter);
-        if(criteriaPresenters.size() > 1) {
+        if (criteriaPresenters.size() > 1) {
             viewContainer.setRemoveButtonVisible(true);
         }
     }
@@ -76,17 +75,17 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
 
     @Override
     public Optional<? extends C> getCriteria() {
-        ImmutableList<? extends C> criteria = ImmutableList.of();//criteriaPresenters.stream()
-//                                                                .map(CriteriaPresenter::getCriteria)
-//                                                                .filter(Optional::isPresent)
-//                                                                .map(Optional::get)
-//                                                                .collect(toImmutableList());
-        if(criteria.isEmpty()) {
+        ImmutableList.Builder<C> builder = ImmutableList.builder();
+        for(CriteriaPresenter<? extends C> presenter : criteriaPresenters) {
+            presenter.getCriteria().ifPresent(builder::add);
+        }
+        ImmutableList<? extends C> criteria = builder.build();
+        if (criteria.isEmpty()) {
             return Optional.empty();
         }
         else {
-            CompositeCriteria<? extends C> compositeCriteria = CompositeCriteria.<C>get(criteria);
-            return Optional.empty();
+            C compositeCriteria = createCriteria(criteria);
+            return Optional.of(compositeCriteria);
         }
     }
 

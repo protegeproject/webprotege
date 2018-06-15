@@ -23,13 +23,20 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Nonnull
     private final IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory;
 
+    @Nonnull
+    private final NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags;
+
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
-                                 @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory, @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory) {
+                                 @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
+                                 @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
+                                 @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
+                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags) {
         super(view);
         this.annotationCriteriaFactory = annotationCriteriaFactory;
         this.isDeprecatedFactory = checkNotNull(isDeprecatedFactory);
         this.notDeprecatedFactory = checkNotNull(notDeprecatedFactory);
+        this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
     }
 
     @Override
@@ -37,5 +44,6 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(annotationCriteriaFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);
+        factoryRegistry.addPresenter(nonUniqueLangTags);
     }
 }

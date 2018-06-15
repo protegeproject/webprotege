@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+        }
+        .label {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .propertyField {
+            width: 200px;
+            border: 1px solid #e0e0e0;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:InlineLabel text="For property" addStyleNames="{style.label} {wp.style.formLabel}"/>
+        <primitive:PrimitiveDataEditorImpl ui:field="propertyField"
+                                           showLinksForEntities="false"
+                                           placeholder="Enter annotation property name"
+                                           annotationPropertiesAllowed="true"
+                                           addStyleNames="{style.propertyField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

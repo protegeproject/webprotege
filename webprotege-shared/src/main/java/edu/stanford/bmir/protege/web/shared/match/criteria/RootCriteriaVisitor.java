@@ -10,6 +10,9 @@ import javax.annotation.Nonnull;
 public interface RootCriteriaVisitor<R> {
 
     @Nonnull
+    R visit(@Nonnull CompositeRootCriteria criteria);
+
+    @Nonnull
     R visit(@Nonnull EntityAnnotationCriteria criteria);
 
     @Nonnull

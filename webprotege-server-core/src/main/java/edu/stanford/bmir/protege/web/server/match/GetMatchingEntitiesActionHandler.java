@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -65,7 +66,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     @Nonnull
     @Override
     public GetMatchingEntitiesResult execute(@Nonnull GetMatchingEntitiesAction action, @Nonnull ExecutionContext executionContext) {
-        Matcher<OWLEntity> matcher = matcherFactory.getMatcher((EntityMatchCriteria) action.getCriteria());
+        Matcher<OWLEntity> matcher = matcherFactory.getMatcher((RootCriteria) action.getCriteria());
         ImmutableList<OWLEntityData> result = rootOntology.getSignature().stream()
                                                           .filter(matcher::matches)
                                                           .map(entity -> DataFactory.getOWLEntityData(entity, renderingManager.getShortForm(entity)))

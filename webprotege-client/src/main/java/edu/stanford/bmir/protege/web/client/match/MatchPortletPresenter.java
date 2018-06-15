@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
@@ -61,6 +62,7 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     private void handleExecute() {
         Optional<? extends Criteria> criteria = presenter.getCriteria();
         String s = criteria.map(Object::toString).orElse("Empty");
+        GWT.log(s);
         criteria.ifPresent(c -> {
             dispatchServiceManager.execute(getMatchingEntities(getProjectId(), c),
                                            this::displayResult);

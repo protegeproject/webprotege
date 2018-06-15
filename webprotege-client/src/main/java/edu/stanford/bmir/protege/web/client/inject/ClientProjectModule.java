@@ -236,6 +236,11 @@ public class ClientProjectModule {
     CriteriaListCriteriaViewContainer provideCriteriaListCriteriaViewContainer(CriteriaListViewViewContainerImpl impl) {
         return impl;
     }
+
+    @Provides
+    AnnotationPropertyCriteriaView provideAnnotationPropertyCriteriaView(AnnotationPropertyCriteriaViewImpl impl) {
+        return impl;
+    }
 }
 
 
