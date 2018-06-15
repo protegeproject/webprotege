@@ -13,12 +13,13 @@
             padding-right: 5px;
         }
         .propertyField {
-            width: 200px;
+            width: 250px;
+            min-width: 250px;
+            max-width: 250px;
             border: 1px solid #e0e0e0;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:InlineLabel text="For property" addStyleNames="{style.label} {wp.style.formLabel}"/>
         <primitive:PrimitiveDataEditorImpl ui:field="propertyField"
                                            showLinksForEntities="false"
                                            placeholder="Enter annotation property name"

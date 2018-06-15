@@ -8,8 +8,8 @@
             border: 1px solid #e0e0e0;
             margin-bottom: 2px;
             margin-top: 2px;
-            min-width: 500px;
-            max-width: 500px;
+            min-width: 250px;
+            max-width: 250px;
         }
         .valueField {
 
@@ -18,6 +18,6 @@
     <g:HTMLPanel>
         <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor" placeholder="Enter annotation property name" showLinksForEntities="false" addStyleNames="{style.propertyField}"/>
         <g:SimplePanel ui:field="valueCriteriaContainer"/>
-        <g:ListBox ui:field="presenceListBox" visibleItemCount="1"/>
+        <g:ListBox visible="false" ui:field="presenceListBox" visibleItemCount="1"/>
     </g:HTMLPanel>
 </ui:UiBinder>

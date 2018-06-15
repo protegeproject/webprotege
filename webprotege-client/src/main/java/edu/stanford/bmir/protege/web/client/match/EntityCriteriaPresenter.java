@@ -20,6 +20,7 @@ public class EntityCriteriaPresenter extends CriteriaListPresenter<RootCriteria>
                                    @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                    @Nonnull RootCriteriaPresenterFactory presenterFactory) {
         super(view, viewContainerProvider, presenterFactory);
+        view.setMatchTextPrefix("Entities that match");
     }
 
     @Override

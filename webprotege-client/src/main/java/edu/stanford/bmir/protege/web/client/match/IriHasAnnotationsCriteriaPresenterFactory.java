@@ -26,7 +26,7 @@ public class IriHasAnnotationsCriteriaPresenterFactory implements CriteriaPresen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "has annotations";
+        return "has value with annotation";
     }
 
     @Nonnull

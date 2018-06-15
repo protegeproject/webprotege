@@ -26,6 +26,8 @@ public interface CriteriaListView extends IsWidget {
 
     void setRemoveCriteriaHandler(@Nonnull RemoveCriteriaHandler handler);
 
+    void setMatchTextPrefix(@Nonnull String prefix);
+
     int getCriteriaCount();
 
     void addCriteriaView(@Nonnull CriteriaListCriteriaViewContainer viewContainer);

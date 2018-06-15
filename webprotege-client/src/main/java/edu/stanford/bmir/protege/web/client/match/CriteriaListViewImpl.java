@@ -5,10 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,6 +37,9 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
     @UiField
     Button addButton;
 
+    @UiField
+    InlineLabel matchTextPrefix;
+
     @Inject
     public CriteriaListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -54,6 +54,11 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
     @Override
     public int getCriteriaCount() {
         return criteriaViewsContainer.getWidgetCount();
+    }
+
+    @Override
+    public void setMatchTextPrefix(@Nonnull String prefix) {
+        matchTextPrefix.setText(checkNotNull(prefix));
     }
 
     @Override
