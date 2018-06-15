@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
 
@@ -10,6 +11,8 @@ import javax.annotation.Nonnull;
  * 14 Jun 2018
  */
 public interface CriteriaListView extends IsWidget {
+
+    void removeCriteriaView(int index);
 
     interface AddCriteriaHandler {
         void handleAddCriteria();

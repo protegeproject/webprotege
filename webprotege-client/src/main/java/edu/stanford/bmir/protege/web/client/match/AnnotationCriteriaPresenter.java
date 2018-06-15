@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class AnnotationCriteriaPresenter implements CriteriaPresenter<AnnotationComponentCriteria> {
+public class AnnotationCriteriaPresenter implements CriteriaPresenter<AnnotationCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaView view;

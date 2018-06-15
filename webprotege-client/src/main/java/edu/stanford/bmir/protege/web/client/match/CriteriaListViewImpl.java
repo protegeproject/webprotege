@@ -70,4 +70,9 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
     public void addCriteriaView(@Nonnull CriteriaListCriteriaViewContainer viewContainer) {
         criteriaViewsContainer.add(viewContainer);
     }
+
+    @Override
+    public void removeCriteriaView(int index) {
+        criteriaViewsContainer.remove(index);
+    }
 }

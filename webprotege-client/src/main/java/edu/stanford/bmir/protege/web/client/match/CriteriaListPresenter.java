@@ -65,12 +65,20 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
         criteriaPresenters.add(presenter);
         if (criteriaPresenters.size() > 1) {
             viewContainer.setRemoveButtonVisible(true);
+            viewContainer.setRemoveHandler(() -> removeCriteria(presenter));
         }
+    }
+
+    private void removeCriteria(@Nonnull CriteriaPresenter<? extends C> presenter) {
+        int presenterIndex = criteriaPresenters.indexOf(presenter);
+        criteriaPresenters.remove(presenterIndex);
+        presenter.stop();
+        view.removeCriteriaView(presenterIndex);
     }
 
     @Override
     public void stop() {
-
+        criteriaPresenters.forEach(CriteriaPresenter::stop);
     }
 
     @Override
