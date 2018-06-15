@@ -63,6 +63,12 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
+            public Matcher<OWLEntity> visit(@Nonnull EntityTypeCriteria criteria) {
+                return entity -> entity.getEntityType().equals(criteria.getEntityType());
+            }
+
+            @Nonnull
+            @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityHasNonUniqueLangTagsCriteria criteria) {
                 Matcher<OWLAnnotationProperty> propertyMatcher = getAnnotationPropertyMatcher(criteria.getPropertyCriteria());
                 return new NonUniqueLangTagsMatcher(axioms, propertyMatcher);
