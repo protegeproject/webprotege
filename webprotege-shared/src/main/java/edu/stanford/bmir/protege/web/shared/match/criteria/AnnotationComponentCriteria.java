@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class AnnotationComponentCriteria implements Criteria {
+public abstract class AnnotationComponentCriteria implements AnnotationCriteria {
 
     private static final String PROPERTY = "property";
 
