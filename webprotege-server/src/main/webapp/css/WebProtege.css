@@ -246,6 +246,7 @@ select {
 
 .gwt-RadioButton > label {
     padding-left: 5px;
+    white-space: nowrap;
 }
 
 .web-protege-form-layout-editor table {
@@ -526,8 +527,14 @@ td {
     /*	border-top: 1px dotted #f4f4f4;*/
 }
 
+.gwt-CheckBox {
+    display: inline-block;
+    overflow: hidden;
+}
+
 .gwt-CheckBox > label {
     padding-left: 3px;
+    white-space: nowrap;
 }
 
 /** Animation of Busy Indicator **/
