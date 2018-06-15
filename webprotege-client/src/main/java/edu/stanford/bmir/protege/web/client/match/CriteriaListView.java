@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +28,8 @@ public interface CriteriaListView extends IsWidget {
     void setRemoveCriteriaHandler(@Nonnull RemoveCriteriaHandler handler);
 
     void setMatchTextPrefix(@Nonnull String prefix);
+
+    MultiMatchType getMultiMatchType();
 
     int getCriteriaCount();
 

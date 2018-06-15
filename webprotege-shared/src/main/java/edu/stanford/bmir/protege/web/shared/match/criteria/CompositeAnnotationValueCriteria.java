@@ -16,20 +16,30 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("CompositeAnnotation")
+@JsonTypeName("Annotations")
 public abstract class CompositeAnnotationValueCriteria implements AnnotationValueCriteria {
 
     private static final String ANNOTATION_VALUES = "annotationValues";
+
+    private static final String MATCH_TYPE = "matchType";
 
     @Nonnull
     @JsonProperty(ANNOTATION_VALUES)
     public abstract ImmutableList<? extends AnnotationValueCriteria> getAnnotationValueCriteria();
 
+    protected abstract int getMultiMatchTypeOrdinal();
+
+    @JsonProperty(MATCH_TYPE)
+    @Nonnull
+    public MultiMatchType getMultiMatchType() {
+        return MultiMatchType.values()[getMultiMatchTypeOrdinal()];
+    }
 
     @JsonCreator
     @Nonnull
-    public static CompositeAnnotationValueCriteria get(@Nonnull @JsonProperty(ANNOTATION_VALUES) ImmutableList<? extends AnnotationValueCriteria> annotationValueCriteria) {
-        return new AutoValue_CompositeAnnotationValueCriteria(annotationValueCriteria);
+    public static CompositeAnnotationValueCriteria get(@Nonnull @JsonProperty(ANNOTATION_VALUES) ImmutableList<? extends AnnotationValueCriteria> annotationValueCriteria,
+                                                       @Nonnull @JsonProperty(MATCH_TYPE) MultiMatchType multiMatchType) {
+        return new AutoValue_CompositeAnnotationValueCriteria(annotationValueCriteria, multiMatchType.ordinal());
     }
 
     @Override

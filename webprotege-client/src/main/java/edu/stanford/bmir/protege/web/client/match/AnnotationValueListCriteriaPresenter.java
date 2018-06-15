@@ -26,6 +26,6 @@ public class AnnotationValueListCriteriaPresenter extends CriteriaListPresenter<
 
     @Override
     protected AnnotationValueCriteria createCriteria(@Nonnull ImmutableList<? extends AnnotationValueCriteria> criteria) {
-        return CompositeAnnotationValueCriteria.get(criteria);
+        return CompositeAnnotationValueCriteria.get(criteria, getMultiMatchType());
     }
 }

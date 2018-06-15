@@ -126,8 +126,15 @@ public class MatcherFactory {
                 ImmutableList<Matcher<OWLAnnotationValue>> matchers = criteria.getAnnotationValueCriteria().stream()
                                                                               .map(c -> c.accept(this))
                                                                               .collect(toImmutableList());
-                // TODO: Implement Or
-                return new AndMatcher<>(matchers);
+                switch (criteria.getMultiMatchType()) {
+                    case ALL:
+                        return new AndMatcher<>(matchers);
+                    case ANY:
+                        return new OrMatcher<>(matchers);
+                    default:
+                        throw new IllegalStateException();
+                }
+
             }
 
             @Nonnull

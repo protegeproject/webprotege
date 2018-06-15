@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:button="urn:import:edu.stanford.bmir.protege.web.client.library.button">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:import field="edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType.*"/>
     <ui:style>
         .main {
             display: flex;
@@ -29,12 +30,11 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{style.operatorContainer}">
+        <g:HTMLPanel ui:field="multiMatchContainer" addStyleNames="{style.operatorContainer}">
             <g:InlineLabel ui:field="matchTextPrefix" text="Match"/>
-            <g:ListBox visibleItemCount="1" addStyleNames="{style.operatorListBox}">
-                <g:item>all</g:item>
-                <g:item>any</g:item>
-                <g:item>none</g:item>
+            <g:ListBox ui:field="multiMatchTypeField" visibleItemCount="1" addStyleNames="{style.operatorListBox}">
+                <g:item value="{ALL.name}">all</g:item>
+                <g:item value="{ANY.name}">any</g:item>
             </g:ListBox> of the following:
         </g:HTMLPanel>
         <g:FlowPanel ui:field="criteriaViewsContainer" addStyleNames="{style.viewsContainer}"/>

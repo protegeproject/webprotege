@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,9 +41,16 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
     @UiField
     InlineLabel matchTextPrefix;
 
+    @UiField
+    ListBox multiMatchTypeField;
+
+    @UiField
+    HTMLPanel multiMatchContainer;
+
     @Inject
     public CriteriaListViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        multiMatchContainer.setVisible(false);
     }
 
 
@@ -54,6 +62,11 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
     @Override
     public int getCriteriaCount() {
         return criteriaViewsContainer.getWidgetCount();
+    }
+
+    @Override
+    public MultiMatchType getMultiMatchType() {
+        return MultiMatchType.valueOf(multiMatchTypeField.getSelectedValue());
     }
 
     @Override
@@ -74,10 +87,16 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
     @Override
     public void addCriteriaView(@Nonnull CriteriaListCriteriaViewContainer viewContainer) {
         criteriaViewsContainer.add(viewContainer);
+        if(getCriteriaCount() > 1) {
+            multiMatchContainer.setVisible(true);
+        }
     }
 
     @Override
     public void removeCriteriaView(int index) {
         criteriaViewsContainer.remove(index);
+        if(getCriteriaCount() == 1) {
+            multiMatchContainer.setVisible(false);
+        }
     }
 }

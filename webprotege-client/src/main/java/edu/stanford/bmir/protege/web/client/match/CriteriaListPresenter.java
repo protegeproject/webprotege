@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.match;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Provider;
@@ -83,6 +84,11 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
     private void updateRemoveButtonVisibility() {
         boolean removeVisible = viewContainers.size() > 1;
         viewContainers.forEach(c -> c.setRemoveButtonVisible(removeVisible));
+    }
+
+    @Nonnull
+    public MultiMatchType getMultiMatchType() {
+        return view.getMultiMatchType();
     }
 
     @Override
