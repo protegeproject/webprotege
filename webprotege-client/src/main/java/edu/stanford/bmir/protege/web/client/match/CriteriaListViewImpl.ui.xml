@@ -10,7 +10,7 @@
         .viewsContainer {
             display: flex;
             flex-direction: column;
-            align-items: baseline;
+            align-items: stretch;
         }
         .addButton {
             align-self: start;

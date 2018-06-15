@@ -6,6 +6,7 @@
         .main {
             display: flex;
             align-items: baseline;
+            justify-content: space-between;
             flex-direction: row;
             margin-bottom: 1px;
             padding-bottom: 1px;
@@ -13,11 +14,26 @@
             flex-grow: 1;
             flex-shrink: 1;
         }
+        .buttonContainer {
+            display: flex;
+            align-items: baseline;
+            flex-grow: 1;
+            flex-shrink: 1;
+            padding-left: 20px;
+            padding-right: 10px;
+            justify-content: flex-end;
+        }
+        .deleteButton {
+            visibility: hidden;
+            justify-self: end;
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:SimplePanel ui:field="viewContainer"/>
-        <div style="margin-left:20px;">
-            <button:DeleteButton visible="false" ui:field="removeButton"/>
-        </div>
+        <g:HTMLPanel addStyleNames="{style.buttonContainer}">
+            <button:DeleteButton ui:field="removeButton" addStyleNames="{style.deleteButton}"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -9,7 +9,7 @@
         .listBox {
         }
         .viewContainer {
-
+            padding-left: 4px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
