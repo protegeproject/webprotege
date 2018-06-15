@@ -371,6 +371,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-topbar__btn")
         String topBarButton();
 
+        @ClassName("wp-btn-add")
+        String addButton();
 
         @ClassName("wp-btn-delete")
         String deleteButton();

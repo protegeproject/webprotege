@@ -36,6 +36,9 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
     @Nonnull
     private final List<CriteriaPresenter<? extends C>> criteriaPresenters = new ArrayList<>();
 
+    @Nonnull
+    private final List<CriteriaListCriteriaViewContainer> viewContainers = new ArrayList<>();
+
     public CriteriaListPresenter(@Nonnull CriteriaListView view,
                                  @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                  @Nonnull CriteriaPresenterFactory<C> presenterFactory) {
@@ -63,17 +66,23 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
         presenter.start(viewContainer);
         view.addCriteriaView(viewContainer);
         criteriaPresenters.add(presenter);
-        if (criteriaPresenters.size() > 1) {
-            viewContainer.setRemoveButtonVisible(true);
-            viewContainer.setRemoveHandler(() -> removeCriteria(presenter));
-        }
+        viewContainers.add(viewContainer);
+        viewContainer.setRemoveHandler(() -> removeCriteria(presenter));
+        updateRemoveButtonVisibility();
     }
 
     private void removeCriteria(@Nonnull CriteriaPresenter<? extends C> presenter) {
         int presenterIndex = criteriaPresenters.indexOf(presenter);
         criteriaPresenters.remove(presenterIndex);
+        viewContainers.remove(presenterIndex);
         presenter.stop();
         view.removeCriteriaView(presenterIndex);
+        updateRemoveButtonVisibility();
+    }
+
+    private void updateRemoveButtonVisibility() {
+        boolean removeVisible = viewContainers.size() > 1;
+        viewContainers.forEach(c -> c.setRemoveButtonVisible(removeVisible));
     }
 
     @Override

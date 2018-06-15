@@ -6,6 +6,7 @@
         .main {
             display: flex;
             flex-direction: column;
+            justify-content: space-around;
         }
         .viewsContainer {
             display: flex;
@@ -13,12 +14,15 @@
             align-items: stretch;
         }
         .addButton {
-            align-self: start;
+            align-self: flex-start;
+            position: relative;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:FlowPanel ui:field="criteriaViewsContainer" addStyleNames="{style.viewsContainer}"/>
-        <g:Button ui:field="addButton" text="Add" addStyleNames="{style.addButton} {wp.buttons.button} {wp.buttons.addTabButton} {wp.buttons.smallPageButton}"/>
+        <g:Button ui:field="addButton" addStyleNames="{wp.buttons.addButton} {style.addButton}">
+            <div style="position: relative; top:-0.2em;">+</div>
+        </g:Button>
     </g:HTMLPanel>
 </ui:UiBinder>

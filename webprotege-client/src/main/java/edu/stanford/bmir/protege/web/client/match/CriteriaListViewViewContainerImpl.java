@@ -46,7 +46,8 @@ public class CriteriaListViewViewContainerImpl extends Composite implements Crit
 
     @Override
     public void setRemoveButtonVisible(boolean visible) {
-        removeButton.getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+        Style.Visibility visibility = visible ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN;
+        removeButton.getElement().getStyle().setVisibility(visibility);
     }
 
     @Override
