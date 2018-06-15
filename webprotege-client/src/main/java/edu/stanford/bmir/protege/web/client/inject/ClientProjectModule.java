@@ -241,6 +241,11 @@ public class ClientProjectModule {
     AnnotationPropertyCriteriaView provideAnnotationPropertyCriteriaView(AnnotationPropertyCriteriaViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    EntityTypeCriteriaView provideEntityTypeCriteriaView(EntityTypeCriteriaViewImpl impl) {
+        return impl;
+    }
 }
 
 

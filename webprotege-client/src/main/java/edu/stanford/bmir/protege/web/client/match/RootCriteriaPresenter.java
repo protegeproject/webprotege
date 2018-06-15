@@ -18,6 +18,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     private final EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory;
 
     @Nonnull
+    private final EntityTypeCriteriaPresenterFactory entityTypeFactory;
+
+    @Nonnull
     private final IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory;
 
     @Nonnull
@@ -29,11 +32,13 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
+                                 @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
                                  @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
                                  @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags) {
         super(view);
-        this.annotationCriteriaFactory = annotationCriteriaFactory;
+        this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
+        this.entityTypeFactory = entityTypeFactory;
         this.isDeprecatedFactory = checkNotNull(isDeprecatedFactory);
         this.notDeprecatedFactory = checkNotNull(notDeprecatedFactory);
         this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
@@ -42,6 +47,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Override
     protected void start(@Nonnull PresenterFactoryRegistry<EntityMatchCriteria> factoryRegistry) {
         factoryRegistry.addPresenter(annotationCriteriaFactory);
+        factoryRegistry.addPresenter(entityTypeFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);
         factoryRegistry.addPresenter(nonUniqueLangTags);
