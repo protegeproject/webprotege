@@ -115,12 +115,12 @@
     cursor: pointer;
     font-size: 18px;
 }
-.wp-btn-delete:hover {
-    background-color: #006bce;
+.wp-btn-add:hover {
+    background-color: #00A60E;
 }
 
-.wp-btn-delete:focus {
-    background-color: #006bce;
+.wp-btn-add:focus {
+    background-color: #00A60E;
     outline-offset: 0;
 }
 
