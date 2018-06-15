@@ -21,7 +21,7 @@ public class AnnotationValueListCriteriaPresenter extends CriteriaListPresenter<
                                                 @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                                 @Nonnull AnnotationValueCriteriaPresenterFactory presenterFactory) {
         super(view, viewContainerProvider, presenterFactory);
-        view.setMatchTextPrefix("value that matches");
+        view.setMatchTextPrefix("matches");
     }
 
     @Override
