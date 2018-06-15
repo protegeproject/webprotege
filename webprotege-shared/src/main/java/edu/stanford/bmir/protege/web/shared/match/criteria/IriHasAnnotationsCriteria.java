@@ -19,12 +19,12 @@ import javax.annotation.Nonnull;
 public abstract class IriHasAnnotationsCriteria implements IriCriteria {
 
     @Nonnull
-    public abstract ImmutableList<AnnotationCriteria> getIriAnnotationsCriteria();
+    public abstract ImmutableList<AnnotationComponentCriteria> getIriAnnotationsCriteria();
 
     @JsonCreator
     @Nonnull
-    public static IriHasAnnotationsCriteria get(ImmutableList<AnnotationCriteria> annotationCriteria) {
-        return new AutoValue_IriHasAnnotationsCriteria(annotationCriteria);
+    public static IriHasAnnotationsCriteria get(ImmutableList<AnnotationComponentCriteria> annotationComponentCriteria) {
+        return new AutoValue_IriHasAnnotationsCriteria(annotationComponentCriteria);
     }
 
     @Override

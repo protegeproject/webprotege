@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
-import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -17,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class AnnotationCriteriaPresenter implements CriteriaPresenter<AnnotationCriteria> {
+public class AnnotationCriteriaPresenter implements CriteriaPresenter<AnnotationComponentCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaView view;
@@ -43,7 +41,7 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
     }
 
     @Override
-    public Optional<? extends AnnotationCriteria> getCriteria() {
+    public Optional<? extends AnnotationComponentCriteria> getCriteria() {
         AnnotationPropertyCriteria propertyCriteria = view.getSelectedProperty()
                                                           .map(prop -> (AnnotationPropertyCriteria) IriEqualsCriteria.get(prop))
                                                           .orElse(AnyAnnotationPropertyCriteria.get());
@@ -51,12 +49,12 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
         if(!valueCriteria.isPresent()) {
             return Optional.empty();
         }
-        AnnotationCriteria annotationCriteria = AnnotationCriteria.get(
+        AnnotationComponentCriteria annotationComponentCriteria = AnnotationComponentCriteria.get(
                 propertyCriteria,
                 valueCriteria.get(),
                 AnyAnnotationSetCriteria.get(),
                 view.getAnnotationPresence()
         );
-        return Optional.of(annotationCriteria);
+        return Optional.of(annotationComponentCriteria);
     }
 }

@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityAnnotationCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationComponentCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class AnnotationCriteriaPresenterFactory implements CriteriaPresenterFactory<AnnotationCriteria> {
+public class AnnotationCriteriaPresenterFactory implements CriteriaPresenterFactory<AnnotationComponentCriteria> {
 
     @Nonnull
     private final Provider<AnnotationCriteriaPresenter> presenterProvider;
@@ -34,7 +31,7 @@ public class AnnotationCriteriaPresenterFactory implements CriteriaPresenterFact
 
     @Nonnull
     @Override
-    public CriteriaPresenter<AnnotationCriteria> createPresenter() {
+    public CriteriaPresenter<AnnotationComponentCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

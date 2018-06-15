@@ -22,7 +22,7 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     @JsonProperty(ANNOTATION)
     @Nonnull
-    public abstract AnnotationCriteria getAnnotationCriteria();
+    public abstract AnnotationComponentCriteria getAnnotationCriteria();
 
     @Override
     public <R> R accept(RootCriteriaVisitor<R> visitor) {
@@ -31,12 +31,12 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     @JsonCreator
     @Nonnull
-    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationCriteria criteria) {
+    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationComponentCriteria criteria) {
         return new AutoValue_EntityAnnotationCriteria(criteria);
     }
 
     public static EntityAnnotationCriteria get(@Nonnull AnnotationPropertyCriteria propertyCriteria,
                                                @Nonnull AnnotationValueCriteria valueCriteria) {
-        return get(AnnotationCriteria.get(propertyCriteria, valueCriteria));
+        return get(AnnotationComponentCriteria.get(propertyCriteria, valueCriteria));
     }
 }
