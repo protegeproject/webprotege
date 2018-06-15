@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringEndsWithCriteria;
 
 import javax.annotation.Nonnull;
@@ -12,7 +10,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria.lexicalValueMatches;
+import static edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria.lexicalValueMatches;
 
 /**
  * Matthew Horridge

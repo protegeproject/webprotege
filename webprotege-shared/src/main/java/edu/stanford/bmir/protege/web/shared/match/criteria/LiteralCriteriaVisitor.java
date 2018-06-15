@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
  */
 public interface LiteralCriteriaVisitor<R> {
 
-    R visit(@Nonnull LiteralMatchesCriteria criteria);
+    R visit(@Nonnull LiteralComponentCriteria criteria);
 
     R visit(@Nonnull LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria criteria);
 }

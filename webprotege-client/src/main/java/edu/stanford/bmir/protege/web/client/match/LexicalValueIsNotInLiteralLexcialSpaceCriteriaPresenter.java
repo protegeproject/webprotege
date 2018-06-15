@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

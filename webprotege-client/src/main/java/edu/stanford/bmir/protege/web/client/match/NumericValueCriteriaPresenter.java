@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralMatchesCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.NumericValueCriteria;
 
 import javax.annotation.Nonnull;
@@ -44,6 +43,6 @@ public class NumericValueCriteriaPresenter implements CriteriaPresenter<LiteralC
             return Optional.empty();
         }
         NumericValueCriteria lexicalValueCriteria = NumericValueCriteria.get(view.getNumericPredicate(), view.getValue().get());
-        return Optional.of(LiteralMatchesCriteria.lexicalValueMatches(lexicalValueCriteria));
+        return Optional.of(LiteralComponentCriteria.lexicalValueMatches(lexicalValueCriteria));
     }
 }
