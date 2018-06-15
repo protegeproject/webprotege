@@ -26,7 +26,7 @@ public class EntityAnnotationCriteriaPresenterFactory implements CriteriaPresent
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "annotations match";
+        return "Annotation";
     }
 
     @Nonnull
