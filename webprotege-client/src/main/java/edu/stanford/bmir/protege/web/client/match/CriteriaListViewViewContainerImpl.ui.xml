@@ -3,16 +3,20 @@
              xmlns:button="urn:import:edu.stanford.bmir.protege.web.client.library.button">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
+        @external .gwt-SuggestBox;
         .main {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
             flex-direction: row;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
             padding-bottom: 1px;
-            border-bottom: 1px solid #f0f0f0;
+            background-color: #f0f0f0;
             flex-grow: 1;
             flex-shrink: 1;
+        }
+        .main .gwt-SuggestBox {
+            background-color: white;
         }
         .buttonContainer {
             display: flex;
