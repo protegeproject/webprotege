@@ -17,4 +17,7 @@ public interface AnnotationValueCriteriaVisitor<R> extends LiteralCriteriaVisito
 
     @Nonnull
     R visit(@Nonnull IriHasAnnotationsCriteria criteria);
+
+    @Nonnull
+    R visit(@Nonnull CompositeAnnotationValueCriteria criteria);
 }

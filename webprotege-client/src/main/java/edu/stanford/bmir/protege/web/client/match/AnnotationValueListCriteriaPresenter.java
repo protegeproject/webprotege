@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationValueCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeAnnotationValueCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -19,5 +21,10 @@ public class AnnotationValueListCriteriaPresenter extends CriteriaListPresenter<
                                                 @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                                 @Nonnull AnnotationValueCriteriaPresenterFactory presenterFactory) {
         super(view, viewContainerProvider, presenterFactory);
+    }
+
+    @Override
+    protected AnnotationValueCriteria createCriteria(@Nonnull ImmutableList<? extends AnnotationValueCriteria> criteria) {
+        return CompositeAnnotationValueCriteria.get(criteria);
     }
 }

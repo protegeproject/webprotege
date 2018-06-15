@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
@@ -18,5 +19,10 @@ public class EntityCriteriaPresenter extends CriteriaListPresenter<RootCriteria>
                                    @Nonnull Provider<CriteriaListCriteriaViewContainer> viewContainerProvider,
                                    @Nonnull RootCriteriaPresenterFactory presenterFactory) {
         super(view, viewContainerProvider, presenterFactory);
+    }
+
+    @Override
+    protected RootCriteria createCriteria(@Nonnull ImmutableList<? extends RootCriteria> criteria) {
+        return null;
     }
 }

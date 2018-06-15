@@ -89,4 +89,6 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
             return Optional.empty();
         }
     }
+
+    protected abstract C createCriteria(@Nonnull ImmutableList<? extends C> criteria);
 }
