@@ -27,7 +27,7 @@ public class NumericValueCriteriaPresenterFactory implements CriteriaPresenterFa
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "numeric value is";
+        return "number is";
     }
 
     @Nonnull
