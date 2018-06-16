@@ -26,7 +26,7 @@ public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory impl
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "value is malformed";
+        return "is malformed";
     }
 
     @Nonnull
