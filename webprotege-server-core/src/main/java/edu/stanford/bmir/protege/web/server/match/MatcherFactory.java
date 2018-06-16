@@ -38,7 +38,15 @@ public class MatcherFactory {
                 ImmutableList<Matcher<OWLEntity>> matchers = criteria.getRootCriteria().stream()
                                                                      .map(c -> c.accept(this))
                                                                      .collect(toImmutableList());
-                return new AndMatcher<>(matchers);
+                switch (criteria.getMatchType()) {
+                    case ANY:
+                        return new OrMatcher<>(matchers);
+                    case ALL:
+                        return new AndMatcher<>(matchers);
+                    default:
+                        throw new RuntimeException();
+                }
+
             }
 
             @Nonnull

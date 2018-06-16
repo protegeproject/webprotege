@@ -25,6 +25,6 @@ public class EntityCriteriaPresenter extends CriteriaListPresenter<RootCriteria>
 
     @Override
     protected RootCriteria createCriteria(@Nonnull ImmutableList<? extends RootCriteria> criteria) {
-        return CompositeRootCriteria.get(criteria);
+        return CompositeRootCriteria.get(criteria, getMultiMatchType());
     }
 }

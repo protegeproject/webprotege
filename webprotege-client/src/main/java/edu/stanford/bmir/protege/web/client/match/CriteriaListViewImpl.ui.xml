@@ -26,6 +26,7 @@
         .addButton {
             align-self: flex-start;
             position: relative;
+            margin-bottom: 2px;
         }
     </ui:style>
 
