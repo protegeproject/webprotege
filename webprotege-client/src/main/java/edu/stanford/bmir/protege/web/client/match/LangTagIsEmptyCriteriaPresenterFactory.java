@@ -26,7 +26,7 @@ public class LangTagIsEmptyCriteriaPresenterFactory implements CriteriaPresenter
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "lang tag is empty";
+        return "has an empty lang tag";
     }
 
     @Nonnull

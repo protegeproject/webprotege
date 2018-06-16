@@ -7,10 +7,7 @@
             display: flex;
             flex-direction: row;
             align-items: baseline;
-        }
-        .label {
-            padding-left: 5px;
-            padding-right: 5px;
+            padding: 2px;
         }
         .propertyField {
             width: 250px;

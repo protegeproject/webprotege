@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
-
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .propertyField {
             border: 1px solid #e0e0e0;
@@ -11,13 +11,23 @@
             min-width: 250px;
             max-width: 250px;
         }
-        .valueField {
-
+        .valueContainer {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            justify-items: flex-start;
+        }
+        .prefixLabel {
+            padding-right: 5px;
         }
     </ui:style>
     <g:HTMLPanel>
         <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor" placeholder="Enter annotation property name" showLinksForEntities="false" addStyleNames="{style.propertyField}"/>
-        <g:SimplePanel ui:field="valueCriteriaContainer"/>
-        <g:ListBox visible="false" ui:field="presenceListBox" visibleItemCount="1"/>
+        <g:HTMLPanel addStyleNames="{style.valueContainer}">
+            <g:InlineLabel text="that " addStyleNames="{style.prefixLabel} {wp.style.formLabel}"/>
+            <g:SimplePanel ui:field="valueCriteriaContainer"/>
+            <g:ListBox visible="false" ui:field="presenceListBox" visibleItemCount="1"/>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>

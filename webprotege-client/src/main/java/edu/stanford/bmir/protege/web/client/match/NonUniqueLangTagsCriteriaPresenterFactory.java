@@ -27,7 +27,7 @@ public class NonUniqueLangTagsCriteriaPresenterFactory implements CriteriaPresen
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Has non-unique lang tags";
+        return "Has non-unique lang tags on";
     }
 
     @Nonnull

@@ -26,7 +26,7 @@ public class IsNotBuiltInEntityPresenterFactory implements CriteriaPresenterFact
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Is not built in entity";
+        return "Is not a built in entity";
     }
 
     @Nonnull

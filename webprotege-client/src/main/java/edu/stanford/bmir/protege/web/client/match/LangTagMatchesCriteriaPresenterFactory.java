@@ -24,7 +24,7 @@ public class LangTagMatchesCriteriaPresenterFactory implements CriteriaPresenter
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "lang tag matches";
+        return "has a lang that matches";
     }
 
     @Nonnull
