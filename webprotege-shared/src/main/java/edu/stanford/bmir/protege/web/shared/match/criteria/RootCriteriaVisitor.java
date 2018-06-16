@@ -25,7 +25,7 @@ public interface RootCriteriaVisitor<R> {
     R visit(@Nonnull EntityHasNonUniqueLangTagsCriteria criteria);
 
     @Nonnull
-    R visit(@Nonnull EntityTypeCriteria criteria);
+    R visit(@Nonnull EntityTypeOneOfCriteria criteria);
 
     @Nonnull
     R visit(@Nonnull EntityHasConflictingBooleanAnnotationValuesCriteria criteria);

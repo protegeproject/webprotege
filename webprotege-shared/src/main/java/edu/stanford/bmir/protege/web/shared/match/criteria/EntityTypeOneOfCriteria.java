@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableSet;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -15,16 +16,16 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("EntityType")
-public abstract class EntityTypeCriteria implements EntityMatchCriteria {
+@JsonTypeName("EntityTypeOneOf")
+public abstract class EntityTypeOneOfCriteria implements EntityMatchCriteria {
 
     @Nonnull
-    public abstract EntityType<?> getEntityType();
+    public abstract ImmutableSet<EntityType<?>> getEntityTypes();
 
     @JsonCreator
     @Nonnull
-    public static EntityTypeCriteria get(@Nonnull EntityType entityType) {
-        return new AutoValue_EntityTypeCriteria(entityType);
+    public static EntityTypeOneOfCriteria get(@Nonnull ImmutableSet<EntityType<?>> entityTypes) {
+        return new AutoValue_EntityTypeOneOfCriteria(entityTypes);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * Matthew Horridge
@@ -13,7 +14,7 @@ import javax.annotation.Nonnull;
 public interface EntityTypeCriteriaView extends IsWidget {
 
     @Nonnull
-    EntityType<?> getEntityType();
+    Set<EntityType<?>> getEntityTypes();
 
-    void setEntityType(@Nonnull EntityType<?> entityType);
+    void setEntityTypes(@Nonnull Set<EntityType<?>> entityType);
 }

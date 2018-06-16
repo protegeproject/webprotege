@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeOneOfCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 15 Jun 2018
  */
-public class EntityTypeCriteriaPresenterFactory implements CriteriaPresenterFactory<EntityTypeCriteria> {
+public class EntityTypeCriteriaPresenterFactory implements CriteriaPresenterFactory<EntityTypeOneOfCriteria> {
 
     @Nonnull
     private final Provider<EntityTypeCriteriaPresenter> presenterProvider;
@@ -26,12 +26,12 @@ public class EntityTypeCriteriaPresenterFactory implements CriteriaPresenterFact
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Kind";
+        return "Type is one of";
     }
 
     @Nonnull
     @Override
-    public CriteriaPresenter<? extends EntityTypeCriteria> createPresenter() {
+    public CriteriaPresenter<? extends EntityTypeOneOfCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

@@ -4,12 +4,9 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.time.ZonedDateTime;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
@@ -73,8 +70,8 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
-            public Matcher<OWLEntity> visit(@Nonnull EntityTypeCriteria criteria) {
-                return entity -> entity.getEntityType().equals(criteria.getEntityType());
+            public Matcher<OWLEntity> visit(@Nonnull EntityTypeOneOfCriteria criteria) {
+                return entity -> criteria.getEntityTypes().contains(entity.getEntityType());
             }
 
             @Nonnull
