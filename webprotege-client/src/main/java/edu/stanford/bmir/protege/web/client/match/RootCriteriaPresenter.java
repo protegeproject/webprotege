@@ -21,6 +21,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     private final EntityTypeCriteriaPresenterFactory entityTypeFactory;
 
     @Nonnull
+    private final IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory;
+
+    @Nonnull
     private final IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory;
 
     @Nonnull
@@ -33,12 +36,13 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
                                  @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
-                                 @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
+                                 @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
                                  @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
         this.entityTypeFactory = entityTypeFactory;
+        this.notBuiltInEntityFactory = notBuiltInEntityFactory;
         this.isDeprecatedFactory = checkNotNull(isDeprecatedFactory);
         this.notDeprecatedFactory = checkNotNull(notDeprecatedFactory);
         this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
@@ -50,6 +54,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(entityTypeFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);
+        factoryRegistry.addPresenter(notBuiltInEntityFactory);
         factoryRegistry.addPresenter(nonUniqueLangTags);
     }
 }

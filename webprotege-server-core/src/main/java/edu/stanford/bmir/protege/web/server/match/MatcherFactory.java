@@ -48,6 +48,12 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
+            public Matcher<OWLEntity> visit(@Nonnull IsNotBuiltInEntityCriteria criteria) {
+                return entity -> !entity.isBuiltIn();
+            }
+
+            @Nonnull
+            @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationCriteria criteria) {
                 AnnotationComponentCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
                 Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationComponentCriteria);

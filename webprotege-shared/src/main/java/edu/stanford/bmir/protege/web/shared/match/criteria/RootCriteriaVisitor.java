@@ -32,5 +32,8 @@ public interface RootCriteriaVisitor<R> {
 
     @Nonnull
     R visit(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria);
+
+    @Nonnull
+    R visit(@Nonnull IsNotBuiltInEntityCriteria criteria);
 }
 
