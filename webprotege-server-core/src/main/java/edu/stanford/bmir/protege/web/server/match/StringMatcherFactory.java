@@ -83,10 +83,16 @@ public class StringMatcherFactory {
 
             @Override
             public Matcher<String> visit(@Nonnull DateIsBeforeCriteria criteria) {
-                System.out.println("Match date is before: " + criteria);
                 return new DateIsBeforeMatcher(LocalDate.of(criteria.getYear(),
                                                             criteria.getMonth(),
                                                             criteria.getDay()));
+            }
+
+            @Override
+            public Matcher<String> visit(@Nonnull DateIsAfterCriteria criteria) {
+                return new DateIsAfterMatcher(LocalDate.of(criteria.getYear(),
+                                                           criteria.getMonth(),
+                                                           criteria.getDay()));
             }
         });
     }

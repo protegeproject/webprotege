@@ -29,4 +29,6 @@ public interface LexicalValueCriteriaVisitor<R> {
 
     R visit(@Nonnull DateIsBeforeCriteria criteria);
 
+    R visit(@Nonnull DateIsAfterCriteria criteria);
+
 }
