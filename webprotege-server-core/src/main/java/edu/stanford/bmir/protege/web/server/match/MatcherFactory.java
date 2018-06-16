@@ -148,15 +148,7 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria criteria) {
-                return new LiteralAnnotationValueMatcher(lit -> {
-                    if (lit.getDatatype().isBuiltIn()) {
-                        OWL2Datatype datatype = lit.getDatatype().getBuiltInDatatype();
-                        return datatype.getPattern().matcher(lit.getLiteral()).matches();
-                    }
-                    else {
-                        return true;
-                    }
-                });
+                return new LiteralAnnotationValueMatcher(new LexicalValueNotInDatatypeSpaceMatcher());
             }
 
             @Nonnull
