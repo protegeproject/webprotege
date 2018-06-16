@@ -24,7 +24,7 @@ public class StringHasUntrimmedSpaceCriteriaPresenterFactory implements Criteria
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "has untrimmed space";
+        return "contains untrimmed space";
     }
 
     @Nonnull
