@@ -56,6 +56,9 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
     @Nonnull
     private final DateTimeValueCriteriaPresenterFactory dateTimeFactory;
 
+    @Nonnull
+    private final IriEqualsCriteriaFactoryPresenter iriEqualsFactory;
+
     @Inject
     public AnnotationValueCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                             @Nonnull StringEqualsCriteriaPresenterFactory equalsFactory, @Nonnull StringStartsWithCriteriaPresenterFactory startsWithFactory,
@@ -64,7 +67,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
                                             @Nonnull StringMatchesRegexCriteriaPresenterFactory regexFactory,
                                             @Nonnull StringHasUntrimmedSpaceCriteriaPresenterFactory untrimmedFactory,
                                             @Nonnull StringContainsRepeatedSpacesCriteriaPresenterFactory repeatedSpacesFactory,
-                                            @Nonnull LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory lexicalValueFactory, @Nonnull IriHasAnnotationsCriteriaPresenterFactory iriAnnotationsFactory, @Nonnull NumericValueCriteriaPresenterFactory numericValueFactory, @Nonnull LangTagMatchesCriteriaPresenterFactory langTagMatchesFactory, @Nonnull LangTagIsEmptyCriteriaPresenterFactory emptyLangTagFactory, @Nonnull AnyAnnotationValueCriteriaPresenterFactory anyValueFactory, @Nonnull DateTimeValueCriteriaPresenterFactory dateTimeFactory) {
+                                            @Nonnull LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory lexicalValueFactory, @Nonnull IriHasAnnotationsCriteriaPresenterFactory iriAnnotationsFactory, @Nonnull NumericValueCriteriaPresenterFactory numericValueFactory, @Nonnull LangTagMatchesCriteriaPresenterFactory langTagMatchesFactory, @Nonnull LangTagIsEmptyCriteriaPresenterFactory emptyLangTagFactory, @Nonnull AnyAnnotationValueCriteriaPresenterFactory anyValueFactory, @Nonnull DateTimeValueCriteriaPresenterFactory dateTimeFactory, @Nonnull IriEqualsCriteriaFactoryPresenter iriEqualsFactory) {
         super(view);
         this.equalsFactory = checkNotNull(equalsFactory);
         this.startsWithFactory = checkNotNull(startsWithFactory);
@@ -80,6 +83,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         this.emptyLangTagFactory = checkNotNull(emptyLangTagFactory);
         this.anyValueFactory = checkNotNull(anyValueFactory);
         this.dateTimeFactory = checkNotNull(dateTimeFactory);
+        this.iriEqualsFactory = checkNotNull(iriEqualsFactory);
     }
 
     @Override
@@ -91,6 +95,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(regexFactory);
         factoryRegistry.addPresenter(numericValueFactory);
         factoryRegistry.addPresenter(dateTimeFactory);
+        factoryRegistry.addPresenter(iriEqualsFactory);
 
         factoryRegistry.addPresenter(langTagMatchesFactory);
         factoryRegistry.addPresenter(emptyLangTagFactory);

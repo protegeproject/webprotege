@@ -246,6 +246,12 @@ public class ClientProjectModule {
     EntityTypeCriteriaView provideEntityTypeCriteriaView(EntityTypeCriteriaViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    IriEqualsView provideIriEqualsView(IriEqualsViewImpl impl) {
+        return impl;
+    }
+
 }
 
 

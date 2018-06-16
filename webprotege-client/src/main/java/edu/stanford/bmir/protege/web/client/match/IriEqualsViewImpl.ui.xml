@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .main {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .iriField {
+            min-width: 250px;
+            max-width: 250px;
+            border: 1px solid #e0e0e0;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <primitive:PrimitiveDataEditorImpl ui:field="iriEditor"
+                                           placeholder="Auto-complete an entity IRI or enter any IRI"
+                                           classesAllowed="true"
+                                           namedIndividualsAllowed="true"
+                                           objectPropertiesAllowed="true"
+                                           dataPropertiesAllowed="true"
+                                           annotationPropertiesAllowed="true"
+                                           datatypesAllowed="true"
+                                           iRIAllowed="true"
+                                           entityLinkMode="DO_NOT_SHOW_LINKS_FOR_ENTITIES"
+                                           addStyleNames="{style.iriField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -165,7 +165,7 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull IriEqualsCriteria criteria) {
-                return val -> val.isIRI() && ((IRI) val).equals(criteria.getIri());
+                return val -> val instanceof IRI && ((IRI) val).equals(criteria.getIri());
             }
 
             @Nonnull
