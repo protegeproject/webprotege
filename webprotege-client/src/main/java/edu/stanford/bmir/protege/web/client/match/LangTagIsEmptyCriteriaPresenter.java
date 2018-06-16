@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagMatchesCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -40,7 +38,11 @@ public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<Litera
     @Override
     public Optional<LiteralCriteria> getCriteria() {
         return Optional.of(
-                LiteralComponentCriteria.langTagMatches(LangTagMatchesCriteria.get(""))
+                LiteralComponentCriteria.get(
+                        AnyStringCriteria.get(),
+                        LangTagIsEmptyCriteria.get(),
+                        AnyDatatypeCriteria.get()
+                )
         );
     }
 }

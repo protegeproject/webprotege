@@ -10,4 +10,6 @@ import javax.annotation.Nonnull;
 public interface LangTagCriteriaVisitor<R> {
 
     R visit(@Nonnull LangTagMatchesCriteria criteria);
+
+    R visit(@Nonnull LangTagIsEmptyCriteria criteria);
 }
