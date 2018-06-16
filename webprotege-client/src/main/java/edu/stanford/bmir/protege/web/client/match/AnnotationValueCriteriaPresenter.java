@@ -89,14 +89,18 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(startsWithFactory);
         factoryRegistry.addPresenter(endsWithFactory);
         factoryRegistry.addPresenter(regexFactory);
-        factoryRegistry.addPresenter(untrimmedFactory);
-        factoryRegistry.addPresenter(repeatedSpacesFactory);
-        factoryRegistry.addPresenter(lexicalValueFactory);
         factoryRegistry.addPresenter(numericValueFactory);
+        factoryRegistry.addPresenter(dateTimeFactory);
+
         factoryRegistry.addPresenter(langTagMatchesFactory);
         factoryRegistry.addPresenter(emptyLangTagFactory);
-        factoryRegistry.addPresenter(iriAnnotationsFactory);
+
         factoryRegistry.addPresenter(anyValueFactory);
-        factoryRegistry.addPresenter(dateTimeFactory);
+        factoryRegistry.addPresenter(lexicalValueFactory);
+
+        factoryRegistry.addPresenter(untrimmedFactory);
+        factoryRegistry.addPresenter(repeatedSpacesFactory);
+
+        factoryRegistry.addPresenter(iriAnnotationsFactory);
     }
 }
