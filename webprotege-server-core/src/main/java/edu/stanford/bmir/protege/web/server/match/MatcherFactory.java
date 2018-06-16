@@ -191,6 +191,11 @@ public class MatcherFactory {
             public Matcher<String> visit(@Nonnull LangTagIsEmptyCriteria criteria) {
                 return String::isEmpty;
             }
+
+            @Override
+            public Matcher<String> visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria) {
+                return tag -> true;
+            }
         });
     }
 

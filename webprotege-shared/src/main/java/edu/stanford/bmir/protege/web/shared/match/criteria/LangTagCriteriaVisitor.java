@@ -12,4 +12,6 @@ public interface LangTagCriteriaVisitor<R> {
     R visit(@Nonnull LangTagMatchesCriteria criteria);
 
     R visit(@Nonnull LangTagIsEmptyCriteria criteria);
+
+    R visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria);
 }

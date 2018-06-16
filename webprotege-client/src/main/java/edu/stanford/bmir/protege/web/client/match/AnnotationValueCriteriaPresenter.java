@@ -95,12 +95,12 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(langTagMatchesFactory);
         factoryRegistry.addPresenter(emptyLangTagFactory);
 
-        factoryRegistry.addPresenter(anyValueFactory);
         factoryRegistry.addPresenter(lexicalValueFactory);
 
         factoryRegistry.addPresenter(untrimmedFactory);
         factoryRegistry.addPresenter(repeatedSpacesFactory);
 
         factoryRegistry.addPresenter(iriAnnotationsFactory);
+        factoryRegistry.addPresenter(anyValueFactory);
     }
 }
