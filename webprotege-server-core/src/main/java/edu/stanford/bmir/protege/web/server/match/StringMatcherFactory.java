@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 /**
@@ -78,6 +79,14 @@ public class StringMatcherFactory {
             @Override
             public Matcher<String> visit(@Nonnull StringHasUntrimmedSpaceCriteria criteria) {
                 return new StringHasUntrimmedSpaceMatcher();
+            }
+
+            @Override
+            public Matcher<String> visit(@Nonnull DateIsBeforeCriteria criteria) {
+                System.out.println("Match date is before: " + criteria);
+                return new DateIsBeforeMatcher(LocalDate.of(criteria.getYear(),
+                                                            criteria.getMonth(),
+                                                            criteria.getDay()));
             }
         });
     }

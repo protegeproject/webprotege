@@ -9,4 +9,10 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface DateTimeView extends IsWidget {
 
+
+    int getYear();
+
+    int getMonth();
+
+    int getDay();
 }

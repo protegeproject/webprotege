@@ -27,4 +27,6 @@ public interface LexicalValueCriteriaVisitor<R> {
 
     R visit(@Nonnull StringContainsRegexMatchCriteria criteria);
 
+    R visit(@Nonnull DateIsBeforeCriteria criteria);
+
 }

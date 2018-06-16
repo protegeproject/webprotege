@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.match;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -16,9 +14,9 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.TimeUtil;
 
 import javax.inject.Inject;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -93,4 +91,18 @@ public class DateTimeViewImpl extends Composite implements DateTimeView {
         return date;
     }
 
+    @Override
+    public int getYear() {
+        return getEnteredDate().getYear() + 1900;
+    }
+
+    @Override
+    public int getMonth() {
+        return getEnteredDate().getMonth() + 1;
+    }
+
+    @Override
+    public int getDay() {
+        return getEnteredDate().getDate();
+    }
 }

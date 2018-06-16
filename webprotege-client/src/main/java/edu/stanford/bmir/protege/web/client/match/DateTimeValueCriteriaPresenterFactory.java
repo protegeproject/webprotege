@@ -26,7 +26,7 @@ public class DateTimeValueCriteriaPresenterFactory implements CriteriaPresenterF
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "date/time value is";
+        return "date is";
     }
 
     @Nonnull

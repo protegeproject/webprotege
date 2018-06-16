@@ -9,6 +9,8 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.time.ZonedDateTime;
+
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**

@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,6 +39,13 @@ public class DateTimeValueIsBeforePresenter implements CriteriaPresenter<Literal
 
     @Override
     public Optional<LiteralCriteria> getCriteria() {
-        return Optional.empty();
+        DateIsBeforeCriteria criteria = DateIsBeforeCriteria.get(
+                view.getYear(),
+                view.getMonth(),
+                view.getDay()
+        );
+        return Optional.of(
+                LiteralComponentCriteria.lexicalValueMatches(criteria)
+        );
     }
 }
