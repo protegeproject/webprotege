@@ -13,13 +13,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateTimeValueIsBeforePresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class DateIsBeforePresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
 
     @Nonnull
-    private final Provider<DateTimeValueIsBeforePresenter> presenterProvider;
+    private final Provider<DateIsBeforePresenter> presenterProvider;
 
     @Inject
-    public DateTimeValueIsBeforePresenterFactory(@Nonnull Provider<DateTimeValueIsBeforePresenter> presenterProvider) {
+    public DateIsBeforePresenterFactory(@Nonnull Provider<DateIsBeforePresenter> presenterProvider) {
         this.presenterProvider = checkNotNull(presenterProvider);
     }
 

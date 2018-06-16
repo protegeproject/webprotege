@@ -7,12 +7,20 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public interface DateTimeView extends IsWidget {
+public interface DateView extends IsWidget {
 
-
+    /**
+     * Returns the year e.g. 2018
+     */
     int getYear();
 
+    /**
+     * Returns the month in the range of 1 to 12
+     */
     int getMonth();
 
+    /**
+     * Returns the day in the range of 1 to 31
+     */
     int getDay();
 }

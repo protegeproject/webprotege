@@ -16,7 +16,6 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import javax.inject.Inject;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -24,7 +23,7 @@ import java.util.Date;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateTimeViewImpl extends Composite implements DateTimeView {
+public class DateViewImpl extends Composite implements DateView {
 
     private static final WebProtegeClientBundle CLIENT_BUNDLE = GWT.create(WebProtegeClientBundle.class);
 
@@ -32,11 +31,11 @@ public class DateTimeViewImpl extends Composite implements DateTimeView {
 
     private PopupPanel popupPanel;
 
-    interface DateTimeViewImplUiBinder extends UiBinder<HTMLPanel, DateTimeViewImpl> {
+    interface DateViewImplUiBinder extends UiBinder<HTMLPanel, DateViewImpl> {
 
     }
 
-    private static DateTimeViewImplUiBinder ourUiBinder = GWT.create(DateTimeViewImplUiBinder.class);
+    private static DateViewImplUiBinder ourUiBinder = GWT.create(DateViewImplUiBinder.class);
 
     @UiField
     TextBox dateField;
@@ -44,7 +43,7 @@ public class DateTimeViewImpl extends Composite implements DateTimeView {
     private DateTimeFormat dateFormat = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_LONG);
 
     @Inject
-    public DateTimeViewImpl() {
+    public DateViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         datePicker = new DatePicker();
         datePicker.addValueChangeHandler(this::handleDatePickerDateChanged);

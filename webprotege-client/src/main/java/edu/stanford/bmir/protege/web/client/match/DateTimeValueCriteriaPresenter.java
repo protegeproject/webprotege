@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,13 +15,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DateTimeValueCriteriaPresenter extends SelectableCriteriaTypePresenter<LiteralCriteria> {
 
     @Nonnull
-    private final DateTimeValueIsBeforePresenterFactory beforeFactory;
+    private final DateIsBeforePresenterFactory beforeFactory;
 
     @Nonnull
-    private final DateTimeValueIsAfterPresenterFactory afterFactory;
+    private final DateIsAfterPresenterFactory afterFactory;
 
     @Inject
-    public DateTimeValueCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view, @Nonnull DateTimeValueIsBeforePresenterFactory beforeFactory, @Nonnull DateTimeValueIsAfterPresenterFactory afterFactory) {
+    public DateTimeValueCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view, @Nonnull DateIsBeforePresenterFactory beforeFactory, @Nonnull DateIsAfterPresenterFactory afterFactory) {
         super(view);
         this.beforeFactory = checkNotNull(beforeFactory);
         this.afterFactory = checkNotNull(afterFactory);

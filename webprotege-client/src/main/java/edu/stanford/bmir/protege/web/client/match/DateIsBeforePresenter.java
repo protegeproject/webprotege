@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -16,13 +15,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateTimeValueIsAfterPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class DateIsBeforePresenter implements CriteriaPresenter<LiteralCriteria> {
 
     @Nonnull
-    private final DateTimeView view;
+    private final DateView view;
 
     @Inject
-    public DateTimeValueIsAfterPresenter(@Nonnull DateTimeView view) {
+    public DateIsBeforePresenter(@Nonnull DateView view) {
         this.view = checkNotNull(view);
     }
 
@@ -38,6 +37,13 @@ public class DateTimeValueIsAfterPresenter implements CriteriaPresenter<LiteralC
 
     @Override
     public Optional<LiteralCriteria> getCriteria() {
-        return Optional.empty();
+        DateIsBeforeCriteria criteria = DateIsBeforeCriteria.get(
+                view.getYear(),
+                view.getMonth(),
+                view.getDay()
+        );
+        return Optional.of(
+                LiteralComponentCriteria.lexicalValueMatches(criteria)
+        );
     }
 }

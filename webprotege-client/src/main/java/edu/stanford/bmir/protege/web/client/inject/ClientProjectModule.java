@@ -218,7 +218,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    DateTimeView provideDateTimeView(DateTimeViewImpl impl) {
+    DateView provideDateTimeView(DateViewImpl impl) {
         return impl;
     }
 
