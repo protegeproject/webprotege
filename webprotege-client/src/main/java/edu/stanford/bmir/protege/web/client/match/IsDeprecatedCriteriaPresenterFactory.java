@@ -27,7 +27,7 @@ public class IsDeprecatedCriteriaPresenterFactory implements CriteriaPresenterFa
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "Is Deprecated";
+        return "Is deprecated";
     }
 
     @Nonnull
