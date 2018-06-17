@@ -77,6 +77,11 @@ public class StringMatcherFactory {
             }
 
             @Override
+            public Matcher<String> visit(@Nonnull StringDoesNotContainRegexMatchCriteria criteria) {
+                return new NotMatcher<>(new StringContainsRegexMatchMatcher(Pattern.compile(criteria.getPattern())));
+            }
+
+            @Override
             public Matcher<String> visit(@Nonnull StringHasUntrimmedSpaceCriteria criteria) {
                 return new StringHasUntrimmedSpaceMatcher();
             }

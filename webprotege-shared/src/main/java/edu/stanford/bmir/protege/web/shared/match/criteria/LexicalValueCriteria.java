@@ -21,7 +21,10 @@ import javax.annotation.Nonnull;
         @Type(AnyStringCriteria.class),
         @Type(SimpleStringCriteria.class),
         @Type(StringContainsRegexMatchCriteria.class),
-        @Type(NumericValueCriteria.class)
+        @Type(StringDoesNotContainRegexMatchCriteria.class),
+        @Type(NumericValueCriteria.class),
+        @Type(DateIsBeforeCriteria.class),
+        @Type(DateIsAfterCriteria.class)
 })
 public interface LexicalValueCriteria extends Criteria {
 
