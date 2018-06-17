@@ -33,6 +33,7 @@ public class LangTagMatchesMatcher implements Matcher<String> {
 
     @Override
     public boolean matches(@Nonnull String value) {
-        return !Locale.filterTags(languageRange, Collections.singleton(value)).isEmpty();
+        return !value.isEmpty()
+                && !Locale.filterTags(languageRange, Collections.singleton(value)).isEmpty();
     }
 }
