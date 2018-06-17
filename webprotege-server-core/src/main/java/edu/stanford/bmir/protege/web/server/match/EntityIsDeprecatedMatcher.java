@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -16,7 +17,7 @@ public class EntityIsDeprecatedMatcher implements Matcher<OWLEntity> {
 
     private final Matcher<OWLEntity> delegate;
 
-    public EntityIsDeprecatedMatcher(HasAnnotationAssertionAxioms axioms) {
+    public EntityIsDeprecatedMatcher(AnnotationAssertionAxiomsIndex axioms) {
         final AnnotationMatcher deprecatedMatcher = new AnnotationMatcher(
                 OWLAnnotationProperty::isDeprecated,
                 LiteralAnnotationValueMatcher.forIsXsdBooleanTrue()

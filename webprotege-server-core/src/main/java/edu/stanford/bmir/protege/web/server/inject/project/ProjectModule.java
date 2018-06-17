@@ -13,6 +13,9 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.frame.PropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsumptionChecker;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexWrapperImpl;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
@@ -543,5 +546,11 @@ public class ProjectModule {
         BuiltInShortFormDictionary dictionary = new BuiltInShortFormDictionary(cache, provider);
         dictionary.load();
         return dictionary;
+    }
+
+    @Provides
+    AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexCachingImpl impl) {
+        impl.attachOntologyListener();
+        return impl;
     }
 }

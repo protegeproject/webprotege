@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -29,7 +30,7 @@ public class NonUniqueLangTagsMatcher_TestCase {
     private NonUniqueLangTagsMatcher matcher;
 
     @Mock
-    private HasAnnotationAssertionAxioms hasAxioms;
+    private AnnotationAssertionAxiomsIndex hasAxioms;
 
     private Set<OWLAnnotationAssertionAxiom> axioms = new HashSet<>();
 
@@ -56,7 +57,7 @@ public class NonUniqueLangTagsMatcher_TestCase {
     public void setUp() {
         matcher = new NonUniqueLangTagsMatcher(hasAxioms, propertyMatcher);
         when(propertyMatcher.matches(any())).thenReturn(true);
-        when(hasAxioms.getAnnotationAssertionAxioms(any())).thenReturn(axioms);
+        when(hasAxioms.getAnnotationAssertionAxioms(any())).thenReturn(axioms.stream());
 
         when(entity.getIRI()).thenReturn(iri);
 

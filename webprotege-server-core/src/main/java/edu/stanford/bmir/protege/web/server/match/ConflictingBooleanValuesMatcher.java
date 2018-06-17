@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -10,6 +11,8 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -17,16 +20,16 @@ import javax.annotation.Nonnull;
  */
 public class ConflictingBooleanValuesMatcher implements Matcher<OWLEntity> {
 
-    private final HasAnnotationAssertionAxioms axioms;
+    private final AnnotationAssertionAxiomsIndex axioms;
 
-    public ConflictingBooleanValuesMatcher(HasAnnotationAssertionAxioms axioms) {
+    public ConflictingBooleanValuesMatcher(AnnotationAssertionAxiomsIndex axioms) {
         this.axioms = axioms;
     }
 
     @Override
     public boolean matches(@Nonnull OWLEntity value) {
         Multimap<OWLAnnotationProperty, Boolean> map = HashMultimap.create(10, 2);
-        for (OWLAnnotationAssertionAxiom ax : axioms.getAnnotationAssertionAxioms(value.getIRI())) {
+        for (OWLAnnotationAssertionAxiom ax : axioms.getAnnotationAssertionAxioms(value.getIRI()).collect(toList())) {
             if (ax.getValue() instanceof OWLLiteral) {
                 OWLLiteral literal = (OWLLiteral) ax.getValue();
                 if (literal.isBoolean() && isInBooleanLexicalSpace(literal)) {

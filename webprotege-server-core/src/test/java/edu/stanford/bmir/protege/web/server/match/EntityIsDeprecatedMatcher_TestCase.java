@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class EntityIsDeprecatedMatcher_TestCase {
     private IRI iri;
 
     @Mock
-    private HasAnnotationAssertionAxioms hasAxioms;
+    private AnnotationAssertionAxiomsIndex hasAxioms;
 
     @Mock
     private OWLAnnotationAssertionAxiom ax;
@@ -62,7 +63,7 @@ public class EntityIsDeprecatedMatcher_TestCase {
         when(value.getLang()).thenReturn("");
 
         when(entity.getIRI()).thenReturn(iri);
-        when(hasAxioms.getAnnotationAssertionAxioms(iri)).thenReturn(axioms);
+        when(hasAxioms.getAnnotationAssertionAxioms(iri)).thenReturn(axioms.stream());
         axioms.add(ax);
 
         when(annotation.getProperty()).thenReturn(property);

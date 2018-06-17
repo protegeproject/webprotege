@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -7,10 +8,14 @@ import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -20,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AnnotationValuesAreNotDisjointMatcher implements Matcher<OWLEntity> {
 
     @Nonnull
-    private final HasAnnotationAssertionAxioms axioms;
+    private final AnnotationAssertionAxiomsIndex axioms;
 
     @Nonnull
     private final Matcher<OWLAnnotationProperty> propertyA;
@@ -28,7 +33,7 @@ public class AnnotationValuesAreNotDisjointMatcher implements Matcher<OWLEntity>
     @Nonnull
     private final Matcher<OWLAnnotationProperty> propertyB;
 
-    public AnnotationValuesAreNotDisjointMatcher(@Nonnull HasAnnotationAssertionAxioms axioms,
+    public AnnotationValuesAreNotDisjointMatcher(@Nonnull AnnotationAssertionAxiomsIndex axioms,
                                                  @Nonnull Matcher<OWLAnnotationProperty> propertyA,
                                                  @Nonnull Matcher<OWLAnnotationProperty> propertyB) {
         this.axioms = checkNotNull(axioms);
@@ -38,7 +43,7 @@ public class AnnotationValuesAreNotDisjointMatcher implements Matcher<OWLEntity>
 
     @Override
     public boolean matches(@Nonnull OWLEntity value) {
-        Set<OWLAnnotationAssertionAxiom> assertions = axioms.getAnnotationAssertionAxioms(value.getIRI());
+        Collection<OWLAnnotationAssertionAxiom> assertions = axioms.getAnnotationAssertionAxioms(value.getIRI()).collect(toList());
         Set<OWLAnnotationValue> valuesA = new HashSet<>(assertions.size());
         Set<OWLAnnotationValue> valuesB = new HashSet<>(assertions.size());
         for(OWLAnnotationAssertionAxiom ax : assertions) {

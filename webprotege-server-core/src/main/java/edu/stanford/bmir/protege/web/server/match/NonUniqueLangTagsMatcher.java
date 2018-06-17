@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -20,13 +20,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class NonUniqueLangTagsMatcher implements EntityFrameMatcher {
 
-    private HasAnnotationAssertionAxioms hasAnnotationAssertionAxioms;
+    private AnnotationAssertionAxiomsIndex axiomsIndex;
 
     private Matcher<OWLAnnotationProperty> propertyMatcher;
 
-    public NonUniqueLangTagsMatcher(@Nonnull HasAnnotationAssertionAxioms hasAnnotationAssertionAxioms,
+    public NonUniqueLangTagsMatcher(@Nonnull AnnotationAssertionAxiomsIndex axiomsIndex,
                                     @Nonnull Matcher<OWLAnnotationProperty> propertyMatcher) {
-        this.hasAnnotationAssertionAxioms = checkNotNull(hasAnnotationAssertionAxioms);
+        this.axiomsIndex = checkNotNull(axiomsIndex);
         this.propertyMatcher = checkNotNull(propertyMatcher);
     }
 
@@ -34,10 +34,10 @@ public class NonUniqueLangTagsMatcher implements EntityFrameMatcher {
     public boolean matches(@Nonnull OWLEntity entity) {
         // Count languages by property
         Map<OWLAnnotationProperty, Multiset<String>> prop2Langs = new HashMap<>();
-        hasAnnotationAssertionAxioms.getAnnotationAssertionAxioms(entity.getIRI()).stream()
-                                    .filter(ax -> propertyMatcher.matches(ax.getProperty()))
-                                    .filter(ax -> ax.getValue() instanceof OWLLiteral)
-                                    .forEach(ax -> {
+        axiomsIndex.getAnnotationAssertionAxioms(entity.getIRI())
+                   .filter(ax -> propertyMatcher.matches(ax.getProperty()))
+                   .filter(ax -> ax.getValue() instanceof OWLLiteral)
+                   .forEach(ax -> {
                                         Multiset<String> langs = prop2Langs.computeIfAbsent(ax.getProperty(), p -> HashMultiset.create());
                                         String lang = ((OWLLiteral) ax.getValue()).getLang();
                                         langs.add(lang);

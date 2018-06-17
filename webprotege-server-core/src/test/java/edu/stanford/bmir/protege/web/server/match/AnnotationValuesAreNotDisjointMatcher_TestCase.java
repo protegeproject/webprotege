@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -28,7 +29,7 @@ public class AnnotationValuesAreNotDisjointMatcher_TestCase {
     private AnnotationValuesAreNotDisjointMatcher matcher;
 
     @Mock
-    private HasAnnotationAssertionAxioms hasAxioms;
+    private AnnotationAssertionAxiomsIndex hasAxioms;
 
     private Set<OWLAnnotationAssertionAxiom> axioms = new HashSet<>();
 
@@ -59,7 +60,7 @@ public class AnnotationValuesAreNotDisjointMatcher_TestCase {
 
         when(entity.getIRI()).thenReturn(iri);
 
-        when(hasAxioms.getAnnotationAssertionAxioms(any())).thenReturn(axioms);
+        when(hasAxioms.getAnnotationAssertionAxioms(any())).thenReturn(axioms.stream());
         when(propAMatcher.matches(propertyA)).thenReturn(true);
         when(propBMatcher.matches(propertyB)).thenReturn(true);
 

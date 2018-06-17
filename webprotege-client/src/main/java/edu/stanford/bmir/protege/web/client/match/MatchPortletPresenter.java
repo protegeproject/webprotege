@@ -29,6 +29,8 @@ import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesActi
 @Portlet(id = "portlet.match", title = "Match", tooltip = "Specifies match criteria")
 public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
 
+    private static final int PAGE_SIZE = 500;
+
     @Nonnull
     private final EntityCriteriaPresenter presenter;
 
@@ -59,6 +61,7 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void displayResult(GetMatchingEntitiesResult result) {
+        view.setExecuteEnabled(true);
         view.setResult(result.getEntities());
         view.setPageCount(result.getEntities().getPageCount());
         view.setPageNumber(result.getEntities().getPageNumber());
@@ -69,7 +72,8 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
         String s = criteria.map(Object::toString).orElse("Empty");
         GWT.log(s);
         criteria.ifPresent(c -> {
-            PageRequest pageRequest = PageRequest.requestPageWithSize(view.getPageNumber(), 500);
+            PageRequest pageRequest = PageRequest.requestPageWithSize(view.getPageNumber(), PAGE_SIZE);
+            view.setExecuteEnabled(false);
             dispatchServiceManager.execute(getMatchingEntities(getProjectId(), c, pageRequest),
                                            this::displayResult);
         });

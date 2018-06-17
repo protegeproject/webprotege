@@ -23,6 +23,8 @@ public interface MatchPortletView extends IsWidget, HasPagination {
 
     void setExecuteHandler(@Nonnull ExecuteQueryHandler handler);
 
+    void setExecuteEnabled(boolean enabled);
+
     @Nonnull
     AcceptsOneWidget getCriteriaContainer();
 

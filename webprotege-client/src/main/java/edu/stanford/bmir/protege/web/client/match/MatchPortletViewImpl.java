@@ -73,6 +73,11 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
     }
 
     @Override
+    public void setExecuteEnabled(boolean enabled) {
+        executeButton.setEnabled(enabled);
+    }
+
+    @Override
     public void setExecuteHandler(@Nonnull ExecuteQueryHandler handler) {
         this.executeHandler = checkNotNull(handler);
     }

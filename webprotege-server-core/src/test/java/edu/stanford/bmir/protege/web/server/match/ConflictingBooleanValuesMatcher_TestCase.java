@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ConflictingBooleanValuesMatcher_TestCase {
     private ConflictingBooleanValuesMatcher matcher;
 
     @Mock
-    private HasAnnotationAssertionAxioms hasAxioms;
+    private AnnotationAssertionAxiomsIndex hasAxioms;
 
     private Set<OWLAnnotationAssertionAxiom> axioms = new HashSet<>();
 
@@ -56,7 +57,7 @@ public class ConflictingBooleanValuesMatcher_TestCase {
 
         when(entity.getIRI()).thenReturn(iri);
 
-        when(hasAxioms.getAnnotationAssertionAxioms(any())).thenReturn(axioms);
+        when(hasAxioms.getAnnotationAssertionAxioms(any())).thenReturn(axioms.stream());
         axioms.add(axiomA);
         axioms.add(axiomB);
 

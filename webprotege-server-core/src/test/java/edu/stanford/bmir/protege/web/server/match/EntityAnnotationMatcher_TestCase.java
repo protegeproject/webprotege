@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class EntityAnnotationMatcher_TestCase {
     private EntityAnnotationMatcher matcher;
 
     @Mock
-    private HasAnnotationAssertionAxioms axiomProvider;
+    private AnnotationAssertionAxiomsIndex axiomProvider;
 
     @Mock
     private Matcher<OWLAnnotation> annotationMatcher;
@@ -59,7 +60,7 @@ public class EntityAnnotationMatcher_TestCase {
         when(axB.getAnnotation()).thenReturn(annotationB);
 
         when(entity.getIRI()).thenReturn(iri);
-        when(axiomProvider.getAnnotationAssertionAxioms(iri)).thenReturn(axioms);
+        when(axiomProvider.getAnnotationAssertionAxioms(iri)).thenReturn(axioms.stream());
     }
 
     @Test

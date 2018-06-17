@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -17,12 +18,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class IriAnnotationsMatcher implements Matcher<IRI> {
 
     @Nonnull
-    private final HasAnnotationAssertionAxioms axiomProvider;
+    private final AnnotationAssertionAxiomsIndex axiomProvider;
 
     @Nonnull
     private final Matcher<OWLAnnotation> annotationMatcher;
 
-    public IriAnnotationsMatcher(@Nonnull HasAnnotationAssertionAxioms axiomProvider,
+    public IriAnnotationsMatcher(@Nonnull AnnotationAssertionAxiomsIndex axiomProvider,
                                  @Nonnull Matcher<OWLAnnotation> annotationMatcher) {
         this.axiomProvider = checkNotNull(axiomProvider);
         this.annotationMatcher = checkNotNull(annotationMatcher);
@@ -30,7 +31,7 @@ public class IriAnnotationsMatcher implements Matcher<IRI> {
 
     @Override
     public boolean matches(@Nonnull IRI subject) {
-        return axiomProvider.getAnnotationAssertionAxioms(subject).stream()
+        return axiomProvider.getAnnotationAssertionAxioms(subject)
                             .map(OWLAnnotationAssertionAxiom::getAnnotation)
                             .anyMatch(annotationMatcher::matches);
     }

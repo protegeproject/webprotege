@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.semanticweb.owlapi.model.*;
@@ -8,6 +9,7 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
@@ -17,13 +19,13 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class MatcherFactory {
 
-    private final HasAnnotationAssertionAxioms axioms;
+    private final AnnotationAssertionAxiomsIndex axiomIndex;
 
     private final StringMatcherFactory stringMatcherFactory = new StringMatcherFactory();
 
     @Inject
-    public MatcherFactory(HasAnnotationAssertionAxioms axioms) {
-        this.axioms = axioms;
+    public MatcherFactory(@Nonnull AnnotationAssertionAxiomsIndex axiomIndex) {
+        this.axiomIndex = checkNotNull(axiomIndex);
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
@@ -57,7 +59,7 @@ public class MatcherFactory {
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationCriteria criteria) {
                 AnnotationCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
                 Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationComponentCriteria);
-                return new EntityAnnotationMatcher(axioms,
+                return new EntityAnnotationMatcher(axiomIndex,
                                                    annotationMatcher,
                                                    criteria.getAnnotationPresence());
             }
@@ -65,13 +67,13 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityIsDeprecatedCriteria criteria) {
-                return new EntityIsDeprecatedMatcher(axioms);
+                return new EntityIsDeprecatedMatcher(axiomIndex);
             }
 
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityIsNotDeprecatedCriteria criteria) {
-                return new NotMatcher<>(new EntityIsDeprecatedMatcher(axioms));
+                return new NotMatcher<>(new EntityIsDeprecatedMatcher(axiomIndex));
             }
 
             @Nonnull
@@ -84,19 +86,19 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityHasNonUniqueLangTagsCriteria criteria) {
                 Matcher<OWLAnnotationProperty> propertyMatcher = getAnnotationPropertyMatcher(criteria.getPropertyCriteria());
-                return new NonUniqueLangTagsMatcher(axioms, propertyMatcher);
+                return new NonUniqueLangTagsMatcher(axiomIndex, propertyMatcher);
             }
 
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityHasConflictingBooleanAnnotationValuesCriteria criteria) {
-                return new ConflictingBooleanValuesMatcher(axioms);
+                return new ConflictingBooleanValuesMatcher(axiomIndex);
             }
 
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria) {
-                return new AnnotationValuesAreNotDisjointMatcher(axioms,
+                return new AnnotationValuesAreNotDisjointMatcher(axiomIndex,
                                                                  getAnnotationPropertyMatcher(criteria.getFirstProperty()),
                                                                  getAnnotationPropertyMatcher(criteria.getSecondProperty()));
             }
@@ -178,7 +180,7 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull IriHasAnnotationsCriteria criteria) {
                 return new IriAnnotationValueMatcher(
-                        new IriAnnotationsMatcher(axioms,
+                        new IriAnnotationsMatcher(axiomIndex,
                                                   getAnnotationMatcher(criteria.getIriAnnotationsCriteria().get(0)))
                 );
             }
