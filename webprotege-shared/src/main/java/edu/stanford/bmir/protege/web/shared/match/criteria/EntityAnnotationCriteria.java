@@ -48,7 +48,7 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     @Nonnull
     public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationCriteria criteria) {
-        return new AutoValue_EntityAnnotationCriteria(criteria, AnnotationPresence.PRESENT.ordinal());
+        return new AutoValue_EntityAnnotationCriteria(criteria, AnnotationPresence.AT_LEAST_ONE.ordinal());
     }
 
     public static EntityAnnotationCriteria get(@Nonnull AnnotationPropertyCriteria propertyCriteria,

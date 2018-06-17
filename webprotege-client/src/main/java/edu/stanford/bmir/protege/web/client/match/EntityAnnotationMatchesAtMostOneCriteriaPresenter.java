@@ -16,13 +16,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jun 2018
  */
-public class EntityAnnotationCriteriaAbsentPresenter implements CriteriaPresenter<EntityAnnotationCriteria> {
+public class EntityAnnotationMatchesAtMostOneCriteriaPresenter implements CriteriaPresenter<EntityAnnotationCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaPresenter delegate;
 
     @Inject
-    public EntityAnnotationCriteriaAbsentPresenter(@Nonnull AnnotationCriteriaPresenter delegate) {
+    public EntityAnnotationMatchesAtMostOneCriteriaPresenter(@Nonnull AnnotationCriteriaPresenter delegate) {
         this.delegate = checkNotNull(delegate);
     }
 
@@ -40,6 +40,6 @@ public class EntityAnnotationCriteriaAbsentPresenter implements CriteriaPresente
     public Optional<? extends EntityAnnotationCriteria> getCriteria() {
         Optional<? extends AnnotationCriteria> criteria = delegate.getCriteria();
         return criteria
-                .map(c -> EntityAnnotationCriteria.get(c, AnnotationPresence.NONE));
+                .map(c -> EntityAnnotationCriteria.get(c, AnnotationPresence.AT_MOST_ONE));
     }
 }

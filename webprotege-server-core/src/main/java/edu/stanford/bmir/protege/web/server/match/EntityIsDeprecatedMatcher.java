@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -24,7 +23,7 @@ public class EntityIsDeprecatedMatcher implements Matcher<OWLEntity> {
         );
         delegate = new EntityAnnotationMatcher(axioms,
                                                deprecatedMatcher,
-                                               AnnotationPresence.PRESENT);
+                                               AnnotationPresence.AT_LEAST_ONE);
     }
 
     @Override

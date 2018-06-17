@@ -10,9 +10,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public enum AnnotationPresence implements IsSerializable {
 
-    @JsonProperty("present")
-    PRESENT,
+    AT_LEAST_ONE,
 
-    @JsonProperty("absent")
-    ABSENT
+    AT_MOST_ONE,
+
+    NONE
 }

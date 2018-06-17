@@ -21,6 +21,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     private final EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory;
 
     @Nonnull
+    private final EntityAnnotationMatchesAtMostOneCriteriaPresenterFactory atMostOneAnnotationFactory;
+
+    @Nonnull
     private final EntityTypeCriteriaPresenterFactory entityTypeFactory;
 
     @Nonnull
@@ -41,15 +44,16 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
-                                 @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory, @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
+                                 @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory, @Nonnull EntityAnnotationMatchesAtMostOneCriteriaPresenterFactory atMostOneAnnotationFactory, @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
                                  @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
                                  @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags, @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
         this.absentAnnotationCriteriaFactory = checkNotNull(absentAnnotationCriteriaFactory);
-        this.entityTypeFactory = entityTypeFactory;
-        this.notBuiltInEntityFactory = notBuiltInEntityFactory;
+        this.atMostOneAnnotationFactory = checkNotNull(atMostOneAnnotationFactory);
+        this.entityTypeFactory = checkNotNull(entityTypeFactory);
+        this.notBuiltInEntityFactory = checkNotNull(notBuiltInEntityFactory);
         this.isDeprecatedFactory = checkNotNull(isDeprecatedFactory);
         this.notDeprecatedFactory = checkNotNull(notDeprecatedFactory);
         this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
@@ -60,6 +64,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     protected void start(@Nonnull PresenterFactoryRegistry<EntityMatchCriteria> factoryRegistry) {
         factoryRegistry.addPresenter(annotationCriteriaFactory);
         factoryRegistry.addPresenter(absentAnnotationCriteriaFactory);
+        factoryRegistry.addPresenter(atMostOneAnnotationFactory);
         factoryRegistry.addPresenter(entityTypeFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);

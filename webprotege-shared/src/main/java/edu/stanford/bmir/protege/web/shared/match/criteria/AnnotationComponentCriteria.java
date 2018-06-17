@@ -42,7 +42,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
                                                   @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria,
                                                   @Nonnull @JsonProperty(PRESENCE) AnnotationPresence presence) {
-        return new AutoValue_AnnotationComponentCriteria(propertyCriteria, valueCriteria, presence == AnnotationPresence.PRESENT, annotationSetCriteria);
+        return new AutoValue_AnnotationComponentCriteria(propertyCriteria, valueCriteria, presence == AnnotationPresence.AT_LEAST_ONE, annotationSetCriteria);
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
     @Nonnull
     public static AnnotationCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria) {
-        return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get(), AnnotationPresence.PRESENT);
+        return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get(), AnnotationPresence.AT_LEAST_ONE);
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
     @JsonProperty(PRESENCE)
     @Nonnull
     public AnnotationPresence getPresence() {
-        return isPresent() ? AnnotationPresence.PRESENT : AnnotationPresence.ABSENT;
+        return isPresent() ? AnnotationPresence.AT_LEAST_ONE : AnnotationPresence.NONE;
     }
 
     @JsonProperty(ANNOTATIONS)

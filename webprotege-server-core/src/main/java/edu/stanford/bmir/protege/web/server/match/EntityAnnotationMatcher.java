@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import org.semanticweb.owlapi.model.*;
 
@@ -41,8 +40,13 @@ public class EntityAnnotationMatcher implements EntityFrameMatcher {
     public boolean matches(@Nonnull OWLEntity entity) {
         Stream<OWLAnnotation> annotationStream = axiomProvider.getAnnotationAssertionAxioms(entity.getIRI())
                                                                  .map(EntityAnnotationMatcher::getAnnotation);
-        if (annotationPresence == AnnotationPresence.PRESENT) {
+        if (annotationPresence == AnnotationPresence.AT_LEAST_ONE) {
             return annotationStream.anyMatch(annotationMatcher::matches);
+        }
+        else if(annotationPresence == AnnotationPresence.AT_MOST_ONE) {
+            return annotationStream.filter(annotationMatcher::matches)
+                                   .limit(2)
+                                   .count() <= 1;
         }
         else {
             return annotationStream.noneMatch(annotationMatcher::matches);
