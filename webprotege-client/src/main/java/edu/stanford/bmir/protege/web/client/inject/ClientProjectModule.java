@@ -252,6 +252,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    AnnotationPropertyPairView provideAnnotationPropertyPairView(AnnotationPropertyPairViewImpl impl) {
+        return impl;
+    }
 }
 
 

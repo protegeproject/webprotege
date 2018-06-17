@@ -35,13 +35,16 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Nonnull
     private final NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags;
 
+    @Nonnull
+    private final EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory;
+
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
                                  @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory, @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
                                  @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
-                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags) {
+                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags, @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
         this.absentAnnotationCriteriaFactory = checkNotNull(absentAnnotationCriteriaFactory);
@@ -50,6 +53,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         this.isDeprecatedFactory = checkNotNull(isDeprecatedFactory);
         this.notDeprecatedFactory = checkNotNull(notDeprecatedFactory);
         this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
+        this.notDisjointFactory = checkNotNull(notDisjointFactory);
     }
 
     @Override
@@ -61,5 +65,6 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(notDeprecatedFactory);
         factoryRegistry.addPresenter(notBuiltInEntityFactory);
         factoryRegistry.addPresenter(nonUniqueLangTags);
+        factoryRegistry.addPresenter(notDisjointFactory);
     }
 }
