@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.trigger.TriggerRunner;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -14,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -24,9 +27,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static edu.stanford.bmir.protege.web.server.pagination.PageCollector.toPage;
 
 /**
  * Matthew Horridge
@@ -75,12 +80,16 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     public GetMatchingEntitiesResult execute(@Nonnull GetMatchingEntitiesAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         Matcher<OWLEntity> matcher = matcherFactory.getMatcher((RootCriteria) action.getCriteria());
-        ImmutableList<OWLEntityData> result = rootOntology.getSignature().stream()
-                                                          .filter(matcher::matches)
-                                                          .map(entity -> DataFactory.getOWLEntityData(entity, renderingManager.getShortForm(entity)))
-                                                          .collect(toImmutableList());
+        PageRequest pageRequest = action.getPageRequest();
+        Optional<Page<OWLEntityData>> result = rootOntology.getSignature().stream()
+                                                           .filter(matcher::matches)
+                                                           .map(entity -> DataFactory.getOWLEntityData(entity, renderingManager.getShortForm(entity)))
+                                                           .sorted()
+                                                           .collect(toPage(pageRequest.getPageNumber(),
+                                                                           pageRequest.getPageSize()));
         stopwatch.stop();
         logger.info("Answer criteria query in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        return GetMatchingEntitiesResult.get(result);
+        return result.map(GetMatchingEntitiesResult::get)
+                     .orElseGet(() -> GetMatchingEntitiesResult.get(Page.emptyPage()));
     }
 }

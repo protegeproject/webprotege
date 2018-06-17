@@ -56,8 +56,8 @@ public class LangTagMatchesMatcher_TestCase {
     }
 
     @Test
-    public void shouldMatchWildCardPatternWhenEmpty() {
-        assertThat(tagMatchesPattern("", "*"), is(true));
+    public void shouldNotMatchWildCardPatternWhenEmpty() {
+        assertThat(tagMatchesPattern("", "*"), is(false));
     }
 
     @Test

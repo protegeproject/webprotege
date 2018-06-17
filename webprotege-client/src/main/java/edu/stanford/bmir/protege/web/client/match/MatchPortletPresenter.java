@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -46,6 +48,7 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
         this.presenter = checkNotNull(presenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view = checkNotNull(view);
+        this.view.setPageNumberChangedHandler(pageNumber -> handleExecute());
     }
 
     @Override
@@ -56,7 +59,9 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     }
 
     private void displayResult(GetMatchingEntitiesResult result) {
-        view.setResults(result.getEntities());
+        view.setResult(result.getEntities());
+        view.setPageCount(result.getEntities().getPageCount());
+        view.setPageNumber(result.getEntities().getPageNumber());
     }
 
     private void handleExecute() {
@@ -64,7 +69,8 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
         String s = criteria.map(Object::toString).orElse("Empty");
         GWT.log(s);
         criteria.ifPresent(c -> {
-            dispatchServiceManager.execute(getMatchingEntities(getProjectId(), c),
+            PageRequest pageRequest = PageRequest.requestPageWithSize(view.getPageNumber(), 500);
+            dispatchServiceManager.execute(getMatchingEntities(getProjectId(), c, pageRequest),
                                            this::displayResult);
         });
     }

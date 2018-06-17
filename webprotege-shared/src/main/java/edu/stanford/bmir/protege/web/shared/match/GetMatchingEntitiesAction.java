@@ -6,9 +6,12 @@ import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstruc
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -23,15 +26,25 @@ public class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntit
 
     private ProjectId projectId;
 
-    public GetMatchingEntitiesAction(Criteria criteria, ProjectId projectId) {
-        this.criteria = criteria;
-        this.projectId = projectId;
+    private PageRequest pageRequest;
+
+    public GetMatchingEntitiesAction(Criteria criteria,
+                                     ProjectId projectId,
+                                     PageRequest pageRequest) {
+        this.criteria = checkNotNull(criteria);
+        this.projectId = checkNotNull(projectId);
+        this.pageRequest = checkNotNull(pageRequest);
     }
 
     @Nonnull
     @Override
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    @Nonnull
+    public PageRequest getPageRequest() {
+        return pageRequest;
     }
 
     @GwtSerializationConstructor
@@ -45,7 +58,8 @@ public class GetMatchingEntitiesAction implements ProjectAction<GetMatchingEntit
 
     @Nonnull
     public static GetMatchingEntitiesAction getMatchingEntities(@Nonnull ProjectId projectId,
-                                                                @Nonnull Criteria criteria) {
-        return new GetMatchingEntitiesAction(criteria, projectId);
+                                                                @Nonnull Criteria criteria,
+                                                                @Nonnull PageRequest pageRequest) {
+        return new GetMatchingEntitiesAction(criteria, projectId, pageRequest);
     }
 }
