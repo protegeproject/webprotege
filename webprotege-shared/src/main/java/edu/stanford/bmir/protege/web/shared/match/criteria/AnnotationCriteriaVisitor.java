@@ -5,10 +5,10 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 15 Jun 2018
+ * 17 Jun 2018
  */
-public interface AnnotationCriteria extends Criteria {
+public interface AnnotationCriteriaVisitor<R> {
 
     @Nonnull
-    <R> R accept(@Nonnull AnnotationCriteriaVisitor<R> visitor);
+    R visit(@Nonnull AnnotationComponentCriteria criteria);
 }

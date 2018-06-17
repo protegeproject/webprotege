@@ -18,6 +18,9 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     private final EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory;
 
     @Nonnull
+    private final EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory;
+
+    @Nonnull
     private final EntityTypeCriteriaPresenterFactory entityTypeFactory;
 
     @Nonnull
@@ -35,12 +38,13 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
-                                 @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
+                                 @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory, @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
                                  @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
                                  @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
+        this.absentAnnotationCriteriaFactory = checkNotNull(absentAnnotationCriteriaFactory);
         this.entityTypeFactory = entityTypeFactory;
         this.notBuiltInEntityFactory = notBuiltInEntityFactory;
         this.isDeprecatedFactory = checkNotNull(isDeprecatedFactory);
@@ -51,6 +55,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Override
     protected void start(@Nonnull PresenterFactoryRegistry<EntityMatchCriteria> factoryRegistry) {
         factoryRegistry.addPresenter(annotationCriteriaFactory);
+        factoryRegistry.addPresenter(absentAnnotationCriteriaFactory);
         factoryRegistry.addPresenter(entityTypeFactory);
         factoryRegistry.addPresenter(isDeprecatedFactory);
         factoryRegistry.addPresenter(notDeprecatedFactory);

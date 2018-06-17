@@ -55,11 +55,11 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationCriteria criteria) {
-                AnnotationComponentCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
+                AnnotationCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
                 Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationComponentCriteria);
                 return new EntityAnnotationMatcher(axioms,
                                                    annotationMatcher,
-                                                   criteria.getAnnotationCriteria().getPresence());
+                                                   criteria.getAnnotationPresence());
             }
 
             @Nonnull
@@ -103,12 +103,18 @@ public class MatcherFactory {
         });
     }
 
-    private Matcher<OWLAnnotation> getAnnotationMatcher(AnnotationComponentCriteria annotationComponentCriteria) {
-        AnnotationPropertyCriteria propertyCriteria = annotationComponentCriteria.getAnnotationPropertyCriteria();
-        Matcher<OWLAnnotationProperty> propertyMatcher = getAnnotationPropertyMatcher(propertyCriteria);
-        AnnotationValueCriteria valueCriteria = annotationComponentCriteria.getAnnotationValueCriteria();
-        Matcher<OWLAnnotationValue> valueMatcher = getAnnotationValueMatcher(valueCriteria);
-        return new AnnotationMatcher(propertyMatcher, valueMatcher);
+    private Matcher<OWLAnnotation> getAnnotationMatcher(AnnotationCriteria annotationCriteria) {
+        return annotationCriteria.accept(new AnnotationCriteriaVisitor<Matcher<OWLAnnotation>>() {
+            @Nonnull
+            @Override
+            public Matcher<OWLAnnotation> visit(@Nonnull AnnotationComponentCriteria criteria) {
+                AnnotationPropertyCriteria propertyCriteria = criteria.getAnnotationPropertyCriteria();
+                Matcher<OWLAnnotationProperty> propertyMatcher = getAnnotationPropertyMatcher(propertyCriteria);
+                AnnotationValueCriteria valueCriteria = criteria.getAnnotationValueCriteria();
+                Matcher<OWLAnnotationValue> valueMatcher = getAnnotationValueMatcher(valueCriteria);
+                return new AnnotationMatcher(propertyMatcher, valueMatcher);
+            }
+        });
     }
 
     private Matcher<OWLAnnotationProperty> getAnnotationPropertyMatcher(@Nonnull AnnotationPropertyCriteria criteria) {

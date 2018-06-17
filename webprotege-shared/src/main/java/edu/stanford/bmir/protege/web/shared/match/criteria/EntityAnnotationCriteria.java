@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 
 import javax.annotation.Nonnull;
 
@@ -22,7 +24,15 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     @JsonProperty(ANNOTATION)
     @Nonnull
-    public abstract AnnotationComponentCriteria getAnnotationCriteria();
+    public abstract AnnotationCriteria getAnnotationCriteria();
+
+    @JsonIgnore
+    protected abstract int getAnnotationPresenceOrdinal();
+
+    @Nonnull
+    public AnnotationPresence getAnnotationPresence() {
+        return AnnotationPresence.values()[getAnnotationPresenceOrdinal()];
+    }
 
     @Override
     public <R> R accept(RootCriteriaVisitor<R> visitor) {
@@ -31,8 +41,14 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     @JsonCreator
     @Nonnull
-    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationComponentCriteria criteria) {
-        return new AutoValue_EntityAnnotationCriteria(criteria);
+    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationCriteria criteria,
+                                               @Nonnull @JsonProperty("presence") AnnotationPresence presence) {
+        return new AutoValue_EntityAnnotationCriteria(criteria, presence.ordinal());
+    }
+
+    @Nonnull
+    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationCriteria criteria) {
+        return new AutoValue_EntityAnnotationCriteria(criteria, AnnotationPresence.PRESENT.ordinal());
     }
 
     public static EntityAnnotationCriteria get(@Nonnull AnnotationPropertyCriteria propertyCriteria,

@@ -40,11 +40,11 @@ public class EntityAnnotationMatcher implements EntityFrameMatcher {
     public boolean matches(@Nonnull OWLEntity entity) {
         Stream<OWLAnnotation> annotationStream = axiomProvider.getAnnotationAssertionAxioms(entity.getIRI()).stream()
                                                                  .map(OWLAnnotationAssertionAxiom::getAnnotation);
-//        if (annotationPresence == AnnotationPresence.PRESENT) {
+        if (annotationPresence == AnnotationPresence.PRESENT) {
             return annotationStream.anyMatch(annotationMatcher::matches);
-//        }
-//        else {
-//            return annotationStream.noneMatch(annotationMatcher::matches);
-//        }
+        }
+        else {
+            return annotationStream.noneMatch(annotationMatcher::matches);
+        }
     }
 }

@@ -41,7 +41,7 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
     }
 
     @Override
-    public Optional<? extends AnnotationComponentCriteria> getCriteria() {
+    public Optional<? extends AnnotationCriteria> getCriteria() {
         AnnotationPropertyCriteria propertyCriteria = view.getSelectedProperty()
                                                           .map(prop -> (AnnotationPropertyCriteria) IriEqualsCriteria.get(prop))
                                                           .orElse(AnyAnnotationPropertyCriteria.get());
@@ -49,7 +49,7 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
         if(!valueCriteria.isPresent()) {
             return Optional.empty();
         }
-        AnnotationComponentCriteria annotationComponentCriteria = AnnotationComponentCriteria.get(
+        AnnotationCriteria annotationComponentCriteria = AnnotationComponentCriteria.get(
                 propertyCriteria,
                 valueCriteria.get(),
                 AnyAnnotationSetCriteria.get(),

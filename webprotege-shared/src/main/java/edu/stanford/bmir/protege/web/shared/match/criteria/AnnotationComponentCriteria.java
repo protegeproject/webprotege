@@ -38,7 +38,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
      */
     @JsonCreator
     @Nonnull
-    public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
+    public static AnnotationCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
                                                   @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria,
                                                   @Nonnull @JsonProperty(PRESENCE) AnnotationPresence presence) {
@@ -53,7 +53,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
      * @param valueCriteria    The criteria for matching the value.
      */
     @Nonnull
-    public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
+    public static AnnotationCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria) {
         return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get(), AnnotationPresence.PRESENT);
     }
@@ -62,7 +62,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
      * A convenicence method to create criteria that will match any annotation.
      */
     @Nonnull
-    public static AnnotationComponentCriteria anyAnnotation() {
+    public static AnnotationCriteria anyAnnotation() {
         return get(AnyAnnotationPropertyCriteria.get(),
                    AnyAnnotationValueCriteria.get());
     }
@@ -86,4 +86,10 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
     @JsonProperty(ANNOTATIONS)
     @Nonnull
     public abstract AnnotationSetCriteria getAnnotationSetCriteria();
+
+    @Nonnull
+    @Override
+    public <R> R accept(@Nonnull AnnotationCriteriaVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
 }
