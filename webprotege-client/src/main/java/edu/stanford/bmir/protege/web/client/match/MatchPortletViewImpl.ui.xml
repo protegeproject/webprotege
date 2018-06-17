@@ -38,7 +38,7 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:InlineLabel text="Query" addStyleNames="{style.resultsCount} {wp.style.formLabel}"/>
         <g:SimplePanel ui:field="criteriaContainer" addStyleNames="{style.criteriaContainer}"/>
-        <g:Button ui:field="executeButton" text="Execute" addStyleNames="{style.executeButton} {wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.acceptButton}"/>
+        <g:Button ui:field="executeButton" text="Execute" addStyleNames="{style.executeButton} {wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.primaryButton}"/>
         <g:InlineLabel ui:field="resultsCount" text="Results" addStyleNames="{style.resultsCount} {wp.style.formLabel}"/>
         <g:FlowPanel ui:field="resultsContainer" addStyleNames="{style.resultsContainer}"/>
         <pagination:PaginatorViewImpl ui:field="paginator" addStyleNames="{style.paginator}"/>

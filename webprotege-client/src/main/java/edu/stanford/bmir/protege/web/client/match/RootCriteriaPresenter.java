@@ -41,13 +41,16 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
     @Nonnull
     private final EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory;
 
+    @Nonnull
+    private final SubClassOfCriteriaPresenterFactory subClassOfFactory;
+
     @Inject
     public RootCriteriaPresenter(@Nonnull SelectableCriteriaTypeView view,
                                  @Nonnull EntityAnnotationCriteriaPresenterFactory annotationCriteriaFactory,
                                  @Nonnull EntityAnnotationCriteriaAbsentPresenterFactory absentAnnotationCriteriaFactory, @Nonnull EntityAnnotationMatchesAtMostOneCriteriaPresenterFactory atMostOneAnnotationFactory, @Nonnull EntityTypeCriteriaPresenterFactory entityTypeFactory,
                                  @Nonnull IsNotBuiltInEntityPresenterFactory notBuiltInEntityFactory, @Nonnull IsDeprecatedCriteriaPresenterFactory isDeprecatedFactory,
                                  @Nonnull IsNotDeprecatedCriteriaPresenterFactory notDeprecatedFactory,
-                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags, @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory) {
+                                 @Nonnull NonUniqueLangTagsCriteriaPresenterFactory nonUniqueLangTags, @Nonnull EntityAnnotationValuesAreNotDisjointCriteriaPresenterFactory notDisjointFactory, @Nonnull SubClassOfCriteriaPresenterFactory subClassOfFactory) {
         super(view);
         this.annotationCriteriaFactory = checkNotNull(annotationCriteriaFactory);
         this.absentAnnotationCriteriaFactory = checkNotNull(absentAnnotationCriteriaFactory);
@@ -58,6 +61,7 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         this.notDeprecatedFactory = checkNotNull(notDeprecatedFactory);
         this.nonUniqueLangTags = checkNotNull(nonUniqueLangTags);
         this.notDisjointFactory = checkNotNull(notDisjointFactory);
+        this.subClassOfFactory = checkNotNull(subClassOfFactory);
     }
 
     @Override
@@ -71,5 +75,6 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(notBuiltInEntityFactory);
         factoryRegistry.addPresenter(nonUniqueLangTags);
         factoryRegistry.addPresenter(notDisjointFactory);
+        factoryRegistry.addPresenter(subClassOfFactory);
     }
 }

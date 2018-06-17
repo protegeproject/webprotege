@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.semanticweb.owlapi.model.*;
 
@@ -23,9 +22,12 @@ public class MatcherFactory {
 
     private final StringMatcherFactory stringMatcherFactory = new StringMatcherFactory();
 
+    private final SubClassOfMatcherFactory subClassOfMatcherFactory;
     @Inject
-    public MatcherFactory(@Nonnull AnnotationAssertionAxiomsIndex axiomIndex) {
+    public MatcherFactory(@Nonnull AnnotationAssertionAxiomsIndex axiomIndex,
+                          SubClassOfMatcherFactory subClassOfMatcherFactory) {
         this.axiomIndex = checkNotNull(axiomIndex);
+        this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
@@ -101,6 +103,12 @@ public class MatcherFactory {
                 return new AnnotationValuesAreNotDisjointMatcher(axiomIndex,
                                                                  getAnnotationPropertyMatcher(criteria.getFirstProperty()),
                                                                  getAnnotationPropertyMatcher(criteria.getSecondProperty()));
+            }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(@Nonnull SubClassOfCriteria criteria) {
+                return subClassOfMatcherFactory.create(criteria.getTarget());
             }
         });
     }

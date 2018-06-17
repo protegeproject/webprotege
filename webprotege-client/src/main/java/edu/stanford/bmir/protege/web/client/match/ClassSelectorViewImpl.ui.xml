@@ -1,0 +1,21 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .main {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .editorField {
+            border: 1px solid #e0e0e0;
+            min-width: 250px;
+            max-width: 250px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <primitive:PrimitiveDataEditorImpl ui:field="editorField"
+                                           classesAllowed="true"
+                                           placeholder="Enter class name"
+                                           addStyleNames="{style.editorField}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
