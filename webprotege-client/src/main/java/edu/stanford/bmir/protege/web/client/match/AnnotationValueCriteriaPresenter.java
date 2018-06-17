@@ -30,6 +30,9 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
     private final StringMatchesRegexCriteriaPresenterFactory regexFactory;
 
     @Nonnull
+    private final StringDoesNotMatchRegexCriteriaPresenterFactory negRegexFactory;
+
+    @Nonnull
     private final StringHasUntrimmedSpaceCriteriaPresenterFactory untrimmedFactory;
 
     @Nonnull
@@ -65,7 +68,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
                                             @Nonnull StringEndsWithCriteriaPresenterFactory endsWithFactory,
                                             @Nonnull StringContainsCriteriaPresenterFactory containsFactory,
                                             @Nonnull StringMatchesRegexCriteriaPresenterFactory regexFactory,
-                                            @Nonnull StringHasUntrimmedSpaceCriteriaPresenterFactory untrimmedFactory,
+                                            @Nonnull StringDoesNotMatchRegexCriteriaPresenterFactory negRegexFactory, @Nonnull StringHasUntrimmedSpaceCriteriaPresenterFactory untrimmedFactory,
                                             @Nonnull StringContainsRepeatedSpacesCriteriaPresenterFactory repeatedSpacesFactory,
                                             @Nonnull LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenterFactory lexicalValueFactory, @Nonnull IriHasAnnotationsCriteriaPresenterFactory iriAnnotationsFactory, @Nonnull NumericValueCriteriaPresenterFactory numericValueFactory, @Nonnull LangTagMatchesCriteriaPresenterFactory langTagMatchesFactory, @Nonnull LangTagIsEmptyCriteriaPresenterFactory emptyLangTagFactory, @Nonnull AnyAnnotationValueCriteriaPresenterFactory anyValueFactory, @Nonnull DateTimeValueCriteriaPresenterFactory dateTimeFactory, @Nonnull IriEqualsCriteriaFactoryPresenter iriEqualsFactory) {
         super(view);
@@ -74,6 +77,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         this.endsWithFactory = checkNotNull(endsWithFactory);
         this.containsFactory = checkNotNull(containsFactory);
         this.regexFactory = checkNotNull(regexFactory);
+        this.negRegexFactory = checkNotNull(negRegexFactory);
         this.untrimmedFactory = checkNotNull(untrimmedFactory);
         this.repeatedSpacesFactory = checkNotNull(repeatedSpacesFactory);
         this.lexicalValueFactory = checkNotNull(lexicalValueFactory);
@@ -93,6 +97,7 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(startsWithFactory);
         factoryRegistry.addPresenter(endsWithFactory);
         factoryRegistry.addPresenter(regexFactory);
+        factoryRegistry.addPresenter(negRegexFactory);
         factoryRegistry.addPresenter(numericValueFactory);
         factoryRegistry.addPresenter(dateTimeFactory);
         factoryRegistry.addPresenter(iriEqualsFactory);

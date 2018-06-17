@@ -20,10 +20,13 @@ public abstract class StringDoesNotContainRegexMatchCriteria implements LexicalV
     @Nonnull
     public abstract String getPattern();
 
+    public abstract boolean ignoreCase();
+
     @JsonCreator
     @Nonnull
-    public static StringDoesNotContainRegexMatchCriteria get(@Nonnull String pattern) {
-        return new AutoValue_StringDoesNotContainRegexMatchCriteria(pattern);
+    public static StringDoesNotContainRegexMatchCriteria get(@Nonnull String pattern,
+                                                             boolean ignoreCase) {
+        return new AutoValue_StringDoesNotContainRegexMatchCriteria(pattern, ignoreCase);
     }
 
     @Override
