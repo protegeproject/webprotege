@@ -26,7 +26,7 @@ public class EntityAnnotationCriteriaAbsentPresenterFactory implements CriteriaP
     @Nonnull
     @Override
     public String getDisplayName() {
-        return "does not have an annotation on";
+        return "Does not have an annotation on";
     }
 
     @Nonnull
