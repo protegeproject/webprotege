@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("LiteralMatches")
-public abstract class LiteralComponentCriteria implements LiteralCriteria {
+@JsonTypeName("LiteralComponents")
+public abstract class LiteralComponentsCriteria implements LiteralCriteria {
 
     private static final String LEXICAL_VALUE = "lexicalValue";
 
@@ -47,17 +47,17 @@ public abstract class LiteralComponentCriteria implements LiteralCriteria {
     }
 
     @JsonCreator
-    public static LiteralComponentCriteria get(@Nonnull @JsonProperty(LEXICAL_VALUE) LexicalValueCriteria lexicalValueCritera,
-                                               @Nonnull @JsonProperty(LANG_TAG) LangTagCriteria langTagCriteria,
-                                               @Nonnull @JsonProperty(DATATYPE) DatatypeCriteria datatypeCriteria) {
-        return new AutoValue_LiteralComponentCriteria(lexicalValueCritera, langTagCriteria, datatypeCriteria);
+    public static LiteralComponentsCriteria get(@Nonnull @JsonProperty(LEXICAL_VALUE) LexicalValueCriteria lexicalValueCritera,
+                                                @Nonnull @JsonProperty(LANG_TAG) LangTagCriteria langTagCriteria,
+                                                @Nonnull @JsonProperty(DATATYPE) DatatypeCriteria datatypeCriteria) {
+        return new AutoValue_LiteralComponentsCriteria(lexicalValueCritera, langTagCriteria, datatypeCriteria);
     }
 
-    public static LiteralComponentCriteria lexicalValueMatches(@Nonnull LexicalValueCriteria criteria) {
+    public static LiteralComponentsCriteria lexicalValueMatches(@Nonnull LexicalValueCriteria criteria) {
         return get(criteria, AnyLangTagOrEmptyLangTagCriteria.get(), AnyDatatypeCriteria.get());
     }
 
-    public static LiteralComponentCriteria langTagMatches(LangTagCriteria criteria) {
+    public static LiteralComponentsCriteria langTagMatches(LangTagCriteria criteria) {
         return get(AnyStringCriteria.get(),
                    criteria,
                    AnyDatatypeCriteria.get());

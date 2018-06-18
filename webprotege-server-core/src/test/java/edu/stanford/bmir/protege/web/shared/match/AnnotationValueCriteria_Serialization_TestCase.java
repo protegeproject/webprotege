@@ -17,7 +17,7 @@ public class AnnotationValueCriteria_Serialization_TestCase {
     @Test
     public void shouldSerialize_LiteralComponentCriteria() throws IOException {
         testSerialization(
-                LiteralComponentCriteria.get(
+                LiteralComponentsCriteria.get(
                         StringContainsCriteria.get("A", true),
                         AnyLangTagOrEmptyLangTagCriteria.get(),
                         AnyDatatypeCriteria.get()
@@ -57,7 +57,7 @@ public class AnnotationValueCriteria_Serialization_TestCase {
                 CompositeAnnotationValueCriteria.get(
                         ImmutableList.of(
                                 AnyAnnotationValueCriteria.get(),
-                                LiteralComponentCriteria.get(
+                                LiteralComponentsCriteria.get(
                                         AnyStringCriteria.get(),
                                         AnyLangTagOrEmptyLangTagCriteria.get(),
                                         AnyDatatypeCriteria.get()

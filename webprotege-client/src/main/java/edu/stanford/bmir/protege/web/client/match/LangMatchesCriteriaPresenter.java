@@ -39,7 +39,7 @@ public class LangMatchesCriteriaPresenter implements CriteriaPresenter<LiteralCr
     public Optional<LiteralCriteria> getCriteria() {
         LangTagMatchesCriteria criteria = LangTagMatchesCriteria.get(view.getPattern());
         return Optional.of(
-                LiteralComponentCriteria.get(
+                LiteralComponentsCriteria.get(
                         AnyStringCriteria.get(),
                         criteria,
                         AnyDatatypeCriteria.get()

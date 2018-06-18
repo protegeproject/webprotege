@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "match")
 @JsonSubTypes({
-        @Type(LiteralComponentCriteria.class),
+        @Type(LiteralComponentsCriteria.class),
         @Type(LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria.class)
 })
 public interface LiteralCriteria extends AnnotationValueCriteria {

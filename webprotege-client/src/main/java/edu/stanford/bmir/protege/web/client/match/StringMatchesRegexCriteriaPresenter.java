@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringContainsRegexMatchCriteria;
 
 import javax.annotation.Nonnull;
@@ -40,6 +40,6 @@ public class StringMatchesRegexCriteriaPresenter implements CriteriaPresenter<Li
     @Override
     public Optional<LiteralCriteria> getCriteria() {
         StringContainsRegexMatchCriteria lexicalValueCriteria = StringContainsRegexMatchCriteria.get(view.getValue(), view.isIgnoreCase());
-        return Optional.of(LiteralComponentCriteria.lexicalValueMatches(lexicalValueCriteria));
+        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(lexicalValueCriteria));
     }
 }

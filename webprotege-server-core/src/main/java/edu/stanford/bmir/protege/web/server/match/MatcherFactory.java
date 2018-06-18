@@ -168,7 +168,7 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
-            public Matcher<OWLAnnotationValue> visit(@Nonnull LiteralComponentCriteria criteria) {
+            public Matcher<OWLAnnotationValue> visit(@Nonnull LiteralComponentsCriteria criteria) {
                 return new LiteralAnnotationValueMatcher(getLiteralMatcher(criteria));
             }
 
@@ -195,7 +195,7 @@ public class MatcherFactory {
         });
     }
 
-    private Matcher<OWLLiteral> getLiteralMatcher(@Nonnull LiteralComponentCriteria criteria) {
+    private Matcher<OWLLiteral> getLiteralMatcher(@Nonnull LiteralComponentsCriteria criteria) {
         return new LiteralMatcher(
                 getLexicalValueMatcher(criteria.getLexicalValueCriteria()),
                 getLangTagMatcher(criteria.getLangTagCriteria()),

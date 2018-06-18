@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringStartsWithCriteria;
 
@@ -40,6 +40,6 @@ public class StringStartsWithCriteriaPresenter implements CriteriaPresenter<Lite
     @Override
     public Optional<LiteralCriteria> getCriteria() {
         StringStartsWithCriteria stringStartsWithCriteria = StringStartsWithCriteria.get(view.getValue(), view.isIgnoreCase());
-        return Optional.of(LiteralComponentCriteria.lexicalValueMatches(stringStartsWithCriteria));
+        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(stringStartsWithCriteria));
     }
 }

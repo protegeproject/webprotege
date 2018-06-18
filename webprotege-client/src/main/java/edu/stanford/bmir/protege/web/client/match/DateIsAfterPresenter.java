@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.DateIsAfterCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public class DateIsAfterPresenter implements CriteriaPresenter<LiteralCriteria> 
         DateIsAfterCriteria criteria = DateIsAfterCriteria.get(view.getYear(),
                                                                view.getMonth(),
                                                                view.getDay());
-        return Optional.of(LiteralComponentCriteria.lexicalValueMatches(
+        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(
                 criteria
         ));
     }

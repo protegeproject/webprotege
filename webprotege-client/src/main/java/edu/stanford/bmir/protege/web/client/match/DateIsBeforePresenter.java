@@ -43,7 +43,7 @@ public class DateIsBeforePresenter implements CriteriaPresenter<LiteralCriteria>
                 view.getDay()
         );
         return Optional.of(
-                LiteralComponentCriteria.lexicalValueMatches(criteria)
+                LiteralComponentsCriteria.lexicalValueMatches(criteria)
         );
     }
 }

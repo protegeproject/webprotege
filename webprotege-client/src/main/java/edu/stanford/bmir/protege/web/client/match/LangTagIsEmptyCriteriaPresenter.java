@@ -38,7 +38,7 @@ public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<Litera
     @Override
     public Optional<LiteralCriteria> getCriteria() {
         return Optional.of(
-                LiteralComponentCriteria.get(
+                LiteralComponentsCriteria.get(
                         AnyStringCriteria.get(),
                         LangTagIsEmptyCriteria.get(),
                         AnyDatatypeCriteria.get()

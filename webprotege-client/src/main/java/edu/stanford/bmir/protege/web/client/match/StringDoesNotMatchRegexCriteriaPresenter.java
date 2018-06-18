@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringDoesNotContainRegexMatchCriteria;
 
@@ -37,7 +37,7 @@ public class StringDoesNotMatchRegexCriteriaPresenter implements CriteriaPresent
     @Override
     public Optional<? extends LiteralCriteria> getCriteria() {
         return Optional.of(
-                LiteralComponentCriteria.lexicalValueMatches(
+                LiteralComponentsCriteria.lexicalValueMatches(
                         StringDoesNotContainRegexMatchCriteria.get(view.getValue(),
                                                                    view.isIgnoreCase()
                 ))
