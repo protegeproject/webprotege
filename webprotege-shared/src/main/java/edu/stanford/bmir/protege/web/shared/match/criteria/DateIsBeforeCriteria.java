@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
@@ -19,22 +20,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("DateIsBefore")
-public abstract class DateIsBeforeCriteria implements LexicalValueCriteria {
+public abstract class DateIsBeforeCriteria implements DateCriteria {
 
-    @JsonProperty("year")
-    public abstract int getYear();
-
-    @JsonProperty("month")
-    public abstract int getMonth();
-
-    @JsonProperty("day")
-    public abstract int getDay();
-
-    public static DateIsBeforeCriteria get(@JsonProperty("year") int year,
-                                           @JsonProperty("month") int month,
-                                           @JsonProperty("day") int day) {
-        checkArgument(month >= 1 && month <= 12);
-        checkArgument(day >= 1 && day <= 31);
+    @Nonnull
+    @JsonCreator
+    public static DateIsBeforeCriteria get(@JsonProperty(YEAR) int year,
+                                           @JsonProperty(MONTH) int month,
+                                           @JsonProperty(DAY) int day) {
+        DateCriteria.checkArgs(year, month, day);
         return new AutoValue_DateIsBeforeCriteria(year,
                                                   month,
                                                   day);

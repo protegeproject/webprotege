@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -16,16 +17,12 @@ import java.util.regex.Pattern;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("StringContainsRegexMatch")
-public abstract class StringContainsRegexMatchCriteria implements LexicalValueCriteria {
-
-    @Nonnull
-    public abstract String getPattern();
-
-    public abstract boolean isIgnoreCase();
+public abstract class StringContainsRegexMatchCriteria implements RegexMatchCriteria {
 
     @JsonCreator
     @Nonnull
-    public static StringContainsRegexMatchCriteria get(@Nonnull String pattern, boolean ignoreCase) {
+    public static StringContainsRegexMatchCriteria get(@Nonnull @JsonProperty(PATTERN) String pattern,
+                                                       @JsonProperty(IGNORE_CASE) boolean ignoreCase) {
         return new AutoValue_StringContainsRegexMatchCriteria(pattern, ignoreCase);
     }
 

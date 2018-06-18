@@ -19,7 +19,10 @@ import javax.annotation.Nonnull;
 )
 @JsonSubTypes({
         @Type(AnyStringCriteria.class),
-        @Type(SimpleStringCriteria.class),
+        @Type(StringStartsWithCriteria.class),
+        @Type(StringEndsWithCriteria.class),
+        @Type(StringContainsCriteria.class),
+        @Type(StringEqualsCriteria.class),
         @Type(StringContainsRegexMatchCriteria.class),
         @Type(StringDoesNotContainRegexMatchCriteria.class),
         @Type(NumericValueCriteria.class),

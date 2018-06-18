@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
  * 11 Jun 2018
  */
 @AutoValue
-@JsonTypeName("LexicalNumericValue")
+@JsonTypeName("NumericValue")
 @GwtCompatible(serializable = true)
 @JsonPropertyOrder({NumericValueCriteria.PREDICATE, NumericValueCriteria.VALUE})
 public abstract class NumericValueCriteria implements LexicalValueCriteria {
