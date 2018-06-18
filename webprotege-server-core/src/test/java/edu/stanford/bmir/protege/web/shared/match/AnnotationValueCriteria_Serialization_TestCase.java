@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.match;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.IRI;
@@ -47,6 +48,22 @@ public class AnnotationValueCriteria_Serialization_TestCase {
                                 AnyAnnotationValueCriteria.get()
                         )
                 )
+        );
+    }
+
+    @Test
+    public void shouldSerialize_CompositeAnnotationValueCriteria() throws IOException {
+        testSerialization(
+                CompositeAnnotationValueCriteria.get(
+                        ImmutableList.of(
+                                AnyAnnotationValueCriteria.get(),
+                                LiteralComponentCriteria.get(
+                                        AnyStringCriteria.get(),
+                                        AnyLangTagOrEmptyLangTagCriteria.get(),
+                                        AnyDatatypeCriteria.get()
+                                )
+                        )
+                , MultiMatchType.ALL)
         );
     }
 

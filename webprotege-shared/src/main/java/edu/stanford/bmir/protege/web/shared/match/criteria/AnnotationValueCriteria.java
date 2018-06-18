@@ -20,7 +20,8 @@ import javax.annotation.Nonnull;
 @JsonSubTypes({
         @Type(LiteralCriteria.class),
         @Type(IriCriteria.class),
-        @Type(AnyAnnotationValueCriteria.class)
+        @Type(AnyAnnotationValueCriteria.class),
+        @Type(CompositeAnnotationValueCriteria.class)
 })
 public interface AnnotationValueCriteria extends Criteria {
 
