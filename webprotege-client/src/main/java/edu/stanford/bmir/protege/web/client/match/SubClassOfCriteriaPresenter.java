@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
+import org.semanticweb.owlapi.model.OWLNamedObject;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

@@ -23,11 +23,15 @@ public class MatcherFactory {
     private final StringMatcherFactory stringMatcherFactory = new StringMatcherFactory();
 
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
+
+    private final OWLDataFactory dataFactory;
+
     @Inject
     public MatcherFactory(@Nonnull AnnotationAssertionAxiomsIndex axiomIndex,
-                          SubClassOfMatcherFactory subClassOfMatcherFactory) {
+                          SubClassOfMatcherFactory subClassOfMatcherFactory, OWLDataFactory dataFactory) {
         this.axiomIndex = checkNotNull(axiomIndex);
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
+        this.dataFactory = checkNotNull(dataFactory);
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {

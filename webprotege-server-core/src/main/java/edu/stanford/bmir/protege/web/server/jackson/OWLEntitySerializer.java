@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.api;
+package edu.stanford.bmir.protege.web.server.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -22,9 +22,9 @@ public class OWLEntitySerializer extends StdSerializer<OWLEntity> {
     public void serialize(OWLEntity entity, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeFieldName("type");
-        jsonGenerator.writeString(entity.getEntityType().getName());
+        jsonGenerator.writeObject(entity.getEntityType());
         jsonGenerator.writeFieldName("iri");
-        jsonGenerator.writeString(entity.getIRI().toQuotedString());
+        jsonGenerator.writeObject(entity.getIRI());
         jsonGenerator.writeEndObject();
     }
 }
