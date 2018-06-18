@@ -148,6 +148,13 @@ public class LexicalValueCriteria_Serialization_TestCase {
         );
     }
 
+    @Test
+    public void shouldSerialize_StringHasUntrimmedSpaceCriteria() throws IOException {
+        testSerialization(
+                StringHasUntrimmedSpaceCriteria.get()
+        );
+    }
+
     private static <V extends LexicalValueCriteria> void testSerialization(V value) throws IOException {
         JsonSerializationTestUtil.testSerialization(value, LexicalValueCriteria.class);
     }
