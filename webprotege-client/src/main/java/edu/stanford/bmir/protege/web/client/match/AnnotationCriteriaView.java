@@ -20,8 +20,6 @@ public interface AnnotationCriteriaView extends IsWidget {
 
     Optional<OWLAnnotationProperty> getSelectedProperty();
 
-    AnnotationPresence getAnnotationPresence();
-
     @Nonnull
     AcceptsOneWidget getValueCriteriaViewContainer();
 }

@@ -41,19 +41,11 @@ public class AnnotationCriteriaViewImpl extends Composite implements AnnotationC
     @UiField
     SimplePanel valueCriteriaContainer;
 
-    @UiField
-    ListBox presenceListBox;
-
-
     @Inject
     public AnnotationCriteriaViewImpl(@Nonnull PrimitiveDataEditorImpl primitiveDataEditor) {
         this.propertyEditor = primitiveDataEditor;
         this.propertyEditor.setAllowedType(PrimitiveType.ANNOTATION_PROPERTY, true);
         initWidget(ourUiBinder.createAndBindUi(this));
-        Stream.of(AnnotationPresence.values())
-              .forEach(presence -> presenceListBox.addItem("is " + presence.name().toLowerCase(),
-                                                           presence.name()));
-        presenceListBox.setSelectedIndex(0);
         primitiveDataEditor.setEntityLinkMode(EntityLinkMode.DO_NOT_SHOW_LINKS_FOR_ENTITIES);
     }
 
@@ -65,11 +57,6 @@ public class AnnotationCriteriaViewImpl extends Composite implements AnnotationC
     @Override
     public Optional<OWLAnnotationProperty> getSelectedProperty() {
         return propertyEditor.getValue().map(entityData -> (OWLAnnotationProperty) entityData.getObject());
-    }
-
-    @Override
-    public AnnotationPresence getAnnotationPresence() {
-        return AnnotationPresence.values()[presenceListBox.getSelectedIndex()];
     }
 
     @Nonnull

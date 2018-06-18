@@ -52,8 +52,7 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
         AnnotationCriteria annotationComponentCriteria = AnnotationComponentCriteria.get(
                 propertyCriteria,
                 valueCriteria.get(),
-                AnyAnnotationSetCriteria.get(),
-                view.getAnnotationPresence()
+                AnyAnnotationSetCriteria.get()
         );
         return Optional.of(annotationComponentCriteria);
     }

@@ -18,8 +18,7 @@ public class AnnotationCriteria_Serialization_TestCase {
                 AnnotationComponentCriteria.get(
                         AnyAnnotationPropertyCriteria.get(),
                         AnyAnnotationValueCriteria.get(),
-                        AnyAnnotationSetCriteria.get(),
-                        AnnotationPresence.NONE
+                        AnyAnnotationSetCriteria.get()
                 )
         );
     }

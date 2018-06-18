@@ -26,7 +26,6 @@
         <g:HTMLPanel addStyleNames="{style.valueContainer}">
             <g:InlineLabel text="that " addStyleNames="{style.prefixLabel} {wp.style.formLabel}"/>
             <g:SimplePanel ui:field="valueCriteriaContainer"/>
-            <g:ListBox visible="false" ui:field="presenceListBox" visibleItemCount="1"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

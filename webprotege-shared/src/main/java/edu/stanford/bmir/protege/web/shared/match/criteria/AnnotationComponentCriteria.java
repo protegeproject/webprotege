@@ -27,24 +27,19 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
 
     private static final String ANNOTATIONS = "annotations";
 
-    private static final String PRESENCE = "presence";
-
     /**
      * Creates criteria that match an annotation based on its property, its value,
      * its set of annotations and its presence.
      *  @param propertyCriteria      The criteria for matching the property.
      * @param valueCriteria         The criteria for matching the value.
      * @param annotationSetCriteria The criteria for matching annotations on the annotation.
-     * @param presence              The presence that specifies whether the annotation should be
-*                              present or not.
      */
     @JsonCreator
     @Nonnull
     public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
-                                                  @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria,
-                                                  @Nonnull @JsonProperty(PRESENCE) AnnotationPresence presence) {
-        return new AutoValue_AnnotationComponentCriteria(propertyCriteria, valueCriteria, presence == AnnotationPresence.AT_LEAST_ONE, annotationSetCriteria);
+                                                  @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria) {
+        return new AutoValue_AnnotationComponentCriteria(propertyCriteria, valueCriteria, annotationSetCriteria);
     }
 
     /**
@@ -57,7 +52,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
     @Nonnull
     public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria) {
-        return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get(), AnnotationPresence.AT_LEAST_ONE);
+        return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get());
     }
 
     /**
@@ -76,14 +71,6 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
     @JsonProperty(VALUE)
     @Nonnull
     public abstract AnnotationValueCriteria getAnnotationValueCriteria();
-
-    public abstract boolean isPresent();
-
-    @JsonProperty(PRESENCE)
-    @Nonnull
-    public AnnotationPresence getPresence() {
-        return isPresent() ? AnnotationPresence.AT_LEAST_ONE : AnnotationPresence.NONE;
-    }
 
     @JsonProperty(ANNOTATIONS)
     @Nonnull
