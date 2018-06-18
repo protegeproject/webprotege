@@ -15,7 +15,7 @@ public class AnnotationCriteria_Serialization_TestCase {
     @Test
     public void shouldSerialize_AnnotationComponentCriteria() throws IOException {
         testSerialization(
-                AnnotationComponentCriteria.get(
+                AnnotationComponentsCriteria.get(
                         AnyAnnotationPropertyCriteria.get(),
                         AnyAnnotationValueCriteria.get(),
                         AnyAnnotationSetCriteria.get()

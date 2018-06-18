@@ -42,7 +42,7 @@ public class AnnotationValueCriteria_Serialization_TestCase {
     public void shouldSerialize_IriHasAnnotationsCriteria() throws IOException {
         testSerialization(
                 IriHasAnnotationCriteria.get(
-                        AnnotationComponentCriteria.get(
+                        AnnotationComponentsCriteria.get(
                                 AnyAnnotationPropertyCriteria.get(),
                                 AnyAnnotationValueCriteria.get()
                         )

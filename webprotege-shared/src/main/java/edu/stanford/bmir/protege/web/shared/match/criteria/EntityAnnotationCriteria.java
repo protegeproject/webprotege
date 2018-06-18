@@ -56,6 +56,6 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     public static EntityAnnotationCriteria get(@Nonnull AnnotationPropertyCriteria propertyCriteria,
                                                @Nonnull AnnotationValueCriteria valueCriteria) {
-        return get(AnnotationComponentCriteria.get(propertyCriteria, valueCriteria));
+        return get(AnnotationComponentsCriteria.get(propertyCriteria, valueCriteria));
     }
 }

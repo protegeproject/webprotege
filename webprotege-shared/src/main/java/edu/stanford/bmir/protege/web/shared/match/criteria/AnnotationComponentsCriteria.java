@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 
 import javax.annotation.Nonnull;
 
@@ -19,7 +18,7 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("AnnotationComponents")
-public abstract class AnnotationComponentCriteria implements AnnotationCriteria {
+public abstract class AnnotationComponentsCriteria implements AnnotationCriteria {
 
     private static final String PROPERTY = "property";
 
@@ -29,17 +28,17 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
 
     /**
      * Creates criteria that match an annotation based on its property, its value,
-     * its set of annotations and its presence.
+     * its set of annotations.
      *  @param propertyCriteria      The criteria for matching the property.
      * @param valueCriteria         The criteria for matching the value.
      * @param annotationSetCriteria The criteria for matching annotations on the annotation.
      */
     @JsonCreator
     @Nonnull
-    public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
-                                                  @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
-                                                  @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria) {
-        return new AutoValue_AnnotationComponentCriteria(propertyCriteria, valueCriteria, annotationSetCriteria);
+    public static AnnotationComponentsCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
+                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
+                                                   @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria) {
+        return new AutoValue_AnnotationComponentsCriteria(propertyCriteria, valueCriteria, annotationSetCriteria);
     }
 
     /**
@@ -50,8 +49,8 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
      * @param valueCriteria    The criteria for matching the value.
      */
     @Nonnull
-    public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
-                                                  @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria) {
+    public static AnnotationComponentsCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
+                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria) {
         return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get());
     }
 

@@ -49,7 +49,7 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
         if(!valueCriteria.isPresent()) {
             return Optional.empty();
         }
-        AnnotationCriteria annotationComponentCriteria = AnnotationComponentCriteria.get(
+        AnnotationCriteria annotationComponentCriteria = AnnotationComponentsCriteria.get(
                 propertyCriteria,
                 valueCriteria.get(),
                 AnyAnnotationSetCriteria.get()

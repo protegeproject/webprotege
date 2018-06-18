@@ -117,7 +117,7 @@ public class MatcherFactory {
         return annotationCriteria.accept(new AnnotationCriteriaVisitor<Matcher<OWLAnnotation>>() {
             @Nonnull
             @Override
-            public Matcher<OWLAnnotation> visit(@Nonnull AnnotationComponentCriteria criteria) {
+            public Matcher<OWLAnnotation> visit(@Nonnull AnnotationComponentsCriteria criteria) {
                 AnnotationPropertyCriteria propertyCriteria = criteria.getAnnotationPropertyCriteria();
                 Matcher<OWLAnnotationProperty> propertyMatcher = getAnnotationPropertyMatcher(propertyCriteria);
                 AnnotationValueCriteria valueCriteria = criteria.getAnnotationValueCriteria();

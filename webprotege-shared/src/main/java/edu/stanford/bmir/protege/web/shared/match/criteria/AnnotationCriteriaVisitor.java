@@ -10,5 +10,5 @@ import javax.annotation.Nonnull;
 public interface AnnotationCriteriaVisitor<R> {
 
     @Nonnull
-    R visit(@Nonnull AnnotationComponentCriteria criteria);
+    R visit(@Nonnull AnnotationComponentsCriteria criteria);
 }

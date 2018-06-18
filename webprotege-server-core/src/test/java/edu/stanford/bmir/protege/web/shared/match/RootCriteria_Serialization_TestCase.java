@@ -18,7 +18,7 @@ public class RootCriteria_Serialization_TestCase {
     public void shouldSerialize_EntityAnnotationCriteria_AtLeastOne() throws IOException {
         testSerialization(
                 EntityAnnotationCriteria.get(
-                        AnnotationComponentCriteria.get(
+                        AnnotationComponentsCriteria.get(
                                 AnyAnnotationPropertyCriteria.get(),
                                 AnyAnnotationValueCriteria.get()
                         ),
@@ -31,7 +31,7 @@ public class RootCriteria_Serialization_TestCase {
     public void shouldSerialize_EntityAnnotationCriteria_AtMostOne() throws IOException {
         testSerialization(
                 EntityAnnotationCriteria.get(
-                        AnnotationComponentCriteria.get(
+                        AnnotationComponentsCriteria.get(
                                 AnyAnnotationPropertyCriteria.get(),
                                 AnyAnnotationValueCriteria.get()
                         ),
@@ -44,7 +44,7 @@ public class RootCriteria_Serialization_TestCase {
     public void shouldSerialize_EntityAnnotationCriteria_None() throws IOException {
         testSerialization(
                 EntityAnnotationCriteria.get(
-                        AnnotationComponentCriteria.get(
+                        AnnotationComponentsCriteria.get(
                                 AnyAnnotationPropertyCriteria.get(),
                                 AnyAnnotationValueCriteria.get()
                         ),
