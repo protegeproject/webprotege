@@ -155,6 +155,13 @@ public class LexicalValueCriteria_Serialization_TestCase {
         );
     }
 
+    @Test
+    public void shouldSerialize_StringContainsRepeatedSpacesCriteria() throws IOException {
+        testSerialization(
+                StringContainsRepeatedSpacesCriteria.get()
+        );
+    }
+
     private static <V extends LexicalValueCriteria> void testSerialization(V value) throws IOException {
         JsonSerializationTestUtil.testSerialization(value, LexicalValueCriteria.class);
     }
