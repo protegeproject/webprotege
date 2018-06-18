@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("Annotation")
+@JsonTypeName("AnnotationComponents")
 public abstract class AnnotationComponentCriteria implements AnnotationCriteria {
 
     private static final String PROPERTY = "property";
