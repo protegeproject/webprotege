@@ -18,20 +18,45 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class MatcherFactory {
 
-    private final AnnotationAssertionAxiomsIndex axiomIndex;
-
+    @Nonnull
     private final StringMatcherFactory stringMatcherFactory = new StringMatcherFactory();
 
+    @Nonnull
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
 
-    private final OWLDataFactory dataFactory;
+    @Nonnull
+    private final ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory;
+
+    @Nonnull
+    private final EntityIsDeprecatedMatcherFactory entityIsDeprecatedMatcherFactory;
+
+    @Nonnull
+    private final AnnotationValuesAreNotDisjointMatcherFactory annotationValuesAreNotDisjointMatcherFactory;
+
+    @Nonnull
+    private final NonUniqueLangTagsMatcherFactory nonUniqueLangTagsMatcherFactory;
+
+    @Nonnull
+    private final EntityAnnotationMatcherFactory entityAnnotationMatcherFactory;
+
+    @Nonnull
+    private final IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory;
 
     @Inject
-    public MatcherFactory(@Nonnull AnnotationAssertionAxiomsIndex axiomIndex,
-                          SubClassOfMatcherFactory subClassOfMatcherFactory, OWLDataFactory dataFactory) {
-        this.axiomIndex = checkNotNull(axiomIndex);
+    public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
+                          @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
+                          @Nonnull EntityIsDeprecatedMatcherFactory entityIsDeprecatedMatcherFactory,
+                          @Nonnull AnnotationValuesAreNotDisjointMatcherFactory annotationValuesAreNotDisjointMatcherFactory,
+                          @Nonnull NonUniqueLangTagsMatcherFactory nonUniqueLangTagsMatcherFactory,
+                          @Nonnull EntityAnnotationMatcherFactory entityAnnotationMatcherFactory,
+                          @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
-        this.dataFactory = checkNotNull(dataFactory);
+        this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
+        this.entityIsDeprecatedMatcherFactory = checkNotNull(entityIsDeprecatedMatcherFactory);
+        this.annotationValuesAreNotDisjointMatcherFactory = checkNotNull(annotationValuesAreNotDisjointMatcherFactory);
+        this.nonUniqueLangTagsMatcherFactory = checkNotNull(nonUniqueLangTagsMatcherFactory);
+        this.entityAnnotationMatcherFactory = checkNotNull(entityAnnotationMatcherFactory);
+        this.iriAnnotationsMatcherFactory = checkNotNull(iriAnnotationsMatcherFactory);
     }
 
     public Matcher<OWLEntity> getMatcher(@Nonnull RootCriteria criteria) {
@@ -65,7 +90,7 @@ public class MatcherFactory {
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationCriteria criteria) {
                 AnnotationCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
                 Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationComponentCriteria);
-                return new EntityAnnotationMatcher(axiomIndex,
+                return entityAnnotationMatcherFactory.create(
                                                    annotationMatcher,
                                                    criteria.getAnnotationPresence());
             }
@@ -73,13 +98,13 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityIsDeprecatedCriteria criteria) {
-                return new EntityIsDeprecatedMatcher(axiomIndex);
+                return entityIsDeprecatedMatcherFactory.create();
             }
 
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityIsNotDeprecatedCriteria criteria) {
-                return new NotMatcher<>(new EntityIsDeprecatedMatcher(axiomIndex));
+                return new NotMatcher<>(entityIsDeprecatedMatcherFactory.create());
             }
 
             @Nonnull
@@ -92,19 +117,19 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityHasNonUniqueLangTagsCriteria criteria) {
                 Matcher<OWLAnnotationProperty> propertyMatcher = getAnnotationPropertyMatcher(criteria.getPropertyCriteria());
-                return new NonUniqueLangTagsMatcher(axiomIndex, propertyMatcher);
+                return nonUniqueLangTagsMatcherFactory.create(propertyMatcher);
             }
 
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityHasConflictingBooleanAnnotationValuesCriteria criteria) {
-                return new ConflictingBooleanValuesMatcher(axiomIndex);
+                return conflictingBooleanValuesMatcherFactory.create();
             }
 
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria) {
-                return new AnnotationValuesAreNotDisjointMatcher(axiomIndex,
+                return annotationValuesAreNotDisjointMatcherFactory.create(
                                                                  getAnnotationPropertyMatcher(criteria.getFirstProperty()),
                                                                  getAnnotationPropertyMatcher(criteria.getSecondProperty()));
             }
@@ -185,15 +210,14 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull IriEqualsCriteria criteria) {
-                return val -> val instanceof IRI && ((IRI) val).equals(criteria.getIri());
+                return val -> val.equals(criteria.getIri());
             }
 
             @Nonnull
             @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull IriHasAnnotationCriteria criteria) {
                 return new IriAnnotationValueMatcher(
-                        new IriAnnotationsMatcher(axiomIndex,
-                                                  getAnnotationMatcher(criteria.getIriAnnotationCriteria()))
+                        iriAnnotationsMatcherFactory.create(getAnnotationMatcher(criteria.getIriAnnotationCriteria()))
                 );
             }
         });

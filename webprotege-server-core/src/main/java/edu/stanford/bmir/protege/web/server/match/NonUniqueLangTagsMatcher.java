@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
@@ -8,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,13 +21,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 8 Jun 2018
  */
+@AutoFactory
 public class NonUniqueLangTagsMatcher implements EntityFrameMatcher {
 
     private AnnotationAssertionAxiomsIndex axiomsIndex;
 
     private Matcher<OWLAnnotationProperty> propertyMatcher;
 
-    public NonUniqueLangTagsMatcher(@Nonnull AnnotationAssertionAxiomsIndex axiomsIndex,
+    @Inject
+    public NonUniqueLangTagsMatcher(@Nonnull @Provided  AnnotationAssertionAxiomsIndex axiomsIndex,
                                     @Nonnull Matcher<OWLAnnotationProperty> propertyMatcher) {
         this.axiomsIndex = checkNotNull(axiomsIndex);
         this.propertyMatcher = checkNotNull(propertyMatcher);

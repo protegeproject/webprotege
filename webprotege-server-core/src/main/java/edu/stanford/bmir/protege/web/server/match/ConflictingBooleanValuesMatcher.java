@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
@@ -10,7 +12,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -18,12 +22,14 @@ import static java.util.stream.Collectors.toList;
  * Stanford Center for Biomedical Informatics Research
  * 12 Jun 2018
  */
+@AutoFactory
 public class ConflictingBooleanValuesMatcher implements Matcher<OWLEntity> {
 
     private final AnnotationAssertionAxiomsIndex axioms;
 
-    public ConflictingBooleanValuesMatcher(AnnotationAssertionAxiomsIndex axioms) {
-        this.axioms = axioms;
+    @Inject
+    public ConflictingBooleanValuesMatcher(@Provided AnnotationAssertionAxiomsIndex axioms) {
+        this.axioms = checkNotNull(axioms);
     }
 
     @Override

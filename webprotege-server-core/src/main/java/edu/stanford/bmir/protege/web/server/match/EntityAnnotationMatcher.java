@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.match;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
 import java.util.Collections;
 import java.util.Set;
@@ -17,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 7 Jun 2018
  */
+@AutoFactory
 public class EntityAnnotationMatcher implements EntityFrameMatcher {
 
     @Nonnull
@@ -28,12 +32,13 @@ public class EntityAnnotationMatcher implements EntityFrameMatcher {
     @Nonnull
     private final AnnotationPresence annotationPresence;
 
-    public EntityAnnotationMatcher(@Nonnull AnnotationAssertionAxiomsIndex axiomProvider,
+    @Inject
+    public EntityAnnotationMatcher(@Nonnull @Provided AnnotationAssertionAxiomsIndex axiomProvider,
                                    @Nonnull Matcher<OWLAnnotation> annotationMatcher,
                                    @Nonnull AnnotationPresence annotationPresence) {
         this.axiomProvider = checkNotNull(axiomProvider);
         this.annotationMatcher = checkNotNull(annotationMatcher);
-        this.annotationPresence = annotationPresence;
+        this.annotationPresence = checkNotNull(annotationPresence);
     }
 
     @Override
