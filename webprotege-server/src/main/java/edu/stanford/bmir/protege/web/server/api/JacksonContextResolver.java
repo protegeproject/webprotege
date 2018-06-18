@@ -32,7 +32,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
                          .configure(SerializationFeature.INDENT_OUTPUT, true);
         SimpleModule module = new SimpleModule();
         module.addSerializer(OWLEntity.class, new OWLEntitySerializer());
-        module.addSerializer(IRI.class, new IriSerializer());
+        module.addSerializer(IRI.class, new IriQuotedSerializer());
         this.objectMapper.registerModule(module);
 
     }

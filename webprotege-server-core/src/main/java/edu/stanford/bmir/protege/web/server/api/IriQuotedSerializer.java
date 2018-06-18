@@ -12,9 +12,9 @@ import java.io.IOException;
  * Stanford Center for Biomedical Informatics Research
  * 23 Apr 2018
  */
-public class IriSerializer extends StdSerializer<IRI> {
+public class IriQuotedSerializer extends StdSerializer<IRI> {
 
-    public IriSerializer() {
+    public IriQuotedSerializer() {
         super(IRI.class);
     }
 
