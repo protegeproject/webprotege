@@ -80,7 +80,7 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
-            public Matcher<OWLEntity> visit(@Nonnull EntityTypeOneOfCriteria criteria) {
+            public Matcher<OWLEntity> visit(@Nonnull EntityTypeIsOneOfCriteria criteria) {
                 return entity -> criteria.getEntityTypes().contains(entity.getEntityType());
             }
 

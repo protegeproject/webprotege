@@ -16,9 +16,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @Type(EntityIsDeprecatedCriteria.class),
         @Type(EntityIsNotDeprecatedCriteria.class),
-        @Type(EntityAnnotationMatchCriteria.class),
+        @Type(EntityAnnotationCriteria.class),
         @Type(EntityHasConflictingBooleanAnnotationValuesCriteria.class),
-        @Type(EntityHasNonUniqueLangTagsCriteria.class)
+        @Type(EntityHasNonUniqueLangTagsCriteria.class),
+        @Type(EntityAnnotationValuesAreNotDisjointCriteria.class),
+        @Type(EntityTypeIsOneOfCriteria.class)
 })
 public interface EntityMatchCriteria extends RootCriteria {
 

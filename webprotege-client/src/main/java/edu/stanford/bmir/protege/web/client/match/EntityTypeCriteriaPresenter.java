@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeOneOfCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityTypeIsOneOfCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 15 Jun 2018
  */
-public class EntityTypeCriteriaPresenter implements CriteriaPresenter<EntityTypeOneOfCriteria> {
+public class EntityTypeCriteriaPresenter implements CriteriaPresenter<EntityTypeIsOneOfCriteria> {
 
     @Nonnull
     private final EntityTypeCriteriaView view;
@@ -36,7 +36,7 @@ public class EntityTypeCriteriaPresenter implements CriteriaPresenter<EntityType
     }
 
     @Override
-    public Optional<? extends EntityTypeOneOfCriteria> getCriteria() {
-        return Optional.of(EntityTypeOneOfCriteria.get(ImmutableSet.copyOf(view.getEntityTypes())));
+    public Optional<? extends EntityTypeIsOneOfCriteria> getCriteria() {
+        return Optional.of(EntityTypeIsOneOfCriteria.get(ImmutableSet.copyOf(view.getEntityTypes())));
     }
 }

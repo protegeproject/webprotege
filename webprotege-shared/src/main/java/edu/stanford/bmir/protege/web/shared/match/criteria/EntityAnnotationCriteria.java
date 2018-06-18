@@ -22,6 +22,8 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     private static final String ANNOTATION = "annotation";
 
+    private static final String PRESENCE = "presence";
+
     @JsonProperty(ANNOTATION)
     @Nonnull
     public abstract AnnotationCriteria getAnnotationCriteria();
@@ -29,6 +31,7 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
     @JsonIgnore
     protected abstract int getAnnotationPresenceOrdinal();
 
+    @JsonProperty(PRESENCE)
     @Nonnull
     public AnnotationPresence getAnnotationPresence() {
         return AnnotationPresence.values()[getAnnotationPresenceOrdinal()];
@@ -41,8 +44,8 @@ public abstract class EntityAnnotationCriteria implements EntityMatchCriteria {
 
     @JsonCreator
     @Nonnull
-    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty("annotation") AnnotationCriteria criteria,
-                                               @Nonnull @JsonProperty("presence") AnnotationPresence presence) {
+    public static EntityAnnotationCriteria get(@Nonnull @JsonProperty(ANNOTATION) AnnotationCriteria criteria,
+                                               @Nonnull @JsonProperty(PRESENCE) AnnotationPresence presence) {
         return new AutoValue_EntityAnnotationCriteria(criteria, presence.ordinal());
     }
 
