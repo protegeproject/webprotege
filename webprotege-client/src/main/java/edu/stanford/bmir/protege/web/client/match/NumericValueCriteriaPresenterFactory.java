@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class NumericValueCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class NumericValueCriteriaPresenterFactory implements CriteriaPresenterFactory<NumericValueCriteria> {
 
     @Nonnull
     private final Provider<NumericValueCriteriaPresenter> presenterProvider;
@@ -32,7 +32,7 @@ public class NumericValueCriteriaPresenterFactory implements CriteriaPresenterFa
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<NumericValueCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

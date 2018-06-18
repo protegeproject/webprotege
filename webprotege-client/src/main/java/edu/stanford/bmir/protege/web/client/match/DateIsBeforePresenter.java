@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateIsBeforePresenter implements CriteriaPresenter<LiteralCriteria> {
+public class DateIsBeforePresenter implements CriteriaPresenter<DateIsBeforeCriteria> {
 
     @Nonnull
     private final DateView view;
@@ -36,14 +36,12 @@ public class DateIsBeforePresenter implements CriteriaPresenter<LiteralCriteria>
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<DateIsBeforeCriteria> getCriteria() {
         DateIsBeforeCriteria criteria = DateIsBeforeCriteria.get(
                 view.getYear(),
                 view.getMonth(),
                 view.getDay()
         );
-        return Optional.of(
-                LiteralComponentsCriteria.lexicalValueMatches(criteria)
-        );
+        return Optional.of(criteria);
     }
 }

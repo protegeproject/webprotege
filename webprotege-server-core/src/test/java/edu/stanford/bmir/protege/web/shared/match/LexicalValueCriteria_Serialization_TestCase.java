@@ -15,12 +15,6 @@ import static edu.stanford.bmir.protege.web.shared.match.JsonSerializationTestUt
 public class LexicalValueCriteria_Serialization_TestCase {
 
     @Test
-    public void shouldSerialize_AnyStringCriteria() throws IOException {
-        AnyStringCriteria value = AnyStringCriteria.get();
-        testSerialization(value);
-    }
-
-    @Test
     public void shouldSerialize_StringStartsWithCriteria_IgnoreCaseTrue() throws IOException {
         StringStartsWithCriteria value = StringStartsWithCriteria.get("A", true);
         testSerialization(value);
@@ -163,6 +157,6 @@ public class LexicalValueCriteria_Serialization_TestCase {
     }
 
     private static <V extends LexicalValueCriteria> void testSerialization(V value) throws IOException {
-        JsonSerializationTestUtil.testSerialization(value, LexicalValueCriteria.class);
+        JsonSerializationTestUtil.testSerialization(value, AnnotationValueCriteria.class);
     }
 }

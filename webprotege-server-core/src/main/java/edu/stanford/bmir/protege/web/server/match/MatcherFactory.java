@@ -1,12 +1,17 @@
 package edu.stanford.bmir.protege.web.server.match;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
-import org.semanticweb.owlapi.model.*;
+import org.apache.commons.lang.StringUtils;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -17,9 +22,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * 11 Jun 2018
  */
 public class MatcherFactory {
-
-    @Nonnull
-    private final StringMatcherFactory stringMatcherFactory = new StringMatcherFactory();
 
     @Nonnull
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
@@ -76,7 +78,6 @@ public class MatcherFactory {
                     default:
                         throw new RuntimeException();
                 }
-
             }
 
             @Nonnull
@@ -91,8 +92,8 @@ public class MatcherFactory {
                 AnnotationCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
                 Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationComponentCriteria);
                 return entityAnnotationMatcherFactory.create(
-                                                   annotationMatcher,
-                                                   criteria.getAnnotationPresence());
+                        annotationMatcher,
+                        criteria.getAnnotationPresence());
             }
 
             @Nonnull
@@ -130,8 +131,8 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria) {
                 return annotationValuesAreNotDisjointMatcherFactory.create(
-                                                                 getAnnotationPropertyMatcher(criteria.getFirstProperty()),
-                                                                 getAnnotationPropertyMatcher(criteria.getSecondProperty()));
+                        getAnnotationPropertyMatcher(criteria.getFirstProperty()),
+                        getAnnotationPropertyMatcher(criteria.getSecondProperty()));
             }
 
             @Nonnull
@@ -197,12 +198,6 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
-            public Matcher<OWLAnnotationValue> visit(@Nonnull LiteralComponentsCriteria criteria) {
-                return new LiteralAnnotationValueMatcher(getLiteralMatcher(criteria));
-            }
-
-            @Nonnull
-            @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria criteria) {
                 return new LiteralAnnotationValueMatcher(new LexicalValueNotInDatatypeSpaceMatcher());
             }
@@ -220,45 +215,134 @@ public class MatcherFactory {
                         iriAnnotationsMatcherFactory.create(getAnnotationMatcher(criteria.getIriAnnotationCriteria()))
                 );
             }
-        });
-    }
 
-    private Matcher<OWLLiteral> getLiteralMatcher(@Nonnull LiteralComponentsCriteria criteria) {
-        return new LiteralMatcher(
-                getLexicalValueMatcher(criteria.getLexicalValueCriteria()),
-                getLangTagMatcher(criteria.getLangTagCriteria()),
-                getDatatypeMatcher(criteria.getDatatypeCriteria())
-        );
-    }
-
-    private Matcher<String> getLexicalValueMatcher(@Nonnull LexicalValueCriteria criteria) {
-        return stringMatcherFactory.getMatcher(criteria);
-    }
-
-    private Matcher<String> getLangTagMatcher(@Nonnull LangTagCriteria criteria) {
-        return criteria.accept(new LangTagCriteriaVisitor<Matcher<String>>() {
             @Override
-            public Matcher<String> visit(@Nonnull LangTagMatchesCriteria criteria) {
-                return LangTagMatchesMatcher.fromPattern(criteria.getLanguageRange());
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringStartsWithCriteria criteria) {
+                if (criteria.isIgnoreCase()) {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> StringUtils.startsWithIgnoreCase(s, criteria.getValue())
+                    );
+                }
+                else {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> s.startsWith(criteria.getValue())
+                    );
+                }
             }
 
             @Override
-            public Matcher<String> visit(@Nonnull LangTagIsEmptyCriteria criteria) {
-                return String::isEmpty;
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringEndsWithCriteria criteria) {
+                if (criteria.isIgnoreCase()) {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> StringUtils.endsWithIgnoreCase(s, criteria.getValue())
+                    );
+                }
+                else {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> s.endsWith(criteria.getValue())
+                    );
+                }
             }
 
             @Override
-            public Matcher<String> visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria) {
-                return tag -> true;
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringContainsCriteria criteria) {
+                if (criteria.isIgnoreCase()) {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> StringUtils.containsIgnoreCase(s, criteria.getValue())
+                    );
+                }
+                else {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> s.contains(criteria.getValue())
+                    );
+                }
             }
-        });
-    }
 
-    private Matcher<OWLDatatype> getDatatypeMatcher(@Nonnull DatatypeCriteria criteria) {
-        return criteria.accept(new DatatypeCriteriaVisitor<Matcher<OWLDatatype>>() {
             @Override
-            public Matcher<OWLDatatype> visit(@Nonnull AnyDatatypeCriteria criteria) {
-                return dt -> true;
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringEqualsCriteria criteria) {
+                if (criteria.isIgnoreCase()) {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> s.equalsIgnoreCase(criteria.getValue())
+                    );
+                }
+                else {
+                    return LiteralAnnotationValueMatcher.forLexicalPredicate(
+                            s -> s.equals(criteria.getValue())
+                    );
+                }
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull NumericValueCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
+                        new NumericValueMatcher(criteria.getPredicate(), criteria.getValue())
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringContainsRepeatedSpacesCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
+                        new StringContainsRepeatedWhiteSpaceMatcher()
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringContainsRegexMatchCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
+                        new StringContainsRegexMatchMatcher(Pattern.compile(criteria.getPattern()))
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringDoesNotContainRegexMatchCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
+                        new NotMatcher<>(new StringContainsRegexMatchMatcher(Pattern.compile(criteria.getPattern())))
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull StringHasUntrimmedSpaceCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(new StringHasUntrimmedSpaceMatcher());
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull DateIsBeforeCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
+                        new DateIsBeforeMatcher(LocalDate.of(criteria.getYear(),
+                                                             criteria.getMonth(),
+                                                             criteria.getDay()))
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull DateIsAfterCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
+                        new DateIsAfterMatcher(LocalDate.of(criteria.getYear(),
+                                                            criteria.getMonth(),
+                                                            criteria.getDay()))
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull LangTagMatchesCriteria criteria) {
+                LangTagMatchesMatcher langTagMatchesMatcher = LangTagMatchesMatcher.fromPattern(criteria.getLanguageRange());
+                return LiteralAnnotationValueMatcher.forLangTagMatcher(
+                        langTagMatchesMatcher
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull LangTagIsEmptyCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLangTagMatcher(
+                        String::isEmpty
+                );
+            }
+
+            @Override
+            public Matcher<OWLAnnotationValue> visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria) {
+                return LiteralAnnotationValueMatcher.forLangTagMatcher(
+                        langTag -> true
+                );
             }
         });
     }

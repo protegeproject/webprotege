@@ -7,17 +7,46 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-public interface AnnotationValueCriteriaVisitor<R> extends LiteralCriteriaVisitor<R> {
+public interface AnnotationValueCriteriaVisitor<R> extends LangTagCriteriaVisitor<R> {
 
-    @Nonnull
     R visit(@Nonnull AnyAnnotationValueCriteria criteria);
 
-    @Nonnull
     R visit(@Nonnull IriEqualsCriteria criteria);
 
-    @Nonnull
     R visit(@Nonnull IriHasAnnotationCriteria criteria);
 
-    @Nonnull
     R visit(@Nonnull CompositeAnnotationValueCriteria criteria);
+
+    R visit(@Nonnull StringStartsWithCriteria criteria);
+
+    R visit(@Nonnull StringEndsWithCriteria criteria);
+
+    R visit(@Nonnull StringContainsCriteria criteria);
+
+    R visit(@Nonnull StringEqualsCriteria criteria);
+
+    R visit(@Nonnull NumericValueCriteria criteria);
+
+    R visit(@Nonnull StringContainsRepeatedSpacesCriteria criteria);
+
+    R visit(@Nonnull StringHasUntrimmedSpaceCriteria criteria);
+
+    R visit(@Nonnull StringContainsRegexMatchCriteria criteria);
+
+    R visit(@Nonnull StringDoesNotContainRegexMatchCriteria criteria);
+
+    R visit(@Nonnull DateIsBeforeCriteria criteria);
+
+    R visit(@Nonnull DateIsAfterCriteria criteria);
+
+    R visit(@Nonnull LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria criteria);
+
+    @Override
+    R visit(@Nonnull LangTagMatchesCriteria criteria);
+
+    @Override
+    R visit(@Nonnull LangTagIsEmptyCriteria criteria);
+
+    @Override
+    R visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria);
 }

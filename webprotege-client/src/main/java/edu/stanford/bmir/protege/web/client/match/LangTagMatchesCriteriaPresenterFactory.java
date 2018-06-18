@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagMatchesCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,7 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LangTagMatchesCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class LangTagMatchesCriteriaPresenterFactory implements CriteriaPresenterFactory<LangTagMatchesCriteria> {
 
     @Nonnull
     private final Provider<LangMatchesCriteriaPresenter> presenterProvider;
@@ -29,7 +30,7 @@ public class LangTagMatchesCriteriaPresenterFactory implements CriteriaPresenter
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<LangTagMatchesCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

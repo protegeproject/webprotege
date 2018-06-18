@@ -13,23 +13,6 @@ import javax.annotation.Nonnull;
  *
  * The criteria for matching a literal lexical value
  */
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        property = "match"
-)
-@JsonSubTypes({
-        @Type(AnyStringCriteria.class),
-        @Type(StringStartsWithCriteria.class),
-        @Type(StringEndsWithCriteria.class),
-        @Type(StringContainsCriteria.class),
-        @Type(StringEqualsCriteria.class),
-        @Type(StringContainsRegexMatchCriteria.class),
-        @Type(StringDoesNotContainRegexMatchCriteria.class),
-        @Type(NumericValueCriteria.class),
-        @Type(DateIsBeforeCriteria.class),
-        @Type(DateIsAfterCriteria.class)
-})
-public interface LexicalValueCriteria extends Criteria {
+public interface LexicalValueCriteria extends AnnotationValueCriteria {
 
-    <R> R accept(@Nonnull LexicalValueCriteriaVisitor<R> visitor);
 }

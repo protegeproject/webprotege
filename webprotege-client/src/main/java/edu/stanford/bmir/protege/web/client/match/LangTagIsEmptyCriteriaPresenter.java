@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<LangTagIsEmptyCriteria> {
 
     @Nonnull
     private final BlankCriteriaView view;
@@ -36,13 +36,7 @@ public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<Litera
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
-        return Optional.of(
-                LiteralComponentsCriteria.get(
-                        AnyStringCriteria.get(),
-                        LangTagIsEmptyCriteria.get(),
-                        AnyDatatypeCriteria.get()
-                )
-        );
+    public Optional<LangTagIsEmptyCriteria> getCriteria() {
+        return Optional.of(LangTagIsEmptyCriteria.get());
     }
 }

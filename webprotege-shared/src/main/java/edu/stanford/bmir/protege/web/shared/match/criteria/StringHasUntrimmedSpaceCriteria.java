@@ -24,7 +24,7 @@ public class StringHasUntrimmedSpaceCriteria implements LexicalValueCriteria {
     }
 
     @Override
-    public <R> R accept(@Nonnull LexicalValueCriteriaVisitor<R> visitor) {
+    public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
 }

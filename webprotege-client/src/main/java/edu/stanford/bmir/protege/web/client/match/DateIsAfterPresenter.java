@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.DateIsAfterCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -16,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateIsAfterPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class DateIsAfterPresenter implements CriteriaPresenter<DateIsAfterCriteria> {
 
     @Nonnull
     private final DateView view;
@@ -37,12 +36,10 @@ public class DateIsAfterPresenter implements CriteriaPresenter<LiteralCriteria> 
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<DateIsAfterCriteria> getCriteria() {
         DateIsAfterCriteria criteria = DateIsAfterCriteria.get(view.getYear(),
                                                                view.getMonth(),
                                                                view.getDay());
-        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(
-                criteria
-        ));
+        return Optional.of(criteria);
     }
 }

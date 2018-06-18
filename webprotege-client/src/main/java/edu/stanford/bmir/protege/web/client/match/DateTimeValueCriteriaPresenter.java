@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationValueCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.DateCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -12,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateTimeValueCriteriaPresenter extends SelectableCriteriaTypePresenter<LiteralCriteria> {
+public class DateTimeValueCriteriaPresenter extends SelectableCriteriaTypePresenter<AnnotationValueCriteria> {
 
     @Nonnull
     private final DateIsBeforePresenterFactory beforeFactory;
@@ -28,7 +30,7 @@ public class DateTimeValueCriteriaPresenter extends SelectableCriteriaTypePresen
     }
 
     @Override
-    protected void start(@Nonnull PresenterFactoryRegistry<LiteralCriteria> factoryRegistry) {
+    protected void start(@Nonnull PresenterFactoryRegistry<AnnotationValueCriteria> factoryRegistry) {
         factoryRegistry.addPresenter(beforeFactory);
         factoryRegistry.addPresenter(afterFactory);
     }

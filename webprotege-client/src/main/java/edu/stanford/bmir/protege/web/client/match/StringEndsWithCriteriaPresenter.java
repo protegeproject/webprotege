@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringEndsWithCriteria;
 
 import javax.annotation.Nonnull;
@@ -10,14 +9,13 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria.lexicalValueMatches;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringEndsWithCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class StringEndsWithCriteriaPresenter implements CriteriaPresenter<StringEndsWithCriteria> {
 
     @Nonnull
     private final SimpleStringCriteriaView view;
@@ -38,10 +36,8 @@ public class StringEndsWithCriteriaPresenter implements CriteriaPresenter<Litera
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<StringEndsWithCriteria> getCriteria() {
         StringEndsWithCriteria criteria = StringEndsWithCriteria.get(view.getValue(), view.isIgnoreCase());
-        return Optional.of(
-                lexicalValueMatches(criteria)
-        );
+        return Optional.of(criteria);
     }
 }

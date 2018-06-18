@@ -21,7 +21,7 @@ public class IriDeserializer extends StdDeserializer<IRI> {
 
     @Override
     public IRI deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        return IRI.create(jsonParser.nextTextValue());
+        return IRI.create(jsonParser.getValueAsString());
     }
 }
 

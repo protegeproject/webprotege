@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringStartsWithCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class StringStartsWithCriteriaPresenterFactory implements CriteriaPresenterFactory<StringStartsWithCriteria> {
 
     @Nonnull
     private final Provider<StringStartsWithCriteriaPresenter> presenterFactory;
@@ -31,7 +31,7 @@ public class StringStartsWithCriteriaPresenterFactory implements CriteriaPresent
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<StringStartsWithCriteria> createPresenter() {
         return presenterFactory.get();
     }
 }

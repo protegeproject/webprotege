@@ -64,4 +64,22 @@ public class LiteralAnnotationValueMatcher implements Matcher<OWLAnnotationValue
     public static Matcher<OWLAnnotationValue> forAnyValue() {
         return OWLAnnotationValue::isLiteral;
     }
+
+    public static Matcher<OWLAnnotationValue> forLangTagMatcher(Matcher<String> langTagMatcher) {
+        return new LiteralAnnotationValueMatcher(new LiteralMatcher(
+                lex -> true,
+                langTagMatcher,
+                dt -> true
+        ));
+    }
+
+    public static Matcher<OWLAnnotationValue> forLexicalValueMatcher(Matcher<String> lexicalValueMatcher) {
+        return new LiteralAnnotationValueMatcher(
+                new LiteralMatcher(
+                        lexicalValueMatcher,
+                        langTag -> true,
+                        dt -> true
+                )
+        );
+    }
 }

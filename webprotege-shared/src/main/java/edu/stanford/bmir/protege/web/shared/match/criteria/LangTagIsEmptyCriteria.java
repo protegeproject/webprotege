@@ -24,7 +24,7 @@ public abstract class LangTagIsEmptyCriteria implements LangTagCriteria {
     }
 
     @Override
-    public <R> R accept(@Nonnull LangTagCriteriaVisitor<R> visitor) {
+    public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
 }

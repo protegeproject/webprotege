@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.LangTagIsEmptyCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LangTagIsEmptyCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class LangTagIsEmptyCriteriaPresenterFactory implements CriteriaPresenterFactory<LangTagIsEmptyCriteria> {
 
     @Nonnull
     private final Provider<LangTagIsEmptyCriteriaPresenter> presenterProvider;
@@ -31,7 +32,7 @@ public class LangTagIsEmptyCriteriaPresenterFactory implements CriteriaPresenter
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<LangTagIsEmptyCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

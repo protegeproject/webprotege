@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringHasUntrimmedSpaceCriteria;
 
@@ -14,7 +13,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringHasUntrimmedSpaceCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class StringHasUntrimmedSpaceCriteriaPresenter implements CriteriaPresenter<StringHasUntrimmedSpaceCriteria> {
 
     @Nonnull
     private final BlankCriteriaView view;
@@ -35,8 +34,8 @@ public class StringHasUntrimmedSpaceCriteriaPresenter implements CriteriaPresent
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<StringHasUntrimmedSpaceCriteria> getCriteria() {
         StringHasUntrimmedSpaceCriteria lexicalValueCriteria = StringHasUntrimmedSpaceCriteria.get();
-        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(lexicalValueCriteria));
+        return Optional.of(lexicalValueCriteria);
     }
 }

@@ -15,17 +15,12 @@ import javax.annotation.Nonnull;
 @AutoValue
 @GwtCompatible(serializable = true)
 @JsonTypeName("LiteralLexicalValueNotInDatatypeLexicalSpace")
-public abstract class LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria implements LiteralCriteria {
+public abstract class LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria implements AnnotationValueCriteria {
 
     @JsonCreator
     @Nonnull
     public static LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria get() {
         return new AutoValue_LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria();
-    }
-
-    @Override
-    public <R> R accept(@Nonnull LiteralCriteriaVisitor<R> visitor) {
-        return visitor.visit(this);
     }
 
     @Override

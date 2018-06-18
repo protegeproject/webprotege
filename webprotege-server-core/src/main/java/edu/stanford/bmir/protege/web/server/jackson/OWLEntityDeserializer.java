@@ -39,6 +39,7 @@ public class OWLEntityDeserializer extends StdDeserializer<OWLEntity> {
                 type = jsonParser.readValueAs(EntityType.class);
             }
             else if("iri".equals(fieldname)) {
+                jsonParser.nextToken();
                 iri = jsonParser.readValueAs(IRI.class);
             }
         }

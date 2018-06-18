@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.NumericValueCriteria;
 
 import javax.annotation.Nonnull;
@@ -17,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class NumericValueCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class NumericValueCriteriaPresenter implements CriteriaPresenter<NumericValueCriteria> {
 
     @Nonnull
     private final NumericValueCriteriaView view;
@@ -38,11 +36,11 @@ public class NumericValueCriteriaPresenter implements CriteriaPresenter<LiteralC
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<NumericValueCriteria> getCriteria() {
         if(!view.getValue().isPresent()) {
             return Optional.empty();
         }
         NumericValueCriteria lexicalValueCriteria = NumericValueCriteria.get(view.getNumericPredicate(), view.getValue().get());
-        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(lexicalValueCriteria));
+        return Optional.of(lexicalValueCriteria);
     }
 }

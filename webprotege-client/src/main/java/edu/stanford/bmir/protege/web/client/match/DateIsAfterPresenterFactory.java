@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import edu.stanford.bmir.protege.web.shared.match.criteria.DateIsAfterCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class DateIsAfterPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class DateIsAfterPresenterFactory implements CriteriaPresenterFactory<DateIsAfterCriteria> {
 
     @Nonnull
     private final Provider<DateIsAfterPresenter> presenterProvider;
@@ -31,7 +32,7 @@ public class DateIsAfterPresenterFactory implements CriteriaPresenterFactory<Lit
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<DateIsAfterCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

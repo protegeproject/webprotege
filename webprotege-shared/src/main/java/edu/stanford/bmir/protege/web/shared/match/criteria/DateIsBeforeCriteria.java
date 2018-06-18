@@ -34,7 +34,7 @@ public abstract class DateIsBeforeCriteria implements DateCriteria {
     }
 
     @Override
-    public <R> R accept(@Nonnull LexicalValueCriteriaVisitor<R> visitor) {
+    public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
 }

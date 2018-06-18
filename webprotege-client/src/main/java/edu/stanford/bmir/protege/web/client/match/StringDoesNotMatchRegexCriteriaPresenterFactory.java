@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jun 2018
  */
-public class StringDoesNotMatchRegexCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class StringDoesNotMatchRegexCriteriaPresenterFactory implements CriteriaPresenterFactory<StringDoesNotContainRegexMatchCriteria> {
 
     @Nonnull
     private final Provider<StringDoesNotMatchRegexCriteriaPresenter> presenterProvider;
@@ -32,7 +32,7 @@ public class StringDoesNotMatchRegexCriteriaPresenterFactory implements Criteria
 
     @Nonnull
     @Override
-    public CriteriaPresenter<? extends LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<StringDoesNotContainRegexMatchCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

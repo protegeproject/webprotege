@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.StringContainsRegexMatchCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringMatchesRegexCriteriaPresenterFactory implements CriteriaPresenterFactory<LiteralCriteria> {
+public class StringMatchesRegexCriteriaPresenterFactory implements CriteriaPresenterFactory<StringContainsRegexMatchCriteria> {
 
     @Nonnull
     private final Provider<StringMatchesRegexCriteriaPresenter> presenterProvider;
@@ -31,7 +32,7 @@ public class StringMatchesRegexCriteriaPresenterFactory implements CriteriaPrese
 
     @Nonnull
     @Override
-    public CriteriaPresenter<LiteralCriteria> createPresenter() {
+    public CriteriaPresenter<StringContainsRegexMatchCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

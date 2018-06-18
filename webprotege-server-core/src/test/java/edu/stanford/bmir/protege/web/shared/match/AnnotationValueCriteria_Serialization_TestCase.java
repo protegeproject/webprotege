@@ -15,17 +15,6 @@ import java.io.IOException;
 public class AnnotationValueCriteria_Serialization_TestCase {
 
     @Test
-    public void shouldSerialize_LiteralComponentCriteria() throws IOException {
-        testSerialization(
-                LiteralComponentsCriteria.get(
-                        StringContainsCriteria.get("A", true),
-                        AnyLangTagOrEmptyLangTagCriteria.get(),
-                        AnyDatatypeCriteria.get()
-                )
-        );
-    }
-
-    @Test
     public void shouldSerialize_LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria() throws IOException {
         testSerialization(
                 LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria.get()
@@ -57,11 +46,7 @@ public class AnnotationValueCriteria_Serialization_TestCase {
                 CompositeAnnotationValueCriteria.get(
                         ImmutableList.of(
                                 AnyAnnotationValueCriteria.get(),
-                                LiteralComponentsCriteria.get(
-                                        AnyStringCriteria.get(),
-                                        AnyLangTagOrEmptyLangTagCriteria.get(),
-                                        AnyDatatypeCriteria.get()
-                                )
+                                StringContainsCriteria.get("A", true)
                         )
                 , MultiMatchType.ALL)
         );

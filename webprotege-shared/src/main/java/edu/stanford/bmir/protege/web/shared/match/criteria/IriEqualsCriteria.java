@@ -21,13 +21,15 @@ import javax.annotation.Nonnull;
 @JsonTypeName("IriEquals")
 public abstract class IriEqualsCriteria implements IriCriteria, AnnotationPropertyCriteria {
 
+    private static final String IRI_PROPERTY = "iri";
+
     @Nonnull
-    @JsonProperty("iri")
+    @JsonProperty(IRI_PROPERTY)
     public abstract IRI getIri();
 
     @Nonnull
     @JsonCreator
-    public static IriEqualsCriteria get(@Nonnull @JsonProperty("iri") IRI iri) {
+    public static IriEqualsCriteria get(@Nonnull @JsonProperty(IRI_PROPERTY) IRI iri) {
         return new AutoValue_IriEqualsCriteria(iri);
     }
 

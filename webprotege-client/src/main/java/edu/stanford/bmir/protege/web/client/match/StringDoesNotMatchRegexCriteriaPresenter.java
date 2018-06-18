@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringDoesNotContainRegexMatchCriteria;
 
 import javax.annotation.Nonnull;
@@ -14,7 +12,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jun 2018
  */
-public class StringDoesNotMatchRegexCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class StringDoesNotMatchRegexCriteriaPresenter implements CriteriaPresenter<StringDoesNotContainRegexMatchCriteria> {
 
     @Nonnull
     private final SimpleStringCriteriaView view;
@@ -35,12 +33,10 @@ public class StringDoesNotMatchRegexCriteriaPresenter implements CriteriaPresent
     }
 
     @Override
-    public Optional<? extends LiteralCriteria> getCriteria() {
+    public Optional<StringDoesNotContainRegexMatchCriteria> getCriteria() {
         return Optional.of(
-                LiteralComponentsCriteria.lexicalValueMatches(
-                        StringDoesNotContainRegexMatchCriteria.get(view.getValue(),
-                                                                   view.isIgnoreCase()
-                ))
-        );
+                StringDoesNotContainRegexMatchCriteria.get(view.getValue(),
+                                                           view.isIgnoreCase()
+                ));
     }
 }

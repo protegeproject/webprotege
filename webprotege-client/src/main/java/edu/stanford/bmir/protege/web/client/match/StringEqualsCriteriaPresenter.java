@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralComponentsCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.StringEqualsCriteria;
 
@@ -14,7 +13,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class StringEqualsCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class StringEqualsCriteriaPresenter implements CriteriaPresenter<StringEqualsCriteria> {
 
     @Nonnull
     private final SimpleStringCriteriaView view;
@@ -35,7 +34,7 @@ public class StringEqualsCriteriaPresenter implements CriteriaPresenter<LiteralC
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
-        return Optional.of(LiteralComponentsCriteria.lexicalValueMatches(StringEqualsCriteria.get(view.getValue(), view.isIgnoreCase())));
+    public Optional<StringEqualsCriteria> getCriteria() {
+        return Optional.of(StringEqualsCriteria.get(view.getValue(), view.isIgnoreCase()));
     }
 }

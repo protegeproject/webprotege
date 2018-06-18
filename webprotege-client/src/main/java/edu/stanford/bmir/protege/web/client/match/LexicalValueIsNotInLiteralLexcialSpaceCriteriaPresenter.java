@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenter implements CriteriaPresenter<LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria> {
 
     @Nonnull
     private final BlankCriteriaView view;
@@ -37,7 +37,7 @@ public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenter implements 
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria> getCriteria() {
         return Optional.of(LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria.get());
     }
 }

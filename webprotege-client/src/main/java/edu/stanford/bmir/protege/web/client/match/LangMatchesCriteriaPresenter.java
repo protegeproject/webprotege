@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class LangMatchesCriteriaPresenter implements CriteriaPresenter<LiteralCriteria> {
+public class LangMatchesCriteriaPresenter implements CriteriaPresenter<LangTagMatchesCriteria> {
 
     @Nonnull
     private final LangTagMatchesCriteriaView view;
@@ -36,14 +36,8 @@ public class LangMatchesCriteriaPresenter implements CriteriaPresenter<LiteralCr
     }
 
     @Override
-    public Optional<LiteralCriteria> getCriteria() {
+    public Optional<LangTagMatchesCriteria> getCriteria() {
         LangTagMatchesCriteria criteria = LangTagMatchesCriteria.get(view.getPattern());
-        return Optional.of(
-                LiteralComponentsCriteria.get(
-                        AnyStringCriteria.get(),
-                        criteria,
-                        AnyDatatypeCriteria.get()
-                )
-        );
+        return Optional.of(criteria);
     }
 }
