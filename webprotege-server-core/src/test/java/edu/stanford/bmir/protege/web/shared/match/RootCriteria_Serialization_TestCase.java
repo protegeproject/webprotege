@@ -98,6 +98,13 @@ public class RootCriteria_Serialization_TestCase {
         );
     }
 
+    @Test
+    public void shouldSerialize_IsNotBuiltInEntityCriteria() throws IOException {
+        testSerialization(
+                IsNotBuiltInEntityCriteria.get()
+        );
+    }
+
     private static <V extends RootCriteria> void testSerialization(V value) throws IOException {
         JsonSerializationTestUtil.testSerialization(value, RootCriteria.class);
     }

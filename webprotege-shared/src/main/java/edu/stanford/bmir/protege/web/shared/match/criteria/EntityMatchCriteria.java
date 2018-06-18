@@ -20,7 +20,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(EntityHasConflictingBooleanAnnotationValuesCriteria.class),
         @Type(EntityHasNonUniqueLangTagsCriteria.class),
         @Type(EntityAnnotationValuesAreNotDisjointCriteria.class),
-        @Type(EntityTypeIsOneOfCriteria.class)
+        @Type(EntityTypeIsOneOfCriteria.class),
+        @Type(IsNotBuiltInEntityCriteria.class)
 })
 public interface EntityMatchCriteria extends RootCriteria {
 
