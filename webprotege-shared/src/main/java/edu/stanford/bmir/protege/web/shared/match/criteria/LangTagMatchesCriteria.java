@@ -18,15 +18,15 @@ import javax.annotation.Nonnull;
 @JsonTypeName("LangTagMatches")
 public abstract class LangTagMatchesCriteria implements LangTagCriteria {
 
-    private static final String PATTERN = "getPattern";
+    private static final String RANGE = "languageRange";
 
-    @JsonProperty(PATTERN)
-    public abstract String getPattern();
+    @JsonProperty(RANGE)
+    public abstract String getLanguageRange();
 
     @JsonCreator
     @Nonnull
-    public static LangTagMatchesCriteria get(@Nonnull @JsonProperty(PATTERN) String pattern) {
-        return new AutoValue_LangTagMatchesCriteria(pattern);
+    public static LangTagMatchesCriteria get(@Nonnull @JsonProperty(RANGE) String languageRange) {
+        return new AutoValue_LangTagMatchesCriteria(languageRange);
     }
 
     @Override

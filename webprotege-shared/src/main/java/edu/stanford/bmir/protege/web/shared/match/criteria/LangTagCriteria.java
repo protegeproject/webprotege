@@ -13,7 +13,9 @@ import javax.annotation.Nonnull;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "match")
 @JsonSubTypes({
-        @Type(LangTagMatchesCriteria.class)
+        @Type(LangTagMatchesCriteria.class),
+        @Type(AnyLangTagOrEmptyLangTagCriteria.class),
+        @Type(LangTagIsEmptyCriteria.class)
 })
 public interface LangTagCriteria extends Criteria {
 

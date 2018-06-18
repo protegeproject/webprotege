@@ -211,7 +211,7 @@ public class MatcherFactory {
         return criteria.accept(new LangTagCriteriaVisitor<Matcher<String>>() {
             @Override
             public Matcher<String> visit(@Nonnull LangTagMatchesCriteria criteria) {
-                return LangTagMatchesMatcher.fromPattern(criteria.getPattern());
+                return LangTagMatchesMatcher.fromPattern(criteria.getLanguageRange());
             }
 
             @Override

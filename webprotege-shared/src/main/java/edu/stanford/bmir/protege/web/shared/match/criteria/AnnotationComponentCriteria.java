@@ -38,7 +38,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
      */
     @JsonCreator
     @Nonnull
-    public static AnnotationCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
+    public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria,
                                                   @Nonnull @JsonProperty(ANNOTATIONS) AnnotationSetCriteria annotationSetCriteria,
                                                   @Nonnull @JsonProperty(PRESENCE) AnnotationPresence presence) {
@@ -53,7 +53,7 @@ public abstract class AnnotationComponentCriteria implements AnnotationCriteria 
      * @param valueCriteria    The criteria for matching the value.
      */
     @Nonnull
-    public static AnnotationCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
+    public static AnnotationComponentCriteria get(@Nonnull @JsonProperty(PROPERTY) AnnotationPropertyCriteria propertyCriteria,
                                                   @Nonnull @JsonProperty(VALUE) AnnotationValueCriteria valueCriteria) {
         return get(propertyCriteria, valueCriteria, AnyAnnotationSetCriteria.get(), AnnotationPresence.AT_LEAST_ONE);
     }
