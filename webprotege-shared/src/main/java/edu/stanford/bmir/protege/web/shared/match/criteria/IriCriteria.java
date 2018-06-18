@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "match")
 @JsonSubTypes({
         @Type(IriEqualsCriteria.class),
-        @Type(IriHasAnnotationsCriteria.class)
+        @Type(IriHasAnnotationCriteria.class)
 })
 public interface IriCriteria extends AnnotationValueCriteria {
 

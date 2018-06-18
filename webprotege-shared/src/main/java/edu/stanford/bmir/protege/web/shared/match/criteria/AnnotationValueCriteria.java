@@ -17,9 +17,11 @@ import javax.annotation.Nonnull;
         use = JsonTypeInfo.Id.NAME,
         property = "match"
 )
-@JsonSubTypes(
-        @Type(LiteralCriteria.class)
-)
+@JsonSubTypes({
+        @Type(LiteralCriteria.class),
+        @Type(IriCriteria.class),
+        @Type(AnyAnnotationValueCriteria.class)
+})
 public interface AnnotationValueCriteria extends Criteria {
 
     <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor);

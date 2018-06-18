@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
@@ -17,6 +18,7 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("Annotation")
 public abstract class AnnotationComponentCriteria implements AnnotationCriteria {
 
     private static final String PROPERTY = "property";

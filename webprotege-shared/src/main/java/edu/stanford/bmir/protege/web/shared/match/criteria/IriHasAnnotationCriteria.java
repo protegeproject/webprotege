@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nonnull;
 
@@ -15,16 +15,19 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("IriHasAnnotations")
-public abstract class IriHasAnnotationsCriteria implements IriCriteria {
+@JsonTypeName("IriHasAnnotation")
+public abstract class IriHasAnnotationCriteria implements IriCriteria {
 
+    private static final String ANNOTATION_CRITERIA = "annotationCriteria";
+
+    @JsonProperty(ANNOTATION_CRITERIA)
     @Nonnull
-    public abstract ImmutableList<AnnotationComponentCriteria> getIriAnnotationsCriteria();
+    public abstract AnnotationCriteria getIriAnnotationCriteria();
 
     @JsonCreator
     @Nonnull
-    public static IriHasAnnotationsCriteria get(ImmutableList<AnnotationComponentCriteria> annotationComponentCriteria) {
-        return new AutoValue_IriHasAnnotationsCriteria(annotationComponentCriteria);
+    public static IriHasAnnotationCriteria get(@Nonnull @JsonProperty(ANNOTATION_CRITERIA) AnnotationCriteria annotationCriteria) {
+        return new AutoValue_IriHasAnnotationCriteria(annotationCriteria);
     }
 
     @Override

@@ -186,10 +186,10 @@ public class MatcherFactory {
 
             @Nonnull
             @Override
-            public Matcher<OWLAnnotationValue> visit(@Nonnull IriHasAnnotationsCriteria criteria) {
+            public Matcher<OWLAnnotationValue> visit(@Nonnull IriHasAnnotationCriteria criteria) {
                 return new IriAnnotationValueMatcher(
                         new IriAnnotationsMatcher(axiomIndex,
-                                                  getAnnotationMatcher(criteria.getIriAnnotationsCriteria().get(0)))
+                                                  getAnnotationMatcher(criteria.getIriAnnotationCriteria()))
                 );
             }
         });

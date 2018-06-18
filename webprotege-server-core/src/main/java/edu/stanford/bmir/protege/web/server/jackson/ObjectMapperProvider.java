@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.stanford.bmir.protege.web.server.api.IriSerializer;
 import edu.stanford.bmir.protege.web.server.api.OWLEntitySerializer;
@@ -30,6 +31,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
         mapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new GuavaModule());
         SimpleModule module = new SimpleModule();
         module.addSerializer(OWLEntity.class, new OWLEntitySerializer());
         mapper.addMixIn(IRI.class, IriMixin.class);

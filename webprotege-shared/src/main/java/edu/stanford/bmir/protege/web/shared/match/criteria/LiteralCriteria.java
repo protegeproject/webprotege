@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 11 Jun 2018
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "matches")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "match")
 @JsonSubTypes({
         @Type(LiteralComponentCriteria.class),
         @Type(LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria.class)
