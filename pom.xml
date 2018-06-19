@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guava.version>24.1-jre</guava.version>
         <dagger.version>2.16</dagger.version>
-        <owlapi.version>4.5.1</owlapi.version>
+        <owlapi.version>4.5.2</owlapi.version>
         <!-- WebProtege Specific Properties -->
         <mail.smtp.host/>
         <mail.smtp.auth/>
