@@ -8,6 +8,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -24,14 +27,22 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
     @Nonnull
     private final OWLClass cls;
 
+    private final Set<OWLClass> descendants;
+
+    private boolean filledDescedants = false;
+
     public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProvider provider, @Nonnull OWLClass cls) {
         this.provider = checkNotNull(provider);
         this.cls = checkNotNull(cls);
+        descendants = new HashSet<>();
     }
 
     @Override
     public boolean matches(@Nonnull OWLEntity value) {
-        return value.isOWLClass()
-                && provider.getAncestors(value.asOWLClass()).contains(cls);
+        if(value.isOWLClass() && !filledDescedants) {
+            filledDescedants = true;
+            descendants.addAll(provider.getDescendants(cls));
+        }
+        return value.isOWLClass() && descendants.contains(value.asOWLClass());
     }
 }
