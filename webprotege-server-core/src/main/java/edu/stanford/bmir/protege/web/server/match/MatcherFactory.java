@@ -288,8 +288,13 @@ public class MatcherFactory {
 
             @Override
             public Matcher<OWLAnnotationValue> visit(@Nonnull StringContainsRegexMatchCriteria criteria) {
+                int flags = 0;
+                if(criteria.isIgnoreCase()) {
+                    flags |= Pattern.CASE_INSENSITIVE;
+                }
+                Pattern pattern = Pattern.compile(criteria.getPattern(), flags);
                 return LiteralAnnotationValueMatcher.forLexicalValueMatcher(
-                        new StringContainsRegexMatchMatcher(Pattern.compile(criteria.getPattern()))
+                        new StringContainsRegexMatchMatcher(pattern)
                 );
             }
 
