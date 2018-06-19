@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.index;
 
-import com.google.common.cache.Cache;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -33,8 +34,8 @@ public class AnnotationAssertionAxiomsIndexCachingImpl implements AnnotationAsse
     @Inject
     public AnnotationAssertionAxiomsIndexCachingImpl(@RootOntology OWLOntology rootOntology) {
         this.rootOntology = checkNotNull(rootOntology);
-        axiomsBySubject = CacheBuilder.newBuilder()
-                                      .build();
+        axiomsBySubject = Caffeine.newBuilder()
+                                  .build();
     }
 
     @Nonnull
@@ -61,11 +62,7 @@ public class AnnotationAssertionAxiomsIndexCachingImpl implements AnnotationAsse
     }
 
     private ImmutableCollection<OWLAnnotationAssertionAxiom> getAxioms(@Nonnull IRI subject) {
-        try {
-            return axiomsBySubject.get(subject, () -> ImmutableList.copyOf(rootOntology.getAnnotationAssertionAxioms(subject)));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return axiomsBySubject.get(subject, (iri) -> ImmutableList.copyOf(rootOntology.getAnnotationAssertionAxioms(iri)));
     }
 
     @Override
