@@ -29,6 +29,7 @@
             margin-right: 2px;
             flex-grow: 0;
             flex-shrink:  0;
+            min-width: 100px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
