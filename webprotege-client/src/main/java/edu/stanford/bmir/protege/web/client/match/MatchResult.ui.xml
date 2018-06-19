@@ -3,14 +3,19 @@
     <ui:style>
         .main {
             height: 22px;
-            line-height: 21px;
             cursor: pointer;
+            vertical-align: middle;
         }
         .main:hover {
             background-color: #f0f0f0;
         }
+        .label {
+            display: flex;
+            align-items: center;
+            height: 22px;
+        }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Label ui:field="displayNameField"/>
+    <g:HTMLPanel ui:field="outer" addStyleNames="{style.main}">
+        <g:Label ui:field="displayNameField" addStyleNames="{style.label}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -95,6 +95,7 @@ public class PageCollector<T> implements Collector<T, List<T>, Optional<Page<T>>
             this.pageNumber = pageNumber;
         }
 
+
         public <S> PageCollector<S> forPageSize(int pageSize) {
             if(pageSize < 1) {
                 throw new IllegalArgumentException("Page size must be greater than zero");

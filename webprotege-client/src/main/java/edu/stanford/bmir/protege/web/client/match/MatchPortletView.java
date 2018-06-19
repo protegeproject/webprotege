@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
@@ -30,5 +31,5 @@ public interface MatchPortletView extends IsWidget, HasPagination {
 
     void clearResults();
 
-    void setResult(@Nonnull Page<OWLEntityData> result);
+    void setResult(@Nonnull Page<EntityHierarchyNode> result);
 }

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -107,13 +108,13 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
     }
 
     @Override
-    public void setResult(@Nonnull Page<OWLEntityData> result) {
+    public void setResult(@Nonnull Page<EntityHierarchyNode> result) {
         resultsCount.setText(NUMBER_FORMAT.format(result.getTotalElements()) + " results");
         resultsContainer.clear();
         result.getPageElements().stream()
               .map(ed -> {
                   MatchResult res = matchResultProvider.get();
-                  res.setClickHandler(event -> handleClick(event, ed));
+                  res.setClickHandler(event -> handleClick(event, ed.getEntityData()));
                   res.setEntityData(ed);
                   return res;
               }).forEach(mr -> resultsContainer.add(mr));

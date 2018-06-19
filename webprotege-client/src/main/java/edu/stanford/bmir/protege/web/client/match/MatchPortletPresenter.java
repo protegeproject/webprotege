@@ -29,7 +29,7 @@ import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesActi
 @Portlet(id = "portlet.match", title = "Match", tooltip = "Specifies match criteria")
 public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
 
-    private static final int PAGE_SIZE = 500;
+    private static final int PAGE_SIZE = 200;
 
     @Nonnull
     private final EntityCriteriaPresenter presenter;
