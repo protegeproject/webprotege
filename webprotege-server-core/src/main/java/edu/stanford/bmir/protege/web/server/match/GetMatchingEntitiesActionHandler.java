@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -52,18 +53,21 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     @Nonnull
     private final EntityHierarchyNodeRenderer nodeRenderer;
 
+    @Nonnull
+    private final MatchingEngine matchingEngine;
 
     @Inject
     public GetMatchingEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                             @Nonnull OWLOntology rootOntology,
                                             @Nonnull RenderingManager renderingManager,
                                             @Nonnull MatcherFactory matcherFactory,
-                                            @Nonnull EntityHierarchyNodeRenderer nodeRenderer) {
+                                            @Nonnull EntityHierarchyNodeRenderer nodeRenderer, @Nonnull MatchingEngine matchingEngine) {
         super(accessManager);
         this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
         this.matcherFactory = matcherFactory;
         this.nodeRenderer = nodeRenderer;
+        this.matchingEngine = matchingEngine;
     }
 
     @Nonnull
@@ -82,13 +86,12 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     @Override
     public GetMatchingEntitiesResult execute(@Nonnull GetMatchingEntitiesAction action, @Nonnull ExecutionContext executionContext) {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        Matcher<OWLEntity> matcher = matcherFactory.getMatcher((RootCriteria) action.getCriteria());
         PageRequest pageRequest = action.getPageRequest();
-        Optional<Page<OWLEntityData>> result = rootOntology.getSignature().stream()
-                                                                 .filter(matcher::matches)
-                                                                 .map(entity -> DataFactory.getOWLEntityData(entity, renderingManager.getShortForm(entity)))
-                                                                 .sorted()
-                                                                 .collect(toPage(pageRequest.getPageNumber(),
+        Criteria criteria = action.getCriteria();
+        Optional<Page<OWLEntityData>> result = matchingEngine.match(criteria)
+                                                             .map(entity -> DataFactory.getOWLEntityData(entity, renderingManager.getShortForm(entity)))
+                                                             .sorted()
+                                                             .collect(toPage(pageRequest.getPageNumber(),
                                                                            pageRequest.getPageSize()));
         stopwatch.stop();
         logger.info("Answer criteria query in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
