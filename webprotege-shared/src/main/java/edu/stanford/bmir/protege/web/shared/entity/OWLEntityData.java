@@ -43,16 +43,16 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
 
     @Override
     public int compareTo(OWLEntityData o) {
-        if(this.getEntity().equals(RDFS_LABEL)) {
-            if(!o.getEntity().equals(RDFS_LABEL)) {
-                return -1;
-            }
-        }
-        else {
-            if(o.getEntity().equals(RDFS_LABEL)) {
-                return 1;
-            }
-        }
+//        if(this.getEntity().equals(RDFS_LABEL)) {
+//            if(!o.getEntity().equals(RDFS_LABEL)) {
+//                return -1;
+//            }
+//        }
+//        else {
+//            if(o.getEntity().equals(RDFS_LABEL)) {
+//                return 1;
+//            }
+//        }
         return this.browserText.compareTo(o.getBrowserText());
     }
 
