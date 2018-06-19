@@ -2,34 +2,29 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
-import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
-import edu.stanford.bmir.protege.web.client.search.EntitySearchResultRendering;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
-import edu.stanford.bmir.protege.web.shared.search.EntitySearchResult;
-import edu.stanford.bmir.protege.web.shared.search.SearchField;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.place.*;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Matthew Horridge
@@ -44,6 +39,17 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
 
     @Nonnull
     private final PrimitiveDataIconProvider primitiveDataIconProvider;
+
+    private final PaginatorPresenter paginatorPresenter;
+
+    @Nonnull
+    private final EntityTypePerspectiveMapper typePerspectiveMapper;
+
+    @Nonnull
+    private final PlaceController placeController;
+
+    @Nonnull
+    private final Provider<MatchResult> matchResultProvider;
 
     @UiField
     SimplePanel criteriaContainer;
@@ -62,11 +68,13 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
 
     private ExecuteQueryHandler executeHandler = () -> {};
 
-    private final PaginatorPresenter paginatorPresenter;
-
     @Inject
-    public MatchPortletViewImpl(@Nonnull PrimitiveDataIconProvider primitiveDataIconProvider) {
+    public MatchPortletViewImpl(@Nonnull PrimitiveDataIconProvider primitiveDataIconProvider,
+                                @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper, @Nonnull PlaceController placeController, @Nonnull Provider<MatchResult> matchResultProvider) {
         this.primitiveDataIconProvider = primitiveDataIconProvider;
+        this.typePerspectiveMapper = typePerspectiveMapper;
+        this.placeController = placeController;
+        this.matchResultProvider = matchResultProvider;
         paginatorPresenter = new PaginatorPresenter(new PaginatorViewImpl());
         paginator = (PaginatorViewImpl) paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -101,19 +109,69 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
     @Override
     public void setResult(@Nonnull Page<OWLEntityData> result) {
         resultsCount.setText(NUMBER_FORMAT.format(result.getTotalElements()) + " results");
-        String rendering = result.getPageElements().stream()
-                                  .sorted()
-                                  .map(this::render)
-                                  .collect(Collectors.joining("\n"));
-        resultsContainer.getElement().setInnerHTML(rendering);
+        resultsContainer.clear();
+        result.getPageElements().stream()
+              .map(ed -> {
+                  MatchResult res = matchResultProvider.get();
+                  res.setClickHandler(event -> handleClick(event, ed));
+                  res.setEntityData(ed);
+                  return res;
+              }).forEach(mr -> resultsContainer.add(mr));
+        ;
     }
 
-    private String render(OWLEntityData ed) {
-        return "<div style='height: 22px; line-height: 21px;' class='"
-                + primitiveDataIconProvider.getIconInsetStyleName(ed)
-                + "'>"
-                + ed.getBrowserText()
-                + "</div>";
+    private void handleClick(ClickEvent event, OWLEntityData ed) {
+                PerspectiveId perspectiveId = typePerspectiveMapper
+                .getPerspectiveId(ed.getEntity().getEntityType());
+
+        Place place = placeController.getWhere();
+        if(place instanceof ProjectViewPlace) {
+            Item<?> item = ed.getEntity().accept(new OWLEntityVisitorEx<Item<?>>() {
+                @Nonnull
+                @Override
+                public Item<?> visit(@Nonnull OWLClass cls) {
+                    return new OWLClassItem(cls);
+                }
+
+                @Nonnull
+                @Override
+                public Item<?> visit(@Nonnull OWLObjectProperty property) {
+                    return new OWLObjectPropertyItem(property);
+                }
+
+                @Nonnull
+                @Override
+                public Item<?> visit(@Nonnull OWLDataProperty property) {
+                    return new OWLDataPropertyItem(property);
+                }
+
+                @Nonnull
+                @Override
+                public Item<?> visit(@Nonnull OWLNamedIndividual individual) {
+                    return new OWLNamedIndividualItem(individual);
+                }
+
+                @Nonnull
+                @Override
+                public Item<?> visit(@Nonnull OWLDatatype datatype) {
+                    return null;
+                }
+
+                @Nonnull
+                @Override
+                public Item<?> visit(@Nonnull OWLAnnotationProperty property) {
+                    return new OWLAnnotationPropertyItem(property);
+                }
+            });
+            if (item != null) {
+                ProjectViewPlace nextPlace = ((ProjectViewPlace) place).builder()
+                                                                       .withPerspectiveId(perspectiveId)
+                                                                       .clearSelection()
+                                                                       .withSelectedItem(item)
+                                                                       .build();
+                placeController.goTo(nextPlace);
+            }
+        }
     }
 
     @Override
@@ -122,13 +180,13 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
     }
 
     @Override
-    public void setPageNumber(int pageNumber) {
-        paginatorPresenter.setPageNumber(pageNumber);
+    public int getPageNumber() {
+        return paginatorPresenter.getPageNumber();
     }
 
     @Override
-    public int getPageNumber() {
-        return paginatorPresenter.getPageNumber();
+    public void setPageNumber(int pageNumber) {
+        paginatorPresenter.setPageNumber(pageNumber);
     }
 
     @Override

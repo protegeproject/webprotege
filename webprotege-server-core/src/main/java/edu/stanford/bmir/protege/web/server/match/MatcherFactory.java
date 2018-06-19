@@ -89,8 +89,8 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull EntityAnnotationCriteria criteria) {
-                AnnotationCriteria annotationComponentCriteria = criteria.getAnnotationCriteria();
-                Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationComponentCriteria);
+                AnnotationCriteria annotationCriteria = criteria.getAnnotationCriteria();
+                Matcher<OWLAnnotation> annotationMatcher = getAnnotationMatcher(annotationCriteria);
                 return entityAnnotationMatcherFactory.create(
                         annotationMatcher,
                         criteria.getAnnotationPresence());

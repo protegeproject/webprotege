@@ -81,6 +81,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private final EntityTypePerspectiveMapper typePerspectiveMapper = new EntityTypePerspectiveMapper();
 
+    private EntityLinkMode linkMode = EntityLinkMode.SHOW_LINKS_FOR_ENTITIES;
+
     @Inject
     public PrimitiveDataEditorImpl(PrimitiveDataEditorView editorView,
                                    LanguageEditor languageEditor,
@@ -166,7 +168,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public void setEntityLinkMode(EntityLinkMode entityLinkMode) {
-//        this.entityLinkMode = entityLinkMode;
+        this.linkMode = checkNotNull(entityLinkMode);
     }
 
     @Override
@@ -554,11 +556,16 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             validateCurrentEntityTypeAgainstAllowedTypes();
             if (isExternalIRI()) {
                 GWT.log("[PrimitiveDataEditorImpl] Value is external IRI");
-                view.setAnchorTitle("Open link in new window");
-                view.setAnchorVisible(true);
+                if (linkMode == EntityLinkMode.SHOW_LINKS_FOR_ENTITIES) {
+                    view.setAnchorTitle("Open link in new window");
+                    view.setAnchorVisible(true);
+                }
+                else {
+                    view.setAnchorVisible(false);
+                }
             } else {
                 OWLPrimitiveData primitiveData = currentData.get();
-                if(primitiveData.isOWLEntity()) {
+                if(linkMode == EntityLinkMode.SHOW_LINKS_FOR_ENTITIES && primitiveData.isOWLEntity()) {
                     view.setAnchorTitle("Go to entity");
                     view.setAnchorVisible(true);
                 }
