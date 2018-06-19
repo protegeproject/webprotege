@@ -19,6 +19,8 @@ import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
+import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
+import edu.stanford.bmir.protege.web.server.match.MatchingEngineImpl;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculator;
 import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
@@ -474,8 +476,9 @@ public class ProjectModule {
             OWLObjectPropertyHierarchyChangeComputer c3,
             OWLDataPropertyHierarchyChangeComputer c4,
             OWLAnnotationPropertyHierarchyChangeComputer c5,
-            EntityDeprecatedChangedEventTranslator c6) {
-        return ImmutableSet.of(c0, c1, c2, c3, c4, c5, c6);
+            EntityDeprecatedChangedEventTranslator c6,
+            EntityTagsChangedEventComputer c7) {
+        return ImmutableSet.of(c0, c1, c2, c3, c4, c5, c6, c7);
     }
 
     @Provides
@@ -551,6 +554,11 @@ public class ProjectModule {
     @Provides
     AnnotationAssertionAxiomsIndex provideAnnotationAssertionAxiomsIndex(AnnotationAssertionAxiomsIndexCachingImpl impl) {
         impl.attachOntologyListener();
+        return impl;
+    }
+
+    @Provides
+    MatchingEngine provideMatchingEngine(MatchingEngineImpl impl) {
         return impl;
     }
 }

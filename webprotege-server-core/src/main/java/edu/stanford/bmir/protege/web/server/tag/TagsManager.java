@@ -1,13 +1,18 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
+import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.*;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,6 +21,7 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.tag.TagId.createTagId;
@@ -36,6 +42,9 @@ public class TagsManager {
     private final EntityTagsRepository entityTagsRepository;
 
     @Nonnull
+    private final CriteriaBasedTagsManager criteriaBasedTagsManager;
+
+    @Nonnull
     private final TagRepository tagRepository;
 
     @Nonnull
@@ -54,10 +63,12 @@ public class TagsManager {
     @Inject
     public TagsManager(@Nonnull ProjectId projectId,
                        @Nonnull EntityTagsRepository entityTagsRepository,
+                       @Nonnull CriteriaBasedTagsManager criteriaBasedTagsManager,
                        @Nonnull TagRepository tagRepository,
                        @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
         this.projectId = checkNotNull(projectId);
         this.entityTagsRepository = checkNotNull(entityTagsRepository);
+        this.criteriaBasedTagsManager = checkNotNull(criteriaBasedTagsManager);
         this.tagRepository = checkNotNull(tagRepository);
         this.eventBus = checkNotNull(eventBus);
     }
@@ -76,13 +87,15 @@ public class TagsManager {
             readLock.lock();
             Map<TagId, Tag> tagsById = getProjectTagsByProjectId();
             Optional<EntityTags> entityTags = entityTagsRepository.findByEntity(projectId, entity);
-            if (!entityTags.isPresent()) {
-                return Collections.emptySet();
-            }
-            return entityTags.get().getTags().stream()
-                             .map(tagsById::get)
-                             .filter(Objects::nonNull)
-                             .collect(toList());
+            Stream<TagId> explicitTags = entityTags.map(tags -> tags.getTags().stream())
+                                                   .orElse(Stream.empty());
+
+            Stream<TagId> criteriaBasedTags = criteriaBasedTagsManager.getTagsForEntity(entity);
+            return Streams.concat(explicitTags, criteriaBasedTags)
+                          .distinct()
+                          .map(tagsById::get)
+                          .filter(Objects::nonNull)
+                          .collect(toList());
         } finally {
             readLock.unlock();
         }
@@ -131,10 +144,14 @@ public class TagsManager {
     public Collection<OWLEntity> getTaggedEntities(@Nonnull TagId tagId) {
         try {
             readLock.lock();
-            return entityTagsRepository.findByTagId(tagId)
-                                       .stream()
-                                       .map(EntityTags::getEntity)
-                                       .collect(toSet());
+
+            Stream<OWLEntity> explicitTags = entityTagsRepository.findByTagId(tagId)
+                                                                 .stream()
+                                                                 .map(EntityTags::getEntity);
+            Stream<OWLEntity> criteriaBasedTags = criteriaBasedTagsManager.getTaggedEntities(tagId);
+
+            return Streams.concat(explicitTags, criteriaBasedTags)
+                          .collect(toSet());
         } finally {
             readLock.unlock();
         }
