@@ -59,6 +59,20 @@
     cursor: default;
 }
 
+.wp-btn--secondary {
+    color:            #fff;
+    background-color: #0089bd;
+}
+
+.wp-btn--secondary:hover {
+    background-color: #0073a5;
+}
+
+.wp-btn--secondary:disabled {
+    background-color: lightgray;
+    cursor: default;
+}
+
 .wp-btn--alternate {
     color: #fff;
     background-color: #db5e33;

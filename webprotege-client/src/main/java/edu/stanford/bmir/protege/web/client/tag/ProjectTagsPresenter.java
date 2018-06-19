@@ -7,7 +7,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
@@ -20,12 +19,10 @@ import edu.stanford.bmir.protege.web.shared.tag.TagData;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
 import static edu.stanford.bmir.protege.web.shared.tag.SetProjectTagsAction.setProjectTags;
-import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
@@ -57,6 +54,9 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Nonnull
+    private final TagCriteriaListPresenter tagCriteriaListPresenter;
+
+    @Nonnull
     private Optional<Place> nextPlace = Optional.empty();
 
     @Nonnull
@@ -66,7 +66,10 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
     public ProjectTagsPresenter(@Nonnull ProjectId projectId, @Nonnull ProjectTagsView view,
                                 @Nonnull BusyView busyView,
                                 @Nonnull ForbiddenView forbiddenView,
-                                @Nonnull PlaceController placeController, @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, @Nonnull DispatchServiceManager dispatchServiceManager) {
+                                @Nonnull PlaceController placeController,
+                                @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
+                                @Nonnull DispatchServiceManager dispatchServiceManager,
+                                @Nonnull TagCriteriaListPresenter tagCriteriaListPresenter) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.busyView = checkNotNull(busyView);
@@ -74,6 +77,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
         this.placeController = checkNotNull(placeController);
         this.permissionChecker = checkNotNull(permissionChecker);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.tagCriteriaListPresenter = checkNotNull(tagCriteriaListPresenter);
     }
 
     @Override
@@ -87,6 +91,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
             if(canEditTags) {
                 container.setWidget(view);
                 displayProjectTags();
+                tagCriteriaListPresenter.start(view.getTagCriteriaContainer());
             }
             else {
                 container.setWidget(forbiddenView);

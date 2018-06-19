@@ -57,6 +57,11 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
         view.setAddCriteriaHandler(this::handleAddCriteria);
     }
 
+    public void setMatchTextPrefix(@Nonnull String prefix) {
+        view.setMatchTextPrefix(checkNotNull(prefix));
+    }
+
+
     private void handleAddCriteria() {
         addCriteriaPresenter();
     }

@@ -39,6 +39,7 @@ import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -262,6 +263,20 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    TagCriteriaView provideTagCriteriaView(TagCriteriaViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TagCriteriaListView provideTagCriteriaListView(TagCriteriaListViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TagCriteriaViewContainer provideTagCriteriaViewContainer(TagCriteriaViewContainerImpl impl) {
+        return impl;
+    }
 }
 
 

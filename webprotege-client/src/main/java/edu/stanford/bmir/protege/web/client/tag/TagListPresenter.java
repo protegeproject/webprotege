@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
-import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;

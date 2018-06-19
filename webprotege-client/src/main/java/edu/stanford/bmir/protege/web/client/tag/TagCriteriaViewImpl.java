@@ -10,36 +10,31 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 19 Mar 2018
+ * 19 Jun 2018
  */
-public class TagListViewImpl extends Composite implements TagListView {
+public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
 
-    interface TagListViewImplUiBinder extends UiBinder<HTMLPanel, TagListViewImpl> {
+    interface TagCriteriaViewImplUiBinder extends UiBinder<HTMLPanel, TagCriteriaViewImpl> {
+
     }
 
-    private static TagListViewImplUiBinder ourUiBinder = GWT.create(TagListViewImplUiBinder.class);
+    private static TagCriteriaViewImplUiBinder ourUiBinder = GWT.create(TagCriteriaViewImplUiBinder.class);
 
     @UiField
-    protected HTMLPanel tagViewsContainer;
+    protected SimplePanel tagCriteriaContainer;
 
     @Inject
-    public TagListViewImpl() {
+    public TagCriteriaViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
+    @Nonnull
     @Override
-    public void clear() {
-        tagViewsContainer.clear();
-    }
-
-    @Override
-    public void setTagViews(@Nonnull List<TagView> tagViews) {
-        tagViewsContainer.clear();
-        tagViews.forEach(v -> tagViewsContainer.add(v));
+    public AcceptsOneWidget getTagCriteriaContainer() {
+        return tagCriteriaContainer;
     }
 }

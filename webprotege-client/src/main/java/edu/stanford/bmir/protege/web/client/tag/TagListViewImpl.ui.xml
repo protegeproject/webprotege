@@ -9,6 +9,9 @@
             margin-right: 10px;
         }
     </ui:style>
-    <g:HTMLPanel ui:field="tagViewsContainer" addStyleNames="{style.tags}">
+    <g:HTMLPanel>
+        <g:HTMLPanel ui:field="tagViewsContainer" addStyleNames="{style.tags}">
+        </g:HTMLPanel>
     </g:HTMLPanel>
+
 </ui:UiBinder>

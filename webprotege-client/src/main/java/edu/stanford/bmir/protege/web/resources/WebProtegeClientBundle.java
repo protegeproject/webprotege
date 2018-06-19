@@ -346,6 +346,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-btn--primary")
         String primaryButton();
 
+        @ClassName("wp-btn--secondary")
+        String secondaryButton();
+
         /**
          * An alternate button on a page or on a settings
          */

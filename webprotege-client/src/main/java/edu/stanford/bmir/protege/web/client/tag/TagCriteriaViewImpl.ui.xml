@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            padding: 5px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:SimplePanel ui:field="tagCriteriaContainer"/>
+        <g:InlineLabel text="assign tag" addStyleNames="{wp.style.formLabel}"/><g:ListBox visibleItemCount="1"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

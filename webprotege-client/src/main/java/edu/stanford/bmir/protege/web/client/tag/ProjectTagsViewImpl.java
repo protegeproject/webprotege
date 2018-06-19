@@ -5,10 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
@@ -58,6 +55,9 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     @UiField(provided = true)
     ValueListEditor<TagData> tagsEditor;
 
+    @UiField
+    SimplePanel tagCriteriaContainer;
+
     @Nonnull
     private final Messages messages;
 
@@ -73,6 +73,12 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
         this.messages = checkNotNull(messages);
         tagsEditor.setDeleteConfirmationPrompt(deletePrompt);
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Nonnull
+    @Override
+    public AcceptsOneWidget getTagCriteriaContainer() {
+        return tagCriteriaContainer;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
@@ -38,4 +39,7 @@ public interface ProjectTagsView extends IsWidget {
     List<TagData> getTagData();
 
     void showDuplicateTagAlert(@Nonnull String label);
+
+    @Nonnull
+    AcceptsOneWidget getTagCriteriaContainer();
 }
