@@ -44,7 +44,6 @@ public class TagCriteriaPresenter {
         this.availableTagLabels.clear();
         this.availableTagLabels.addAll(availableTagLabels);
         view.setAvailableTagNames(availableTagLabels);
-
     }
 
 }

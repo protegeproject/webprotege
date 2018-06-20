@@ -57,6 +57,7 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
         }
     }
 
+    @Nonnull
     @Override
     public Optional<String> getSelectedTagName() {
         return Optional.ofNullable(availableTagsField.getSelectedValue());

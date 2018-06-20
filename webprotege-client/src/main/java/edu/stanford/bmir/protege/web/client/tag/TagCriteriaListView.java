@@ -11,7 +11,15 @@ import javax.annotation.Nonnull;
  */
 public interface TagCriteriaListView extends IsWidget {
 
+    interface AddHandler {
+        void handleAdd();
+    }
+
+    void setAddHandler(@Nonnull AddHandler handler);
+
     void clearView();
 
     void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container);
+
+    void removeTagCriteriaViewContainer(int viewContainerIndex);
 }

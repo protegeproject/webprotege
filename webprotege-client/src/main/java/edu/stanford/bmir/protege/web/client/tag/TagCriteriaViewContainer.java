@@ -12,7 +12,13 @@ import javax.annotation.Nonnull;
  */
 public interface TagCriteriaViewContainer extends IsWidget {
 
+    interface RemoveHandler {
+        void handleRemove();
+    }
+
     @Nonnull
     AcceptsOneWidget getViewContainer();
+
+    void setRemoveHandler(RemoveHandler removeHandler);
 }
 

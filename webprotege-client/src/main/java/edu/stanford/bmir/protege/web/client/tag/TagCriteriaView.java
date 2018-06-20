@@ -14,10 +14,15 @@ import java.util.Optional;
  */
 public interface TagCriteriaView extends IsWidget {
 
+    interface RemoveHandler {
+        void handleRemove();
+    }
+
     @Nonnull
     AcceptsOneWidget getTagCriteriaContainer();
 
     void setAvailableTagNames(@Nonnull List<String> tagNames);
 
+    @Nonnull
     Optional<String> getSelectedTagName();
 }
