@@ -86,6 +86,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
         view.setCancelButtonVisible(nextPlace.isPresent());
         view.setApplyChangesHandler(this::handleApplyChanges);
         view.setCancelChangesHandler(this::handleCancelChanges);
+        view.setTagListChangedHandler(this::handleTagListChanged);
         container.setWidget(busyView);
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, canEditTags -> {
             if(canEditTags) {
@@ -139,5 +140,10 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
     private void displayProjectTags(GetProjectTagsResult result) {
         List<Tag> tags = result.getTags();
         view.setTags(tags, result.getTagUsage());
+        tagCriteriaListPresenter.setAvailableTags(tags);
+    }
+
+
+    private void handleTagListChanged() {
     }
 }

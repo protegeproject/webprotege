@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -29,6 +31,8 @@ public class TagCriteriaListPresenter {
 
     private final List<TagCriteriaPresenter> presenters = new ArrayList<>();
 
+    private final List<Tag> availableTags = new ArrayList<>();
+
     @Inject
     public TagCriteriaListPresenter(@Nonnull TagCriteriaListView view,
                                     @Nonnull Provider<TagCriteriaPresenter> presenterProvider, @Nonnull Provider<TagCriteriaViewContainer> tagCriteriaViewContainerProvider) {
@@ -43,6 +47,12 @@ public class TagCriteriaListPresenter {
         addFirst();
     }
 
+    public void setAvailableTags(@Nonnull List<Tag> availableTags) {
+        this.availableTags.clear();
+        this.availableTags.addAll(availableTags);
+        presenters.forEach(presenter -> presenter.setAvailableTags(availableTags));
+    }
+
     private void addFirst() {
         addTagCriteriaView();
     }
@@ -52,6 +62,7 @@ public class TagCriteriaListPresenter {
         presenters.add(presenter);
         TagCriteriaViewContainer container = tagCriteriaViewContainerProvider.get();
         presenter.start(container.getViewContainer());
+        presenter.setAvailableTags(availableTags);
         view.addTagCriteriaViewContainer(container);
     }
 }

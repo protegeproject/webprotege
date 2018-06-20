@@ -3,13 +3,11 @@ package edu.stanford.bmir.protege.web.client.tag;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -27,6 +25,9 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
     @UiField
     protected SimplePanel tagCriteriaContainer;
 
+    @UiField
+    ListBox availableTagsField;
+
     @Inject
     public TagCriteriaViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -36,5 +37,11 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
     @Override
     public AcceptsOneWidget getTagCriteriaContainer() {
         return tagCriteriaContainer;
+    }
+
+    @Override
+    public void setAvailableTagNames(@Nonnull List<String> tagNames) {
+        availableTagsField.clear();
+        tagNames.forEach(tagName -> availableTagsField.addItem(tagName));
     }
 }

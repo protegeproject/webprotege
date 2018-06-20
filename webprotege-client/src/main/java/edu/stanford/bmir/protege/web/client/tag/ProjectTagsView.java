@@ -25,6 +25,10 @@ public interface ProjectTagsView extends IsWidget {
         void handleCancelChanges();
     }
 
+    interface TagListChangedHandler {
+        void handleTagListChanged();
+    }
+
     void setProjectTitle(@Nonnull String projectTitle);
 
     void setApplyChangesHandler(@Nonnull ApplyChangesHandler applyChangesHandler);
@@ -34,6 +38,8 @@ public interface ProjectTagsView extends IsWidget {
     void setCancelButtonVisible(boolean visible);
 
     void setTags(@Nonnull List<Tag> tags, Map<TagId, Integer> usageCount);
+
+    void setTagListChangedHandler(@Nonnull TagListChangedHandler handler);
 
     @Nonnull
     List<TagData> getTagData();

@@ -11,10 +11,10 @@
             /*border: 1px solid #c0c0c0;*/
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: stretch;
         }
         .removeButton {
-            justify-self: end;
+            align-self: flex-end;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">

@@ -65,6 +65,8 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
 
     private CancelChangesHandler cancelChangesHandler = () -> {};
 
+    private TagListChangedHandler tagListChangedHandler = () -> {};
+
     @Inject
     public ProjectTagsViewImpl(@Nonnull Provider<ColorSwatchPresenter> colorSwatchPresenter,
                                @Nonnull Messages messages,
@@ -72,6 +74,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
         tagsEditor = new ValueListFlexEditorImpl<>(() -> new TagEditor(colorSwatchPresenter.get()));
         this.messages = checkNotNull(messages);
         tagsEditor.setDeleteConfirmationPrompt(deletePrompt);
+        tagsEditor.addValueChangeHandler(event -> tagListChangedHandler.handleTagListChanged());
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
@@ -95,6 +98,11 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     @UiHandler("cancelButton")
     protected void handleCancelChanges(ClickEvent event) {
         cancelChangesHandler.handleCancelChanges();
+    }
+
+    @Override
+    public void setTagListChangedHandler(@Nonnull TagListChangedHandler handler) {
+        this.tagListChangedHandler = checkNotNull(handler);
     }
 
     @Override

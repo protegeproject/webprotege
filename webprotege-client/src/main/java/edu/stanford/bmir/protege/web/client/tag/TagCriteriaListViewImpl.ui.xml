@@ -7,13 +7,14 @@
             background-color: white;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
         }
-        .list {
+        .button {
+            align-self: flex-start;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel ui:field="tagCriteriaListContainer" addStyleNames="{style.list}"/>
-        <g:Button ui:field="addButton" text="Add" addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+        <g:HTMLPanel ui:field="tagCriteriaListContainer"/>
+        <g:Button ui:field="addButton" text="Add" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

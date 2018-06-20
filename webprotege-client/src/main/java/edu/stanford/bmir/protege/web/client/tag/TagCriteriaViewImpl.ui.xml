@@ -5,9 +5,12 @@
         .main {
             padding: 5px;
         }
+        .label {
+            padding-right: 5px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:SimplePanel ui:field="tagCriteriaContainer"/>
-        <g:InlineLabel text="assign tag" addStyleNames="{wp.style.formLabel}"/><g:ListBox visibleItemCount="1"/>
+        <g:InlineLabel text="assign tag" addStyleNames=" {style.label} {wp.style.formLabel}"/><g:ListBox ui:field="availableTagsField" visibleItemCount="1"/>
     </g:HTMLPanel>
 </ui:UiBinder>
