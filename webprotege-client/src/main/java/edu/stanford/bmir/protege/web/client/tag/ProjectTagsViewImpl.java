@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -128,7 +129,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     @Override
     public void setTags(@Nonnull List<Tag> tags, Map<TagId, Integer> usageCount) {
         List<TagData> tagData = tags.stream()
-                                    .map(tag -> new TagData(Optional.of(tag.getTagId()),
+                                    .map(tag -> TagData.get(Optional.of(tag.getTagId()),
                                                             tag.getLabel(),
                                                             tag.getDescription(),
                                                             tag.getColor(),

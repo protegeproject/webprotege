@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,99 +22,41 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 23 Mar 2018
  */
-public class TagData implements IsSerializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class TagData implements IsSerializable {
 
-    @Nullable
-    private TagId tagId;
-
-    private String label;
-
-    private String description;
-
-    private Color color;
-
-    private Color backgroundColor;
-
-    private int usageCount = 0;
-
-    public TagData(@Nonnull Optional<TagId> tagId,
-                   @Nonnull String label,
-                   @Nonnull String description,
-                   @Nonnull Color color,
-                   @Nonnull Color backgroundColor,
-                   int usageCount) {
-        this.tagId = tagId.orElse(null);
-        this.label = checkNotNull(label);
-        this.description = checkNotNull(description);
-        this.color = checkNotNull(color);
-        this.backgroundColor = checkNotNull(backgroundColor);
-        this.usageCount = usageCount;
+    public static TagData get(@Nonnull String label,
+                              @Nonnull String description,
+                              @Nonnull Color color,
+                              @Nonnull Color backgroundColor,
+                              int usageCount) {
+        return new AutoValue_TagData(Optional.empty(), label, description, color, backgroundColor, usageCount);
     }
 
-    @GwtSerializationConstructor
-    private TagData() {
+    public static TagData get(@Nonnull Optional<TagId> tagId,
+                              @Nonnull String label,
+                              @Nonnull String description,
+                              @Nonnull Color color,
+                              @Nonnull Color backgroundColor,
+                              int usageCount) {
+        return new AutoValue_TagData(tagId, label, description, color, backgroundColor, usageCount);
     }
 
     @Nonnull
-    public Optional<TagId> getTagId() {
-        return Optional.ofNullable(tagId);
-    }
+    public abstract Optional<TagId> getTagId();
 
     @Nonnull
-    public String getLabel() {
-        return label;
-    }
+    public abstract String getLabel();
 
     @Nonnull
-    public String getDescription() {
-        return description;
-    }
+    public abstract String getDescription();
 
     @Nonnull
-    public Color getColor() {
-        return color;
-    }
+    public abstract Color getColor();
 
     @Nonnull
-    public Color getBackgroundColor() {
-        return backgroundColor;
-    }
+    public abstract Color getBackgroundColor();
 
-    public int getUsageCount() {
-        return usageCount;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(tagId, label, description, color, backgroundColor, usageCount);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof TagData)) {
-            return false;
-        }
-        TagData other = (TagData) obj;
-        return Objects.equal(this.tagId, other.tagId)
-                && this.label.equals(other.label)
-                && this.description.equals(other.description)
-                && this.color.equals(other.color)
-                && this.backgroundColor.equals(other.backgroundColor)
-                && this.usageCount == other.usageCount;
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("TagData")
-                .add("tagId", tagId)
-                .add("label", label)
-                .add("description", description)
-                .add("color", color)
-                .add("backgroundColor", backgroundColor)
-                .toString();
-    }
+    public abstract int getUsageCount();
 }

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -135,7 +137,7 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
         if(getTagLabel().isEmpty()) {
             return Optional.empty();
         }
-        TagData tagData = new TagData(tagId,
+        TagData tagData = TagData.get(tagId,
                                       getTagLabel(),
                                       descriptionField.getValue().trim(),
                                       Color.getWhite(),
