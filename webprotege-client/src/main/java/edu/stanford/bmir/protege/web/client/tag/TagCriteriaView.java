@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -17,4 +18,6 @@ public interface TagCriteriaView extends IsWidget {
     AcceptsOneWidget getTagCriteriaContainer();
 
     void setAvailableTagNames(@Nonnull List<String> tagNames);
+
+    Optional<String> getSelectedTagName();
 }

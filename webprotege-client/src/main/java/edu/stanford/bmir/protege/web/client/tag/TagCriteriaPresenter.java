@@ -1,18 +1,16 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -27,7 +25,7 @@ public class TagCriteriaPresenter {
     @Nonnull
     private final EntityCriteriaPresenter entityCriteriaPresenter;
 
-    private final List<Tag> availableTags = new ArrayList<>();
+    private final List<String> availableTagLabels = new ArrayList<>();
 
     @Inject
     public TagCriteriaPresenter(@Nonnull TagCriteriaView view,
@@ -42,13 +40,11 @@ public class TagCriteriaPresenter {
         entityCriteriaPresenter.start(view.getTagCriteriaContainer());
     }
 
-    public void setAvailableTags(@Nonnull List<Tag> availableTags) {
-        this.availableTags.clear();
-        this.availableTags.addAll(availableTags);
-        List<String> tagName = availableTags.stream()
-                                            .map(Tag::getLabel)
-                                            .collect(toList());
-        view.setAvailableTagNames(tagName);
+    public void setAvailableTags(@Nonnull List<String> availableTagLabels) {
+        this.availableTagLabels.clear();
+        this.availableTagLabels.addAll(availableTagLabels);
+        view.setAvailableTagNames(availableTagLabels);
+
     }
 
 }

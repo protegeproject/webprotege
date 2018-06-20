@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -41,7 +42,23 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
 
     @Override
     public void setAvailableTagNames(@Nonnull List<String> tagNames) {
+        String sel = availableTagsField.getSelectedValue();
         availableTagsField.clear();
-        tagNames.forEach(tagName -> availableTagsField.addItem(tagName));
+        int index = -1;
+        for(int i = 0; i < tagNames.size(); i++) {
+            String tagName = tagNames.get(i);
+            availableTagsField.addItem(tagName);
+            if(tagName.equals(sel)) {
+                index = i;
+            }
+        }
+        if(index != -1) {
+            availableTagsField.setSelectedIndex(index);
+        }
+    }
+
+    @Override
+    public Optional<String> getSelectedTagName() {
+        return Optional.ofNullable(availableTagsField.getSelectedValue());
     }
 }

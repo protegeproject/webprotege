@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.tag.TagData;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_ENTITY_TAGS;
@@ -140,10 +141,11 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
     private void displayProjectTags(GetProjectTagsResult result) {
         List<Tag> tags = result.getTags();
         view.setTags(tags, result.getTagUsage());
-        tagCriteriaListPresenter.setAvailableTags(tags);
+        tagCriteriaListPresenter.setAvailableTags(tags.stream().map(Tag::getLabel).collect(Collectors.toList()));
     }
 
 
     private void handleTagListChanged() {
+        tagCriteriaListPresenter.setAvailableTags(view.getTagData().stream().map(TagData::getLabel).collect(Collectors.toList()));
     }
 }

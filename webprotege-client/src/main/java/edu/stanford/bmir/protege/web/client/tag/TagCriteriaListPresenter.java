@@ -31,7 +31,7 @@ public class TagCriteriaListPresenter {
 
     private final List<TagCriteriaPresenter> presenters = new ArrayList<>();
 
-    private final List<Tag> availableTags = new ArrayList<>();
+    private final List<String> availableTagLabels = new ArrayList<>();
 
     @Inject
     public TagCriteriaListPresenter(@Nonnull TagCriteriaListView view,
@@ -47,10 +47,10 @@ public class TagCriteriaListPresenter {
         addFirst();
     }
 
-    public void setAvailableTags(@Nonnull List<Tag> availableTags) {
-        this.availableTags.clear();
-        this.availableTags.addAll(availableTags);
-        presenters.forEach(presenter -> presenter.setAvailableTags(availableTags));
+    public void setAvailableTags(@Nonnull List<String> availableTagLabels) {
+        this.availableTagLabels.clear();
+        this.availableTagLabels.addAll(availableTagLabels);
+        presenters.forEach(presenter -> presenter.setAvailableTags(availableTagLabels));
     }
 
     private void addFirst() {
@@ -62,7 +62,7 @@ public class TagCriteriaListPresenter {
         presenters.add(presenter);
         TagCriteriaViewContainer container = tagCriteriaViewContainerProvider.get();
         presenter.start(container.getViewContainer());
-        presenter.setAvailableTags(availableTags);
+        presenter.setAvailableTags(availableTagLabels);
         view.addTagCriteriaViewContainer(container);
     }
 }
