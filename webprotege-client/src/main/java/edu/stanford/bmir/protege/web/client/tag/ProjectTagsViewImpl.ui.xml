@@ -30,9 +30,9 @@
         }
 
         .criteriaEditorContainer {
-            border:     1px solid #c0c0c0;
-            overflow-y: auto;
-            background-color: white;
+            border:           1px solid #e0e0e0;
+            overflow-y:       auto;
+            background-color: #fafaff;
         }
     </ui:style>
     <g:HTMLPanel>
