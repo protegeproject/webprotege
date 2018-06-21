@@ -8,12 +8,15 @@
             flex-direction: column;
             align-items: stretch;
         }
+        .listContainer {
+            overflow-x: hidden;
+        }
         .button {
             align-self: flex-start;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel ui:field="tagCriteriaListContainer"/>
+        <g:HTMLPanel ui:field="tagCriteriaListContainer" addStyleNames="{style.listContainer}"/>
         <g:Button ui:field="addButton" text="Add" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
