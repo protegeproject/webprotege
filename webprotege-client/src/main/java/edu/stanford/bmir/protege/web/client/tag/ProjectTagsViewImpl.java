@@ -134,6 +134,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
                                                             tag.getDescription(),
                                                             tag.getColor(),
                                                             tag.getBackgroundColor(),
+                                                            ImmutableList.of(),
                                                             usageCount.getOrDefault(tag.getTagId(), 0)))
                                     .collect(toList());
         tagsEditor.setValue(tagData);

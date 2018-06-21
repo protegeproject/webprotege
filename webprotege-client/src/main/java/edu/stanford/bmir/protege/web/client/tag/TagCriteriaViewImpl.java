@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -41,13 +42,13 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
     }
 
     @Override
-    public void setAvailableTagNames(@Nonnull List<String> tagNames) {
+    public void setAvailableTagLabels(@Nonnull List<String> tagLabels) {
         String sel = availableTagsField.getSelectedValue();
         availableTagsField.clear();
         availableTagsField.addItem("");
         int index = -1;
-        for(int i = 0; i < tagNames.size(); i++) {
-            String tagName = tagNames.get(i);
+        for(int i = 0; i < tagLabels.size(); i++) {
+            String tagName = tagLabels.get(i);
             availableTagsField.addItem(tagName);
             if(tagName.equals(sel)) {
                 // Off set because of empty tag
@@ -61,7 +62,7 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
 
     @Nonnull
     @Override
-    public Optional<String> getSelectedTagName() {
+    public Optional<String> getSelectedTagLabel() {
         return Optional.ofNullable(availableTagsField.getSelectedValue())
                        .filter(tn -> !tn.isEmpty());
     }

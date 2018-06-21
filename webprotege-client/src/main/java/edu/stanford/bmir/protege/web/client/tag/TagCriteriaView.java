@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.tag;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -21,8 +22,8 @@ public interface TagCriteriaView extends IsWidget {
     @Nonnull
     AcceptsOneWidget getTagCriteriaContainer();
 
-    void setAvailableTagNames(@Nonnull List<String> tagNames);
+    void setAvailableTagLabels(@Nonnull List<String> tagLabels);
 
     @Nonnull
-    Optional<String> getSelectedTagName();
+    Optional<String> getSelectedTagLabel();
 }

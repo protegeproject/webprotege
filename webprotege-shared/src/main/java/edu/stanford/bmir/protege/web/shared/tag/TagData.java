@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,8 +32,9 @@ public abstract class TagData implements IsSerializable {
                               @Nonnull String description,
                               @Nonnull Color color,
                               @Nonnull Color backgroundColor,
+                              @Nonnull ImmutableList<RootCriteria> criteria,
                               int usageCount) {
-        return get(null, label, description, color, backgroundColor, usageCount);
+        return get(null, label, description, color, backgroundColor, criteria, usageCount);
     }
 
     @JsonCreator
@@ -41,8 +43,9 @@ public abstract class TagData implements IsSerializable {
                               @Nonnull String description,
                               @Nonnull Color color,
                               @Nonnull Color backgroundColor,
+                              @Nonnull ImmutableList<RootCriteria> criteria,
                               int usageCount) {
-        return new AutoValue_TagData(tagId, label, description, color, backgroundColor, usageCount);
+        return new AutoValue_TagData(tagId, label, description, color, backgroundColor, criteria, usageCount);
     }
 
     @Nonnull
@@ -65,5 +68,20 @@ public abstract class TagData implements IsSerializable {
     @Nonnull
     public abstract Color getBackgroundColor();
 
+    @Nonnull
+    public abstract ImmutableList<RootCriteria> getCriteria();
+
     public abstract int getUsageCount();
+
+    public TagData withCriteria(ImmutableList<RootCriteria> criteria) {
+        return get(_getTagId(),
+                   getLabel(),
+                   getDescription(),
+                   getColor(),
+                   getBackgroundColor(),
+                   criteria,
+                   getUsageCount());
+    }
+
+
 }

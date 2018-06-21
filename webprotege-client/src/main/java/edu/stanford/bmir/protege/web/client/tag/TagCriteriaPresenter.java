@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.tag;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.match.EntityCriteriaPresenter;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -43,7 +44,17 @@ public class TagCriteriaPresenter {
     public void setAvailableTags(@Nonnull List<String> availableTagLabels) {
         this.availableTagLabels.clear();
         this.availableTagLabels.addAll(availableTagLabels);
-        view.setAvailableTagNames(availableTagLabels);
+        view.setAvailableTagLabels(availableTagLabels);
+    }
+
+    @Nonnull
+    public Optional<String> getSelectedTagLabel() {
+        return view.getSelectedTagLabel();
+    }
+
+    @Nonnull
+    public Optional<? extends RootCriteria> getCriteria() {
+        return entityCriteriaPresenter.getCriteria();
     }
 
 }

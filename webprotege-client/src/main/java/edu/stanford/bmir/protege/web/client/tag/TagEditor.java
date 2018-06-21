@@ -142,6 +142,7 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
                                       descriptionField.getValue().trim(),
                                       Color.getWhite(),
                                       backgroundColor,
+                                      ImmutableList.of(),
                                       usage);
         return Optional.of(tagData);
     }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -116,17 +117,28 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
     }
 
     private void handleApplyChanges() {
+        getTagData().ifPresent(tagData -> {
+            dispatchServiceManager.execute(setProjectTags(projectId, tagData),
+                                           result -> nextPlace.ifPresent(placeController::goTo));
+        });
+    }
+
+    @Nonnull
+    private Optional<List<TagData>> getTagData() {
+        // Get data for entered project tags
         List<TagData> tagData = view.getTagData();
         Set<String> labels = new HashSet<>();
         for(TagData td : tagData) {
             boolean added = labels.add(td.getLabel());
             if(!added) {
                 view.showDuplicateTagAlert(td.getLabel());
-                return;
+                return Optional.empty();
             }
         }
-        dispatchServiceManager.execute(setProjectTags(projectId, tagData),
-                                       result -> nextPlace.ifPresent(placeController::goTo));
+        // Integrate criteria
+        List<TagData> tagDataWithCriteria = tagCriteriaListPresenter.augmentTagDataWithCriteria(tagData);
+        GWT.log(tagDataWithCriteria.toString());
+        return Optional.of(tagData);
     }
 
     private void handleCancelChanges() {
@@ -142,6 +154,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
         List<Tag> tags = result.getTags();
         view.setTags(tags, result.getTagUsage());
         tagCriteriaListPresenter.setAvailableTags(tags.stream().map(Tag::getLabel).collect(Collectors.toList()));
+        // TODO: Set criteria
     }
 
 
