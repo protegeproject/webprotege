@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsDeprecatedCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
@@ -50,6 +53,8 @@ public class TagRepositoryImpl_IT {
 
     private ProjectId projectId, projectId2;
 
+    private ImmutableList<RootCriteria> criteria;
+
     @Before
     public void setUp() throws Exception {
         client = createMongoClient();
@@ -62,18 +67,22 @@ public class TagRepositoryImpl_IT {
         tagId2 = TagId.getId("12345678-1234-1234-1234-123456789def");
         projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
         projectId2 = ProjectId.get("12345678-1234-1234-1234-123456789def");
+        RootCriteria rootCriteria = EntityIsDeprecatedCriteria.get();
+        criteria = ImmutableList.of(rootCriteria);
         tag = Tag.get(tagId,
                       projectId,
                       THE_TAG_LABEL,
                       THE_TAG_DESCRIPTION,
                       COLOR,
-                      BG_COLOR);
+                      BG_COLOR,
+                      criteria);
         tag2 = Tag.get(tagId2,
                        projectId2,
                        THE_TAG_LABEL,
                        THE_TAG_DESCRIPTION,
                        COLOR,
-                       BG_COLOR);
+                       BG_COLOR,
+                       criteria);
 
 
         repository.saveTag(tag);
@@ -126,7 +135,7 @@ public class TagRepositoryImpl_IT {
 
     @Test
     public void shouldUpdateTag() {
-        Tag updatedTag = Tag.get(tagId, projectId, "An updated label", THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
+        Tag updatedTag = Tag.get(tagId, projectId, "An updated label", THE_TAG_DESCRIPTION, COLOR, BG_COLOR, criteria);
         repository.saveTag(updatedTag);
         assertThat(getTagsCollectionSize(), is(1L));
         Optional<Tag> foundTag = repository.findTagByTagId(tagId);
@@ -137,7 +146,7 @@ public class TagRepositoryImpl_IT {
     public void shouldNotSaveTagWithDuplicateLabel() {
         try {
             TagId otherTagId = TagId.getId("1234abcd-abcd-abcd-abcd-123456789abc");
-            Tag otherTag = Tag.get(otherTagId, projectId, THE_TAG_LABEL, THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
+            Tag otherTag = Tag.get(otherTagId, projectId, THE_TAG_LABEL, THE_TAG_DESCRIPTION, COLOR, BG_COLOR, criteria);
             repository.saveTag(otherTag);
             fail("Inserted multiple documents");
         } catch (MongoWriteException e) {

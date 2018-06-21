@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.match.tag;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.match.criteria.EntityIsNotDeprecatedCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
@@ -38,7 +40,8 @@ public class Tag_Serialization_TestCase {
                           "The label",
                           "The description",
                           Color.getRGB(10, 20, 30),
-                          Color.getRGB(200, 210, 220));
+                          Color.getRGB(200, 210, 220),
+                          ImmutableList.of(EntityIsNotDeprecatedCriteria.get()));
         StringWriter sw = new StringWriter();
         objectMapper.writeValue(sw, tag);
         Tag readTag = objectMapper.readValue(new StringReader(sw.toString()), Tag.class);

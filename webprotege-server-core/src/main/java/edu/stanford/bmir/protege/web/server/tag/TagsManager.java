@@ -209,7 +209,8 @@ public class TagsManager {
                                                    tagData.getLabel(),
                                                    tagData.getDescription(),
                                                    tagData.getColor(),
-                                                   tagData.getBackgroundColor()
+                                                   tagData.getBackgroundColor(),
+                                                   tagData.getCriteria()
                                            ))
                                            .peek(tag -> {
                                                // Find the modified entities for this tag

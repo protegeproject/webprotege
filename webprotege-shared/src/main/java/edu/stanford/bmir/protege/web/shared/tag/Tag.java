@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -37,6 +39,8 @@ public abstract class Tag implements IsSerializable {
 
     private static final String BACKGROUND_COLOR = "backgroundColor";
 
+    private static final String CRITERIA = "criteria";
+
     /**
      * Creates a Tag.
      *
@@ -54,9 +58,10 @@ public abstract class Tag implements IsSerializable {
                           @Nonnull @JsonProperty(LABEL) String label,
                           @Nonnull @JsonProperty(DESCRIPTION) String description,
                           @Nonnull @JsonProperty(COLOR) Color color,
-                          @Nonnull @JsonProperty(BACKGROUND_COLOR) Color backgroundColor) {
+                          @Nonnull @JsonProperty(BACKGROUND_COLOR) Color backgroundColor,
+                          @Nonnull @JsonProperty(CRITERIA) ImmutableList<RootCriteria> criteria) {
         checkArgument(!label.isEmpty(), "Tag label cannot be empty");
-        return new AutoValue_Tag(tagId, projectId, label, description, color, backgroundColor);
+        return new AutoValue_Tag(tagId, projectId, label, description, color, backgroundColor, criteria);
     }
 
     /**
@@ -107,4 +112,6 @@ public abstract class Tag implements IsSerializable {
     @JsonProperty(BACKGROUND_COLOR)
     @Nonnull
     public abstract Color getBackgroundColor();
+
+    public abstract ImmutableList<RootCriteria> getCriteria();
 }

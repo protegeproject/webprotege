@@ -1,6 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import org.junit.Before;
@@ -35,16 +37,22 @@ public class Tag_TestCase {
 
     @Mock
     private Color backgroundColor;
+    
+    private ImmutableList<RootCriteria> criteria;
 
+    @Mock
+    private RootCriteria rootCriteria;
+    
     @Before
     public void setUp() {
-        tag = Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor);
+        criteria = ImmutableList.of(rootCriteria);
+        tag = Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor, criteria);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_tagId_IsNull() {
-        Tag.get(null, projectId, tagLabel, description, color, backgroundColor);
+        Tag.get(null, projectId, tagLabel, description, color, backgroundColor, criteria);
     }
 
     @Test
@@ -55,7 +63,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        Tag.get(tagId, null, tagLabel, description, color, backgroundColor);
+        Tag.get(tagId, null, tagLabel, description, color, backgroundColor, criteria);
     }
 
     @Test
@@ -66,7 +74,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_tagLabel_IsNull() {
-        Tag.get(tagId, projectId, null, description, color, backgroundColor);
+        Tag.get(tagId, projectId, null, description, color, backgroundColor, criteria);
     }
 
     @Test
@@ -77,7 +85,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_description_IsNull() {
-        Tag.get(tagId, projectId, tagLabel, null, color, backgroundColor);
+        Tag.get(tagId, projectId, tagLabel, null, color, backgroundColor, criteria);
     }
 
     @Test
@@ -88,7 +96,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_color_IsNull() {
-        Tag.get(tagId, projectId, tagLabel, description, null, backgroundColor);
+        Tag.get(tagId, projectId, tagLabel, description, null, backgroundColor, criteria);
     }
 
     @Test
@@ -99,7 +107,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_backgroundColor_IsNull() {
-        Tag.get(tagId, projectId, tagLabel, description, color, null);
+        Tag.get(tagId, projectId, tagLabel, description, color, null, criteria);
     }
 
     @Test
@@ -120,42 +128,42 @@ public class Tag_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(tag, is(Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor)));
+        assertThat(tag, is(Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor, criteria)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_tagId() {
-        assertThat(tag, is(not(Tag.get(mock(TagId.class), projectId, tagLabel, description, color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(mock(TagId.class), projectId, tagLabel, description, color, backgroundColor, criteria))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(tag, is(not(Tag.get(tagId, mock(ProjectId.class), tagLabel, description, color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, mock(ProjectId.class), tagLabel, description, color, backgroundColor, criteria))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_tagLabel() {
-        assertThat(tag, is(not(Tag.get(tagId, projectId, "String-c3bf64b2-a1f6-460b-9cbb-deb440eaefe3", description, color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, "String-c3bf64b2-a1f6-460b-9cbb-deb440eaefe3", description, color, backgroundColor, criteria))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_description() {
-        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, "String-5a51416b-66bd-4f1c-bbbc-ca20837cd576", color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, "String-5a51416b-66bd-4f1c-bbbc-ca20837cd576", color, backgroundColor, criteria))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_color() {
-        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, description, mock(Color.class), backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, description, mock(Color.class), backgroundColor, criteria))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_backgroundColor() {
-        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, description, color, mock(Color.class)))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, description, color, mock(Color.class), criteria))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(tag.hashCode(), is(Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor).hashCode()));
+        assertThat(tag.hashCode(), is(Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor, criteria).hashCode()));
     }
 
     @Test
