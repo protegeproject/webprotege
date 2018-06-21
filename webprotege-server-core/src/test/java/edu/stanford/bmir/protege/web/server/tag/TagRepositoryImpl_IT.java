@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.is;
  * Stanford Center for Biomedical Informatics Research
  * 18 Mar 2018
  */
-public class TagRepository_IT {
+public class TagRepositoryImpl_IT {
 
     private static final String THE_TAG_LABEL = "The tag label";
 
@@ -38,7 +38,7 @@ public class TagRepository_IT {
     private static final Color BG_COLOR = Color.getHex("#f0f0f0");
 
 
-    private TagRepository repository;
+    private TagRepositoryImpl repository;
 
     private MongoClient client;
 
@@ -53,7 +53,7 @@ public class TagRepository_IT {
         client = createMongoClient();
         Morphia morphia = createMorphia();
         Datastore datastore = morphia.createDatastore(client, getTestDbName());
-        repository = new TagRepository(datastore);
+        repository = new TagRepositoryImpl(datastore);
         repository.ensureIndexes();
 
         tagId = TagId.getId("12345678-1234-1234-1234-123456789abc");

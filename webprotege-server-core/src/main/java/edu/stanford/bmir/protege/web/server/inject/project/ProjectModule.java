@@ -39,6 +39,8 @@ import edu.stanford.bmir.protege.web.server.revision.RevisionManagerImpl;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreProvider;
 import edu.stanford.bmir.protege.web.server.shortform.*;
+import edu.stanford.bmir.protege.web.server.tag.TagRepository;
+import edu.stanford.bmir.protege.web.server.tag.TagRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchTriggeredHandler;
@@ -559,6 +561,12 @@ public class ProjectModule {
 
     @Provides
     MatchingEngine provideMatchingEngine(MatchingEngineImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    TagRepository provideTagRepository(TagRepositoryImpl impl) {
+        impl.ensureIndexes();
         return impl;
     }
 }
