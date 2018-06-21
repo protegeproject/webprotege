@@ -1,26 +1,28 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import com.mongodb.DuplicateKeyException;
-import com.mongodb.MongoClient;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.*;
+import com.mongodb.client.MongoDatabase;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.color.Color;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMongoClient;
-import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.createMorphia;
 import static edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils.getTestDbName;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 
 /**
  * Matthew Horridge
@@ -42,28 +44,36 @@ public class TagRepositoryImpl_IT {
 
     private MongoClient client;
 
-    private Tag tag;
+    private Tag tag, tag2;
 
-    private TagId tagId;
+    private TagId tagId, tagId2;
 
-    private ProjectId projectId;
+    private ProjectId projectId, projectId2;
 
     @Before
     public void setUp() throws Exception {
         client = createMongoClient();
-        Morphia morphia = createMorphia();
-        Datastore datastore = morphia.createDatastore(client, getTestDbName());
-        repository = new TagRepositoryImpl(datastore);
+        MongoDatabase database = client.getDatabase(getTestDbName());
+        ObjectMapper objectMapper = new ObjectMapperProvider(new OWLDataFactoryImpl()).get();
+        repository = new TagRepositoryImpl(database, objectMapper);
         repository.ensureIndexes();
 
         tagId = TagId.getId("12345678-1234-1234-1234-123456789abc");
+        tagId2 = TagId.getId("12345678-1234-1234-1234-123456789def");
         projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
+        projectId2 = ProjectId.get("12345678-1234-1234-1234-123456789def");
         tag = Tag.get(tagId,
                       projectId,
                       THE_TAG_LABEL,
                       THE_TAG_DESCRIPTION,
                       COLOR,
                       BG_COLOR);
+        tag2 = Tag.get(tagId2,
+                       projectId2,
+                       THE_TAG_LABEL,
+                       THE_TAG_DESCRIPTION,
+                       COLOR,
+                       BG_COLOR);
 
 
         repository.saveTag(tag);
@@ -88,6 +98,12 @@ public class TagRepositoryImpl_IT {
     public void shouldSaveTag() {
         long count = getTagsCollectionSize();
         assertThat(count, is(1L));
+    }
+
+    @Test
+    public void shouldSaveTags() {
+        repository.saveTags(Arrays.asList(tag, tag2));
+        assertThat(getTagsCollectionSize(), is(2L));
     }
 
     @Test
@@ -117,10 +133,17 @@ public class TagRepositoryImpl_IT {
         assertThat(foundTag, is(Optional.of(updatedTag)));
     }
 
-    @Test(expected = DuplicateKeyException.class)
+    @Test
     public void shouldNotSaveTagWithDuplicateLabel() {
-        TagId otherTagId = TagId.getId("1234abcd-abcd-abcd-abcd-123456789abc");
-        Tag otherTag = Tag.get(otherTagId, projectId, THE_TAG_LABEL, THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
-        repository.saveTag(otherTag);
+        try {
+            TagId otherTagId = TagId.getId("1234abcd-abcd-abcd-abcd-123456789abc");
+            Tag otherTag = Tag.get(otherTagId, projectId, THE_TAG_LABEL, THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
+            repository.saveTag(otherTag);
+            fail("Inserted multiple documents");
+        } catch (MongoWriteException e) {
+            WriteError error = e.getError();
+            assertThat(error.getCategory(), is(ErrorCategory.DUPLICATE_KEY));
+        }
+
     }
 }
