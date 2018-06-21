@@ -8,7 +8,7 @@
             margin-right: 5px;
             margin-bottom: 20px;
             padding: 2px;
-            box-shadow: 0 2px 3px #d0d0d0;
+            box-shadow: 0 2px 3px #a0a0a0;
             background-color: white;
             display: flex;
             flex-direction: column;
