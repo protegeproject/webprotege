@@ -19,7 +19,8 @@ public interface TagCriteriaListView extends IsWidget {
 
     void clearView();
 
-    void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container);
+    void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container,
+                                     boolean scrollIntoView);
 
     void removeTagCriteriaViewContainer(int viewContainerIndex);
 }

@@ -52,8 +52,12 @@ public class TagCriteriaListViewImpl extends Composite implements TagCriteriaLis
     }
 
     @Override
-    public void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container) {
+    public void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container,
+                                            boolean scrollIntoView) {
         tagCriteriaListContainer.add(container);
+        if (scrollIntoView) {
+            addButton.getElement().scrollIntoView();
+        }
     }
 
     @Override

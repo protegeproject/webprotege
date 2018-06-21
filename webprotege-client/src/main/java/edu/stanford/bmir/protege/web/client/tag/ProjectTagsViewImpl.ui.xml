@@ -4,16 +4,37 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
-        .outer {
-            height: 90%;
-        }
 
-        .main {
+
+        .outerMost {
+            position:       absolute;
+            top:            0;
+            bottom:         0;
+            left:           0;
+            right:          0;
             display:        flex;
             flex-direction: column;
-            align-items:    stretch;
-            flex-grow:      1;
-            flex-shrink:    1;
+
+        }
+
+        .content {
+            flex-grow:   1;
+            flex-shrink: 1;
+            overflow-y:  auto;
+        }
+
+        .topBar {
+            flex-grow:   0;
+            flex-shrink: 0;
+        }
+
+        .inner {
+            margin-top:    10px;
+            margin-bottom: 10px;
+            flex-grow:     1;
+            flex-shrink:   1;
+            overflow-y:    auto;
+            padding: 20px 20px;
         }
 
         .label {
@@ -21,59 +42,57 @@
             flex-shrink: 0;
         }
 
-        .tabPanel {
-            height: 600px;
-        }
-
-        .tagsEditorContainer {
-            overflow-y: auto;
-        }
-
         .criteriaEditorContainer {
             border:           1px solid #e0e0e0;
             overflow-y:       auto;
             background-color: #fafaff;
         }
+
+        .buttonBarContainer {
+            flex-grow:   0;
+            flex-shrink: 0;
+        }
+
+        .buttonBar {
+            background-color: #f0f0f0;
+            border-top:       1px solid #e0e0e0;
+            padding:          5px;
+            display:          flex;
+            flex-direction:   row;
+            justify-content:  flex-end;
+        }
     </ui:style>
-    <g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.laf.topBar}">
+    <g:HTMLPanel addStyleNames="{style.outerMost}">
+        <g:HTMLPanel addStyleNames="{wp.laf.topBar} {style.topBar}">
             <g:HTMLPanel addStyleNames="{wp.laf.topBarLogo}"/>
             <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
                 <g:Label ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
 
-        <g:HTMLPanel addStyleNames="{wp.settings.outer} {style.outer}">
-            <g:HTMLPanel addStyleNames="{wp.settings.inner}">
-                <g:HTMLPanel addStyleNames="{wp.settings.content}">
-                    <g:Label text="{msg.tags_projectTagsTitle}" addStyleNames="{wp.settings.title} {style.label}"/>
-                    <g:HTMLPanel addStyleNames="{style.main}">
-                        <g:TabLayoutPanel barUnit='EM' barHeight='3' addStyleNames="{style.tabPanel}">
-                            <g:tab>
-                                <g:header size="7">Tags</g:header>
-                                <g:HTMLPanel addStyleNames="{style.tagsEditorContainer}">
-                                    <editor:ValueListEditor ui:field="tagsEditor" enabled="true"/>
-                                </g:HTMLPanel>
-                            </g:tab>
-                            <g:tab>
-                                <g:header size="7">Assignment</g:header>
-                                <g:HTMLPanel addStyleNames="{style.criteriaEditorContainer}">
-                                    <g:SimplePanel ui:field="tagCriteriaContainer"/>
-                                    <g:HTMLPanel/>
-                                </g:HTMLPanel>
-                            </g:tab>
-                        </g:TabLayoutPanel>
+        <g:HTMLPanel addStyleNames="{style.content}">
+                <g:HTMLPanel addStyleNames="{wp.settings.inner} {style.inner}">
+                    <g:Label text="{msg.tags_projectTagsTitle}"
+                             addStyleNames="{wp.settings.title} {style.label}"/>
+                    <editor:ValueListEditor ui:field="tagsEditor" enabled="true"/>
+                </g:HTMLPanel>
+                <g:HTMLPanel addStyleNames="{wp.settings.inner} {style.inner}">
+                    <g:Label text="Tag Assignment" addStyleNames="{wp.settings.title} {style.label}"/>
+                    <g:HTMLPanel addStyleNames="{style.criteriaEditorContainer}">
+                        <g:SimplePanel ui:field="tagCriteriaContainer"/>
                     </g:HTMLPanel>
                 </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{wp.settings.buttonBar}">
-                    <g:Button ui:field="cancelButton" text="Cancel"
-                              addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.escapeButton}"/>
-                    <g:Button ui:field="applyButton" text="Apply"
-                              addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.acceptButton}"/>
-                </g:HTMLPanel>
+        </g:HTMLPanel>
 
+        <g:HTMLPanel addStyleNames="{style.buttonBarContainer}">
+            <g:HTMLPanel addStyleNames="{style.buttonBar}">
+                <g:Button ui:field="cancelButton" text="Cancel"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.escapeButton}"/>
+                <g:Button ui:field="applyButton" text="Apply"
+                          addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.acceptButton}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
+
 
     </g:HTMLPanel>
 </ui:UiBinder>

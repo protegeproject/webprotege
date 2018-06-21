@@ -62,7 +62,7 @@ public class TagCriteriaListPresenter {
         container.setRemoveHandler(() -> handleRemove(presenter));
         presenter.start(container.getViewContainer());
         presenter.setAvailableTags(availableTagLabels);
-        view.addTagCriteriaViewContainer(container);
+        view.addTagCriteriaViewContainer(container, true);
     }
 
     private void handleRemove(TagCriteriaPresenter presenter) {
