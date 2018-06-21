@@ -45,7 +45,7 @@
         .criteriaEditorContainer {
             border:           1px solid #e0e0e0;
             overflow-y:       auto;
-            background-color: #fafaff;
+            background-color: literal("var(--inlay-panel--alternate-background-color)");
         }
 
         .buttonBarContainer {
