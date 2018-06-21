@@ -58,7 +58,7 @@ public class TagRepositoryImpl_IT {
 
         tagId = TagId.getId("12345678-1234-1234-1234-123456789abc");
         projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
-        tag = new Tag(tagId,
+        tag = Tag.get(tagId,
                       projectId,
                       THE_TAG_LABEL,
                       THE_TAG_DESCRIPTION,
@@ -110,7 +110,7 @@ public class TagRepositoryImpl_IT {
 
     @Test
     public void shouldUpdateTag() {
-        Tag updatedTag = new Tag(tagId, projectId, "An updated label", THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
+        Tag updatedTag = Tag.get(tagId, projectId, "An updated label", THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
         repository.saveTag(updatedTag);
         assertThat(getTagsCollectionSize(), is(1L));
         Optional<Tag> foundTag = repository.findTagByTagId(tagId);
@@ -120,7 +120,7 @@ public class TagRepositoryImpl_IT {
     @Test(expected = DuplicateKeyException.class)
     public void shouldNotSaveTagWithDuplicateLabel() {
         TagId otherTagId = TagId.getId("1234abcd-abcd-abcd-abcd-123456789abc");
-        Tag otherTag = new Tag(otherTagId, projectId, THE_TAG_LABEL, THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
+        Tag otherTag = Tag.get(otherTagId, projectId, THE_TAG_LABEL, THE_TAG_DESCRIPTION, COLOR, BG_COLOR);
         repository.saveTag(otherTag);
     }
 }

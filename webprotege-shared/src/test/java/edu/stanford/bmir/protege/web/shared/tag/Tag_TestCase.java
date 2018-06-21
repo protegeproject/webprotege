@@ -38,13 +38,13 @@ public class Tag_TestCase {
 
     @Before
     public void setUp() {
-        tag = new Tag(tagId, projectId, tagLabel, description, color, backgroundColor);
+        tag = Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_tagId_IsNull() {
-        new Tag(null, projectId, tagLabel, description, color, backgroundColor);
+        Tag.get(null, projectId, tagLabel, description, color, backgroundColor);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new Tag(tagId, null, tagLabel, description, color, backgroundColor);
+        Tag.get(tagId, null, tagLabel, description, color, backgroundColor);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_tagLabel_IsNull() {
-        new Tag(tagId, projectId, null, description, color, backgroundColor);
+        Tag.get(tagId, projectId, null, description, color, backgroundColor);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_description_IsNull() {
-        new Tag(tagId, projectId, tagLabel, null, color, backgroundColor);
+        Tag.get(tagId, projectId, tagLabel, null, color, backgroundColor);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_color_IsNull() {
-        new Tag(tagId, projectId, tagLabel, description, null, backgroundColor);
+        Tag.get(tagId, projectId, tagLabel, description, null, backgroundColor);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class Tag_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_backgroundColor_IsNull() {
-        new Tag(tagId, projectId, tagLabel, description, color, null);
+        Tag.get(tagId, projectId, tagLabel, description, color, null);
     }
 
     @Test
@@ -120,42 +120,42 @@ public class Tag_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(tag, is(new Tag(tagId, projectId, tagLabel, description, color, backgroundColor)));
+        assertThat(tag, is(Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_tagId() {
-        assertThat(tag, is(not(new Tag(mock(TagId.class), projectId, tagLabel, description, color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(mock(TagId.class), projectId, tagLabel, description, color, backgroundColor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(tag, is(not(new Tag(tagId, mock(ProjectId.class), tagLabel, description, color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, mock(ProjectId.class), tagLabel, description, color, backgroundColor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_tagLabel() {
-        assertThat(tag, is(not(new Tag(tagId, projectId, "String-c3bf64b2-a1f6-460b-9cbb-deb440eaefe3", description, color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, "String-c3bf64b2-a1f6-460b-9cbb-deb440eaefe3", description, color, backgroundColor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_description() {
-        assertThat(tag, is(not(new Tag(tagId, projectId, tagLabel, "String-5a51416b-66bd-4f1c-bbbc-ca20837cd576", color, backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, "String-5a51416b-66bd-4f1c-bbbc-ca20837cd576", color, backgroundColor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_color() {
-        assertThat(tag, is(not(new Tag(tagId, projectId, tagLabel, description, mock(Color.class), backgroundColor))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, description, mock(Color.class), backgroundColor))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_backgroundColor() {
-        assertThat(tag, is(not(new Tag(tagId, projectId, tagLabel, description, color, mock(Color.class)))));
+        assertThat(tag, is(not(Tag.get(tagId, projectId, tagLabel, description, color, mock(Color.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(tag.hashCode(), is(new Tag(tagId, projectId, tagLabel, description, color, backgroundColor).hashCode()));
+        assertThat(tag.hashCode(), is(Tag.get(tagId, projectId, tagLabel, description, color, backgroundColor).hashCode()));
     }
 
     @Test

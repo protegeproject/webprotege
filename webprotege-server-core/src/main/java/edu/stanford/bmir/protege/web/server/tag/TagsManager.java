@@ -202,7 +202,7 @@ public class TagsManager {
                               .forEach(tagRepository::deleteTag);
             // Set fresh tags
             List<Tag> tags = newProjectTags.stream()
-                                           .map(tagData -> new Tag(
+                                           .map(tagData -> Tag.get(
                                                    tagData.getTagId()
                                                           .orElse(createTagId()),
                                                    projectId,

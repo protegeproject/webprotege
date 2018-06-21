@@ -48,7 +48,7 @@ public class TagRepositoryImpl implements TagRepository {
     public void deleteTag(@Nonnull TagId tagId) {
         checkNotNull(tagId);
         Query<Tag> query =  datastore.createQuery(Tag.class)
-                                     .field(Tag.TAG_ID).equal(tagId);
+                                     .field(Tag.ID).equal(tagId);
         datastore.delete(query);
     }
 
@@ -63,7 +63,7 @@ public class TagRepositoryImpl implements TagRepository {
     public Optional<Tag> findTagByTagId(@Nonnull TagId tagId) {
         return Optional.ofNullable(
                 datastore.createQuery(Tag.class)
-                         .field(Tag.TAG_ID).equal(tagId)
+                         .field(Tag.ID).equal(tagId)
                          .get()
         );
     }
