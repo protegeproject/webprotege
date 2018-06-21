@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.tag;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
@@ -31,10 +32,11 @@ public abstract class TagData implements IsSerializable {
                               @Nonnull Color color,
                               @Nonnull Color backgroundColor,
                               int usageCount) {
-        return new AutoValue_TagData(Optional.empty(), label, description, color, backgroundColor, usageCount);
+        return get(null, label, description, color, backgroundColor, usageCount);
     }
 
-    public static TagData get(@Nonnull Optional<TagId> tagId,
+    @JsonCreator
+    public static TagData get(@Nullable TagId tagId,
                               @Nonnull String label,
                               @Nonnull String description,
                               @Nonnull Color color,
@@ -44,7 +46,12 @@ public abstract class TagData implements IsSerializable {
     }
 
     @Nonnull
-    public abstract Optional<TagId> getTagId();
+    public Optional<TagId> getTagId() {
+        return Optional.ofNullable(_getTagId());
+    }
+
+    @Nullable
+    protected abstract TagId _getTagId();
 
     @Nonnull
     public abstract String getLabel();

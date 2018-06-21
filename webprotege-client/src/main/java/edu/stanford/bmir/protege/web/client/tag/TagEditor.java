@@ -137,7 +137,7 @@ public class TagEditor extends Composite implements ValueEditor<TagData>
         if(getTagLabel().isEmpty()) {
             return Optional.empty();
         }
-        TagData tagData = TagData.get(tagId,
+        TagData tagData = TagData.get(tagId.orElse(null),
                                       getTagLabel(),
                                       descriptionField.getValue().trim(),
                                       Color.getWhite(),

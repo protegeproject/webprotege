@@ -129,7 +129,7 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
     @Override
     public void setTags(@Nonnull List<Tag> tags, Map<TagId, Integer> usageCount) {
         List<TagData> tagData = tags.stream()
-                                    .map(tag -> TagData.get(Optional.of(tag.getTagId()),
+                                    .map(tag -> TagData.get(tag.getTagId(),
                                                             tag.getLabel(),
                                                             tag.getDescription(),
                                                             tag.getColor(),
