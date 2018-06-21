@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import com.mongodb.BasicDBObject;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -21,14 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Represents a tag in a project.  Tags are used to tag entities with information that can be used for
  * development and project management.
  */
-//@Entity(value = "Tags", noClassnameStored = true)
-//@Indexes(
-//        {
-//                // Note, in addition to the unique indexes here, tag ids are globally unique
-//                // Labels are unique within a project
-//                @Index(fields = {@Field(PROJECT_ID), @Field(TAG_LABEL)}, options = @IndexOptions(unique = true))
-//        }
-//)
 @AutoValue
 @GwtCompatible(serializable = true)
 public abstract class Tag implements IsSerializable {
