@@ -10,7 +10,7 @@
             justify-content: space-between;
             flex-direction: row;
             margin-bottom: 2px;
-            padding-bottom: 1px;
+            padding: 2px;
             background-color: #f0f0f0;
             flex-grow: 1;
             flex-shrink: 1;
