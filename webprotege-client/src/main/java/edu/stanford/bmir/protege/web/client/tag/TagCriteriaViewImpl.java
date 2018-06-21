@@ -44,12 +44,14 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
     public void setAvailableTagNames(@Nonnull List<String> tagNames) {
         String sel = availableTagsField.getSelectedValue();
         availableTagsField.clear();
+        availableTagsField.addItem("");
         int index = -1;
         for(int i = 0; i < tagNames.size(); i++) {
             String tagName = tagNames.get(i);
             availableTagsField.addItem(tagName);
             if(tagName.equals(sel)) {
-                index = i;
+                // Off set because of empty tag
+                index = i + 1;
             }
         }
         if(index != -1) {
@@ -60,6 +62,7 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
     @Nonnull
     @Override
     public Optional<String> getSelectedTagName() {
-        return Optional.ofNullable(availableTagsField.getSelectedValue());
+        return Optional.ofNullable(availableTagsField.getSelectedValue())
+                       .filter(tn -> !tn.isEmpty());
     }
 }
