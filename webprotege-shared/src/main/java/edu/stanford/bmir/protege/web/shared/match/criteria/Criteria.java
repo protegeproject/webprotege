@@ -7,6 +7,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * Stanford Center for Biomedical Informatics Research
  * 12 Jun 2018
  */
-public interface Criteria {
+public interface Criteria extends IsSerializable {
 
 }

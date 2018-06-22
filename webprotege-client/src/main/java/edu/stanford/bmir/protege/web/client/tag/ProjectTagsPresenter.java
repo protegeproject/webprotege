@@ -118,6 +118,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
 
     private void handleApplyChanges() {
         getTagData().ifPresent(tagData -> {
+            GWT.log("[ProjectTagsPresenter] Setting Project Tags: " + tagData);
             dispatchServiceManager.execute(setProjectTags(projectId, tagData),
                                            result -> nextPlace.ifPresent(placeController::goTo));
         });
@@ -138,7 +139,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
         // Integrate criteria
         List<TagData> tagDataWithCriteria = tagCriteriaListPresenter.augmentTagDataWithCriteria(tagData);
         GWT.log(tagDataWithCriteria.toString());
-        return Optional.of(tagData);
+        return Optional.of(tagDataWithCriteria);
     }
 
     private void handleCancelChanges() {

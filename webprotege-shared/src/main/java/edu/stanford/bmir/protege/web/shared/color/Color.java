@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.shared.color;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
 import javax.annotation.Nonnull;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padStart;
@@ -22,17 +22,19 @@ import static java.lang.Math.abs;
  *
  * A simple utility class for representing colors (since Java Color is not GWT compatible)
  */
-public class Color implements IsSerializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class Color implements IsSerializable {
 
     private static final int MIN = 0;
 
     private static final int MAX = 255;
 
-    private int red;
+    private static final String RED = "red";
 
-    private int green;
+    private static final String GREEN = "green";
 
-    private int blue;
+    private static final String BLUE = "blue";
 
     /**
      * Constructs a Color using RBG values.
@@ -40,17 +42,11 @@ public class Color implements IsSerializable {
      * @param green The green component between 0-255 inclusive
      * @param blue The blue component between 0-255 inclusive
      */
-    public Color(int red, int green, int blue) {
+    public static Color get(int red, int green, int blue) {
         checkArgument(red >= MIN && red <= MAX, "Invalid value specified for red component");
-        this.red = red;
         checkArgument(green >= MIN && green <= MAX, "Invalid value specified for red component");
-        this.green = green;
         checkArgument(blue >= MIN && blue <= MAX, "Invalid value specified for red component");
-        this.blue = blue;
-    }
-
-    @GwtSerializationConstructor
-    private Color() {
+        return new AutoValue_Color(red, green, blue);
     }
 
     /**
@@ -62,7 +58,7 @@ public class Color implements IsSerializable {
      * @throws IllegalArgumentException if any values are out of range.
      */
     public static Color getRGB(int red, int green, int blue) {
-        return new Color(red, green, blue);
+        return get(red, green, blue);
     }
 
     /**
@@ -102,7 +98,7 @@ public class Color implements IsSerializable {
         checkArgument(red.length() == 2, "Invalid length for red hex component");
         checkArgument(green.length() == 2, "Invalid length for green hex component");
         checkArgument(blue.length() == 2, "Invalid length for blue hex component");
-        return new Color(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16));
+        return get(parseInt(red, 16), parseInt(green, 16), parseInt(blue, 16));
     }
 
     /**
@@ -169,25 +165,19 @@ public class Color implements IsSerializable {
      * Gets the red component
      * @return An integer value representing the red component (0-255)
      */
-    public int getRed() {
-        return red;
-    }
+    public abstract int getRed();
     
     /**
      * Gets the green component
      * @return An integer value representing the green component (0-255)
      */
-    public int getGreen() {
-        return green;
-    }
+    public abstract int getGreen();
 
     /**
      * Gets the blue component
      * @return An integer value representing the blue component (0-255)
      */
-    public int getBlue() {
-        return blue;
-    }
+    public abstract int getBlue();
 
     /**
      * Gets the Hex RGB value
@@ -195,42 +185,13 @@ public class Color implements IsSerializable {
     @Nonnull
     @JsonValue
     public String getHex() {
-        String r = pad(toHexString(red));
-        String g = pad(toHexString(green));
-        String b = pad(toHexString(blue));
+        String r = pad(toHexString(getRed()));
+        String g = pad(toHexString(getGreen()));
+        String b = pad(toHexString(getBlue()));
         return "#" + r + g + b;
     }
 
     private static String pad(String hexValue) {
         return padStart(hexValue, 2, '0');
-    }
-
-    @Override
-    public String toString() {
-        return toStringHelper("Color")
-                .add("r", red)
-                .add("g", green)
-                .add("b", blue)
-                .add("hex", getHex())
-                .toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return red * 3 + green * 31 + blue * 51;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof Color)) {
-            return false;
-        }
-        Color other = (Color) obj;
-        return this.red == other.red
-                && this.green == other.green
-                && this.blue == other.blue;
     }
 }

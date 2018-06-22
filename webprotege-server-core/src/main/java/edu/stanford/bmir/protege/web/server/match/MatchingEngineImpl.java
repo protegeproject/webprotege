@@ -40,15 +40,15 @@ public class MatchingEngineImpl implements MatchingEngine {
     public Stream<OWLEntity> match(@Nonnull Criteria criteria) {
         Matcher<OWLEntity> matcher = getMatcher(criteria);
         return rootOntology.getSignature(Imports.INCLUDED)
-                .stream()
-                .filter(matcher::matches);
+                           .stream()
+                           .filter(matcher::matches);
     }
 
     @Override
     public Stream<OWLEntity> matchAny(@Nonnull ImmutableList<? extends Criteria> criteria) {
         ImmutableList<Matcher<OWLEntity>> matchers = criteria.stream()
-                                                            .map(this::getMatcher)
-                                                            .collect(toImmutableList());
+                                                             .map(this::getMatcher)
+                                                             .collect(toImmutableList());
         OrMatcher<OWLEntity> orMatcher = new OrMatcher<>(matchers);
         return rootOntology.getSignature(Imports.INCLUDED)
                            .stream()
@@ -58,6 +58,13 @@ public class MatchingEngineImpl implements MatchingEngine {
     @Override
     public boolean matches(@Nonnull OWLEntity entity, @Nonnull Criteria criteria) {
         return getMatcher(criteria).matches(entity);
+    }
+
+    @Override
+    public boolean matchesAny(@Nonnull OWLEntity entity, @Nonnull ImmutableList<? extends Criteria> criteria) {
+        return criteria.stream()
+                       .map(this::getMatcher)
+                       .anyMatch(c -> c.matches(entity));
     }
 
     private Matcher<OWLEntity> getMatcher(@Nonnull Criteria rootCriteria) {

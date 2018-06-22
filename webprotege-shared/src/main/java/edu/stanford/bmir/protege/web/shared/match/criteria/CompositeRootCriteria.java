@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.match.criteria;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
@@ -16,22 +18,30 @@ import javax.annotation.Nonnull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
+@JsonTypeName("CompositeCriteria")
 public abstract class CompositeRootCriteria implements RootCriteria {
 
+    private static final String MATCH_TYPE = "matchType";
+
+    private static final String CRITERIA = "criteria";
+
+    @JsonProperty(CRITERIA)
     @Nonnull
     public abstract ImmutableList<? extends RootCriteria> getRootCriteria();
 
     @JsonIgnore
     protected abstract int getMultiMatchTypeOrdinal();
 
+    @JsonProperty(MATCH_TYPE)
     @Nonnull
     public MultiMatchType getMatchType() {
         return MultiMatchType.values()[getMultiMatchTypeOrdinal()];
     }
 
 
-    public static CompositeRootCriteria get(@Nonnull ImmutableList<? extends RootCriteria> rootCriteria,
-                                            @Nonnull MultiMatchType matchType) {
+    @JsonCreator
+    public static CompositeRootCriteria get(@Nonnull @JsonProperty(CRITERIA) ImmutableList<? extends RootCriteria> rootCriteria,
+                                            @Nonnull @JsonProperty(MATCH_TYPE) MultiMatchType matchType) {
         return new AutoValue_CompositeRootCriteria(rootCriteria, matchType.ordinal());
     }
 

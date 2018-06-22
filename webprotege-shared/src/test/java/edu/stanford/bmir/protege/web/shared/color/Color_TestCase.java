@@ -25,7 +25,7 @@ public class Color_TestCase {
 
     @Before
     public void setUp() {
-        color = new Color(red, green, blue);
+        color = Color.get(red, green, blue);
     }
 
     @Test
@@ -56,27 +56,27 @@ public class Color_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(color, is(new Color(red, green, blue)));
+        assertThat(color, is(Color.get(red, green, blue)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_red() {
-        assertThat(color, is(not(new Color(4, green, blue))));
+        assertThat(color, is(not(Color.get(4, green, blue))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_green() {
-        assertThat(color, is(not(new Color(red, 5, blue))));
+        assertThat(color, is(not(Color.get(red, 5, blue))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_blue() {
-        assertThat(color, is(not(new Color(red, green, 6))));
+        assertThat(color, is(not(Color.get(red, green, 6))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(color.hashCode(), is(new Color(red, green, blue).hashCode()));
+        assertThat(color.hashCode(), is(Color.get(red, green, blue).hashCode()));
     }
 
     @Test

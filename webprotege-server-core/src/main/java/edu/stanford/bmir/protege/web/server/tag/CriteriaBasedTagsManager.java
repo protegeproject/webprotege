@@ -1,17 +1,15 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,51 +22,42 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class CriteriaBasedTagsManager {
 
+
     @Nonnull
-    private final Map<Criteria, TagId> criteria2TagMap = new ConcurrentHashMap<>();
+    private final ProjectId projectId;
+
+    @Nonnull
+    private final TagRepository tagRepository;
 
     @Nonnull
     private final MatchingEngine matchingEngine;
 
     @Inject
-    public CriteriaBasedTagsManager(@Nonnull MatchingEngine matchingEngine) {
+    public CriteriaBasedTagsManager(@Nonnull ProjectId projectId, @Nonnull TagRepository tagRepository,
+                                    @Nonnull MatchingEngine matchingEngine) {
+        this.projectId = projectId;
+        this.tagRepository = tagRepository;
         this.matchingEngine = matchingEngine;
     }
 
-    public void putCriteria(@Nonnull Criteria criteria,
-                            @Nonnull TagId tagId) {
-        criteria2TagMap.put(checkNotNull(criteria), checkNotNull(tagId));
-    }
-
     public Stream<TagId> getTagsForEntity(@Nonnull OWLEntity entity) {
-        return criteria2TagMap.entrySet().stream()
-                              .map(entry -> {
-                                  Criteria criteria = entry.getKey();
-                                  TagId tagId = entry.getValue();
-                                  boolean matches = matchingEngine.matches(entity, criteria);
-                                  if (matches) {
-                                      return tagId;
-                                  }
-                                  else {
-                                      return null;
-                                  }
-                              }).filter(Objects::nonNull);
+        return tagRepository.findTagsByProjectId(projectId)
+                     .stream()
+                     .map(tag -> {
+                         if(matchingEngine.matchesAny(entity, tag.getCriteria())) {
+                             return tag;
+                         }
+                         else {
+                             return null;
+                         }
+                     })
+                     .filter(Objects::nonNull)
+                     .map(Tag::getTagId);
     }
 
     public Stream<OWLEntity> getTaggedEntities(@Nonnull TagId tagId) {
-        ImmutableList<Criteria> tagCriteria = criteria2TagMap.entrySet().stream()
-                                                                    .map(entry -> {
-                                                                        Criteria criteria = entry.getKey();
-                                                                        TagId criteriaTagId = entry.getValue();
-                                                                        if (criteriaTagId.equals(tagId)) {
-                                                                            return criteria;
-                                                                        }
-                                                                        else {
-                                                                            return null;
-                                                                        }
-                                                                    })
-                                                                    .filter(Objects::nonNull)
-                                                                    .collect(ImmutableList.toImmutableList());
-        return matchingEngine.matchAny(tagCriteria);
+        return tagRepository.findTagByTagId(tagId)
+                     .map(tag -> matchingEngine.matchAny(tag.getCriteria()))
+                     .orElse(Stream.empty());
     }
 }

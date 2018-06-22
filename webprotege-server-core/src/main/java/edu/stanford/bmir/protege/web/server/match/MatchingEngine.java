@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -28,4 +29,6 @@ public interface MatchingEngine {
      * Determines whether the specified entity matches the specified criteria
      */
     boolean matches(@Nonnull OWLEntity entity, @Nonnull Criteria criteria);
+
+    boolean matchesAny(@Nonnull OWLEntity entity, @Nonnull ImmutableList<? extends Criteria> criteria);
 }
