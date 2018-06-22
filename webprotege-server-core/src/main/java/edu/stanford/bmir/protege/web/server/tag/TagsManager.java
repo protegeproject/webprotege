@@ -1,18 +1,12 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
 import com.google.common.collect.*;
-import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.match.AnnotationPresence;
-import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.*;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,7 +120,7 @@ public class TagsManager {
         try {
             readLock.lock();
             if (projectTags == null) {
-                projectTags = tagRepository.findTagsByProjectId(projectId).stream()
+                projectTags = tagRepository.findTags().stream()
                                            .collect(toMap(Tag::getTagId, tag -> tag));
             }
             return projectTags;

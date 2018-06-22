@@ -41,7 +41,7 @@ public class CriteriaBasedTagsManager {
     }
 
     public Stream<TagId> getTagsForEntity(@Nonnull OWLEntity entity) {
-        return tagRepository.findTagsByProjectId(projectId)
+        return tagRepository.findTags()
                      .stream()
                      .map(tag -> {
                          if(matchingEngine.matchesAny(entity, tag.getCriteria())) {

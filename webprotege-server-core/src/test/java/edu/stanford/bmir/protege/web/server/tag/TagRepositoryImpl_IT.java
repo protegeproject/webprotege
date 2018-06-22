@@ -57,16 +57,17 @@ public class TagRepositoryImpl_IT {
 
     @Before
     public void setUp() throws Exception {
-        client = createMongoClient();
-        MongoDatabase database = client.getDatabase(getTestDbName());
-        ObjectMapper objectMapper = new ObjectMapperProvider(new OWLDataFactoryImpl()).get();
-        repository = new TagRepositoryImpl(database, objectMapper);
-        repository.ensureIndexes();
-
         tagId = TagId.getId("12345678-1234-1234-1234-123456789abc");
         tagId2 = TagId.getId("12345678-1234-1234-1234-123456789def");
         projectId = ProjectId.get("12345678-1234-1234-1234-123456789abc");
         projectId2 = ProjectId.get("12345678-1234-1234-1234-123456789def");
+
+        client = createMongoClient();
+        MongoDatabase database = client.getDatabase(getTestDbName());
+        ObjectMapper objectMapper = new ObjectMapperProvider(new OWLDataFactoryImpl()).get();
+        repository = new TagRepositoryImpl(projectId, database, objectMapper);
+        repository.ensureIndexes();
+
         RootCriteria rootCriteria = EntityIsDeprecatedCriteria.get();
         criteria = ImmutableList.of(rootCriteria);
         tag = Tag.get(tagId,
@@ -123,7 +124,7 @@ public class TagRepositoryImpl_IT {
 
     @Test
     public void shouldFindTagsByProjectId() {
-        List<Tag> theTags = repository.findTagsByProjectId(projectId);
+        List<Tag> theTags = repository.findTags();
         assertThat(theTags, hasItems(tag));
     }
 
