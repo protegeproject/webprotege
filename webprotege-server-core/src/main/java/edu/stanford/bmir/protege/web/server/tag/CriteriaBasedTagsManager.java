@@ -22,10 +22,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class CriteriaBasedTagsManager {
 
-
-    @Nonnull
-    private final ProjectId projectId;
-
     @Nonnull
     private final TagRepository tagRepository;
 
@@ -33,11 +29,10 @@ public class CriteriaBasedTagsManager {
     private final MatchingEngine matchingEngine;
 
     @Inject
-    public CriteriaBasedTagsManager(@Nonnull ProjectId projectId, @Nonnull TagRepository tagRepository,
+    public CriteriaBasedTagsManager(@Nonnull TagRepository tagRepository,
                                     @Nonnull MatchingEngine matchingEngine) {
-        this.projectId = projectId;
-        this.tagRepository = tagRepository;
-        this.matchingEngine = matchingEngine;
+        this.tagRepository = checkNotNull(tagRepository);
+        this.matchingEngine = checkNotNull(matchingEngine);
     }
 
     public Stream<TagId> getTagsForEntity(@Nonnull OWLEntity entity) {
