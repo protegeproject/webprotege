@@ -44,7 +44,26 @@ public class Tag_Serialization_TestCase {
                           ImmutableList.of(EntityIsNotDeprecatedCriteria.get()));
         StringWriter sw = new StringWriter();
         objectMapper.writeValue(sw, tag);
+        System.out.println(sw.toString());
         Tag readTag = objectMapper.readValue(new StringReader(sw.toString()), Tag.class);
+        MatcherAssert.assertThat(readTag, is(tag));
+    }
+
+    /**
+     * Test to handle loading of tags that did not have previous criteria.
+     */
+    @Test
+    public void shouldDeserializeTagWithMissingCriteriaField() throws Exception {
+        Tag tag = Tag.get(TagId.getId("605bc497-fd7f-4338-b7c9-81cc3559c470"),
+                          ProjectId.get("12345678-1234-1234-1234-123456789abc"),
+                          "The label",
+                          "The description",
+                          Color.getRGB(10, 20, 30),
+                          Color.getRGB(200, 210, 220),
+                          ImmutableList.of());
+
+        String tagJson = "{\"_id\":\"605bc497-fd7f-4338-b7c9-81cc3559c470\",\"projectId\":\"12345678-1234-1234-1234-123456789abc\",\"label\":\"The label\",\"description\":\"The description\",\"color\":\"#0a141e\",\"backgroundColor\":\"#c8d2dc\"}";
+        Tag readTag = objectMapper.readValue(new StringReader(tagJson), Tag.class);
         MatcherAssert.assertThat(readTag, is(tag));
     }
 }

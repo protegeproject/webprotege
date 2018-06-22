@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.shared.tag;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
@@ -11,6 +13,9 @@ import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -59,9 +64,16 @@ public abstract class Tag implements IsSerializable {
                           @Nonnull @JsonProperty(DESCRIPTION) String description,
                           @Nonnull @JsonProperty(COLOR) Color color,
                           @Nonnull @JsonProperty(BACKGROUND_COLOR) Color backgroundColor,
-                          @Nonnull @JsonProperty(CRITERIA) ImmutableList<RootCriteria> criteria) {
+                          @Nullable @JsonProperty(CRITERIA) List<RootCriteria> criteria) {
         checkArgument(!label.isEmpty(), "Tag label cannot be empty");
-        return new AutoValue_Tag(tagId, projectId, label, description, color, backgroundColor, criteria);
+        ImmutableList<RootCriteria> rootCriteria;
+        if(criteria != null) {
+            rootCriteria = ImmutableList.copyOf(criteria);
+        }
+        else {
+            rootCriteria = ImmutableList.of();
+        }
+        return new AutoValue_Tag(tagId, projectId, label, description, color, backgroundColor, rootCriteria);
     }
 
     /**
@@ -113,5 +125,7 @@ public abstract class Tag implements IsSerializable {
     @Nonnull
     public abstract Color getBackgroundColor();
 
+    @JsonProperty(CRITERIA)
+    @Nonnull
     public abstract ImmutableList<RootCriteria> getCriteria();
 }
