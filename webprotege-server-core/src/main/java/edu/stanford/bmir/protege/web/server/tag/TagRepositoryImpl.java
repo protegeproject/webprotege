@@ -49,9 +49,6 @@ public class TagRepositoryImpl implements TagRepository, Repository {
     @Nonnull
     private final ObjectMapper objectMapper;
 
-    @Nonnull
-    private final AtomicReference<ImmutableList<Tag>> projectTags = new AtomicReference<>(null);
-
     @Inject
     public TagRepositoryImpl(@Nonnull ProjectId projectId,
                              @Nonnull MongoDatabase database,
@@ -89,7 +86,6 @@ public class TagRepositoryImpl implements TagRepository, Repository {
         checkNotNull(tag);
         Document document = toDocument(tag);
         getCollection().replaceOne(toFilter(tag), document, upsert());
-        projectTags.set(null);
     }
 
     private Document toDocument(@Nonnull Tag tag) {
@@ -107,31 +103,20 @@ public class TagRepositoryImpl implements TagRepository, Repository {
                 ))
                 .collect(toList());
         BulkWriteResult bulkWriteResult = getCollection().bulkWrite(updates);
-        projectTags.set(null);
     }
 
     public void deleteTag(@Nonnull TagId tagId) {
         checkNotNull(tagId);
         getCollection().deleteOne(new Document("_id", tagId.getId()));
-        projectTags.set(null);
     }
 
     @Nonnull
     public List<Tag> findTags() {
-        return projectTags.updateAndGet(tags -> {
-            if (tags == null) {
-                Document filter = new Document(Tag.PROJECT_ID, projectId.getId());
-                FindIterable<Document> documents = getCollection().find(filter);
-                Stream<Document> docs = stream(documents.spliterator(), false);
-                return docs.map(doc -> objectMapper.convertValue(doc, Tag.class))
-                           .collect(toImmutableList());
-            }
-            else {
-                return tags;
-            }
-        });
-
-
+        Document filter = new Document(Tag.PROJECT_ID, projectId.getId());
+        FindIterable<Document> documents = getCollection().find(filter);
+        Stream<Document> docs = stream(documents.spliterator(), false);
+        return docs.map(doc -> objectMapper.convertValue(doc, Tag.class))
+                   .collect(toImmutableList());
     }
 
     @Nonnull
