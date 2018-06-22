@@ -42,6 +42,7 @@ import edu.stanford.bmir.protege.web.server.revision.RevisionStore;
 import edu.stanford.bmir.protege.web.server.revision.RevisionStoreProvider;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.tag.TagRepository;
+import edu.stanford.bmir.protege.web.server.tag.TagRepositoryCachingImpl;
 import edu.stanford.bmir.protege.web.server.tag.TagRepositoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
@@ -567,9 +568,14 @@ public class ProjectModule {
     }
 
     @Provides
-    TagRepository provideTagRepository(TagRepositoryImpl impl) {
-        impl.ensureIndexes();
+    TagRepository provideTagRepository(TagRepositoryCachingImpl impl) {
         return impl;
+    }
+
+    @Provides
+    TagRepositoryCachingImpl provideTagRepositoryCachingImpl(TagRepositoryImpl impl) {
+        impl.ensureIndexes();
+        return new TagRepositoryCachingImpl(impl);
     }
 
     @ProjectSingleton
