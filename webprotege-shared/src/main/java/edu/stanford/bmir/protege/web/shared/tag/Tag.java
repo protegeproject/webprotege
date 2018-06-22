@@ -73,7 +73,7 @@ public abstract class Tag implements IsSerializable {
         else {
             rootCriteria = ImmutableList.of();
         }
-        return new AutoValue_Tag(tagId, projectId, label, description, color.getHex(), backgroundColor.getHex(), rootCriteria);
+        return new AutoValue_Tag(tagId, projectId, label, description, color, backgroundColor, rootCriteria);
     }
 
     /**
@@ -114,12 +114,7 @@ public abstract class Tag implements IsSerializable {
      */
     @JsonProperty(COLOR)
     @Nonnull
-    public Color getColor() {
-        return Color.getHex(_getColor());
-    }
-    // Doing this because of GWT serialization issues that I'm struggling
-    // to figure out
-    protected abstract String _getColor();
+    public abstract Color getColor();
 
     /**
      * Gets the background color of this tag.
@@ -128,11 +123,7 @@ public abstract class Tag implements IsSerializable {
      */
     @JsonProperty(BACKGROUND_COLOR)
     @Nonnull
-    public Color getBackgroundColor() {
-        return Color.getHex(_getBackgroundColor());
-    }
-
-    protected abstract String _getBackgroundColor();
+    public abstract Color getBackgroundColor();
 
     @JsonProperty(CRITERIA)
     @Nonnull
