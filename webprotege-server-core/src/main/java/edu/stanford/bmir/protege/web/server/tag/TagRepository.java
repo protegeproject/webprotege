@@ -14,9 +14,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 18 Mar 2018
  */
-public interface TagRepository extends Repository {
-
-    void ensureIndexes();
+public interface TagRepository {
 
     void saveTag(@Nonnull Tag tag);
 

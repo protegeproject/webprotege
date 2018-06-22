@@ -10,6 +10,7 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.ReplaceOneModel;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.WriteModel;
+import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
@@ -35,7 +36,7 @@ import static java.util.stream.StreamSupport.stream;
  * 21 Jun 2018
  */
 @ProjectSingleton
-public class TagRepositoryImpl implements TagRepository {
+public class TagRepositoryImpl implements TagRepository, Repository {
 
     private static final String COLLECTION_NAME = "Tags";
 
