@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexWrapperImpl;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
@@ -568,5 +570,11 @@ public class ProjectModule {
     TagRepository provideTagRepository(TagRepositoryImpl impl) {
         impl.ensureIndexes();
         return impl;
+    }
+
+    @ProjectSingleton
+    @Provides
+    public ObjectMapper provideObjectMapper(ObjectMapperProvider provider) {
+        return provider.get();
     }
 }

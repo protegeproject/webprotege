@@ -29,6 +29,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryI
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 import edu.stanford.bmir.protege.web.server.download.DownloadGeneratorExecutor;
 import edu.stanford.bmir.protege.web.server.download.FileTransferExecutor;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.mail.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
@@ -251,12 +252,6 @@ public class ApplicationModule {
     public ApplicationSettings provideApplicationSettings(ApplicationSettingsManager manager) {
         return manager.getApplicationSettings();
     }
-
-    @Provides
-    public ObjectMapper provideObjectMapper() {
-        return new ObjectMapper();
-    }
-
 
     @Provides @IntoSet
     public EntityCrudKitPlugin<?,?,?> provideUUIDPlugin(UUIDEntityCrudKitPlugin plugin) {
