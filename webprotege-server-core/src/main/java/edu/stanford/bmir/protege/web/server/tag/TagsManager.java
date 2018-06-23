@@ -79,7 +79,7 @@ public class TagsManager {
         checkNotNull(entity);
         try {
             readLock.lock();
-            Map<TagId, Tag> tagsById = getProjectTagsByProjectId();
+            Map<TagId, Tag> tagsById = getProjectTagsByTagId();
             Optional<EntityTags> entityTags = entityTagsRepository.findByEntity(projectId, entity);
             Stream<TagId> explicitTags = entityTags.map(tags -> tags.getTags().stream())
                                                    .orElse(Stream.empty());
@@ -101,7 +101,7 @@ public class TagsManager {
         try {
             Multimap<OWLEntity, Tag> result = HashMultimap.create();
             Map<OWLEntity, EntityTags> tagsByEntity = entityTagsRepository.findByProject(projectId);
-            Map<TagId, Tag> tagsById = getProjectTagsByProjectId();
+            Map<TagId, Tag> tagsById = getProjectTagsByTagId();
             tagsByEntity.forEach((entity, tags) -> {
                 tags.getTags().stream()
                     .map(tagsById::get)
@@ -116,7 +116,7 @@ public class TagsManager {
     }
 
     @Nonnull
-    private Map<TagId, Tag> getProjectTagsByProjectId() {
+    private Map<TagId, Tag> getProjectTagsByTagId() {
         try {
             readLock.lock();
             if (projectTags == null) {
@@ -159,7 +159,7 @@ public class TagsManager {
     public Collection<Tag> getProjectTags() {
         try {
             readLock.lock();
-            return new ArrayList<>(getProjectTagsByProjectId().values());
+            return new ArrayList<>(getProjectTagsByTagId().values());
         } finally {
             readLock.unlock();
         }
