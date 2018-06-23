@@ -34,11 +34,11 @@ public class TagRepositoryCachingImpl implements TagRepository {
         this.delegate = checkNotNull(delegate);
     }
 
-    private void invalidate() {
+    private synchronized void invalidate() {
         cachedTags = null;
     }
 
-    private CachedTags get() {
+    private synchronized CachedTags get() {
         if (cachedTags == null) {
             cachedTags = CachedTags.build(delegate.findTags());
         }
@@ -47,20 +47,20 @@ public class TagRepositoryCachingImpl implements TagRepository {
 
     @Override
     public synchronized void saveTag(@Nonnull Tag tag) {
-        delegate.saveTag(tag);
         invalidate();
+        delegate.saveTag(tag);
     }
 
     @Override
     public synchronized void saveTags(@Nonnull Iterable<Tag> tags) {
-        delegate.saveTags(tags);
         invalidate();
+        delegate.saveTags(tags);
     }
 
     @Override
     public synchronized void deleteTag(@Nonnull TagId tagId) {
-        delegate.deleteTag(tagId);
         invalidate();
+        delegate.deleteTag(tagId);
     }
 
     @Nonnull
