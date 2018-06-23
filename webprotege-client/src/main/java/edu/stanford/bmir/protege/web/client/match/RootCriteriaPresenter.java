@@ -93,7 +93,16 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
             @Nonnull
             @Override
             public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityAnnotationCriteria criteria) {
-                return annotationCriteriaFactory;
+                switch (criteria.getAnnotationPresence()) {
+                    case AT_LEAST_ONE:
+                        return annotationCriteriaFactory;
+                    case AT_MOST_ONE:
+                        return atMostOneAnnotationFactory;
+                    case NONE:
+                        return absentAnnotationCriteriaFactory;
+                    default:
+                        throw new RuntimeException("Unknown MultiType");
+                }
             }
 
             @Nonnull
