@@ -42,4 +42,11 @@ public class DateIsAfterPresenter implements CriteriaPresenter<DateIsAfterCriter
                                                                view.getDay());
         return Optional.of(criteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull DateIsAfterCriteria criteria) {
+        view.setYear(criteria.getYear());
+        view.setMonth(criteria.getMonth());
+        view.setDay(criteria.getDay());
+    }
 }

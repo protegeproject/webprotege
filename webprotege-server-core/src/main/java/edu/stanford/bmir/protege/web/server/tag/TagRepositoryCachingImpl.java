@@ -12,8 +12,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -48,32 +46,32 @@ public class TagRepositoryCachingImpl implements TagRepository {
     }
 
     @Override
-    public void saveTag(@Nonnull Tag tag) {
+    public synchronized void saveTag(@Nonnull Tag tag) {
         delegate.saveTag(tag);
         invalidate();
     }
 
     @Override
-    public void saveTags(@Nonnull Iterable<Tag> tags) {
+    public synchronized void saveTags(@Nonnull Iterable<Tag> tags) {
         delegate.saveTags(tags);
         invalidate();
     }
 
     @Override
-    public void deleteTag(@Nonnull TagId tagId) {
+    public synchronized void deleteTag(@Nonnull TagId tagId) {
         delegate.deleteTag(tagId);
         invalidate();
     }
 
     @Nonnull
     @Override
-    public List<Tag> findTags() {
+    public synchronized List<Tag> findTags() {
         return get().getTags();
     }
 
     @Nonnull
     @Override
-    public Optional<Tag> findTagByTagId(@Nonnull TagId tagId) {
+    public synchronized Optional<Tag> findTagByTagId(@Nonnull TagId tagId) {
         return Optional.ofNullable(get().getTagsByTagId().get(tagId));
     }
 

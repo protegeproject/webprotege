@@ -40,4 +40,9 @@ public class StringContainsRepeatedSpacesCriteriaPresenter implements CriteriaPr
         StringContainsRepeatedSpacesCriteria lexicalValueCriteria = StringContainsRepeatedSpacesCriteria.get();
         return Optional.of(lexicalValueCriteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringContainsRepeatedSpacesCriteria criteria) {
+
+    }
 }

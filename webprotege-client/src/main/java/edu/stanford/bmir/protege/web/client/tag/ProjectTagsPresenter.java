@@ -155,7 +155,7 @@ public class ProjectTagsPresenter implements Presenter, HasBusy {
         List<Tag> tags = result.getTags();
         view.setTags(tags, result.getTagUsage());
         tagCriteriaListPresenter.setAvailableTags(tags.stream().map(Tag::getLabel).collect(Collectors.toList()));
-        // TODO: Set criteria
+        tagCriteriaListPresenter.setTags(tags);
     }
 
 

@@ -40,4 +40,10 @@ public class StringEndsWithCriteriaPresenter implements CriteriaPresenter<String
         StringEndsWithCriteria criteria = StringEndsWithCriteria.get(view.getValue(), view.isIgnoreCase());
         return Optional.of(criteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringEndsWithCriteria criteria) {
+        view.setValue(criteria.getValue());
+        view.setIgnoreCase(criteria.isIgnoreCase());
+    }
 }

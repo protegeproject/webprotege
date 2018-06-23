@@ -43,4 +43,10 @@ public class NumericValueCriteriaPresenter implements CriteriaPresenter<NumericV
         NumericValueCriteria lexicalValueCriteria = NumericValueCriteria.get(view.getNumericPredicate(), view.getValue().get());
         return Optional.of(lexicalValueCriteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull NumericValueCriteria criteria) {
+        view.setValue(criteria.getValue());
+        view.setNumericPredicate(criteria.getPredicate());
+    }
 }

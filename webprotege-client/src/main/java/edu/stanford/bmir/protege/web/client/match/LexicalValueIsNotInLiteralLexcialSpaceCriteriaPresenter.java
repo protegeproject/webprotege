@@ -40,4 +40,9 @@ public class LexicalValueIsNotInLiteralLexcialSpaceCriteriaPresenter implements 
     public Optional<LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria> getCriteria() {
         return Optional.of(LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria.get());
     }
+
+    @Override
+    public void setCriteria(@Nonnull LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria criteria) {
+
+    }
 }

@@ -57,4 +57,11 @@ public class TagCriteriaPresenter {
         return entityCriteriaPresenter.getCriteria();
     }
 
+    public void setSelectedTagLabel(@Nonnull String selectedTagLabel) {
+        view.setSelectedTagLabel(selectedTagLabel);
+    }
+
+    public void setCriteria(@Nonnull RootCriteria criteria) {
+        entityCriteriaPresenter.setCriteria(criteria.asCompositeRootCriteria());
+    }
 }

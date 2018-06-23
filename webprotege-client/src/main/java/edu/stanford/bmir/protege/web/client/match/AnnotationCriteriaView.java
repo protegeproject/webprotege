@@ -22,4 +22,6 @@ public interface AnnotationCriteriaView extends IsWidget {
 
     @Nonnull
     AcceptsOneWidget getValueCriteriaViewContainer();
+
+    void clearProperty();
 }

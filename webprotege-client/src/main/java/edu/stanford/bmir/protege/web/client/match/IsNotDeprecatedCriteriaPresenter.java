@@ -42,4 +42,9 @@ public class IsNotDeprecatedCriteriaPresenter implements CriteriaPresenter<Entit
     public Optional<EntityIsNotDeprecatedCriteria> getCriteria() {
         return Optional.of(EntityIsNotDeprecatedCriteria.get());
     }
+
+    @Override
+    public void setCriteria(@Nonnull EntityMatchCriteria criteria) {
+
+    }
 }

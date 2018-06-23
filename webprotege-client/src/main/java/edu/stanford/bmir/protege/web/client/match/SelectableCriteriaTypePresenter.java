@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
@@ -98,16 +99,18 @@ public abstract class SelectableCriteriaTypePresenter<C extends Criteria> implem
         }
     }
 
-    private void displayPresenter(int index) {
+    private Optional<CriteriaPresenter> displayPresenter(int index) {
         if (index != -1) {
             view.setSelectedName(index);
             CriteriaPresenterFactory<? extends C> factory = presenterFactories.get(index);
             String name = factory.getDisplayName();
-            CriteriaPresenter presenter = presenterMap.computeIfAbsent(name, n -> factory.createPresenter());
+            CriteriaPresenter<? extends C> presenter = presenterMap.computeIfAbsent(name, n -> factory.createPresenter());
             presenter.start(view);
+            return Optional.of(presenter);
         }
         else {
             view.setWidget(new Label("Nothing to select"));
+            return Optional.empty();
         }
     }
 
@@ -118,6 +121,28 @@ public abstract class SelectableCriteriaTypePresenter<C extends Criteria> implem
                    .filter(Objects::nonNull)
                    .flatMap(CriteriaPresenter::getCriteria);
     }
+
+    @Override
+    public final void setCriteria(@Nonnull C criteria) {
+        CriteriaPresenterFactory<? extends C> presenterFactoryForCriteria = getPresenterFactoryForCriteria(criteria);
+        int presenterIndex = -1;
+        for(int i = 0; i < presenterFactories.size(); i++) {
+            if(presenterFactories.get(i).getDisplayName().equals(presenterFactoryForCriteria.getDisplayName())) {
+                presenterIndex = i;
+                break;
+            }
+        }
+        GWT.log("[SelectableCriteriaTypePresenter] Found presenter at " + presenterIndex);
+        if(presenterIndex != -1) {
+            view.setSelectedName(presenterIndex);
+            displayPresenter(presenterIndex).ifPresent(presenter -> {
+                presenter.setCriteria(criteria);
+            });
+        }
+    }
+
+    @Nonnull
+    protected abstract CriteriaPresenterFactory<? extends C> getPresenterFactoryForCriteria(@Nonnull C criteria);
 
     interface PresenterFactoryRegistry<C> {
 

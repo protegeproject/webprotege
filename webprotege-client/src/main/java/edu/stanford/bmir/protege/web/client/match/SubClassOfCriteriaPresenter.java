@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
-import org.semanticweb.owlapi.model.OWLNamedObject;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -20,9 +20,14 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     @Nonnull
     private final ClassSelectorView view;
 
+    @Nonnull
+    private final ClassIriRenderer renderer;
+
     @Inject
-    public SubClassOfCriteriaPresenter(@Nonnull ClassSelectorView view) {
+    public SubClassOfCriteriaPresenter(@Nonnull ClassSelectorView view,
+                                       @Nonnull ClassIriRenderer renderer) {
         this.view = checkNotNull(view);
+        this.renderer = checkNotNull(renderer);
     }
 
     @Override
@@ -39,5 +44,11 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     public Optional<? extends SubClassOfCriteria> getCriteria() {
         return view.getOwlClass()
                    .map(SubClassOfCriteria::get);
+    }
+
+    @Override
+    public void setCriteria(@Nonnull SubClassOfCriteria criteria) {
+        renderer.renderClassIri(criteria.getTarget().getIRI(),
+                                view::setOwlClass);
     }
 }

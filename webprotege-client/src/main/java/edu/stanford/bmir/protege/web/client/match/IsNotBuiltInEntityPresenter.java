@@ -39,4 +39,9 @@ public class IsNotBuiltInEntityPresenter implements CriteriaPresenter<EntityMatc
     public Optional<? extends EntityMatchCriteria> getCriteria() {
         return Optional.of(IsNotBuiltInEntityCriteria.get());
     }
+
+    @Override
+    public void setCriteria(@Nonnull EntityMatchCriteria criteria) {
+
+    }
 }

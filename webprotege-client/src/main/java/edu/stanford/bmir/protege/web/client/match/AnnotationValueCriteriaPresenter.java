@@ -113,4 +113,105 @@ public class AnnotationValueCriteriaPresenter extends SelectableCriteriaTypePres
         factoryRegistry.addPresenter(iriAnnotationsFactory);
         factoryRegistry.addPresenter(anyValueFactory);
     }
+
+    @Nonnull
+    @Override
+    protected CriteriaPresenterFactory<? extends AnnotationValueCriteria> getPresenterFactoryForCriteria(@Nonnull AnnotationValueCriteria criteria) {
+        return criteria.accept(new AnnotationValueCriteriaVisitor<CriteriaPresenterFactory<? extends AnnotationValueCriteria>>() {
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull AnyAnnotationValueCriteria criteria) {
+                return anyValueFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull IriEqualsCriteria criteria) {
+                return iriEqualsFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull IriHasAnnotationCriteria criteria) {
+                return iriAnnotationsFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull CompositeAnnotationValueCriteria criteria) {
+                throw new RuntimeException("Not implemented");
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringStartsWithCriteria criteria) {
+                return startsWithFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringEndsWithCriteria criteria) {
+                return endsWithFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringContainsCriteria criteria) {
+                return containsFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringEqualsCriteria criteria) {
+                return equalsFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull NumericValueCriteria criteria) {
+                return numericValueFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringContainsRepeatedSpacesCriteria criteria) {
+                return repeatedSpacesFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringHasUntrimmedSpaceCriteria criteria) {
+                return untrimmedFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringContainsRegexMatchCriteria criteria) {
+                return regexFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull StringDoesNotContainRegexMatchCriteria criteria) {
+                return negRegexFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull DateIsBeforeCriteria criteria) {
+                return dateTimeFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull DateIsAfterCriteria criteria) {
+                return dateTimeFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull LiteralLexicalValueNotInDatatypeLexicalSpaceCriteria criteria) {
+                return lexicalValueFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull LangTagMatchesCriteria criteria) {
+                return langTagMatchesFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull LangTagIsEmptyCriteria criteria) {
+                return emptyLangTagFactory;
+            }
+
+            @Override
+            public CriteriaPresenterFactory<? extends AnnotationValueCriteria> visit(@Nonnull AnyLangTagOrEmptyLangTagCriteria criteria) {
+                return null;
+            }
+        });
+    }
 }

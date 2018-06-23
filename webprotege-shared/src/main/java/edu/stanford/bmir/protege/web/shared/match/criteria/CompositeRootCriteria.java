@@ -49,4 +49,9 @@ public abstract class CompositeRootCriteria implements RootCriteria {
     public <R> R accept(RootCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public CompositeRootCriteria asCompositeRootCriteria() {
+        return this;
+    }
 }

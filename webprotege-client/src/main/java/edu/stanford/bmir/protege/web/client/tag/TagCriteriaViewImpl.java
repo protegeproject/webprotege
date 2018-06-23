@@ -66,4 +66,15 @@ public class TagCriteriaViewImpl extends Composite implements TagCriteriaView {
         return Optional.ofNullable(availableTagsField.getSelectedValue())
                        .filter(tn -> !tn.isEmpty());
     }
+
+    @Override
+    public void setSelectedTagLabel(@Nonnull String selectedTagLabel) {
+        for(int i = 0; i < availableTagsField.getItemCount(); i++) {
+            String value = availableTagsField.getValue(i);
+            if(selectedTagLabel.equals(value)) {
+                availableTagsField.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
 }

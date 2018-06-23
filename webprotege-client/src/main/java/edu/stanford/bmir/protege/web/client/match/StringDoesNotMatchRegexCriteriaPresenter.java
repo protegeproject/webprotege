@@ -39,4 +39,10 @@ public class StringDoesNotMatchRegexCriteriaPresenter implements CriteriaPresent
                                                            view.isIgnoreCase()
                 ));
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringDoesNotContainRegexMatchCriteria criteria) {
+        view.setValue(criteria.getPattern());
+        view.setIgnoreCase(criteria.isIgnoreCase());
+    }
 }

@@ -39,4 +39,9 @@ public class IriEqualsCriteriaPresenter implements CriteriaPresenter<IriEqualsCr
         return view.getIri()
                 .map(IriEqualsCriteria::get);
     }
+
+    @Override
+    public void setCriteria(@Nonnull IriEqualsCriteria criteria) {
+        view.setIri(criteria.getIri());
+    }
 }

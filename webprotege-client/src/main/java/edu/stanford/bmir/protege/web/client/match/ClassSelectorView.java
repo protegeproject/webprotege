@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
@@ -15,4 +16,6 @@ public interface ClassSelectorView extends IsWidget {
 
     @Nonnull
     Optional<OWLClass> getOwlClass();
+
+    void setOwlClass(@Nonnull OWLClassData owlClassData);
 }

@@ -104,4 +104,19 @@ public class DateViewImpl extends Composite implements DateView {
     public int getDay() {
         return getEnteredDate().getDate();
     }
+
+    @Override
+    public void setYear(int year) {
+        dateField.setText(dateFormat.format(new Date(year - 1900, getMonth() - 1, getDay())));
+    }
+
+    @Override
+    public void setMonth(int month) {
+        dateField.setText(dateFormat.format(new Date(getYear() - 1900, month - 1, getDay())));
+    }
+
+    @Override
+    public void setDay(int day) {
+        dateField.setText(dateFormat.format(new Date(getYear() - 1900, getMonth() - 1, day)));
+    }
 }

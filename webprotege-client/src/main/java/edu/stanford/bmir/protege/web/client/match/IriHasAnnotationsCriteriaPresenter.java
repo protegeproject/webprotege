@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter<IriCriteria> {
+public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter<IriHasAnnotationCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaPresenter delegate;
@@ -37,9 +37,14 @@ public class IriHasAnnotationsCriteriaPresenter implements CriteriaPresenter<Iri
     }
 
     @Override
-    public Optional<IriCriteria> getCriteria() {
+    public Optional<IriHasAnnotationCriteria> getCriteria() {
         Optional<? extends AnnotationCriteria> annotationCriteria = delegate.getCriteria();
         return annotationCriteria
                        .map(IriHasAnnotationCriteria::get);
+    }
+
+    @Override
+    public void setCriteria(@Nonnull IriHasAnnotationCriteria criteria) {
+        delegate.setCriteria(criteria.getIriAnnotationCriteria());
     }
 }

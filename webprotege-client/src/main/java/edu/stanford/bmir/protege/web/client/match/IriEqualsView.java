@@ -15,4 +15,6 @@ public interface IriEqualsView extends IsWidget {
 
     @Nonnull
     Optional<IRI> getIri();
+
+    void setIri(IRI iri);
 }

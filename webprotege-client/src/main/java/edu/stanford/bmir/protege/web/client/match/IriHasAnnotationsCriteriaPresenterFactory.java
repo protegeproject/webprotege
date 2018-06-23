@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import edu.stanford.bmir.protege.web.shared.match.criteria.IriCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.IriHasAnnotationCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 13 Jun 2018
  */
-public class IriHasAnnotationsCriteriaPresenterFactory implements CriteriaPresenterFactory<IriCriteria> {
+public class IriHasAnnotationsCriteriaPresenterFactory implements CriteriaPresenterFactory<IriHasAnnotationCriteria> {
 
     @Nonnull
     private final Provider<IriHasAnnotationsCriteriaPresenter> presenterProvider;
@@ -31,7 +32,7 @@ public class IriHasAnnotationsCriteriaPresenterFactory implements CriteriaPresen
 
     @Nonnull
     @Override
-    public CriteriaPresenter<IriCriteria> createPresenter() {
+    public CriteriaPresenter<IriHasAnnotationCriteria> createPresenter() {
         return presenterProvider.get();
     }
 }

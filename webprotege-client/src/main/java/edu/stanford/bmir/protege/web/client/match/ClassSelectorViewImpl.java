@@ -41,6 +41,11 @@ public class ClassSelectorViewImpl extends Composite implements ClassSelectorVie
                           .map(pd -> ((OWLClassData) pd).getEntity());
     }
 
+    @Override
+    public void setOwlClass(@Nonnull OWLClassData owlClassData) {
+        editorField.setValue(owlClassData);
+    }
+
     interface ClassSelectorViewImplUiBinder extends UiBinder<HTMLPanel, ClassSelectorViewImpl> {
 
     }

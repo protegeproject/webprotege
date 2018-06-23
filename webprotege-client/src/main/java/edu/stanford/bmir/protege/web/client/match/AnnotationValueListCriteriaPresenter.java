@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.match;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeAnnotationValueCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -14,7 +15,7 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 14 Jun 2018
  */
-public class AnnotationValueListCriteriaPresenter extends CriteriaListPresenter<AnnotationValueCriteria> {
+public class AnnotationValueListCriteriaPresenter extends CriteriaListPresenter<AnnotationValueCriteria, CompositeAnnotationValueCriteria> {
 
     @Inject
     public AnnotationValueListCriteriaPresenter(@Nonnull CriteriaListView view,
@@ -25,7 +26,17 @@ public class AnnotationValueListCriteriaPresenter extends CriteriaListPresenter<
     }
 
     @Override
-    protected AnnotationValueCriteria createCriteria(@Nonnull ImmutableList<? extends AnnotationValueCriteria> criteria) {
-        return CompositeAnnotationValueCriteria.get(criteria, getMultiMatchType());
+    protected CompositeAnnotationValueCriteria createCompositeCriteria(@Nonnull ImmutableList<? extends AnnotationValueCriteria> criteriaList) {
+        return CompositeAnnotationValueCriteria.get(criteriaList, getMultiMatchType());
+    }
+
+    @Override
+    protected ImmutableList<? extends AnnotationValueCriteria> decomposeCompositeCriteria(CompositeAnnotationValueCriteria compositeCriteria) {
+        return compositeCriteria.getAnnotationValueCriteria();
+    }
+
+    @Override
+    protected MultiMatchType getMultiMatchType(CompositeAnnotationValueCriteria compositeCriteria) {
+        return compositeCriteria.getMultiMatchType();
     }
 }

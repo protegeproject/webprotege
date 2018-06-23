@@ -38,4 +38,9 @@ public class StringHasUntrimmedSpaceCriteriaPresenter implements CriteriaPresent
         StringHasUntrimmedSpaceCriteria lexicalValueCriteria = StringHasUntrimmedSpaceCriteria.get();
         return Optional.of(lexicalValueCriteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringHasUntrimmedSpaceCriteria criteria) {
+
+    }
 }

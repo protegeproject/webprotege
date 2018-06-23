@@ -64,4 +64,9 @@ public class AnnotationCriteriaViewImpl extends Composite implements AnnotationC
     public AcceptsOneWidget getValueCriteriaViewContainer() {
         return valueCriteriaContainer;
     }
+
+    @Override
+    public void clearProperty() {
+        propertyEditor.clearValue();
+    }
 }

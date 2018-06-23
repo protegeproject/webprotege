@@ -56,4 +56,9 @@ public class IriEqualsViewImpl extends Composite implements IriEqualsView {
                             })
                             .filter(Objects::nonNull);
     }
+
+    @Override
+    public void setIri(IRI iri) {
+        this.iriEditor.setValue(new IRIData(iri));
+    }
 }

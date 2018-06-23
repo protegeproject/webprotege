@@ -18,4 +18,6 @@ public interface CriteriaPresenter<C extends Criteria> {
     void stop();
 
     Optional<? extends C> getCriteria();
+
+    void setCriteria(@Nonnull C criteria);
 }

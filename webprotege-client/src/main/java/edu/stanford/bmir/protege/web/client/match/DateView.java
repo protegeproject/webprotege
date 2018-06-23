@@ -23,4 +23,10 @@ public interface DateView extends IsWidget {
      * Returns the day in the range of 1 to 31
      */
     int getDay();
+
+    void setYear(int year);
+
+    void setMonth(int month);
+
+    void setDay(int day);
 }

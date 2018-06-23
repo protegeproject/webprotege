@@ -41,4 +41,10 @@ public class StringMatchesRegexCriteriaPresenter implements CriteriaPresenter<St
         StringContainsRegexMatchCriteria lexicalValueCriteria = StringContainsRegexMatchCriteria.get(view.getValue(), view.isIgnoreCase());
         return Optional.of(lexicalValueCriteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringContainsRegexMatchCriteria criteria) {
+        view.setValue(criteria.getPattern());
+        view.setIgnoreCase(criteria.isIgnoreCase());
+    }
 }

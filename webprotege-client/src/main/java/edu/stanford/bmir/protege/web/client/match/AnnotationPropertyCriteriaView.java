@@ -17,4 +17,6 @@ public interface AnnotationPropertyCriteriaView extends IsWidget {
     void setProperty(@Nonnull OWLAnnotationPropertyData property);
 
     Optional<OWLAnnotationProperty> getProperty();
+
+    void clear();
 }

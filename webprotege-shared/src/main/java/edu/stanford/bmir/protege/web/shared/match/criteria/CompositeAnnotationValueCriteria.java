@@ -46,4 +46,9 @@ public abstract class CompositeAnnotationValueCriteria implements AnnotationValu
     public <R> R accept(@Nonnull AnnotationValueCriteriaVisitor<R> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public CompositeAnnotationValueCriteria asCompositeAnnotationValueCriteria() {
+        return this;
+    }
 }

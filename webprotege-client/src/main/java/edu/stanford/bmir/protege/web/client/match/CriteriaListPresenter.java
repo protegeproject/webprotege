@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
@@ -9,11 +10,9 @@ import javax.annotation.Nonnull;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -23,7 +22,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Presents a list of criteria, delegating to a list of {@link CriteriaPresenter}s
  * to do this
  */
-public abstract class CriteriaListPresenter<C extends Criteria> implements CriteriaPresenter<C> {
+public abstract class CriteriaListPresenter<C extends Criteria, F extends C> implements CriteriaPresenter<F> {
 
     @Nonnull
     private final CriteriaListView view;
@@ -68,6 +67,10 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
 
     private void addCriteriaPresenter() {
         CriteriaPresenter<? extends C> presenter = presenterFactory.createPresenter();
+        addCriteriaPresenter(presenter);
+    }
+
+    private void addCriteriaPresenter(CriteriaPresenter<? extends C> presenter) {
         CriteriaListCriteriaViewContainer viewContainer = viewContainerProvider.get();
         presenter.start(viewContainer);
         view.addCriteriaView(viewContainer);
@@ -83,6 +86,14 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
         viewContainers.remove(presenterIndex);
         presenter.stop();
         view.removeCriteriaView(presenterIndex);
+        updateRemoveButtonVisibility();
+    }
+
+    private void clear() {
+        criteriaPresenters.forEach(CriteriaPresenter::stop);
+        criteriaPresenters.clear();
+        viewContainers.clear();
+        view.removeAllCriteriaViews();
         updateRemoveButtonVisibility();
     }
 
@@ -102,7 +113,7 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
     }
 
     @Override
-    public Optional<? extends C> getCriteria() {
+    public Optional<? extends F> getCriteria() {
         ImmutableList.Builder<C> builder = ImmutableList.builder();
         for(CriteriaPresenter<? extends C> presenter : criteriaPresenters) {
             presenter.getCriteria().ifPresent(builder::add);
@@ -112,10 +123,27 @@ public abstract class CriteriaListPresenter<C extends Criteria> implements Crite
             return Optional.empty();
         }
         else {
-            C compositeCriteria = createCriteria(criteria);
+            F compositeCriteria = createCompositeCriteria(criteria);
             return Optional.of(compositeCriteria);
         }
     }
 
-    protected abstract C createCriteria(@Nonnull ImmutableList<? extends C> criteria);
+    @Override
+    public void setCriteria(@Nonnull F criteria) {
+        clear();
+        GWT.log("[CriteriaListPresenter] Decomposing " + criteria.toString());
+        ImmutableList<? extends C> decomposedCriteria = decomposeCompositeCriteria(criteria);
+        view.setMultiMatchType(getMultiMatchType(criteria));
+        decomposedCriteria.forEach(c -> {
+            CriteriaPresenter presenter = presenterFactory.createPresenter();
+            addCriteriaPresenter(presenter);
+            presenter.setCriteria(c);
+        });
+    }
+
+    protected abstract F createCompositeCriteria(@Nonnull ImmutableList<? extends C> criteriaList);
+
+    protected abstract ImmutableList<? extends C> decomposeCompositeCriteria(F compositeCriteria);
+
+    protected abstract MultiMatchType getMultiMatchType(F compositeCriteria);
 }

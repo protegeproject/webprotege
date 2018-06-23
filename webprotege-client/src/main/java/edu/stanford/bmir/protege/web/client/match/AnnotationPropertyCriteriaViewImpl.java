@@ -47,4 +47,9 @@ public class AnnotationPropertyCriteriaViewImpl extends Composite implements Ann
     public Optional<OWLAnnotationProperty> getProperty() {
         return propertyField.getValue().map(prop -> ((OWLAnnotationPropertyData) prop).getEntity());
     }
+
+    @Override
+    public void clear() {
+        propertyField.clearValue();
+    }
 }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
+import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagData;
 
 import javax.annotation.Nonnull;
@@ -83,7 +84,12 @@ public class TagCriteriaListPresenter {
                       .collect(toList());
     }
 
-    private void addTagCriteriaView() {
+    private void clear() {
+        view.clearView();
+        presenters.clear();
+    }
+
+    private TagCriteriaPresenter addTagCriteriaView() {
         TagCriteriaPresenter presenter = presenterProvider.get();
         presenters.add(presenter);
         TagCriteriaViewContainer container = tagCriteriaViewContainerProvider.get();
@@ -91,6 +97,7 @@ public class TagCriteriaListPresenter {
         presenter.start(container.getViewContainer());
         presenter.setAvailableTags(availableTagLabels);
         view.addTagCriteriaViewContainer(container, true);
+        return presenter;
     }
 
     private void handleRemove(TagCriteriaPresenter presenter) {
@@ -118,5 +125,16 @@ public class TagCriteriaListPresenter {
                                        });
                                    }));
         return criteriaByTagLabel;
+    }
+
+    public void setTags(@Nonnull List<Tag> tags) {
+        clear();
+        tags.forEach(tag -> {
+            tag.getCriteria().forEach(criteria -> {
+                TagCriteriaPresenter presenter = addTagCriteriaView();
+                presenter.setSelectedTagLabel(tag.getLabel());
+                presenter.setCriteria(criteria);
+            });
+        });
     }
 }

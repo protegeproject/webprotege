@@ -44,4 +44,11 @@ public class DateIsBeforePresenter implements CriteriaPresenter<DateIsBeforeCrit
         );
         return Optional.of(criteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull DateIsBeforeCriteria criteria) {
+        view.setYear(criteria.getYear());
+        view.setMonth(criteria.getMonth());
+        view.setDay(criteria.getDay());
+    }
 }

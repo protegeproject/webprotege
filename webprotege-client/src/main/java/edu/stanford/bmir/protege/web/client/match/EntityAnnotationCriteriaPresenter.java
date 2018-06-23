@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14 Jun 2018
  */
-public class EntityAnnotationCriteriaPresenter implements CriteriaPresenter<EntityMatchCriteria> {
+public class EntityAnnotationCriteriaPresenter implements CriteriaPresenter<EntityAnnotationCriteria> {
 
     @Nonnull
     private final AnnotationCriteriaPresenter delegate;
@@ -36,8 +36,13 @@ public class EntityAnnotationCriteriaPresenter implements CriteriaPresenter<Enti
     }
 
     @Override
-    public Optional<? extends EntityMatchCriteria> getCriteria() {
+    public Optional<EntityAnnotationCriteria> getCriteria() {
         return delegate.getCriteria()
                        .map(EntityAnnotationCriteria::get);
+    }
+
+    @Override
+    public void setCriteria(@Nonnull EntityAnnotationCriteria criteria) {
+        delegate.setCriteria(criteria.getAnnotationCriteria());
     }
 }

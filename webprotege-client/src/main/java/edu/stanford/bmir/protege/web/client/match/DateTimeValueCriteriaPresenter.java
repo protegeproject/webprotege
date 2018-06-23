@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationValueCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.DateCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.DateIsBeforeCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.LiteralCriteria;
 
 import javax.annotation.Nonnull;
@@ -33,5 +34,16 @@ public class DateTimeValueCriteriaPresenter extends SelectableCriteriaTypePresen
     protected void start(@Nonnull PresenterFactoryRegistry<AnnotationValueCriteria> factoryRegistry) {
         factoryRegistry.addPresenter(beforeFactory);
         factoryRegistry.addPresenter(afterFactory);
+    }
+
+    @Nonnull
+    @Override
+    protected CriteriaPresenterFactory<? extends AnnotationValueCriteria> getPresenterFactoryForCriteria(@Nonnull AnnotationValueCriteria criteria) {
+        if(criteria instanceof DateIsBeforeCriteria) {
+            return beforeFactory;
+        }
+        else {
+            return afterFactory;
+        }
     }
 }

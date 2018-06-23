@@ -99,4 +99,14 @@ public class CriteriaListViewImpl extends Composite implements CriteriaListView 
             multiMatchContainer.setVisible(false);
         }
     }
+
+    @Override
+    public void setMultiMatchType(@Nonnull MultiMatchType multiMatchType) {
+        multiMatchTypeField.setSelectedIndex(multiMatchType.ordinal());
+    }
+
+    @Override
+    public void removeAllCriteriaViews() {
+        criteriaViewsContainer.clear();
+    }
 }

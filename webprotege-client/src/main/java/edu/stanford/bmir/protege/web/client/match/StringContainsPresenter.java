@@ -38,4 +38,10 @@ public class StringContainsPresenter implements CriteriaPresenter<StringContains
         StringContainsCriteria lexicalCriteria = StringContainsCriteria.get(view.getValue(), view.isIgnoreCase());
         return Optional.of(lexicalCriteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringContainsCriteria criteria) {
+        view.setValue(criteria.getValue());
+        view.setIgnoreCase(criteria.isIgnoreCase());
+    }
 }

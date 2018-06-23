@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import edu.stanford.bmir.protege.web.shared.match.criteria.EntityMatchCriteria;
+import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -76,5 +77,72 @@ public class RootCriteriaPresenter extends SelectableCriteriaTypePresenter<Entit
         factoryRegistry.addPresenter(nonUniqueLangTags);
         factoryRegistry.addPresenter(notDisjointFactory);
         factoryRegistry.addPresenter(subClassOfFactory);
+    }
+
+    @Nonnull
+    @Override
+    protected CriteriaPresenterFactory<? extends EntityMatchCriteria> getPresenterFactoryForCriteria(@Nonnull EntityMatchCriteria criteria) {
+        GWT.log("[RootCriteriaPresenter] Selecting presenter factory for " + criteria);
+        return criteria.accept(new RootCriteriaVisitor<CriteriaPresenterFactory<? extends EntityMatchCriteria>>() {
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull CompositeRootCriteria criteria) {
+                throw new RuntimeException("Cannot set criteria. Not supported by this presenter.");
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityAnnotationCriteria criteria) {
+                return annotationCriteriaFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityIsDeprecatedCriteria criteria) {
+                return isDeprecatedFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityIsNotDeprecatedCriteria criteria) {
+                return notDeprecatedFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityHasNonUniqueLangTagsCriteria criteria) {
+                return nonUniqueLangTags;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityTypeIsOneOfCriteria criteria) {
+                return entityTypeFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityHasConflictingBooleanAnnotationValuesCriteria criteria) {
+                throw new RuntimeException("Cannot set criteria. Not supported by this presenter.");
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria) {
+                return notDisjointFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull IsNotBuiltInEntityCriteria criteria) {
+                return notBuiltInEntityFactory;
+            }
+
+            @Nonnull
+            @Override
+            public CriteriaPresenterFactory<? extends EntityMatchCriteria> visit(@Nonnull SubClassOfCriteria criteria) {
+                return subClassOfFactory;
+            }
+        });
     }
 }

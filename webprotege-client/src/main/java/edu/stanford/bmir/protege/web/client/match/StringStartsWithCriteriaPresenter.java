@@ -41,4 +41,10 @@ public class StringStartsWithCriteriaPresenter implements CriteriaPresenter<Stri
         StringStartsWithCriteria stringStartsWithCriteria = StringStartsWithCriteria.get(view.getValue(), view.isIgnoreCase());
         return Optional.of(stringStartsWithCriteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringStartsWithCriteria criteria) {
+        view.setValue(criteria.getValue());
+        view.setIgnoreCase(criteria.isIgnoreCase());
+    }
 }

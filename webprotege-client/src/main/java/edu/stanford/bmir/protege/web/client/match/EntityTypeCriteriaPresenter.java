@@ -39,4 +39,9 @@ public class EntityTypeCriteriaPresenter implements CriteriaPresenter<EntityType
     public Optional<? extends EntityTypeIsOneOfCriteria> getCriteria() {
         return Optional.of(EntityTypeIsOneOfCriteria.get(ImmutableSet.copyOf(view.getEntityTypes())));
     }
+
+    @Override
+    public void setCriteria(@Nonnull EntityTypeIsOneOfCriteria criteria) {
+        view.setEntityTypes(criteria.getEntityTypes());
+    }
 }

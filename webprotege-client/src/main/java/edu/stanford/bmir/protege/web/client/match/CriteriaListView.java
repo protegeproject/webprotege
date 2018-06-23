@@ -15,6 +15,10 @@ public interface CriteriaListView extends IsWidget {
 
     void removeCriteriaView(int index);
 
+    void setMultiMatchType(@Nonnull MultiMatchType multiMatchType);
+
+    void removeAllCriteriaViews();
+
     interface AddCriteriaHandler {
         void handleAddCriteria();
     }

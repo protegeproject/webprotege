@@ -37,6 +37,10 @@ import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
+import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
+import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
+import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
@@ -275,6 +279,16 @@ public class ClientProjectModule {
 
     @Provides
     TagCriteriaViewContainer provideTagCriteriaViewContainer(TagCriteriaViewContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    AnnotationPropertyIriRenderer provideAnnotationPropertyIriRenderer(AnnotationPropertyIriRendererImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ClassIriRenderer provideClassIriRenderer(ClassIriRendererImpl impl) {
         return impl;
     }
 }

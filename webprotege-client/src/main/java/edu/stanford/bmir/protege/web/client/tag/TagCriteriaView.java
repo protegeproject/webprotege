@@ -26,4 +26,7 @@ public interface TagCriteriaView extends IsWidget {
 
     @Nonnull
     Optional<String> getSelectedTagLabel();
+
+    void setSelectedTagLabel(@Nonnull String selectedTagLabel);
+
 }

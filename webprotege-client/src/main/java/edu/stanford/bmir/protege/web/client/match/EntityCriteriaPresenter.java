@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.match.criteria.CompositeRootCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 
 import javax.annotation.Nonnull;
@@ -13,7 +15,7 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 14 Jun 2018
  */
-public class EntityCriteriaPresenter extends CriteriaListPresenter<RootCriteria> {
+public class EntityCriteriaPresenter extends CriteriaListPresenter<RootCriteria, CompositeRootCriteria> {
 
     @Inject
     public EntityCriteriaPresenter(@Nonnull CriteriaListView view,
@@ -24,7 +26,17 @@ public class EntityCriteriaPresenter extends CriteriaListPresenter<RootCriteria>
     }
 
     @Override
-    protected RootCriteria createCriteria(@Nonnull ImmutableList<? extends RootCriteria> criteria) {
-        return CompositeRootCriteria.get(criteria, getMultiMatchType());
+    protected CompositeRootCriteria createCompositeCriteria(@Nonnull ImmutableList<? extends RootCriteria> criteriaList) {
+        return CompositeRootCriteria.get(criteriaList, getMultiMatchType());
+    }
+
+    @Override
+    protected ImmutableList<? extends RootCriteria> decomposeCompositeCriteria(CompositeRootCriteria compositeCriteria) {
+        return compositeCriteria.getRootCriteria();
+    }
+
+    @Override
+    protected MultiMatchType getMultiMatchType(CompositeRootCriteria compositeCriteria) {
+        return compositeCriteria.getMatchType();
     }
 }

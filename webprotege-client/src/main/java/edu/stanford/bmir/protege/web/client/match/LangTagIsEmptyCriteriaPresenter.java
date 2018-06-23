@@ -39,4 +39,9 @@ public class LangTagIsEmptyCriteriaPresenter implements CriteriaPresenter<LangTa
     public Optional<LangTagIsEmptyCriteria> getCriteria() {
         return Optional.of(LangTagIsEmptyCriteria.get());
     }
+
+    @Override
+    public void setCriteria(@Nonnull LangTagIsEmptyCriteria criteria) {
+
+    }
 }

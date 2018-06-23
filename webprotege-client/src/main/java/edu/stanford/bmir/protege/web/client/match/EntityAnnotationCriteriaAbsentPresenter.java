@@ -42,4 +42,9 @@ public class EntityAnnotationCriteriaAbsentPresenter implements CriteriaPresente
         return criteria
                 .map(c -> EntityAnnotationCriteria.get(c, AnnotationPresence.NONE));
     }
+
+    @Override
+    public void setCriteria(@Nonnull EntityAnnotationCriteria criteria) {
+        delegate.setCriteria(criteria.getAnnotationCriteria());
+    }
 }

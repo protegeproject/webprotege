@@ -37,4 +37,10 @@ public class StringEqualsCriteriaPresenter implements CriteriaPresenter<StringEq
     public Optional<StringEqualsCriteria> getCriteria() {
         return Optional.of(StringEqualsCriteria.get(view.getValue(), view.isIgnoreCase()));
     }
+
+    @Override
+    public void setCriteria(@Nonnull StringEqualsCriteria criteria) {
+        view.setValue(criteria.getValue());
+        view.setIgnoreCase(criteria.isIgnoreCase());
+    }
 }

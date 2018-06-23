@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.shared.match.criteria.AnnotationPropertyCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.EntityAnnotationValuesAreNotDisjointCriteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.IriEqualsCriteria;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -53,5 +54,11 @@ public class EntityAnnotationValuesAreNotDisjointCriteriaPresenter implements Cr
                         IriEqualsCriteria.get(secondProperty.get())
                 )
         );
+    }
+
+    @Override
+    public void setCriteria(@Nonnull EntityAnnotationValuesAreNotDisjointCriteria criteria) {
+        AnnotationPropertyCriteria firstProperty = criteria.getFirstProperty();
+        AnnotationPropertyCriteria secondProperty = criteria.getSecondProperty();
     }
 }

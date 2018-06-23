@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 
 import javax.annotation.Nonnull;
@@ -23,10 +25,16 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
     @Nonnull
     private final AnnotationValueListCriteriaPresenter valuePresenter;
 
+    @Nonnull
+    private final AnnotationPropertyIriRenderer renderer;
+
     @Inject
-    public AnnotationCriteriaPresenter(@Nonnull AnnotationCriteriaView view, @Nonnull AnnotationValueListCriteriaPresenter valuePresenter) {
+    public AnnotationCriteriaPresenter(@Nonnull AnnotationCriteriaView view,
+                                       @Nonnull AnnotationValueListCriteriaPresenter valuePresenter,
+                                       @Nonnull AnnotationPropertyIriRenderer renderer) {
         this.view = checkNotNull(view);
         this.valuePresenter = checkNotNull(valuePresenter);
+        this.renderer = checkNotNull(renderer);
     }
 
     @Override
@@ -55,5 +63,32 @@ public class AnnotationCriteriaPresenter implements CriteriaPresenter<Annotation
                 AnyAnnotationSetCriteria.get()
         );
         return Optional.of(annotationComponentCriteria);
+    }
+
+    @Override
+    public void setCriteria(@Nonnull AnnotationCriteria criteria) {
+        GWT.log("[AnnotationCriteriaPresenter] Setting criteria " + criteria);
+        criteria.accept(new AnnotationCriteriaVisitor<Object>() {
+            @Nonnull
+            @Override
+            public Object visit(@Nonnull AnnotationComponentsCriteria criteria) {
+                criteria.getAnnotationPropertyCriteria().accept(new AnnotationPropertyCriteriaVisitor<Object>() {
+                    @Override
+                    public Object visit(@Nonnull AnyAnnotationPropertyCriteria criteria) {
+                        view.clearProperty();
+                        return null;
+                    }
+
+                    @Override
+                    public Object visit(@Nonnull IriEqualsCriteria criteria) {
+                        GWT.log("[AnnotationCriteriaPresenter] Setting property " + criteria);
+                        renderer.renderAnnotationPropertyIri(criteria.getIri(), view::setSelectedProperty);
+                        return null;
+                    }
+                });
+                valuePresenter.setCriteria(criteria.getAnnotationValueCriteria().asCompositeAnnotationValueCriteria());
+                return null;
+            }
+        });
     }
 }

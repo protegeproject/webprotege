@@ -42,4 +42,9 @@ public class EntityAnnotationMatchesAtMostOneCriteriaPresenter implements Criter
         return criteria
                 .map(c -> EntityAnnotationCriteria.get(c, AnnotationPresence.AT_MOST_ONE));
     }
+
+    @Override
+    public void setCriteria(@Nonnull EntityAnnotationCriteria criteria) {
+        delegate.setCriteria(criteria.getAnnotationCriteria());
+    }
 }

@@ -40,4 +40,9 @@ public class LangMatchesCriteriaPresenter implements CriteriaPresenter<LangTagMa
         LangTagMatchesCriteria criteria = LangTagMatchesCriteria.get(view.getPattern());
         return Optional.of(criteria);
     }
+
+    @Override
+    public void setCriteria(@Nonnull LangTagMatchesCriteria criteria) {
+        view.setPattern(criteria.getLanguageRange());
+    }
 }

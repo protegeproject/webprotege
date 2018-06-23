@@ -40,4 +40,9 @@ public class AnyAnnotationValueCriteriaPresenter implements CriteriaPresenter<An
     public Optional<AnyAnnotationValueCriteria> getCriteria() {
         return Optional.of(AnyAnnotationValueCriteria.get());
     }
+
+    @Override
+    public void setCriteria(@Nonnull AnyAnnotationValueCriteria criteria) {
+
+    }
 }
