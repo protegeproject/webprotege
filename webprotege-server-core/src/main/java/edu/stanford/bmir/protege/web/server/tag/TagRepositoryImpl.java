@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,6 +51,12 @@ public class TagRepositoryImpl implements TagRepository, Repository {
 
     @Nonnull
     private final ObjectMapper objectMapper;
+
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private final Lock readLock = readWriteLock.readLock();
+
+    private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
     public TagRepositoryImpl(@Nonnull ProjectId projectId,
@@ -83,9 +92,15 @@ public class TagRepositoryImpl implements TagRepository, Repository {
     }
 
     public void saveTag(@Nonnull Tag tag) {
-        checkNotNull(tag);
-        Document document = toDocument(tag);
-        getCollection().replaceOne(toFilter(tag), document, upsert());
+        writeLock.lock();
+        try {
+            checkNotNull(tag);
+            Document document = toDocument(tag);
+            getCollection().replaceOne(toFilter(tag), document, upsert());
+        } finally {
+            writeLock.unlock();
+        }
+
     }
 
     private Document toDocument(@Nonnull Tag tag) {
@@ -93,38 +108,62 @@ public class TagRepositoryImpl implements TagRepository, Repository {
     }
 
     public void saveTags(@Nonnull Iterable<Tag> tags) {
-        checkNotNull(tags);
-        Spliterator<Tag> spliterator = tags.spliterator();
-        List<WriteModel<Document>> updates = stream(spliterator, false)
-                .map(tag -> new ReplaceOneModel<>(
-                        toFilter(tag),
-                        toDocument(tag),
-                        upsert()
-                ))
-                .collect(toList());
-        BulkWriteResult bulkWriteResult = getCollection().bulkWrite(updates);
+        writeLock.lock();
+        try {
+            checkNotNull(tags);
+            Spliterator<Tag> spliterator = tags.spliterator();
+            List<WriteModel<Document>> updates = stream(spliterator, false)
+                    .map(tag -> new ReplaceOneModel<>(
+                            toFilter(tag),
+                            toDocument(tag),
+                            upsert()
+                    ))
+                    .collect(toList());
+            BulkWriteResult bulkWriteResult = getCollection().bulkWrite(updates);
+        } finally {
+            writeLock.unlock();
+        }
+
     }
 
     public void deleteTag(@Nonnull TagId tagId) {
-        checkNotNull(tagId);
-        getCollection().deleteOne(new Document("_id", tagId.getId()));
+        writeLock.lock();
+        try {
+            checkNotNull(tagId);
+            getCollection().deleteOne(new Document("_id", tagId.getId()));
+        } finally {
+            writeLock.unlock();
+        }
+
     }
 
     @Nonnull
     public List<Tag> findTags() {
-        Document filter = new Document(Tag.PROJECT_ID, projectId.getId());
-        FindIterable<Document> documents = getCollection().find(filter);
-        Stream<Document> docs = stream(documents.spliterator(), false);
-        return docs.map(doc -> objectMapper.convertValue(doc, Tag.class))
-                   .collect(toImmutableList());
+        readLock.lock();
+        try {
+            Document filter = new Document(Tag.PROJECT_ID, projectId.getId());
+            FindIterable<Document> documents = getCollection().find(filter);
+            Stream<Document> docs = stream(documents.spliterator(), false);
+            return docs.map(doc -> objectMapper.convertValue(doc, Tag.class))
+                       .collect(toImmutableList());
+        } finally {
+            readLock.unlock();
+        }
+
     }
 
     @Nonnull
     public Optional<Tag> findTagByTagId(@Nonnull TagId tagId) {
-        Document document = getCollection().find(toFilter(tagId))
-                                           .limit(1)
-                                           .first();
-        return Optional.ofNullable(document)
-                       .map(doc -> objectMapper.convertValue(doc, Tag.class));
+        readLock.lock();
+        try {
+            Document document = getCollection().find(toFilter(tagId))
+                                               .limit(1)
+                                               .first();
+            return Optional.ofNullable(document)
+                           .map(doc -> objectMapper.convertValue(doc, Tag.class));
+        } finally {
+            readLock.unlock();
+        }
+
     }
 }
