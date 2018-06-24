@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 
 /**
  * Matthew Horridge
@@ -20,11 +21,7 @@ public class RpcWhiteList implements Action, Result {
 
     private Criteria criteria;
 
-
-    public RpcWhiteList(Criteria criteria, Color color) {
-        this.criteria = criteria;
-        this.color = color;
-    }
+    MultiMatchType multiMatchType;
 
     public RpcWhiteList() {
     }
@@ -37,5 +34,19 @@ public class RpcWhiteList implements Action, Result {
         return color;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
+    public void setCriteria(Criteria criteria) {
+        this.criteria = criteria;
+    }
+
+    public MultiMatchType getMultiMatchType() {
+        return multiMatchType;
+    }
+
+    public void setMultiMatchType(MultiMatchType multiMatchType) {
+        this.multiMatchType = multiMatchType;
+    }
 }

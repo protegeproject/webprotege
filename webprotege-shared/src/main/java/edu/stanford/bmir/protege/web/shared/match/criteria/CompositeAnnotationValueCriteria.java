@@ -27,19 +27,15 @@ public abstract class CompositeAnnotationValueCriteria implements AnnotationValu
     @JsonProperty(ANNOTATION_VALUES)
     public abstract ImmutableList<? extends AnnotationValueCriteria> getAnnotationValueCriteria();
 
-    protected abstract int getMultiMatchTypeOrdinal();
-
     @JsonProperty(MATCH_TYPE)
     @Nonnull
-    public MultiMatchType getMultiMatchType() {
-        return MultiMatchType.values()[getMultiMatchTypeOrdinal()];
-    }
+    public abstract MultiMatchType getMultiMatchType();
 
     @JsonCreator
     @Nonnull
     public static CompositeAnnotationValueCriteria get(@Nonnull @JsonProperty(ANNOTATION_VALUES) ImmutableList<? extends AnnotationValueCriteria> annotationValueCriteria,
                                                        @Nonnull @JsonProperty(MATCH_TYPE) MultiMatchType multiMatchType) {
-        return new AutoValue_CompositeAnnotationValueCriteria(annotationValueCriteria, multiMatchType.ordinal());
+        return new AutoValue_CompositeAnnotationValueCriteria(annotationValueCriteria, multiMatchType);
     }
 
     @Override
