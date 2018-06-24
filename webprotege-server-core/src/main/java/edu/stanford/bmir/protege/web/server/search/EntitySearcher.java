@@ -215,6 +215,7 @@ public class EntitySearcher {
                    .skip(skip)
                    .peek(entity -> filledCounter.increment())
                    .limit(limit)
+                   .peek(entity -> tagsByEntity.putAll(entity, tagsManager.getTags(entity)))
                    .map(entity -> {
                        String rendering = dictionaryManager.getShortForm(entity);
                        return toSearchResult(entity, rendering, "", 1, ImmutableIntArray.of(0), MatchType.TAG);
