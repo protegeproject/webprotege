@@ -111,7 +111,8 @@ public class RootCriteria_Serialization_TestCase {
     @Test
     public void shouldSerialize_SubClassOfCriteria() throws IOException {
         testSerialization(
-                SubClassOfCriteria.get(new OWLClassImpl(OWLRDFVocabulary.OWL_THING.getIRI()))
+                SubClassOfCriteria.get(new OWLClassImpl(OWLRDFVocabulary.OWL_THING.getIRI()),
+                                       SubClassFilterType.DESCENDANT_SUBCLASSES)
         );
     }
 

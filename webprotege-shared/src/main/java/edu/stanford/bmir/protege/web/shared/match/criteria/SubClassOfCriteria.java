@@ -21,14 +21,20 @@ public abstract class SubClassOfCriteria implements EntityMatchCriteria {
 
     private static final String TARGET = "target";
 
+    private static final String FILTER_TYPE = "filterType";
+
     @JsonProperty(TARGET)
     @Nonnull
     public abstract OWLClass getTarget();
 
+    @JsonProperty(FILTER_TYPE)
+    public abstract SubClassFilterType getFilterType();
+
     @JsonCreator
     @Nonnull
-    public static SubClassOfCriteria get(@Nonnull @JsonProperty(TARGET) OWLClass target) {
-        return new AutoValue_SubClassOfCriteria(target);
+    public static SubClassOfCriteria get(@Nonnull @JsonProperty(TARGET) OWLClass target,
+                                         @Nonnull @JsonProperty(FILTER_TYPE) SubClassFilterType filterType) {
+        return new AutoValue_SubClassOfCriteria(target, filterType);
     }
 
     @Override

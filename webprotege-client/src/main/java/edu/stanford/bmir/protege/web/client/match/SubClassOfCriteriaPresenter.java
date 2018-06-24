@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
+import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassFilterType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
 
 import javax.annotation.Nonnull;
@@ -43,7 +44,7 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     @Override
     public Optional<? extends SubClassOfCriteria> getCriteria() {
         return view.getOwlClass()
-                   .map(SubClassOfCriteria::get);
+                   .map(cls -> SubClassOfCriteria.get(cls, SubClassFilterType.DESCENDANT_SUBCLASSES));
     }
 
     @Override

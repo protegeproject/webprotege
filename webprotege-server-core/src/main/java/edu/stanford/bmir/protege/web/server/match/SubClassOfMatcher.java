@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.match;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassFilterType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -27,22 +28,32 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
     @Nonnull
     private final OWLClass cls;
 
-    private final Set<OWLClass> descendants;
+    private final Set<OWLClass> subClasses;
 
-    private boolean filledDescedants = false;
+    private final SubClassFilterType filterType;
 
-    public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProvider provider, @Nonnull OWLClass cls) {
+    private boolean filledClasses = false;
+
+    public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProvider provider,
+                             @Nonnull OWLClass cls,
+                             @Nonnull SubClassFilterType filterType) {
         this.provider = checkNotNull(provider);
+        this.filterType = checkNotNull(filterType);
         this.cls = checkNotNull(cls);
-        descendants = new HashSet<>();
+        subClasses = new HashSet<>();
     }
 
     @Override
     public boolean matches(@Nonnull OWLEntity value) {
-        if(value.isOWLClass() && !filledDescedants) {
-            filledDescedants = true;
-            descendants.addAll(provider.getDescendants(cls));
+        if(value.isOWLClass() && !filledClasses) {
+            filledClasses = true;
+            if (filterType == SubClassFilterType.DESCENDANT_SUBCLASSES) {
+                subClasses.addAll(provider.getDescendants(cls));
+            }
+            else {
+                subClasses.addAll(provider.getChildren(cls));
+            }
         }
-        return value.isOWLClass() && descendants.contains(value.asOWLClass());
+        return value.isOWLClass() && subClasses.contains(value.asOWLClass());
     }
 }
