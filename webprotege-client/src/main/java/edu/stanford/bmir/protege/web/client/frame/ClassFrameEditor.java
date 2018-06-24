@@ -103,10 +103,8 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         iriField.setValue(decodedIri);
         ArrayList<PropertyAnnotationValue> annotationPropertyValues = new ArrayList<>(lcf.getFrame()
                                                                                .getAnnotationPropertyValues());
-        Collections.sort(annotationPropertyValues);
         annotations.setValue(new PropertyValueList(annotationPropertyValues));
         ArrayList<PropertyValue> logicalPropertyValues = new ArrayList<>(lcf.getFrame().getLogicalPropertyValues());
-        Collections.sort(logicalPropertyValues);
         properties.setValue(new PropertyValueList(logicalPropertyValues));
         classes.setValue(new ArrayList<>(lcf.getFrame().getClassEntries()));
     }

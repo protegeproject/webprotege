@@ -37,8 +37,8 @@ public class ClassFrame implements EntityFrame<OWLClassData>, HasSignature, Seri
 
     public ClassFrame(OWLClassData subject, Set<OWLClassData> classes, Set<PropertyValue> propertyValues) {
         this.subject = checkNotNull(subject);
-        this.classEntries = new HashSet<>(checkNotNull(classes));
-        this.propertyValues = new HashSet<>(checkNotNull(propertyValues));
+        this.classEntries = new LinkedHashSet<>(checkNotNull(classes));
+        this.propertyValues = new LinkedHashSet<>(checkNotNull(propertyValues));
     }
 
     /**
@@ -171,7 +171,7 @@ public class ClassFrame implements EntityFrame<OWLClassData>, HasSignature, Seri
         private OWLClassData subject;
 
         // Mutable
-        private final Set<OWLClassData> classes = new HashSet<>();
+        private final Set<OWLClassData> classes = new LinkedHashSet<>();
 
         // Mutable
         private final Set<PropertyValue> propertyValues = new LinkedHashSet<PropertyValue>();
