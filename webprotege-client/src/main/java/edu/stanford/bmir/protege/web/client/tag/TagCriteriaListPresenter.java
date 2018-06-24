@@ -50,7 +50,7 @@ public class TagCriteriaListPresenter {
         container.setWidget(view);
         view.setAddHandler(this::handleAdd);
         // Add a blank criteria view
-        addTagCriteriaView();
+        addTagCriteriaView(false);
     }
 
     /**
@@ -89,14 +89,14 @@ public class TagCriteriaListPresenter {
         presenters.clear();
     }
 
-    private TagCriteriaPresenter addTagCriteriaView() {
+    private TagCriteriaPresenter addTagCriteriaView(boolean scrollIntoView) {
         TagCriteriaPresenter presenter = presenterProvider.get();
         presenters.add(presenter);
         TagCriteriaViewContainer container = tagCriteriaViewContainerProvider.get();
         container.setRemoveHandler(() -> handleRemove(presenter));
         presenter.start(container.getViewContainer());
         presenter.setAvailableTags(availableTagLabels);
-        view.addTagCriteriaViewContainer(container, true);
+        view.addTagCriteriaViewContainer(container, scrollIntoView);
         return presenter;
     }
 
@@ -110,7 +110,7 @@ public class TagCriteriaListPresenter {
     }
 
     private void handleAdd() {
-        addTagCriteriaView();
+        addTagCriteriaView(true);
     }
 
     /**
@@ -131,7 +131,7 @@ public class TagCriteriaListPresenter {
         clear();
         tags.forEach(tag -> {
             tag.getCriteria().forEach(criteria -> {
-                TagCriteriaPresenter presenter = addTagCriteriaView();
+                TagCriteriaPresenter presenter = addTagCriteriaView(false);
                 presenter.setSelectedTagLabel(tag.getLabel());
                 presenter.setCriteria(criteria);
             });

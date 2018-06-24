@@ -34,9 +34,11 @@
             flex-grow: 0;
             flex-shrink: 0;
         }
+        .viewContainer {
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:SimplePanel ui:field="viewContainer"/>
+        <g:SimplePanel ui:field="viewContainer" addStyleNames="{style.viewContainer}"/>
         <g:HTMLPanel addStyleNames="{style.buttonContainer}">
             <button:DeleteButton ui:field="removeButton" addStyleNames="{style.deleteButton}"/>
         </g:HTMLPanel>

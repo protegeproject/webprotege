@@ -128,10 +128,10 @@ public abstract class CriteriaListPresenter<C extends Criteria, F extends C> imp
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setCriteria(@Nonnull F criteria) {
         clear();
-        GWT.log("[CriteriaListPresenter] Decomposing " + criteria.toString());
         ImmutableList<? extends C> decomposedCriteria = decomposeCompositeCriteria(criteria);
         view.setMultiMatchType(getMultiMatchType(criteria));
         decomposedCriteria.forEach(c -> {
