@@ -38,5 +38,8 @@ public interface RootCriteriaVisitor<R> {
 
     @Nonnull
     R visit(@Nonnull SubClassOfCriteria criteria);
+
+    @Nonnull
+    R visit(@Nonnull InstanceOfCriteria instanceOfCriteria);
 }
 

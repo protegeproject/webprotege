@@ -22,7 +22,7 @@
                                            placeholder="Enter class name"
                                            addStyleNames="{style.editorField}"/>
         <g:HTMLPanel addStyleNames="{style.checkBoxPadding}">
-            <g:CheckBox ui:field="directSubClassesCheckBox" text="Direct subclasses"/>
+            <g:CheckBox ui:field="directCheckBox" text="Direct"/>
         </g:HTMLPanel>
 
     </g:HTMLPanel>

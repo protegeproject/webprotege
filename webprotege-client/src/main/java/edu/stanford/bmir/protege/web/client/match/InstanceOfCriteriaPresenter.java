@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
-import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassOfCriteria;
+import edu.stanford.bmir.protege.web.shared.match.criteria.InstanceOfCriteria;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -13,9 +13,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 17 Jun 2018
+ * 25 Jun 2018
  */
-public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOfCriteria> {
+public class InstanceOfCriteriaPresenter implements CriteriaPresenter<InstanceOfCriteria> {
 
     @Nonnull
     private final ClassSelectorView view;
@@ -24,7 +24,7 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     private final ClassIriRenderer renderer;
 
     @Inject
-    public SubClassOfCriteriaPresenter(@Nonnull ClassSelectorView view,
+    public InstanceOfCriteriaPresenter(@Nonnull ClassSelectorView view,
                                        @Nonnull ClassIriRenderer renderer) {
         this.view = checkNotNull(view);
         this.renderer = checkNotNull(renderer);
@@ -41,14 +41,14 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     }
 
     @Override
-    public Optional<? extends SubClassOfCriteria> getCriteria() {
-        return view.getOwlClass()
-                   .map(cls -> SubClassOfCriteria.get(cls, view.getHierarchyFilterType()));
+    public Optional<? extends InstanceOfCriteria> getCriteria() {
+        return view.getOwlClass().map(cls -> {
+            return InstanceOfCriteria.get(cls, view.getHierarchyFilterType());
+        });
     }
 
     @Override
-    public void setCriteria(@Nonnull SubClassOfCriteria criteria) {
-        renderer.renderClassIri(criteria.getTarget().getIRI(),
-                                view::setOwlClass);
+    public void setCriteria(@Nonnull InstanceOfCriteria criteria) {
+        renderer.renderClassIri(criteria.getTarget().getIRI(), view::setOwlClass);
     }
 }

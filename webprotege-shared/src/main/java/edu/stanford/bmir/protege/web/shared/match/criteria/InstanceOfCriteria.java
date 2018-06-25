@@ -12,12 +12,12 @@ import javax.annotation.Nonnull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 17 Jun 2018
+ * 25 Jun 2018
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-@JsonTypeName("SubClassOf")
-public abstract class SubClassOfCriteria implements EntityMatchCriteria {
+@JsonTypeName("InstanceOf")
+public abstract class InstanceOfCriteria implements EntityMatchCriteria {
 
     private static final String TARGET = "target";
 
@@ -32,10 +32,11 @@ public abstract class SubClassOfCriteria implements EntityMatchCriteria {
 
     @JsonCreator
     @Nonnull
-    public static SubClassOfCriteria get(@Nonnull @JsonProperty(TARGET) OWLClass target,
+    public static InstanceOfCriteria get(@Nonnull @JsonProperty(TARGET) OWLClass target,
                                          @Nonnull @JsonProperty(FILTER_TYPE) HierarchyFilterType filterType) {
-        return new AutoValue_SubClassOfCriteria(target, filterType);
+        return new AutoValue_InstanceOfCriteria(target, filterType);
     }
+
 
     @Override
     public <R> R accept(RootCriteriaVisitor<R> visitor) {

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.match;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import edu.stanford.bmir.protege.web.server.hierarchy.ClassHierarchyProvider;
-import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassFilterType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -30,13 +30,13 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
 
     private final Set<OWLClass> subClasses;
 
-    private final SubClassFilterType filterType;
+    private final HierarchyFilterType filterType;
 
     private boolean filledClasses = false;
 
     public SubClassOfMatcher(@Provided @Nonnull ClassHierarchyProvider provider,
                              @Nonnull OWLClass cls,
-                             @Nonnull SubClassFilterType filterType) {
+                             @Nonnull HierarchyFilterType filterType) {
         this.provider = checkNotNull(provider);
         this.filterType = checkNotNull(filterType);
         this.cls = checkNotNull(cls);
@@ -47,7 +47,7 @@ public class SubClassOfMatcher implements Matcher<OWLEntity> {
     public boolean matches(@Nonnull OWLEntity value) {
         if(value.isOWLClass() && !filledClasses) {
             filledClasses = true;
-            if (filterType == SubClassFilterType.DESCENDANT_SUBCLASSES) {
+            if (filterType == HierarchyFilterType.ALL) {
                 subClasses.addAll(provider.getDescendants(cls));
             }
             else {

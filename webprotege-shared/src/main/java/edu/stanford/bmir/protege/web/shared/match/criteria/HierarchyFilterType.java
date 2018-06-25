@@ -5,9 +5,9 @@ package edu.stanford.bmir.protege.web.shared.match.criteria;
  * Stanford Center for Biomedical Informatics Research
  * 24 Jun 2018
  */
-public enum SubClassFilterType {
+public enum HierarchyFilterType {
 
-    DIRECT_SUBCLASSES,
+    DIRECT,
 
-    DESCENDANT_SUBCLASSES;
+    ALL;
 }

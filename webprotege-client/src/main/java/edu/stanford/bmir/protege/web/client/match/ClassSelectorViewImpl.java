@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassFilterType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ public class ClassSelectorViewImpl extends Composite implements ClassSelectorVie
     PrimitiveDataEditorImpl editorField;
 
     @UiField
-    CheckBox directSubClassesCheckBox;
+    CheckBox directCheckBox;
 
     @Inject
     public ClassSelectorViewImpl(@Nonnull PrimitiveDataEditorImpl editorField) {
@@ -52,18 +52,18 @@ public class ClassSelectorViewImpl extends Composite implements ClassSelectorVie
     }
 
     @Override
-    public SubClassFilterType getSubClassFilterType() {
-        if(directSubClassesCheckBox.getValue()) {
-            return SubClassFilterType.DIRECT_SUBCLASSES;
+    public HierarchyFilterType getHierarchyFilterType() {
+        if(directCheckBox.getValue()) {
+            return HierarchyFilterType.DIRECT;
         }
         else {
-            return SubClassFilterType.DESCENDANT_SUBCLASSES;
+            return HierarchyFilterType.ALL;
         }
     }
 
     @Override
-    public void setSubClassFilterType(@Nonnull SubClassFilterType filterType) {
-        directSubClassesCheckBox.setValue(filterType == SubClassFilterType.DIRECT_SUBCLASSES);
+    public void setHierarchyFilterType(@Nonnull HierarchyFilterType filterType) {
+        directCheckBox.setValue(filterType == HierarchyFilterType.DIRECT);
     }
 
     interface ClassSelectorViewImplUiBinder extends UiBinder<HTMLPanel, ClassSelectorViewImpl> {

@@ -27,6 +27,9 @@ public class MatcherFactory {
     private final SubClassOfMatcherFactory subClassOfMatcherFactory;
 
     @Nonnull
+    private final InstanceOfMatcherFactory instanceOfMatcherFactory;
+
+    @Nonnull
     private final ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory;
 
     @Nonnull
@@ -46,13 +49,14 @@ public class MatcherFactory {
 
     @Inject
     public MatcherFactory(@Nonnull SubClassOfMatcherFactory subClassOfMatcherFactory,
-                          @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
+                          @Nonnull InstanceOfMatcherFactory instanceOfMatcherFactory, @Nonnull ConflictingBooleanValuesMatcherFactory conflictingBooleanValuesMatcherFactory,
                           @Nonnull EntityIsDeprecatedMatcherFactory entityIsDeprecatedMatcherFactory,
                           @Nonnull AnnotationValuesAreNotDisjointMatcherFactory annotationValuesAreNotDisjointMatcherFactory,
                           @Nonnull NonUniqueLangTagsMatcherFactory nonUniqueLangTagsMatcherFactory,
                           @Nonnull EntityAnnotationMatcherFactory entityAnnotationMatcherFactory,
                           @Nonnull IriAnnotationsMatcherFactory iriAnnotationsMatcherFactory) {
         this.subClassOfMatcherFactory = checkNotNull(subClassOfMatcherFactory);
+        this.instanceOfMatcherFactory = checkNotNull(instanceOfMatcherFactory);
         this.conflictingBooleanValuesMatcherFactory = checkNotNull(conflictingBooleanValuesMatcherFactory);
         this.entityIsDeprecatedMatcherFactory = checkNotNull(entityIsDeprecatedMatcherFactory);
         this.annotationValuesAreNotDisjointMatcherFactory = checkNotNull(annotationValuesAreNotDisjointMatcherFactory);
@@ -139,6 +143,13 @@ public class MatcherFactory {
             @Override
             public Matcher<OWLEntity> visit(@Nonnull SubClassOfCriteria criteria) {
                 return subClassOfMatcherFactory.create(criteria.getTarget(),
+                                                       criteria.getFilterType());
+            }
+
+            @Nonnull
+            @Override
+            public Matcher<OWLEntity> visit(@Nonnull InstanceOfCriteria criteria) {
+                return instanceOfMatcherFactory.create(criteria.getTarget(),
                                                        criteria.getFilterType());
             }
         });

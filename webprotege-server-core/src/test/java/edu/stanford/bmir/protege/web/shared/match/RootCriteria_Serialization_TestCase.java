@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.match.criteria.*;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
@@ -112,7 +111,7 @@ public class RootCriteria_Serialization_TestCase {
     public void shouldSerialize_SubClassOfCriteria() throws IOException {
         testSerialization(
                 SubClassOfCriteria.get(new OWLClassImpl(OWLRDFVocabulary.OWL_THING.getIRI()),
-                                       SubClassFilterType.DESCENDANT_SUBCLASSES)
+                                       HierarchyFilterType.ALL)
         );
     }
 
