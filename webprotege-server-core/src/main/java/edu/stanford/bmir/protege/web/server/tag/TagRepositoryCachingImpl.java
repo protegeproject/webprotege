@@ -1,14 +1,14 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -20,13 +20,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 22 Jun 2018
  */
+@ProjectSingleton
 public class TagRepositoryCachingImpl implements TagRepository {
 
     @Nonnull
     private final TagRepositoryImpl delegate;
 
-    @Nullable
-    private CachedTags cachedTags;
+    private static final String KEY = "KEY";
+
+    @Nonnull
+    private final Cache<String, CachedTags> cache = Caffeine.newBuilder()
+            .build();
 
 
     @Inject
@@ -34,33 +38,30 @@ public class TagRepositoryCachingImpl implements TagRepository {
         this.delegate = checkNotNull(delegate);
     }
 
-    private synchronized void invalidate() {
-        cachedTags = null;
+    private void invalidate() {
+        cache.invalidate(KEY);
     }
 
-    private synchronized CachedTags get() {
-        if (cachedTags == null) {
-            cachedTags = CachedTags.build(delegate.findTags());
-        }
-        return cachedTags;
+    private CachedTags get() {
+        return cache.get(KEY, k -> CachedTags.build(delegate.findTags()));
     }
 
     @Override
     public synchronized void saveTag(@Nonnull Tag tag) {
-        invalidate();
         delegate.saveTag(tag);
+        invalidate();
     }
 
     @Override
     public synchronized void saveTags(@Nonnull Iterable<Tag> tags) {
-        invalidate();
         delegate.saveTags(tags);
+        invalidate();
     }
 
     @Override
     public synchronized void deleteTag(@Nonnull TagId tagId) {
-        invalidate();
         delegate.deleteTag(tagId);
+        invalidate();
     }
 
     @Nonnull

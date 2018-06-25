@@ -568,8 +568,7 @@ public class ProjectModule {
     }
 
     @Provides
-    TagRepository provideTagRepository(TagRepositoryImpl impl) {
-        impl.ensureIndexes();
+    TagRepository provideTagRepository(TagRepositoryCachingImpl impl) {
         return impl;
     }
 
