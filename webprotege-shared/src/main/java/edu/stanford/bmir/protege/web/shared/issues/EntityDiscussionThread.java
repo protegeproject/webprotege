@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Entity(value = "EntityDiscussionThreads", noClassnameStored = true)
 @Indexes(
         {
-                @Index(fields = {@Field("projectId"), @Field("entity")}),
+                @Index(fields = {@Field("projectId"), @Field("entity"), @Field("status")}),
                 @Index(fields = @Field("comments.id"), options = @IndexOptions(unique = true))
         }
 )
