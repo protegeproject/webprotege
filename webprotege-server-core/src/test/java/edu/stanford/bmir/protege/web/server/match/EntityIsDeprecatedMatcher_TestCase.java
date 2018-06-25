@@ -64,14 +64,9 @@ public class EntityIsDeprecatedMatcher_TestCase {
 
         when(entity.getIRI()).thenReturn(iri);
         when(hasAxioms.getAnnotationAssertionAxioms(iri)).thenReturn(axioms.stream());
+        when(ax.getProperty()).thenReturn(property);
+        when(ax.getValue()).thenReturn(value);
         axioms.add(ax);
-
-        when(annotation.getProperty()).thenReturn(property);
-        when(annotation.getValue()).thenReturn(value);
-        when(ax.getAnnotation()).thenReturn(annotation);
-
-
-
     }
 
     @Test
