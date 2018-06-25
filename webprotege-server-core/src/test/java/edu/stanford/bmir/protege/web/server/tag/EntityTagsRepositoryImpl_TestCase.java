@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +27,11 @@ import static org.hamcrest.Matchers.*;
  * Stanford Center for Biomedical Informatics Research
  * 15 Mar 2018
  */
-public class EntityTagsRepository_TestCase {
+public class EntityTagsRepositoryImpl_TestCase {
 
     private static final String UUID = "12345678-1234-1234-1234-123456789abc";
 
-    private EntityTagsRepository repository;
+    private EntityTagsRepositoryImpl repository;
 
     private MongoClient mongoClient;
 
@@ -48,7 +47,7 @@ public class EntityTagsRepository_TestCase {
         Morphia morphia = createMorphia();
         mongoClient = createMongoClient();
         Datastore datastore = morphia.createDatastore(mongoClient, getTestDbName());
-        repository = new EntityTagsRepository(datastore);
+        repository = new EntityTagsRepositoryImpl(datastore);
         repository.ensureIndexes();
         entity = new OWLClassImpl(IRI.create("http://stuff.com/entities/A"));
         tagIdA = TagId.getId("12345678-1234-1234-1234-123456789abc");

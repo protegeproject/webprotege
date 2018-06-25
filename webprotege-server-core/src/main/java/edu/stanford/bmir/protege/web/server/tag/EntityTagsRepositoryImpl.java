@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toMap;
  * Stanford Center for Biomedical Informatics Research
  * 15 Mar 2018
  */
-public class EntityTagsRepository implements Repository {
+public class EntityTagsRepositoryImpl implements Repository {
 
     @Nonnull
     private final Datastore datastore;
@@ -41,7 +41,7 @@ public class EntityTagsRepository implements Repository {
     private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
-    public EntityTagsRepository(@Nonnull Datastore datastore) {
+    public EntityTagsRepositoryImpl(@Nonnull Datastore datastore) {
         this.datastore = checkNotNull(datastore);
     }
 

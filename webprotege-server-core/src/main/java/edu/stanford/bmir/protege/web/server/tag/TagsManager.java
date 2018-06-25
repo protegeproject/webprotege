@@ -33,7 +33,7 @@ public class TagsManager {
     private final ProjectId projectId;
 
     @Nonnull
-    private final EntityTagsRepository entityTagsRepository;
+    private final EntityTagsRepositoryImpl entityTagsRepository;
 
     @Nonnull
     private final CriteriaBasedTagsManager criteriaBasedTagsManager;
@@ -56,7 +56,7 @@ public class TagsManager {
 
     @Inject
     public TagsManager(@Nonnull ProjectId projectId,
-                       @Nonnull EntityTagsRepository entityTagsRepository,
+                       @Nonnull EntityTagsRepositoryImpl entityTagsRepository,
                        @Nonnull CriteriaBasedTagsManager criteriaBasedTagsManager,
                        @Nonnull TagRepository tagRepository,
                        @Nonnull HasPostEvents<ProjectEvent<?>> eventBus) {
