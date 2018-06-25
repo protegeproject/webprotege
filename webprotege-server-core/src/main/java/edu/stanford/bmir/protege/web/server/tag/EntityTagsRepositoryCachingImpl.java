@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -32,37 +31,40 @@ public class EntityTagsRepositoryCachingImpl implements EntityTagsRepository, Re
     }
 
     @Override
-    public void save(EntityTags tag) {
+    public void save(@Nonnull EntityTags tag) {
         delegate.save(tag);
     }
 
     @Override
-    public void addTag(ProjectId projectId, OWLEntity entity, TagId tagId) {
-        delegate.addTag(projectId, entity, tagId);
+    public void addTag(@Nonnull OWLEntity entity, @Nonnull TagId tagId) {
+        delegate.addTag(entity, tagId);
     }
 
     @Override
-    public void removeTag(ProjectId projectId, OWLEntity entity, TagId tagId) {
-        delegate.removeTag(projectId, entity, tagId);
+    public void removeTag(@Nonnull OWLEntity entity, @Nonnull TagId tagId) {
+        delegate.removeTag(entity, tagId);
     }
 
     @Override
-    public void removeTag(ProjectId projectId, TagId tagId) {
-        delegate.removeTag(projectId, tagId);
+    public void removeTag(@Nonnull TagId tagId) {
+        delegate.removeTag(tagId);
     }
 
+    @Nonnull
     @Override
-    public Map<OWLEntity, EntityTags> findByProject(ProjectId projectId) {
-        return delegate.findByProject(projectId);
+    public Map<OWLEntity, EntityTags> findAll() {
+        return delegate.findAll();
     }
 
+    @Nonnull
     @Override
-    public Optional<EntityTags> findByEntity(ProjectId projectId, OWLEntity entity) {
-        return delegate.findByEntity(projectId, entity);
+    public Optional<EntityTags> findByEntity(@Nonnull OWLEntity entity) {
+        return delegate.findByEntity(entity);
     }
 
+    @Nonnull
     @Override
-    public Collection<EntityTags> findByTagId(TagId tagId) {
+    public Collection<EntityTags> findByTagId(@Nonnull TagId tagId) {
         return delegate.findByTagId(tagId);
     }
 }

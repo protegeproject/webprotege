@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.tag;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
@@ -18,11 +17,9 @@ import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.tag.EntityTags.*;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -34,6 +31,9 @@ import static java.util.stream.Collectors.toMap;
 public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repository {
 
     @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final Datastore datastore;
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
@@ -43,7 +43,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     private final Lock writeLock = readWriteLock.writeLock();
 
     @Inject
-    public EntityTagsRepositoryImpl(@Nonnull Datastore datastore) {
+    public EntityTagsRepositoryImpl(@Nonnull ProjectId projectId,
+                                    @Nonnull Datastore datastore) {
+        this.projectId = checkNotNull(projectId);
         this.datastore = checkNotNull(datastore);
     }
 
@@ -53,7 +55,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     }
 
     @Override
-    public void save(EntityTags tag) {
+    public void save(@Nonnull EntityTags tag) {
         try {
             writeLock.lock();
             datastore.delete(tagWithProjectIdAndEntity(tag.getProjectId(), tag.getEntity()));
@@ -64,7 +66,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     }
 
     @Override
-    public void addTag(ProjectId projectId, OWLEntity entity, TagId tagId) {
+    public void addTag(@Nonnull OWLEntity entity, @Nonnull TagId tagId) {
         try {
             writeLock.lock();
             Query<EntityTags> query = tagWithProjectIdAndEntity(projectId, entity);
@@ -77,7 +79,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     }
 
     @Override
-    public void removeTag(ProjectId projectId, OWLEntity entity, TagId tagId) {
+    public void removeTag(@Nonnull OWLEntity entity, @Nonnull TagId tagId) {
         try {
             writeLock.lock();
             Query<EntityTags> query = tagWithProjectIdAndEntity(projectId, entity);
@@ -90,7 +92,7 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     }
 
     @Override
-    public void removeTag(ProjectId projectId, TagId tagId) {
+    public void removeTag(@Nonnull TagId tagId) {
         try {
             writeLock.lock();
             Query<EntityTags> query = datastore.createQuery(EntityTags.class)
@@ -109,8 +111,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
                         .field(ENTITY).equal(entity);
     }
 
+    @Nonnull
     @Override
-    public Map<OWLEntity, EntityTags> findByProject(ProjectId projectId) {
+    public Map<OWLEntity, EntityTags> findAll() {
         try {
             readLock.lock();
             return datastore.createQuery(EntityTags.class)
@@ -123,8 +126,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
         }
     }
 
+    @Nonnull
     @Override
-    public Optional<EntityTags> findByEntity(ProjectId projectId, OWLEntity entity) {
+    public Optional<EntityTags> findByEntity(@Nonnull OWLEntity entity) {
         try {
             readLock.lock();
             return Optional.ofNullable(tagWithProjectIdAndEntity(projectId, entity).get());
@@ -133,8 +137,9 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
         }
     }
 
+    @Nonnull
     @Override
-    public Collection<EntityTags> findByTagId(TagId tagId) {
+    public Collection<EntityTags> findByTagId(@Nonnull TagId tagId) {
         try {
             readLock.lock();
             return datastore.find(EntityTags.class)

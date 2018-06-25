@@ -80,7 +80,7 @@ public class TagsManager {
         try {
             readLock.lock();
             Map<TagId, Tag> tagsById = getProjectTagsByTagId();
-            Optional<EntityTags> entityTags = entityTagsRepository.findByEntity(projectId, entity);
+            Optional<EntityTags> entityTags = entityTagsRepository.findByEntity(entity);
             Stream<TagId> explicitTags = entityTags.map(tags -> tags.getTags().stream())
                                                    .orElse(Stream.empty());
 
@@ -100,7 +100,7 @@ public class TagsManager {
         readLock.lock();
         try {
             Multimap<OWLEntity, Tag> result = HashMultimap.create();
-            Map<OWLEntity, EntityTags> tagsByEntity = entityTagsRepository.findByProject(projectId);
+            Map<OWLEntity, EntityTags> tagsByEntity = entityTagsRepository.findAll();
             Map<TagId, Tag> tagsById = getProjectTagsByTagId();
             tagsByEntity.forEach((entity, tags) -> {
                 tags.getTags().stream()
@@ -190,7 +190,7 @@ public class TagsManager {
                                                           .map(EntityTags::getEntity)
                                                           .forEach(modifiedEntityTags::add);
                                       // Remove tag from entity
-                                      entityTagsRepository.removeTag(projectId, tagId);
+                                      entityTagsRepository.removeTag(tagId);
                                   }
                               })
                               .forEach(tagRepository::deleteTag);
@@ -242,8 +242,8 @@ public class TagsManager {
                            @Nonnull Set<TagId> toTagIds) {
         try {
             writeLock.lock();
-            Optional<EntityTags> existingTags = entityTagsRepository.findByEntity(projectId,
-                                                                                  entity);
+            Optional<EntityTags> existingTags = entityTagsRepository.findByEntity(
+                    entity);
             Set<TagId> nextTagIds = new HashSet<>();
             existingTags.ifPresent(entityTags -> nextTagIds.addAll(entityTags.getTags()));
             fromTagIds.stream()
