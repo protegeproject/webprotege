@@ -138,7 +138,8 @@ public class MatcherFactory {
             @Nonnull
             @Override
             public Matcher<OWLEntity> visit(@Nonnull SubClassOfCriteria criteria) {
-                return subClassOfMatcherFactory.create(criteria.getTarget());
+                return subClassOfMatcherFactory.create(criteria.getTarget(),
+                                                       criteria.getFilterType());
             }
         });
     }

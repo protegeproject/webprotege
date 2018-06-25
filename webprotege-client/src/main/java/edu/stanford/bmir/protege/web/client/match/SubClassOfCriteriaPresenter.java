@@ -44,7 +44,7 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     @Override
     public Optional<? extends SubClassOfCriteria> getCriteria() {
         return view.getOwlClass()
-                   .map(cls -> SubClassOfCriteria.get(cls, SubClassFilterType.DESCENDANT_SUBCLASSES));
+                   .map(cls -> SubClassOfCriteria.get(cls, view.getSubClassFilterType()));
     }
 
     @Override

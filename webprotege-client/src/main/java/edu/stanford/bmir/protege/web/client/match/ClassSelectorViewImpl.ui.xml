@@ -11,11 +11,19 @@
             min-width: 250px;
             max-width: 250px;
         }
+        .checkBoxPadding {
+            padding-top: 4px;
+            padding-bottom: 2px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <primitive:PrimitiveDataEditorImpl ui:field="editorField"
                                            classesAllowed="true"
                                            placeholder="Enter class name"
                                            addStyleNames="{style.editorField}"/>
+        <g:HTMLPanel addStyleNames="{style.checkBoxPadding}">
+            <g:CheckBox ui:field="directSubClassesCheckBox" text="Direct subclasses"/>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>

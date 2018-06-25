@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassFilterType;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.annotation.Nonnull;
@@ -18,4 +19,8 @@ public interface ClassSelectorView extends IsWidget {
     Optional<OWLClass> getOwlClass();
 
     void setOwlClass(@Nonnull OWLClassData owlClassData);
+
+    SubClassFilterType getSubClassFilterType();
+
+    void setSubClassFilterType(@Nonnull SubClassFilterType filterType);
 }

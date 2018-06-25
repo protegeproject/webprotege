@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
+import edu.stanford.bmir.protege.web.shared.match.criteria.SubClassFilterType;
 
 /**
  * Matthew Horridge
@@ -22,6 +23,8 @@ public class RpcWhiteList implements Action, Result {
     private Criteria criteria;
 
     MultiMatchType multiMatchType;
+
+    SubClassFilterType subClassFilterType;
 
     public RpcWhiteList() {
     }
@@ -48,5 +51,13 @@ public class RpcWhiteList implements Action, Result {
 
     public void setMultiMatchType(MultiMatchType multiMatchType) {
         this.multiMatchType = multiMatchType;
+    }
+
+    public SubClassFilterType getSubClassFilterType() {
+        return subClassFilterType;
+    }
+
+    public void setSubClassFilterType(SubClassFilterType subClassFilterType) {
+        this.subClassFilterType = subClassFilterType;
     }
 }
