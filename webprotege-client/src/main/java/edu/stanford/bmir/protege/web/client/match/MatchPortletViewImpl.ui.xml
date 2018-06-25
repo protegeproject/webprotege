@@ -6,7 +6,6 @@
         .main {
             display: flex;
             flex-direction: column;
-            padding: 5px;
             overflow: hidden;
             box-sizing: border-box;
         }
