@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.tag;
 
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.tag.TagId;
@@ -29,7 +30,8 @@ import static java.util.stream.Collectors.toMap;
  * Stanford Center for Biomedical Informatics Research
  * 15 Mar 2018
  */
-public class EntityTagsRepositoryImpl implements Repository {
+@ProjectSingleton
+public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repository {
 
     @Nonnull
     private final Datastore datastore;
@@ -50,6 +52,7 @@ public class EntityTagsRepositoryImpl implements Repository {
         datastore.ensureIndexes(EntityTags.class);
     }
 
+    @Override
     public void save(EntityTags tag) {
         try {
             writeLock.lock();
@@ -60,6 +63,7 @@ public class EntityTagsRepositoryImpl implements Repository {
         }
     }
 
+    @Override
     public void addTag(ProjectId projectId, OWLEntity entity, TagId tagId) {
         try {
             writeLock.lock();
@@ -72,6 +76,7 @@ public class EntityTagsRepositoryImpl implements Repository {
         }
     }
 
+    @Override
     public void removeTag(ProjectId projectId, OWLEntity entity, TagId tagId) {
         try {
             writeLock.lock();
@@ -84,6 +89,7 @@ public class EntityTagsRepositoryImpl implements Repository {
         }
     }
 
+    @Override
     public void removeTag(ProjectId projectId, TagId tagId) {
         try {
             writeLock.lock();
@@ -103,6 +109,7 @@ public class EntityTagsRepositoryImpl implements Repository {
                         .field(ENTITY).equal(entity);
     }
 
+    @Override
     public Map<OWLEntity, EntityTags> findByProject(ProjectId projectId) {
         try {
             readLock.lock();
@@ -116,6 +123,7 @@ public class EntityTagsRepositoryImpl implements Repository {
         }
     }
 
+    @Override
     public Optional<EntityTags> findByEntity(ProjectId projectId, OWLEntity entity) {
         try {
             readLock.lock();
@@ -125,6 +133,7 @@ public class EntityTagsRepositoryImpl implements Repository {
         }
     }
 
+    @Override
     public Collection<EntityTags> findByTagId(TagId tagId) {
         try {
             readLock.lock();
