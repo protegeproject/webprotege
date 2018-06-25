@@ -583,8 +583,15 @@ public class ProjectModule {
     }
 
     @Provides
-    EntityTagsRepository provideEntityTagsRepository(EntityTagsRepositoryImpl impl) {
+    EntityTagsRepository provideEntityTagsRepository(EntityTagsRepositoryCachingImpl impl) {
         impl.ensureIndexes();
         return impl;
+    }
+
+    @Provides
+    EntityTagsRepositoryCachingImpl provideEntityTagsRepositoryCachingImpl(EntityTagsRepositoryImpl impl) {
+        EntityTagsRepositoryCachingImpl rep = new EntityTagsRepositoryCachingImpl(impl);
+        rep.preloadCache();
+        return rep;
     }
 }

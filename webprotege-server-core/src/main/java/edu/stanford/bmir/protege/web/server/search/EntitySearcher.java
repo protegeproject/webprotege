@@ -201,7 +201,6 @@ public class EntitySearcher {
         tagsByLabel.clear();
         tagsManager.getProjectTags().forEach(tag -> tagsByLabel.put(tag.getLabel().toLowerCase(), tag));
         tagsByEntity.clear();
-        tagsByEntity.putAll(tagsManager.getTags(projectId));
 
         Counter filledCounter = new Counter();
         tagsByLabel.entrySet().stream()

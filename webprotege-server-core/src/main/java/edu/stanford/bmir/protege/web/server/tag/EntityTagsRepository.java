@@ -28,9 +28,6 @@ public interface EntityTagsRepository {
     void removeTag(@Nonnull TagId tagId);
 
     @Nonnull
-    Map<OWLEntity, EntityTags> findAll();
-
-    @Nonnull
     Optional<EntityTags> findByEntity(@Nonnull OWLEntity entity);
 
     @Nonnull

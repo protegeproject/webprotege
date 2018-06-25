@@ -96,26 +96,6 @@ public class TagsManager {
     }
 
     @Nonnull
-    public Multimap<OWLEntity, Tag> getTags(@Nonnull ProjectId projectId) {
-        readLock.lock();
-        try {
-            Multimap<OWLEntity, Tag> result = HashMultimap.create();
-            Map<OWLEntity, EntityTags> tagsByEntity = entityTagsRepository.findAll();
-            Map<TagId, Tag> tagsById = getProjectTagsByTagId();
-            tagsByEntity.forEach((entity, tags) -> {
-                tags.getTags().stream()
-                    .map(tagsById::get)
-                    .filter(Objects::nonNull)
-                    .forEach(tag -> result.put(entity, tag));
-            });
-            return result;
-        } finally {
-            readLock.unlock();
-        }
-
-    }
-
-    @Nonnull
     private Map<TagId, Tag> getProjectTagsByTagId() {
         try {
             readLock.lock();

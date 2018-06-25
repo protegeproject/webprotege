@@ -112,7 +112,6 @@ public class EntityTagsRepositoryImpl implements EntityTagsRepository, Repositor
     }
 
     @Nonnull
-    @Override
     public Map<OWLEntity, EntityTags> findAll() {
         try {
             readLock.lock();
