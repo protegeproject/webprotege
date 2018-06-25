@@ -26,8 +26,8 @@ import static edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesActi
  * Stanford Center for Biomedical Informatics Research
  * 12 Jun 2018
  */
-@Portlet(id = "portlet.match", title = "Match", tooltip = "Specifies match criteria")
-public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
+@Portlet(id = "portlet.query", title = "Query", tooltip = "Allows asserted information to be queried")
+public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     private static final int PAGE_SIZE = 200;
 
@@ -41,7 +41,7 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     private final MatchPortletView view;
 
     @Inject
-    public MatchPortletPresenter(@Nonnull SelectionModel selectionModel,
+    public QueryPortletPresenter(@Nonnull SelectionModel selectionModel,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
@@ -70,7 +70,6 @@ public class MatchPortletPresenter extends AbstractWebProtegePortletPresenter {
     private void handleExecute() {
         Optional<? extends Criteria> criteria = presenter.getCriteria();
         String s = criteria.map(Object::toString).orElse("Empty");
-        GWT.log(s);
         criteria.ifPresent(c -> {
             PageRequest pageRequest = PageRequest.requestPageWithSize(view.getPageNumber(), PAGE_SIZE);
             view.setExecuteEnabled(false);
