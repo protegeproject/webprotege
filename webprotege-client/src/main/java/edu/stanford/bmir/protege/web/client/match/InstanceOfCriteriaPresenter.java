@@ -42,13 +42,12 @@ public class InstanceOfCriteriaPresenter implements CriteriaPresenter<InstanceOf
 
     @Override
     public Optional<? extends InstanceOfCriteria> getCriteria() {
-        return view.getOwlClass().map(cls -> {
-            return InstanceOfCriteria.get(cls, view.getHierarchyFilterType());
-        });
+        return view.getOwlClass().map(cls -> InstanceOfCriteria.get(cls, view.getHierarchyFilterType()));
     }
 
     @Override
     public void setCriteria(@Nonnull InstanceOfCriteria criteria) {
         renderer.renderClassIri(criteria.getTarget().getIRI(), view::setOwlClass);
+        view.setHierarchyFilterType(criteria.getFilterType());
     }
 }
