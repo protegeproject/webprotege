@@ -45,6 +45,7 @@
 "cv","Chuvash"
 "cy","Welsh"
 "da","Danish"
+"de","German"
 "de-AT","German; Austria"
 "de-CH","German; Switzerland"
 "de-LI","German; Liechtenstein"
