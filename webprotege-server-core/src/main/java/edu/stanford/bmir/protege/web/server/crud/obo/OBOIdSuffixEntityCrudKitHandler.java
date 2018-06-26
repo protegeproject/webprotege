@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -103,7 +104,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
             if(!session.isSessionId(currentId)) {
                 String shortName = numberFormat.format(currentId);
                 IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
-                if (!rootOntology.containsEntityInSignature(iri, true)) {
+                if (!rootOntology.containsEntityInSignature(iri, Imports.INCLUDED)) {
                     session.addSessionId(currentId);
                     setCurrentId(userId, currentId);
                     return iri;
