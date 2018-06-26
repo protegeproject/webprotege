@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -38,14 +36,14 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
     private final DispatchServiceManager dispatchServiceManager;
 
     @Nonnull
-    private final MatchPortletView view;
+    private final QueryPortletView view;
 
     @Inject
     public QueryPortletPresenter(@Nonnull SelectionModel selectionModel,
                                  @Nonnull ProjectId projectId,
                                  @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
-                                 @Nonnull MatchPortletView view) {
+                                 @Nonnull QueryPortletView view) {
         super(selectionModel, projectId);
         this.presenter = checkNotNull(presenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);

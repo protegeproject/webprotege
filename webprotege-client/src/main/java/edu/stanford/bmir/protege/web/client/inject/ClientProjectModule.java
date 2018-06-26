@@ -228,7 +228,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    MatchPortletView provideMatchPortletView(MatchPortletViewImpl impl) {
+    QueryPortletView provideMatchPortletView(QueryPortletViewImpl impl) {
         return impl;
     }
 

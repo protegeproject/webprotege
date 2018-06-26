@@ -16,7 +16,7 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 14 Jun 2018
  */
-public interface MatchPortletView extends IsWidget, HasPagination {
+public interface QueryPortletView extends IsWidget, HasPagination {
 
     interface ExecuteQueryHandler {
         void handleExecute();

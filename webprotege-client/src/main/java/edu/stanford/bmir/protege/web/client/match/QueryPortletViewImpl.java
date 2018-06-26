@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -32,11 +31,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14 Jun 2018
  */
-public class MatchPortletViewImpl extends Composite implements MatchPortletView {
+public class QueryPortletViewImpl extends Composite implements QueryPortletView {
 
     private static final NumberFormat NUMBER_FORMAT = NumberFormat.getDecimalFormat();
 
-    private static MatchPortletViewImplUiBinder ourUiBinder = GWT.create(MatchPortletViewImplUiBinder.class);
+    private static QueryPortletViewImplUiBinder ourUiBinder = GWT.create(QueryPortletViewImplUiBinder.class);
 
     @Nonnull
     private final PrimitiveDataIconProvider primitiveDataIconProvider;
@@ -70,7 +69,7 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
     private ExecuteQueryHandler executeHandler = () -> {};
 
     @Inject
-    public MatchPortletViewImpl(@Nonnull PrimitiveDataIconProvider primitiveDataIconProvider,
+    public QueryPortletViewImpl(@Nonnull PrimitiveDataIconProvider primitiveDataIconProvider,
                                 @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper, @Nonnull PlaceController placeController, @Nonnull Provider<MatchResult> matchResultProvider) {
         this.primitiveDataIconProvider = primitiveDataIconProvider;
         this.typePerspectiveMapper = typePerspectiveMapper;
@@ -195,7 +194,7 @@ public class MatchPortletViewImpl extends Composite implements MatchPortletView 
         paginatorPresenter.setPageNumberChangedHandler(handler);
     }
 
-    interface MatchPortletViewImplUiBinder extends UiBinder<HTMLPanel, MatchPortletViewImpl> {
+    interface QueryPortletViewImplUiBinder extends UiBinder<HTMLPanel, QueryPortletViewImpl> {
 
     }
 }
