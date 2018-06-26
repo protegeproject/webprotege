@@ -23,12 +23,17 @@
             margin-top: 5px;
             font-size: large;
             margin-bottom: 3px;
+            margin-left: 2px;
         }
         .resultsContainer {
             flex-grow: 1;
             flex-shrink: 1;
             overflow-y: scroll;
-            border: 1px solid #f0f0f0;
+            border-top: 1px solid #f0f0f0;
+        }
+        .queryPanel {
+            padding: 10px;
+            padding-bottom: 20px;
         }
         .paginator {
             background-color: literal("var(--inlay-panel--background-color)");
@@ -36,10 +41,13 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:InlineLabel text="Query" addStyleNames="{style.resultsCount} {wp.style.formLabel}"/>
-        <g:SimplePanel ui:field="criteriaContainer" addStyleNames="{style.criteriaContainer}"/>
-        <g:Button ui:field="executeButton" text="Execute" addStyleNames="{style.executeButton} {wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.primaryButton}"/>
+        <g:HTMLPanel addStyleNames="{style.queryPanel}">
+            <g:SimplePanel ui:field="criteriaContainer" addStyleNames="{style.criteriaContainer}"/>
+            <g:Button ui:field="executeButton" text="Execute"
+                      addStyleNames="{style.executeButton} {wp.buttons.button} {wp.buttons.dialogButton} {wp.buttons.primaryButton}"/>
+        </g:HTMLPanel>
         <g:InlineLabel ui:field="resultsCount" text="Results" addStyleNames="{style.resultsCount} {wp.style.formLabel}"/>
-        <g:FlowPanel ui:field="resultsContainer" addStyleNames="{style.resultsContainer}"/>
-        <pagination:PaginatorViewImpl ui:field="paginator" addStyleNames="{style.paginator}"/>
+            <g:FlowPanel ui:field="resultsContainer" addStyleNames="{style.resultsContainer}"/>
+            <pagination:PaginatorViewImpl ui:field="paginator" addStyleNames="{style.paginator}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
