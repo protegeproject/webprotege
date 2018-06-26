@@ -566,13 +566,13 @@ public class ProjectModule {
     }
 
     @Provides
-    TagRepository provideTagRepository(TagRepositoryCachingImpl impl) {
+    TagRepository provideTagRepository(TagRepositoryImpl impl) {
+        impl.ensureIndexes();
         return impl;
     }
 
     @Provides
     TagRepositoryCachingImpl provideTagRepositoryCachingImpl(TagRepositoryImpl impl) {
-        impl.ensureIndexes();
         return new TagRepositoryCachingImpl(impl);
     }
 
@@ -583,7 +583,7 @@ public class ProjectModule {
     }
 
     @Provides
-    EntityTagsRepository provideEntityTagsRepository(EntityTagsRepositoryImpl impl) {
+    EntityTagsRepository provideEntityTagsRepository(EntityTagsRepositoryCachingImpl impl) {
         impl.ensureIndexes();
         return impl;
     }
