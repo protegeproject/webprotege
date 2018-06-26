@@ -50,5 +50,6 @@ public class SubClassOfCriteriaPresenter implements CriteriaPresenter<SubClassOf
     public void setCriteria(@Nonnull SubClassOfCriteria criteria) {
         renderer.renderClassIri(criteria.getTarget().getIRI(),
                                 view::setOwlClass);
+        view.setHierarchyFilterType(criteria.getFilterType());
     }
 }
