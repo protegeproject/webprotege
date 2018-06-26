@@ -289,7 +289,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String error_permissionError_title();
 
     
-    @DefaultMessage("Please reload your browser")
+    @DefaultMessage("Please refresh your browser")
     @Key("error.refreshBrowser")
     String error_refreshBrowser();
 
@@ -304,7 +304,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String error_statusCode();
 
     
-    @DefaultMessage("WebProtégé has been updated.  Please reload your browser.")
+    @DefaultMessage("WebProtégé has been updated.  Please empty your browser caches and reload your browser.")
     @Key("error.upgraded")
     String error_upgraded();
 
