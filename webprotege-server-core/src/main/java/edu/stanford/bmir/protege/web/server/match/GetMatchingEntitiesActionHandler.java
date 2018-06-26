@@ -94,7 +94,10 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
                                                              .collect(toPage(pageRequest.getPageNumber(),
                                                                            pageRequest.getPageSize()));
         stopwatch.stop();
-        logger.info("Answer criteria query in {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        logger.info("{} {} Answered query in {} ms",
+                    action.getProjectId(),
+                    executionContext.getUserId(),
+                    stopwatch.elapsed(TimeUnit.MILLISECONDS));
         Optional<Page<EntityHierarchyNode>> entityHierarchyNodes = result.map(pg -> {
             List<EntityHierarchyNode> nodes = pg.getPageElements().stream()
                                                 .map(ed -> nodeRenderer.render(ed.getEntity()))
