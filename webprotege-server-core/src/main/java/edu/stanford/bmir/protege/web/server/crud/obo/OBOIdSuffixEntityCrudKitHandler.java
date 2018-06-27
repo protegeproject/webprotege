@@ -18,6 +18,10 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /**
@@ -28,6 +32,12 @@ import java.util.Map;
  */
 public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> {
 
+
+    private static final IRI CREATED_BY = IRI.create("http://www.geneontology.org/formats/oboInOwl#created_by");
+
+    private static final IRI CREATION_DATE = IRI.create("http://www.geneontology.org/formats/oboInOwl#creation_date");
+
+    private static final DateTimeFormatter ISO_OFFSET_DATE_TIME = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     private long currentId = 0;
 
@@ -87,6 +97,20 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
         OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(), entity.getIRI(), labellingLiteral);
         builder.addAxiom(targetOntology, ax);
+        OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
+                dataFactory.getOWLAnnotationProperty(CREATED_BY),
+                entity.getIRI(),
+                dataFactory.getOWLLiteral(context.getUserId().getUserName())
+        );
+        builder.addAxiom(targetOntology, createdByAx);
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+        String formattedNow = now.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        OWLAnnotationAssertionAxiom createdAtAx = dataFactory.getOWLAnnotationAssertionAxiom(
+                dataFactory.getOWLAnnotationProperty(CREATION_DATE),
+                entity.getIRI(),
+                dataFactory.getOWLLiteral(formattedNow)
+        );
+        builder.addAxiom(targetOntology, createdAtAx);
         return entity;
     }
 
