@@ -6,57 +6,26 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
     <ui:style>
-        .main {
-            display: flex;
-            flex-direction: column;
-        }
         .prefixDeclarationsEditorContainer {
-            padding: 10px;
-            height: 300px;
+            padding:    10px;
+            height:     300px;
             overflow-y: auto;
         }
     </ui:style>
 
     <g:HTMLPanel>
-
-
-
-        <g:HTMLPanel addStyleNames="{style.main}">
-            <g:HTMLPanel addStyleNames="{wp.laf.topBar}">
-                <g:HTMLPanel ui:field="iconContainer" addStyleNames="{wp.laf.topBarLogo}"/>
-                <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
-                    <g:Label ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
-                </g:HTMLPanel>
-
-            </g:HTMLPanel>
-
-
-            <g:HTMLPanel addStyleNames="{wp.settings.outer}">
-                <g:HTMLPanel addStyleNames="{wp.settings.inner}">
-                    <g:HTMLPanel addStyleNames="{wp.settings.content}">
-                        <g:Label text="{msg.prefixes_title}" addStyleNames="{wp.settings.title}"/>
-                        <g:Label text="Prefixes should be well-formed absolute IRIs.
-                        They usually end in a slash (/) or a hash(#).  For example,
-                        'http://ontologies.org/vehicles/' or 'http://ontologies.org/vehicles#'"/>
-                        <g:Label text="Prefix names act as labels for prefixes.
-                        They are usually short and always end with a colon.  For example, 'veh:' or 'vehicles:'"/>
-
-                        <g:HTMLPanel addStyleNames="{style.prefixDeclarationsEditorContainer}">
-                            <editor:ValueListFlexEditorImpl ui:field="prefixesEditor"/>
-                        </g:HTMLPanel>
-
-                    </g:HTMLPanel>
-                    <g:HTMLPanel addStyleNames="{wp.settings.buttonBar}">
-                        <g:Button ui:field="cancelButton" text="Cancel"
-                                  addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.escapeButton}"/>
-                        <g:Button ui:field="applyButton" text="Apply"
-                                  addStyleNames="{wp.buttons.button} {wp.buttons.pageButton} {wp.buttons.acceptButton}"/>
-                    </g:HTMLPanel>
-
-                </g:HTMLPanel>
-            </g:HTMLPanel>
-
+        Prefixes should be well-formed absolute IRIs.
+        They usually end in a slash (/) or a hash(#).  For example,
+        'http://ontologies.org/vehicles/' or 'http://ontologies.org/vehicles#'
+        <br/>
+        <br/>
+        Prefix names act as labels for prefixes.  They are usually short and always end with a colon.
+        For example, 'veh:' or 'vehicles:'
+        <br/>
+        <br/>
+        Note that there is no need to declare built-in prefix names for owl:, rdfs:, rdf:, xsd: etc.
+        <g:HTMLPanel addStyleNames="{style.prefixDeclarationsEditorContainer}">
+            <editor:ValueListFlexEditorImpl ui:field="prefixesEditor"/>
         </g:HTMLPanel>
-
     </g:HTMLPanel>
 </ui:UiBinder>

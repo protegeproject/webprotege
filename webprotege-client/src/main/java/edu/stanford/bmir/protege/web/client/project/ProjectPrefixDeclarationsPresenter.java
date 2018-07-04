@@ -4,11 +4,13 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.place.ProjectPrefixDeclarationsPlace;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
@@ -49,17 +51,27 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     @Nonnull
     private final PlaceController placeController;
 
+    @Nonnull
+    private final SettingsPresenter settingsPresenter;
+
+    @Nonnull
+    private final Messages messages;
+
     @Inject
     public ProjectPrefixDeclarationsPresenter(@Nonnull ProjectId projectId,
                                               @Nonnull ProjectPrefixDeclarationsView view,
                                               @Nonnull PermissionScreener permissionScreener,
                                               @Nonnull DispatchServiceManager dispatchServiceManager,
-                                              @Nonnull PlaceController placeController) {
+                                              @Nonnull PlaceController placeController,
+                                              @Nonnull SettingsPresenter settingsPresenter,
+                                              @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.view = checkNotNull(view);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.placeController = checkNotNull(placeController);
+        this.settingsPresenter = checkNotNull(settingsPresenter);
+        this.messages = checkNotNull(messages);
     }
 
     @Override
@@ -67,16 +79,16 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                       @Nonnull EventBus eventBus) {
         permissionScreener.checkPermission(EDIT_PROJECT_PREFIXES.getActionId(),
                                            container,
-                                           () -> {
-                                               displayProjectPrefixes(container);
-                                               view.setApplyChangesHandler(this::handleApplyChanges);
-                                               getNextPlace().ifPresent(np -> view.setCancelChangesHandler(this::cancelChanges));
-                                           });
+                                           () -> displayProjectPrefixes(container));
     }
 
     private void displayProjectPrefixes(@Nonnull AcceptsOneWidget container) {
         view.clear();
-        GetProjectPrefixDeclarationsAction action = new GetProjectPrefixDeclarationsAction(projectId);
+        settingsPresenter.start(container);
+        settingsPresenter.addSection(messages.prefixes_title()).setWidget(view);
+        settingsPresenter.setApplySettingsHandler(this::handleApplyChanges);
+        settingsPresenter.setCancelSettingsHandler(this::cancelChanges);
+        settingsPresenter.setNextPlace(getNextPlace());
         dispatchServiceManager.execute(new GetProjectPrefixDeclarationsAction(projectId),
                                        new DispatchServiceCallbackWithProgressDisplay<GetProjectPrefixDeclarationsResult>() {
                                            @Override
@@ -97,7 +109,6 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
                                                view.setPrefixDeclarations(prefixDeclarations);
                                            }
                                        });
-        container.setWidget(view);
     }
 
     private void handleApplyChanges() {
@@ -162,11 +173,6 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     }
 
     private void cancelChanges() {
-        Optional<Place> nextPlace = getNextPlace();
-        if (nextPlace == null) {
-            return;
-        }
-        nextPlace.ifPresent(placeController::goTo);
     }
 
     /**

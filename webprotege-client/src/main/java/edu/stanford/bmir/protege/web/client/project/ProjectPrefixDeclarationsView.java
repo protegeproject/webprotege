@@ -14,15 +14,6 @@ import java.util.List;
  */
 public interface ProjectPrefixDeclarationsView extends IsWidget, HasValueChangeHandlers<List<PrefixDeclaration>> {
 
-
-    interface ApplyChangesHandler {
-        void handleApplyChanges();
-    }
-
-    interface CancelChangesHandler {
-        void handleCancelChanges();
-    }
-
     /**
      * Clears the view of any prefixes
      */
@@ -41,8 +32,4 @@ public interface ProjectPrefixDeclarationsView extends IsWidget, HasValueChangeH
      */
     @Nonnull
     List<PrefixDeclaration> getPrefixDeclarations();
-
-    void setApplyChangesHandler(@Nonnull ApplyChangesHandler handler);
-
-    void setCancelChangesHandler(@Nonnull CancelChangesHandler handler);
 }

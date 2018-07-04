@@ -35,44 +35,19 @@ public class ProjectPrefixDeclarationsViewImpl extends Composite implements Proj
 
     private static ProjectPrefixesViewImplUiBinder ourUiBinder = GWT.create(ProjectPrefixesViewImplUiBinder.class);
 
-    private ApplyChangesHandler applyChangesHandler = () -> {};
-
-    private CancelChangesHandler cancelChangesHandler = () -> {};
-
-
-    @UiField
-    Label projectTitle;
-
     @UiField(provided = true)
     ValueListFlexEditorImpl<PrefixDeclaration> prefixesEditor;
-
-    @UiField
-    Button applyButton;
-
-    @UiField
-    Button cancelButton;
 
     @Inject
     public ProjectPrefixDeclarationsViewImpl() {
         prefixesEditor = new ValueListFlexEditorImpl<>(PrefixDeclarationEditor::new);
         initWidget(ourUiBinder.createAndBindUi(this));
         prefixesEditor.setEnabled(true);
-        cancelButton.setVisible(false);
     }
 
     @UiHandler("prefixesEditor")
     protected void handlePrefixDeclarationsChanged(ValueChangeEvent<Optional<List<PrefixDeclaration>>> evt) {
         ValueChangeEvent.fire(this, prefixesEditor.getValue().orElse(Collections.emptyList()));
-    }
-
-    @UiHandler("applyButton")
-    public void handleApplyClicked(ClickEvent event) {
-        applyChangesHandler.handleApplyChanges();
-    }
-
-    @UiHandler("cancelButton")
-    public void handleCancelClicked(ClickEvent event) {
-        cancelChangesHandler.handleCancelChanges();
     }
 
     @Override
@@ -90,17 +65,6 @@ public class ProjectPrefixDeclarationsViewImpl extends Composite implements Proj
     @Override
     public List<PrefixDeclaration> getPrefixDeclarations() {
         return prefixesEditor.getValue().orElse(Collections.emptyList());
-    }
-
-    @Override
-    public void setApplyChangesHandler(@Nonnull ApplyChangesHandler handler) {
-        this.applyChangesHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setCancelChangesHandler(@Nonnull CancelChangesHandler handler) {
-        cancelButton.setVisible(true);
-        this.cancelChangesHandler = checkNotNull(handler);
     }
 
     @Override
