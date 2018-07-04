@@ -81,7 +81,7 @@ public class ProjectSettingsPresenter {
     }
 
     private void displaySettings(AcceptsOneWidget container) {
-
+        settingsPresenter.setSettingsTitle("Project Settings");
         settingsPresenter.start(container);
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.addSection("General Settings").setWidget(generalSettingsView);

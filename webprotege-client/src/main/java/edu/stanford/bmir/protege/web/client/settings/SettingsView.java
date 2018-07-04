@@ -29,4 +29,6 @@ public interface SettingsView extends IsWidget {
     void setApplySettingsStarted();
 
     void setApplySettingsFinished();
+
+    void setSettingsTitle(@Nonnull String settingsTitle);
 }

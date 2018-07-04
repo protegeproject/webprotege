@@ -47,12 +47,20 @@
             justify-content:  flex-end;
             box-shadow: 0 0 10px 0 #e0e0e0
         }
+        .titleSeparator {
+            width: 20px;
+        }
+        .settingsTitle {
+            font-weight: 500;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.outerMost}">
         <g:HTMLPanel addStyleNames="{wp.laf.topBar} {style.topBar}">
             <g:HTMLPanel addStyleNames="{wp.laf.topBarLogo}"/>
             <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">
                 <g:Label ui:field="projectTitle" addStyleNames="{wp.laf.topBarTitle}"/>
+                <g:Label addStyleNames="{wp.laf.topBarSeparator} {style.titleSeparator}"/>
+                <g:Label ui:field="settingsTitle" addStyleNames="{wp.laf.topBarTitle} {style.settingsTitle}"/>
             </g:HTMLPanel>
         </g:HTMLPanel>
 

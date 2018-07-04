@@ -38,6 +38,9 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     @UiField
     HTMLPanel settingsContainer;
 
+    @UiField
+    Label settingsTitle;
+
     @Nonnull
     private final Messages messages;
 
@@ -113,5 +116,10 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     @Override
     public void setApplySettingsFinished() {
 
+    }
+
+    @Override
+    public void setSettingsTitle(@Nonnull String settingsTitle) {
+        this.settingsTitle.setText(checkNotNull(settingsTitle).trim());
     }
 }

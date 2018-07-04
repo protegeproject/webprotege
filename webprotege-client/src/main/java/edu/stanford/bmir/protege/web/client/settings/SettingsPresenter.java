@@ -113,4 +113,8 @@ public class SettingsPresenter {
     public void goToNextPlace() {
         nextPlace.ifPresent(placeController::goTo);
     }
+
+    public void setSettingsTitle(@Nonnull String settingsTitle) {
+        view.setSettingsTitle(settingsTitle);
+    }
 }
