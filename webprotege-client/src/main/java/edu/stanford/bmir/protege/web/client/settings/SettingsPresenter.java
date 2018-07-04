@@ -60,6 +60,7 @@ public class SettingsPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         view.setApplySettingsHandler(this::handleApply);
+        view.setCancelSettingsHandler(this::handleCancel);
         container.setWidget(view);
         activeProjectManager.getActiveProjectDetails(projectDetails -> {
             projectDetails.ifPresent(details -> view.setProjectTitle(details.getDisplayName()));
@@ -85,6 +86,7 @@ public class SettingsPresenter {
     private void handleApply() {
         GWT.log("[SettingsPresenter] Propagating ApplySettings");
         applySettingsHandler.handleApplySettings();
+
     }
 
     public void displayErrorMessage(@Nonnull String msgTitle,
@@ -93,6 +95,7 @@ public class SettingsPresenter {
     }
 
     private void handleCancel() {
+        GWT.log("[SettingsPresenter] Handling Cancel");
         cancelSettingsHandler.handleCancelSettings();
         goToNextPlace();
     }
@@ -107,6 +110,7 @@ public class SettingsPresenter {
     }
 
     public void setNextPlace(@Nonnull Optional<Place> nextPlace) {
+        GWT.log("[SettingsPresenter] setNextPlace: " + nextPlace);
         this.nextPlace = checkNotNull(nextPlace);
     }
 

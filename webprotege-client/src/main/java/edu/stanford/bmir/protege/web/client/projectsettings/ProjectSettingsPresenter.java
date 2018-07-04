@@ -76,14 +76,15 @@ public class ProjectSettingsPresenter {
 
     }
 
-    public void setNextPlace(Optional<Place> nextPlace) {
-        this.settingsPresenter.setNextPlace(nextPlace);
+    public void setNextPlace(@Nonnull Optional<Place> nextPlace) {
+        settingsPresenter.setNextPlace(checkNotNull(nextPlace));
     }
 
     private void displaySettings(AcceptsOneWidget container) {
         settingsPresenter.setSettingsTitle("Project Settings");
         settingsPresenter.start(container);
         settingsPresenter.setApplySettingsHandler(this::applySettings);
+        settingsPresenter.setCancelSettingsHandler(this::handleCancel);
         settingsPresenter.addSection("General Settings").setWidget(generalSettingsView);
         settingsPresenter.addSection("Slack Webhook Url").setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection("WebProtégé Webhook Urls").setWidget(webhookSettingsView);
@@ -125,5 +126,9 @@ public class ProjectSettingsPresenter {
                 settingsPresenter.goToNextPlace();
             }
         });
+    }
+
+    private void handleCancel() {
+
     }
 }
