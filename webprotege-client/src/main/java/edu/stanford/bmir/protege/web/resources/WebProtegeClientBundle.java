@@ -390,6 +390,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String inner();
 
+        String section();
+
         String title();
 
         String content();

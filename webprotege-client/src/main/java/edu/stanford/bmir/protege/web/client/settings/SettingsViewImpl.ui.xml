@@ -27,6 +27,10 @@
             flex-grow:   1;
             flex-shrink: 1;
             overflow-y:  auto;
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-top: 40px;
+            padding-bottom: 40px;
         }
 
         .buttonBarContainer {

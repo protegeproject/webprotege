@@ -2,15 +2,12 @@ package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.progress.BusyView;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
+import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 
@@ -30,40 +27,41 @@ public class ProjectSettingsPresenter {
 
     private final ProjectId projectId;
 
-    private final ProjectSettingsView view;
-
     private final PermissionScreener permissionScreener;
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final ActiveProjectManager activeProjectManager;
-
-    private final BusyView busyView;
-
     private final EventBus eventBus;
 
-    private final PlaceController placeController;
+    @Nonnull
+    private final SettingsPresenter settingsPresenter;
 
-    private Optional<Place> nextPlace = Optional.empty();
+    @Nonnull
+    private final GeneralSettingsView generalSettingsView;
+
+    @Nonnull
+    private final SlackWebhookSettingsView slackWebhookSettingsView;
+
+    @Nonnull
+    private final WebhookSettingsView webhookSettingsView;
 
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
-                                    @Nonnull ProjectSettingsView view,
                                     @Nonnull PermissionScreener permissionScreener,
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
-                                    @Nonnull ActiveProjectManager activeProjectManager,
-                                    @Nonnull BusyView busyView,
                                     @Nonnull EventBus eventBus,
-                                    @Nonnull PlaceController placeController) {
+                                    @Nonnull SettingsPresenter settingsPresenter,
+                                    @Nonnull GeneralSettingsView generalSettingsView,
+                                    @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
+                                    @Nonnull WebhookSettingsView webhookSettingsView) {
         this.projectId = checkNotNull(projectId);
-        this.view = checkNotNull(view);
-        this.activeProjectManager = checkNotNull(activeProjectManager);
-        this.placeController = checkNotNull(placeController);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
-        this.busyView = checkNotNull(busyView);
         this.eventBus = checkNotNull(eventBus);
-        view.setCancelButtonVisible(false);
+        this.settingsPresenter = checkNotNull(settingsPresenter);
+        this.generalSettingsView = checkNotNull(generalSettingsView);
+        this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
+        this.webhookSettingsView = checkNotNull(webhookSettingsView);
     }
 
     public ProjectId getProjectId() {
@@ -71,55 +69,61 @@ public class ProjectSettingsPresenter {
     }
 
 
-
-
     public void start(AcceptsOneWidget container) {
         permissionScreener.checkPermission(EDIT_PROJECT_SETTINGS.getActionId(),
                                            container,
                                            () -> displaySettings(container));
-        view.setApplyChangesHandler(this::applySettings);
-        view.setCancelChangesHandler(this::cancelChanges);
 
     }
 
     public void setNextPlace(Optional<Place> nextPlace) {
-        this.nextPlace = nextPlace;
-        view.setCancelButtonVisible(nextPlace.isPresent());
+        this.settingsPresenter.setNextPlace(nextPlace);
     }
 
     private void displaySettings(AcceptsOneWidget container) {
-        busyView.setMessage("Retrieving project settings.");
-        container.setWidget(busyView);
+
+        settingsPresenter.start(container);
+        settingsPresenter.setApplySettingsHandler(this::applySettings);
+        settingsPresenter.addSection("General Settings").setWidget(generalSettingsView);
+        settingsPresenter.addSection("Slack Webhook Url").setWidget(slackWebhookSettingsView);
+        settingsPresenter.addSection("WebProtégé Webhook Urls").setWidget(webhookSettingsView);
+        settingsPresenter.setBusy(container, true);
         dispatchServiceManager.execute(new GetProjectSettingsAction(projectId),
                                        result -> {
-                                           view.setValue(result.getProjectSettings());
-                                           container.setWidget(view);
+                                           ProjectSettings projectSettings = result.getProjectSettings();
+                                           displayProjectSettings(container, projectSettings);
                                        });
-        activeProjectManager.getActiveProjectDetails(projectDetails -> {
-            projectDetails.ifPresent(details -> view.setProjectTitle(details.getDisplayName()));
-        });
+    }
+
+    private void displayProjectSettings(@Nonnull AcceptsOneWidget container,
+                                        @Nonnull ProjectSettings projectSettings) {
+        generalSettingsView.setDisplayName(projectSettings.getProjectDisplayName());
+        generalSettingsView.setDescription(projectSettings.getProjectDescription());
+        SlackIntegrationSettings slackIntegrationSettings = projectSettings.getSlackIntegrationSettings();
+        slackWebhookSettingsView.setWebhookUrl(slackIntegrationSettings.getPayloadUrl());
+        WebhookSettings webhookSettings = projectSettings.getWebhookSettings();
+        webhookSettingsView.setWebhookUrls(webhookSettings.getWebhookSettings());
+        settingsPresenter.setBusy(container, false);
     }
 
 
     private void applySettings() {
         GWT.log("[ProjectSettingsPresenter] Applying project settings");
-        Optional<ProjectSettings> projectSettings = view.getEditorValue();
-        projectSettings.ifPresent(data -> {
-            dispatchServiceManager.execute(new SetProjectSettingsAction(data), new DispatchServiceCallback<SetProjectSettingsResult>() {
-                @Override
-                public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
-                    eventBus.fireEvent(new ProjectSettingsChangedEvent(data).asGWTEvent());
-                    goToNextPlaceIfPresent();
-                }
-            });
+        SlackIntegrationSettings slackIntegrationSettings = new SlackIntegrationSettings(slackWebhookSettingsView.getWebhookrUrl());
+        WebhookSettings webhookSettings = new WebhookSettings(webhookSettingsView.getWebhookUrls());
+        ProjectSettings projectSettings = new ProjectSettings(
+                projectId,
+                generalSettingsView.getDisplayName(),
+                generalSettingsView.getDescription(),
+                slackIntegrationSettings,
+                webhookSettings
+        );
+        dispatchServiceManager.execute(new SetProjectSettingsAction(projectSettings), new DispatchServiceCallback<SetProjectSettingsResult>() {
+            @Override
+            public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
+                eventBus.fireEvent(new ProjectSettingsChangedEvent(projectSettings).asGWTEvent());
+                settingsPresenter.goToNextPlace();
+            }
         });
-    }
-
-    private void cancelChanges() {
-        goToNextPlaceIfPresent();
-    }
-
-    private void goToNextPlaceIfPresent() {
-        nextPlace.ifPresent(placeController::goTo);
     }
 }

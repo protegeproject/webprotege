@@ -9,5 +9,5 @@ import javax.annotation.Nonnull;
  */
 public interface ApplySettingsHandler {
 
-    void handleApplySettings(@Nonnull ApplySettingsCallback callback);
+    void handleApplySettings();
 }

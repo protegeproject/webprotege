@@ -35,12 +35,15 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsView;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
+import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
+import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
+import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
+import edu.stanford.bmir.protege.web.client.settings.SettingsView;
+import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
@@ -120,11 +123,6 @@ public class ClientProjectModule {
 
     @Provides
     SharingSettingsView provideSharingSettingsView(SharingSettingsViewImpl view) {
-        return view;
-    }
-
-    @Provides
-    ProjectSettingsView provideProjectSettingsView(ProjectSettingsViewImpl view) {
         return view;
     }
 
@@ -289,6 +287,31 @@ public class ClientProjectModule {
 
     @Provides
     ClassIriRenderer provideClassIriRenderer(ClassIriRendererImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GeneralSettingsView provideGeneralSettingsView(GeneralSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SlackWebhookSettingsView provideSlackWebhookSettingsView(SlackWebhookSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    WebhookSettingsView provideWebhookSettingsView(WebhookSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SettingsView provideSettingsView(SettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SettingsSectionViewContainer provideSettingsSectionViewContainer(SettingsSectionViewContainerImpl impl) {
         return impl;
     }
 }

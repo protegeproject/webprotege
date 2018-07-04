@@ -11,14 +11,6 @@ import javax.annotation.Nonnull;
  */
 public interface SettingsView extends IsWidget {
 
-    interface ApplyButtonHandler {
-        void handleApplyClicked();
-    }
-
-    interface CancelButtonHandler {
-        void handleCancelClicked();
-    }
-
     void clearView();
 
     void addSectionViewContainer(@Nonnull SettingsSectionViewContainer view);
@@ -27,9 +19,9 @@ public interface SettingsView extends IsWidget {
 
     void setCancelButtonVisible(boolean visible);
 
-    void setApplyButtonHandler(@Nonnull ApplyButtonHandler applyButtonHandler);
+    void setApplySettingsHandler(@Nonnull ApplySettingsHandler applyButtonHandler);
 
-    void setCancelButtonHandler(@Nonnull CancelButtonHandler cancelButtonHandler);
+    void setCancelSettingsHandler(@Nonnull CancelSettingsHandler cancelButtonHandler);
 
     void showErrorMessage(@Nonnull String msgTitle,
                           @Nonnull String msgBody);

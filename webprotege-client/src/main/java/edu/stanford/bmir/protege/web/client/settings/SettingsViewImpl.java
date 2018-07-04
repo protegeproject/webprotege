@@ -42,10 +42,10 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     private final Messages messages;
 
     @Nonnull
-    private ApplyButtonHandler applyHandler = () -> {};
+    private ApplySettingsHandler applyHandler = () -> {};
 
     @Nonnull
-    private CancelButtonHandler cancelHandler = () -> {};
+    private CancelSettingsHandler cancelHandler = () -> {};
 
     @Inject
     public SettingsViewImpl(@Nonnull Messages messages) {
@@ -65,12 +65,13 @@ public class SettingsViewImpl extends Composite implements SettingsView {
 
     @UiHandler("applyButton")
     protected void handleApplyChanges(ClickEvent event) {
-        applyHandler.handleApplyClicked();
+        GWT.log("[SettingsViewImpl] Apply Button Clicked");
+        applyHandler.handleApplySettings();
     }
 
     @UiHandler("cancelButton")
     protected void handleCancelChanges(ClickEvent event) {
-        cancelHandler.handleCancelClicked();
+        cancelHandler.handleCancelSettings();
     }
 
     @Override
@@ -89,12 +90,28 @@ public class SettingsViewImpl extends Composite implements SettingsView {
     }
 
     @Override
-    public void setApplyButtonHandler(@Nonnull ApplyButtonHandler applyButtonHandler) {
+    public void setApplySettingsHandler(@Nonnull ApplySettingsHandler applyButtonHandler) {
+        GWT.log("[SettingsViewImpl] Setting apply settings handler");
         this.applyHandler = checkNotNull(applyButtonHandler);
     }
 
     @Override
-    public void setCancelButtonHandler(@Nonnull CancelButtonHandler cancelButtonHandler) {
+    public void setCancelSettingsHandler(@Nonnull CancelSettingsHandler cancelButtonHandler) {
         this.cancelHandler = checkNotNull(cancelButtonHandler);
+    }
+
+    @Override
+    public void showErrorMessage(@Nonnull String msgTitle, @Nonnull String msgBody) {
+
+    }
+
+    @Override
+    public void setApplySettingsStarted() {
+
+    }
+
+    @Override
+    public void setApplySettingsFinished() {
+
     }
 }
