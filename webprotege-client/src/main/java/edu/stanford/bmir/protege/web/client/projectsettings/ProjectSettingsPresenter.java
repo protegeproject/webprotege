@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -45,6 +46,9 @@ public class ProjectSettingsPresenter {
     @Nonnull
     private final WebhookSettingsView webhookSettingsView;
 
+    @Nonnull
+    private final Messages messages;
+
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull PermissionScreener permissionScreener,
@@ -53,7 +57,8 @@ public class ProjectSettingsPresenter {
                                     @Nonnull SettingsPresenter settingsPresenter,
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
-                                    @Nonnull WebhookSettingsView webhookSettingsView) {
+                                    @Nonnull WebhookSettingsView webhookSettingsView,
+                                    @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -62,6 +67,7 @@ public class ProjectSettingsPresenter {
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
+        this.messages = checkNotNull(messages);
     }
 
     public ProjectId getProjectId() {
@@ -81,13 +87,13 @@ public class ProjectSettingsPresenter {
     }
 
     private void displaySettings(AcceptsOneWidget container) {
-        settingsPresenter.setSettingsTitle("Project Settings");
+        settingsPresenter.setSettingsTitle(messages.projectSettings_title());
         settingsPresenter.start(container);
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
-        settingsPresenter.addSection("General Settings").setWidget(generalSettingsView);
-        settingsPresenter.addSection("Slack Webhook Url").setWidget(slackWebhookSettingsView);
-        settingsPresenter.addSection("WebProtégé Webhook Urls").setWidget(webhookSettingsView);
+        settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
+        settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
+        settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
         settingsPresenter.setBusy(container, true);
         dispatchServiceManager.execute(new GetProjectSettingsAction(projectId),
                                        result -> {
@@ -109,7 +115,6 @@ public class ProjectSettingsPresenter {
 
 
     private void applySettings() {
-        GWT.log("[ProjectSettingsPresenter] Applying project settings");
         SlackIntegrationSettings slackIntegrationSettings = new SlackIntegrationSettings(slackWebhookSettingsView.getWebhookrUrl());
         WebhookSettings webhookSettings = new WebhookSettings(webhookSettingsView.getWebhookUrls());
         ProjectSettings projectSettings = new ProjectSettings(
