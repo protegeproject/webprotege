@@ -44,27 +44,11 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
 
     private static ProjectTagsViewImplUiBinder ourUiBinder = GWT.create(ProjectTagsViewImplUiBinder.class);
 
-    @UiField
-    Button cancelButton;
-
-    @UiField
-    Button applyButton;
-
-    @UiField
-    Label projectTitle;
-
     @UiField(provided = true)
     ValueListEditor<TagData> tagsEditor;
 
-    @UiField
-    SimplePanel tagCriteriaContainer;
-
     @Nonnull
     private final Messages messages;
-
-    private ApplyChangesHandler applyChangesHandler = () -> {};
-
-    private CancelChangesHandler cancelChangesHandler = () -> {};
 
     private TagListChangedHandler tagListChangedHandler = () -> {};
 
@@ -79,51 +63,15 @@ public class ProjectTagsViewImpl extends Composite implements ProjectTagsView {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    @Nonnull
-    @Override
-    public AcceptsOneWidget getTagCriteriaContainer() {
-        return tagCriteriaContainer;
-    }
-
     @Override
     protected void onLoad() {
         super.onLoad();
         tagsEditor.setEnabled(true);
     }
 
-    @UiHandler("applyButton")
-    protected void handleApplyChanges(ClickEvent event) {
-        applyChangesHandler.handleApplyChanges();
-    }
-
-    @UiHandler("cancelButton")
-    protected void handleCancelChanges(ClickEvent event) {
-        cancelChangesHandler.handleCancelChanges();
-    }
-
     @Override
     public void setTagListChangedHandler(@Nonnull TagListChangedHandler handler) {
         this.tagListChangedHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setProjectTitle(@Nonnull String projectTitle) {
-        this.projectTitle.setText(checkNotNull(projectTitle));
-    }
-
-    @Override
-    public void setApplyChangesHandler(@Nonnull ApplyChangesHandler applyChangesHandler) {
-        this.applyChangesHandler = checkNotNull(applyChangesHandler);
-    }
-
-    @Override
-    public void setCancelChangesHandler(@Nonnull CancelChangesHandler cancelChangesHandler) {
-        this.cancelChangesHandler = checkNotNull(cancelChangesHandler);
-    }
-
-    @Override
-    public void setCancelButtonVisible(boolean visible) {
-        cancelButton.setVisible(visible);
     }
 
     @Override

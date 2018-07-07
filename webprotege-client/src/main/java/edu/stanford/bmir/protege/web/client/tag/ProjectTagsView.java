@@ -17,25 +17,9 @@ import java.util.Map;
  */
 public interface ProjectTagsView extends IsWidget {
 
-    interface ApplyChangesHandler {
-        void handleApplyChanges();
-    }
-
-    interface CancelChangesHandler {
-        void handleCancelChanges();
-    }
-
     interface TagListChangedHandler {
         void handleTagListChanged();
     }
-
-    void setProjectTitle(@Nonnull String projectTitle);
-
-    void setApplyChangesHandler(@Nonnull ApplyChangesHandler applyChangesHandler);
-
-    void setCancelChangesHandler(@Nonnull CancelChangesHandler cancelChangesHandler);
-
-    void setCancelButtonVisible(boolean visible);
 
     void setTags(@Nonnull List<Tag> tags, Map<TagId, Integer> usageCount);
 
@@ -45,7 +29,4 @@ public interface ProjectTagsView extends IsWidget {
     List<TagData> getTagData();
 
     void showDuplicateTagAlert(@Nonnull String label);
-
-    @Nonnull
-    AcceptsOneWidget getTagCriteriaContainer();
 }
