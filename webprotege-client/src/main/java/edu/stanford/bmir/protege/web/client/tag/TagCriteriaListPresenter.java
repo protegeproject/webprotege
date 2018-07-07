@@ -96,7 +96,7 @@ public class TagCriteriaListPresenter {
         container.setRemoveHandler(() -> handleRemove(presenter));
         presenter.start(container.getViewContainer());
         presenter.setAvailableTags(availableTagLabels);
-        view.addTagCriteriaViewContainer(container, scrollIntoView);
+        view.addTagCriteriaViewContainer(container, scrollIntoView, scrollIntoView);
         return presenter;
     }
 

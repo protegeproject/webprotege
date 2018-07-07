@@ -20,7 +20,8 @@ public interface TagCriteriaListView extends IsWidget {
     void clearView();
 
     void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container,
-                                     boolean scrollIntoView);
+                                     boolean scrollIntoView,
+                                     boolean animate);
 
     void removeTagCriteriaViewContainer(int viewContainerIndex);
 }

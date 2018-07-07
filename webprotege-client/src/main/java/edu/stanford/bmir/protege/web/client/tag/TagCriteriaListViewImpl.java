@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.tag;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -20,6 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 19 Jun 2018
  */
 public class TagCriteriaListViewImpl extends Composite implements TagCriteriaListView {
+
+    private static final int ANIMATION_DURATION_MS = 1_000;
 
     private AddHandler addHandler = () -> {};
 
@@ -53,10 +58,22 @@ public class TagCriteriaListViewImpl extends Composite implements TagCriteriaLis
 
     @Override
     public void addTagCriteriaViewContainer(@Nonnull TagCriteriaViewContainer container,
-                                            boolean scrollIntoView) {
+                                            boolean scrollIntoView, boolean animate) {
         tagCriteriaListContainer.add(container);
         if (scrollIntoView) {
             addButton.getElement().scrollIntoView();
+        }
+        if (animate) {
+            Element element = container.asWidget().getElement();
+            Style style = element.getStyle();
+            style.setOpacity(0);
+            Animation animation = new Animation() {
+                @Override
+                protected void onUpdate(double progress) {
+                    style.setOpacity(progress);
+                }
+            };
+            animation.run(ANIMATION_DURATION_MS);
         }
     }
 
