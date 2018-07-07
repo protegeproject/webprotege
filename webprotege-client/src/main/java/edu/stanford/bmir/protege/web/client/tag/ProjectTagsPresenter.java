@@ -82,12 +82,13 @@ public class ProjectTagsPresenter implements Presenter {
         settingsPresenter.setBusy(container, true);
         settingsPresenter.setApplySettingsHandler(this::handleApplyChanges);
         settingsPresenter.setCancelSettingsHandler(this::handleCancelChanges);
+        settingsPresenter.setSettingsTitle(messages.tags_projectTagsTitle());
         permissionChecker.hasPermission(EDIT_ENTITY_TAGS, canEditTags -> {
             if(canEditTags) {
                 settingsPresenter.setBusy(container, false);
-                settingsPresenter.addSection(messages.tags_projectTagsTitle())
+                settingsPresenter.addSection(messages.tags_EditProjectTags())
                                  .setWidget(projectTagsView);
-                tagCriteriaListPresenter.start(settingsPresenter.addSection(messages.tags_assignTags_Title()));
+                tagCriteriaListPresenter.start(settingsPresenter.addSection(messages.tags_tagAssigments_Title()));
                 displayProjectTags();
             }
             else {

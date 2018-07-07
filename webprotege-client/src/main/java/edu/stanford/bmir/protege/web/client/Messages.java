@@ -1055,7 +1055,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
             "Please edit the labels so that a unique label is used for each tag.")
     String tags_duplicateTag_Message(String label);
 
-    @DefaultMessage("Assign Tags")
-    @Key("tags.assignTags.title")
-    String tags_assignTags_Title();
+    @DefaultMessage("Tag Assignments")
+    @Key("tags.tagAssignments.title")
+    String tags_tagAssigments_Title();
 }
