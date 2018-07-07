@@ -14,8 +14,15 @@
         .button {
             align-self: flex-start;
         }
+        .helpText {
+            padding-bottom: 20px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{style.helpText}">
+            Tags can be assigned manually or they can be assigned automatically based on criteria specified
+            below.
+        </g:HTMLPanel>
         <g:HTMLPanel ui:field="tagCriteriaListContainer" addStyleNames="{style.listContainer}"/>
         <g:Button ui:field="addButton" text="Add" addStyleNames="{style.button} {wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.primaryButton}"/>
     </g:HTMLPanel>
