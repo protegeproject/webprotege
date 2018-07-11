@@ -3,7 +3,7 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:import field="edu.stanford.bmir.protege.web.client.app.SchemeValue.*"/>
-
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <g:HTMLPanel>
         <div class="{wp.style.helpText} {wp.style.helpTextPadding}">The application URL is the URL that users use to access
             WebProtégé. If you have
@@ -13,7 +13,7 @@
             mandatory.
         </div>
         <g:HTMLPanel addStyleNames="{wp.settings.group}">
-            <g:Label text="Scheme"/>
+            <g:Label text="{msg.applicationSettings_url_scheme}&#x2a;"/>
             <g:ListBox ui:field="applicationSchemeField">
                 <g:item value="HTTPS">https</g:item>
                 <g:item value="HTTP">http</g:item>
@@ -22,13 +22,13 @@
                 It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
                 running WebProtégé.  The http protocol should be used for testing purposes only.
             </div>
-            <g:Label text="Host"/>
+            <g:Label text="{msg.applicationSettings_url_host}&#x2a;"/>
             <text:PlaceholderTextBox ui:field="applicationHostField"
                                      placeholder="e.g. webprotege.stanford.edu"/>
-            <g:Label text="Path"/>
+            <g:Label text="{msg.applicationSettings_url_path}"/>
             <text:PlaceholderTextBox ui:field="applicationPathField"
                                      placeholder="e.g. /webprotege (leave blank for no path)"/>
-            <g:Label text="Port"/>
+            <g:Label text="{msg.applicationSettings_url_port}"/>
             <text:PlaceholderTextBox ui:field="applicationPortField"
                                      placeholder="e.g. 443 (leave blank for default port)"/>
         </g:HTMLPanel>

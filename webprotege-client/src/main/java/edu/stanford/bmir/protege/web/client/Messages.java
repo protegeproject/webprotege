@@ -1077,4 +1077,20 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Email Settings")
     @Key("app.settings.emailNotificationSettings")
     String applicationSettings_EmailNotifications();
+
+    @DefaultMessage("Scheme")
+    @Key("app.settings.url.scheme")
+    String applicationSettings_url_scheme();
+
+    @DefaultMessage("Host")
+    @Key("app.settings.url.host")
+    String applicationSettings_url_host();
+
+    @DefaultMessage("Path")
+    @Key("app.settings.url.path")
+    String applicationSettings_url_path();
+
+    @DefaultMessage("Port")
+    @Key("app.settings.url.port")
+    String applicationSettings_url_port();
 }
