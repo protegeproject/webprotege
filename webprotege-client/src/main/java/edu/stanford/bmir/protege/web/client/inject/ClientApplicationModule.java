@@ -12,8 +12,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.Messages;
-import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsView;
-import edu.stanford.bmir.protege.web.client.app.ApplicationSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
@@ -49,6 +47,8 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUiImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageView;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImageViewImpl;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
+import edu.stanford.bmir.protege.web.client.progress.BusyView;
+import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectView;
 import edu.stanford.bmir.protege.web.client.projectlist.AvailableProjectViewImpl;
@@ -56,6 +56,10 @@ import edu.stanford.bmir.protege.web.client.projectmanager.*;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.search.SearchView;
 import edu.stanford.bmir.protege.web.client.search.SearchViewImpl;
+import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
+import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
+import edu.stanford.bmir.protege.web.client.settings.SettingsView;
+import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;
 import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
@@ -338,11 +342,6 @@ public class ClientApplicationModule {
     }
 
     @Provides
-    ApplicationSettingsView provideAdminView(ApplicationSettingsViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
     NothingSelectedView provideNothingSelectedView(NothingSelectedViewImpl impl) {
         return impl;
     }
@@ -441,4 +440,40 @@ public class ClientApplicationModule {
     PrimitiveDataEditorImageView providePrimitiveDataEditorView(PrimitiveDataEditorImageViewImpl imageView) {
         return imageView;
     }
+
+    @Provides
+    SettingsView provideSettingsView(SettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SettingsSectionViewContainer provideSettingsSectionViewContainer(SettingsSectionViewContainerImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    ApplicationUrlView provideApplicationUrlView(ApplicationUrlViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EmailNotificationSettingsView provideEmailNotificationSettingsView(EmailNotificationSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    GlobalPermissionSettingsView provideGlobalPermissionSettingsView(GlobalPermissionSettingsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    SystemDetailsView provideSystemDetailsView(SystemDetailsViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    BusyView provideBusyView(BusyViewImpl impl) {
+        return impl;
+    }
+
 }

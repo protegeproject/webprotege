@@ -797,7 +797,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     String search_hint();
 
     
-    @DefaultMessage("Settings")
+    @DefaultMessage("Application Settings")
     @Key("settings")
     String settings();
 
@@ -1058,4 +1058,20 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Tag Assignments")
     @Key("tags.tagAssignments.title")
     String tags_tagAssigments_Title();
+
+    @DefaultMessage("System Settings")
+    @Key("app.settings.systemSettings")
+    String applicationSettings_SystemSettings();
+
+    @DefaultMessage("Application URL")
+    @Key("app.settings.applicationUrl")
+    String applicationSettings_ApplicationUrl();
+
+    @DefaultMessage("Permissions")
+    @Key("app.settings.globalPermissions")
+    String applicationSettings_GlobalPermissions();
+
+    @DefaultMessage("Email Settings")
+    @Key("app.settings.emailNotificationSettings")
+    String applicationSettings_EmailNotifications();
 }

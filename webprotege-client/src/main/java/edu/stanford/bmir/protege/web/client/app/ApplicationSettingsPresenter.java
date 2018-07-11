@@ -3,14 +3,16 @@ package edu.stanford.bmir.protege.web.client.app;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.app.GetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
-import edu.stanford.bmir.protege.web.shared.app.ApplicationLocation;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
@@ -43,85 +45,118 @@ public class ApplicationSettingsPresenter implements Presenter {
 
     public static final RegExp PATH_REGEXP = RegExp.compile("(^\\/[/.a-zA-Z0-9-]+$)|^$");
 
-    private final ApplicationSettingsView view;
+    @Nonnull
+    private final SystemDetailsView systemDetailsView;
 
+    @Nonnull
+    private final ApplicationUrlView applicationUrlView;
+
+    @Nonnull
+    private final GlobalPermissionSettingsView permissionsView;
+
+    @Nonnull
+    private final EmailNotificationSettingsView emailNotificationSettingsView;
+
+    @Nonnull
     private final LoggedInUserManager loggedInUserManager;
 
+    @Nonnull
     private final ForbiddenView forbiddenView;
 
+    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Nonnull
+    private final SettingsPresenter settingsPresenter;
+
+    @Nonnull
+    private final Messages messages;
+
     @Inject
-    public ApplicationSettingsPresenter(@Nonnull ApplicationSettingsView view,
+    public ApplicationSettingsPresenter(@Nonnull SystemDetailsView systemDetailsView,
+                                        @Nonnull ApplicationUrlView applicationUrlView,
+                                        @Nonnull GlobalPermissionSettingsView permissionsView,
+                                        @Nonnull EmailNotificationSettingsView emailNotificationSettingsView,
                                         @Nonnull LoggedInUserManager loggedInUserManager,
                                         @Nonnull ForbiddenView forbiddenView,
-                                        @Nonnull DispatchServiceManager dispatchServiceManager) {
-        this.view = checkNotNull(view);
+                                        @Nonnull DispatchServiceManager dispatchServiceManager,
+                                        @Nonnull SettingsPresenter settingsPresenter,
+                                        @Nonnull Messages messages) {
+        this.systemDetailsView = checkNotNull(systemDetailsView);
+        this.applicationUrlView = checkNotNull(applicationUrlView);
+        this.permissionsView = checkNotNull(permissionsView);
+        this.emailNotificationSettingsView = checkNotNull(emailNotificationSettingsView);
         this.loggedInUserManager = checkNotNull(loggedInUserManager);
         this.forbiddenView = checkNotNull(forbiddenView);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.settingsPresenter = settingsPresenter;
+        this.messages = messages;
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
-        if(!loggedInUserManager.isAllowedApplicationAction(EDIT_APPLICATION_SETTINGS)) {
+        if (!loggedInUserManager.isAllowedApplicationAction(EDIT_APPLICATION_SETTINGS)) {
             container.setWidget(forbiddenView);
         }
         else {
-            container.setWidget(view);
+            settingsPresenter.start(container);
+            settingsPresenter.setSettingsTitle(messages.settings());
+            settingsPresenter.addSection(messages.applicationSettings_SystemSettings()).setWidget(systemDetailsView);
+            settingsPresenter.addSection(messages.applicationSettings_ApplicationUrl()).setWidget(applicationUrlView);
+            settingsPresenter.addSection(messages.applicationSettings_GlobalPermissions()).setWidget(permissionsView);
+            settingsPresenter.addSection(messages.applicationSettings_EmailNotifications()).setWidget(emailNotificationSettingsView);
+            settingsPresenter.setApplySettingsHandler(this::applySettings);
             dispatchServiceManager.execute(new GetApplicationSettingsAction(),
-                                           result -> {
-                                               displaySettings(result.getApplicationSettings());
-                                           });
+                                           result -> displaySettings(result.getApplicationSettings()));
         }
-        view.setApplySettingsHandler(this::applySettings);
-        view.setRebuildPermissionsHandler(this::rebuildPermissions);
+        // TODO:
+//        view.setRebuildPermissionsHandler(this::rebuildPermissions);
     }
 
     private void displaySettings(ApplicationSettings applicationSettings) {
-        view.setApplicationName(applicationSettings.getApplicationName());
-        view.setSystemNotificationEmailAddress(applicationSettings.getSystemNotificationEmailAddress().getEmailAddress());
-        view.setAccountCreationAllowed(applicationSettings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED);
-        view.setProjectCreationAllowed(applicationSettings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED);
-        view.setProjectUploadAllowed(applicationSettings.getProjectUploadSetting() == PROJECT_UPLOAD_ALLOWED);
-        view.setNotificationEmailsEnabled(applicationSettings.getNotificationEmailsSetting() == SEND_NOTIFICATION_EMAILS);
+        systemDetailsView.setApplicationName(applicationSettings.getApplicationName());
+        systemDetailsView.setSystemNotificationEmailAddress(applicationSettings.getSystemNotificationEmailAddress().getEmailAddress());
+        permissionsView.setAccountCreationAllowed(applicationSettings.getAccountCreationSetting() == ACCOUNT_CREATION_ALLOWED);
+        permissionsView.setProjectCreationAllowed(applicationSettings.getProjectCreationSetting() == EMPTY_PROJECT_CREATION_ALLOWED);
+        permissionsView.setProjectUploadAllowed(applicationSettings.getProjectUploadSetting() == PROJECT_UPLOAD_ALLOWED);
+        emailNotificationSettingsView.setNotificationEmailsEnabled(applicationSettings.getNotificationEmailsSetting() == SEND_NOTIFICATION_EMAILS);
         SchemeValue scheme = SchemeValue.valueOf(applicationSettings.getApplicationLocation().getScheme().toUpperCase());
-        view.setScheme(scheme);
-        view.setHost(applicationSettings.getApplicationLocation().getHost());
-        view.setPath(applicationSettings.getApplicationLocation().getPath());
+        applicationUrlView.setScheme(scheme);
+        applicationUrlView.setHost(applicationSettings.getApplicationLocation().getHost());
+        applicationUrlView.setPath(applicationSettings.getApplicationLocation().getPath());
         int port = applicationSettings.getApplicationLocation().getPort();
-        if(scheme.getDefaultPort() == port) {
-            view.setPort("");
+        if (scheme.getDefaultPort() == port) {
+            applicationUrlView.setPort("");
         }
         else {
-            view.setPort(Integer.toString(port));
+            applicationUrlView.setPort(Integer.toString(port));
         }
 
-        if(applicationSettings.getMaxUploadSize() == Long.MAX_VALUE) {
-            view.setMaxUploadSize("");
+        if (applicationSettings.getMaxUploadSize() == Long.MAX_VALUE) {
+            permissionsView.setMaxUploadSize("");
         }
         else {
             String maxUploadSize = Long.toString(applicationSettings.getMaxUploadSize() / (1024 * 1024));
-            view.setMaxUploadSize(maxUploadSize);
+            permissionsView.setMaxUploadSize(maxUploadSize);
         }
 
     }
 
     private void applySettings() {
         ApplicationSettings applicationSettings = new ApplicationSettings(
-                view.getApplicationName(),
-                new EmailAddress(view.getSystemNotificationEmailAddress()),
-                new ApplicationLocation(view.getScheme().name().toLowerCase(),
+                systemDetailsView.getApplicationName(),
+                new EmailAddress(systemDetailsView.getSystemNotificationEmailAddress()),
+                new ApplicationLocation(applicationUrlView.getScheme().name().toLowerCase(),
                                         getHostNameFromView(),
                                         getPathFromView(),
                                         getPortFromView()),
-                view.isAccountCreationAllowed() ? ACCOUNT_CREATION_ALLOWED : ACCOUNT_CREATION_NOT_ALLOWED,
+                permissionsView.isAccountCreationAllowed() ? ACCOUNT_CREATION_ALLOWED : ACCOUNT_CREATION_NOT_ALLOWED,
                 Collections.emptyList(),
-                view.isProjectCreationAllowed() ? EMPTY_PROJECT_CREATION_ALLOWED : EMPTY_PROJECT_CREATION_NOT_ALLOWED,
+                permissionsView.isProjectCreationAllowed() ? EMPTY_PROJECT_CREATION_ALLOWED : EMPTY_PROJECT_CREATION_NOT_ALLOWED,
                 Collections.emptyList(),
-                view.isProjectUploadAllowed() ? PROJECT_UPLOAD_ALLOWED : PROJECT_UPLOAD_NOT_ALLOWED,
+                permissionsView.isProjectUploadAllowed() ? PROJECT_UPLOAD_ALLOWED : PROJECT_UPLOAD_NOT_ALLOWED,
                 Collections.emptyList(),
-                view.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS,
+                emailNotificationSettingsView.isNotificationEmailsEnabled() ? SEND_NOTIFICATION_EMAILS : DO_NOT_SEND_NOTIFICATION_EMAILS,
                 parseMaxUploadSize()
         );
         dispatchServiceManager.execute(new SetApplicationSettingsAction(applicationSettings),
@@ -129,8 +164,8 @@ public class ApplicationSettingsPresenter implements Presenter {
     }
 
     private long parseMaxUploadSize() {
-        String maxUploadSize = view.getMaxUploadSize();
-        if(maxUploadSize.isEmpty()) {
+        String maxUploadSize = permissionsView.getMaxUploadSize();
+        if (maxUploadSize.isEmpty()) {
             return Long.MAX_VALUE;
         }
         try {
@@ -156,8 +191,8 @@ public class ApplicationSettingsPresenter implements Presenter {
     }
 
     private String getHostNameFromView() {
-        String hostName = view.getHost();
-        if(HOST_REGEXP.test(hostName)) {
+        String hostName = applicationUrlView.getHost();
+        if (HOST_REGEXP.test(hostName)) {
             return hostName;
         }
         else {
@@ -166,11 +201,11 @@ public class ApplicationSettingsPresenter implements Presenter {
     }
 
     private String getPathFromView() {
-        String enteredValue = view.getPath();
-        if(enteredValue.isEmpty()) {
+        String enteredValue = applicationUrlView.getPath();
+        if (enteredValue.isEmpty()) {
             return "";
         }
-        if(PATH_REGEXP.test(enteredValue)) {
+        if (PATH_REGEXP.test(enteredValue)) {
             return enteredValue;
         }
         else {
@@ -179,11 +214,11 @@ public class ApplicationSettingsPresenter implements Presenter {
     }
 
     private int getPortFromView() {
-        String portValue = view.getPort();
+        String portValue = applicationUrlView.getPort();
         try {
             return Integer.parseInt(portValue);
         } catch (NumberFormatException e) {
-            return view.getScheme().getDefaultPort();
+            return applicationUrlView.getScheme().getDefaultPort();
         }
     }
 

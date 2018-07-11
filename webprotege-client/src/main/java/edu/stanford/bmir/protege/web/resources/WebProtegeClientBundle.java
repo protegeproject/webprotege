@@ -217,7 +217,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String noSelection();
 
+        @ClassName("help-text")
         String helpText();
+
+        @ClassName("help-text--padding")
+        String helpTextPadding();
     }
 
     interface DateTimePicker extends CssResource {

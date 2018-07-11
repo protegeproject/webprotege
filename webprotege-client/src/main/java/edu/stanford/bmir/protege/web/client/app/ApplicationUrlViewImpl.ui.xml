@@ -1,0 +1,36 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:import field="edu.stanford.bmir.protege.web.client.app.SchemeValue.*"/>
+
+    <g:HTMLPanel>
+        <div class="{wp.style.helpText} {wp.style.helpTextPadding}">The application URL is the URL that users use to access
+            WebProtégé. If you have
+            something like an Apache HTTP Server sitting in-front of Tomcat then this may be
+            different to
+            the Tomcat URL. Note that the Path and Port fields are optional. The Host field is
+            mandatory.
+        </div>
+        <g:HTMLPanel addStyleNames="{wp.settings.group}">
+            <g:Label text="Scheme"/>
+            <g:ListBox ui:field="applicationSchemeField">
+                <g:item value="HTTPS">https</g:item>
+                <g:item value="HTTP">http</g:item>
+            </g:ListBox>
+            <div class="{wp.style.helpText} {wp.style.helpTextPadding}">
+                It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
+                running WebProtégé.  The http protocol should be used for testing purposes only.
+            </div>
+            <g:Label text="Host"/>
+            <text:PlaceholderTextBox ui:field="applicationHostField"
+                                     placeholder="e.g. webprotege.stanford.edu"/>
+            <g:Label text="Path"/>
+            <text:PlaceholderTextBox ui:field="applicationPathField"
+                                     placeholder="e.g. /webprotege (leave blank for no path)"/>
+            <g:Label text="Port"/>
+            <text:PlaceholderTextBox ui:field="applicationPortField"
+                                     placeholder="e.g. 443 (leave blank for default port)"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

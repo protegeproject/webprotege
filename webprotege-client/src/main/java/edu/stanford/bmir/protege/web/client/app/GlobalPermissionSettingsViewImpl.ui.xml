@@ -1,0 +1,37 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:import field="edu.stanford.bmir.protege.web.client.app.SchemeValue.*"/>
+    <ui:style>
+        .checkBox {
+            display: block;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .sectionHeading {
+            font-size: 14px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <g:Label text="Account Creation" addStyleNames="{style.sectionHeading}"/>
+        <g:HTMLPanel addStyleNames="{wp.settings.group}">
+            <g:CheckBox ui:field="accountCreationEnabledCheckBox" text="Account creation enabled"
+                        addStyleNames="{style.checkBox}"/>
+        </g:HTMLPanel>
+        <g:Label text="Project Creation and Upload" addStyleNames="{style.sectionHeading}"/>
+        <g:HTMLPanel addStyleNames="{wp.settings.group}">
+            <g:CheckBox ui:field="projectCreationEnabledCheckBox" text="Project creation enabled"
+                        addStyleNames="{style.checkBox}"/>
+            <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled"
+                        addStyleNames="{style.checkBox}"/>
+            <div style="padding-left: 40px;">
+                <g:Label text="Max upload size (MB)"/>
+                <text:PlaceholderTextBox ui:field="maxUploadSize" width="100%"
+                                         placeholder="Enter max upload size in Megabytes (MB).  Leave blank for no limit."/>
+            </div>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.inject;
 
 import dagger.Module;
 import dagger.Provides;
+import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
@@ -40,10 +41,6 @@ import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRender
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRendererImpl;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.ClassIriRendererImpl;
-import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainer;
-import edu.stanford.bmir.protege.web.client.settings.SettingsSectionViewContainerImpl;
-import edu.stanford.bmir.protege.web.client.settings.SettingsView;
-import edu.stanford.bmir.protege.web.client.settings.SettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
@@ -168,11 +165,6 @@ public class ClientProjectModule {
     @ProjectSingleton
     PortletFactory providePortletFactory(PortletFactoryGenerated portletFactoryGenerated) {
         return portletFactoryGenerated;
-    }
-
-    @Provides
-    BusyView provideBusyView(BusyViewImpl impl) {
-        return impl;
     }
 
     @Provides
@@ -305,15 +297,6 @@ public class ClientProjectModule {
         return impl;
     }
 
-    @Provides
-    SettingsView provideSettingsView(SettingsViewImpl impl) {
-        return impl;
-    }
-
-    @Provides
-    SettingsSectionViewContainer provideSettingsSectionViewContainer(SettingsSectionViewContainerImpl impl) {
-        return impl;
-    }
 }
 
 
