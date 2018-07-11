@@ -796,12 +796,6 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search.hint")
     String search_hint();
 
-    
-    @DefaultMessage("Application Settings")
-    @Key("settings")
-    String settings();
-
-    
     @DefaultMessage("Share")
     @Key("share")
     String share();
@@ -1058,6 +1052,15 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Tag Assignments")
     @Key("tags.tagAssignments.title")
     String tags_tagAssigments_Title();
+
+
+    @DefaultMessage("Settings")
+    @Key("project.settings")
+    String projectSettings();
+
+    @DefaultMessage("WebProtégé Application Settings")
+    @Key("app.settings.title")
+    String applicationSettings();
 
     @DefaultMessage("System Settings")
     @Key("app.settings.systemSettings")

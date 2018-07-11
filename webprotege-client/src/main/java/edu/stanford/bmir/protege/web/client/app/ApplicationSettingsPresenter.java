@@ -103,7 +103,7 @@ public class ApplicationSettingsPresenter implements Presenter {
         else {
             settingsPresenter.setNextPlace(Optional.of(new ProjectListPlace()));
             settingsPresenter.start(container);
-            settingsPresenter.setSettingsTitle(messages.settings());
+            settingsPresenter.setSettingsTitle(messages.applicationSettings());
             settingsPresenter.addSection(messages.applicationSettings_SystemSettings()).setWidget(systemDetailsView);
             settingsPresenter.addSection(messages.applicationSettings_ApplicationUrl()).setWidget(applicationUrlView);
             settingsPresenter.addSection(messages.applicationSettings_GlobalPermissions()).setWidget(permissionsView);

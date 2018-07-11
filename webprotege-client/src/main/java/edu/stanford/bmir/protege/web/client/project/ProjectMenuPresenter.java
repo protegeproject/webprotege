@@ -38,7 +38,7 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final EditProjectTagsUIActionHandler editProjectTagsUIActionHandler;
 
-    private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.settings()) {
+    private AbstractUiAction editProjectSettings = new AbstractUiAction(MESSAGES.projectSettings()) {
         @Override
         public void execute() {
             showProjectDetailsHandler.handleShowProjectDetails();
