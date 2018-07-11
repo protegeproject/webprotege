@@ -59,6 +59,7 @@ public class SettingsPresenter {
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
+        view.clearView();
         view.setApplySettingsHandler(this::handleApply);
         view.setCancelSettingsHandler(this::handleCancel);
         container.setWidget(view);

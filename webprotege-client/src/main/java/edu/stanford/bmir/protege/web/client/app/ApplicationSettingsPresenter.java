@@ -16,11 +16,13 @@ import edu.stanford.bmir.protege.web.shared.app.SetApplicationSettingsAction;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.RebuildPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.place.ProjectListPlace;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_APPLICATION_SETTINGS;
@@ -89,8 +91,8 @@ public class ApplicationSettingsPresenter implements Presenter {
         this.loggedInUserManager = checkNotNull(loggedInUserManager);
         this.forbiddenView = checkNotNull(forbiddenView);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
-        this.settingsPresenter = settingsPresenter;
-        this.messages = messages;
+        this.settingsPresenter = checkNotNull(settingsPresenter);
+        this.messages = checkNotNull(messages);
     }
 
     @Override
@@ -99,6 +101,7 @@ public class ApplicationSettingsPresenter implements Presenter {
             container.setWidget(forbiddenView);
         }
         else {
+            settingsPresenter.setNextPlace(Optional.of(new ProjectListPlace()));
             settingsPresenter.start(container);
             settingsPresenter.setSettingsTitle(messages.settings());
             settingsPresenter.addSection(messages.applicationSettings_SystemSettings()).setWidget(systemDetailsView);
@@ -106,6 +109,7 @@ public class ApplicationSettingsPresenter implements Presenter {
             settingsPresenter.addSection(messages.applicationSettings_GlobalPermissions()).setWidget(permissionsView);
             settingsPresenter.addSection(messages.applicationSettings_EmailNotifications()).setWidget(emailNotificationSettingsView);
             settingsPresenter.setApplySettingsHandler(this::applySettings);
+            settingsPresenter.setCancelSettingsHandler(this::cancelSettings);
             dispatchServiceManager.execute(new GetApplicationSettingsAction(),
                                            result -> displaySettings(result.getApplicationSettings()));
         }
@@ -160,7 +164,13 @@ public class ApplicationSettingsPresenter implements Presenter {
                 parseMaxUploadSize()
         );
         dispatchServiceManager.execute(new SetApplicationSettingsAction(applicationSettings),
-                                       result -> MessageBox.showMessage("Settings applied", "The application settings have successfully been applied"));
+                                       result -> MessageBox.showMessage("Settings applied",
+                                                                        "The application settings have successfully been applied",
+                                                                        settingsPresenter::goToNextPlace));
+    }
+
+    private void cancelSettings() {
+        settingsPresenter.goToNextPlace();
     }
 
     private long parseMaxUploadSize() {
