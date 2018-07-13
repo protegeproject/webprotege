@@ -15,16 +15,6 @@ import java.util.Optional;
  */
 public interface SharingSettingsView extends IsWidget {
 
-    interface ApplyChangesHandler {
-        void handleApplyChanges();
-    }
-
-    interface CancelHandler {
-        void handleCancel();
-    }
-
-    void setProjectTitle(@Nonnull String projectTitle);
-
     void setLinkSharingPermission(Optional<SharingPermission> sharingPermission);
 
     Optional<SharingPermission> getLinkSharingPermission();
@@ -32,8 +22,4 @@ public interface SharingSettingsView extends IsWidget {
     void setSharingSettings(List<SharingSetting> sharingSettings);
 
     List<SharingSetting> getSharingSettings();
-
-    void setApplyChangesHandler(ApplyChangesHandler handler);
-
-    void setCancelHandler(CancelHandler handler);
 }

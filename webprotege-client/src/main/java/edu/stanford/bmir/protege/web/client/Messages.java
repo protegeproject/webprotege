@@ -841,11 +841,17 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("sharing.shareWithSpecificPeople")
     String sharing_shareWithSpecificPeople();
 
-    
-    @DefaultMessage("Sharing Settings")
-    @Key("sharing.sharingSettings")
-    String sharing_sharingSettings();
+    @DefaultMessage("Loading sharing settings")
+    @Key("sharing.settings.loading")
+    String sharing_settings_loading();
 
+    @DefaultMessage("Sharing settings")
+    @Key("sharing.settings.title")
+    String sharing_settings_title();
+
+    @DefaultMessage("Updating sharing settings")
+    @Key("sharing.settings.updating")
+    String sharing_settings_updating();
     
     @DefaultMessage("Sign-in Required")
     @Key("sharing.signInRequired")

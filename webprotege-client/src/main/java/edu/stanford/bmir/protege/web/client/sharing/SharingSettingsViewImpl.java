@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,13 +11,10 @@ import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -34,12 +30,6 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
     private static SharingSettingsViewImplUiBinder ourUiBinder = GWT.create(SharingSettingsViewImplUiBinder.class);
 
     @UiField
-    Button cancelButton;
-
-    @UiField
-    Button applyButton;
-
-    @UiField
     CheckBox linkSharingEnabledCheckBox;
 
     @UiField
@@ -50,13 +40,6 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
 
     @UiField
     HTMLPanel linkSharingView;
-
-    @UiField
-    Label projectTitle;
-
-    private ApplyChangesHandler applyChangesHandler = () -> {};
-
-    private CancelHandler cancelHandler = () -> {};
 
     @Inject
     public SharingSettingsViewImpl(final DispatchServiceManager dispatchServiceManager) {
@@ -72,23 +55,6 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
     protected void handleLinkSharingSettingChanged(ValueChangeEvent<Boolean> e) {
         linkSharingPermissionDropDown.setEnabled(linkSharingEnabledCheckBox.getValue());
         updateLinkSharingPanel();
-    }
-
-    @UiHandler("applyButton")
-    protected void handleApply(ClickEvent e) {
-        applyChangesHandler.handleApplyChanges();
-    }
-
-
-    @UiHandler("cancelButton")
-    protected void handleCancel(ClickEvent e) {
-        cancelHandler.handleCancel();
-    }
-
-
-    @Override
-    public void setProjectTitle(@Nonnull String projectTitle) {
-        this.projectTitle.setText(checkNotNull(projectTitle.trim()));
     }
 
     @Override
@@ -127,22 +93,7 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
 
     @Override
     public List<SharingSetting> getSharingSettings() {
-        Optional<List<SharingSetting>> value = Optional.ofNullable(sharingSettingsListEditor.getValue().orElse(null));
-        if(value.isPresent()) {
-            return value.get();
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-
-    @Override
-    public void setApplyChangesHandler(ApplyChangesHandler handler) {
-        applyChangesHandler = checkNotNull(handler);
-    }
-
-    @Override
-    public void setCancelHandler(CancelHandler handler) {
-        cancelHandler = checkNotNull(handler);
+        Optional<List<SharingSetting>> value = sharingSettingsListEditor.getValue();
+        return value.orElseGet(Collections::emptyList);
     }
 }

@@ -1,17 +1,16 @@
 package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.app.Presenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
@@ -22,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.EDIT_SHARING_SETTINGS;
 
 /**
@@ -41,13 +41,7 @@ public class SharingSettingsPresenter implements Presenter {
     private final BusyView busyView;
 
     @Nonnull
-    private final PlaceController placeController;
-
-    @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
-
-    @Nonnull
-    private final ActiveProjectManager activeProjectManager;
 
     @Nonnull
     private final PermissionManager permissionManager;
@@ -56,35 +50,34 @@ public class SharingSettingsPresenter implements Presenter {
     private final PermissionScreener permissionScreener;
 
     @Nonnull
-    private Optional<Place> nextPlace = Optional.empty();
+    private final SettingsPresenter settingsPresenter;
+
+    @Nonnull
+    private final Messages messages;
 
     @Inject
     public SharingSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull SharingSettingsView view,
                                     @Nonnull BusyView busyView,
-                                    @Nonnull PlaceController placeController,
                                     @Nonnull DispatchServiceManager dispatchServiceManager,
-                                    @Nonnull ActiveProjectManager activeProjectManager,
                                     @Nonnull PermissionManager permissionManager,
-                                    @Nonnull PermissionScreener permissionScreener) {
-        this.projectId = projectId;
-        this.view = view;
-        this.busyView = busyView;
-        this.placeController = placeController;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.activeProjectManager = activeProjectManager;
-        this.permissionManager = permissionManager;
-        this.permissionScreener = permissionScreener;
-    }
-
-    public Optional<Place> getNextPlace() {
-        return nextPlace;
+                                    @Nonnull PermissionScreener permissionScreener,
+                                    @Nonnull SettingsPresenter settingsPresenter,
+                                    @Nonnull Messages messages) {
+        this.projectId = checkNotNull(projectId);
+        this.view = checkNotNull(view);
+        this.busyView = checkNotNull(busyView);
+        this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
+        this.permissionManager = checkNotNull(permissionManager);
+        this.permissionScreener = checkNotNull(permissionScreener);
+        this.settingsPresenter = checkNotNull(settingsPresenter);
+        this.messages = checkNotNull(messages);
     }
 
     @Override
     public void start(@Nonnull AcceptsOneWidget container,
                       @Nonnull EventBus eventBus) {
-        busyView.setMessage("Loading sharing settings");
+        busyView.setMessage(messages.sharing_settings_loading());
         container.setWidget(busyView);
         permissionScreener.checkPermission(
                 EDIT_SHARING_SETTINGS.getActionId(),
@@ -96,21 +89,19 @@ public class SharingSettingsPresenter implements Presenter {
     private void displaySharingSettings(AcceptsOneWidget container) {
         dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), result -> {
             ProjectSharingSettings settings = result.getProjectSharingSettings();
-            view.setApplyChangesHandler(this::applyChangesAndGoToNextPlace);
-            view.setCancelHandler(this::cancelChangesAndGoToNextPlace);
+            settingsPresenter.start(container);
+            settingsPresenter.setSettingsTitle(messages.sharing_settings_title());
+            settingsPresenter.addSection("").setWidget(view);
+            settingsPresenter.setApplySettingsHandler(this::applyChangesAndGoToNextPlace);
+            settingsPresenter.setCancelSettingsHandler(this::cancelChangesAndGoToNextPlace);
             view.setLinkSharingPermission(settings.getLinkSharingPermission());
             view.setSharingSettings(settings.getSharingSettings());
-            container.setWidget(view);
-        });
-        activeProjectManager.getActiveProjectDetails(projectDetails -> {
-            String displayName = projectDetails.map(ProjectDetails::getDisplayName).orElse("");
-            view.setProjectTitle(displayName);
         });
     }
 
 
     private void applyChangesAndGoToNextPlace() {
-        nextPlace.ifPresent(placeController::goTo);
+        settingsPresenter.goToNextPlace();
         ProjectSharingSettings settings = new ProjectSharingSettings(projectId, view.getLinkSharingPermission(), view.getSharingSettings());
         dispatchServiceManager.execute(new SetProjectSharingSettingsAction(settings), new DispatchServiceCallbackWithProgressDisplay<SetProjectSharingSettingsResult>() {
             @Override
@@ -120,7 +111,7 @@ public class SharingSettingsPresenter implements Presenter {
 
             @Override
             public String getProgressDisplayTitle() {
-                return "Updating sharing settings";
+                return messages.sharing_settings_updating();
             }
 
             @Override
@@ -131,10 +122,10 @@ public class SharingSettingsPresenter implements Presenter {
     }
 
     private void cancelChangesAndGoToNextPlace() {
-        nextPlace.ifPresent(placeController::goTo);
+        settingsPresenter.goToNextPlace();
     }
 
     public void setNextPlace(Optional<Place> nextPlace) {
-        this.nextPlace = nextPlace;
+        settingsPresenter.setNextPlace(nextPlace);
     }
 }
