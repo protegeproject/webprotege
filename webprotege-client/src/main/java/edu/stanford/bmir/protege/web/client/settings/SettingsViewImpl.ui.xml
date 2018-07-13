@@ -56,7 +56,7 @@
             font-weight: 500;
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.outerMost}">
+    <g:HTMLPanel addStyleNames="{style.outerMost} {wp.settings.settings}">
         <g:HTMLPanel addStyleNames="{wp.laf.topBar} {style.topBar}">
             <g:HTMLPanel addStyleNames="{wp.laf.topBarLogo}"/>
             <g:HTMLPanel addStyleNames="{wp.laf.topBarContent}">

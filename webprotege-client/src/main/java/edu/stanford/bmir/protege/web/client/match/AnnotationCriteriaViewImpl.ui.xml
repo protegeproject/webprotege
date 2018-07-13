@@ -5,9 +5,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .propertyField {
-            border: 1px solid #e0e0e0;
-            margin-bottom: 2px;
-            margin-top: 2px;
             min-width: 250px;
             max-width: 250px;
         }
@@ -27,6 +24,5 @@
             <g:InlineLabel text="that " addStyleNames="{style.prefixLabel} {wp.style.formLabel}"/>
             <g:SimplePanel ui:field="valueCriteriaContainer"/>
         </g:HTMLPanel>
-
     </g:HTMLPanel>
 </ui:UiBinder>

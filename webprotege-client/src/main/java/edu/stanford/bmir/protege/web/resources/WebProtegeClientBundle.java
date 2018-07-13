@@ -222,6 +222,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("help-text--padding")
         String helpTextPadding();
+
+        @ClassName("wp-panel-filled")
+        String panelFilled();
+
+        @ClassName("wp-panel-filled--border")
+        String panelFilledBorder();
+
+        @ClassName("wp-panel-neutral")
+        String panelNeutral();
     }
 
     interface DateTimePicker extends CssResource {
@@ -268,6 +277,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-login__logo")
         String loginLogo();
+
+        @ClassName("wp-login__form")
+        String loginForm();
+
+        @ClassName("wp-login__footnote")
+        String loginFootnote();
+
+        @ClassName("wp-login__message")
+        String loginMessage();
+
+        @ClassName("wp-login__forgot-user-name-or-password")
+        String loginForgotUsernameOrPassword();
     }
 
     interface DiscussionCss extends CssResource {
@@ -390,30 +411,21 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface SettingsPageCss extends CssResource {
 
-        String outer();
+        @ClassName("wp-settings")
+        String settings();
 
-        String inner();
-
+        @ClassName("wp-settings__section")
         String section();
 
+        @ClassName("wp-settings__section__title")
         String title();
 
+        @ClassName("wp-settings__section__content")
         String content();
 
         String group();
 
         String buttonBar();
-
-        String errorLabel();
-
-        @ClassName("gwt-TextBox")
-        String gwtTextBox();
-
-        @ClassName("gwt-PasswordTextBox")
-        String gwtPasswordTextBox();
-
-        @ClassName("gwt-Label")
-        String gwtLabel();
     }
 
     interface MenuCss extends CssResource {

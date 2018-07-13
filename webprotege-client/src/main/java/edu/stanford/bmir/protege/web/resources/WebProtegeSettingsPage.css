@@ -1,33 +1,35 @@
-@external .gwt-TextBox;
-@external .gwt-TextArea;
-@external .gwt-PasswordTextBox;
-@external .gwt-Label;
-@external .gwt-Button;
+@external .wp-*;
+@external .gwt-*;
 
-.outer {
-    padding-top: 20px;
-    display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    overflow: hidden;
+.wp-settings {
+
+}
+
+.wp-settings__section {
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.wp-settings__section + .wp-settings__section {
+    margin-top: 50px;
+}
+
+.wp-settings__section__title {
+    font-size: 18px;
+    font-weight: 600;
     padding-bottom: 20px;
+    padding-top: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
-.inner {
-    padding: 20px 40px;
-    background-color: #f0f0f0;
-    border: 1px solid #e3e3e3;
-    border-radius: 3px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 800px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+.wp-settings__section .gwt-Label {
+    padding-bottom: 4px;
+    padding-top: 10px;
+    font-weight: 500;
 }
 
-.content {
+.wp-settings__section__content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -44,45 +46,6 @@
     flex-shrink: 0;
 }
 
-.inner .gwt-TextBox {
-    border: 1px solid #e0e0e0;
-    line-height: 20px;
-    background-color: #ffffff;
-    padding: 2px;
-    font-size: 12px;
-}
-
-.inner textarea {
-    border: 1px solid #e0e0e0;
-    line-height: 20px;
-    background-color: #ffffff;
-    padding: 2px;
-    font-size: 12px;
-}
-
-.inner .gwt-PasswordTextBox {
-    border: 1px solid #e0e0e0;
-    line-height: 20px;
-    background-color: #ffffff;
-    padding: 2px;
-    font-size: 12px;
-}
-
-.section .gwt-Label {
-    padding-bottom: 4px;
-    padding-top: 10px;
-    font-weight: 500;
-}
-
-.title {
-    font-size: 18px;
-    font-weight: 600;
-    padding-bottom: 20px;
-    padding-top: 0;
-    flex-grow: 0;
-    flex-shrink: 0;
-}
-
 .group {
     padding-bottom: 10px;
     display: flex;
@@ -90,18 +53,3 @@
     align-items: stretch;
 }
 
-.inner .errorLabel {
-    color: literal("var(--error--color)");
-    display: none;
-    padding: 0;
-}
-
-.section {
-    background-color: #f0f0f0;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 20px;
-}
-.section + .section {
-    margin-top: 50px;
-}

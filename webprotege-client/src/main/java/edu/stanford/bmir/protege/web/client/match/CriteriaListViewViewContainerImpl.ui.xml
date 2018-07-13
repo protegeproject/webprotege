@@ -11,7 +11,6 @@
             flex-direction: row;
             margin-bottom: 2px;
             padding: 2px;
-            background-color: #f0f0f0;
             flex-grow: 1;
             flex-shrink: 1;
             overflow-x: hidden;
@@ -37,7 +36,7 @@
         .viewContainer {
         }
     </ui:style>
-    <g:HTMLPanel addStyleNames="{style.main}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.style.panelFilled}">
         <g:SimplePanel ui:field="viewContainer" addStyleNames="{style.viewContainer}"/>
         <g:HTMLPanel addStyleNames="{style.buttonContainer}">
             <button:DeleteButton ui:field="removeButton" addStyleNames="{style.deleteButton}"/>

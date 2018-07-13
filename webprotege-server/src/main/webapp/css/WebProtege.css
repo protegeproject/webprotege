@@ -11,6 +11,10 @@
 
     --inlay-panel--background-color: #f0f0f0;
 
+    --inlay-panel--border: 1px solid #e0e0e0;
+
+    --inlay-panel--border-radius: 3px;
+
     --inlay-panel--alternate-background-color: #fafaff;
 
     --view-toolbar--background-color: #f0f0f0;
@@ -38,6 +42,7 @@ body, input, textarea, keygen, select, button {
 
 input, textarea {
     margin: 0;
+    border: none;
 }
 
 textarea {
@@ -211,6 +216,22 @@ select {
 
 .gwt-DialogBox .dialogMiddleCenter {
     padding: 20px;
+}
+
+.gwt-DialogBox .gwt-TextBox {
+    border: var(--inlay-panel--border);
+}
+
+.gwt-DialogBox .gwt-PasswordTextBox {
+    border: var(--inlay-panel--border);
+}
+
+.gwt-DialogBox .gwt-TextArea {
+    border: var(--inlay-panel--border);
+}
+
+.gwt-DialogBox .gwt-SuggestBox {
+    border: var(--inlay-panel--border);
 }
 
 .gwt-PopupPanelGlass {

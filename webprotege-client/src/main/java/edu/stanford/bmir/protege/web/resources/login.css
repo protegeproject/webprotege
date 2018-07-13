@@ -1,4 +1,5 @@
 @external .wp-*;
+@external .gwt-*;
 
 @url protegeBlenderUrl protegeBlender;
 
@@ -12,4 +13,39 @@
     background-image: protegeBlenderUrl;
     background-repeat: no-repeat;
     background-size: contain;
+}
+
+.wp-login__form {
+    background-color: literal("var(--inlay-panel--background-color)");
+    border: literal("var(--inlay-panel--border)");
+    width: 280px;
+    padding: 30px;
+    border-radius: 2px;
+}
+
+.wp-login__form .gwt-TextBox {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-login__form .gwt-PasswordTextBox {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-login__footnote {
+    width:        800px;
+    text-align:   center;
+    font-size:    10px;
+    color: #c0c0c0;
+}
+
+.wp-login__message {
+    font-size:      18px;
+    text-align:     center;
+}
+
+.wp-login__forgot-user-name-or-password {
+    color:           blue;
+    text-decoration: underline;
+    padding-top:     20px;
+    padding-right:   0;
 }

@@ -3,31 +3,24 @@
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
-        @external .gwt-SuggestBox;
         .main {
             display: flex;
             flex-direction: row;
-            align-items: start;
-        }
-        .main .gwt-SuggestBox {
-            border: 1px solid transparent;
+            align-items: baseline;
         }
         .property-field {
             flex-grow: 0;
             min-width: 170px;
             max-width: 170px;
-            border: 1px solid transparent;
         }
         .value-field {
             flex-grow: 1;
             flex-shrink: 1;
-            border: 1px solid transparent;
         }
         .language-field {
             flex-grow: 0;
             flex-shrink: 0;
             width: 36px;
-            border: 1px solid transparent;
         }
     </ui:style>
 

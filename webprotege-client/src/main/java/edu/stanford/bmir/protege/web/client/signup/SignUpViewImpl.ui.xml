@@ -6,49 +6,37 @@
     <ui:style>
         .main {
             padding-top: 50px;
+            margin-left: 70px;
+            margin-right: 70px;
         }
-
-        .message {
-            width: 180px;
-            margin-left: auto;
-            margin-right: auto;
-            padding-top: 20px;
-            padding-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .verticalPadding {
-            height: 10px;
-        }
-
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{wp.settings.inner}">
+    <g:HTMLPanel addStyleNames="{style.main} {wp.settings.settings}">
+        <g:HTMLPanel addStyleNames="{wp.settings.section} {wp.style.panelFilled} {wp.style.panelFilledBorder}">
             <g:HTMLPanel addStyleNames="{wp.settings.content}">
                 <g:Label text="Create Account" addStyleNames="{wp.settings.title}"/>
 
                 <g:Label text="User name"/>
                 <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Jane Doe"/>
                 <g:Label ui:field="userNameErrorLabel" text="Please specify a user name"
-                         addStyleNames="{wp.settings.errorLabel}"/>
+                         addStyleNames="{wp.style.errorLabel}"/>
 
                 <g:Label text="Email address"/>
                 <g:TextBox ui:field="emailAddressField"/>
                 <g:Label ui:field="emailAddressErrorLabel" text="Please enter a valid email address"
-                         addStyleNames="{wp.settings.errorLabel}"/>
+                         addStyleNames="{wp.style.errorLabel}"/>
 
                 <g:HTMLPanel addStyleNames="{wp.settings.group}">
 
                     <g:Label text="Password"/>
                     <g:PasswordTextBox ui:field="passwordField"/>
                     <g:Label ui:field="passwordErrorLabel" text="Please enter a password"
-                             addStyleNames="{wp.settings.errorLabel}"/>
+                             addStyleNames="{wp.style.errorLabel}"/>
 
                     <g:Label text="Confirm Password"/>
                     <g:PasswordTextBox ui:field="confirmPasswordField"/>
                     <g:Label ui:field="confirmPasswordErrorLabel" text="Passwords do not match"
-                             addStyleNames="{wp.settings.errorLabel}"/>
+                             addStyleNames="{wp.style.errorLabel}"/>
 
                 </g:HTMLPanel>
             </g:HTMLPanel>

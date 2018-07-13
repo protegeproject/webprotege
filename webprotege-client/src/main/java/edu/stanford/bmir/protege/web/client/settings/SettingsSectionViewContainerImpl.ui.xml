@@ -1,7 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel addStyleNames="{wp.settings.section}">
+    <g:HTMLPanel addStyleNames="{wp.settings.section}  {wp.style.panelFilled} {wp.style.panelFilledBorder}">
         <g:Label ui:field="nameField" addStyleNames="{wp.settings.title}"/>
         <g:SimplePanel ui:field="container"/>
     </g:HTMLPanel>

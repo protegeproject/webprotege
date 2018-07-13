@@ -1,4 +1,4 @@
-@external gwt-TabLayoutPanelTab;
+@external gwt-*;
 @external gwt-TabLayoutPanelTab-selected;
 @external blockquote;
 @url classIconUrl svgClassIcon;
@@ -249,4 +249,48 @@
     padding-bottom: 10px;
     padding-left: 4px;
     padding-top: 2px;
+}
+
+.wp-panel-filled {
+    background-color: literal("var(--inlay-panel--background-color)");
+}
+
+.wp-panel-filled--border {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-panel-filled .gwt-TextBox {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-panel-filled .gwt-PasswordTextBox {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-panel-filled .gwt-TextArea {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-panel-filled .gwt-SuggestBox {
+    border: literal("var(--inlay-panel--border)");
+}
+
+.wp-panel-neutral {
+
+}
+
+.wp-panel-neutral .gwt-TextBox {
+
+}
+
+.wp-panel-neutral .gwt-PasswordTextBox {
+
+}
+
+.wp-panel-neutral .gwt-TextArea {
+
+}
+
+.wp-panel-neutral .gwt-SuggestBox {
+
 }
