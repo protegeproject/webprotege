@@ -23,12 +23,6 @@
     flex-shrink: 0;
 }
 
-.wp-settings__section .gwt-Label {
-    padding-bottom: 4px;
-    padding-top: 10px;
-    font-weight: 500;
-}
-
 .wp-settings__section__content {
     display: flex;
     flex-direction: column;
