@@ -36,6 +36,10 @@ body, input, textarea, keygen, select, button {
     font-size: 12px;
 }
 
+input, textarea {
+    margin: 0;
+}
+
 textarea {
     resize: none;
 }
@@ -73,14 +77,12 @@ pre {
 }
 
 .gwt-TextBox, textarea, .gwt-PasswordTextBox {
-    border: 1px solid #e0e0e0;
     line-height: 18px;
     background-color: #ffffff;
     padding: 2px;
 }
 
 .gwt-SuggestBox, .gwt-SuggestBox [disabled] {
-    border: 1px solid #f0f0f0;
     font-size: 12px;
     padding: 2px;
     line-height: 16px;
