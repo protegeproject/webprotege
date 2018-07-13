@@ -4,6 +4,7 @@
              xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
 
@@ -13,7 +14,9 @@
             box-sizing: border-box;
             width: 600px;
         }
-
+        .helpText {
+            width: 600px;
+        }
         .foucusPanel {
             box-sizing: border-box;
             width: 600px;
@@ -46,6 +49,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
+        <g:Label text="{msg.search_help}" addStyleNames="{wp.style.helpText} {wp.style.helpTextPadding} {style.helpText}"/>
         <g:Label ui:field="searchSummaryField" addStyleNames="{style.searchSummaryLabel}"/>
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
         <g:FocusPanel ui:field="base" addStyleNames="{style.foucusPanel}">

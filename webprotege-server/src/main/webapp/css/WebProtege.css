@@ -72,14 +72,6 @@ pre {
     border: none;
 }
 
-.gwt-DialogBox .gwt-Label {
-    color: #606060;
-    padding-bottom: 4px;
-    padding-top: 10px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
 .gwt-TextBox, textarea, .gwt-PasswordTextBox {
     border: 1px solid #e0e0e0;
     line-height: 18px;

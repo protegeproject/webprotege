@@ -796,6 +796,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("search.hint")
     String search_hint();
 
+    @DefaultMessage(
+            "Separate search words by spaces to perform multi-word search.  Search for tagged entities by " +
+            "entering the name of the tag.")
+    @Key("search.help")
+    String search_help();
+
     @DefaultMessage("Share")
     @Key("share")
     String share();
