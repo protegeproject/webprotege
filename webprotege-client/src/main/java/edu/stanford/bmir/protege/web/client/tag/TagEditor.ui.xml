@@ -10,6 +10,7 @@
         .labelField {
             flex-grow: 1;
             flex-shrink: 1;
+            margin-right: 1px;
         }
         .descriptionField {
             flex-grow: 3;

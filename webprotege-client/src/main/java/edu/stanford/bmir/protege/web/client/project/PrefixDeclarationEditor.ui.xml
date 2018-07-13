@@ -15,6 +15,7 @@
             flex-shrink: 0;
             width: 100px;
             font-family: courier, serif;
+            margin-right: 1px;
         }
         .prefixNameField::-webkit-contacts-auto-fill-button {
             visibility: hidden;
