@@ -3,9 +3,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
 
-        @external .gwt-SuggestBox;
-
-
         textarea pre {
             margin: 0;
             padding: 0;
@@ -71,11 +68,6 @@
         .main > a:hover {
             color: #a9a9a9;
         }
-
-        .main .gwt-SuggestBox {
-            border: none;
-        }
-
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}" ui:field="outer">
