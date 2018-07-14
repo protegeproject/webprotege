@@ -24,6 +24,8 @@
         <br/>
         <br/>
         Note that there is no need to declare built-in prefix names for owl:, rdfs:, rdf:, xsd: etc.
+        <br/>
+        <br/>
         <g:HTMLPanel addStyleNames="{style.prefixDeclarationsEditorContainer}">
             <editor:ValueListFlexEditorImpl ui:field="prefixesEditor"/>
         </g:HTMLPanel>
