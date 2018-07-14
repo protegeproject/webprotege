@@ -1,9 +1,17 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:TextBox ui:field="slackPayloadUrl"/>
-        </g:HTMLPanel>
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:TextBox ui:field="slackPayloadUrl"/>
+        <g:Label addStyleNames="{wp.style.helpText} {wp.style.helpTextPadding}" text="{msg.projectSettings_slackWebHookHelp}">
+        </g:Label>
     </g:HTMLPanel>
 </ui:UiBinder>
