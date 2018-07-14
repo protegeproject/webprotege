@@ -13,7 +13,7 @@
             mandatory.
         </div>
         <g:HTMLPanel addStyleNames="{wp.settings.group}">
-            <g:Label text="{msg.applicationSettings_url_scheme}&#x2a;"/>
+            <g:Label text="{msg.applicationSettings_url_scheme}&#x2a;" addStyleNames="{wp.settings.label}"/>
             <g:ListBox ui:field="applicationSchemeField">
                 <g:item value="HTTPS">https</g:item>
                 <g:item value="HTTP">http</g:item>
@@ -22,13 +22,13 @@
                 It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
                 running WebProtégé.  The http protocol should be used for testing purposes only.
             </div>
-            <g:Label text="{msg.applicationSettings_url_host}&#x2a;"/>
+            <g:Label text="{msg.applicationSettings_url_host}&#x2a;" addStyleNames="{wp.settings.label}"/>
             <text:PlaceholderTextBox ui:field="applicationHostField"
                                      placeholder="e.g. webprotege.stanford.edu"/>
-            <g:Label text="{msg.applicationSettings_url_path}"/>
+            <g:Label text="{msg.applicationSettings_url_path}" addStyleNames="{wp.settings.label} {wp.settings.labelPadding}"/>
             <text:PlaceholderTextBox ui:field="applicationPathField"
                                      placeholder="e.g. /webprotege (leave blank for no path)"/>
-            <g:Label text="{msg.applicationSettings_url_port}"/>
+            <g:Label text="{msg.applicationSettings_url_port}" addStyleNames="{wp.settings.label} {wp.settings.labelPadding}"/>
             <text:PlaceholderTextBox ui:field="applicationPortField"
                                      placeholder="e.g. 443 (leave blank for default port)"/>
         </g:HTMLPanel>

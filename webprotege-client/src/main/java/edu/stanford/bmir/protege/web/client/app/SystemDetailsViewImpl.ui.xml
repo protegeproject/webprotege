@@ -3,14 +3,14 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel addStyleNames="{wp.settings.group}">
-        <g:Label text="Application name&#x2a;"/>
+        <g:Label text="Application name&#x2a;" addStyleNames="{wp.settings.label}"/>
         <text:PlaceholderTextBox ui:field="applicationNameField"
                                  placeholder="Application name"/>
         <div  class="{wp.style.helpText} {wp.style.helpTextPadding}">
             The Application Name is used for display throughout the user interface and is also used in
             notification emails that are sent to users.
         </div>
-        <g:Label text="System notification email address&#x2a;"/>
+        <g:Label text="System notification email address&#x2a;" addStyleNames="{wp.settings.label}  {wp.settings.labelPadding}"/>
         <text:PlaceholderTextBox ui:field="systemNotificationEmailAddressField"
                                  placeholder="Email address for system notifications"/>
 

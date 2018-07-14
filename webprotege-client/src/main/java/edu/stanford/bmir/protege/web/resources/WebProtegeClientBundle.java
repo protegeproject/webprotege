@@ -426,6 +426,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String group();
 
         String buttonBar();
+
+        @ClassName("wp-settings__label")
+        String label();
+
+        @ClassName("wp-settings__label--padding")
+        String labelPadding();
     }
 
     interface MenuCss extends CssResource {
