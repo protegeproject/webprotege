@@ -85,6 +85,7 @@ public class ProjectPrefixDeclarationsPresenter implements Presenter {
     private void displayProjectPrefixes(@Nonnull AcceptsOneWidget container) {
         view.clear();
         settingsPresenter.start(container);
+        settingsPresenter.setSettingsTitle(messages.prefixes_project_title());
         settingsPresenter.addSection(messages.prefixes_title()).setWidget(view);
         settingsPresenter.setApplySettingsHandler(this::handleApplyChanges);
         settingsPresenter.setCancelSettingsHandler(this::cancelChanges);
