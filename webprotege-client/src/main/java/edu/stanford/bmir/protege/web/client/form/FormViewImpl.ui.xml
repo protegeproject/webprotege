@@ -10,6 +10,6 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.container}">
-        <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.formMain} {style.container}"/>
+        <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.form} {style.container}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

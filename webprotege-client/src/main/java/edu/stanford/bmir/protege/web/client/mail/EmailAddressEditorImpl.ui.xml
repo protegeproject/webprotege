@@ -3,7 +3,7 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
             <g:Label text="Email address" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="emailAddressField" visibleLength="60"/>

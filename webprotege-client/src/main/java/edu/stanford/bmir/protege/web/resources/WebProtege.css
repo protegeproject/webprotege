@@ -1,4 +1,5 @@
 @external gwt-*;
+@external wp-*;
 @external gwt-TabLayoutPanelTab-selected;
 @external blockquote;
 @url classIconUrl svgClassIcon;
@@ -27,28 +28,28 @@
     color: white !important;
 }
 
-.formMain {
+.wp-form {
     padding: 20px;
     padding-top: 13px;
     box-sizing: border-box;
 }
 
-.formMain [derived-property-value] {
+.wp-form [derived-property-value] {
     background-color: burlywood;
 }
 
-.formMain [disabled] {
+.wp-form [disabled] {
     /*background-color: #ffffff !important;*/
 }
 
-.formGroup {
-    padding-bottom: 10px;
+.wp-form-group {
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-.formLabel {
+.wp-form-label {
     font-weight: bold;
     padding-bottom: 5px;
     font-size: 14px;

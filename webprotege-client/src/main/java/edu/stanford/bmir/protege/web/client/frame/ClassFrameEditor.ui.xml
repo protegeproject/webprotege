@@ -7,7 +7,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
 
-    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
@@ -15,20 +15,20 @@
         </div>
 
 
-        <div style="height: 10px;"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
+            <wp:PropertyValueListEditor ui:field="annotations"/>
+        </div>
 
-        <g:Label text="{msg.frame_annotations}" addStyleNames="{wp.style.formLabel}"/>
-        <wp:PropertyValueListEditor ui:field="annotations"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_classes}" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="{msg.frame_enterAClassName}"/>
+        </div>
 
-        <div style="height: 10px;"/>
-
-        <g:Label text="{msg.frame_classes}" addStyleNames="{wp.style.formLabel}"/>
-        <primitive:PrimitiveDataListEditor ui:field="classes" placeholder="{msg.frame_enterAClassName}"/>
-
-        <div style="height: 15px;"/>
-
-        <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
-        <wp:PropertyValueListEditor ui:field="properties"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
+            <wp:PropertyValueListEditor ui:field="properties"/>
+        </div>
 
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -161,11 +161,16 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String noFocusBorder();
 
-        String formMain();
+        @ClassName("wp-form")
+        String form();
 
+        @ClassName("wp-form-group")
         String formGroup();
 
+        @ClassName("wp-form-label")
         String formLabel();
+
+
 
         String warningLabel();
 
