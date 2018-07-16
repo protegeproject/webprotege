@@ -16,11 +16,6 @@
 @url eyeIconUrl eyeIcon;
 @url datetimeIconUrl dateTimeIcon;
 
-.webProtegeLaf {
-
-}
-
-
 .gwt-TabLayoutPanelTab {
     background-color: #c0c0c0;
     padding: 5px;

@@ -163,8 +163,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String noFocusBorder();
 
-        String webProtegeLaf();
-
         String formMain();
 
         String formGroup();
