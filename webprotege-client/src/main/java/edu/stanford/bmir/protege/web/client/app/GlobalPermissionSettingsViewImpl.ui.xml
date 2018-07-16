@@ -13,19 +13,19 @@
     </ui:style>
 
     <g:HTMLPanel>
-        <g:Label text="Account Creation" addStyleNames="{wp.settings.label}"/>
+        <g:Label text="Account Creation" addStyleNames="{wp.style.formLabel}"/>
         <g:HTMLPanel addStyleNames="{wp.settings.group}">
             <g:CheckBox ui:field="accountCreationEnabledCheckBox" text="Account creation enabled"
                         addStyleNames="{style.checkBox}"/>
         </g:HTMLPanel>
-        <g:Label text="Project Creation and Upload" addStyleNames="{wp.settings.label} {wp.settings.labelPadding}"/>
+        <g:Label text="Project Creation and Upload" addStyleNames="{wp.style.formLabel}"/>
         <g:HTMLPanel addStyleNames="{wp.settings.group}">
             <g:CheckBox ui:field="projectCreationEnabledCheckBox" text="Project creation enabled"
                         addStyleNames="{style.checkBox}"/>
             <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled"
                         addStyleNames="{style.checkBox}"/>
             <div style="padding-left: 40px;">
-                <g:Label text="Max upload size (MB)" addStyleNames="{wp.settings.label}"/>
+                <g:Label text="Max upload size (MB)" addStyleNames="{wp.style.formLabel}"/>
                 <text:PlaceholderTextBox ui:field="maxUploadSize" width="100%"
                                          placeholder="Enter max upload size in Megabytes (MB).  Leave blank for no limit."/>
             </div>

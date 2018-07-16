@@ -47,12 +47,12 @@
     align-items: stretch;
 }
 
-.wp-settings__label {
-    font-weight: 500;
-    padding-bottom: 5px;
-    font-size: 14px;
-}
+/*.wp-settings__label {*/
+    /*font-weight: 500;*/
+    /*padding-bottom: 5px;*/
+    /*font-size: 14px;*/
+/*}*/
 
-.wp-settings__label--padding {
-    padding-top: 15px;
-}
+/*.wp-settings__label--padding {*/
+    /*padding-top: 15px;*/
+/*}*/
