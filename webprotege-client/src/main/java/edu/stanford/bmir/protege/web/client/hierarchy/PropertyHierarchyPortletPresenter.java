@@ -192,8 +192,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
         tagVisibilityPresenter.start(filterView, view);
 
-        setSelectionInTree(getSelectedEntity());
         portletUi.setWidget(view);
+        setSelectionInTree(getSelectedEntity());
     }
 
     /**

@@ -90,8 +90,8 @@ public class SharingSettingsPresenter implements Presenter {
         dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), result -> {
             ProjectSharingSettings settings = result.getProjectSharingSettings();
             settingsPresenter.start(container);
-            settingsPresenter.setSettingsTitle(messages.sharing_settings_title());
-            settingsPresenter.addSection("").setWidget(view);
+            settingsPresenter.setSettingsTitle(messages.share());
+            settingsPresenter.addSection(messages.sharing_settings_title()).setWidget(view);
             settingsPresenter.setApplySettingsHandler(this::applyChangesAndGoToNextPlace);
             settingsPresenter.setCancelSettingsHandler(this::cancelChangesAndGoToNextPlace);
             view.setLinkSharingPermission(settings.getLinkSharingPermission());
