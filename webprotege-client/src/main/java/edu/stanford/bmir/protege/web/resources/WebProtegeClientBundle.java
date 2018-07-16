@@ -157,8 +157,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     interface WebProtegeCss extends CssResource {
 
-        String entityIcon();
-
         String focusBorder();
 
         String noFocusBorder();
