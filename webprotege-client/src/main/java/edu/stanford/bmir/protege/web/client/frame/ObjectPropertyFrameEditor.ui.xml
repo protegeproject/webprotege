@@ -28,6 +28,6 @@
             <g:Label text="{msg.frame_range}" addStyleNames="{wp.style.formLabel}"/>
             <wp:PrimitiveDataListEditor ui:field="ranges"/>
         </div>
-        
+
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -338,6 +338,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("frame.domain")
     String frame_domain();
 
+    @DefaultMessage("Characteristics")
+    @Key("frame.characteristics")
+    String frame_characteristics();
+
     
     @DefaultMessage("Enter a class name")
     @Key("frame.enterAClassName")
@@ -1114,4 +1118,5 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Port")
     @Key("app.settings.url.port")
     String applicationSettings_url_port();
+
 }
