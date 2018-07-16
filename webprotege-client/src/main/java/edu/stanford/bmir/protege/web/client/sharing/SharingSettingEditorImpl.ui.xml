@@ -16,10 +16,13 @@
             flex-grow: 0;
             flex-shrink: 0;
         }
+        .sharingDropDown {
+            text-transform: lowercase;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:SuggestBox ui:field="personIdField" addStyleNames="{style.personIdField}"/>
-        <g:ListBox ui:field="permissionField" addStyleNames="{style.permissionField} {wp.style.sharingDropDown}">
+        <g:ListBox ui:field="permissionField" addStyleNames="{style.permissionField} {style.sharingDropDown}">
         </g:ListBox>
     </g:HTMLPanel>
 </ui:UiBinder>

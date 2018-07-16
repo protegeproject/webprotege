@@ -195,8 +195,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String inTrash();
 
-        String sharingDropDown();
-
         String commentIconInset();
 
         String derivedInformation();

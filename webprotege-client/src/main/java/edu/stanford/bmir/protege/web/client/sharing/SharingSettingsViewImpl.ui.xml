@@ -39,6 +39,10 @@
         .main input {
             background-color: white;
         }
+        .sharingDropDown {
+            text-transform: lowercase;
+        }
+
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} ">
@@ -50,7 +54,7 @@
             <g:HTMLPanel addStyleNames="{style.linkSharingPermissionSurround}" ui:field="linkSharingView">
                 <g:InlineLabel text="{msg.sharing_anyoneWithTheLinkCan} "/>
                 <g:ListBox ui:field="linkSharingPermissionDropDown" visibleItemCount="1"
-                           addStyleNames="{wp.style.sharingDropDown}">
+                           addStyleNames="{style.sharingDropDown}">
                 </g:ListBox>
             </g:HTMLPanel>
         </g:HTMLPanel>
