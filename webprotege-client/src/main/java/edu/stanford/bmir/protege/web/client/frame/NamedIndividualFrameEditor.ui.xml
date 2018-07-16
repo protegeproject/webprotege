@@ -13,21 +13,20 @@
             <g:TextBox ui:field="iriField" width="100%"/>
         </div>
 
-        <div style="height: 10px;"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_types}" addStyleNames="{wp.style.formLabel}"/>
+            <wp:PrimitiveDataListEditor ui:field="types"/>
+        </div>
 
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
+            <frame:PropertyValueListEditor ui:field="assertions"/>
+        </div>
 
-        <g:Label text="{msg.frame_types}" addStyleNames="{wp.style.formLabel}"/>
-        <wp:PrimitiveDataListEditor ui:field="types"/>
-
-        <div style="height: 15px;"/>
-
-        <g:Label text="{msg.frame_relationships}" addStyleNames="{wp.style.formLabel}"/>
-        <frame:PropertyValueListEditor ui:field="assertions"/>
-
-        <div style="height: 15px;"/>
-
-        <g:Label text="{msg.frame_sameIndividual}" addStyleNames="{wp.style.formLabel}"/>
-        <wp:PrimitiveDataListEditor ui:field="sameAs"/>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="{msg.frame_sameIndividual}" addStyleNames="{wp.style.formLabel}"/>
+            <wp:PrimitiveDataListEditor ui:field="sameAs"/>
+        </div>
 
     </g:HTMLPanel>
 
