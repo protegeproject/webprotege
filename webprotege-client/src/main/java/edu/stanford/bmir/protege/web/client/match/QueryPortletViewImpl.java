@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -12,6 +14,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
+import edu.stanford.bmir.protege.web.client.ui.ScrollTracker;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -68,6 +71,8 @@ public class QueryPortletViewImpl extends Composite implements QueryPortletView 
 
     private ExecuteQueryHandler executeHandler = () -> {};
 
+    private ScrollTracker scrollTracker;
+
     @Inject
     public QueryPortletViewImpl(@Nonnull PrimitiveDataIconProvider primitiveDataIconProvider,
                                 @Nonnull EntityTypePerspectiveMapper typePerspectiveMapper, @Nonnull PlaceController placeController, @Nonnull Provider<MatchResult> matchResultProvider) {
@@ -78,6 +83,13 @@ public class QueryPortletViewImpl extends Composite implements QueryPortletView 
         paginatorPresenter = new PaginatorPresenter(new PaginatorViewImpl());
         paginator = (PaginatorViewImpl) paginatorPresenter.getView();
         initWidget(ourUiBinder.createAndBindUi(this));
+        scrollTracker = new ScrollTracker(resultsContainer);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        scrollTracker.start();
     }
 
     @Override
