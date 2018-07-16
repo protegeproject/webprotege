@@ -26,7 +26,6 @@
         <div class="{wp.style.formGroup}">
             <g:Label text="{msg.frame_characteristics}" addStyleNames="{wp.style.formLabel}"/>
             <g:CheckBox ui:field="functionalCheckBox" text="{msg.frame_functional}"/>
-            <g:InlineLabel text="{msg.frame_singleValued}" addStyleNames="{style.hint}"/>
         </div>
 
         <div class="{wp.style.formGroup}">
