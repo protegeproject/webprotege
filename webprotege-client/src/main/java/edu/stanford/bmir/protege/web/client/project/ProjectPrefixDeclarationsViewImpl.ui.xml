@@ -13,21 +13,17 @@
         }
     </ui:style>
 
-    <g:HTMLPanel>
-        Prefixes should be well-formed absolute IRIs.
-        They usually end in a slash (/) or a hash(#).  For example,
-        'http://ontologies.org/vehicles/' or 'http://ontologies.org/vehicles#'
-        <br/>
-        <br/>
-        Prefix names act as labels for prefixes.  They are usually short and always end with a colon.
-        For example, 'veh:' or 'vehicles:'
-        <br/>
-        <br/>
-        Note that there is no need to declare built-in prefix names for owl:, rdfs:, rdf:, xsd: etc.
-        <br/>
-        <br/>
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
         <g:HTMLPanel addStyleNames="{style.prefixDeclarationsEditorContainer}">
             <editor:ValueListFlexEditorImpl ui:field="prefixesEditor"/>
+            <div class="{wp.style.formHelpText}">
+                Prefixes should be well-formed absolute IRIs.
+                They usually end in a slash (/) or a hash(#). For example,
+                'http://ontologies.org/vehicles/' or 'http://ontologies.org/vehicles#'
+                Prefix names act as labels for prefixes. They are usually short and always end with a colon.
+                For example, 'veh:' or 'vehicles:'
+                Note that there is no need to declare built-in prefix names for owl:, rdfs:, rdf:, xsd: etc.
+            </div>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

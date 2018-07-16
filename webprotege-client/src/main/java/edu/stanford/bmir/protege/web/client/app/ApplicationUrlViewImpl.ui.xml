@@ -5,7 +5,7 @@
     <ui:import field="edu.stanford.bmir.protege.web.client.app.SchemeValue.*"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <g:HTMLPanel>
-        <div class="{wp.style.helpText} {wp.style.helpTextPadding}">The application URL is the URL that users use to access
+        <div class="{wp.style.formHelpText}">The application URL is the URL that users use to access
             WebProtégé. If you have
             something like an Apache HTTP Server sitting in-front of Tomcat then this may be
             different to
@@ -18,7 +18,7 @@
                 <g:item value="HTTPS">https</g:item>
                 <g:item value="HTTP">http</g:item>
             </g:ListBox>
-            <div class="{wp.style.helpText} {wp.style.helpTextPadding}">
+            <div class="{wp.style.formHelpText}">
                 It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
                 running WebProtégé.  The http protocol should be used for testing purposes only.
             </div>

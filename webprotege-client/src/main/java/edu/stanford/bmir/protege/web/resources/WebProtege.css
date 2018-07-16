@@ -71,6 +71,16 @@
     padding-left: 0.3rem;
 }
 
+.wp-form-help-text {
+    font-size: 11px;
+    color: #707070;
+    font-weight: 400;
+    padding-left: 0.25rem;
+    padding-top: 0.25rem;
+    margin-right: 1rem;
+    line-height: 1.2;
+}
+
 .warningLabel {
     border: solid 1px #ffe884;
     background-color: #faf6c3;
@@ -228,18 +238,6 @@
 
 .errorLabel {
     color: red;
-}
-
-.help-text {
-    font-size: 11px;
-    color: #707070;
-    font-weight: 300;
-}
-
-.help-text--padding {
-    padding-bottom: 10px;
-    padding-left: 4px;
-    padding-top: 4px;
 }
 
 .wp-panel-filled {

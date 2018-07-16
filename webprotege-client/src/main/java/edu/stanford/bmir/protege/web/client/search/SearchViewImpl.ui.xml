@@ -49,7 +49,7 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <text:PlaceholderTextBox ui:field="searchStringField" placeholder="{msg.search_hint}" addStyleNames="{style.searchField}"/>
-        <g:Label text="{msg.search_help}" addStyleNames="{wp.style.helpText} {wp.style.helpTextPadding} {style.helpText}"/>
+        <g:Label text="{msg.search_help}" addStyleNames="{wp.style.formHelpText} {style.helpText}"/>
         <g:Label ui:field="searchSummaryField" addStyleNames="{style.searchSummaryLabel}"/>
         <progress:BusyViewImpl ui:field="busyView" visible="false" addStyleNames="{style.busyView}"/>
         <g:FocusPanel ui:field="base" addStyleNames="{style.foucusPanel}">

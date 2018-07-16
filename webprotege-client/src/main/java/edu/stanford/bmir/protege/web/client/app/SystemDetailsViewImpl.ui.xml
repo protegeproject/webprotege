@@ -6,7 +6,7 @@
         <g:Label text="Application name&#x2a;" addStyleNames="{wp.style.formLabel}"/>
         <text:PlaceholderTextBox ui:field="applicationNameField"
                                  placeholder="Application name"/>
-        <div  class="{wp.style.helpText} {wp.style.helpTextPadding}">
+        <div  class="{wp.style.formHelpText}">
             The Application Name is used for display throughout the user interface and is also used in
             notification emails that are sent to users.
         </div>

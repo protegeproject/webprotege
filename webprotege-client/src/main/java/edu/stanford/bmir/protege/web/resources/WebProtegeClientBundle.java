@@ -173,7 +173,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-form-checkbox")
         String formCheckBox();
 
-
+        @ClassName("wp-form-help-text")
+        String formHelpText();
 
         String warningLabel();
 
@@ -216,12 +217,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String selection();
 
         String noSelection();
-
-        @ClassName("help-text")
-        String helpText();
-
-        @ClassName("help-text--padding")
-        String helpTextPadding();
 
         @ClassName("wp-panel-filled")
         String panelFilled();
