@@ -32,13 +32,12 @@
                     <g:CheckBox ui:field="projectUploadEnabledCheckBox" text="Project upload enabled"
                                 addStyleNames="{style.checkBox}"/>
                 </div>
-                <div style="padding-left: 40px; padding-top: 5px;">
-                    <g:Label text="Max upload size (MB)" addStyleNames="{wp.style.formLabel}"/>
-                    <text:PlaceholderTextBox ui:field="maxUploadSize" width="100%"
-                                             placeholder="Enter max upload size in Megabytes (MB).  Leave blank for no limit."/>
-                </div>
-
             </g:HTMLPanel>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="Max upload size (MB)" addStyleNames="{wp.style.formLabel}"/>
+                <text:PlaceholderTextBox ui:field="maxUploadSize" width="100%"
+                                         placeholder="Enter max upload size in Megabytes (MB).  Leave blank for no limit."/>
+            </div>
         </div>
 
     </g:HTMLPanel>
