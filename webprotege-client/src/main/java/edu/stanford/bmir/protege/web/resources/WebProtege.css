@@ -55,6 +55,20 @@
     font-size: 14px;
 }
 
+
+.wp-form-checkbox {
+    padding-left: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.wp-form-checkbox input {
+
+}
+
+.wp-form-checkbox label {
+    padding-left: 0.3rem;
+}
+
 .warningLabel {
     border: solid 1px #ffe884;
     background-color: #faf6c3;
