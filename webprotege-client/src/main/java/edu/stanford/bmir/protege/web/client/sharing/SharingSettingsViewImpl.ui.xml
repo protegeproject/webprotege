@@ -5,7 +5,7 @@
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
-            display: flex;
+            display:        flex;
             flex-direction: column;
         }
 
@@ -26,12 +26,12 @@
         }
 
         .linkSharingPermissionSurround {
-            padding: 2px;
+            padding:      2px;
             padding-left: 22px;
         }
 
         .divider {
-            margin-top: 10px;
+            margin-top:    10px;
             border-bottom: 1px solid #e0e0e0;
             margin-bottom: 20px;
         }
@@ -39,18 +39,21 @@
         .main input {
             background-color: white;
         }
+
         .sharingDropDown {
             text-transform: lowercase;
         }
 
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main} ">
-        <g:HTMLPanel addStyleNames="{wp.settings.group}">
-            <g:CheckBox text="{msg.sharing_linkSharingEnabled}" ui:field="linkSharingEnabledCheckBox"
-                        addStyleNames="{style.linkSharingEnabledCheckBox}"/>
-            <span style="color: #808080">(<ui:text from="{msg.sharing_signInRequired}"/>)
-            </span>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <div class="{wp.style.formCheckBox}">
+                <g:CheckBox text="{msg.sharing_linkSharingEnabled}" ui:field="linkSharingEnabledCheckBox"
+                            addStyleNames="{style.linkSharingEnabledCheckBox}"/>
+                <g:Label addStyleNames="{wp.style.helpText} {wp.style.helpTextPadding}" text="{msg.sharing_signInRequired}"/>
+            </div>
+
             <g:HTMLPanel addStyleNames="{style.linkSharingPermissionSurround}" ui:field="linkSharingView">
                 <g:InlineLabel text="{msg.sharing_anyoneWithTheLinkCan} "/>
                 <g:ListBox ui:field="linkSharingPermissionDropDown" visibleItemCount="1"
@@ -60,8 +63,8 @@
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.divider}"/>
 
-        <g:HTMLPanel addStyleNames="{wp.settings.group}">
-            <ui:text from="{msg.sharing_shareWithSpecificPeople}"/>:
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="{msg.sharing_shareWithSpecificPeople}:" addStyleNames="{wp.style.formLabel}"/>
             <g:HTMLPanel addStyleNames="{style.verticalPadding}"/>
             <editor:ValueListFlexEditorImpl ui:field="sharingSettingsListEditor" addStyleNames="{style.list}"
                                             enabled="true"/>
