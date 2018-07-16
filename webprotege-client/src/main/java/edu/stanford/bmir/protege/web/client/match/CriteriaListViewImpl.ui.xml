@@ -18,7 +18,6 @@
             align-self: flex-start;
             padding-top: 2px;
             padding-bottom: 2px;
-            font-weight: 500;
         }
         .operatorListBox {
             display: inline-block;
@@ -31,7 +30,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel ui:field="multiMatchContainer" addStyleNames="{style.operatorContainer}">
+        <g:HTMLPanel ui:field="multiMatchContainer" addStyleNames="{style.operatorContainer} {wp.style.formLabel}">
             <g:InlineLabel ui:field="matchTextPrefix" text="Match"/>
             <g:ListBox ui:field="multiMatchTypeField" visibleItemCount="1" addStyleNames="{style.operatorListBox}">
                 <g:item value="{ALL.name}">all</g:item>
