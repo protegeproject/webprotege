@@ -259,4 +259,9 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
             holder.remove(errorView);
         }
     }
+
+    @Override
+    public void setWrap(boolean wrap) {
+        textBox.setWrap(wrap);
+    }
 }

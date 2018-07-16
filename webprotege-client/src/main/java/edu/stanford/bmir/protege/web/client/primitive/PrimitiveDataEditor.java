@@ -229,5 +229,12 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      * @param autoSelectSuggestions {@code true} if the suggestions are auto selected, otherwise {@code false}.
      */
     void setAutoSelectSuggestions(boolean autoSelectSuggestions);
+
+    /**
+     * Specifies whether this editor should wrap text.
+     * @param wrap true if the editor should wrap text (this is the default behaviour), or false if the editor
+     *             should not wrap text.
+     */
+    void setWrap(boolean wrap);
     
 }

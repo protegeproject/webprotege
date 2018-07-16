@@ -161,6 +161,11 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
+    public void setWrap(boolean wrap) {
+        view.setWrap(wrap);
+    }
+
+    @Override
     public void setMode(PrimitiveDataEditorView.Mode mode) {
         checkNotNull(mode);
         view.setMode(mode);

@@ -25,6 +25,7 @@ import java.util.Set;
  */
 public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChangeHandlers<String>, HasSelectionHandlers<EntitySuggestion>, HasAnchor, HasEnabled, HasPlaceholder, HasFocusHandlers, HasKeyUpHandlers {
 
+
     enum Mode {SINGLE_LINE, MULTI_LINE}
 
     /**
@@ -44,4 +45,6 @@ public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChan
     void showErrorMessage(SafeHtml errorMessage, Set<EntityType<?>> expectedTypes);
 
     void clearErrorMessage();
+
+    void setWrap(boolean wrap);
 }

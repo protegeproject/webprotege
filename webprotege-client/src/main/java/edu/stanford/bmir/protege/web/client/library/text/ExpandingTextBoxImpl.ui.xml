@@ -37,7 +37,6 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             visibility: hidden;
-            color: #00ffff;
             font-size: 12px;
             padding-left: 22px;
             padding-bottom: 2px;

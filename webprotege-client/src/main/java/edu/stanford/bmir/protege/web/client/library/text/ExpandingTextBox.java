@@ -285,4 +285,8 @@ public class ExpandingTextBox extends Composite implements Focusable, HasText, H
     public void clearMinHeight() {
         impl.clearMinHeight();
     }
+
+    public void setWrap(boolean wrap) {
+        impl.setWrap(wrap);
+    }
 }

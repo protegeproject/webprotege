@@ -413,4 +413,17 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         }
     }
 
+
+    public void setWrap(boolean wrap) {
+        Style.WhiteSpace whiteSpace;
+        if (wrap) {
+            whiteSpace = Style.WhiteSpace.PRE_WRAP;
+        }
+        else {
+            whiteSpace = Style.WhiteSpace.NOWRAP;
+        }
+        getPreElement().getStyle().setWhiteSpace(whiteSpace);
+        suggestBox.getElement().getStyle().setWhiteSpace(whiteSpace);
+    }
+
 }
