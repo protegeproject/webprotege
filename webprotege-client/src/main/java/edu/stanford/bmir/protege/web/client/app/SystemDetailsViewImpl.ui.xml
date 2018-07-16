@@ -2,17 +2,20 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel addStyleNames="{wp.settings.group}">
-        <g:Label text="Application name&#x2a;" addStyleNames="{wp.style.formLabel}"/>
-        <text:PlaceholderTextBox ui:field="applicationNameField"
-                                 placeholder="Application name"/>
-        <div  class="{wp.style.formHelpText}">
-            The Application Name is used for display throughout the user interface and is also used in
-            notification emails that are sent to users.
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Application name&#x2a;" addStyleNames="{wp.style.formLabel}"/>
+            <text:PlaceholderTextBox ui:field="applicationNameField"
+                                     placeholder="Application name"/>
+            <div class="{wp.style.formHelpText}">
+                The Application Name is used for display throughout the user interface and is also used in
+                notification emails that are sent to users.
+            </div>
         </div>
-        <g:Label text="System notification email address&#x2a;" addStyleNames="{wp.style.formLabel}"/>
-        <text:PlaceholderTextBox ui:field="systemNotificationEmailAddressField"
-                                 placeholder="Email address for system notifications"/>
-
+        <div class="{wp.style.formGroup}">
+            <g:Label text="System notification email address&#x2a;" addStyleNames="{wp.style.formLabel}"/>
+            <text:PlaceholderTextBox ui:field="systemNotificationEmailAddressField"
+                                     placeholder="Email address for system notifications"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>
