@@ -4,33 +4,45 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:import field="edu.stanford.bmir.protege.web.client.app.SchemeValue.*"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
-    <g:HTMLPanel>
-        <div class="{wp.style.formHelpText}">The application URL is the URL that users use to access
-            WebProtégé. If you have
-            something like an Apache HTTP Server sitting in-front of Tomcat then this may be
-            different to
-            the Tomcat URL. Note that the Path and Port fields are optional. The Host field is
-            mandatory.
-        </div>
-        <g:HTMLPanel addStyleNames="{wp.settings.group}">
-            <g:Label text="{msg.applicationSettings_url_scheme}&#x2a;" addStyleNames="{wp.style.formLabel}"/>
-            <g:ListBox ui:field="applicationSchemeField">
-                <g:item value="HTTPS">https</g:item>
-                <g:item value="HTTP">http</g:item>
-            </g:ListBox>
-            <div class="{wp.style.formHelpText}">
-                It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
-                running WebProtégé.  The http protocol should be used for testing purposes only.
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <div class="{wp.style.formGroup}">
+            <div class="{wp.style.formHelpText}">The application URL is the URL that users use to access
+                WebProtégé. If you have
+                something like an Apache HTTP Server sitting in-front of Tomcat then this may be
+                different to
+                the Tomcat URL. Note that the Path and Port fields are optional. The Host field is
+                mandatory.
             </div>
-            <g:Label text="{msg.applicationSettings_url_host}&#x2a;" addStyleNames="{wp.style.formLabel}"/>
-            <text:PlaceholderTextBox ui:field="applicationHostField"
-                                     placeholder="e.g. webprotege.stanford.edu"/>
-            <g:Label text="{msg.applicationSettings_url_path}" addStyleNames="{wp.style.formLabel}"/>
-            <text:PlaceholderTextBox ui:field="applicationPathField"
-                                     placeholder="e.g. /webprotege (leave blank for no path)"/>
-            <g:Label text="{msg.applicationSettings_url_port}" addStyleNames="{wp.style.formLabel}"/>
-            <text:PlaceholderTextBox ui:field="applicationPortField"
-                                     placeholder="e.g. 443 (leave blank for default port)"/>
+        </div>
+
+        <g:HTMLPanel>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="{msg.applicationSettings_url_scheme}&#x2a;" addStyleNames="{wp.style.formLabel}"/>
+                <g:ListBox ui:field="applicationSchemeField">
+                    <g:item value="HTTPS">https</g:item>
+                    <g:item value="HTTP">http</g:item>
+                </g:ListBox>
+                <div class="{wp.style.formHelpText}">
+                    It is strongly recommended that you setup and choose the secure <emph>https</emph> protocol for
+                    running WebProtégé. The http protocol should be used for testing purposes only.
+                </div>
+            </div>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="{msg.applicationSettings_url_host}&#x2a;" addStyleNames="{wp.style.formLabel}"/>
+                <text:PlaceholderTextBox ui:field="applicationHostField"
+                                         placeholder="e.g. webprotege.stanford.edu"/>
+            </div>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="{msg.applicationSettings_url_path}" addStyleNames="{wp.style.formLabel}"/>
+                <text:PlaceholderTextBox ui:field="applicationPathField"
+                                         placeholder="e.g. /webprotege (leave blank for no path)"/>
+            </div>
+            <div class="{wp.style.formGroup}">
+                <g:Label text="{msg.applicationSettings_url_port}" addStyleNames="{wp.style.formLabel}"/>
+                <text:PlaceholderTextBox ui:field="applicationPortField"
+                                         placeholder="e.g. 443 (leave blank for default port)"/>
+            </div>
+
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
