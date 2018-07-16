@@ -59,19 +59,6 @@
     font-size: 14px;
 }
 
-.formField {
-    border-top-width: 1px;
-    border-top-style: solid;
-    border-top-color: transparent;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-right-color: transparent;
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-left-color: transparent;
-    border-bottom: 1px solid #f0f0f0;
-}
-
 .warningLabel {
     border: solid 1px #ffe884;
     background-color: #faf6c3;

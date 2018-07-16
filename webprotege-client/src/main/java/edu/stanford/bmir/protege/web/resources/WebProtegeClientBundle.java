@@ -171,8 +171,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String formLabel();
 
-        String formField();
-
         String warningLabel();
 
         String classIconInset();
