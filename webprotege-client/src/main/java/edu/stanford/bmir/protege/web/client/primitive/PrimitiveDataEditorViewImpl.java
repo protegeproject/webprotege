@@ -183,7 +183,7 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     private boolean isPossibleImageLink() {
         String text = getText().trim();
         return (text.startsWith("http://") || text.startsWith("https://"))
-                && (text.endsWith(".jpg") || text.endsWith(".png"));
+                && (text.endsWith(".jpg") || text.endsWith(".png") || text.endsWith(".svg") || text.endsWith(".jpeg"));
     }
 
     private boolean imageViewHasFocus = false;
