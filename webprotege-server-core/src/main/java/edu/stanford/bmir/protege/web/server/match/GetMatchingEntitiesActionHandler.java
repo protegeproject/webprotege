@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.pagination.PageCollector.toPage;
 import static java.util.stream.Collectors.toList;
 
@@ -42,13 +43,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     private static Logger logger = LoggerFactory.getLogger(GetMatchingEntitiesActionHandler.class);
 
     @Nonnull
-    private final OWLOntology rootOntology;
-
-    @Nonnull
     private final RenderingManager renderingManager;
-
-    @Nonnull
-    private final MatcherFactory matcherFactory;
 
     @Nonnull
     private final EntityHierarchyNodeRenderer nodeRenderer;
@@ -58,16 +53,13 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
 
     @Inject
     public GetMatchingEntitiesActionHandler(@Nonnull AccessManager accessManager,
-                                            @Nonnull OWLOntology rootOntology,
                                             @Nonnull RenderingManager renderingManager,
-                                            @Nonnull MatcherFactory matcherFactory,
-                                            @Nonnull EntityHierarchyNodeRenderer nodeRenderer, @Nonnull MatchingEngine matchingEngine) {
+                                            @Nonnull EntityHierarchyNodeRenderer nodeRenderer,
+                                            @Nonnull MatchingEngine matchingEngine) {
         super(accessManager);
-        this.rootOntology = rootOntology;
-        this.renderingManager = renderingManager;
-        this.matcherFactory = matcherFactory;
-        this.nodeRenderer = nodeRenderer;
-        this.matchingEngine = matchingEngine;
+        this.renderingManager = checkNotNull(renderingManager);
+        this.nodeRenderer = checkNotNull(nodeRenderer);
+        this.matchingEngine = checkNotNull(matchingEngine);
     }
 
     @Nonnull

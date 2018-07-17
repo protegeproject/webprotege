@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -62,7 +63,9 @@ public class AnnotationAssertionAxiomsIndexCachingImpl implements AnnotationAsse
     }
 
     private ImmutableCollection<OWLAnnotationAssertionAxiom> getAxioms(@Nonnull IRI subject) {
-        return axiomsBySubject.get(subject, (iri) -> ImmutableList.copyOf(rootOntology.getAnnotationAssertionAxioms(iri)));
+        return axiomsBySubject.get(subject, (iri) -> rootOntology.getImportsClosure().stream()
+                                                             .flatMap(ont -> ont.getAnnotationAssertionAxioms(iri).stream())
+                                                             .collect(toImmutableList()));
     }
 
     @Override
