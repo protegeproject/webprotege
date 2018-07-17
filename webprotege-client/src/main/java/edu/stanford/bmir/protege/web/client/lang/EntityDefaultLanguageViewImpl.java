@@ -12,16 +12,16 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class EntityDefaultLanguagesViewImpl extends Composite implements EntityDefaultLanguagesView {
+public class EntityDefaultLanguageViewImpl extends Composite implements EntityDefaultLanguageView {
 
-    interface EntityDefaultLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, EntityDefaultLanguagesViewImpl> {
+    interface EntityDefaultLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, EntityDefaultLanguageViewImpl> {
 
     }
 
     private static EntityDefaultLanguagesViewImplUiBinder ourUiBinder = GWT.create(EntityDefaultLanguagesViewImplUiBinder.class);
 
     @Inject
-    public EntityDefaultLanguagesViewImpl() {
+    public EntityDefaultLanguageViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 }

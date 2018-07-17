@@ -7,6 +7,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public interface EntityDefaultLanguagesView extends IsWidget {
+public interface EntityDefaultLanguageView extends IsWidget {
 
 }

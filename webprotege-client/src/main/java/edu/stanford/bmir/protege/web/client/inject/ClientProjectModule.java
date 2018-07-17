@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.inject;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.stanford.bmir.protege.web.client.app.*;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
@@ -32,8 +31,6 @@ import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerIm
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryGenerated;
 import edu.stanford.bmir.protege.web.client.portlet.PortletModulesGenerated;
-import edu.stanford.bmir.protege.web.client.progress.BusyView;
-import edu.stanford.bmir.protege.web.client.progress.BusyViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.projectsettings.*;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
@@ -302,7 +299,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    EntityDefaultLanguagesView provideEntityDefaultLanguagesView(EntityDefaultLanguagesViewImpl impl) {
+    EntityDefaultLanguageView provideEntityDefaultLanguagesView(EntityDefaultLanguageViewImpl impl) {
         return impl;
     }
 }

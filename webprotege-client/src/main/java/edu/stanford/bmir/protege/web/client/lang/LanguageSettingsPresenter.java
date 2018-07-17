@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
-import com.google.auto.factory.AutoFactory;
-import com.google.auto.factory.Provided;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -32,7 +30,7 @@ public class LanguageSettingsPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final EntityDefaultLanguagesView entityDefaultLanguagesView;
+    private final EntityDefaultLanguageView entityDefaultLanguageView;
 
     @Nonnull
     private final DisplayLanguagesView displayLanguagesView;
@@ -44,20 +42,20 @@ public class LanguageSettingsPresenter {
     public LanguageSettingsPresenter(@Nonnull ProjectId projectId,
                                      @Nonnull SettingsPresenter settingsPresenter,
                                      @Nonnull DispatchServiceManager dispatch,
-                                     @Nonnull EntityDefaultLanguagesView entityDefaultLanguagesView,
+                                     @Nonnull EntityDefaultLanguageView entityDefaultLanguageView,
                                      @Nonnull DisplayLanguagesView displayLanguagesView) {
         this.projectId = checkNotNull(projectId);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.dispatch = checkNotNull(dispatch);
-        this.entityDefaultLanguagesView = checkNotNull(entityDefaultLanguagesView);
+        this.entityDefaultLanguageView = checkNotNull(entityDefaultLanguageView);
         this.displayLanguagesView = checkNotNull(displayLanguagesView);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         settingsPresenter.setSettingsTitle("Language Settings");
         settingsPresenter.start(container);
-        settingsPresenter.addSection("New Entity Default Languages").setWidget(entityDefaultLanguagesView);
         settingsPresenter.addSection("Display Languages").setWidget(displayLanguagesView);
+        settingsPresenter.addSection("New Entity Default Language").setWidget(entityDefaultLanguageView);
     }
 
     public void setNextPlace(@Nonnull Optional<Place> place) {
