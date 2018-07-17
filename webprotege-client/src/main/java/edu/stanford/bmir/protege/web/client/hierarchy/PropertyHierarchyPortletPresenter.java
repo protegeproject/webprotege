@@ -1,19 +1,20 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
-import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
+import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -109,7 +110,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     @Nonnull
     private final TagVisibilityPresenter tagVisibilityPresenter;
 
-    private boolean transmittingSelection = false;
+    private boolean transmittingSelectionFromHierarchy = false;
+
+    private boolean settingSelectionInHierarchy = false;
 
     @Inject
     public PropertyHierarchyPortletPresenter(@Nonnull SelectionModel selectionModel,
@@ -186,9 +189,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
 
         actionStatePresenter.start(eventBus);
 
-        view.setHierarchyIdSelectedHandler(this::handleHierarchyChanged);
-
         view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
+        view.setHierarchyIdSelectedHandler(this::handleHierarchySwitched);
 
         tagVisibilityPresenter.start(filterView, view);
 
@@ -229,26 +231,38 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void handleSelectionChanged(SelectionChangeEvent selectionChangeEvent) {
+        GWT.log("[PropertyHierarchyPortletPresenter] handling selection changed in tree");
         transmitSelection();
     }
 
-    private void handleHierarchyChanged(@Nonnull HierarchyId hierarchyId) {
+    private void handleHierarchySwitched(@Nonnull HierarchyId hierarchyId) {
+        GWT.log("[PropertyHierarchyPortletPresenter] handling hierarchy switched");
         transmitSelection();
     }
 
     private void transmitSelection() {
+        if (settingSelectionInHierarchy) {
+            GWT.log("[PropertyHierarchyPortletPresenter] Setting selection in hierarchy, returning");
+            return;
+        }
         try {
-            transmittingSelection = true;
+            transmittingSelectionFromHierarchy = true;
             view.getSelectedHierarchy().ifPresent(tree -> {
                 Optional<OWLEntity> sel = tree.getFirstSelectedKey();
-                sel.ifPresent(entity -> getSelectionModel().setSelection(entity));
+                if (!sel.equals(getSelectedEntity())) {
+                    sel.ifPresent(entity -> {
+                        GWT.log("[PropertyHierarchyPortletPresenter] Transmitting selection " + entity);
+                        getSelectionModel().setSelection(entity);
+
+                    });
+                }
                 if (!sel.isPresent()) {
+                    GWT.log("[PropertyHierarchyPortletPresenter] Transmitting empty selection");
                     getSelectionModel().clearSelection();
                 }
-
             });
         } finally {
-            transmittingSelection = false;
+            transmittingSelectionFromHierarchy = false;
         }
     }
 
@@ -258,23 +272,29 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     }
 
     private void setSelectionInTree(Optional<OWLEntity> entity) {
-        if (transmittingSelection) {
+        if (transmittingSelectionFromHierarchy) {
             return;
         }
-        entity.ifPresent(sel -> {
-            if (sel.isOWLObjectProperty()) {
-                view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
-                objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
-            }
-            else if (sel.isOWLDataProperty()) {
-                view.setSelectedHierarchy(DATA_PROPERTY_HIERARCHY);
-                dataPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
-            }
-            else if (sel.isOWLAnnotationProperty()) {
-                view.setSelectedHierarchy(ANNOTATION_PROPERTY_HIERARCHY);
-                annotationPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
-            }
-        });
+        try {
+            GWT.log("[PropertyHierarchyPortletPresenter] Setting selection in hierarchy: " + entity);
+            settingSelectionInHierarchy = true;
+            entity.ifPresent(sel -> {
+                if (sel.isOWLObjectProperty()) {
+                    view.setSelectedHierarchy(OBJECT_PROPERTY_HIERARCHY);
+                    objectPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
+                }
+                else if (sel.isOWLDataProperty()) {
+                    view.setSelectedHierarchy(DATA_PROPERTY_HIERARCHY);
+                    dataPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
+                }
+                else if (sel.isOWLAnnotationProperty()) {
+                    view.setSelectedHierarchy(ANNOTATION_PROPERTY_HIERARCHY);
+                    annotationPropertyTree.revealTreeNodesForKey(sel, REVEAL_FIRST);
+                }
+            });
+        } finally {
+            settingSelectionInHierarchy = false;
+        }
     }
 
     private void handleCreate() {
