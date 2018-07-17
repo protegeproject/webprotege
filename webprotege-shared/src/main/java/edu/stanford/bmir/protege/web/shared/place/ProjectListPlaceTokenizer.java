@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
+import com.google.gwt.place.shared.Place;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -23,7 +25,7 @@ public class ProjectListPlaceTokenizer implements WebProtegePlaceTokenizer<Proje
     }
 
     @Override
-    public Class<ProjectListPlace> getPlaceClass() {
-        return ProjectListPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof ProjectListPlace;
     }
 }

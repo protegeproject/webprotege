@@ -21,8 +21,7 @@ import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletVi
 import edu.stanford.bmir.protege.web.client.hierarchy.PropertyHierarchyPortletViewImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewImpl;
-import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
-import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
+import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.match.*;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ontology.annotations.AnnotationsViewImpl;
@@ -297,6 +296,15 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    DisplayLanguagesView provideDisplayLanguagesView(DisplayLanguagesViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    EntityDefaultLanguagesView provideEntityDefaultLanguagesView(EntityDefaultLanguagesViewImpl impl) {
+        return impl;
+    }
 }
 
 

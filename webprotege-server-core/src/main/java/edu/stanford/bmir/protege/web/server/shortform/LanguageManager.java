@@ -2,12 +2,10 @@ package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

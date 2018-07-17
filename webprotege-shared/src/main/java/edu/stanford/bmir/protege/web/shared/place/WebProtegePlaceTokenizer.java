@@ -12,5 +12,5 @@ public interface WebProtegePlaceTokenizer<P extends Place> extends PlaceTokenize
 
     boolean matches(String token);
 
-    Class<P> getPlaceClass();
+    boolean isTokenizerFor(Place place);
 }

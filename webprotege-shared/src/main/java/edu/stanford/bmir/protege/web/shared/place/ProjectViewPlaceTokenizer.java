@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.place;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -34,8 +35,8 @@ public class ProjectViewPlaceTokenizer implements WebProtegePlaceTokenizer<Proje
     }
 
     @Override
-    public Class<ProjectViewPlace> getPlaceClass() {
-        return ProjectViewPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof ProjectViewPlace;
     }
 
     public ProjectViewPlace getPlace(String token) {

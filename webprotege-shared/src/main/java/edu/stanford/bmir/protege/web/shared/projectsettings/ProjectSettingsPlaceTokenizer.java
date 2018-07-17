@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer;
@@ -29,8 +30,8 @@ public class ProjectSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<P
     }
 
     @Override
-    public Class<ProjectSettingsPlace> getPlaceClass() {
-        return ProjectSettingsPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof ProjectSettingsPlace;
     }
 
     @Override

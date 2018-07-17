@@ -24,7 +24,8 @@ import java.util.List;
                 SignUpPlaceTokenizer.class,
                 SharingSettingsPlaceTokenizer.class,
                 AdminPlaceTokenizer.class,
-                CollectionViewPlaceTokenizer.class
+                CollectionViewPlaceTokenizer.class,
+                LanguageSettingsPlaceTokenizer.class
         })
 public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
 
@@ -41,6 +42,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
         tokenizers.add(new ProjectPrefixDeclarationsPlaceTokenizer());
         tokenizers.add(new ProjectTagsPlaceTokenizer());
         tokenizers.add(new CollectionViewPlaceTokenizer());
+        tokenizers.add(new LanguageSettingsPlaceTokenizer());
     }
 
     @Override
@@ -56,7 +58,7 @@ public class WebProtegePlaceHistoryMapper implements PlaceHistoryMapper {
     @Override
     public String getToken(Place place) {
         for(WebProtegePlaceTokenizer tokenizer : tokenizers) {
-            if(tokenizer.getPlaceClass().getName().equals(place.getClass().getName())) {
+            if(tokenizer.isTokenizerFor(place)) {
                 return tokenizer.getToken(place);
             }
         }

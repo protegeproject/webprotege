@@ -114,6 +114,13 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             return new ProjectSettingsActivity(projectComponent.getProjectSettingsPresenter(),
                                                projectSettingsPlace.getNextPlace());
         }
+        if(place instanceof LanguageSettingsPlace) {
+            LanguageSettingsPlace languageSettingsPlace = (LanguageSettingsPlace) place;
+            ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(
+                    new ClientProjectModule(languageSettingsPlace.getProjectId()));
+            return LanguageSettingsActivity.get(languageSettingsPlace,
+                                                projectComponent.getLanguageSettingsPresenter());
+        }
         if(place instanceof ProjectPrefixDeclarationsPlace) {
             ProjectPrefixDeclarationsPlace projectPrefixDeclarationsPlace = (ProjectPrefixDeclarationsPlace) place;
             ClientProjectComponent projectComponent = applicationComponent.getClientProjectComponent(

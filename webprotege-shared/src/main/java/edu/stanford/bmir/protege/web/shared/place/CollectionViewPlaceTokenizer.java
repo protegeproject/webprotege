@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.collection.CollectionId;
@@ -36,8 +37,8 @@ public class CollectionViewPlaceTokenizer implements WebProtegePlaceTokenizer<Co
     }
 
     @Override
-    public Class<CollectionViewPlace> getPlaceClass() {
-        return CollectionViewPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof CollectionViewPlace;
     }
 
     @Override

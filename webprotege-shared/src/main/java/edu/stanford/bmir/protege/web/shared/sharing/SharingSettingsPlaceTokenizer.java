@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer;
@@ -26,8 +27,8 @@ public class SharingSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<S
     }
 
     @Override
-    public Class<SharingSettingsPlace> getPlaceClass() {
-        return SharingSettingsPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof SharingSettingsPlace;
     }
 
     @Override

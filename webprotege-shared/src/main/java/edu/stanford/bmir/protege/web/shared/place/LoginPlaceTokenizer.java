@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
 import edu.stanford.bmir.protege.web.shared.login.LoginPlace;
 
 /**
@@ -17,11 +18,6 @@ public class LoginPlaceTokenizer implements WebProtegePlaceTokenizer<LoginPlace>
         return LOGIN.equals(token);
     }
 
-    @Override
-    public Class<LoginPlace> getPlaceClass() {
-        return LoginPlace.class;
-    }
-
     public LoginPlace getPlace(String token) {
         GWT.log("[LoginPlaceTokenizer] getPlace Token: " + token);
         return new LoginPlace();
@@ -31,4 +27,8 @@ public class LoginPlaceTokenizer implements WebProtegePlaceTokenizer<LoginPlace>
         return LOGIN;
     }
 
+    @Override
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof LoginPlace;
+    }
 }

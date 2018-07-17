@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
+import com.google.gwt.place.shared.Place;
 import edu.stanford.bmir.protege.web.shared.place.ApplicationSettingsPlace;
 import edu.stanford.bmir.protege.web.shared.place.WebProtegePlaceTokenizer;
 
@@ -18,8 +19,8 @@ public class AdminPlaceTokenizer implements WebProtegePlaceTokenizer<Application
     }
 
     @Override
-    public Class<ApplicationSettingsPlace> getPlaceClass() {
-        return ApplicationSettingsPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof ApplicationSettingsPlace;
     }
 
     @Override

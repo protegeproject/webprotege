@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
+import com.google.gwt.place.shared.Place;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -15,8 +17,8 @@ public class SignUpPlaceTokenizer implements WebProtegePlaceTokenizer<SignUpPlac
     }
 
     @Override
-    public Class<SignUpPlace> getPlaceClass() {
-        return SignUpPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof SignUpPlace;
     }
 
     @Override

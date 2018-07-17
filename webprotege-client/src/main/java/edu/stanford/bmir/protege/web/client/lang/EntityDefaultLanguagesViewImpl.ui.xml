@@ -1,0 +1,7 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel>
+        <g:Label text="Specify a list of default languages for creating new entities" addStyleNames="{wp.style.formHelpText}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

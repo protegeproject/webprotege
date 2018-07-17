@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,9 +14,9 @@ public class LanguageSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<
 
     private static final String PROJECTS = "projects/";
 
-    private static final String LANGUAGE = "/language";
+    private static final String LANGUAGES = "/languages";
 
-    private static RegExp regExp = RegExp.compile(PROJECTS + "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" + LANGUAGE);
+    private static RegExp regExp = RegExp.compile(PROJECTS + "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})" + LANGUAGES);
 
 
     @Override
@@ -24,8 +25,8 @@ public class LanguageSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<
     }
 
     @Override
-    public Class<LanguageSettingsPlace> getPlaceClass() {
-        return LanguageSettingsPlace.class;
+    public boolean isTokenizerFor(Place place) {
+        return place instanceof LanguageSettingsPlace;
     }
 
     @Override
@@ -46,6 +47,6 @@ public class LanguageSettingsPlaceTokenizer implements WebProtegePlaceTokenizer<
 
     @Override
     public String getToken(LanguageSettingsPlace place) {
-        return PROJECTS + place.getProjectId().getId() + LANGUAGE;
+        return PROJECTS + place.getProjectId().getId() + LANGUAGES;
     }
 }
