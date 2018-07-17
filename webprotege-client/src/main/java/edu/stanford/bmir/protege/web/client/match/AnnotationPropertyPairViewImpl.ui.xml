@@ -8,7 +8,6 @@
             padding-bottom: 2px;
         }
         .propertyField {
-            border: 1px solid #e0e0e0;
             margin: 2px;
             min-width: 250px;
             max-width: 250px;
