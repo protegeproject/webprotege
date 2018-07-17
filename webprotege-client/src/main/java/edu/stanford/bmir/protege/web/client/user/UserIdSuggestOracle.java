@@ -44,11 +44,11 @@ public class UserIdSuggestOracle extends SuggestOracle {
                             String query = request.getQuery();
                             int queryIndex = userName.toLowerCase().indexOf(query.toLowerCase());
                             if(queryIndex != -1) {
-                                return userName.substring(0, queryIndex)
+                                return "<span>" + userName.substring(0, queryIndex)
                                         + "<span style='font-weight: bold;'>"
                                         + userName.substring(queryIndex, queryIndex + query.length())
                                         + "</span>"
-                                        + userName.substring(queryIndex + query.length());
+                                        + userName.substring(queryIndex + query.length()) + "<span>";
                             }
                             else {
                                 return userName;
