@@ -54,9 +54,9 @@ public class LanguageSettingsPresenter {
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
-        settingsPresenter.setSettingsTitle("Language Settings");
         settingsPresenter.start(container);
-        settingsPresenter.addSection("Display Languages").setWidget(displayLanguagesView);
+        settingsPresenter.setSettingsTitle("Personal Language Settings");
+        settingsPresenter.addSection("Entity Display Name Languages").setWidget(displayLanguagesView);
         settingsPresenter.addSection("New Entities Language").setWidget(entityDefaultLanguageView);
     }
 

@@ -41,12 +41,9 @@ public class DictionaryLanguageDataEditor extends Composite implements ValueEdit
     public Optional<DictionaryLanguageData> getValue() {
         Optional<OWLAnnotationPropertyData> property = view.getAnnotationProperty();
         String lang = view.getLang();
-        if (lang.contains(" ")) {
-            return Optional.empty();
-        }
         return property.map(prop -> Optional.of(DictionaryLanguageData.get(prop,
                                                                            lang)))
-                       .orElseGet(() -> Optional.of(DictionaryLanguageData.get(lang)));
+                       .orElse(Optional.of(DictionaryLanguageData.get(lang)));
     }
 
     @Override
@@ -72,6 +69,6 @@ public class DictionaryLanguageDataEditor extends Composite implements ValueEdit
 
     @Override
     public boolean isWellFormed() {
-        return getValue().isPresent();
+        return true;
     }
 }

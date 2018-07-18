@@ -7,11 +7,15 @@
             flex-direction: row;
         }
         .propertyField {
-            min-width: 300px;
+            flex-grow: 1;
+            flex-shrink: 1;
+            max-width: 300px;
         }
         .langField {
-            min-width: 40px;
-            margin-left: 4px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 40px;
+            margin-left: 2px;
         }
     </ui:style>
     <g:HTMLPanel>
@@ -22,7 +26,7 @@
                                                placeholder="Enter annotation property name (e.g. rdfs:label)"/>
             <primitive:DefaultLanguageEditor ui:field="languageField"
                                              addStyleNames="{style.langField}"
-                                             placeholder="Enter lang tag"/>
+                                             placeholder="lang"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

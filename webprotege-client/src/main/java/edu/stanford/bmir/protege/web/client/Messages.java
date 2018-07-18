@@ -148,6 +148,9 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("createProject")
     String createProject();
 
+    @DefaultMessage("Add")
+    @Key("add")
+    String add();
     
     @DefaultMessage("Delete")
     @Key("delete")
@@ -1118,5 +1121,4 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Port")
     @Key("app.settings.url.port")
     String applicationSettings_url_port();
-
 }

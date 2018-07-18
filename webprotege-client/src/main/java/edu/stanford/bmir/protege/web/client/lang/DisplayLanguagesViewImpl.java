@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
@@ -34,6 +35,7 @@ public class DisplayLanguagesViewImpl extends Composite implements DisplayLangua
     public DisplayLanguagesViewImpl(@Nonnull Provider<DictionaryLanguageDataEditor> editorProvider) {
         languagesList = new ValueListFlexEditorImpl<>(editorProvider::get);
         languagesList.setEnabled(true);
+        languagesList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 }

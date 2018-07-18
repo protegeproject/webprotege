@@ -2,16 +2,16 @@ package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
@@ -52,11 +52,16 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     private String placeholder = "";
 
+    private NewRowMode newRowMode = NewRowMode.AUTOMATIC;
+
     // Don't prompt by default
     private DeleteConfirmationPrompt<O> deleteConfirmationPrompt = (value, callback) -> callback.deleteValue(true);
 
     @UiField
     HTMLPanel container;
+
+    @UiField
+    Button addButton;
 
     public ValueListFlexEditorImpl(ValueEditorFactory<O> valueEditorFactory) {
         this.valueEditorFactory = valueEditorFactory;
@@ -64,6 +69,13 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         initWidget(rootElement);
         valueChangeHandler = event -> handleValueEditorValueChanged();
         dirtyChangedHandler = event -> handleValueEditorDirtyChanged(event);
+        updateEnabled();
+    }
+
+
+    @UiHandler("addButton")
+    public void addButtonClick(ClickEvent event) {
+        addValueEditor(true);
         updateEnabled();
     }
 
@@ -87,6 +99,16 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         return this;
     }
 
+    @Override
+    public void setNewRowMode(@Nonnull NewRowMode newRowMode) {
+        this.newRowMode = checkNotNull(newRowMode);
+        if(newRowMode == NewRowMode.MANUAL) {
+            addButton.setVisible(true);
+        }
+        else {
+            addButton.setVisible(false);
+        }
+    }
 
     @Override
     public void setValue(List<O> object) {
@@ -180,11 +202,10 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
-
-
     private void ensureBlank() {
         if (isEnabled()) {
-            if(currentEditors.isEmpty() || currentEditors.get(currentEditors.size() - 1).getValue().isPresent()) {
+            if(currentEditors.isEmpty()
+                    || (newRowMode == NewRowMode.AUTOMATIC && currentEditors.get(currentEditors.size() - 1).getValue().isPresent())) {
                 addValueEditor(false);
             }
         }
@@ -277,5 +298,4 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         this.fireEvent(event);
         ensureBlank();
     }
-
 }

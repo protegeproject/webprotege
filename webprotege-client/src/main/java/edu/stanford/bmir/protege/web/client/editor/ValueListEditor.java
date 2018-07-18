@@ -13,5 +13,12 @@ import java.util.List;
  */
 public interface ValueListEditor<O> extends ValueEditor<List<O>>, HasEnabled {
 
+    enum NewRowMode {
+        AUTOMATIC,
+        MANUAL
+    }
+
     void setDeleteConfirmationPrompt(@Nonnull DeleteConfirmationPrompt<O> prompt);
+
+    void setNewRowMode(@Nonnull NewRowMode newRowMode);
 }
