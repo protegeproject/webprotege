@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
 import edu.stanford.bmir.protege.web.client.primitive.LanguageEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
@@ -20,7 +21,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class DictionaryLanguageDataViewImpl extends Composite implements DictionaryLanguageDataView {
+public class DictionaryLanguageDataViewImpl extends Composite implements DictionaryLanguageDataView, HasRequestFocus {
 
     interface DictionaryLanguageDataViewImplUiBinder extends UiBinder<HTMLPanel, DictionaryLanguageDataViewImpl> {
 
@@ -40,6 +41,11 @@ public class DictionaryLanguageDataViewImpl extends Composite implements Diction
         this.annotationPropertyField = primitiveDataEditor;
         this.languageField = (DefaultLanguageEditor) languageEditor;
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public void requestFocus() {
+        annotationPropertyField.requestFocus();
     }
 
     @Override

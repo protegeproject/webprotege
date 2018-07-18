@@ -264,4 +264,9 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     public void setWrap(boolean wrap) {
         textBox.setWrap(wrap);
     }
+
+    @Override
+    public void requestFocus() {
+        textBox.setFocus(true);
+    }
 }

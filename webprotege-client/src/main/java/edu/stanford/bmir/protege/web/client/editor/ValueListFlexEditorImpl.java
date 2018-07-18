@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -11,6 +12,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -75,7 +77,10 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
 
     @UiHandler("addButton")
     public void addButtonClick(ClickEvent event) {
-        addValueEditor(true);
+        ValueEditor<O> valueEditor = addValueEditor(true);
+        if(valueEditor instanceof HasRequestFocus) {
+            Scheduler.get().scheduleDeferred(((HasRequestFocus) valueEditor)::requestFocus);
+        }
         updateEnabled();
     }
 

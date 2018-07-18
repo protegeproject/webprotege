@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -47,7 +48,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  *
  * This is really a presenter for the editor view.
  */
-public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataEditor, HasEnabled {
+public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataEditor, HasEnabled, HasRequestFocus {
 
     public static final double PLACEHOLDER_ICON_OPACITY = 0.3;
 
@@ -115,6 +116,11 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     public void setPlaceholder(String placeholder) {
         this.textPlaceholder = placeholder;
         view.setPlaceholder(placeholder);
+    }
+
+    @Override
+    public void requestFocus() {
+        view.requestFocus();
     }
 
     @Override

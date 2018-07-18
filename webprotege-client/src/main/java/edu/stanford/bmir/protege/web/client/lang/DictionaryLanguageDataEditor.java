@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
@@ -21,7 +22,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class DictionaryLanguageDataEditor extends Composite implements ValueEditor<DictionaryLanguageData> {
+public class DictionaryLanguageDataEditor extends Composite implements ValueEditor<DictionaryLanguageData>, HasRequestFocus {
 
     @Nonnull
     private final DictionaryLanguageDataView view;
@@ -30,6 +31,11 @@ public class DictionaryLanguageDataEditor extends Composite implements ValueEdit
     public DictionaryLanguageDataEditor(@Nonnull DictionaryLanguageDataView view) {
         this.view = view;
         initWidget(view.asWidget());
+    }
+
+    @Override
+    public void requestFocus() {
+        view.requestFocus();
     }
 
     @Override

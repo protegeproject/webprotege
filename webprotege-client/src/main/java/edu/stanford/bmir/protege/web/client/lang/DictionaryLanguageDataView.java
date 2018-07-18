@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public interface DictionaryLanguageDataView extends IsWidget {
+public interface DictionaryLanguageDataView extends IsWidget, HasRequestFocus {
 
     void clear();
 

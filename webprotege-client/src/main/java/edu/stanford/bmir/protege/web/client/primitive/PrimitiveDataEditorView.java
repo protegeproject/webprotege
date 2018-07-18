@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.anchor.HasAnchor;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
+import edu.stanford.bmir.protege.web.client.library.dlg.HasRequestFocus;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -23,8 +24,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/01/2014
  */
-public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChangeHandlers<String>, HasSelectionHandlers<EntitySuggestion>, HasAnchor, HasEnabled, HasPlaceholder, HasFocusHandlers, HasKeyUpHandlers {
-
+public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChangeHandlers<String>, HasSelectionHandlers<EntitySuggestion>, HasAnchor, HasEnabled, HasPlaceholder, HasFocusHandlers, HasKeyUpHandlers, HasRequestFocus {
 
     enum Mode {SINGLE_LINE, MULTI_LINE}
 
@@ -47,4 +47,6 @@ public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChan
     void clearErrorMessage();
 
     void setWrap(boolean wrap);
+
+    void requestFocus();
 }
