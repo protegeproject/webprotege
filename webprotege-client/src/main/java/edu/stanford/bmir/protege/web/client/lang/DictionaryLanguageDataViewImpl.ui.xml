@@ -21,6 +21,7 @@
     <g:HTMLPanel>
         <div class="{style.main}">
             <primitive:PrimitiveDataEditorImpl ui:field="annotationPropertyField"
+                                               entityLinkMode="DO_NOT_SHOW_LINKS_FOR_ENTITIES"
                                                annotationPropertiesAllowed="true"
                                                addStyleNames="{style.propertyField}"
                                                placeholder="Enter annotation property name (e.g. rdfs:label)"/>
