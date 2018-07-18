@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayDictionaryLanguagesView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 
@@ -108,6 +110,7 @@ public class ProjectSettingsPresenter {
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
+        // TODO: Check that the user can do this
         settingsPresenter.addSection(messages.newEntitySettings()).setWidget(entityCrudKitSettingsEditor);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
         settingsPresenter.addSection("Default Display Name Settings").setWidget(displayDictionaryLanguagesView);
@@ -118,6 +121,11 @@ public class ProjectSettingsPresenter {
                                        result -> {
                                            ProjectSettings projectSettings = result.getProjectSettings();
                                            displayProjectSettings(container, projectSettings);
+                                       });
+        dispatchServiceManager.execute(new GetEntityCrudKitSettingsAction(projectId),
+                                       result -> {
+                                           EntityCrudKitSettings<?> settings = result.getSettings();
+                                           entityCrudKitSettingsEditor.setValue(settings);
                                        });
     }
 
