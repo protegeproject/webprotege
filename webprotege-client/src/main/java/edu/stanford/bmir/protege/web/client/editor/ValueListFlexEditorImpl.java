@@ -267,7 +267,7 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
         deleteConfirmationPrompt.shouldDeleteValue(value.get(), delete -> {
             if (delete) {
                 Optional<List<O>> before = getValue();
-                removeEditor(editor);
+                int remIndex = removeEditor(editor);
                 ensureBlank();
                 dirty = true;
                 fireEvent(new DirtyChangedEvent());
@@ -275,17 +275,25 @@ public class ValueListFlexEditorImpl<O> extends Composite implements ValueListEd
                 if (!after.equals(before)) {
                     ValueChangeEvent.fire(this, after);
                 }
+                if(remIndex != -1) {
+                    int nextIndex = Math.min(remIndex, container.getWidgetCount() - 1);
+                    if(nextIndex != -1) {
+                        ValueListFlexEditorContainer<O> editorContainer = (ValueListFlexEditorContainer<O>) container.getWidget(nextIndex);
+                        editorContainer.deleteButton.setFocus(true);
+                    }
+                }
             }
         });
     }
 
-    private void removeEditor(ValueEditor<O> editor) {
+    private int removeEditor(ValueEditor<O> editor) {
         int index = currentEditors.indexOf(editor);
         if(index == -1) {
-            return;
+            return index;
         }
         currentEditors.remove(editor);
         container.remove(index);
+        return index;
     }
 
     private ValueEditor<O> getFreshValueEditor() {
