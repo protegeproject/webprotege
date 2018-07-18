@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.COMMENT_POSTED;
+import static edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType.PROJECT_CHANGED;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -52,10 +54,10 @@ public class WebhookSettingsViewImpl extends Composite implements WebhookSetting
     @Nonnull
     @Override
     public List<WebhookSetting> getWebhookUrls() {
-        return webhooks.getValue().map(whs -> whs.stream().map(wh -> new WebhookSetting(wh,
+        return webhooks.getValue().map(whs -> whs.stream().map(wh -> WebhookSetting.get(wh,
                                                                                  Sets.newHashSet(
-                                                                                         ProjectWebhookEventType.PROJECT_CHANGED,
-                                                                                         ProjectWebhookEventType.COMMENT_POSTED
+                                                                                         PROJECT_CHANGED,
+                                                                                         COMMENT_POSTED
                                                                                  ))).collect(toList())).orElse(Collections.emptyList());
     }
 }

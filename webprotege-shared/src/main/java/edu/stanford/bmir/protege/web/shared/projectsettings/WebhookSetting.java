@@ -1,10 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,54 +20,25 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 8 Jun 2017
  */
-public class WebhookSetting implements IsSerializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class WebhookSetting implements IsSerializable {
 
-    private String payloadUrl;
+    public static final String PAYLOAD_URL = "payloadUrl";
 
-    private Set<ProjectWebhookEventType> eventTypes;
+    public static final String EVENT_TYPES = "eventTypes";
 
-    @GwtSerializationConstructor
-    private WebhookSetting() {
-    }
+    @JsonProperty(PAYLOAD_URL)
+    @Nonnull
+    public abstract String getPayloadUrl();
 
-    public WebhookSetting(String payloadUrl,
-                          Set<ProjectWebhookEventType> eventTypes) {
-        this.payloadUrl = payloadUrl;
-        this.eventTypes = new HashSet<>(eventTypes);
-    }
+    @JsonProperty(EVENT_TYPES)
+    @Nonnull
+    public abstract ImmutableSet<ProjectWebhookEventType> getEventTypes();
 
-    public String getPayloadUrl() {
-        return payloadUrl;
-    }
-
-    public Set<ProjectWebhookEventType> getEventTypes() {
-        return new HashSet<>(eventTypes);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(payloadUrl, eventTypes);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof WebhookSetting)) {
-            return false;
-        }
-        WebhookSetting other = (WebhookSetting) obj;
-        return this.payloadUrl.equals(other.payloadUrl)
-                && this.eventTypes.equals(other.eventTypes);
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("WebhookSetting")
-                .add("payloadUrl", payloadUrl)
-                .add("eventTypes", eventTypes)
-                .toString();
+    @Nonnull
+    public static WebhookSetting get(@Nonnull @JsonProperty(PAYLOAD_URL) String payloadUrl,
+                                     @Nonnull @JsonProperty(EVENT_TYPES) Set<ProjectWebhookEventType> eventTypes) {
+        return new AutoValue_WebhookSetting(payloadUrl, ImmutableSet.copyOf(eventTypes));
     }
 }

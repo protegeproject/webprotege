@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
@@ -118,7 +119,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                                 .findFirst()
                                                 .map(SlackWebhook::getPayloadUrl).orElse("");
         List<WebhookSetting> webhookSettings = webhookRepository.getProjectWebhooks(projectId).stream()
-                                                               .map(wh -> new WebhookSetting(wh.getPayloadUrl(), new LinkedHashSet<ProjectWebhookEventType>(wh.getSubscribedToEvents())))
+                                                               .map(wh -> WebhookSetting.get(wh.getPayloadUrl(),
+                                                                                             ImmutableSet.copyOf(wh.getSubscribedToEvents())))
                                                                .collect(toList());
         ProjectDetails projectDetails = getProjectDetails(projectId);
             return new ProjectSettings(projectId,
