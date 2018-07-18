@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+        }
+        .propertyField {
+            min-width: 300px;
+        }
+        .langField {
+            min-width: 40px;
+            margin-left: 4px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <div class="{style.main}">
+            <primitive:PrimitiveDataEditorImpl ui:field="annotationPropertyField"
+                                               annotationPropertiesAllowed="true"
+                                               addStyleNames="{style.propertyField}"
+                                               placeholder="Enter annotation property name (e.g. rdfs:label)"/>
+            <primitive:DefaultLanguageEditor ui:field="languageField"
+                                             addStyleNames="{style.langField}"
+                                             placeholder="Enter lang tag"/>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

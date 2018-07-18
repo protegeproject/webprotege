@@ -1,7 +1,23 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:lang="urn:import:edu.stanford.bmir.protege.web.client.lang"
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel>
-        <g:Label text="Specify a list of default languages for creating new entities" addStyleNames="{wp.style.formHelpText}"/>
+    <g:HTMLPanel addStyleNames="{wp.style.form} {wp.style.panelFilled}">
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Specify a default property and language for new entities."/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:PrimitiveDataEditorImpl ui:field="propertyEditor"
+                                               annotationPropertiesAllowed="true" placeholder="Enter annotation property name (e.g. rdfs:label, skos:prefLabel etc.)"/>
+            <g:Label text="Leave empty for the default property, which is rdfs:label" addStyleNames="{wp.style.formHelpText}"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Language Tag" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:DefaultLanguageEditor ui:field="languageTagEditor" placeholder="Enter language tag"/>
+            <g:Label text="Leave empty for no language tag" addStyleNames="{wp.style.formHelpText}"/>
+        </div>
+
     </g:HTMLPanel>
 </ui:UiBinder>

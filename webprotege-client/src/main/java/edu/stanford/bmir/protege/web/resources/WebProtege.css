@@ -250,18 +250,22 @@
 
 .wp-panel-filled .gwt-TextBox {
     border: literal("var(--inlay-panel--border)");
+    background-color: white;
 }
 
 .wp-panel-filled .gwt-PasswordTextBox {
     border: literal("var(--inlay-panel--border)");
+    background-color: white;
 }
 
 .wp-panel-filled .gwt-TextArea {
     border: literal("var(--inlay-panel--border)");
+    background-color: white;
 }
 
 .wp-panel-filled .gwt-SuggestBox {
     border: literal("var(--inlay-panel--border)");
+    background-color: white;
 }
 
 .wp-panel-neutral {

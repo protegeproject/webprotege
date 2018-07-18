@@ -1,7 +1,18 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-    <g:HTMLPanel>
-        <g:Label text="Specify a list of languages for display" addStyleNames="{wp.style.formHelpText}"/>
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Specify a list of languages that should be used for entity display names.
+        A language consists of an annotation property and a language tag.
+        Languages that appear closer to the top of the list are given priority over languages
+        that appear closer to the bottom of the list."/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Display Language Priority" addStyleNames="{wp.style.formLabel}"/>
+            <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
+        </div>
+
     </g:HTMLPanel>
 </ui:UiBinder>

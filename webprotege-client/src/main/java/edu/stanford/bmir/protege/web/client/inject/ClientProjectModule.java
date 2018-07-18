@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.auto.factory.Provided;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
@@ -300,6 +301,11 @@ public class ClientProjectModule {
 
     @Provides
     EntityDefaultLanguageView provideEntityDefaultLanguagesView(EntityDefaultLanguageViewImpl impl) {
+        return impl;
+    }
+
+    @Provides
+    DictionaryLanguageDataView provideDictionaryLanguageDataView(DictionaryLanguageDataViewImpl impl) {
         return impl;
     }
 }

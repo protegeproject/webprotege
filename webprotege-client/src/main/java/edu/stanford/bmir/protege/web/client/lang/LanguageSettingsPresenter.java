@@ -4,6 +4,8 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -30,10 +32,10 @@ public class LanguageSettingsPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final EntityDefaultLanguageView entityDefaultLanguageView;
+    private final DisplayLanguagesView displayLanguagesView;
 
     @Nonnull
-    private final DisplayLanguagesView displayLanguagesView;
+    private final EntityDefaultLanguageView entityDefaultLanguageView;
 
     @Nonnull
     private Optional<Place> nextPlace = Optional.empty();
@@ -55,7 +57,7 @@ public class LanguageSettingsPresenter {
         settingsPresenter.setSettingsTitle("Language Settings");
         settingsPresenter.start(container);
         settingsPresenter.addSection("Display Languages").setWidget(displayLanguagesView);
-        settingsPresenter.addSection("New Entity Default Language").setWidget(entityDefaultLanguageView);
+        settingsPresenter.addSection("New Entities Language").setWidget(entityDefaultLanguageView);
     }
 
     public void setNextPlace(@Nonnull Optional<Place> place) {
