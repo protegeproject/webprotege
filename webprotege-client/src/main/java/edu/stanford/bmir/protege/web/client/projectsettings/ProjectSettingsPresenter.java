@@ -144,7 +144,7 @@ public class ProjectSettingsPresenter {
     private void applySettings() {
         SlackIntegrationSettings slackIntegrationSettings = SlackIntegrationSettings.get(slackWebhookSettingsView.getWebhookrUrl());
         WebhookSettings webhookSettings = WebhookSettings.get(webhookSettingsView.getWebhookUrls());
-        ProjectSettings projectSettings = new ProjectSettings(
+        ProjectSettings projectSettings = ProjectSettings.get(
                 projectId,
                 generalSettingsView.getDisplayName(),
                 generalSettingsView.getDescription(),

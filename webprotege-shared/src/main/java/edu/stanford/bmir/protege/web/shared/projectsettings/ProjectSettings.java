@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -16,107 +19,61 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectSettings implements Serializable, IsSerializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class ProjectSettings implements Serializable, IsSerializable {
 
-    private ProjectId projectId;
+    private static final String PROJECT_ID = "projectId";
 
-    private String projectDisplayName;
-    
-    private String projectDescription;
+    private static final String DISPLAY_NAME = "displayName";
 
-    private SlackIntegrationSettings slackIntegrationSettings;
+    private static final String DESCRIPTION = "description";
 
-    private WebhookSettings webhookSettings;
+    private static final String SLACK_INTEGRATION_SETTINGS = "slackIntegrationSettings";
 
-    /**
-     * For serialization purposes only
-     */
-    private ProjectSettings() {}
-
-    /**
-     * Constructs a ProjectSettingsData object.
-     * @param projectId The projectId.  Not {@code null}.
-     * @param projectDescription The project description. Not {@code null}.
-     * @param slackIntegrationSettings
-     * @param webhookSettings
-     * @throws java.lang.NullPointerException if any parameters are {@code null}.
-     */
-    public ProjectSettings(@Nonnull ProjectId projectId,
-                           @Nonnull String projectDisplayName,
-                           @Nonnull String projectDescription,
-                           @Nonnull SlackIntegrationSettings slackIntegrationSettings,
-                           @Nonnull WebhookSettings webhookSettings) {
-        this.projectId = checkNotNull(projectId);
-        this.projectDisplayName = checkNotNull(projectDisplayName);
-        this.projectDescription = checkNotNull(projectDescription);
-        this.slackIntegrationSettings = checkNotNull(slackIntegrationSettings);
-        this.webhookSettings = checkNotNull(webhookSettings);
-    }
+    private static final String WEBHOOK_SETTINGS = "webhookSettings";
 
     /**
      * Gets the projectId.
      * @return The projectId.  Not {@code null}.
      */
-    public ProjectId getProjectId() {
-        return projectId;
-    }
+    @JsonProperty(PROJECT_ID)
+    @Nonnull
+    public abstract ProjectId getProjectId();
 
     /**
      * Gets the project display name.
      * @return The project display name.  Not {@code null}.
      */
-    public String getProjectDisplayName() {
-        return projectDisplayName;
-    }
+    @Nonnull
+    @JsonProperty(DISPLAY_NAME)
+    public abstract String getProjectDisplayName();
 
     /**
      * Gets the project description.
      * @return The project description as a string.  May be empty. Not {@code null}.
      */
-    public String getProjectDescription() {
-        return projectDescription;
-    }
+    @Nonnull
+    @JsonProperty(DESCRIPTION)
+    public abstract String getProjectDescription();
 
-    public SlackIntegrationSettings getSlackIntegrationSettings() {
-        return slackIntegrationSettings;
-    }
+    @Nonnull
+    @JsonProperty(SLACK_INTEGRATION_SETTINGS)
+    public abstract SlackIntegrationSettings getSlackIntegrationSettings();
 
-    public WebhookSettings getWebhookSettings() {
-        return webhookSettings;
-    }
+    @Nonnull
+    @JsonProperty(WEBHOOK_SETTINGS)
+    public abstract WebhookSettings getWebhookSettings();
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(projectId,
-                                projectDisplayName,
-                                projectDescription,
-                                slackIntegrationSettings,
-                                webhookSettings);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof ProjectSettings)) {
-            return false;
-        }
-        ProjectSettings other = (ProjectSettings) obj;
-        return this.projectDisplayName.equals(other.projectDisplayName)
-                && this.projectDescription.equals(other.projectDescription)
-                && this.projectId.equals(other.projectId)
-                && this.slackIntegrationSettings.equals(other.slackIntegrationSettings)
-                && this.webhookSettings.equals(other.webhookSettings);
-    }
-
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper("ProjectSettings")
-                          .addValue(projectId)
-                          .add("displayName", projectDisplayName)
-                          .add("description", projectDescription)
-                          .toString();
+    public static ProjectSettings get(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
+                                      @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,
+                                      @Nonnull @JsonProperty(DESCRIPTION) String description,
+                                      @Nonnull @JsonProperty(SLACK_INTEGRATION_SETTINGS) SlackIntegrationSettings slackIntegrationSettings,
+                                      @Nonnull @JsonProperty(WEBHOOK_SETTINGS) WebhookSettings webhookSettings) {
+        return new AutoValue_ProjectSettings(projectId,
+                                             displayName,
+                                             description,
+                                             slackIntegrationSettings,
+                                             webhookSettings);
     }
 }

@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
@@ -28,6 +30,10 @@ public class RpcWhiteList implements Action, Result {
     MultiMatchType multiMatchType;
 
     HierarchyFilterType hierarchyFilterType;
+
+    ProjectSettings projectSettings;
+
+    SlackIntegrationSettings slackIntegrationSettings;
 
     WebhookSettings webhookSettings;
 
@@ -92,5 +98,21 @@ public class RpcWhiteList implements Action, Result {
 
     public void setProjectWebhookEventType(ProjectWebhookEventType projectWebhookEventType) {
         this.projectWebhookEventType = projectWebhookEventType;
+    }
+
+    public ProjectSettings getProjectSettings() {
+        return projectSettings;
+    }
+
+    public void setProjectSettings(ProjectSettings projectSettings) {
+        this.projectSettings = projectSettings;
+    }
+
+    public SlackIntegrationSettings getSlackIntegrationSettings() {
+        return slackIntegrationSettings;
+    }
+
+    public void setSlackIntegrationSettings(SlackIntegrationSettings slackIntegrationSettings) {
+        this.slackIntegrationSettings = slackIntegrationSettings;
     }
 }

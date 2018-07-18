@@ -123,7 +123,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                                                                              ImmutableSet.copyOf(wh.getSubscribedToEvents())))
                                                                .collect(toList());
         ProjectDetails projectDetails = getProjectDetails(projectId);
-            return new ProjectSettings(projectId,
+            return ProjectSettings.get(projectId,
                     projectDetails.getDisplayName(),
                     projectDetails.getDescription(),
                                        SlackIntegrationSettings.get(slackPayloadUrl),
