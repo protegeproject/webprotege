@@ -11,7 +11,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public interface EntityDefaultLanguageView extends IsWidget {
+public interface EntityDefaultDictionaryLanguageView extends IsWidget {
 
     @Nonnull
     Optional<OWLAnnotationPropertyData> getAnnotationProperty();

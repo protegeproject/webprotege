@@ -6,7 +6,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 
@@ -22,9 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class EntityDefaultLanguageViewImpl extends Composite implements EntityDefaultLanguageView {
+public class EntityDefaultDictionaryLanguageViewImpl extends Composite implements EntityDefaultDictionaryLanguageView {
 
-    interface EntityDefaultLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, EntityDefaultLanguageViewImpl> {
+    interface EntityDefaultLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, EntityDefaultDictionaryLanguageViewImpl> {
 
     }
 
@@ -38,8 +37,8 @@ public class EntityDefaultLanguageViewImpl extends Composite implements EntityDe
     DefaultLanguageEditor languageTagEditor;
 
     @Inject
-    public EntityDefaultLanguageViewImpl(@Nonnull PrimitiveDataEditorImpl propertyEditor,
-                                         @Nonnull DefaultLanguageEditor languageTagEditor) {
+    public EntityDefaultDictionaryLanguageViewImpl(@Nonnull PrimitiveDataEditorImpl propertyEditor,
+                                                   @Nonnull DefaultLanguageEditor languageTagEditor) {
         this.propertyEditor = checkNotNull(propertyEditor);
         this.languageTagEditor = checkNotNull(languageTagEditor);
         initWidget(ourUiBinder.createAndBindUi(this));

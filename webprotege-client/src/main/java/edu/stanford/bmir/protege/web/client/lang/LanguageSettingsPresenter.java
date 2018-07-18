@@ -4,8 +4,6 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -32,10 +30,10 @@ public class LanguageSettingsPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final DisplayLanguagesView displayLanguagesView;
+    private final DisplayDictionaryLanguagesView displayDictionaryLanguagesView;
 
     @Nonnull
-    private final EntityDefaultLanguageView entityDefaultLanguageView;
+    private final EntityDefaultDictionaryLanguageView entityDefaultDictionaryLanguageView;
 
     @Nonnull
     private Optional<Place> nextPlace = Optional.empty();
@@ -44,20 +42,20 @@ public class LanguageSettingsPresenter {
     public LanguageSettingsPresenter(@Nonnull ProjectId projectId,
                                      @Nonnull SettingsPresenter settingsPresenter,
                                      @Nonnull DispatchServiceManager dispatch,
-                                     @Nonnull EntityDefaultLanguageView entityDefaultLanguageView,
-                                     @Nonnull DisplayLanguagesView displayLanguagesView) {
+                                     @Nonnull EntityDefaultDictionaryLanguageView entityDefaultDictionaryLanguageView,
+                                     @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView) {
         this.projectId = checkNotNull(projectId);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.dispatch = checkNotNull(dispatch);
-        this.entityDefaultLanguageView = checkNotNull(entityDefaultLanguageView);
-        this.displayLanguagesView = checkNotNull(displayLanguagesView);
+        this.entityDefaultDictionaryLanguageView = checkNotNull(entityDefaultDictionaryLanguageView);
+        this.displayDictionaryLanguagesView = checkNotNull(displayDictionaryLanguagesView);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         settingsPresenter.start(container);
         settingsPresenter.setSettingsTitle("Personal Language Settings");
-        settingsPresenter.addSection("Entity Display Name Languages").setWidget(displayLanguagesView);
-        settingsPresenter.addSection("New Entities Language").setWidget(entityDefaultLanguageView);
+        settingsPresenter.addSection("Entity Display Name Languages").setWidget(displayDictionaryLanguagesView);
+        settingsPresenter.addSection("New Entities Language").setWidget(entityDefaultDictionaryLanguageView);
     }
 
     public void setNextPlace(@Nonnull Optional<Place> place) {

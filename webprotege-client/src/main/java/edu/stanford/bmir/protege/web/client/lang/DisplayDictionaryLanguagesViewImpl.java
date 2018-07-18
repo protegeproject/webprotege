@@ -5,8 +5,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
@@ -20,9 +18,9 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class DisplayLanguagesViewImpl extends Composite implements DisplayLanguagesView {
+public class DisplayDictionaryLanguagesViewImpl extends Composite implements DisplayDictionaryLanguagesView {
 
-    interface DisplayLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DisplayLanguagesViewImpl> {
+    interface DisplayLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DisplayDictionaryLanguagesViewImpl> {
 
     }
 
@@ -32,7 +30,7 @@ public class DisplayLanguagesViewImpl extends Composite implements DisplayLangua
     ValueListFlexEditorImpl<DictionaryLanguageData> languagesList;
 
     @Inject
-    public DisplayLanguagesViewImpl(@Nonnull Provider<DictionaryLanguageDataEditor> editorProvider) {
+    public DisplayDictionaryLanguagesViewImpl(@Nonnull Provider<DictionaryLanguageDataEditor> editorProvider) {
         languagesList = new ValueListFlexEditorImpl<>(editorProvider::get);
         languagesList.setEnabled(true);
         languagesList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);

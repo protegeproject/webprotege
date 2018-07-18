@@ -5,7 +5,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel addStyleNames="{wp.style.form} {wp.style.panelFilled}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="Specify a default property and language for new entities."/>
+            <g:Label text="Specify a default property and default language for new entities."/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Annotation property" addStyleNames="{wp.style.formLabel}"/>
