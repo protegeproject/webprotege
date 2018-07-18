@@ -26,7 +26,7 @@ public class LanguageSettingsPlaceTokenizer_TestCase {
     @Test
     public void shouldParsePlaceToken() {
         String projectId = "12345678-1234-1234-1234-123456789abc";
-        LanguageSettingsPlace place = tokenizer.getPlace("projects/" + projectId + "/language");
+        LanguageSettingsPlace place = tokenizer.getPlace("projects/" + projectId + "/languages");
         assertThat(place, is(notNullValue()));
         assertThat(place.getProjectId().getId(), is(projectId));
     }
