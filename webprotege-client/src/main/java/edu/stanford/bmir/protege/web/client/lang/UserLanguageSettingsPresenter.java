@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class LanguageSettingsPresenter {
+public class UserLanguageSettingsPresenter {
 
     @Nonnull
     private final ProjectId projectId;
@@ -33,29 +33,28 @@ public class LanguageSettingsPresenter {
     private final DisplayDictionaryLanguagesView displayDictionaryLanguagesView;
 
     @Nonnull
-    private final EntityDefaultDictionaryLanguageView entityDefaultDictionaryLanguageView;
+    private final DefaultLanguageTagView defaultLanguageTagView;
 
     @Nonnull
     private Optional<Place> nextPlace = Optional.empty();
 
     @Inject
-    public LanguageSettingsPresenter(@Nonnull ProjectId projectId,
-                                     @Nonnull SettingsPresenter settingsPresenter,
-                                     @Nonnull DispatchServiceManager dispatch,
-                                     @Nonnull EntityDefaultDictionaryLanguageView entityDefaultDictionaryLanguageView,
-                                     @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView) {
+    public UserLanguageSettingsPresenter(@Nonnull ProjectId projectId,
+                                         @Nonnull SettingsPresenter settingsPresenter,
+                                         @Nonnull DispatchServiceManager dispatch,
+                                         @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView, @Nonnull DefaultLanguageTagView defaultLanguageTagView) {
         this.projectId = checkNotNull(projectId);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.dispatch = checkNotNull(dispatch);
-        this.entityDefaultDictionaryLanguageView = checkNotNull(entityDefaultDictionaryLanguageView);
+        this.defaultLanguageTagView = checkNotNull(defaultLanguageTagView);
         this.displayDictionaryLanguagesView = checkNotNull(displayDictionaryLanguagesView);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         settingsPresenter.start(container);
-        settingsPresenter.setSettingsTitle("Personal Language Settings");
-        settingsPresenter.addSection("Entity Display Name Languages").setWidget(displayDictionaryLanguagesView);
-        settingsPresenter.addSection("New Entities Language").setWidget(entityDefaultDictionaryLanguageView);
+        settingsPresenter.setSettingsTitle("User Language Settings");
+        settingsPresenter.addSection("Entity Display Name").setWidget(displayDictionaryLanguagesView);
+        settingsPresenter.addSection("New Entities").setWidget(defaultLanguageTagView);
     }
 
     public void setNextPlace(@Nonnull Optional<Place> place) {

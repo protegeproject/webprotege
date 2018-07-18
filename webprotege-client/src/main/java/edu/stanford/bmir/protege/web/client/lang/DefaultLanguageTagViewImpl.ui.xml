@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <g:HTMLPanel addStyleNames="{wp.style.form} {wp.style.panelFilled}">
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Specify the default language tag to use for new entities.  Note that this will override the default language tag for the project."/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Default language tag" addStyleNames="{wp.style.formLabel}"/>
+            <primitive:DefaultLanguageEditor ui:field="languageTagEditor" placeholder="Enter language tag"/>
+            <g:Label text="Leave empty for no language tag" addStyleNames="{wp.style.formHelpText}"/>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

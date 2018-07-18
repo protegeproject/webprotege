@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.auto.value.AutoValue;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.lang.LanguageSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.lang.UserLanguageSettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.place.LanguageSettingsPlace;
 
 import javax.annotation.Nonnull;
@@ -22,10 +21,10 @@ public class LanguageSettingsActivity extends AbstractActivity {
     private final LanguageSettingsPlace place;
 
     @Nonnull
-    private final LanguageSettingsPresenter presenter;
+    private final UserLanguageSettingsPresenter presenter;
 
     public LanguageSettingsActivity(@Nonnull LanguageSettingsPlace place,
-                                    @Nonnull LanguageSettingsPresenter presenter) {
+                                    @Nonnull UserLanguageSettingsPresenter presenter) {
         this.place = checkNotNull(place);
         this.presenter = checkNotNull(presenter);
     }
@@ -36,18 +35,18 @@ public class LanguageSettingsActivity extends AbstractActivity {
     }
 
     @Nonnull
-    public LanguageSettingsPresenter getPresenter() {
+    public UserLanguageSettingsPresenter getPresenter() {
         return presenter;
     }
 
     public static LanguageSettingsActivity get(@Nonnull LanguageSettingsPlace place,
-                                               @Nonnull LanguageSettingsPresenter presenter) {
+                                               @Nonnull UserLanguageSettingsPresenter presenter) {
         return new LanguageSettingsActivity(place, presenter);
     }
 
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        LanguageSettingsPresenter presenter = getPresenter();
+        UserLanguageSettingsPresenter presenter = getPresenter();
         presenter.setNextPlace(getPlace().getNextPlace());
         presenter.start(panel);
 

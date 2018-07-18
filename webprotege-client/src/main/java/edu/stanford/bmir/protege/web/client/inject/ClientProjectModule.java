@@ -307,6 +307,11 @@ public class ClientProjectModule {
     DictionaryLanguageDataView provideDictionaryLanguageDataView(DictionaryLanguageDataViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    DefaultLanguageTagView provideDefaultLanguageTagView(DefaultLanguageTagViewImpl impl) {
+        return impl;
+    }
 }
 
 
