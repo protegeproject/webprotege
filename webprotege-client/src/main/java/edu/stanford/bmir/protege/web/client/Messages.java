@@ -1132,4 +1132,8 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @DefaultMessage("Display name property and language priority")
     @Key("language.displayName.priorityList.title")
     String language_displayName_priorityList_title();
+
+    @DefaultMessage("Default Language Settings")
+    @Key("language.defaultSettings.title")
+    String language_defaultSettings_title();
 }
