@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
+import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
+import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
 
 /**
  * Matthew Horridge
@@ -25,6 +27,10 @@ public class RpcWhiteList implements Action, Result {
     MultiMatchType multiMatchType;
 
     HierarchyFilterType hierarchyFilterType;
+
+    WebhookSettings webhookSettings;
+
+    WebhookSetting webhookSetting;
 
     public RpcWhiteList() {
     }
@@ -61,4 +67,19 @@ public class RpcWhiteList implements Action, Result {
         this.hierarchyFilterType = hierarchyFilterType;
     }
 
+    public WebhookSettings getWebhookSettings() {
+        return webhookSettings;
+    }
+
+    public void setWebhookSettings(WebhookSettings webhookSettings) {
+        this.webhookSettings = webhookSettings;
+    }
+
+    public WebhookSetting getWebhookSetting() {
+        return webhookSetting;
+    }
+
+    public void setWebhookSetting(WebhookSetting webhookSetting) {
+        this.webhookSetting = webhookSetting;
+    }
 }

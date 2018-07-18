@@ -125,7 +125,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                     projectDetails.getDisplayName(),
                     projectDetails.getDescription(),
                                        SlackIntegrationSettings.get(slackPayloadUrl),
-                                       new WebhookSettings(webhookSettings));
+                                       WebhookSettings.get(webhookSettings));
     }
 
 }
