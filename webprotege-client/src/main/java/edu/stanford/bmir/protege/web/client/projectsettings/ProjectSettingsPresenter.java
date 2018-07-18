@@ -11,10 +11,14 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayDictionaryLanguagesView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -133,11 +137,18 @@ public class ProjectSettingsPresenter {
                                         @Nonnull ProjectSettings projectSettings) {
         generalSettingsView.setDisplayName(projectSettings.getProjectDisplayName());
         generalSettingsView.setDescription(projectSettings.getProjectDescription());
+
+        displayDefaultDictionaryLanguage(projectSettings.getDefaultLanguage());
         SlackIntegrationSettings slackIntegrationSettings = projectSettings.getSlackIntegrationSettings();
         slackWebhookSettingsView.setWebhookUrl(slackIntegrationSettings.getPayloadUrl());
         WebhookSettings webhookSettings = projectSettings.getWebhookSettings();
         webhookSettingsView.setWebhookUrls(webhookSettings.getWebhookSettings());
         settingsPresenter.setBusy(container, false);
+    }
+
+    private void displayDefaultDictionaryLanguage(@Nonnull DictionaryLanguageData defaultLanguage) {
+        defaultLanguage.getAnnotationPropertyData().ifPresent(defaultDictionaryLanguageView::setAnnotationProperty);
+        defaultDictionaryLanguageView.setLanguageTag(defaultLanguage.getLanguage());
     }
 
 
@@ -148,6 +159,7 @@ public class ProjectSettingsPresenter {
                 projectId,
                 generalSettingsView.getDisplayName(),
                 generalSettingsView.getDescription(),
+                getDefaultLanguage(),
                 slackIntegrationSettings,
                 webhookSettings
         );
@@ -158,6 +170,13 @@ public class ProjectSettingsPresenter {
                 settingsPresenter.goToNextPlace();
             }
         });
+    }
+
+    private DictionaryLanguageData getDefaultLanguage() {
+        OWLAnnotationPropertyData property = defaultDictionaryLanguageView.getAnnotationProperty()
+                                                                          .orElse(DataFactory.getRdfsLabelData());
+        String langTag = defaultDictionaryLanguageView.getLanguageTag();
+        return DictionaryLanguageData.get(property, langTag);
     }
 
     private void handleCancel() {

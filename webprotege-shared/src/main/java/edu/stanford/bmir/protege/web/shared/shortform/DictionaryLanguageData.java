@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.shared.shortform;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import uk.ac.manchester.cs.owl.owlapi.OWLAnnotationPropertyImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,13 +20,25 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class DictionaryLanguageData {
 
+    @Nonnull
     public static DictionaryLanguageData get(@Nonnull OWLAnnotationPropertyData propertyData,
                                       @Nonnull String lang) {
         return new AutoValue_DictionaryLanguageData(propertyData, lang);
     }
 
+    @Nonnull
     public static DictionaryLanguageData get(@Nonnull String lang) {
         return new AutoValue_DictionaryLanguageData(null, lang);
+    }
+
+    @Nonnull
+    public static DictionaryLanguageData getRdfsLabelWithEmptyLang() {
+        return getRdfsLabelWithLang("");
+    }
+
+    @Nonnull
+    public static DictionaryLanguageData getRdfsLabelWithLang(@Nonnull String lang) {
+        return get(DataFactory.getRdfsLabelData(), lang);
     }
 
     @Nonnull

@@ -5,6 +5,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
@@ -325,4 +326,11 @@ public class DataFactory {
         return "today".equalsIgnoreCase(trimmedContent) || "now".equalsIgnoreCase(trimmedContent);
     }
 
+    @Nonnull
+    public static OWLAnnotationPropertyData getRdfsLabelData() {
+        return new OWLAnnotationPropertyData(
+                dataFactory.getRDFSLabel(),
+                OWLRDFVocabulary.RDFS_LABEL.getPrefixedName()
+        );
+    }
 }

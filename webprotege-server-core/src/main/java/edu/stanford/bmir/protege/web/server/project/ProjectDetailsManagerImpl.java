@@ -11,13 +11,17 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
@@ -63,7 +67,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     @Override
     public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
         Optional<ProjectDetails> record = repository.findOne(projectId);
-        if(!record.isPresent()) {
+        if (!record.isPresent()) {
             throw new UnknownProjectException(projectId);
         }
         return record.get();
@@ -88,26 +92,26 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     public void setProjectSettings(ProjectSettings projectSettings) {
         ProjectId projectId = projectSettings.getProjectId();
         Optional<ProjectDetails> record = repository.findOne(projectId);
-        if(!record.isPresent()) {
+        if (!record.isPresent()) {
             return;
         }
         ProjectDetails updatedRecord = record.get().builder()
-                .setDisplayName(projectSettings.getProjectDisplayName())
-                .setDescription(projectSettings.getProjectDescription())
-                .build();
+                                             .setDisplayName(projectSettings.getProjectDisplayName())
+                                             .setDescription(projectSettings.getProjectDescription())
+                                             .build();
         repository.save(updatedRecord);
         slackWebhookRepository.clearWebhooks(projectId);
         String payloadUrl = projectSettings.getSlackIntegrationSettings().getPayloadUrl();
-        if(!payloadUrl.isEmpty()) {
+        if (!payloadUrl.isEmpty()) {
             slackWebhookRepository.addWebhooks(Collections.singletonList(new SlackWebhook(projectId, payloadUrl)));
         }
         webhookRepository.clearProjectWebhooks(projectId);
         List<ProjectWebhook> projectWebhooks = projectSettings.getWebhookSettings().getWebhookSettings().stream()
-                                                      .map(s -> new ProjectWebhook(projectId,
-                                                                                   s.getPayloadUrl(),
-                                                                                   new ArrayList<ProjectWebhookEventType>(
-                                                                                           s.getEventTypes())))
-                                                      .collect(toList());
+                                                              .map(s -> new ProjectWebhook(projectId,
+                                                                                           s.getPayloadUrl(),
+                                                                                           new ArrayList<ProjectWebhookEventType>(
+                                                                                                   s.getEventTypes())))
+                                                              .collect(toList());
         webhookRepository.addProjectWebhooks(projectWebhooks);
 
     }
@@ -119,15 +123,16 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                                 .findFirst()
                                                 .map(SlackWebhook::getPayloadUrl).orElse("");
         List<WebhookSetting> webhookSettings = webhookRepository.getProjectWebhooks(projectId).stream()
-                                                               .map(wh -> WebhookSetting.get(wh.getPayloadUrl(),
-                                                                                             ImmutableSet.copyOf(wh.getSubscribedToEvents())))
-                                                               .collect(toList());
+                                                                .map(wh -> WebhookSetting.get(wh.getPayloadUrl(),
+                                                                                              ImmutableSet.copyOf(wh.getSubscribedToEvents())))
+                                                                .collect(toList());
         ProjectDetails projectDetails = getProjectDetails(projectId);
-            return ProjectSettings.get(projectId,
-                    projectDetails.getDisplayName(),
-                    projectDetails.getDescription(),
-                                       SlackIntegrationSettings.get(slackPayloadUrl),
-                                       WebhookSettings.get(webhookSettings));
+        return ProjectSettings.get(projectId,
+                                   projectDetails.getDisplayName(),
+                                   projectDetails.getDescription(),
+                                   DictionaryLanguageData.getRdfsLabelWithEmptyLang(),
+                                   SlackIntegrationSettings.get(slackPayloadUrl),
+                                   WebhookSettings.get(webhookSettings));
     }
 
 }

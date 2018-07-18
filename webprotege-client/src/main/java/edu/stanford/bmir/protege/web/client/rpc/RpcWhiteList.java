@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 
 /**
@@ -40,6 +42,10 @@ public class RpcWhiteList implements Action, Result {
     WebhookSetting webhookSetting;
 
     ProjectWebhookEventType projectWebhookEventType;
+
+    DictionaryLanguageData dictionaryLanguageData;
+
+    DictionaryLanguage dictionaryLanguage;
 
     public RpcWhiteList() {
     }
@@ -114,5 +120,21 @@ public class RpcWhiteList implements Action, Result {
 
     public void setSlackIntegrationSettings(SlackIntegrationSettings slackIntegrationSettings) {
         this.slackIntegrationSettings = slackIntegrationSettings;
+    }
+
+    public DictionaryLanguageData getDictionaryLanguageData() {
+        return dictionaryLanguageData;
+    }
+
+    public void setDictionaryLanguageData(DictionaryLanguageData dictionaryLanguageData) {
+        this.dictionaryLanguageData = dictionaryLanguageData;
+    }
+
+    public DictionaryLanguage getDictionaryLanguage() {
+        return dictionaryLanguage;
+    }
+
+    public void setDictionaryLanguage(DictionaryLanguage dictionaryLanguage) {
+        this.dictionaryLanguage = dictionaryLanguage;
     }
 }
