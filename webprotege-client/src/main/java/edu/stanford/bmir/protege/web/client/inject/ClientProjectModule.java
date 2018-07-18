@@ -299,7 +299,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    EntityDefaultDictionaryLanguageView provideEntityDefaultLanguagesView(EntityDefaultDictionaryLanguageViewImpl impl) {
+    DefaultDictionaryLanguageView provideEntityDefaultLanguagesView(DefaultDictionaryLanguageViewImpl impl) {
         return impl;
     }
 

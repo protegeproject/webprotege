@@ -21,9 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class EntityDefaultDictionaryLanguageViewImpl extends Composite implements EntityDefaultDictionaryLanguageView {
+public class DefaultDictionaryLanguageViewImpl extends Composite implements DefaultDictionaryLanguageView {
 
-    interface EntityDefaultLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, EntityDefaultDictionaryLanguageViewImpl> {
+    interface EntityDefaultLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DefaultDictionaryLanguageViewImpl> {
 
     }
 
@@ -37,8 +37,8 @@ public class EntityDefaultDictionaryLanguageViewImpl extends Composite implement
     DefaultLanguageEditor languageTagEditor;
 
     @Inject
-    public EntityDefaultDictionaryLanguageViewImpl(@Nonnull PrimitiveDataEditorImpl propertyEditor,
-                                                   @Nonnull DefaultLanguageEditor languageTagEditor) {
+    public DefaultDictionaryLanguageViewImpl(@Nonnull PrimitiveDataEditorImpl propertyEditor,
+                                             @Nonnull DefaultLanguageEditor languageTagEditor) {
         this.propertyEditor = checkNotNull(propertyEditor);
         this.languageTagEditor = checkNotNull(languageTagEditor);
         initWidget(ourUiBinder.createAndBindUi(this));
