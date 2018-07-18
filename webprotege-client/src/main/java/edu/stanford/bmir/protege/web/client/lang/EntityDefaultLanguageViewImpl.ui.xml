@@ -14,7 +14,7 @@
             <g:Label text="Leave empty for the default property, which is rdfs:label" addStyleNames="{wp.style.formHelpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Language Tag" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="Language tag" addStyleNames="{wp.style.formLabel}"/>
             <primitive:DefaultLanguageEditor ui:field="languageTagEditor" placeholder="Enter language tag"/>
             <g:Label text="Leave empty for no language tag" addStyleNames="{wp.style.formHelpText}"/>
         </div>
