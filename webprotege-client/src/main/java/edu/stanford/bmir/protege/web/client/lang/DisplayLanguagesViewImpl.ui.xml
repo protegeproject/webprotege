@@ -2,20 +2,14 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <g:HTMLPanel addStyleNames="{wp.style.form}">
         <div class="{wp.style.formGroup}">
-            Specify a list of annotation property and language pairs that should be used for entity display names.
-            The display name for an entity will be chosen based on its annotations and the ordering
-            of the pairs listed below. Properties and languages that appear closer to the top of the list are given priority over
-            properties and languages that appear closer to the bottom of the list.
+            <ui:text from="{msg.language_displayName_helpText}"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Display name property and language priority" addStyleNames="{wp.style.formLabel}"/>
-            <div>
-                <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
-            </div>
-
+            <g:Label text="{msg.language_displayName_priorityList_title}" addStyleNames="{wp.style.formLabel}"/>
+            <editor:ValueListFlexEditorImpl ui:field="languagesList"/>
         </div>
-
     </g:HTMLPanel>
 </ui:UiBinder>
