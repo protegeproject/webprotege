@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
+import edu.stanford.bmir.protege.web.client.lang.DisplayDictionaryLanguagesView;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
@@ -44,6 +45,9 @@ public class ProjectSettingsPresenter {
     private final DefaultDictionaryLanguageView defaultDictionaryLanguageView;
 
     @Nonnull
+    private final DisplayDictionaryLanguagesView displayDictionaryLanguagesView;
+
+    @Nonnull
     private final SlackWebhookSettingsView slackWebhookSettingsView;
 
     @Nonnull
@@ -60,6 +64,7 @@ public class ProjectSettingsPresenter {
                                     @Nonnull SettingsPresenter settingsPresenter,
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull DefaultDictionaryLanguageView defaultDictionaryLanguageView,
+                                    @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView,
                                     @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
                                     @Nonnull Messages messages) {
@@ -70,6 +75,7 @@ public class ProjectSettingsPresenter {
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.defaultDictionaryLanguageView = checkNotNull(defaultDictionaryLanguageView);
+        this.displayDictionaryLanguagesView = checkNotNull(displayDictionaryLanguagesView);
         this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
         this.messages = checkNotNull(messages);
@@ -98,6 +104,7 @@ public class ProjectSettingsPresenter {
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
+        settingsPresenter.addSection("Default Display Name Settings").setWidget(displayDictionaryLanguagesView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
         settingsPresenter.setBusy(container, true);
