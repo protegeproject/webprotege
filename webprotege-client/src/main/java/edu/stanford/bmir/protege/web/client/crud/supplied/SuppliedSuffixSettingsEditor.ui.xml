@@ -4,9 +4,7 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <g:HTMLPanel>
-        <g:HTMLPanel>
-            <g:Label text="Spaces"/>
-            <g:ListBox ui:field="whiteSpaceTreatmentListBox" visibleItemCount="1"/>
-        </g:HTMLPanel>
+        <g:Label text="Spaces" addStyleNames="{wp.style.formLabel}"/>
+        <g:ListBox ui:field="whiteSpaceTreatmentListBox" visibleItemCount="1"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -4,8 +4,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
-        .main {
-        }
         .validator {
             color: #ff0000;
             padding: 2px;
@@ -13,20 +11,20 @@
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
-
+    <g:HTMLPanel addStyleNames="{wp.style.form}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="IRI Prefix"/>
+            <g:Label text="IRI Prefix" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="iriPrefixEditor" visibleLength="90"/>
             <g:HTML ui:field="prefixValidatorMessage" visible="false" addStyleNames="{style.validator}"/>
         </div>
 
         <div class="{wp.style.formGroup}">
-            <g:Label text="IRI Suffix"/>
+            <g:Label text="IRI Suffix" addStyleNames="{wp.style.formLabel}"/>
             <g:ListBox ui:field="suffixSelectorListBox" visibleItemCount="1"/>
         </div>
+        <div class="{wp.style.formGroup}">
+            <g:SimplePanel ui:field="schemeSpecificSettingsEditorHolder"/>
+        </div>
 
-        <div style="height: 10px;"/>
-        <g:SimplePanel ui:field="schemeSpecificSettingsEditorHolder"/>
     </g:HTMLPanel>
 </ui:UiBinder>

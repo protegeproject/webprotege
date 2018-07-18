@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
@@ -48,6 +49,9 @@ public class ProjectSettingsPresenter {
     private final DisplayDictionaryLanguagesView displayDictionaryLanguagesView;
 
     @Nonnull
+    private final EntityCrudKitSettingsEditor entityCrudKitSettingsEditor;
+
+    @Nonnull
     private final SlackWebhookSettingsView slackWebhookSettingsView;
 
     @Nonnull
@@ -65,7 +69,7 @@ public class ProjectSettingsPresenter {
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull DefaultDictionaryLanguageView defaultDictionaryLanguageView,
                                     @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView,
-                                    @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
+                                    @Nonnull EntityCrudKitSettingsEditor entityCrudKitSettingsEditor, @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
                                     @Nonnull Messages messages) {
         this.projectId = checkNotNull(projectId);
@@ -76,6 +80,7 @@ public class ProjectSettingsPresenter {
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.defaultDictionaryLanguageView = checkNotNull(defaultDictionaryLanguageView);
         this.displayDictionaryLanguagesView = checkNotNull(displayDictionaryLanguagesView);
+        this.entityCrudKitSettingsEditor = checkNotNull(entityCrudKitSettingsEditor);
         this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
         this.messages = checkNotNull(messages);
@@ -103,6 +108,7 @@ public class ProjectSettingsPresenter {
         settingsPresenter.setApplySettingsHandler(this::applySettings);
         settingsPresenter.setCancelSettingsHandler(this::handleCancel);
         settingsPresenter.addSection(messages.projectSettings_mainSettings()).setWidget(generalSettingsView);
+        settingsPresenter.addSection(messages.newEntitySettings()).setWidget(entityCrudKitSettingsEditor);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
         settingsPresenter.addSection("Default Display Name Settings").setWidget(displayDictionaryLanguagesView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
