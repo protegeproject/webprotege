@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
+import edu.stanford.bmir.protege.web.server.api.TimestampSerializer;
 import edu.stanford.bmir.protege.web.server.persistence.DocumentConverter;
 import edu.stanford.bmir.protege.web.server.persistence.Indexable;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -44,6 +45,32 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
     public ProjectDetailsConverter() {
     }
 
+    @Nonnull
+    public static Bson withProjectId(@Nonnull ProjectId projectId) {
+        return new Document(PROJECT_ID, projectId.getId());
+    }
+
+    @Nonnull
+    public static Bson withOwner(@Nonnull UserId userId) {
+        return new Document(OWNER, userId.getUserName());
+    }
+
+    @Nonnull
+    public static Bson withProjectIdAndWithOwner(@Nonnull ProjectId projectId, @Nonnull UserId owner) {
+        return new Document(PROJECT_ID, projectId.getId()).append(OWNER, owner.getUserName());
+    }
+
+    public static Bson updateInTrash(boolean inTrash) {
+        return Updates.set(IN_TRASH, inTrash);
+    }
+
+    public static Bson updateModified(UserId userId, long timestamp) {
+        return Updates.combine(
+                Updates.set(MODIFIED_AT, TimestampSerializer.toIsoDateTime(timestamp)),
+                Updates.set(MODIFIED_BY, userId.getUserName())
+        );
+    }
+
     @Override
     public void ensureIndexes(@Nonnull MongoCollection<Document> collection) {
         collection.createIndex(new Document(PROJECT_ID, 1).append(DISPLAY_NAME, 1));
@@ -77,32 +104,13 @@ public class ProjectDetailsConverter implements DocumentConverter<ProjectDetails
         UserId createdBy = UserId.getUserId(Optional.ofNullable(document.getString(CREATED_BY)).orElse(owner.getUserName()));
         long lastModifiedAt = Optional.ofNullable(document.getDate(MODIFIED_AT)).map(Date::getTime).orElse(0L);
         UserId lastModifiedBy = UserId.getUserId(Optional.ofNullable(document.getString(MODIFIED_BY)).orElse(owner.getUserName()));
-        return new ProjectDetails(projectId, displayName, description, owner, inTrash, createdAt, createdBy, lastModifiedAt, lastModifiedBy);
-    }
-
-    @Nonnull
-    public static Bson withProjectId(@Nonnull  ProjectId projectId) {
-        return new Document(PROJECT_ID, projectId.getId());
-    }
-
-    @Nonnull
-    public static Bson withOwner(@Nonnull UserId userId) {
-        return new Document(OWNER, userId.getUserName());
-    }
-
-    @Nonnull
-    public static Bson withProjectIdAndWithOwner(@Nonnull ProjectId projectId, @Nonnull UserId owner) {
-        return new Document(PROJECT_ID, projectId.getId()).append(OWNER, owner.getUserName());
-    }
-
-    public static Bson updateInTrash(boolean inTrash) {
-        return Updates.set(IN_TRASH, inTrash);
-    }
-
-    public static Bson updateModified(UserId userId, long timestamp) {
-        return Updates.combine(
-                Updates.set(MODIFIED_AT, new Date(timestamp)),
-                Updates.set(MODIFIED_BY, userId.getUserName())
-        );
+        return ProjectDetails.builder(projectId, displayName, owner)
+                             .setDescription(description)
+                             .setInTrash(inTrash)
+                             .setCreatedAt(createdAt)
+                             .setCreatedBy(createdBy)
+                             .setLastModifiedAt(lastModifiedAt)
+                             .setLastModifiedBy(lastModifiedBy)
+                             .build();
     }
 }

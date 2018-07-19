@@ -30,7 +30,7 @@ public class Tag_Serialization_TestCase {
 
     @Before
     public void setUp() {
-        objectMapper = new ObjectMapperProvider(new OWLDataFactoryImpl()).get();
+        objectMapper = new ObjectMapperProvider().get();
     }
 
     @Test

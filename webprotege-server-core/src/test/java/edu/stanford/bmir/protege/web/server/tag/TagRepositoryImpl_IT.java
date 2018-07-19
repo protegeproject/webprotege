@@ -64,7 +64,7 @@ public class TagRepositoryImpl_IT {
 
         client = createMongoClient();
         MongoDatabase database = client.getDatabase(getTestDbName());
-        ObjectMapper objectMapper = new ObjectMapperProvider(new OWLDataFactoryImpl()).get();
+        ObjectMapper objectMapper = new ObjectMapperProvider().get();
         repository = new TagRepositoryImpl(projectId, database, objectMapper);
         repository.ensureIndexes();
 

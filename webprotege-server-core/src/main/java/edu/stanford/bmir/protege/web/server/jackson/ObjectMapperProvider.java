@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableList;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,8 +29,8 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     private final OWLDataFactory dataFactory;
 
     @Inject
-    public ObjectMapperProvider(@Nonnull OWLDataFactory dataFactory) {
-        this.dataFactory = dataFactory;
+    public ObjectMapperProvider() {
+        this.dataFactory = new OWLDataFactoryImpl(new OWLDataFactoryInternalsImplNoCache(false));
     }
 
     @Override

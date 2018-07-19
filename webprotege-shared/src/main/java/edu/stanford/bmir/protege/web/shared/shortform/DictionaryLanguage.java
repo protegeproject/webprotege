@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.annotations.GwtCompatible;
@@ -24,6 +27,10 @@ public abstract class DictionaryLanguage {
 
     private static final DictionaryLanguage LOCAL_NAME_LANGUAGE;
 
+    private static final String PROPERTY_IRI = "propertyIri";
+
+    private static final String LANG = "lang";
+
     static {
         LOCAL_NAME_LANGUAGE = create(null, "");
     }
@@ -43,8 +50,10 @@ public abstract class DictionaryLanguage {
      * @param annotationPropertyIri The annotation property
      * @param lang                  The language.  May be empty.
      */
+    @JsonCreator
     @Nonnull
-    public static DictionaryLanguage create(@Nullable IRI annotationPropertyIri, @Nonnull String lang) {
+    public static DictionaryLanguage create(@Nullable @JsonProperty(PROPERTY_IRI) IRI annotationPropertyIri,
+                                            @Nonnull @JsonProperty(LANG) String lang) {
         return new AutoValue_DictionaryLanguage(annotationPropertyIri, lang);
     }
 
@@ -58,12 +67,15 @@ public abstract class DictionaryLanguage {
         return DictionaryLanguage.create(SKOSVocabulary.PREFLABEL.getIRI(), lang);
     }
 
+    @JsonProperty(PROPERTY_IRI)
     @Nullable
     public abstract IRI getAnnotationPropertyIri();
 
+    @JsonProperty(LANG)
     @Nonnull
     public abstract String getLang();
 
+    @JsonIgnore
     public boolean isAnnotationBased() {
         return !this.equals(LOCAL_NAME_LANGUAGE);
     }

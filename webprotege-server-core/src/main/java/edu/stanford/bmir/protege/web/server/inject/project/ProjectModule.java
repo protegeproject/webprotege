@@ -32,6 +32,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureI
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesWithIRIImpl;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
@@ -574,12 +575,6 @@ public class ProjectModule {
     @Provides
     TagRepositoryCachingImpl provideTagRepositoryCachingImpl(TagRepositoryImpl impl) {
         return new TagRepositoryCachingImpl(impl);
-    }
-
-    @ProjectSingleton
-    @Provides
-    public ObjectMapper provideObjectMapper(ObjectMapperProvider provider) {
-        return provider.get();
     }
 
     @Provides

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
@@ -51,12 +52,13 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     @Override
     public void registerProject(ProjectId projectId, NewProjectSettings settings) {
         long now = System.currentTimeMillis();
-        ProjectDetails record = new ProjectDetails(
+        ProjectDetails record = ProjectDetails.get(
                 projectId,
                 settings.getDisplayName(),
                 settings.getProjectDescription(),
                 settings.getProjectOwner(),
                 false,
+                DictionaryLanguage.rdfsLabel(""),
                 now,
                 settings.getProjectOwner(),
                 now,
@@ -95,7 +97,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         if (!record.isPresent()) {
             return;
         }
-        ProjectDetails updatedRecord = record.get().builder()
+        ProjectDetails updatedRecord = record.get()
+                                             .toBuilder()
                                              .setDisplayName(projectSettings.getProjectDisplayName())
                                              .setDescription(projectSettings.getProjectDescription())
                                              .build();

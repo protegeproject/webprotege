@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,37 +52,12 @@ public class ProjectDetailsTestCase {
     public void setUp() throws Exception {
         displayName = "DisplayName";
         description = "Description";
-        projectDetails = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullProjectIdInConstructorThrowsNullPointerException() {
-        new ProjectDetails(null, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullDisplayNameInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, null, displayName, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullProjectDescriptionInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, displayName, null, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullUserIdInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, displayName, "", null, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullModifiedByInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullCreatedByInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, null, modifiedAt, modifiedBy);
+        projectDetails = ProjectDetails.builder(projectId, displayName, userId)
+                                       .setDescription(description)
+                                       .setInTrash(IN_TRASH)
+                                       .setCreatedAt(createdAt)
+                                       .setCreatedBy(createdBy).setLastModifiedAt(modifiedAt)
+                                       .setLastModifiedBy(modifiedBy).build();
     }
 
     @Test
@@ -110,59 +86,33 @@ public class ProjectDetailsTestCase {
     }
 
     @Test
-    public void equalValuesMeansEqualProjectDetails() {
-        ProjectDetails projectDetailsA = projectDetails;
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-        assertEquals(projectDetailsA, projectDetailsB);
-    }
-
-    @Test
-    public void equalValuesMeansEqualHashCodes() {
-        ProjectDetails projectDetailsA = projectDetails;
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH, createdAt, createdBy, modifiedAt, modifiedBy);
-        assertEquals(projectDetailsA.hashCode(), projectDetailsB.hashCode());
-    }
-    
-    
-    @Test
     public void buildBuildsEqualObject() {
-        ProjectDetails details = projectDetails.builder().build();
-        assertThat(details, is(equalTo(projectDetails)));
-    }
-
-    @Test
-    public void buildBuildsCorrectDetails() {
-        ProjectDetails details = ProjectDetails.builder(projectId, userId, displayName, description)
-                                               .setLastModifiedAt(modifiedAt)
-                                               .setLastModifiedBy(modifiedBy)
-                                               .setCreatedAt(createdAt)
-                                               .setCreatedBy(createdBy)
-                                               .setInTrash(IN_TRASH).build();
+        ProjectDetails details = projectDetails.toBuilder().build();
         assertThat(details, is(equalTo(projectDetails)));
     }
 
     @Test
     public void builderSetDisplayNameChangesDisplayName() {
-        ProjectDetails details = projectDetails.builder().setDisplayName("Hello").build();
+        ProjectDetails details = projectDetails.toBuilder().setDisplayName("Hello").build();
         assertThat(details.getDisplayName(), is(equalTo("Hello")));
     }
 
     @Test
     public void builderSetDescriptionChangesDescriptionName() {
-        ProjectDetails details = projectDetails.builder().setDescription("Hello").build();
+        ProjectDetails details = projectDetails.toBuilder().setDescription("Hello").build();
         assertThat(details.getDescription(), is(equalTo("Hello")));
     }
 
     @Test
     public void builderSetInTrashChangesInTrash() {
-        ProjectDetails details = projectDetails.builder().setInTrash(true).build();
+        ProjectDetails details = projectDetails.toBuilder().setInTrash(true).build();
         assertThat(details.isInTrash(), is(true));
     }
 
     @Test
     public void builderSetOwnerChangesOwner() {
         UserId userId = mock(UserId.class);
-        ProjectDetails details = projectDetails.builder().setOwner(userId).build();
+        ProjectDetails details = projectDetails.toBuilder().setOwner(userId).build();
         assertThat(details.getOwner(), is(equalTo(userId)));
     }
 

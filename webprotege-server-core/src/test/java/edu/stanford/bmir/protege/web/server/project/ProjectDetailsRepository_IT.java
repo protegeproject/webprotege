@@ -3,9 +3,12 @@ package edu.stanford.bmir.protege.web.server.project;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 import org.junit.After;
@@ -62,12 +65,14 @@ public class ProjectDetailsRepository_IT {
     public void setUp() {
         mongoClient = MongoTestUtils.createMongoClient();
         database = mongoClient.getDatabase(MongoTestUtils.getTestDbName());
-        repository = new ProjectDetailsRepository(database, new ProjectDetailsConverter());
-        projectDetails = new ProjectDetails(projectId,
+        ObjectMapperProvider mapperProvider = new ObjectMapperProvider();
+        repository = new ProjectDetailsRepository(database, new ProjectDetailsConverter(), mapperProvider.get());
+        projectDetails = ProjectDetails.get(projectId,
                                             "The Display Name",
                                             "The Description",
                                             owner,
                                             IN_TRASH,
+                                            DictionaryLanguage.rdfsLabel("en"),
                                             CREATED_AT,
                                             createdBy,
                                             MODIFIED_AT,

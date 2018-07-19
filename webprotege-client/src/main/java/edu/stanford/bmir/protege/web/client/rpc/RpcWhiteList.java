@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
+import edu.stanford.bmir.protege.web.shared.project.AvailableProject;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SlackIntegrationSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.WebhookSetting;
@@ -46,6 +48,10 @@ public class RpcWhiteList implements Action, Result {
     DictionaryLanguageData dictionaryLanguageData;
 
     DictionaryLanguage dictionaryLanguage;
+
+    AvailableProject availableProject;
+
+    ProjectDetails projectDetails;
 
     public RpcWhiteList() {
     }
@@ -136,5 +142,21 @@ public class RpcWhiteList implements Action, Result {
 
     public void setDictionaryLanguage(DictionaryLanguage dictionaryLanguage) {
         this.dictionaryLanguage = dictionaryLanguage;
+    }
+
+    public AvailableProject getAvailableProject() {
+        return availableProject;
+    }
+
+    public void setAvailableProject(AvailableProject availableProject) {
+        this.availableProject = availableProject;
+    }
+
+    public ProjectDetails getProjectDetails() {
+        return projectDetails;
+    }
+
+    public void setProjectDetails(ProjectDetails projectDetails) {
+        this.projectDetails = projectDetails;
     }
 }

@@ -20,7 +20,7 @@ public class JsonSerializationTestUtil {
 
     public static  <C, V extends C> void testSerialization(V object, Class<C> cls) throws IOException {
         StringWriter writer = new StringWriter();
-        ObjectMapperProvider mapperProvider = new ObjectMapperProvider(new OWLDataFactoryImpl());
+        ObjectMapperProvider mapperProvider = new ObjectMapperProvider();
         ObjectMapper mapper = mapperProvider.get();
         mapper.writeValue(writer, object);
         System.out.println(writer.toString());

@@ -50,6 +50,7 @@ import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepositoryImpl;
 import edu.stanford.bmir.protege.web.shared.app.ApplicationSettings;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntityProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -69,6 +70,14 @@ import java.util.concurrent.Executors;
 public class ApplicationModule {
 
     private static final int MAX_FILE_DOWNLOAD_THREADS = 5;
+
+
+
+    @ApplicationSingleton
+    @Provides
+    public ObjectMapper provideObjectMapper(ObjectMapperProvider provider) {
+        return provider.get();
+    }
 
     @Provides
     @ApplicationSingleton
