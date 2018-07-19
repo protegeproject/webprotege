@@ -260,6 +260,9 @@ public class ChangeManager implements HasApplyChanges {
         final ChangeApplicationResult<R> finalResult;
 
 
+
+        final EntityCrudContext crudContext = getEntityCrudContext(userId);
+
         // The following must take into consideration fresh entity IRIs.  Entity IRIs are minted on the server, so
         // ontology changes may contain fresh entity IRIs as place holders. We need to make sure these get replaced
         // with true entity IRIs
@@ -316,6 +319,7 @@ public class ChangeManager implements HasApplyChanges {
                         if (!iriRenameMap.containsKey(currentIRI)) {
                             String shortName = DataFactory.getFreshEntityShortName(entity);
                             OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(session,
+                                                                                             crudContext,
                                                                                              userId,
                                                                                              shortName,
                                                                                              (EntityType<? extends OWLEntity>) entity
@@ -518,6 +522,7 @@ public class ChangeManager implements HasApplyChanges {
 
 
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session,
+                                                                       EntityCrudContext context,
                                                                        UserId userId,
                                                                        String shortName,
                                                                        EntityType<E> entityType) {
@@ -531,7 +536,7 @@ public class ChangeManager implements HasApplyChanges {
         handler.createChangeSetSession();
         E ent = handler.create(session, entityType,
                                EntityShortForm.get(shortName),
-                               getEntityCrudContext(userId),
+                               context,
                                builder);
         return new OWLEntityCreator<>(ent, builder.build(ent).getChanges());
 
