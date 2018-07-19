@@ -94,12 +94,6 @@ public class ClientProjectModule {
     }
 
     @Provides
-    @ProjectSingleton
-    ShowFreshEntitySettingsHandler provideShowFreshEntitySettingsHandler(ShowFreshEntitySettingsHandlerImpl handler) {
-        return handler;
-    }
-
-    @Provides
     LoggedInUserProjectPermissionChecker provideLoggedInUserProjectPermissionChecker(LoggedInUserProjectPermissionCheckerImpl checker) {
         return checker;
     }

@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
+import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
+import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
@@ -182,6 +184,13 @@ public class ProjectSettingsPresenter {
                 settingsPresenter.goToNextPlace();
             }
         });
+        entityCrudKitSettingsEditor.getValue().ifPresent(settings -> {
+            dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId,
+                                                                              settings, settings,
+                                                                              IRIPrefixUpdateStrategy.LEAVE_INTACT),
+                                           result -> {});
+        });
+
     }
 
     private DictionaryLanguage getDefaultLanguage() {

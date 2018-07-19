@@ -28,8 +28,6 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private final ShowProjectDetailsHandler showProjectDetailsHandler;
 
-    private final ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler;
-
     private final UploadAndMergeHandler uploadAndMergeHandler;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
@@ -42,13 +40,6 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
         @Override
         public void execute() {
             showProjectDetailsHandler.handleShowProjectDetails();
-        }
-    };
-
-    private AbstractUiAction editNewEntitySettings = new AbstractUiAction(MESSAGES.newEntitySettings()) {
-        @Override
-        public void execute() {
-            showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
         }
     };
 
@@ -77,14 +68,12 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
     public ProjectMenuPresenter(LoggedInUserProjectPermissionChecker permissionChecker,
                                 ProjectMenuView view,
                                 ShowProjectDetailsHandler showProjectDetailsHandler,
-                                ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler,
                                 UploadAndMergeHandler uploadAndMergeHandler,
                                 EditProjectPrefixDeclarationsHandler editProjectPrefixDeclarationsHandler,
                                 EditProjectTagsUIActionHandler editProjectTagsUIActionHandler) {
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
-        this.showFreshEntitySettingsHandler = showFreshEntitySettingsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
         this.editProjectPrefixDeclarationsHandler = editProjectPrefixDeclarationsHandler;
         this.editProjectTagsUIActionHandler = editProjectTagsUIActionHandler;
@@ -93,15 +82,12 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     public void start(@Nonnull AcceptsOneWidget container, @Nonnull EventBus eventBus) {
         editProjectSettings.setEnabled(false);
-        editNewEntitySettings.setEnabled(false);
         uploadAndMerge.setEnabled(false);
         displayButton(container);
         permissionChecker.hasPermission(EDIT_PROJECT_SETTINGS,
                                         canEdit -> editProjectSettings.setEnabled(canEdit));
         permissionChecker.hasPermission(UPLOAD_AND_MERGE,
                                         canUploadAndMerge -> uploadAndMerge.setEnabled(canUploadAndMerge));
-        permissionChecker.hasPermission(EDIT_NEW_ENTITY_SETTINGS,
-                                        canEdit -> editNewEntitySettings.setEnabled(canEdit));
         permissionChecker.hasPermission(EDIT_PROJECT_PREFIXES,
                                         canEdit -> editProjectPrefixes.setEnabled(canEdit));
         permissionChecker.hasPermission(EDIT_PROJECT_TAGS,
@@ -118,7 +104,6 @@ public class ProjectMenuPresenter implements HasDispose, Presenter {
 
     private void setupActions() {
         view.addMenuAction(editProjectSettings);
-        view.addMenuAction(editNewEntitySettings);
         view.addMenuAction(editProjectTags);
         view.addMenuAction(editProjectPrefixes);
         view.addMenuAction(uploadAndMerge);
