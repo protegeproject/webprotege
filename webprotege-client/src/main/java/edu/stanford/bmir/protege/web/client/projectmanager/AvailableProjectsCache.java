@@ -52,7 +52,7 @@ public class AvailableProjectsCache {
         }
         ProjectDetails replacementDetails = availableProject.getProjectDetails()
                                                             .withInTrash(inTrash);
-        cache.put(projectId, new AvailableProject(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable(),
+        cache.put(projectId, AvailableProject.get(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable(),
                                                   availableProject.getLastOpenedAt()));
         return true;
     }

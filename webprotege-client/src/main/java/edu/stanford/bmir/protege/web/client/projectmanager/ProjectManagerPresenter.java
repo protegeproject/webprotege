@@ -117,7 +117,7 @@ public class ProjectManagerPresenter implements Presenter {
     }
 
     private void handleProjectCreated(ProjectCreatedEvent event) {
-        AvailableProject availableProject = new AvailableProject(event.getProjectDetails(), true, true, UNKNOWN);
+        AvailableProject availableProject = AvailableProject.get(event.getProjectDetails(), true, true, UNKNOWN);
         insertAndSelectAvailableProject(availableProject, event.getProjectId());
     }
 

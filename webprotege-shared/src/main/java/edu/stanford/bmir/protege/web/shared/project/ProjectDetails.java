@@ -86,7 +86,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
     }
 
     @JsonCreator
-
+    @GwtIncompatible
     public static ProjectDetails valueOf(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
                                          @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,
                                          @Nullable @JsonProperty(DESCRIPTION) String description,
