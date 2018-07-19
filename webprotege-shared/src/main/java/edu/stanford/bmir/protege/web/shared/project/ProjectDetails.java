@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.core.shared.GwtIncompatible;
@@ -85,7 +83,12 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                             lastModifiedBy);
     }
 
+    /**
+     * Separate factory method for Jackson that deals with default values in case values are not present (are null)
+     * and also deals with Instant.
+     */
     @JsonCreator
+    @JsonSetter(nulls = Nulls.AS_EMPTY)
     @GwtIncompatible
     public static ProjectDetails valueOf(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
                                          @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,

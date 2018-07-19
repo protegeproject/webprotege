@@ -11,7 +11,9 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -49,5 +51,24 @@ public class ProjectDetails_Serialization_TestCase {
         System.out.println(val);
         ProjectDetails readProjectDetails = objectMapper.readValue(val, ProjectDetails.class);
         assertThat(readProjectDetails, is(projectDetails));
+    }
+
+    @Test
+    public void shouldDeserializeFromJsonWithMissingDescription() {
+        ProjectDetails readProjectDetails = roundTripWithoutField(ProjectDetails.DESCRIPTION);
+        assertThat(readProjectDetails, is(projectDetails.withDescription("")));
+    }
+
+    @Test
+    public void shouldDeserializeFromJsonWithMissingDefaultLanguage() {
+        ProjectDetails readProjectDetails = roundTripWithoutField(ProjectDetails.DEFAULT_LANGUAGE);
+        DictionaryLanguage expectedDefaultLanguage = DictionaryLanguage.rdfsLabel("");
+        assertThat(readProjectDetails, is(projectDetails.withDefaultLanguage(expectedDefaultLanguage)));
+    }
+
+    private ProjectDetails roundTripWithoutField(@Nonnull String fieldName) {
+        Map document = objectMapper.convertValue(projectDetails, Map.class);
+        document.remove(fieldName);
+        return objectMapper.convertValue(document, ProjectDetails.class);
     }
 }
