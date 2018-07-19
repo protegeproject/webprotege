@@ -1,11 +1,18 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -18,6 +25,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityCrudContext implements HasDataFactory {
 
+    private final ProjectId projectId;
+
     private final OWLOntology targetOntology;
 
     private final OWLDataFactory dataFactory;
@@ -26,14 +35,25 @@ public class EntityCrudContext implements HasDataFactory {
 
     private final UserId userId;
 
-    public EntityCrudContext(@Nonnull UserId userId,
-                             @Nonnull OWLOntology targetOntology,
-                             @Nonnull OWLDataFactory dataFactory,
-                             @Nonnull PrefixedNameExpander prefixedNameExpander) {
+    @Nonnull
+    private final ProjectDetailsRepository projectDetailsRepository;
+
+    @Nullable
+    private DictionaryLanguage dictionaryLanguage;
+
+    @AutoFactory
+    public EntityCrudContext(@Provided @Nonnull ProjectId projectId,
+                             @Nonnull UserId userId,
+                             @Provided @Nonnull OWLOntology targetOntology,
+                             @Provided @Nonnull OWLDataFactory dataFactory,
+                             @Nonnull PrefixedNameExpander prefixedNameExpander,
+                             @Provided @Nonnull ProjectDetailsRepository projectDetailsRepository) {
+        this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.targetOntology = checkNotNull(targetOntology);
         this.dataFactory = checkNotNull(dataFactory);
         this.prefixedNameExpander = checkNotNull(prefixedNameExpander);
+        this.projectDetailsRepository = checkNotNull(projectDetailsRepository);
     }
 
     @Nonnull
@@ -57,7 +77,12 @@ public class EntityCrudContext implements HasDataFactory {
     }
 
     @Nonnull
-    public Optional<String> getTargetLanguage() {
-        return Optional.empty();
+    public DictionaryLanguage getDictionaryLanguage() {
+        if(dictionaryLanguage == null) {
+            dictionaryLanguage = projectDetailsRepository.findOne(projectId)
+                                                                .map(ProjectDetails::getDefaultDictionaryLanguage)
+                                                                .orElse(DictionaryLanguage.rdfsLabel(""));
+        }
+        return dictionaryLanguage;
     }
 }

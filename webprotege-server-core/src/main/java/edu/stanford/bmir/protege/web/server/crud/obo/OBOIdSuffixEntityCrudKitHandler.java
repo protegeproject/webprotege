@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -94,9 +95,13 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         final IRI iri = getNextIRI(session, targetOntology, context.getUserId());
         final E entity = dataFactory.getOWLEntity(entityType, iri);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
-        final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
-        OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(), entity.getIRI(), labellingLiteral);
-        builder.addAxiom(targetOntology, ax);
+        DictionaryLanguage language = context.getDictionaryLanguage();
+        IRI annotationPropertyIri = language.getAnnotationPropertyIri();
+        if (annotationPropertyIri != null) {
+            final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
+            OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+            builder.addAxiom(targetOntology, ax);
+        }
         OWLAnnotationAssertionAxiom createdByAx = dataFactory.getOWLAnnotationAssertionAxiom(
                 dataFactory.getOWLAnnotationProperty(CREATED_BY),
                 entity.getIRI(),
@@ -161,42 +166,9 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         }
     }
 
-    @Override
-    public <E extends OWLEntity> void update(OBOIdSession session, E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
-        final OWLDataFactory df = context.getDataFactory();
-        OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm, context);
-        OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<>();
-
-        OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
-        final OWLOntology targetOntology = context.getTargetOntology();
-        for (OWLOntology ont : targetOntology.getImportsClosure()) {
-            for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI())) {
-                if (ax.getProperty().isLabel()) {
-                    builder.removeAxiom(ont, ax);
-                    builder.addAxiom(ont, freshAx);
-                }
-            }
-        }
-        if (builder.isEmpty()) {
-            builder.addAxiom(targetOntology, freshAx);
-        }
-    }
-
-    @Override
-    public <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context) {
-        for (OWLOntology ontology : context.getTargetOntology().getImportsClosure()) {
-            for (OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {
-                if (ax.getProperty().isLabel() && ax.getValue() instanceof OWLLiteral) {
-                    OWLLiteral literal = (OWLLiteral) ax.getValue();
-                    return literal.getLiteral();
-                }
-            }
-        }
-        return entity.getIRI().toString();
-    }
-
     private static OWLLiteral getLabellingLiteral(EntityShortForm shortForm, EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
-        return dataFactory.getOWLLiteral(shortForm.getShortForm(), context.getTargetLanguage().orElse(""));
+        DictionaryLanguage dictionaryLanguage = context.getDictionaryLanguage();
+        return dataFactory.getOWLLiteral(shortForm.getShortForm(), dictionaryLanguage.getLang());
     }
 }

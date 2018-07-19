@@ -169,6 +169,9 @@ public class ChangeManager implements HasApplyChanges {
     private final UserInSessionFactory userInSessionFactory;
 
     @Nonnull
+    private final EntityCrudContextFactory entityCrudContextFactory;
+
+    @Nonnull
     private final ReadWriteLock projectChangeLock = new ReentrantReadWriteLock();
 
     @Nonnull
@@ -195,7 +198,7 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, @Nonnull UserInSessionFactory userInSessionFactory) {
+                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, @Nonnull UserInSessionFactory userInSessionFactory, @Nonnull EntityCrudContextFactory entityCrudContextFactory) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -216,6 +219,7 @@ public class ChangeManager implements HasApplyChanges {
         this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
         this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
         this.userInSessionFactory = userInSessionFactory;
+        this.entityCrudContextFactory = entityCrudContextFactory;
     }
 
     /**
@@ -538,7 +542,7 @@ public class ChangeManager implements HasApplyChanges {
         prefixDeclarationsStore.find(projectId).getPrefixes().forEach(builder::withPrefixNamePrefix);
         builder.withNamespaces(Namespaces.values());
         PrefixedNameExpander expander = builder.build();
-        return new EntityCrudContext(userId, rootOntology, dataFactory, expander);
+        return entityCrudContextFactory.create(userId, expander);
     }
 
     @SuppressWarnings("unchecked")

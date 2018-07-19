@@ -138,34 +138,4 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             throw new RuntimeException("UTF-8 is not supported!");
         }
     }
-
-    @Override
-    public <E extends OWLEntity> void update(
-            ChangeSetEntityCrudSession session,
-            E entity,
-            EntityShortForm shortForm,
-            EntityCrudContext context,
-            OntologyChangeList.Builder<E> changeListBuilder) {
-        // TODO: This requires that we update comments on this entity
-        OWLEntityRenamer renamer = new OWLEntityRenamer(context.getTargetOntology().getOWLOntologyManager(),
-                                                        context.getTargetOntology().getImportsClosure());
-        List<OWLOntologyChange> changeList = renamer.changeIRI(entity,
-                                                               createEntityIRI(shortForm));
-        changeListBuilder.addAll(changeList);
-    }
-
-    @Override
-    public <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context) {
-        try {
-            String iriString = entity.getIRI().toString();
-            final String iriPrefix = prefixSettings.getIRIPrefix();
-            String name = XMLUtils.getNCNameSuffix(iriPrefix);
-            if (name == null) {
-                return iriString;
-            }
-            return URLDecoder.decode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UTF-8 is not supported!");
-        }
-    }
 }

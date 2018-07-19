@@ -75,7 +75,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
-        when(crudContext.getTargetLanguage()).thenReturn(Optional.empty());
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         handler = new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, suffixSettings);
     }

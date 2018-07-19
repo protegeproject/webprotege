@@ -24,9 +24,7 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C e
      * Creates a fresh change set session.  Each time a set of changes is applied to an ontology a session is created
      * and passes to the {@link #create(ChangeSetEntityCrudSession, EntityType, EntityShortForm, EntityCrudContext,
      * OntologyChangeList.Builder)}
-     * and {@link #update(ChangeSetEntityCrudSession, OWLEntity, EntityShortForm, EntityCrudContext,
-     * OntologyChangeList.Builder)}
-     * methods.  The session can be used to persist things like counters over multiple entity creations.
+     * method.  The session can be used to persist things like counters over multiple entity creations.
      *
      * @return A {@link C}.  Not {@code null}.
      */
@@ -38,14 +36,4 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C e
             EntityShortForm shortForm,
             EntityCrudContext context,
             OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
-
-    <E extends OWLEntity> void update(
-            C session,
-            E entity,
-            EntityShortForm shortForm,
-            EntityCrudContext context,
-            OntologyChangeList.Builder<E> changeListBuilder);
-
-    <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context);
-
 }

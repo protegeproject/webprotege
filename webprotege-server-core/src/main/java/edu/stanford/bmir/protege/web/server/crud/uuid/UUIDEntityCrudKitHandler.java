@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Optional;
@@ -68,19 +69,6 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
-    public <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context) {
-        for(OWLOntology ontology : context.getTargetOntology().getImportsClosure()) {
-            for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {
-                if(ax.getProperty().isLabel() && ax.getValue() instanceof OWLLiteral) {
-                    OWLLiteral literal = (OWLLiteral) ax.getValue();
-                    return literal.getLiteral();
-                }
-            }
-        }
-        return entity.getIRI().toString();
-    }
-
-    @Override
     public <E extends OWLEntity> E create(ChangeSetEntityCrudSession session, EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
@@ -98,28 +86,13 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         }
         final E entity =  dataFactory.getOWLEntity(entityType, entityIRI);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
-        OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(), entityIRI, labellingLiteral);
-        builder.addAxiom(targetOntology, ax);
+        DictionaryLanguage language = context.getDictionaryLanguage();
+        IRI annotationPropertyIri = language.getAnnotationPropertyIri();
+        if (annotationPropertyIri != null) {
+            OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getOWLAnnotationProperty(annotationPropertyIri), entity.getIRI(), labellingLiteral);
+            builder.addAxiom(targetOntology, ax);
+        }
         return entity;
-    }
-
-    @Override
-    public <E extends OWLEntity> void update(ChangeSetEntityCrudSession session, E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
-        final OWLDataFactory df = context.getDataFactory();
-        OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm.getShortForm(), context);
-        OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
-        final OWLOntology targetOntology = context.getTargetOntology();
-        for(OWLOntology ont : targetOntology.getImportsClosure()) {
-            for(OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI())) {
-                if(ax.getProperty().isLabel()) {
-                    changeListBuilder.removeAxiom(ont, ax);
-                    changeListBuilder.addAxiom(ont, freshAx);
-                }
-            }
-        }
-        if(changeListBuilder.isEmpty()) {
-            changeListBuilder.addAxiom(targetOntology, freshAx);
-        }
     }
 
     private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
@@ -145,7 +118,8 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
 
     private static OWLLiteral getLabellingLiteral(String suppliedName, EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
-        return dataFactory.getOWLLiteral(suppliedName, context.getTargetLanguage().orElse(""));
+        DictionaryLanguage dictionaryLanguage = context.getDictionaryLanguage();
+        return dataFactory.getOWLLiteral(suppliedName, dictionaryLanguage.getLang());
     }
 
 }
