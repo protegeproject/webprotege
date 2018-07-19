@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
 import edu.stanford.bmir.protege.web.client.lang.DisplayDictionaryLanguagesView;
+import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -19,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -66,6 +68,9 @@ public class ProjectSettingsPresenter {
     @Nonnull
     private final Messages messages;
 
+    @Nonnull
+    private final AnnotationPropertyIriRenderer annotationPropertyIriRenderer;
+
     @Inject
     public ProjectSettingsPresenter(@Nonnull ProjectId projectId,
                                     @Nonnull PermissionScreener permissionScreener,
@@ -77,7 +82,7 @@ public class ProjectSettingsPresenter {
                                     @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView,
                                     @Nonnull EntityCrudKitSettingsEditor entityCrudKitSettingsEditor, @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
-                                    @Nonnull Messages messages) {
+                                    @Nonnull Messages messages, @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer) {
         this.projectId = checkNotNull(projectId);
         this.permissionScreener = checkNotNull(permissionScreener);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
@@ -90,6 +95,7 @@ public class ProjectSettingsPresenter {
         this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
         this.messages = checkNotNull(messages);
+        this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
     }
 
     public ProjectId getProjectId() {
@@ -146,9 +152,15 @@ public class ProjectSettingsPresenter {
         settingsPresenter.setBusy(container, false);
     }
 
-    private void displayDefaultDictionaryLanguage(@Nonnull DictionaryLanguageData defaultLanguage) {
-        defaultLanguage.getAnnotationPropertyData().ifPresent(defaultDictionaryLanguageView::setAnnotationProperty);
-        defaultDictionaryLanguageView.setLanguageTag(defaultLanguage.getLanguage());
+    private void displayDefaultDictionaryLanguage(@Nonnull DictionaryLanguage defaultLanguage) {
+        IRI annotationPropertyIri = defaultLanguage.getAnnotationPropertyIri();
+        if (annotationPropertyIri != null) {
+            annotationPropertyIriRenderer.renderAnnotationPropertyIri(annotationPropertyIri, defaultDictionaryLanguageView::setAnnotationProperty);
+        }
+        else {
+            defaultDictionaryLanguageView.clearAnnotationProperty();
+        }
+        defaultDictionaryLanguageView.setLanguageTag(defaultLanguage.getLang());
     }
 
 
@@ -172,11 +184,11 @@ public class ProjectSettingsPresenter {
         });
     }
 
-    private DictionaryLanguageData getDefaultLanguage() {
+    private DictionaryLanguage getDefaultLanguage() {
         OWLAnnotationPropertyData property = defaultDictionaryLanguageView.getAnnotationProperty()
                                                                           .orElse(DataFactory.getRdfsLabelData());
         String langTag = defaultDictionaryLanguageView.getLanguageTag();
-        return DictionaryLanguageData.get(property, langTag);
+        return DictionaryLanguage.create(property.getEntity().getIRI(), langTag);
     }
 
     private void handleCancel() {

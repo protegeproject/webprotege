@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.common.collect.ImmutableSet;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhook;
 import edu.stanford.bmir.protege.web.shared.webhook.ProjectWebhookEventType;
 import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
+import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -97,7 +99,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         record.ifPresent(rec -> {
             ProjectDetails updatedRecord = rec.withDisplayName(projectSettings.getProjectDisplayName())
                                               .withDescription(projectSettings.getProjectDescription())
-                                              .withDefaultLanguage(projectSettings.getDefaultLanguage().toDictionaryLanguage());
+                                              .withDefaultLanguage(projectSettings.getDefaultLanguage());
             repository.save(updatedRecord);
 
         });
@@ -131,7 +133,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         return ProjectSettings.get(projectId,
                                    projectDetails.getDisplayName(),
                                    projectDetails.getDescription(),
-                                   DictionaryLanguageData.getRdfsLabelWithEmptyLang(),
+                                   projectDetails.getDefaultDictionaryLanguage(),
                                    SlackIntegrationSettings.get(slackPayloadUrl),
                                    WebhookSettings.get(webhookSettings));
     }

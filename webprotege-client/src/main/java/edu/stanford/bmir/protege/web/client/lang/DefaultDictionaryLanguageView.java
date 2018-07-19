@@ -23,4 +23,5 @@ public interface DefaultDictionaryLanguageView extends IsWidget {
 
     void setLanguageTag(@Nonnull String languageTag);
 
+    void clearAnnotationProperty();
 }

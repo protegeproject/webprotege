@@ -67,4 +67,9 @@ public class DefaultDictionaryLanguageViewImpl extends Composite implements Defa
     public void setLanguageTag(@Nonnull String languageTag) {
         languageTagEditor.setValue(languageTag);
     }
+
+    @Override
+    public void clearAnnotationProperty() {
+        propertyEditor.clearValue();
+    }
 }

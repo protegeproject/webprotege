@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class ProjectSettings_TestCase {
     private SlackIntegrationSettings slackIntegrationSettings;
 
     @Mock
-    private DictionaryLanguageData defaultLanguage;
+    private DictionaryLanguage defaultLanguage;
 
     @Mock
     private WebhookSettings webhookSettings;

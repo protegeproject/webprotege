@@ -8,6 +8,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
@@ -63,7 +64,7 @@ public abstract class ProjectSettings implements Serializable, IsSerializable {
 
     @Nonnull
     @JsonProperty(DEFAULT_LANGUAGE)
-    public abstract DictionaryLanguageData getDefaultLanguage();
+    public abstract DictionaryLanguage getDefaultLanguage();
 
     @Nonnull
     @JsonProperty(SLACK_INTEGRATION_SETTINGS)
@@ -78,7 +79,7 @@ public abstract class ProjectSettings implements Serializable, IsSerializable {
     public static ProjectSettings get(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
                                       @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,
                                       @Nonnull @JsonProperty(DESCRIPTION) String description,
-                                      @Nonnull @JsonProperty(DEFAULT_LANGUAGE) DictionaryLanguageData defaultLanguage,
+                                      @Nonnull @JsonProperty(DEFAULT_LANGUAGE) DictionaryLanguage defaultLanguage,
                                       @Nonnull @JsonProperty(SLACK_INTEGRATION_SETTINGS) SlackIntegrationSettings slackIntegrationSettings,
                                       @Nonnull @JsonProperty(WEBHOOK_SETTINGS) WebhookSettings webhookSettings) {
         return new AutoValue_ProjectSettings(projectId,
