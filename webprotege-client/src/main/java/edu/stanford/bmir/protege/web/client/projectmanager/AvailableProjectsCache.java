@@ -51,9 +51,7 @@ public class AvailableProjectsCache {
             return false;
         }
         ProjectDetails replacementDetails = availableProject.getProjectDetails()
-                                                            .toBuilder()
-                                                            .setInTrash(inTrash)
-                                                            .build();
+                                                            .withInTrash(inTrash);
         cache.put(projectId, new AvailableProject(replacementDetails, availableProject.isDownloadable(), availableProject.isTrashable(),
                                                   availableProject.getLastOpenedAt()));
         return true;

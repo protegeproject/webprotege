@@ -73,21 +73,20 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                      @Nonnull UserId createdBy,
                                      long lastModifiedAt,
                                      @Nonnull UserId lastModifiedBy) {
-        Builder builder = builder(projectId, displayName, owner)
-                .setInTrash(inTrash)
-                .setDescription(description)
-                .setCreatedAt(createdAt)
-                .setCreatedBy(createdBy)
-                .setLastModifiedAt(lastModifiedAt)
-                .setLastModifiedBy(lastModifiedBy);
-        if (dictionaryLanguage != null) {
-            builder.setDefaultDictionaryLanguage(dictionaryLanguage);
-        }
-        return builder.build();
+        return new AutoValue_ProjectDetails(projectId,
+                                            displayName,
+                                            description,
+                                            owner,
+                                            inTrash,
+                                            dictionaryLanguage,
+                                            createdAt,
+                                            createdBy,
+                                            lastModifiedAt,
+                                            lastModifiedBy);
     }
 
     @JsonCreator
-    @GwtIncompatible
+
     public static ProjectDetails valueOf(@Nonnull @JsonProperty(PROJECT_ID) ProjectId projectId,
                                          @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,
                                          @Nullable @JsonProperty(DESCRIPTION) String description,
@@ -98,34 +97,91 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                          @JsonProperty(CREATED_BY) @Nonnull UserId createdBy,
                                          @JsonProperty(MODIFIED_AT) Instant lastModifiedAt,
                                          @JsonProperty(MODIFIED_BY) @Nonnull UserId lastModifiedBy) {
-        Builder builder = builder(projectId, displayName, owner)
-                .setInTrash(inTrash)
-                .setCreatedAt(createdAt.toEpochMilli())
-                .setCreatedBy(createdBy)
-                .setLastModifiedAt(lastModifiedAt.toEpochMilli())
-                .setLastModifiedBy(lastModifiedBy);
-        if(description == null) {
-            builder.setDescription("");
-        }
-        else {
-            builder.setDescription(description);
-        }
-        if (dictionaryLanguage != null) {
-            builder.setDefaultDictionaryLanguage(dictionaryLanguage);
-        }
-        return builder.build();
+        String desc = description == null ? "" : description;
+        DictionaryLanguage dl = dictionaryLanguage == null ? DictionaryLanguage.rdfsLabel("") : dictionaryLanguage;
+        return get(projectId,
+                   displayName,
+                   desc,
+                   owner,
+                   inTrash,
+                   dl,
+                   createdAt.toEpochMilli(),
+                   createdBy,
+                   lastModifiedAt.toEpochMilli(),
+                   lastModifiedBy);
     }
 
-    @Nonnull
-    public static Builder builder(@Nonnull ProjectId projectId,
-                                  @Nonnull String displayName,
-                                  @Nonnull UserId owner) {
-        return new AutoValue_ProjectDetails.Builder()
-                .setProjectId(projectId)
-                .setDisplayName(displayName)
-                .setOwner(owner)
-                .setInTrash(false)
-                .setDefaultDictionaryLanguage(DictionaryLanguage.rdfsLabel(""));
+    public ProjectDetails withDisplayName(@Nonnull String displayName) {
+        if(displayName.equals(getDisplayName())) {
+            return this;
+        }
+        else {
+            return get(getProjectId(),
+                       displayName,
+                       getDescription(),
+                       getOwner(),
+                       isInTrash(),
+                       getDefaultDictionaryLanguage(),
+                       getCreatedAt(),
+                       getCreatedBy(),
+                       getLastModifiedAt(),
+                       getLastModifiedBy());
+        }
+    }
+
+    public ProjectDetails withDescription(@Nonnull String description) {
+        if(description.equals(getDescription())) {
+            return this;
+        }
+        else {
+            return get(getProjectId(),
+                       getDisplayName(),
+                       description,
+                       getOwner(),
+                       isInTrash(),
+                       getDefaultDictionaryLanguage(),
+                       getCreatedAt(),
+                       getCreatedBy(),
+                       getLastModifiedAt(),
+                       getLastModifiedBy());
+        }
+    }
+
+
+    public ProjectDetails withDefaultLanguage(@Nonnull DictionaryLanguage defaultLanguage) {
+        if(defaultLanguage.equals(getDefaultDictionaryLanguage())) {
+            return this;
+        }
+        else {
+            return get(getProjectId(),
+                       getDisplayName(),
+                       getDescription(),
+                       getOwner(),
+                       isInTrash(),
+                       defaultLanguage,
+                       getCreatedAt(),
+                       getCreatedBy(),
+                       getLastModifiedAt(),
+                       getLastModifiedBy());
+        }
+    }
+
+    public ProjectDetails withInTrash(boolean inTrash) {
+        if(inTrash == isInTrash()) {
+            return this;
+        }
+        else {
+            return get(getProjectId(),
+                       getDisplayName(),
+                       getDescription(),
+                       getOwner(),
+                       inTrash,
+                       getDefaultDictionaryLanguage(),
+                       getCreatedAt(),
+                       getCreatedBy(),
+                       getLastModifiedAt(),
+                       getLastModifiedBy());
+        }
     }
 
     /**
@@ -245,35 +301,5 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
             return descriptionDiff;
         }
         return getProjectId().getId().compareTo(o.getProjectId().getId());
-    }
-
-    public abstract Builder toBuilder();
-
-    @SuppressWarnings("NullableProblems")
-    @AutoValue.Builder
-    public abstract static class Builder {
-
-        public abstract Builder setProjectId(@Nonnull ProjectId projectId);
-
-        public abstract Builder setDisplayName(@Nonnull String displayName);
-
-        public abstract Builder setDescription(@Nonnull String description);
-
-        public abstract Builder setOwner(@Nonnull UserId owner);
-
-        public abstract Builder setInTrash(boolean inTrash);
-
-        public abstract Builder setDefaultDictionaryLanguage(@Nonnull DictionaryLanguage defaulDictionaryLanguage);
-
-        public abstract Builder setCreatedAt(long createdAt);
-
-        public abstract Builder setCreatedBy(@Nonnull UserId userId);
-
-        public abstract Builder setLastModifiedAt(long modifiedAt);
-
-        public abstract Builder setLastModifiedBy(@Nonnull UserId userId);
-
-        public abstract ProjectDetails build();
-
     }
 }

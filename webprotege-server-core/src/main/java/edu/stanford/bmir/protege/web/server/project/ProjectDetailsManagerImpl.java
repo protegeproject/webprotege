@@ -94,15 +94,13 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     public void setProjectSettings(ProjectSettings projectSettings) {
         ProjectId projectId = projectSettings.getProjectId();
         Optional<ProjectDetails> record = repository.findOne(projectId);
-        if (!record.isPresent()) {
-            return;
-        }
-        ProjectDetails updatedRecord = record.get()
-                                             .toBuilder()
-                                             .setDisplayName(projectSettings.getProjectDisplayName())
-                                             .setDescription(projectSettings.getProjectDescription())
-                                             .build();
-        repository.save(updatedRecord);
+        record.ifPresent(rec -> {
+            ProjectDetails updatedRecord = rec.withDisplayName(projectSettings.getProjectDisplayName())
+                                              .withDescription(projectSettings.getProjectDescription())
+                                              .withDefaultLanguage(projectSettings.getDefaultLanguage().toDictionaryLanguage());
+            repository.save(updatedRecord);
+
+        });
         slackWebhookRepository.clearWebhooks(projectId);
         String payloadUrl = projectSettings.getSlackIntegrationSettings().getPayloadUrl();
         if (!payloadUrl.isEmpty()) {

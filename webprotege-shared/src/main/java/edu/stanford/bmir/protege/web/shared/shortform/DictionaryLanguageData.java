@@ -46,10 +46,15 @@ public abstract class DictionaryLanguageData {
         return Optional.ofNullable(getPropertyData());
     }
 
-    @Nullable
+    @Nonnull
     protected abstract OWLAnnotationPropertyData getPropertyData();
 
 
     @Nonnull
     public abstract String getLanguage();
+
+    public DictionaryLanguage toDictionaryLanguage() {
+        return DictionaryLanguage.create(getPropertyData().getEntity().getIRI(),
+                                         getLanguage());
+    }
 }
