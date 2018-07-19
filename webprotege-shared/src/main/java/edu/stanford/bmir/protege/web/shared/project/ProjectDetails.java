@@ -28,25 +28,25 @@ import java.time.Instant;
 public abstract class ProjectDetails implements Serializable, Comparable<ProjectDetails>, HasProjectId {
 
 
-    private static final String PROJECT_ID = "_id";
+    public static final String PROJECT_ID = "_id";
 
-    private static final String DISPLAY_NAME = "displayName";
+    public static final String DISPLAY_NAME = "displayName";
 
-    private static final String DESCRIPTION = "description";
+    public static final String DESCRIPTION = "description";
 
-    private static final String OWNER = "owner";
+    public static final String OWNER = "owner";
 
-    private static final String IN_TRASH = "inTrash";
+    public static final String IN_TRASH = "inTrash";
 
-    private static final String CREATED_AT = "createdAt";
+    public static final String CREATED_AT = "createdAt";
 
-    private static final String CREATED_BY = "createdBy";
+    public static final String CREATED_BY = "createdBy";
 
-    private static final String MODIFIED_AT = "modifiedAt";
+    public static final String MODIFIED_AT = "modifiedAt";
 
-    private static final String MODIFIED_BY = "modifiedBy";
+    public static final String MODIFIED_BY = "modifiedBy";
 
-    private static final String DEFAULT_DICTIONARY_LANGUAGE = "defaultDictionaryLanguage";
+    public static final String DEFAULT_LANGUAGE = "defaultLanguage";
 
     /**
      * Constructs a {@link ProjectDetails} object.
@@ -75,6 +75,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                      @Nonnull UserId lastModifiedBy) {
         Builder builder = builder(projectId, displayName, owner)
                 .setInTrash(inTrash)
+                .setDescription(description)
                 .setCreatedAt(createdAt)
                 .setCreatedBy(createdBy)
                 .setLastModifiedAt(lastModifiedAt)
@@ -92,7 +93,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                          @Nullable @JsonProperty(DESCRIPTION) String description,
                                          @Nonnull @JsonProperty(OWNER) UserId owner,
                                          @JsonProperty(IN_TRASH) boolean inTrash,
-                                         @Nullable @JsonProperty(DEFAULT_DICTIONARY_LANGUAGE) DictionaryLanguage dictionaryLanguage,
+                                         @Nullable @JsonProperty(DEFAULT_LANGUAGE) DictionaryLanguage dictionaryLanguage,
                                          @JsonProperty(CREATED_AT) Instant createdAt,
                                          @JsonProperty(CREATED_BY) @Nonnull UserId createdBy,
                                          @JsonProperty(MODIFIED_AT) Instant lastModifiedAt,
@@ -174,7 +175,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
     /**
      * Gets the default dictionary language for this project
      */
-    @JsonProperty(DEFAULT_DICTIONARY_LANGUAGE)
+    @JsonProperty(DEFAULT_LANGUAGE)
     @Nonnull
     public abstract DictionaryLanguage getDefaultDictionaryLanguage();
 

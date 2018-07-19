@@ -66,7 +66,7 @@ public class ProjectDetailsRepository_IT {
         mongoClient = MongoTestUtils.createMongoClient();
         database = mongoClient.getDatabase(MongoTestUtils.getTestDbName());
         ObjectMapperProvider mapperProvider = new ObjectMapperProvider();
-        repository = new ProjectDetailsRepository(database, new ProjectDetailsConverter(), mapperProvider.get());
+        repository = new ProjectDetailsRepository(database, mapperProvider.get());
         projectDetails = ProjectDetails.get(projectId,
                                             "The Display Name",
                                             "The Description",

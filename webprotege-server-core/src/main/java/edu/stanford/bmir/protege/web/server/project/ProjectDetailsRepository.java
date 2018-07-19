@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
+import edu.stanford.bmir.protege.web.server.api.TimestampSerializer;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -18,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.server.project.ProjectDetailsConverter.*;
+import static edu.stanford.bmir.protege.web.shared.project.ProjectDetails.*;
 
 /**
  * Matthew Horridge
@@ -36,10 +38,34 @@ public class ProjectDetailsRepository implements Repository {
 
     @Inject
     public ProjectDetailsRepository(@Nonnull MongoDatabase database,
-                                    @Nonnull ProjectDetailsConverter converter,
                                     @Nonnull ObjectMapper objectMapper) {
         this.collection = database.getCollection(COLLECTION_NAME);
         this.objectMapper = checkNotNull(objectMapper);
+    }
+
+    private static Document withProjectId(@Nonnull ProjectId projectId) {
+        return new Document(PROJECT_ID, projectId.getId());
+    }
+
+    private static Document withOwner(@Nonnull UserId owner) {
+        return new Document(OWNER, owner.getUserName());
+    }
+
+    private static Document withProjectIdAndWithOwner(@Nonnull ProjectId projectId,
+                                                      @Nonnull UserId owner) {
+        return new Document(PROJECT_ID, projectId.getId())
+                .append(OWNER, owner.getUserName());
+    }
+
+    public static Bson updateInTrash(boolean inTrash) {
+        return Updates.set(IN_TRASH, inTrash);
+    }
+
+    public static Bson updateModified(UserId userId, long timestamp) {
+        return Updates.combine(
+                Updates.set(MODIFIED_AT, TimestampSerializer.toIsoDateTime(timestamp)),
+                Updates.set(MODIFIED_BY, userId.getUserName())
+        );
     }
 
     @Override
@@ -77,22 +103,22 @@ public class ProjectDetailsRepository implements Repository {
                         .find(withProjectId(projectId))
                         .limit(1)
                         .first())
-                .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
+                       .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
     }
 
     public List<ProjectDetails> findByOwner(UserId owner) {
         ArrayList<ProjectDetails> result = new ArrayList<>();
         collection.find(withOwner(owner))
-                .map(d -> objectMapper.convertValue(d, ProjectDetails.class))
-                .into(result);
+                  .map(d -> objectMapper.convertValue(d, ProjectDetails.class))
+                  .into(result);
         return result;
     }
 
     public void save(@Nonnull ProjectDetails projectRecord) {
         Document document = objectMapper.convertValue(projectRecord, Document.class);
         collection.replaceOne(withProjectId(projectRecord.getProjectId()),
-                             document,
-                             new UpdateOptions().upsert(true));
+                              document,
+                              new UpdateOptions().upsert(true));
     }
 
     public void delete(@Nonnull ProjectId projectId) {
