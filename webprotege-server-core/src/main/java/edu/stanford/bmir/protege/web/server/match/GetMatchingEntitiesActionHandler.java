@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -13,11 +13,8 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
-import edu.stanford.bmir.protege.web.shared.match.criteria.RootCriteria;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +40,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     private static Logger logger = LoggerFactory.getLogger(GetMatchingEntitiesActionHandler.class);
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final DictionaryManager dictionaryManager;
 
     @Nonnull
     private final EntityHierarchyNodeRenderer nodeRenderer;
@@ -53,11 +50,11 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
 
     @Inject
     public GetMatchingEntitiesActionHandler(@Nonnull AccessManager accessManager,
-                                            @Nonnull RenderingManager renderingManager,
+                                            @Nonnull DictionaryManager dictionaryManager,
                                             @Nonnull EntityHierarchyNodeRenderer nodeRenderer,
                                             @Nonnull MatchingEngine matchingEngine) {
         super(accessManager);
-        this.renderingManager = checkNotNull(renderingManager);
+        this.dictionaryManager = checkNotNull(dictionaryManager);
         this.nodeRenderer = checkNotNull(nodeRenderer);
         this.matchingEngine = checkNotNull(matchingEngine);
     }
@@ -81,7 +78,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
         PageRequest pageRequest = action.getPageRequest();
         Criteria criteria = action.getCriteria();
         Optional<Page<OWLEntityData>> result = matchingEngine.match(criteria)
-                                                             .map(entity -> DataFactory.getOWLEntityData(entity, renderingManager.getShortForm(entity)))
+                                                             .map(entity -> DataFactory.getOWLEntityData(entity, dictionaryManager.getShortForm(entity)))
                                                              .sorted()
                                                              .collect(toPage(pageRequest.getPageNumber(),
                                                                            pageRequest.getPageSize()));
