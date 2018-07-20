@@ -23,8 +23,7 @@ public class EntityHierarchyNodeRenderer {
     private final ProjectId projectId;
 
     @Nonnull
-    private final RenderingManager renderingManager
-            ;
+    private final RenderingManager renderingManager;
 
     @Nonnull
     private final DeprecatedEntityChecker deprecatedEntityChecker;

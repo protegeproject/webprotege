@@ -24,7 +24,7 @@ public abstract class OWLClassData extends OWLEntityData {
 
 
     public static OWLClassData get(@Nonnull OWLClass cls,
-                                    @Nonnull String browserText) {
+                                   @Nonnull String browserText) {
         return new AutoValue_OWLClassData(browserText, cls);
     }
 
