@@ -21,6 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public interface ObjectData extends HasBrowserText, HasSignature {
 
+    /**
+     * Gets the core object that is decorated with data
+     */
     @Nonnull
     Object getObject();
 
