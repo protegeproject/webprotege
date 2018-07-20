@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -46,16 +47,20 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     private final EntityHierarchyNodeRenderer nodeRenderer;
 
     @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
     private final MatchingEngine matchingEngine;
 
     @Inject
     public GetMatchingEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                             @Nonnull DictionaryManager dictionaryManager,
                                             @Nonnull EntityHierarchyNodeRenderer nodeRenderer,
-                                            @Nonnull MatchingEngine matchingEngine) {
+                                            @Nonnull RenderingManager renderingManager, @Nonnull MatchingEngine matchingEngine) {
         super(accessManager);
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.nodeRenderer = checkNotNull(nodeRenderer);
+        this.renderingManager = renderingManager;
         this.matchingEngine = checkNotNull(matchingEngine);
     }
 
@@ -78,7 +83,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
         PageRequest pageRequest = action.getPageRequest();
         Criteria criteria = action.getCriteria();
         Optional<Page<OWLEntityData>> result = matchingEngine.match(criteria)
-                                                             .map(entity -> DataFactory.getOWLEntityData(entity, dictionaryManager.getShortForm(entity)))
+                                                             .map(renderingManager::getRendering)
                                                              .sorted()
                                                              .collect(toPage(pageRequest.getPageNumber(),
                                                                            pageRequest.getPageSize()));

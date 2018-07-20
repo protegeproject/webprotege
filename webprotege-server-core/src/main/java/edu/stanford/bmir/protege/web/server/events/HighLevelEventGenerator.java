@@ -30,7 +30,7 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     private final OWLOntology rootOntology;
 
-    private final DictionaryManager dictionaryManager;
+    private final RenderingManager renderingManager;
 
     private final HasGetRevisionSummary hasGetRevisionSummary;
 
@@ -39,12 +39,12 @@ public class HighLevelEventGenerator implements EventTranslator {
     @Inject
     public HighLevelEventGenerator(ProjectId projectId,
                                    OWLOntology rootOntology,
-                                   DictionaryManager dictionaryManager,
+                                   RenderingManager renderingManager,
                                    HasGetEntitiesWithIRI hasGetEntitiesWithIRI,
                                    HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
-        this.dictionaryManager = dictionaryManager;
+        this.renderingManager = renderingManager;
         this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
         this.hasGetRevisionSummary = hasGetRevisionSummary;
     }
@@ -164,8 +164,7 @@ public class HighLevelEventGenerator implements EventTranslator {
         if(subject instanceof OWLEntity) {
             OWLEntity entity = (OWLEntity) subject;
             if (rootOntology.containsEntityInSignature(entity)) {
-                String browserText = dictionaryManager.getShortForm(entity);
-                changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
+                changedEntitiesData.add(renderingManager.getRendering(entity));
             }
         }
         else if(subject instanceof OWLEntityData) {
@@ -180,10 +179,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                       .filter(element -> element instanceof OWLEntity)
                       .map(element -> (OWLEntity) element)
                       .filter(rootOntology::containsEntityInSignature)
-                      .forEach(entity -> {
-                          String browserText = dictionaryManager.getShortForm(entity);
-                          changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
-                      });
+                      .forEach(entity -> changedEntitiesData.add(renderingManager.getRendering(entity)));
 
         }
         Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
