@@ -29,7 +29,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class ClassFrame implements EntityFrame<OWLClassData>, HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
+public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
 
     /**
      * Gets the subject of this class frame.
@@ -95,19 +95,5 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, HasSignat
         return getPropertyValues().stream()
                                   .filter(PropertyValue::isLogical)
                                   .collect(toImmutableList());
-    }
-
-    public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> result = new HashSet<>();
-        result.add(getSubject().getEntity());
-        for (OWLClassData entry : getClassEntries()) {
-            result.add(entry.getEntity());
-        }
-        for (PropertyValue propertyValue : getPropertyValues()) {
-            result.addAll(propertyValue.getProperty().getSignature());
-            result.addAll(propertyValue.getValue().getSignature());
-        }
-
-        return result;
     }
 }

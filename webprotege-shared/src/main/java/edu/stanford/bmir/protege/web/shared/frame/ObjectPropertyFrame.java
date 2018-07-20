@@ -55,24 +55,6 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
         return subject;
     }
 
-    /**
-     * Gets the signature of the object that implements this interface.
-     * @return A set of entities that represent the signature of this object
-     */
-    @Override
-    public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> signature = new HashSet<OWLEntity>();
-        signature.add(subject.getEntity());
-        signature.addAll(domains.stream().map(OWLEntityData::getEntity).collect(toList()));
-        signature.addAll(ranges.stream().map(OWLEntityData::getEntity).collect(toList()));
-        signature.addAll(inverses.stream().map(OWLEntityData::getEntity).collect(toList()));
-        for(PropertyAnnotationValue v : annotationValues) {
-            signature.add(v.getProperty().getEntity());
-            signature.addAll(v.getValue().getSignature());
-        }
-        return signature;
-    }
-
     @Override
     public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return new HashSet<PropertyAnnotationValue>(annotationValues);

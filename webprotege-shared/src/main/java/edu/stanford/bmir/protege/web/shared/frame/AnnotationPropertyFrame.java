@@ -40,16 +40,6 @@ public class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropert
     }
 
     @Override
-    public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> sig = new HashSet<>();
-        sig.add(subject.getEntity());
-        sig.addAll(propertyValues.getSignature());
-        domains.stream().map(OWLEntityData::getEntity).forEach(sig::add);
-        ranges.stream().map(OWLEntityData::getEntity).forEach(sig::add);
-        return sig;
-    }
-
-    @Override
     public PropertyValueList getPropertyValueList() {
         return propertyValues;
     }

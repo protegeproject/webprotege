@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.HasSignature;
  *     A high level interface for frame objects.  All frames have some kind of subject.
  * </p>
  */
-public interface Frame<S> extends HasSignature, IsSerializable {
+public interface Frame<S> extends IsSerializable {
 
     /**
      * Gets the subject of this frame.
