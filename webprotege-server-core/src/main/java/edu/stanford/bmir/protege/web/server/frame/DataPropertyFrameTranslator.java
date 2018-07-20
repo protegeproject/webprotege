@@ -29,13 +29,13 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     private final OWLOntology rootOntology;
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final RenderingManager rm;
 
     @Inject
     public DataPropertyFrameTranslator(@Nonnull OWLOntology rootOntology,
                                        @Nonnull RenderingManager renderingManager) {
         this.rootOntology = rootOntology;
-        this.renderingManager = renderingManager;
+        this.rm = renderingManager;
     }
 
     @Override
@@ -48,12 +48,12 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
             for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject.getEntity())) {
                 if(!ax.getDomain().isAnonymous()) {
-                    domains.add(renderingManager.getRendering(ax.getDomain().asOWLClass()));
+                    domains.add(rm.getRendering(ax.getDomain().asOWLClass()));
                 }
             }
             for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject.getEntity())) {
                 if(ax.getRange().isDatatype()) {
-                    ranges.add(renderingManager.getRendering(ax.getRange().asOWLDatatype()));
+                    ranges.add(rm.getRendering(ax.getRange().asOWLDatatype()));
                 }
             }
             if(EntitySearcher.isFunctional(subject.getEntity(), ontology)) {
@@ -64,7 +64,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         for(OWLAxiom ax : propertyValueAxioms) {
             propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED,
-                                                               renderingManager));
+                                                               rm));
         }
 
         PropertyValueList pvl = new PropertyValueList(propertyValues);
