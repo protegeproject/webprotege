@@ -75,7 +75,7 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public String getHTMLBrowserText(OWLObject object, final Set<String> highlightedPhrases) {
-        return getHTMLBrowserText(object, entity -> highlightedPhrases.contains(getShortForm(entity)));
+        return getHTMLBrowserText(object, entity -> highlightedPhrases.contains(dictionaryManager.getShortForm(entity)));
     }
 
     private String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
@@ -83,7 +83,7 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLEntityData getRendering(OWLEntity entity) {
-        return DataFactory.getOWLEntityData(entity, getShortForm(entity));
+        return DataFactory.getOWLEntityData(entity, dictionaryManager.getShortForm(entity));
     }
 
     public OWLPrimitiveData getRendering(OWLAnnotationValue value) {
@@ -99,27 +99,27 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLClassData getRendering(OWLClass cls) {
-        return OWLClassData.get(cls, getShortForm(cls));
+        return OWLClassData.get(cls, dictionaryManager.getShortForm(cls));
     }
 
     public OWLObjectPropertyData getRendering(OWLObjectProperty property) {
-        return OWLObjectPropertyData.get(property, getShortForm(property));
+        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForm(property));
     }
 
     public OWLDataPropertyData getRendering(OWLDataProperty property) {
-        return OWLDataPropertyData.get(property, getShortForm(property));
+        return OWLDataPropertyData.get(property, dictionaryManager.getShortForm(property));
     }
 
     public OWLAnnotationPropertyData getRendering(OWLAnnotationProperty property) {
-        return OWLAnnotationPropertyData.get(property, getShortForm(property));
+        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForm(property));
     }
 
     public OWLNamedIndividualData getRendering(OWLNamedIndividual individual) {
-        return OWLNamedIndividualData.get(individual, getShortForm(individual));
+        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForm(individual));
     }
 
     public OWLDatatypeData getRendering(OWLDatatype datatype) {
-        return OWLDatatypeData.get(datatype, getShortForm(datatype));
+        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForm(datatype));
     }
 
     public void dispose() {

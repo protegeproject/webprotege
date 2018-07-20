@@ -73,12 +73,7 @@ public class ReferencingAxiomVisitor implements OWLAxiomVisitorEx<Set<UsageRefer
         final String useageOfBrowserText = renderingManager.getShortForm(usageOf);
         String rendering = renderingManager.getHTMLBrowserText(axiom, Collections.singleton(useageOfBrowserText));
         Optional<String> subjectRendering;
-        if(axiomSubject.isPresent()) {
-            subjectRendering = Optional.of(renderingManager.getShortForm(axiomSubject.get()));
-        }
-        else {
-            subjectRendering = Optional.empty();
-        }
+        subjectRendering = axiomSubject.map(renderingManager::getShortForm);
         return Collections.singleton(new UsageReference(axiom.getAxiomType(), rendering, axiomSubject, subjectRendering));
     }
 
