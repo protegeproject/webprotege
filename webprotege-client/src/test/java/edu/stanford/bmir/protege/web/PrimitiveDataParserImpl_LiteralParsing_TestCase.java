@@ -150,7 +150,7 @@ public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
 
     private void verifyResult(String lexicalValue, OWL2Datatype datatype) {
         OWLLiteral expected = dataFactory.getOWLLiteral(lexicalValue, datatype);
-        Optional<OWLPrimitiveData> expectedData = Optional.of(new OWLLiteralData(expected));
+        Optional<OWLPrimitiveData> expectedData = Optional.of(OWLLiteralData.get(expected));
         Mockito.verify(primitiveDataParserCallback).onSuccess(expectedData);
     }
 }

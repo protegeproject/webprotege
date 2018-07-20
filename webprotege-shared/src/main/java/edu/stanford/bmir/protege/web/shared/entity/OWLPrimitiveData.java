@@ -17,18 +17,6 @@ import java.util.Optional;
  */
 public abstract class OWLPrimitiveData extends ObjectData<OWLObject> {
 
-    protected OWLPrimitiveData(OWLEntity object) {
-        super(object);
-    }
-
-    protected OWLPrimitiveData(OWLLiteral literal) {
-        super(literal);
-    }
-
-    protected OWLPrimitiveData(IRI iri) {
-        super(iri);
-    }
-
     public abstract <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
 
     public abstract <R> R accept(OWLEntityVisitorEx<R> visitor, R defaultValue);

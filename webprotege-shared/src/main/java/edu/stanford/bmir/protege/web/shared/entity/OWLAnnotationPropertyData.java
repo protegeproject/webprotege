@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -12,15 +15,30 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public final class OWLAnnotationPropertyData extends OWLPropertyData {
+@AutoValue
+public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
 
-    public OWLAnnotationPropertyData(OWLAnnotationProperty entity, String browserText) {
-        super(entity, browserText);
+    public static OWLAnnotationPropertyData get(@Nonnull OWLAnnotationProperty property,
+                                                @Nonnull String browserText) {
+        return new AutoValue_OWLAnnotationPropertyData(browserText, property);
     }
 
     @Override
+    public abstract OWLAnnotationProperty getObject();
+
+    @Override
     public OWLAnnotationProperty getEntity() {
-        return (OWLAnnotationProperty) super.getEntity();
+        return getObject();
+    }
+
+    @Override
+    public <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public <R> R accept(OWLEntityVisitorEx<R> visitor, R defaultValue) {
+        return visitor.visit(getObject());
     }
 
     @Override
@@ -34,42 +52,7 @@ public final class OWLAnnotationPropertyData extends OWLPropertyData {
     }
 
     @Override
-    public <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E {
-        return visitor.visit(this);
-    }
-
-    @Override
-    public <R> R accept(OWLEntityVisitorEx<R> visitor, R defaultValue) {
-        return visitor.visit(getEntity());
-    }
-
-    @Override
     public <R> R accept(OWLEntityDataVisitorEx<R> visitor) {
         return visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return "OWLAnnotationPropertyData".hashCode() + this.getEntity().hashCode() + this.getBrowserText().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof OWLAnnotationPropertyData)) {
-            return false;
-        }
-        OWLAnnotationPropertyData other = (OWLAnnotationPropertyData) obj;
-        return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
-    }
-
-    @Override
-    public String toString() {
-        return toStringHelper("OWLAnnotationPropertyData" )
-                .addValue(getEntity())
-                .add("browserText", getBrowserText())
-                .toString();
     }
 }

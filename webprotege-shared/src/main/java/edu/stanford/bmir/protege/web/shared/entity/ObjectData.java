@@ -20,15 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class ObjectData<O> implements HasBrowserText, HasSignature {
 
-    private final O object;
-
-    protected ObjectData(O object) {
-        this.object = checkNotNull(object);
-    }
-
-    public O getObject() {
-        return object;
-    }
+    public abstract O getObject();
 
     /**
      * Gets the signature of this object.
@@ -36,8 +28,8 @@ public abstract class ObjectData<O> implements HasBrowserText, HasSignature {
      */
     @Override
     public Set<OWLEntity> getSignature() {
-        if(object instanceof HasSignature) {
-            return ((HasSignature) object).getSignature();
+        if(getObject() instanceof HasSignature) {
+            return ((HasSignature) getSignature()).getSignature();
         }
         else {
             return Collections.emptySet();

@@ -89,10 +89,10 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 //            valueRendering = propertyData.get();
 //        }
 //        else if (propertyValue.getValue() instanceof OWLLiteral) {
-//            valueRendering = new OWLLiteralData((OWLLiteral) propertyValue.getValue());
+//            valueRendering = OWLLiteralData.get((OWLLiteral) propertyValue.getValue());
 //        }
 //        else if (propertyValue.getValue() instanceof IRI) {
-//            valueRendering = new IRIData((IRI) propertyValue.getValue());
+//            valueRendering = IRIData.get((IRI) propertyValue.getValue());
 //        }
 //        if(propRendering.isPresent()) {
 //            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Collections.emptySet()));

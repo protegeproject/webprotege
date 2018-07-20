@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,15 +15,22 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public class OWLNamedIndividualData extends OWLEntityData {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class OWLNamedIndividualData extends OWLEntityData {
 
-    public OWLNamedIndividualData(OWLNamedIndividual entity, String browserText) {
-        super(entity, browserText);
+
+    public static OWLNamedIndividualData get(@Nonnull OWLNamedIndividual individual,
+                                             @Nonnull String browserText) {
+        return new AutoValue_OWLNamedIndividualData(browserText, individual);
     }
 
     @Override
+    public abstract OWLNamedIndividual getObject();
+
+    @Override
     public OWLNamedIndividual getEntity() {
-        return (OWLNamedIndividual) super.getEntity();
+        return getObject();
     }
 
     @Override
@@ -41,34 +53,4 @@ public class OWLNamedIndividualData extends OWLEntityData {
         return visitor.visit(this);
     }
 
-    @Override
-    public int hashCode() {
-        return "OWLNamedIndividualData".hashCode() + getEntity().hashCode() + getBrowserText().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof OWLNamedIndividualData)) {
-            return false;
-        }
-        OWLNamedIndividualData other = (OWLNamedIndividualData) obj;
-        return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("OWLNamedIndividualData");
-        sb.append("(");
-        sb.append("BrowserText(");
-        sb.append(getBrowserText());
-        sb.append(") NamedIndividual(");
-        sb.append(getEntity());
-        sb.append(")");
-        sb.append(")");
-        return sb.toString();
-    }
 }

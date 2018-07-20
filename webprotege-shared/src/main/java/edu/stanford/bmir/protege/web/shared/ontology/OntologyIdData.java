@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.ontology;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.entity.ObjectData;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,48 +16,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 25/07/15
  */
-public class OntologyIdData extends ObjectData<OWLOntologyID> {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class OntologyIdData extends ObjectData<OWLOntologyID> {
 
-    private final String browserText;
-
-    public OntologyIdData(OWLOntologyID ontologyID, String browserText) {
-        super(checkNotNull(ontologyID));
-        this.browserText = checkNotNull(browserText);
+    public static OntologyIdData get(@Nonnull OWLOntologyID ontologyID,
+                                     @Nonnull String browserText) {
+        return new AutoValue_OntologyIdData(browserText, ontologyID);
     }
 
     @Override
-    public String getBrowserText() {
-        return browserText;
-    }
+    public abstract OWLOntologyID getObject();
 
     @Override
     public String getUnquotedBrowserText() {
-        return browserText;
-    }
-
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper("OntologyIdData")
-                          .addValue(getObject())
-                          .addValue(browserText)
-                          .toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getObject(), browserText);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof OntologyIdData)) {
-            return false;
-        }
-        OntologyIdData other = (OntologyIdData) obj;
-        return this.getObject().equals(other.getObject()) && this.browserText.equals(other.browserText);
+        return getBrowserText();
     }
 }

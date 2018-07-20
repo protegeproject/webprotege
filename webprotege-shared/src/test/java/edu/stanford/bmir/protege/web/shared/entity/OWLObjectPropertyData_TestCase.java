@@ -25,13 +25,13 @@ public class OWLObjectPropertyData_TestCase {
 
     @Before
     public void setUp() {
-        oWLObjectPropertyData = new OWLObjectPropertyData(entity, browserText);
+        oWLObjectPropertyData = OWLObjectPropertyData.get(entity, browserText);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        new OWLObjectPropertyData(null, browserText);
+        OWLObjectPropertyData.get(null, browserText);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class OWLObjectPropertyData_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        new OWLObjectPropertyData(entity, null);
+        OWLObjectPropertyData.get(entity, null);
     }
 
     @Test
@@ -63,22 +63,22 @@ public class OWLObjectPropertyData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(oWLObjectPropertyData, is(new OWLObjectPropertyData(entity, browserText)));
+        assertThat(oWLObjectPropertyData, is(OWLObjectPropertyData.get(entity, browserText)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(oWLObjectPropertyData, is(not(new OWLObjectPropertyData(Mockito.mock(OWLObjectProperty.class), browserText))));
+        assertThat(oWLObjectPropertyData, is(not(OWLObjectPropertyData.get(Mockito.mock(OWLObjectProperty.class), browserText))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(oWLObjectPropertyData, is(not(new OWLObjectPropertyData(entity, "String-b5c89b5d-753e-4678-800b-ee8aff6d631e"))));
+        assertThat(oWLObjectPropertyData, is(not(OWLObjectPropertyData.get(entity, "String-b5c89b5d-753e-4678-800b-ee8aff6d631e"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(oWLObjectPropertyData.hashCode(), is(new OWLObjectPropertyData(entity, browserText).hashCode()));
+        assertThat(oWLObjectPropertyData.hashCode(), is(OWLObjectPropertyData.get(entity, browserText).hashCode()));
     }
 
     @Test

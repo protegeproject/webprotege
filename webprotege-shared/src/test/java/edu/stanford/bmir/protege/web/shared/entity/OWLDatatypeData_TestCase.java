@@ -28,13 +28,13 @@ public class OWLDatatypeData_TestCase {
     public void setUp()
         throws Exception
     {
-        data = new OWLDatatypeData(entity, browserText);
+        data = OWLDatatypeData.get(entity, browserText);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        new OWLDatatypeData(null, browserText);
+        OWLDatatypeData.get(null, browserText);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class OWLDatatypeData_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        new OWLDatatypeData(entity, null);
+        OWLDatatypeData.get(entity, null);
     }
 
     @Test
@@ -66,22 +66,22 @@ public class OWLDatatypeData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(data, is(new OWLDatatypeData(entity, browserText)));
+        assertThat(data, is(OWLDatatypeData.get(entity, browserText)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(data, is(Matchers.not(new OWLDatatypeData(Mockito.mock(OWLDatatype.class), browserText))));
+        assertThat(data, is(Matchers.not(OWLDatatypeData.get(Mockito.mock(OWLDatatype.class), browserText))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(data, is(Matchers.not(new OWLDatatypeData(entity, "String-21fa6bff-caee-40c3-85b1-411d0df51d1a"))));
+        assertThat(data, is(Matchers.not(OWLDatatypeData.get(entity, "String-21fa6bff-caee-40c3-85b1-411d0df51d1a"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(data.hashCode(), is(new OWLDatatypeData(entity, browserText).hashCode()));
+        assertThat(data.hashCode(), is(OWLDatatypeData.get(entity, browserText).hashCode()));
     }
 
     @Test

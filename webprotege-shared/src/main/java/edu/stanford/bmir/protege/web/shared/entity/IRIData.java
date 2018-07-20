@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -13,13 +16,16 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/12/2012
  */
-public class IRIData extends OWLPrimitiveData {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class IRIData extends OWLPrimitiveData {
 
-
-
-    public IRIData(IRI object) {
-        super(object);
+    public static IRIData get(@Nonnull IRI iri) {
+        return new AutoValue_IRIData(iri);
     }
+
+    @Override
+    public abstract IRI getObject();
 
     @Override
     public PrimitiveType getType() {
@@ -34,11 +40,6 @@ public class IRIData extends OWLPrimitiveData {
     @Override
     public <R> R accept(OWLEntityVisitorEx<R> visitor, R defaultValue) {
         return defaultValue;
-    }
-
-    @Override
-    public IRI getObject() {
-        return (IRI) super.getObject();
     }
 
     @Override

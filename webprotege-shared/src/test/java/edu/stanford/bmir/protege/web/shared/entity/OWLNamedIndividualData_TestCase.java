@@ -25,13 +25,13 @@ public class OWLNamedIndividualData_TestCase {
 
     @Before
     public void setUp() {
-        oWLNamedIndividualData = new OWLNamedIndividualData(entity, browserText);
+        oWLNamedIndividualData = OWLNamedIndividualData.get(entity, browserText);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        new OWLNamedIndividualData(null, browserText);
+        OWLNamedIndividualData.get(null, browserText);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class OWLNamedIndividualData_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        new OWLNamedIndividualData(entity, null);
+        OWLNamedIndividualData.get(entity, null);
     }
 
     @Test
@@ -63,22 +63,22 @@ public class OWLNamedIndividualData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(oWLNamedIndividualData, is(new OWLNamedIndividualData(entity, browserText)));
+        assertThat(oWLNamedIndividualData, is(OWLNamedIndividualData.get(entity, browserText)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(oWLNamedIndividualData, is(not(new OWLNamedIndividualData(Mockito.mock(OWLNamedIndividual.class), browserText))));
+        assertThat(oWLNamedIndividualData, is(not(OWLNamedIndividualData.get(Mockito.mock(OWLNamedIndividual.class), browserText))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(oWLNamedIndividualData, is(not(new OWLNamedIndividualData(entity, "String-fe67d54e-e14f-4f55-980d-de8e89642ff9"))));
+        assertThat(oWLNamedIndividualData, is(not(OWLNamedIndividualData.get(entity, "String-fe67d54e-e14f-4f55-980d-de8e89642ff9"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(oWLNamedIndividualData.hashCode(), is(new OWLNamedIndividualData(entity, browserText).hashCode()));
+        assertThat(oWLNamedIndividualData.hashCode(), is(OWLNamedIndividualData.get(entity, browserText).hashCode()));
     }
 
     @Test

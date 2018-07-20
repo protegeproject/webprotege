@@ -88,10 +88,10 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
     public OWLPrimitiveData getRendering(OWLAnnotationValue value) {
         if(value instanceof IRI) {
-            return new IRIData((IRI) value);
+            return IRIData.get((IRI) value);
         }
         else if(value instanceof OWLLiteral) {
-            return new OWLLiteralData((OWLLiteral) value);
+            return OWLLiteralData.get((OWLLiteral) value);
         }
         else {
             throw new RuntimeException("Unsupported");
@@ -99,27 +99,27 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLClassData getRendering(OWLClass cls) {
-        return new OWLClassData(cls, getShortForm(cls));
+        return OWLClassData.get(cls, getShortForm(cls));
     }
 
     public OWLObjectPropertyData getRendering(OWLObjectProperty property) {
-        return new OWLObjectPropertyData(property, getShortForm(property));
+        return OWLObjectPropertyData.get(property, getShortForm(property));
     }
 
     public OWLDataPropertyData getRendering(OWLDataProperty property) {
-        return new OWLDataPropertyData(property, getShortForm(property));
+        return OWLDataPropertyData.get(property, getShortForm(property));
     }
 
     public OWLAnnotationPropertyData getRendering(OWLAnnotationProperty property) {
-        return new OWLAnnotationPropertyData(property, getShortForm(property));
+        return OWLAnnotationPropertyData.get(property, getShortForm(property));
     }
 
     public OWLNamedIndividualData getRendering(OWLNamedIndividual individual) {
-        return new OWLNamedIndividualData(individual, getShortForm(individual));
+        return OWLNamedIndividualData.get(individual, getShortForm(individual));
     }
 
     public OWLDatatypeData getRendering(OWLDatatype datatype) {
-        return new OWLDatatypeData(datatype, getShortForm(datatype));
+        return OWLDatatypeData.get(datatype, getShortForm(datatype));
     }
 
     public void dispose() {

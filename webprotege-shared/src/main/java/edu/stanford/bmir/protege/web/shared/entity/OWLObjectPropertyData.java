@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-import static com.google.common.base.MoreObjects.toStringHelper;
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,11 +14,18 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public class OWLObjectPropertyData extends OWLPropertyData {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class OWLObjectPropertyData extends OWLPropertyData {
 
-    public OWLObjectPropertyData(OWLObjectProperty entity, String browserText) {
-        super(entity, browserText);
+
+    public static OWLObjectPropertyData get(@Nonnull OWLObjectProperty property,
+                                            @Nonnull String browserText) {
+        return new AutoValue_OWLObjectPropertyData(browserText, property);
     }
+
+    @Override
+    public abstract OWLObjectProperty getObject();
 
     @Override
     public PrimitiveType getType() {
@@ -25,7 +34,7 @@ public class OWLObjectPropertyData extends OWLPropertyData {
 
     @Override
     public OWLObjectProperty getEntity() {
-        return (OWLObjectProperty) super.getEntity();
+        return getObject();
     }
 
     @Override
@@ -46,31 +55,5 @@ public class OWLObjectPropertyData extends OWLPropertyData {
     @Override
     public <R> R accept(OWLEntityDataVisitorEx<R> visitor) {
         return visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return "OWLObjectPropertyData".hashCode() + getEntity().hashCode() + getBrowserText().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof OWLObjectPropertyData)) {
-            return false;
-        }
-        OWLObjectPropertyData other = (OWLObjectPropertyData) obj;
-        return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("OWLObjectPropertyData" )
-                .addValue(getEntity())
-                .add("browserText", getBrowserText())
-                .toString();
     }
 }

@@ -173,7 +173,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         public Set<PropertyValue> visit(OWLDataPropertyAssertionAxiom axiom) {
             if (axiom.getSubject().equals(subject)) {
                 return toSet(new PropertyLiteralValue(rm.getRendering(axiom.getProperty().asOWLDataProperty()),
-                                                      new OWLLiteralData(axiom.getObject()),
+                                                      OWLLiteralData.get(axiom.getObject()),
                                                       State.ASSERTED));
             }
             else {
@@ -325,7 +325,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         @Override
         public Set<PropertyValue> visit(OWLDataHasValue desc) {
             return toSet(new PropertyLiteralValue(rm.getRendering(desc.getProperty().asOWLDataProperty()),
-                                                  new OWLLiteralData(desc.getFiller()),
+                                                  OWLLiteralData.get(desc.getFiller()),
                                                   state));
         }
     }

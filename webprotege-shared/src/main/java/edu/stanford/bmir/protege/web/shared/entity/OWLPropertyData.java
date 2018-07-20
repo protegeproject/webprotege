@@ -10,10 +10,6 @@ import org.semanticweb.owlapi.model.OWLProperty;
  */
 public abstract class OWLPropertyData extends OWLEntityData {
 
-    protected OWLPropertyData(OWLProperty entity, String browserText) {
-        super(entity, browserText);
-    }
-
     public abstract boolean isOWLAnnotationProperty();
 
     @Override

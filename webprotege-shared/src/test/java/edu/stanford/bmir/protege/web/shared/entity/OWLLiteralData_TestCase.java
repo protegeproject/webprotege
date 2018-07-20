@@ -32,7 +32,7 @@ public class OWLLiteralData_TestCase {
 
     @Before
     public void setUp() {
-        data = new OWLLiteralData(object);
+        data = OWLLiteralData.get(object);
         when(object.getLang()).thenReturn(THE_LANG);
         when(object.hasLang()).thenReturn(true);
         when(object.getLiteral()).thenReturn(THE_LITERAL);
@@ -41,7 +41,7 @@ public class OWLLiteralData_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_object_IsNull() {
-        new OWLLiteralData(null);
+        OWLLiteralData.get(null);
     }
 
     @Test
@@ -62,17 +62,17 @@ public class OWLLiteralData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(data, is(new OWLLiteralData(object)));
+        assertThat(data, is(OWLLiteralData.get(object)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_object() {
-        assertThat(data, is(not(new OWLLiteralData(Mockito.mock(OWLLiteral.class)))));
+        assertThat(data, is(not(OWLLiteralData.get(Mockito.mock(OWLLiteral.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(data.hashCode(), is(new OWLLiteralData(object).hashCode()));
+        assertThat(data.hashCode(), is(OWLLiteralData.get(object).hashCode()));
     }
 
     @Test

@@ -27,13 +27,13 @@ public class OWLAnnotationPropertyData_TestCase {
 
     @Before
     public void setUp() {
-        data = new OWLAnnotationPropertyData(entity, browserText);
+        data = OWLAnnotationPropertyData.get(entity, browserText);
     }
 
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        new OWLAnnotationPropertyData(null, browserText);
+        OWLAnnotationPropertyData.get(null, browserText);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class OWLAnnotationPropertyData_TestCase {
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        new OWLAnnotationPropertyData(entity, null);
+        OWLAnnotationPropertyData.get(entity, null);
     }
 
     @Test
@@ -65,24 +65,24 @@ public class OWLAnnotationPropertyData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(data, is(new OWLAnnotationPropertyData(entity, browserText)));
+        assertThat(data, is(OWLAnnotationPropertyData.get(entity, browserText)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
         assertThat(data,
-                   is(not(new OWLAnnotationPropertyData(Mockito.mock(OWLAnnotationProperty.class), browserText))));
+                   is(not(OWLAnnotationPropertyData.get(Mockito.mock(OWLAnnotationProperty.class), browserText))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
         assertThat(data,
-                   is(not(new OWLAnnotationPropertyData(entity, "String-6b8e4a42-6d66-47e8-b5ec-e9c463c9a0fc" ))));
+                   is(not(OWLAnnotationPropertyData.get(entity, "String-6b8e4a42-6d66-47e8-b5ec-e9c463c9a0fc" ))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(data.hashCode(), is(new OWLAnnotationPropertyData(entity, browserText).hashCode()));
+        assertThat(data.hashCode(), is(OWLAnnotationPropertyData.get(entity, browserText).hashCode()));
     }
 
     @Test

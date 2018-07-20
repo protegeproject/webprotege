@@ -23,17 +23,17 @@ public class OntologyIdData_TestCase {
     public void setUp()
         throws Exception
     {
-        ontologyIdData = new OntologyIdData(ontologyID, browserText);
+        ontologyIdData = OntologyIdData.get(ontologyID, browserText);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ontologyID_IsNull() {
-        new OntologyIdData(null, browserText);
+        OntologyIdData.get(null, browserText);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        new OntologyIdData(ontologyID, null);
+        OntologyIdData.get(ontologyID, null);
     }
 
     @Test
@@ -53,22 +53,22 @@ public class OntologyIdData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(ontologyIdData, is(new OntologyIdData(ontologyID, browserText)));
+        MatcherAssert.assertThat(ontologyIdData, is(OntologyIdData.get(ontologyID, browserText)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_ontologyID() {
-        MatcherAssert.assertThat(ontologyIdData, is(not(new OntologyIdData(new OWLOntologyID(), browserText))));
+        MatcherAssert.assertThat(ontologyIdData, is(not(OntologyIdData.get(new OWLOntologyID(), browserText))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        MatcherAssert.assertThat(ontologyIdData, is(not(new OntologyIdData(ontologyID, "String-113be408-6933-4a00-833b-5df2376852f2"))));
+        MatcherAssert.assertThat(ontologyIdData, is(not(OntologyIdData.get(ontologyID, "String-113be408-6933-4a00-833b-5df2376852f2"))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(ontologyIdData.hashCode(), is(new OntologyIdData(ontologyID, browserText).hashCode()));
+        MatcherAssert.assertThat(ontologyIdData.hashCode(), is(OntologyIdData.get(ontologyID, browserText).hashCode()));
     }
 
     @Test

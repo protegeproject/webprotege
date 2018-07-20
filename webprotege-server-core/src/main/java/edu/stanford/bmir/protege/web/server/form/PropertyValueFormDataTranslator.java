@@ -141,7 +141,7 @@ public class PropertyValueFormDataTranslator {
                     }
                     else if (val instanceof OWLLiteral) {
                         propertyValues.add(new PropertyLiteralValue(dataProp,
-                                                                    new OWLLiteralData((OWLLiteral) val),
+                                                                    OWLLiteralData.get((OWLLiteral) val),
                                                                     State.ASSERTED));
                     }
                 }
@@ -151,7 +151,7 @@ public class PropertyValueFormDataTranslator {
                     OWLAnnotationPropertyData annotationProp = renderingManager.getRendering((OWLAnnotationProperty) property);
                     if (val instanceof OWLLiteral) {
                         propertyValues.add(new PropertyAnnotationValue(annotationProp,
-                                                                       new OWLLiteralData((OWLLiteral) val),
+                                                                       OWLLiteralData.get((OWLLiteral) val),
                                                                        State.ASSERTED));
                     }
                     else if (val instanceof OWLEntity) {
@@ -162,7 +162,7 @@ public class PropertyValueFormDataTranslator {
                     }
                     else if (val instanceof IRI) {
                         propertyValues.add(new PropertyAnnotationValue(annotationProp,
-                                                                       new IRIData((IRI) val),
+                                                                       IRIData.get((IRI) val),
                                                                        State.ASSERTED));
                     }
                 }

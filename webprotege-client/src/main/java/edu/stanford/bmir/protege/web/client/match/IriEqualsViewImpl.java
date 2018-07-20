@@ -59,6 +59,6 @@ public class IriEqualsViewImpl extends Composite implements IriEqualsView {
 
     @Override
     public void setIri(IRI iri) {
-        this.iriEditor.setValue(new IRIData(iri));
+        this.iriEditor.setValue(IRIData.get(iri));
     }
 }

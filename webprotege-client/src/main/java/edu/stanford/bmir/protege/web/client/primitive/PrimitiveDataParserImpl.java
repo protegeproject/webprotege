@@ -42,7 +42,7 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
      */
     private OWLLiteralData parseLiteralData(String trimmedContent, java.util.Optional<String> language) {
         OWLLiteral literal = DataFactory.parseLiteral(trimmedContent, language);
-        return new OWLLiteralData(literal);
+        return OWLLiteralData.get(literal);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
             callback.onSuccess(java.util.Optional.of(result.get()));
         }
         else if (allowedTypes.contains(PrimitiveType.IRI) && isAbsoluteIRI(trimmedContent)) {
-            IRIData iriData = new IRIData(IRI.create(trimmedContent));
+            IRIData iriData = IRIData.get(IRI.create(trimmedContent));
             callback.onSuccess(java.util.Optional.of(iriData));
         }
         else if (allowedTypes.contains(PrimitiveType.LITERAL)) {

@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -12,11 +17,18 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public class OWLDatatypeData extends OWLEntityData {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class OWLDatatypeData extends OWLEntityData {
 
-    public OWLDatatypeData(OWLDatatype entity, String browserText) {
-        super(entity, browserText);
+    @Nonnull
+    public static OWLDatatypeData get(@Nonnull OWLDatatype datatype,
+                                      @Nonnull String browserText) {
+        return new AutoValue_OWLDatatypeData(browserText, datatype);
     }
+
+    @Override
+    public abstract OWLDatatype getObject();
 
     @Override
     public PrimitiveType getType() {
@@ -25,7 +37,7 @@ public class OWLDatatypeData extends OWLEntityData {
 
     @Override
     public OWLDatatype getEntity() {
-        return (OWLDatatype) super.getEntity();
+        return getObject();
     }
 
     @Override
@@ -41,31 +53,5 @@ public class OWLDatatypeData extends OWLEntityData {
     @Override
     public <R> R accept(OWLEntityDataVisitorEx<R> visitor) {
         return  visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return "OWLDatatypeData".hashCode() + getEntity().hashCode() + getBrowserText().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof OWLDatatypeData)) {
-            return false;
-        }
-        OWLDatatypeData other = (OWLDatatypeData) obj;
-        return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("OWLDatatypeData" )
-                .addValue(getEntity())
-                .add("browserText", getBrowserText())
-                .toString();
     }
 }

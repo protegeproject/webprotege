@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
+
+import javax.annotation.Nonnull;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -12,15 +17,23 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public class OWLClassData extends OWLEntityData {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class OWLClassData extends OWLEntityData {
 
-    public OWLClassData(OWLClass entity, String browserText) {
-        super(entity, browserText);
+
+
+    public static OWLClassData get(@Nonnull OWLClass cls,
+                                    @Nonnull String browserText) {
+        return new AutoValue_OWLClassData(browserText, cls);
     }
 
     @Override
+    public abstract OWLClass getObject();
+
+    @Override
     public OWLClass getEntity() {
-        return (OWLClass) super.getEntity();
+        return getObject();
     }
 
     @Override
@@ -41,31 +54,5 @@ public class OWLClassData extends OWLEntityData {
     @Override
     public <R> R accept(OWLEntityDataVisitorEx<R> visitor) {
         return visitor.visit(this);
-    }
-
-    @Override
-    public int hashCode() {
-        return "OWLClassData".hashCode() + getEntity().hashCode() + getBrowserText().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof OWLClassData)) {
-            return false;
-        }
-        OWLClassData other = (OWLClassData) obj;
-        return this.getEntity().equals(other.getEntity()) && this.getBrowserText().equals(other.getBrowserText());
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("OWLClassData" )
-                .addValue(getEntity())
-                .add("browserText", getBrowserText())
-                .toString();
     }
 }

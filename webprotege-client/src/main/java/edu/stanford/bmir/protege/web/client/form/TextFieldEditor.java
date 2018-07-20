@@ -147,7 +147,7 @@ public class TextFieldEditor extends Composite implements FormElementEditor {
             clearValue();
         }
         else {
-            editor.setValue(new OWLLiteralData(primitive.get()));
+            editor.setValue(OWLLiteralData.get(primitive.get()));
             validateInput();
         }
 

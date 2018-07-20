@@ -139,34 +139,40 @@ public class DataFactory {
 
     public static OWLEntityData getOWLEntityData(OWLEntity entity, final String browserText) {
         return entity.accept(new OWLEntityVisitorEx<OWLEntityData>() {
+            @Nonnull
             @Override
-            public OWLEntityData visit(OWLClass owlClass) {
-                return new OWLClassData(owlClass, browserText);
+            public OWLEntityData visit(@Nonnull OWLClass owlClass) {
+                return OWLClassData.get(owlClass, browserText);
             }
 
+            @Nonnull
             @Override
-            public OWLEntityData visit(OWLObjectProperty property) {
-                return new OWLObjectPropertyData(property, browserText);
+            public OWLEntityData visit(@Nonnull OWLObjectProperty property) {
+                return OWLObjectPropertyData.get(property, browserText);
             }
 
+            @Nonnull
             @Override
-            public OWLEntityData visit(OWLDataProperty property) {
-                return new OWLDataPropertyData(property, browserText);
+            public OWLEntityData visit(@Nonnull OWLDataProperty property) {
+                return OWLDataPropertyData.get(property, browserText);
             }
 
+            @Nonnull
             @Override
-            public OWLEntityData visit(OWLNamedIndividual individual) {
-                return new OWLNamedIndividualData(individual, browserText);
+            public OWLEntityData visit(@Nonnull OWLNamedIndividual individual) {
+                return OWLNamedIndividualData.get(individual, browserText);
             }
 
+            @Nonnull
             @Override
-            public OWLEntityData visit(OWLDatatype datatype) {
-                return new OWLDatatypeData(datatype, browserText);
+            public OWLEntityData visit(@Nonnull OWLDatatype datatype) {
+                return OWLDatatypeData.get(datatype, browserText);
             }
 
+            @Nonnull
             @Override
-            public OWLEntityData visit(OWLAnnotationProperty property) {
-                return new OWLAnnotationPropertyData(property, browserText);
+            public OWLEntityData visit(@Nonnull OWLAnnotationProperty property) {
+                return OWLAnnotationPropertyData.get(property, browserText);
             }
         });
     }
@@ -328,7 +334,7 @@ public class DataFactory {
 
     @Nonnull
     public static OWLAnnotationPropertyData getRdfsLabelData() {
-        return new OWLAnnotationPropertyData(
+        return OWLAnnotationPropertyData.get(
                 dataFactory.getRDFSLabel(),
                 OWLRDFVocabulary.RDFS_LABEL.getPrefixedName()
         );
