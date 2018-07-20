@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public abstract class OWLEntityData implements OWLPrimitiveData, Comparable<OWLEntityData> {
+public abstract class OWLEntityData extends OWLPrimitiveData implements Comparable<OWLEntityData> {
 
     public OWLEntity getEntity() {
         return (OWLEntity) getObject();

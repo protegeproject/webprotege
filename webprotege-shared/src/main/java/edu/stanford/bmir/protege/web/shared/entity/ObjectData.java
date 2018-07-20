@@ -19,20 +19,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     Represents data about some object.  This data includes browser text for the object.
  * </p>
  */
-public interface ObjectData extends HasBrowserText, HasSignature {
+public abstract class ObjectData implements HasBrowserText, HasSignature {
 
     /**
      * Gets the core object that is decorated with data
      */
     @Nonnull
-    Object getObject();
+    public abstract Object getObject();
 
     /**
      * Gets the signature of this object.
      * @return A (possibly empty) set representing the signature of this object.
      */
     @Override
-    default Set<OWLEntity> getSignature() {
+    public Set<OWLEntity> getSignature() {
         if(getObject() instanceof HasSignature) {
             return ((HasSignature) getSignature()).getSignature();
         }

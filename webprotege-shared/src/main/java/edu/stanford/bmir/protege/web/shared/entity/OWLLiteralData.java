@@ -21,7 +21,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class OWLLiteralData implements OWLPrimitiveData, HasLexicalForm {
+public abstract class OWLLiteralData extends OWLPrimitiveData implements HasLexicalForm {
 
     public static OWLLiteralData get(@Nonnull OWLLiteral literal) {
         return new AutoValue_OWLLiteralData(literal);

@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class IRIData implements OWLPrimitiveData {
+public abstract class IRIData extends OWLPrimitiveData {
 
     public static IRIData get(@Nonnull IRI iri) {
         return new AutoValue_IRIData(iri);
