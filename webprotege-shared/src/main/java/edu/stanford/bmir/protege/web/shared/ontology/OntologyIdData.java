@@ -25,6 +25,7 @@ public abstract class OntologyIdData implements ObjectData {
         return new AutoValue_OntologyIdData(browserText, ontologyID);
     }
 
+    @Nonnull
     @Override
     public abstract OWLOntologyID getObject();
 

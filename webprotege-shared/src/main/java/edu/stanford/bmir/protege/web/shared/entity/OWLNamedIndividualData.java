@@ -25,6 +25,7 @@ public abstract class OWLNamedIndividualData extends OWLEntityData {
         return new AutoValue_OWLNamedIndividualData(browserText, individual);
     }
 
+    @Nonnull
     @Override
     public abstract OWLNamedIndividual getObject();
 

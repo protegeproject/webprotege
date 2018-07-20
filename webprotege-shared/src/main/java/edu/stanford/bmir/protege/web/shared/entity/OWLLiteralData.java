@@ -27,6 +27,7 @@ public abstract class OWLLiteralData implements OWLPrimitiveData, HasLexicalForm
         return new AutoValue_OWLLiteralData(literal);
     }
 
+    @Nonnull
     @Override
     public abstract OWLLiteral getObject();
 

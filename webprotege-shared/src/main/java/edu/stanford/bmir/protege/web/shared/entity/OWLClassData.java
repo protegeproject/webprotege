@@ -28,6 +28,7 @@ public abstract class OWLClassData extends OWLEntityData {
         return new AutoValue_OWLClassData(browserText, cls);
     }
 
+    @Nonnull
     @Override
     public abstract OWLClass getObject();
 

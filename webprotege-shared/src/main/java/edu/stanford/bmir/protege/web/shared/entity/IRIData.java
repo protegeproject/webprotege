@@ -24,6 +24,7 @@ public abstract class IRIData implements OWLPrimitiveData {
         return new AutoValue_IRIData(iri);
     }
 
+    @Nonnull
     @Override
     public abstract IRI getObject();
 

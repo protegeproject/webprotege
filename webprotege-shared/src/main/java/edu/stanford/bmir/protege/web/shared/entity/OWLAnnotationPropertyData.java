@@ -23,6 +23,7 @@ public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
         return new AutoValue_OWLAnnotationPropertyData(browserText, property);
     }
 
+    @Nonnull
     @Override
     public abstract OWLAnnotationProperty getObject();
 

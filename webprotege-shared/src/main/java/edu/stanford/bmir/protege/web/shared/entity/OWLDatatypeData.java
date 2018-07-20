@@ -27,6 +27,7 @@ public abstract class OWLDatatypeData extends OWLEntityData {
         return new AutoValue_OWLDatatypeData(browserText, datatype);
     }
 
+    @Nonnull
     @Override
     public abstract OWLDatatype getObject();
 

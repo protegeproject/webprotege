@@ -26,6 +26,7 @@ public abstract class OWLDataPropertyData extends OWLPropertyData {
         return new AutoValue_OWLDataPropertyData(browserText, property);
     }
 
+    @Nonnull
     @Override
     public abstract OWLDataProperty getObject();
 
