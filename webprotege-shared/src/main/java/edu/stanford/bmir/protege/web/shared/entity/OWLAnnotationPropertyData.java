@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
@@ -16,6 +17,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Date: 28/11/2012
  */
 @AutoValue
+@GwtCompatible(serializable = true)
 public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
 
     public static OWLAnnotationPropertyData get(@Nonnull OWLAnnotationProperty property,
