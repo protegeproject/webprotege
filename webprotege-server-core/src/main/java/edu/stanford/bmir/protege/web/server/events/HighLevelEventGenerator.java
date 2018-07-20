@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -29,7 +30,7 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     private final OWLOntology rootOntology;
 
-    private final RenderingManager renderingManager;
+    private final DictionaryManager dictionaryManager;
 
     private final HasGetRevisionSummary hasGetRevisionSummary;
 
@@ -38,12 +39,12 @@ public class HighLevelEventGenerator implements EventTranslator {
     @Inject
     public HighLevelEventGenerator(ProjectId projectId,
                                    OWLOntology rootOntology,
-                                   RenderingManager renderingManager,
+                                   DictionaryManager dictionaryManager,
                                    HasGetEntitiesWithIRI hasGetEntitiesWithIRI,
                                    HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
-        this.renderingManager = renderingManager;
+        this.dictionaryManager = dictionaryManager;
         this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
         this.hasGetRevisionSummary = hasGetRevisionSummary;
     }
@@ -163,7 +164,7 @@ public class HighLevelEventGenerator implements EventTranslator {
         if(subject instanceof OWLEntity) {
             OWLEntity entity = (OWLEntity) subject;
             if (rootOntology.containsEntityInSignature(entity)) {
-                String browserText = renderingManager.getShortForm(entity);
+                String browserText = dictionaryManager.getShortForm(entity);
                 changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
             }
         }
@@ -180,7 +181,7 @@ public class HighLevelEventGenerator implements EventTranslator {
                       .map(element -> (OWLEntity) element)
                       .filter(rootOntology::containsEntityInSignature)
                       .forEach(entity -> {
-                          String browserText = renderingManager.getShortForm(entity);
+                          String browserText = dictionaryManager.getShortForm(entity);
                           changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
                       });
 
