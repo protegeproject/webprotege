@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.List;
@@ -59,6 +61,12 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Mock
     protected ChangeSetEntityCrudSession session;
 
+    @Mock
+    protected DictionaryLanguage dictionaryLanguage;
+
+    protected IRI annotationPropertyIri = OWLRDFVocabulary.RDFS_LABEL.getIRI();
+
+
     private UUIDEntityCrudKitHandler handler;
 
     @Before
@@ -67,6 +75,9 @@ public class UUIDEntityCrudKitHandlerTestCase {
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
         when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
+        when(crudContext.getDictionaryLanguage()).thenReturn(dictionaryLanguage);
+        when(dictionaryLanguage.getLang()).thenReturn("en");
+        when(dictionaryLanguage.getAnnotationPropertyIri()).thenReturn(annotationPropertyIri);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
         handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings);
