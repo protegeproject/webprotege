@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
@@ -23,7 +24,7 @@ public class EntityHierarchyNodeRenderer {
     private final ProjectId projectId;
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final DictionaryManager dictionaryManager;
 
     @Nonnull
     private final DeprecatedEntityChecker deprecatedEntityChecker;
@@ -39,13 +40,13 @@ public class EntityHierarchyNodeRenderer {
 
     @Inject
     public EntityHierarchyNodeRenderer(@Nonnull ProjectId projectId,
-                                       @Nonnull RenderingManager renderingManager,
+                                       @Nonnull DictionaryManager dictionaryManager,
                                        @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
                                        @Nonnull WatchManager watchManager,
                                        @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
                                        @Nonnull TagsManager tagsManager) {
         this.projectId = checkNotNull(projectId);
-        this.renderingManager = checkNotNull(renderingManager);
+        this.dictionaryManager = checkNotNull(dictionaryManager);
         this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);
         this.watchManager = checkNotNull(watchManager);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
@@ -61,7 +62,7 @@ public class EntityHierarchyNodeRenderer {
     public EntityHierarchyNode render(@Nonnull OWLEntity entity) {
         return new EntityHierarchyNode(
                 entity,
-                renderingManager.getShortForm(entity),
+                dictionaryManager.getShortForm(entity),
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity),
                 discussionThreadRepository.getOpenCommentsCount(projectId, entity),
