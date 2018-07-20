@@ -19,10 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     Represents data about some object.  This data includes browser text for the object.
  * </p>
  */
-public interface ObjectData<O> extends HasBrowserText, HasSignature {
+public interface ObjectData extends HasBrowserText, HasSignature {
 
     @Nonnull
-    O getObject();
+    Object getObject();
 
     /**
      * Gets the signature of this object.

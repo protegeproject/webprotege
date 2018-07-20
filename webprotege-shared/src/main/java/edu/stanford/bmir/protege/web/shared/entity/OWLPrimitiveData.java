@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.entity;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -15,7 +16,11 @@ import java.util.Optional;
  *     {@link IRI}.
  * </p>
  */
-public interface OWLPrimitiveData extends ObjectData<OWLObject> {
+public interface OWLPrimitiveData extends ObjectData {
+
+    @Nonnull
+    @Override
+    OWLObject getObject();
 
     <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
 
