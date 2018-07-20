@@ -84,16 +84,11 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
         return new PropertyValueList(getPropertyValues());
     }
 
-    public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
-        return getPropertyValues().stream()
-                                  .filter(PropertyValue::isAnnotation)
-                                  .map(pv -> (PropertyAnnotationValue) pv)
-                                  .collect(toImmutableSet());
+    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+        return getPropertyValueList().getAnnotationPropertyValues();
     }
 
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
-        return getPropertyValues().stream()
-                                  .filter(PropertyValue::isLogical)
-                                  .collect(toImmutableList());
+        return getPropertyValueList().getLogicalPropertyValues();
     }
 }

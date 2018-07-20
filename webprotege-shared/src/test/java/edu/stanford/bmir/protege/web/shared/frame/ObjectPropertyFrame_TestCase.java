@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -34,7 +35,7 @@ public class ObjectPropertyFrame_TestCase {
 
     private Set<OWLClassData> ranges;
 
-    private Set<PropertyAnnotationValue> annotations;
+    private ImmutableList<PropertyAnnotationValue> annotations;
 
     private Set<OWLObjectPropertyData> inverses;
 
@@ -61,7 +62,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        annotations = Sets.newHashSet(annotationValue);
+        annotations = ImmutableList.of(annotationValue);
         domain = mock(OWLClassData.class);
         domains = Sets.newHashSet(domain);
         ranges = Sets.newHashSet(range);

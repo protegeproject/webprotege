@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -14,6 +15,8 @@ import javax.inject.Provider;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -47,74 +50,69 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         Set<OWLClassData> domains = new HashSet<>();
         Set<OWLClassData> ranges = new HashSet<>();
         Set<ObjectPropertyCharacteristic> characteristics = new HashSet<>();
-        for(OWLOntology ontology : rootOntology.getImportsClosure()) {
+        for (OWLOntology ontology : rootOntology.getImportsClosure()) {
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
-            for(OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {
+            for (OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {
                 final OWLClassExpression domain = ax.getDomain();
                 if (!domain.isAnonymous()) {
                     domains.add(rm.getRendering(domain.asOWLClass()));
                 }
             }
-            for(OWLObjectPropertyRangeAxiom ax : ontology.getObjectPropertyRangeAxioms(subject.getEntity())) {
+            for (OWLObjectPropertyRangeAxiom ax : ontology.getObjectPropertyRangeAxioms(subject.getEntity())) {
                 OWLClassExpression range = ax.getRange();
-                if(!range.isAnonymous()) {
+                if (!range.isAnonymous()) {
                     ranges.add(rm.getRendering(range.asOWLClass()));
                 }
             }
-            if(ontology.getAxiomCount(AxiomType.FUNCTIONAL_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.FUNCTIONAL_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.FUNCTIONAL);
             }
-            if(ontology.getAxiomCount(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
             }
-            if(ontology.getAxiomCount(AxiomType.SYMMETRIC_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.SYMMETRIC_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.SYMMETRIC);
             }
-            if(ontology.getAxiomCount(AxiomType.ASYMMETRIC_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.ASYMMETRIC_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.ASYMMETRIC);
             }
-            if(ontology.getAxiomCount(AxiomType.REFLEXIVE_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.REFLEXIVE_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.REFLEXIVE);
             }
-            if(ontology.getAxiomCount(AxiomType.IRREFLEXIVE_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.IRREFLEXIVE_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.IRREFLEXIVE);
             }
-            if(ontology.getAxiomCount(AxiomType.TRANSITIVE_OBJECT_PROPERTY) > 1) {
+            if (ontology.getAxiomCount(AxiomType.TRANSITIVE_OBJECT_PROPERTY) > 1) {
                 characteristics.add(ObjectPropertyCharacteristic.TRANSITIVE);
             }
         }
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
-        Set<PropertyAnnotationValue> propertyValues = new HashSet<>();
-        for(OWLAxiom ax : propertyValueAxioms) {
-            Set<PropertyValue> translationResult = translator.getPropertyValues(
-                    subject.getEntity(), ax, rootOntology,
-                    State.ASSERTED);
-            for(PropertyValue pv : translationResult) {
-                if(pv.isAnnotation()) {
-                    propertyValues.add((PropertyAnnotationValue) pv);
-                }
-            }
-
-        }
+        ImmutableList<PropertyAnnotationValue> propertyValues = propertyValueAxioms.stream()
+                                                                                   .flatMap(ax -> translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED).stream())
+                                                                                   .filter(PropertyValue::isAnnotation)
+                                                                                   .map(pv -> (PropertyAnnotationValue) pv)
+                                                                                   .distinct()
+                                                                                   .sorted()
+                                                                                   .collect(toImmutableList());
         return new ObjectPropertyFrame(subject, propertyValues, domains, ranges, Collections.emptySet(), characteristics);
     }
 
     @Override
     public Set<OWLAxiom> getAxioms(ObjectPropertyFrame frame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
-        for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
+        for (PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
             result.addAll(translator.getAxioms(frame.getSubject().getEntity(), pv, mode));
         }
-        for(OWLClassData domain : frame.getDomains()) {
+        for (OWLClassData domain : frame.getDomains()) {
             OWLAxiom ax = DataFactory.get().getOWLObjectPropertyDomainAxiom(frame.getSubject().getEntity(), domain.getEntity());
             result.add(ax);
         }
-        for(OWLClassData range : frame.getRanges()) {
+        for (OWLClassData range : frame.getRanges()) {
             OWLAxiom ax = DataFactory.get().getOWLObjectPropertyRangeAxiom(frame.getSubject().getEntity(), range.getEntity());
             result.add(ax);
         }
-        for(ObjectPropertyCharacteristic characteristic : frame.getCharacteristics()) {
+        for (ObjectPropertyCharacteristic characteristic : frame.getCharacteristics()) {
             OWLAxiom ax = characteristic.createAxiom(frame.getSubject().getEntity(), DataFactory.get());
             result.add(ax);
         }

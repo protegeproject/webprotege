@@ -60,7 +60,7 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>
     }
 
     @Override
-    public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return propertyValueList.getAnnotationPropertyValues();
     }
 

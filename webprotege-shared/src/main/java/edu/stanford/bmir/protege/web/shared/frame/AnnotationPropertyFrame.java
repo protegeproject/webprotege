@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,101 +17,35 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-@SuppressWarnings("GwtInconsistentSerializableClass" )
-public class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropertyData>, HasPropertyValueList {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropertyData>, HasPropertyValueList {
 
-    private OWLAnnotationPropertyData subject;
+    @Nonnull
+    public abstract OWLAnnotationPropertyData getSubject();
 
+    @Nonnull
+    public abstract ImmutableList<PropertyAnnotationValue> getPropertyValues();
 
-    private PropertyValueList propertyValues;
+    @Nonnull
+    public abstract ImmutableList<OWLEntityData> getDomains();
 
-    private Set<OWLEntityData> domains;
+    @Nonnull
+    public abstract ImmutableList<OWLEntityData> getRanges();
 
-    private Set<OWLEntityData> ranges;
-
-    private AnnotationPropertyFrame() {
-    }
-
-    public AnnotationPropertyFrame(OWLAnnotationPropertyData subject, Set<PropertyAnnotationValue> propertyValues, Set<OWLEntityData> domains, Set<OWLEntityData> ranges) {
-        this.subject = subject;
-        this.propertyValues = new PropertyValueList(propertyValues);
-        this.domains = new HashSet<>(domains);
-        this.ranges = new HashSet<>(ranges);
-    }
-
-    public OWLAnnotationPropertyData getSubject() {
-        return subject;
+    @Nonnull
+    public static AnnotationPropertyFrame get(@Nonnull OWLAnnotationPropertyData subject,
+                                              @Nonnull ImmutableList<PropertyAnnotationValue> propertyValues,
+                                              @Nonnull ImmutableList<OWLEntityData> domains,
+                                              @Nonnull ImmutableList<OWLEntityData> ranges) {
+        return new AutoValue_AnnotationPropertyFrame(subject,
+                                                     propertyValues,
+                                                     domains,
+                                                     ranges);
     }
 
     @Override
     public PropertyValueList getPropertyValueList() {
-        return propertyValues;
+        return new PropertyValueList(getPropertyValues());
     }
-
-    public Set<PropertyAnnotationValue> getPropertyValues() {
-        return propertyValues.getAnnotationPropertyValues();
-    }
-
-    public Set<OWLEntityData> getDomains() {
-        return new HashSet<>(domains);
-    }
-
-    public Set<OWLEntityData> getRanges() {
-        return new HashSet<>(ranges);
-    }
-
-    @Override
-    public int hashCode() {
-        return "AnnotationPropertyFrame".hashCode() + subject.hashCode() + propertyValues.hashCode() + domains.hashCode() + ranges.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof AnnotationPropertyFrame)) {
-            return false;
-        }
-        AnnotationPropertyFrame other = (AnnotationPropertyFrame) obj;
-        return this.subject.equals(other.subject) && this.propertyValues.equals(other.propertyValues) && this.domains.equals(other.domains) && this.ranges.equals(other.ranges);
-    }
-
-    //    public Builder builder() {
-//        return new Builder(subject, propertyValues);
-//    }
-
-//    public static class Builder {
-//
-//        private Set<PropertyAnnotationValue> propertyValues = new HashSet<PropertyAnnotationValue>();
-//
-//        private OWLAnnotationSubject subject;
-//
-//        public Builder(OWLAnnotationSubject subject, Set<PropertyAnnotationValue> propertyValues) {
-//            this.subject = subject;
-//            this.propertyValues.addAll(propertyValues);
-//        }
-//
-//        public void addPropertyValue(OWLAnnotationProperty property, OWLAnnotationValue value) {
-//            propertyValues.add(new PropertyAnnotationValue(property, value));
-//        }
-//
-//        public void addPropertyValue(OWLAnnotationProperty property, String value) {
-//            propertyValues.add(new PropertyAnnotationValue(property, DataFactory.getOWLLiteral(value)));
-//        }
-//
-//        public void addPropertyValue(OWLAnnotationProperty property, int value) {
-//            propertyValues.add(new PropertyAnnotationValue(property, DataFactory.getOWLLiteral(value)));
-//        }
-//
-//        public void addPropertyValue(OWLAnnotationProperty property, double value) {
-//            propertyValues.add(new PropertyAnnotationValue(property, DataFactory.getOWLLiteral(value)));
-//        }
-//
-//        public AnnotationPropertyFrame build() {
-//            return new AnnotationPropertyFrame(subject, propertyValues);
-//        }
-//
-//    }
-
 }

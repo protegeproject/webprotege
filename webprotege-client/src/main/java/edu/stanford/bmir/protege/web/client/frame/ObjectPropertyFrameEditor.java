@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -27,7 +28,10 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
+import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
@@ -45,8 +49,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameEditor, ValueEditor<ObjectPropertyFrame>, HasEnabled, EditorView<ObjectPropertyFrame> {
 
-    @UiField
-    protected TextBox iriField;
+    private static ObjectPropertyFrameEditorUiBinder ourUiBinder = GWT.create(ObjectPropertyFrameEditorUiBinder.class);
 
     @UiField(provided = true)
     protected final PropertyValueListEditor annotations;
@@ -57,20 +60,18 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @UiField(provided = true)
     final PrimitiveDataListEditor ranges;
 
+    @UiField
+    protected TextBox iriField;
+
     private boolean dirty = false;
 
     private EntityDisplay entityDisplay = entityData -> {};
 
-
     private Optional<ObjectPropertyFrame> previouslySetValue = Optional.empty();
 
-    interface ObjectPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, ObjectPropertyFrameEditor> {
-
-    }
-
-    private static ObjectPropertyFrameEditorUiBinder ourUiBinder = GWT.create(ObjectPropertyFrameEditorUiBinder.class);
-
     private Set<ObjectPropertyCharacteristic> characteristics = Sets.newHashSet();
+
+    private boolean enabled = false;
 
     @Inject
     public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor,
@@ -87,14 +88,12 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         add(rootElement);
     }
 
-    private boolean enabled = false;
-
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);
     }
 
     private void fireEventIfWellFormed() {
-        if(isWellFormed()) {
+        if (isWellFormed()) {
             dirty = true;
             ValueChangeEvent.fire(this, getValue());
         }
@@ -125,8 +124,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     /**
      * Sets whether this widget is enabled.
+     *
      * @param enabled <code>true</code> to enable the widget, <code>false</code>
-     * to disable it
+     *                to disable it
      */
     @Override
     public void setEnabled(boolean enabled) {
@@ -147,20 +147,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     @Override
-    public void setValue(ObjectPropertyFrame frame) {
-        dirty = false;
-        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
-        iriField.setValue(decodedIri);
-        annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
-        characteristics.clear();
-        characteristics.addAll(frame.getCharacteristics());
-        domains.setValue(new ArrayList<>(frame.getDomains()));
-        ranges.setValue(new ArrayList<>(frame.getRanges()));
-        previouslySetValue = Optional.of(frame);
-        entityDisplay.setDisplayedEntity(Optional.of(frame.getSubject()));
-    }
-
-    @Override
     public void clearValue() {
         dirty = false;
         iriField.setValue("");
@@ -171,29 +157,41 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     @Override
     public Optional<ObjectPropertyFrame> getValue() {
-        if(!previouslySetValue.isPresent()) {
+        if (!previouslySetValue.isPresent()) {
             return previouslySetValue;
         }
-        Set<PropertyAnnotationValue> annotationValueSet = new HashSet<PropertyAnnotationValue>();
-        annotationValueSet.addAll(annotations.getValue().get().getAnnotationPropertyValues());
+        ImmutableList<PropertyAnnotationValue> annotationValues = annotations.getValue().get().getAnnotationPropertyValues();
         final ObjectPropertyFrame previousFrame = previouslySetValue.get();
         OWLObjectPropertyData subject = previousFrame.getSubject();
         List<OWLClassData> editedDomains = Lists.newArrayList();
-        for(OWLPrimitiveData data : domains.getValue().get()) {
+        for (OWLPrimitiveData data : domains.getValue().get()) {
             editedDomains.add((OWLClassData) data);
         }
         List<OWLClassData> editedRanges = Lists.newArrayList();
-        for(OWLPrimitiveData data : ranges.getValue().get()) {
+        for (OWLPrimitiveData data : ranges.getValue().get()) {
             editedRanges.add((OWLClassData) data);
         }
-        ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValueSet,
-                new HashSet<>(editedDomains),
-                new HashSet<>(editedRanges),
-                Collections.emptySet(),
-                characteristics);
+        ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValues,
+                                                            new HashSet<>(editedDomains),
+                                                            new HashSet<>(editedRanges),
+                                                            Collections.emptySet(),
+                                                            characteristics);
         return Optional.of(frame);
     }
 
+    @Override
+    public void setValue(ObjectPropertyFrame frame) {
+        dirty = false;
+        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
+        iriField.setValue(decodedIri);
+        annotations.setValue(new PropertyValueList(frame.getAnnotationPropertyValues()));
+        characteristics.clear();
+        characteristics.addAll(frame.getCharacteristics());
+        domains.setValue(new ArrayList<>(frame.getDomains()));
+        ranges.setValue(new ArrayList<>(frame.getRanges()));
+        previouslySetValue = Optional.of(frame);
+        entityDisplay.setDisplayedEntity(Optional.of(frame.getSubject()));
+    }
 
     @Override
     public boolean isWellFormed() {
@@ -202,6 +200,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     /**
      * Determines if this object is dirty.
+     *
      * @return {@code true} if the object is dirty, otherwise {@code false}.
      */
     @Override
@@ -217,5 +216,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<ObjectPropertyFrame>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    interface ObjectPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, ObjectPropertyFrameEditor> {
+
     }
 }

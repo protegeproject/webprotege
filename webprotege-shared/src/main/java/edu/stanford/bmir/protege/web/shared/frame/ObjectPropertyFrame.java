@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -24,7 +25,7 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
 
     private OWLObjectPropertyData subject;
 
-    private Set<PropertyAnnotationValue> annotationValues;
+    private ImmutableList<PropertyAnnotationValue> annotationValues;
 
     private Set<OWLClassData> domains;
 
@@ -38,13 +39,13 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
     }
 
     public ObjectPropertyFrame(OWLObjectPropertyData subject,
-                               Set<PropertyAnnotationValue> annotationValues,
+                               ImmutableList<PropertyAnnotationValue> annotationValues,
                                Set<OWLClassData> domains,
                                Set<OWLClassData> ranges,
                                Set<OWLObjectPropertyData> inverseProperties,
                                Set<ObjectPropertyCharacteristic> characteristics) {
         this.subject = checkNotNull(subject);
-        this.annotationValues = new HashSet<>(checkNotNull(annotationValues));
+        this.annotationValues = checkNotNull(annotationValues);
         this.domains = new HashSet<>(checkNotNull(domains));
         this.ranges = new HashSet<>(checkNotNull(ranges));
         this.inverses = new HashSet<>(checkNotNull(inverseProperties));
@@ -56,8 +57,8 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
     }
 
     @Override
-    public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
-        return new HashSet<PropertyAnnotationValue>(annotationValues);
+    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+        return annotationValues;
     }
 
 
@@ -65,7 +66,7 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
 
         private OWLObjectPropertyData subject;
 
-        private Set<PropertyAnnotationValue> values = new HashSet<>();
+        private ImmutableList.Builder<PropertyAnnotationValue> values = ImmutableList.builder();
 
         private Set<OWLClassData> domains = new HashSet<>();
 
@@ -79,32 +80,8 @@ public class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, 
             this.subject = subject;
         }
 
-//        public void addPropertyValue(PropertyAnnotationValue propertyValue) {
-//            values.add(propertyValue);
-//        }
-//
-//        public void addPropertyCharacteristic(ObjectPropertyCharacteristic characteristic) {
-//            characteristics.add(characteristic);
-//        }
-//
-//        public void addDomain(OWLClass domain) {
-//            domains.add(domain);
-//        }
-//
-//        public void addRange(OWLClass range) {
-//            ranges.add(range);
-//        }
-//
-//        public void clearDomains() {
-//            domains.clear();
-//        }
-//
-//        public void clearRanges() {
-//            ranges.clear();
-//        }
-
         public ObjectPropertyFrame build() {
-            return new ObjectPropertyFrame(subject, values, domains, ranges, inverses, characteristics);
+            return new ObjectPropertyFrame(subject, values.build(), domains, ranges, inverses, characteristics);
         }
     }
 

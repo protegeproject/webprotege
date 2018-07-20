@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
@@ -35,9 +36,9 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
 
     @Override
     public AnnotationPropertyFrame getFrame(OWLAnnotationPropertyData subject) {
-        Set<PropertyAnnotationValue> propertyValues = new HashSet<>();
-        Set<OWLEntityData> domains = new HashSet<>();
-        Set<OWLEntityData> ranges = new HashSet<>();
+        ImmutableList.Builder<PropertyAnnotationValue> propertyValues = ImmutableList.builder();
+        ImmutableList.Builder<OWLEntityData> domains = ImmutableList.builder();
+        ImmutableList.Builder<OWLEntityData> ranges = ImmutableList.builder();
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getEntity().getIRI())) {
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {
@@ -49,18 +50,24 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
             for (OWLAnnotationPropertyDomainAxiom ax : ont.getAnnotationPropertyDomainAxioms(subject.getEntity())) {
                 rootOntology.getEntitiesInSignature(ax.getDomain(), Imports.INCLUDED)
                             .stream()
+                            .distinct()
                             .map(renderingManager::getRendering)
+                            .sorted()
                             .forEach(domains::add);
             }
             for (OWLAnnotationPropertyRangeAxiom ax : ont.getAnnotationPropertyRangeAxioms(subject.getEntity())) {
                 rootOntology.getEntitiesInSignature(ax.getRange(), Imports.INCLUDED)
                             .stream()
+                            .distinct()
                             .map(renderingManager::getRendering)
+                            .sorted()
                             .forEach(ranges::add);
             }
         }
-        return new AnnotationPropertyFrame(renderingManager.getRendering(subject.getEntity()),
-                                           propertyValues, domains, ranges);
+        return AnnotationPropertyFrame.get(renderingManager.getRendering(subject.getEntity()),
+                                           propertyValues.build(),
+                                           domains.build(),
+                                           ranges.build());
     }
 
     @Override

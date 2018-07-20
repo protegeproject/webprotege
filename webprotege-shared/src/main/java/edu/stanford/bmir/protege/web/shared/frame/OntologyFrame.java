@@ -41,7 +41,7 @@ public class OntologyFrame implements HasSignature, Serializable, HasPropertyVal
     }
 
     @Override
-    public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return propertyValueList.getAnnotationPropertyValues();
     }
 

@@ -21,13 +21,13 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class PropertyValueList implements Serializable, HasSignature, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
 
-    private List<PropertyValue> propertyValues;
+    private ImmutableList<PropertyValue> propertyValues;
 
     private PropertyValueList() {
     }
 
     public PropertyValueList(Collection<? extends PropertyValue> propertyValues) {
-        this.propertyValues = new ArrayList<>(checkNotNull(propertyValues));
+        this.propertyValues = ImmutableList.copyOf(checkNotNull(propertyValues));
     }
 
     @Override
@@ -60,14 +60,11 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
     }
 
     @Override
-    public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
-        Set<PropertyAnnotationValue> result = new LinkedHashSet<PropertyAnnotationValue>();
-        for (PropertyValue propertyValue : propertyValues) {
-            if (propertyValue.isAnnotation()) {
-                result.add((PropertyAnnotationValue) propertyValue);
-            }
-        }
-        return result;
+    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+        return propertyValues.stream()
+                             .filter(PropertyValue::isAnnotation)
+                             .map(pv -> (PropertyAnnotationValue) pv)
+                             .collect(toImmutableList());
     }
 
     @Override

@@ -52,7 +52,7 @@ public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, HasS
     }
 
     @Override
-    public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return propertyValueList.getAnnotationPropertyValues();
     }
 
