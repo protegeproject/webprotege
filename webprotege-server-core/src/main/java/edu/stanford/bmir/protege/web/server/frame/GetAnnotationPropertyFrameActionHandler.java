@@ -3,19 +3,19 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameResult;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -31,18 +31,18 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
     private Logger logger = LoggerFactory.getLogger(GetAnnotationPropertyFrameActionHandler.class);
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final RenderingManager renderingManager;
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final Provider<AnnotationPropertyFrameTranslator> translatorProvider;
 
     @Inject
     public GetAnnotationPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
-                                                   @Nonnull @RootOntology OWLOntology rootOntology,
-                                                   @Nonnull RenderingManager renderingManager) {
+                                                   @Nonnull RenderingManager renderingManager,
+                                                   @Nonnull Provider<AnnotationPropertyFrameTranslator> translatorProvider) {
         super(accessManager);
-        this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
+        this.translatorProvider = translatorProvider;
     }
 
     @Nullable
@@ -54,12 +54,9 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractProjectActi
     @Nonnull
     @Override
     public GetAnnotationPropertyFrameResult execute(@Nonnull GetAnnotationPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        AnnotationPropertyFrameTranslator translator = new AnnotationPropertyFrameTranslator(renderingManager,
-                                                                                             rootOntology);
-        AnnotationPropertyFrame frame = translator.getFrame(
-                renderingManager.getRendering(action.getSubject())
-        );
-        String label = renderingManager.getShortForm(action.getSubject());
+        AnnotationPropertyFrameTranslator translator = translatorProvider.get();
+        OWLAnnotationPropertyData annotationPropertyData = renderingManager.getRendering(action.getSubject());
+        AnnotationPropertyFrame frame = translator.getFrame(annotationPropertyData);
         logger.info(BROWSING,
                      "{} {} retrieved AnnotationProperty frame for {} ({})",
                     action.getProjectId(),

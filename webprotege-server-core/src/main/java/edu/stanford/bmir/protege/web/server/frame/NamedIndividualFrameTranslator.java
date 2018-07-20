@@ -42,17 +42,21 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     @Nonnull
     private final Provider<ClassFrameTranslator> translatorProvider;
 
+    @Nonnull
+    private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
+
     @Inject
     public NamedIndividualFrameTranslator(@Nonnull @RootOntology OWLOntology rootOntology,
                                           @Nonnull RenderingManager rm,
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                           @Nonnull PropertyValueComparator propertyValueComparator,
-                                          @Nonnull Provider<ClassFrameTranslator> translatorProvider) {
+                                          @Nonnull Provider<ClassFrameTranslator> translatorProvider, Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
         this.rootOntology = rootOntology;
         this.rm = rm;
         this.propertyValueMinimiser = propertyValueMinimiser;
         this.propertyValueComparator = propertyValueComparator;
         this.translatorProvider = translatorProvider;
+        this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
 
     /**
@@ -88,8 +92,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         }
         List<PropertyValue> propertyValues = new ArrayList<>();
         for(OWLAxiom axiom : relevantAxioms) {
-            AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, rootOntology, State.ASSERTED, rm));
+            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), axiom, rootOntology, State.ASSERTED));
         }
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(subject.getEntity())) {
@@ -141,7 +145,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
             result.add(DataFactory.get().getOWLClassAssertionAxiom(cls.getEntity(), subject));
         }
         for(PropertyValue propertyValue : frame.getPropertyValues()) {
-            AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
+            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
             result.addAll(translator.getAxioms(subject, propertyValue, mode));
         }
         for(OWLNamedIndividualData individual : frame.getSameIndividuals()) {

@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -46,17 +47,21 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     @Nonnull
     private final PropertyValueComparator propertyValueComparator;
 
+    @Nonnull
+    private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
+
     @Inject
     public ClassFrameTranslator(@Nonnull RenderingManager rm,
                                 @Nonnull @RootOntology OWLOntology rootOntology,
                                 @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
                                 @Nonnull PropertyValueMinimiser propertyValueMinimiser,
-                                @Nonnull PropertyValueComparator propertyValueComparator) {
+                                @Nonnull PropertyValueComparator propertyValueComparator, @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
         this.rm = rm;
         this.rootOntology = rootOntology;
         this.ancestorsProvider = ancestorsProvider;
         this.propertyValueMinimiser = propertyValueMinimiser;
         this.propertyValueComparator = propertyValueComparator;
+        this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
 
     /**
@@ -115,8 +120,8 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                                                                 State initialState) {
         List<PropertyValue> propertyValues = new ArrayList<>();
         for (OWLAxiom axiom : relevantAxioms) {
-            AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology, initialState, rm));
+            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
+            propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology, initialState));
         }
         return propertyValues;
     }
@@ -141,7 +146,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
             result.add(DataFactory.get().getOWLSubClassOfAxiom(subject.getEntity(), cls.getEntity()));
         }
         for (PropertyValue propertyValue : classFrame.getPropertyValues()) {
-            AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
+            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
             result.addAll(translator.getAxioms(subject.getEntity(), propertyValue, mode));
         }
         return result;

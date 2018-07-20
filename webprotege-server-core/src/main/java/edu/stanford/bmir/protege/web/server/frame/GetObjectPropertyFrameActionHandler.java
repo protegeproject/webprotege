@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
@@ -34,15 +35,15 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     private final RenderingManager rm;
 
     @Nonnull
-    private final OWLOntology rootOntology;
+    private final Provider<ObjectPropertyFrameTranslator> translatorProvider;
 
     @Inject
     public GetObjectPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull RenderingManager rm,
-                                               @Nonnull OWLOntology rootOntology) {
+                                               @Nonnull Provider<ObjectPropertyFrameTranslator> translatorProvider) {
         super(accessManager);
         this.rm = rm;
-        this.rootOntology = rootOntology;
+        this.translatorProvider = translatorProvider;
     }
 
     @Nullable
@@ -53,9 +54,7 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
 
     @Nonnull
     public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        FrameTranslator<ObjectPropertyFrame, OWLObjectPropertyData> translator = new ObjectPropertyFrameTranslator(rm,
-                                                                                                                   rootOntology);
-
+        ObjectPropertyFrameTranslator translator = translatorProvider.get();
         OWLObjectPropertyData objectPropertyData = rm.getRendering(action.getSubject());
         ObjectPropertyFrame f = translator.getFrame(objectPropertyData);
         logger.info(BROWSING,

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
@@ -54,8 +55,8 @@ public class GetDataPropertyFrameActionHandler extends AbstractProjectActionHand
     @Override
     public GetDataPropertyFrameResult execute(@Nonnull GetDataPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
         DataPropertyFrameTranslator translator = translatorProvider.get();
-        final DataPropertyFrame frame = translator.getFrame(renderingManager.getRendering(action.getSubject())
-        );
+        OWLDataPropertyData dataPropertyData = renderingManager.getRendering(action.getSubject());
+        DataPropertyFrame frame = translator.getFrame(dataPropertyData);
         String displayName = renderingManager.getShortForm(action.getSubject());
         logger.info(BROWSING,
                     "{} {} retrieved DataProperty frame for {} ({})",

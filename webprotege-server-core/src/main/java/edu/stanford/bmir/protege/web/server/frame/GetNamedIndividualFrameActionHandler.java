@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,10 +64,8 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
     @Override
     public GetNamedIndividualFrameResult execute(@Nonnull GetNamedIndividualFrameAction action,
                                                  @Nonnull ExecutionContext executionContext) {
-        NamedIndividualFrame frame = translator.getFrame(
-                renderingManager.getRendering(action.getSubject())
-        );
-        String rendering = renderingManager.getShortForm(action.getSubject());
+        OWLNamedIndividualData individualData = renderingManager.getRendering(action.getSubject());
+        NamedIndividualFrame frame = translator.getFrame(individualData);
         logger.info(BROWSING,
                      "{} {} retrieved NamedIndividual frame for {} ({})",
                     action.getProjectId(),

@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,11 +32,16 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     @Nonnull
     private final RenderingManager rm;
 
+    @Nonnull
+    private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
+
     @Inject
     public DataPropertyFrameTranslator(@Nonnull OWLOntology rootOntology,
-                                       @Nonnull RenderingManager renderingManager) {
+                                       @Nonnull RenderingManager renderingManager,
+                                       @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
         this.rootOntology = rootOntology;
         this.rm = renderingManager;
+        this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
 
     @Override
@@ -61,10 +67,10 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
             }
         }
         Set<PropertyValue> propertyValues = new HashSet<>();
-        AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
+        AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED,
-                                                               rm));
+            propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED
+            ));
         }
 
         PropertyValueList pvl = new PropertyValueList(propertyValues);
@@ -75,7 +81,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     public Set<OWLAxiom> getAxioms(DataPropertyFrame frame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
-            AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
+            AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
             result.addAll(translator.getAxioms(frame.getSubject().getEntity(), pv, mode));
         }
         for(OWLClassData domain : frame.getDomains()) {

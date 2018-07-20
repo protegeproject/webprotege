@@ -69,7 +69,8 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
         OWLClass subject = action.getSubject();
         OWLClassData subjectData = renderingManager.getRendering(subject);
-        ClassFrame f = translatorProvider.get().getFrame(subjectData);
+        ClassFrameTranslator translator = translatorProvider.get();
+        ClassFrame f = translator.getFrame(subjectData);
         ProjectId projectId = action.getProjectId();
         logger.info(BROWSING,
                     "{} {} retrieved Class frame for {} ({})",
