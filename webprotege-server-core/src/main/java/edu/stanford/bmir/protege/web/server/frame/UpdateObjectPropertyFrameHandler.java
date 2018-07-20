@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -41,7 +40,7 @@ public class UpdateObjectPropertyFrameHandler extends AbstractUpdateFrameHandler
     }
 
     @Override
-    protected Result createResponse(LabelledFrame<ObjectPropertyFrame> to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(ObjectPropertyFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 
@@ -51,7 +50,7 @@ public class UpdateObjectPropertyFrameHandler extends AbstractUpdateFrameHandler
     }
 
     @Override
-    protected String getChangeDescription(LabelledFrame<ObjectPropertyFrame> from, LabelledFrame<ObjectPropertyFrame> to) {
+    protected String getChangeDescription(ObjectPropertyFrame from, ObjectPropertyFrame to) {
         return "Edited object property";
     }
 

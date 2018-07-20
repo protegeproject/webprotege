@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
@@ -51,7 +50,7 @@ public class UpdateClassFrameActionHandler extends AbstractUpdateFrameHandler<Up
     }
 
     @Override
-    protected Result createResponse(LabelledFrame<ClassFrame> to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(ClassFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 
@@ -61,7 +60,7 @@ public class UpdateClassFrameActionHandler extends AbstractUpdateFrameHandler<Up
     }
 
     @Override
-    protected String getChangeDescription(LabelledFrame<ClassFrame> from, LabelledFrame<ClassFrame> to) {
+    protected String getChangeDescription(ClassFrame from, ClassFrame to) {
         return "Edited class";
     }
 }

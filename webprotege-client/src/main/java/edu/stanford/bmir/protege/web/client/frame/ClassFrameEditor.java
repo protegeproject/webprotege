@@ -17,8 +17,6 @@ import edu.stanford.bmir.protege.web.client.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
-import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
-import edu.stanford.bmir.protege.web.client.tag.TagListView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -27,7 +25,6 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -42,7 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
  */
-public class ClassFrameEditor extends SimplePanel implements ValueEditor<LabelledFrame<ClassFrame>>, ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
+public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFrame>, ClassFrameEditorPresenter, EditorView<ClassFrame> {
 
     @UiField
     protected TextBox iriField;
@@ -55,9 +52,6 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
 
     @UiField(provided = true)
     protected final PrimitiveDataListEditor classes;
-
-
-    private LabelledFrame<ClassFrame> lastClassFrame;
 
     private OWLClassData currentSubject;
 
@@ -94,19 +88,17 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         this.entityDisplay = checkNotNull(entityDisplay);
     }
 
-    public void setValue(final LabelledFrame<ClassFrame> lcf) {
+    public void setValue(final ClassFrame frame) {
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
-        lastClassFrame = lcf;
-        currentSubject = lcf.getFrame().getSubject();
-        entityDisplay.setDisplayedEntity(java.util.Optional.of(currentSubject));
-        String decodedIri = URL.decode(lcf.getFrame().getSubject().getEntity().getIRI().toString());
+        currentSubject = frame.getSubject();
+        entityDisplay.setDisplayedEntity(Optional.of(currentSubject));
+        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
         iriField.setValue(decodedIri);
-        ArrayList<PropertyAnnotationValue> annotationPropertyValues = new ArrayList<>(lcf.getFrame()
-                                                                               .getAnnotationPropertyValues());
+        ArrayList<PropertyAnnotationValue> annotationPropertyValues = new ArrayList<>(frame.getAnnotationPropertyValues());
         annotations.setValue(new PropertyValueList(annotationPropertyValues));
-        ArrayList<PropertyValue> logicalPropertyValues = new ArrayList<>(lcf.getFrame().getLogicalPropertyValues());
+        ArrayList<PropertyValue> logicalPropertyValues = new ArrayList<>(frame.getLogicalPropertyValues());
         properties.setValue(new PropertyValueList(logicalPropertyValues));
-        classes.setValue(new ArrayList<>(lcf.getFrame().getClassEntries()));
+        classes.setValue(new ArrayList<>(frame.getClassEntries()));
     }
 
 
@@ -184,21 +176,18 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
 
 
     @Override
-    public Optional<LabelledFrame<ClassFrame>> getValue() {
+    public Optional<ClassFrame> getValue() {
         if(currentSubject == null) {
             return Optional.empty();
         }
         else {
             Set<OWLClassData> classesData = new HashSet<>();
-            for(OWLPrimitiveData cls : classes.getValue().get()) {
-                classesData.add((OWLClassData) cls);
-            }
+            classes.getValue().ifPresent(clses -> clses.forEach(cls -> classesData.add((OWLClassData) cls)));
             Set<PropertyValue> propertyValues = new TreeSet<>();
-            propertyValues.addAll(annotations.getValue().get().getPropertyValues());
-            propertyValues.addAll(properties.getValue().get().getPropertyValues());
-            ClassFrame cf = new ClassFrame(currentSubject, classesData, propertyValues);
-            LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<>(lastClassFrame.getDisplayName(), cf);
-            return Optional.of(labelledClassFrame);
+            annotations.getValue().ifPresent(annos -> propertyValues.addAll(annos.getPropertyValues()));
+            properties.getValue().ifPresent(props -> propertyValues.addAll(props.getPropertyValues()));
+            ClassFrame clsFrame = new ClassFrame(currentSubject, classesData, propertyValues);
+            return Optional.of(clsFrame);
         }
     }
 
@@ -212,7 +201,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
         annotations.clearValue();
         properties.clearValue();
         classes.clearValue();
-        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
+        entityDisplay.setDisplayedEntity(Optional.empty());
     }
 
     @UiHandler("annotations")
@@ -263,7 +252,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<Labelle
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<ClassFrame>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<ClassFrame>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

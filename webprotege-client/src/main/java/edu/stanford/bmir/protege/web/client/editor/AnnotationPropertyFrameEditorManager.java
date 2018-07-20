@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
 import edu.stanford.bmir.protege.web.client.frame.AnnotationPropertyFrameEditor;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
@@ -16,7 +15,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<AnnotationPropertyFrame>, GetAnnotationPropertyFrameAction, GetAnnotationPropertyFrameResult> {
+public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEntityContext, AnnotationPropertyFrame, GetAnnotationPropertyFrameAction, GetAnnotationPropertyFrameResult> {
 
     private final AnnotationPropertyFrameEditor editor;
 
@@ -31,7 +30,7 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
     }
 
     @Override
-    public EditorView<LabelledFrame<AnnotationPropertyFrame>> getView(OWLEntityContext editorContext) {
+    public EditorView<AnnotationPropertyFrame> getView(OWLEntityContext editorContext) {
         return editor;
     }
 
@@ -41,12 +40,12 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
     }
 
     @Override
-    public LabelledFrame<AnnotationPropertyFrame> extractObject(GetAnnotationPropertyFrameResult result) {
+    public AnnotationPropertyFrame extractObject(GetAnnotationPropertyFrameResult result) {
         return result.getFrame();
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<AnnotationPropertyFrame>> createUpdateObjectAction(LabelledFrame<AnnotationPropertyFrame> pristineObject, LabelledFrame<AnnotationPropertyFrame> editedObject, OWLEntityContext editorContext) {
+    public UpdateObjectAction<AnnotationPropertyFrame> createUpdateObjectAction(AnnotationPropertyFrame pristineObject, AnnotationPropertyFrame editedObject, OWLEntityContext editorContext) {
         return new UpdateAnnotationPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 }

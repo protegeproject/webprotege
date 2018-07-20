@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameAction;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -41,7 +40,7 @@ public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFr
     }
 
     @Override
-    protected Result createResponse(LabelledFrame<AnnotationPropertyFrame> to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(AnnotationPropertyFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 
@@ -51,7 +50,7 @@ public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFr
     }
 
     @Override
-    protected String getChangeDescription(LabelledFrame<AnnotationPropertyFrame> from, LabelledFrame<AnnotationPropertyFrame> to) {
+    protected String getChangeDescription(AnnotationPropertyFrame from, AnnotationPropertyFrame to) {
         return "Edited annotation property";
     }
 

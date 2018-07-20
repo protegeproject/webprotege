@@ -17,7 +17,7 @@ public class UpdateObjectPropertyFrameAction extends UpdateFrameAction<ObjectPro
     private UpdateObjectPropertyFrameAction() {
     }
 
-    public UpdateObjectPropertyFrameAction(ProjectId projectId, LabelledFrame<ObjectPropertyFrame> from, LabelledFrame<ObjectPropertyFrame> to) {
+    public UpdateObjectPropertyFrameAction(ProjectId projectId, ObjectPropertyFrame from, ObjectPropertyFrame to) {
         super(projectId, from, to);
     }
 }

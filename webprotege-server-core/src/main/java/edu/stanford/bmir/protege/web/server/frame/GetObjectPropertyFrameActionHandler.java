@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.slf4j.Logger;
@@ -32,17 +31,17 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
     private static Logger logger = LoggerFactory.getLogger(GetObjectPropertyFrameAction.class);
 
     @Nonnull
-    private final RenderingManager renderer;
+    private final RenderingManager rm;
 
     @Nonnull
     private final OWLOntology rootOntology;
 
     @Inject
     public GetObjectPropertyFrameActionHandler(@Nonnull AccessManager accessManager,
-                                               @Nonnull RenderingManager renderer,
+                                               @Nonnull RenderingManager rm,
                                                @Nonnull OWLOntology rootOntology) {
         super(accessManager);
-        this.renderer = renderer;
+        this.rm = rm;
         this.rootOntology = rootOntology;
     }
 
@@ -54,20 +53,17 @@ public class GetObjectPropertyFrameActionHandler extends AbstractProjectActionHa
 
     @Nonnull
     public GetObjectPropertyFrameResult execute(@Nonnull GetObjectPropertyFrameAction action, @Nonnull ExecutionContext executionContext) {
-        FrameTranslator<ObjectPropertyFrame, OWLObjectPropertyData> translator = new ObjectPropertyFrameTranslator(renderer,
+        FrameTranslator<ObjectPropertyFrame, OWLObjectPropertyData> translator = new ObjectPropertyFrameTranslator(rm,
                                                                                                                    rootOntology);
 
-        FrameActionResultTranslator<ObjectPropertyFrame, OWLObjectPropertyData> t = new FrameActionResultTranslator<>(
-                renderer,
-                translator,
-                renderer.getRendering(action.getSubject()));
-        LabelledFrame<ObjectPropertyFrame> f = t.doIT();
+        OWLObjectPropertyData objectPropertyData = rm.getRendering(action.getSubject());
+        ObjectPropertyFrame f = translator.getFrame(objectPropertyData);
         logger.info(BROWSING,
                      "{} {} retrieved ObjectProperty frame for {} ({})",
                      action.getProjectId(),
                      executionContext.getUserId(),
                      action.getSubject(),
-                     f.getDisplayName());
+                     f.getSubject().getBrowserText());
         return new GetObjectPropertyFrameResult(f);
     }
 

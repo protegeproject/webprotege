@@ -24,7 +24,6 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -42,11 +41,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/12/2012
  */
-public class NamedIndividualFrameEditor extends SimplePanel implements ValueEditor<LabelledFrame<NamedIndividualFrame>>, HasEnabled, EditorView<LabelledFrame<NamedIndividualFrame>> {
+public class NamedIndividualFrameEditor extends SimplePanel implements ValueEditor<NamedIndividualFrame>, HasEnabled, EditorView<NamedIndividualFrame> {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
-    private java.util.Optional<LabelledFrame<NamedIndividualFrame>> editedFrame = java.util.Optional.empty();
+    private java.util.Optional<NamedIndividualFrame> editedFrame = Optional.empty();
 
     @UiField
     protected TextBox iriField;
@@ -118,15 +117,15 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     }
 
     @Override
-    public void setValue(final LabelledFrame<NamedIndividualFrame> frame) {
-        editedFrame = java.util.Optional.of(frame);
-        String decodedIri = URL.decode(frame.getFrame().getSubject().getEntity().getIRI().toString());
+    public void setValue(final NamedIndividualFrame frame) {
+        editedFrame = Optional.of(frame);
+        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
         iriField.setValue(decodedIri);
-        assertions.setValue(frame.getFrame().getPropertyValueList());
+        assertions.setValue(frame.getPropertyValueList());
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
-        types.setValue(new ArrayList<>(frame.getFrame().getClasses()));
-        sameAs.setValue(new ArrayList<>(frame.getFrame().getSameIndividuals()));
-        entityDisplay.setDisplayedEntity(java.util.Optional.of(frame.getFrame().getSubject()));
+        types.setValue(new ArrayList<>(frame.getClasses()));
+        sameAs.setValue(new ArrayList<>(frame.getSameIndividuals()));
+        entityDisplay.setDisplayedEntity(Optional.of(frame.getSubject()));
     }
 
     @Override
@@ -140,7 +139,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     }
 
     @Override
-    public Optional<LabelledFrame<NamedIndividualFrame>> getValue() {
+    public Optional<NamedIndividualFrame> getValue() {
         GWT.log("[NamedIndividualFrameEditor] Get value: Dirty: " + isDirty() + " Edited frame: " + editedFrame);
        if(!editedFrame.isPresent()) {
            return Optional.empty();
@@ -148,10 +147,10 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
        PropertyValueList propertyValueList = assertions.getValue().get();
        Set<OWLClassData> rawTypes = getRawTypes();
        Set<OWLNamedIndividualData> sameAs = getRawSameAs();
-       NamedIndividualFrame reference = new NamedIndividualFrame(
-               editedFrame.get().getFrame().getSubject(),
+       NamedIndividualFrame frame = new NamedIndividualFrame(
+               editedFrame.get().getSubject(),
                rawTypes, propertyValueList, sameAs);
-       return Optional.of(new LabelledFrame<>(editedFrame.get().getDisplayName(), reference));
+       return Optional.of(frame);
    }
 
     private Set<OWLClassData> getRawTypes() {
@@ -228,7 +227,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
         types.clearValue();
         assertions.clearValue();
         sameAs.clearValue();
-        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
+        entityDisplay.setDisplayedEntity(Optional.empty());
     }
 
     @Override
@@ -237,7 +236,7 @@ public class NamedIndividualFrameEditor extends SimplePanel implements ValueEdit
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<NamedIndividualFrame>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<NamedIndividualFrame>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 }

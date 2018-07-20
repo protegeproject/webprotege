@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.editor;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.frame.ClassFrameEditor;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
@@ -16,7 +15,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ClassFrame>, GetClassFrameAction, GetClassFrameResult> {
+public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, ClassFrame, GetClassFrameAction, GetClassFrameResult> {
 
     private ClassFrameEditor editor;
 
@@ -26,7 +25,7 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
     }
 
     @Override
-    public EditorView<LabelledFrame<ClassFrame>> getView(OWLEntityContext context) {
+    public EditorView<ClassFrame> getView(OWLEntityContext context) {
         return editor;
     }
 
@@ -36,12 +35,12 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
     }
 
     @Override
-    public LabelledFrame<ClassFrame> extractObject(GetClassFrameResult result) {
+    public ClassFrame extractObject(GetClassFrameResult result) {
         return result.getFrame();
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<ClassFrame>> createUpdateObjectAction(LabelledFrame<ClassFrame> pristineObject, LabelledFrame<ClassFrame> editedObject, OWLEntityContext editorContext) {
+    public UpdateObjectAction<ClassFrame> createUpdateObjectAction(ClassFrame pristineObject, ClassFrame editedObject, OWLEntityContext editorContext) {
         return new UpdateClassFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 

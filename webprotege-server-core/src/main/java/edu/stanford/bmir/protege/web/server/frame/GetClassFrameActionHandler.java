@@ -4,15 +4,12 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
-import edu.stanford.bmir.protege.web.server.tag.TagsManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,18 +68,15 @@ public class GetClassFrameActionHandler extends AbstractProjectActionHandler<Get
     @Override
     public GetClassFrameResult execute(@Nonnull GetClassFrameAction action, @Nonnull ExecutionContext executionContext) {
         OWLClass subject = action.getSubject();
-        FrameActionResultTranslator<ClassFrame, OWLClassData> translator = new FrameActionResultTranslator<>(
-                renderingManager,
-                translatorProvider.get(),
-                renderingManager.getRendering(subject));
-        LabelledFrame<ClassFrame> f = translator.doIT();
+        OWLClassData subjectData = renderingManager.getRendering(subject);
+        ClassFrame f = translatorProvider.get().getFrame(subjectData);
         ProjectId projectId = action.getProjectId();
         logger.info(BROWSING,
                     "{} {} retrieved Class frame for {} ({})",
                     projectId,
                     executionContext.getUserId(),
                     subject,
-                    f.getDisplayName());
+                    f.getSubject().getBrowserText());
         return new GetClassFrameResult(f);
     }
 }

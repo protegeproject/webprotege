@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.frame.ObjectPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
@@ -16,7 +15,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ObjectPropertyFrame>, GetObjectPropertyFrameAction, GetObjectPropertyFrameResult> {
+public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityContext, ObjectPropertyFrame, GetObjectPropertyFrameAction, GetObjectPropertyFrameResult> {
 
     private final ObjectPropertyFrameEditor editor;
 
@@ -26,7 +25,7 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
     }
 
     @Override
-    public EditorView<LabelledFrame<ObjectPropertyFrame>> getView(OWLEntityContext editorContext) {
+    public EditorView<ObjectPropertyFrame> getView(OWLEntityContext editorContext) {
         return editor;
     }
 
@@ -36,12 +35,12 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
     }
 
     @Override
-    public LabelledFrame<ObjectPropertyFrame> extractObject(GetObjectPropertyFrameResult result) {
+    public ObjectPropertyFrame extractObject(GetObjectPropertyFrameResult result) {
         return result.getFrame();
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<ObjectPropertyFrame>> createUpdateObjectAction(LabelledFrame<ObjectPropertyFrame> pristineObject, LabelledFrame<ObjectPropertyFrame> editedObject, OWLEntityContext editorContext) {
+    public UpdateObjectAction<ObjectPropertyFrame> createUpdateObjectAction(ObjectPropertyFrame pristineObject, ObjectPropertyFrame editedObject, OWLEntityContext editorContext) {
         return new UpdateObjectPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 

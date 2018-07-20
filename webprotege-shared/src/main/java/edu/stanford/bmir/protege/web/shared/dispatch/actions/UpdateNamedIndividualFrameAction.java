@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
@@ -20,7 +19,7 @@ public class UpdateNamedIndividualFrameAction extends UpdateFrameAction<NamedInd
     private UpdateNamedIndividualFrameAction() {
     }
 
-    public UpdateNamedIndividualFrameAction(ProjectId projectId, LabelledFrame<NamedIndividualFrame> from, LabelledFrame<NamedIndividualFrame> to) {
+    public UpdateNamedIndividualFrameAction(ProjectId projectId, NamedIndividualFrame from, NamedIndividualFrame to) {
         super(projectId, from, to);
     }
 }

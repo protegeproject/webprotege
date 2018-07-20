@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateNamedIndividu
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -51,7 +50,7 @@ public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandle
     }
 
     @Override
-    protected Result createResponse(LabelledFrame<NamedIndividualFrame> to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(NamedIndividualFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 
@@ -61,7 +60,7 @@ public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandle
     }
 
     @Override
-    protected String getChangeDescription(LabelledFrame<NamedIndividualFrame> from, LabelledFrame<NamedIndividualFrame> to) {
+    protected String getChangeDescription(NamedIndividualFrame from, NamedIndividualFrame to) {
         return "Edited individual";
     }
 }

@@ -1,20 +1,16 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
-import edu.stanford.bmir.protege.web.shared.tag.Tag;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassFrame>> {
+public class GetClassFrameResult implements GetObjectResult<ClassFrame> {
 
 
-    private LabelledFrame<ClassFrame> frame;
+    private ClassFrame frame;
 
     /**
      * For serialization purposes only
@@ -22,11 +18,11 @@ public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassF
     private GetClassFrameResult() {
     }
 
-    public GetClassFrameResult(LabelledFrame<ClassFrame> frame) {
+    public GetClassFrameResult(ClassFrame frame) {
         this.frame = frame;
     }
 
-    public LabelledFrame<ClassFrame> getFrame() {
+    public ClassFrame getFrame() {
         return frame;
     }
 
@@ -36,7 +32,7 @@ public class GetClassFrameResult implements GetObjectResult<LabelledFrame<ClassF
      * @return The object.  Not {@code null}.
      */
     @Override
-    public LabelledFrame<ClassFrame> getObject() {
+    public ClassFrame getObject() {
         return frame;
     }
 }

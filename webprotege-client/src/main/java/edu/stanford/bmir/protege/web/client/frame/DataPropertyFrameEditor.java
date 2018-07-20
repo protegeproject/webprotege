@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 
 import javax.annotation.Nonnull;
@@ -41,9 +40,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class DataPropertyFrameEditor extends Composite implements EditorView<LabelledFrame<DataPropertyFrame>>, HasEnabled {
+public class DataPropertyFrameEditor extends Composite implements EditorView<DataPropertyFrame>, HasEnabled {
 
-    private Optional<LabelledFrame<DataPropertyFrame>> lastDataPropertyFrame = Optional.empty();
+    private Optional<DataPropertyFrame> lastDataPropertyFrame = Optional.empty();
 
     interface DataPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, DataPropertyFrameEditor> {
 
@@ -128,17 +127,16 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     }
 
     @Override
-    public void setValue(LabelledFrame<DataPropertyFrame> object) {
+    public void setValue(DataPropertyFrame frame) {
         dirty = false;
-        lastDataPropertyFrame = Optional.of(object);
-        final DataPropertyFrame frame = object.getFrame();
-        String decodedIri = URL.decode(object.getFrame().getSubject().getEntity().getIRI().toString());
+        lastDataPropertyFrame = Optional.of(frame);
+        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
         iriField.setValue(decodedIri);
         annotations.setValue(frame.getPropertyValueList());
         domains.setValue(new ArrayList<>(frame.getDomains()));
         ranges.setValue(new ArrayList<>(frame.getRanges()));
         functionalCheckBox.setValue(frame.isFunctional());
-        entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
+        entityDisplay.setDisplayedEntity(Optional.of(frame.getSubject()));
 
     }
 
@@ -148,11 +146,11 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         annotations.clearValue();
         domains.clearValue();
         ranges.clearValue();
-        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
+        entityDisplay.setDisplayedEntity(Optional.empty());
     }
 
     @Override
-    public Optional<LabelledFrame<DataPropertyFrame>> getValue() {
+    public Optional<DataPropertyFrame> getValue() {
         if(!lastDataPropertyFrame.isPresent()) {
             return Optional.empty();
         }
@@ -168,12 +166,12 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
                 rangeTypes.add(((OWLDatatypeData) primitiveData));
             }
         }
-        DataPropertyFrame frame = new DataPropertyFrame(lastDataPropertyFrame.get().getFrame().getSubject(),
+        DataPropertyFrame frame = new DataPropertyFrame(lastDataPropertyFrame.get().getSubject(),
                                                         annotations.getValue().get(),
                                                         domainsClasses,
                                                         rangeTypes,
                                                         functionalCheckBox.getValue());
-        return Optional.of(new LabelledFrame<>(lastDataPropertyFrame.get().getDisplayName(), frame));
+        return Optional.of(frame);
     }
 
     @Override
@@ -187,7 +185,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<DataPropertyFrame>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<DataPropertyFrame>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

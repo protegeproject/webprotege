@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,14 +67,13 @@ public class GetNamedIndividualFrameActionHandler extends AbstractProjectActionH
                 renderingManager.getRendering(action.getSubject())
         );
         String rendering = renderingManager.getShortForm(action.getSubject());
-        LabelledFrame<NamedIndividualFrame> labelledFrame = new LabelledFrame<>(rendering, frame);
         logger.info(BROWSING,
                      "{} {} retrieved NamedIndividual frame for {} ({})",
                     action.getProjectId(),
                     executionContext.getUserId(),
                     action.getSubject(),
-                    labelledFrame.getDisplayName());
-        return new GetNamedIndividualFrameResult(labelledFrame);
+                    frame.getSubject().getBrowserText());
+        return new GetNamedIndividualFrameResult(frame);
 
     }
 }

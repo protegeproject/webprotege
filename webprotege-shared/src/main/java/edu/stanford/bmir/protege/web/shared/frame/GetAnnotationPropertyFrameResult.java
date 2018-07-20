@@ -11,24 +11,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetAnnotationPropertyFrameResult implements Result, GetObjectResult<LabelledFrame<AnnotationPropertyFrame>> {
+public class GetAnnotationPropertyFrameResult implements Result, GetObjectResult<AnnotationPropertyFrame> {
 
-    private LabelledFrame<AnnotationPropertyFrame> frame;
+    private AnnotationPropertyFrame frame;
 
     @GwtSerializationConstructor
     private GetAnnotationPropertyFrameResult() {
     }
 
-    public GetAnnotationPropertyFrameResult(LabelledFrame<AnnotationPropertyFrame> frame) {
+    public GetAnnotationPropertyFrameResult(AnnotationPropertyFrame frame) {
         this.frame = checkNotNull(frame);
     }
 
-    public LabelledFrame<AnnotationPropertyFrame> getFrame() {
+    public AnnotationPropertyFrame getFrame() {
         return frame;
     }
 
     @Override
-    public LabelledFrame<AnnotationPropertyFrame> getObject() {
+    public AnnotationPropertyFrame getObject() {
         return frame;
     }
 }

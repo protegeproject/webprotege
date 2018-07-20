@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.EventTag;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -72,8 +71,8 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
     @Nonnull
     @Override
     public Result execute(@Nonnull A action, @Nonnull ExecutionContext executionContext) {
-        LabelledFrame<F> from = action.getFrom();
-        LabelledFrame<F> to = action.getTo();
+        F from = action.getFrom();
+        F to = action.getTo();
         final EventTag startTag = eventManager.getCurrentTag();
         if(from.equals(to)) {
             return createResponse(action.getTo(), eventManager.getEventsFromTag(startTag));
@@ -83,17 +82,17 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
 
         FrameTranslator<F, S> translator = createTranslator();
 
-        final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<>(from.getFrame(), to.getFrame(),
+        final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<>(from, to,
                                                                                       translator,
                                                                                       rootOntology,
                                                                                       changeDescriptionGeneratorFactory);
-        ChangeDescriptionGenerator<S> generator = changeDescriptionGeneratorFactory.get("Edited " + from.getDisplayName());
+        ChangeDescriptionGenerator<S> generator = changeDescriptionGeneratorFactory.get("Edited " + from.getSubject().getBrowserText());
         applyChanges.applyChanges(userId, changeGenerator);
         EventList<ProjectEvent<?>> events = eventManager.getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);
     }
 
-//    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, LabelledFrame<F> from, LabelledFrame<F> to, UserId userId) {
+//    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, F from, F to, UserId userId) {
 //        // Set changes
 //        EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
 //        ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
@@ -109,9 +108,9 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
 //        project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
 //    }
 
-    protected abstract Result createResponse(LabelledFrame<F> to, EventList<ProjectEvent<?>> events);
+    protected abstract Result createResponse(F to, EventList<ProjectEvent<?>> events);
 
     protected abstract FrameTranslator<F, S> createTranslator();
 
-    protected abstract String getChangeDescription(LabelledFrame<F> from, LabelledFrame<F> to);
+    protected abstract String getChangeDescription(F from, F to);
 }

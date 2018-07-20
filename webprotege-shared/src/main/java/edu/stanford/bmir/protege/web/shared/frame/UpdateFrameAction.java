@@ -12,11 +12,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntityData> extends AbstractHasProjectAction<Result> implements UpdateObjectAction<LabelledFrame<F>> {
+public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntityData> extends AbstractHasProjectAction<Result> implements UpdateObjectAction<F> {
 
-    private LabelledFrame<F> from;
+    private F from;
 
-    private LabelledFrame<F> to;
+    private F to;
 
     /**
      * For serialization purposes only
@@ -24,19 +24,19 @@ public abstract class UpdateFrameAction<F extends Frame<S>, S extends OWLEntityD
     protected UpdateFrameAction() {
     }
 
-    protected UpdateFrameAction(ProjectId projectId, LabelledFrame<F> from, LabelledFrame<F> to) {
+    protected UpdateFrameAction(ProjectId projectId, F from, F to) {
         super(projectId);
         this.from = from;
         this.to = to;
     }
 
     @Override
-    public LabelledFrame<F> getFrom() {
+    public F getFrom() {
         return from;
     }
 
     @Override
-    public LabelledFrame<F> getTo() {
+    public F getTo() {
         return to;
     }
 }

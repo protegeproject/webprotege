@@ -14,7 +14,7 @@ public class UpdateAnnotationPropertyFrameAction extends UpdateFrameAction<Annot
     private UpdateAnnotationPropertyFrameAction() {
     }
 
-    public UpdateAnnotationPropertyFrameAction(ProjectId projectId, LabelledFrame<AnnotationPropertyFrame> from, LabelledFrame<AnnotationPropertyFrame> to) {
+    public UpdateAnnotationPropertyFrameAction(ProjectId projectId, AnnotationPropertyFrame from, AnnotationPropertyFrame to) {
         super(projectId, from, to);
     }
 }

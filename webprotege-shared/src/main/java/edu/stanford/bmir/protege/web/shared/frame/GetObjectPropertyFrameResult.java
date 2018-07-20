@@ -10,24 +10,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetObjectPropertyFrameResult implements GetObjectResult<LabelledFrame<ObjectPropertyFrame>> {
+public class GetObjectPropertyFrameResult implements GetObjectResult<ObjectPropertyFrame> {
 
-    private LabelledFrame<ObjectPropertyFrame> frame;
+    private ObjectPropertyFrame frame;
 
     @GwtSerializationConstructor
     private GetObjectPropertyFrameResult() {
     }
 
-    public GetObjectPropertyFrameResult(LabelledFrame<ObjectPropertyFrame> frame) {
+    public GetObjectPropertyFrameResult(ObjectPropertyFrame frame) {
         this.frame = checkNotNull(frame);
     }
 
-    public LabelledFrame<ObjectPropertyFrame> getFrame() {
+    public ObjectPropertyFrame getFrame() {
         return frame;
     }
 
     @Override
-    public LabelledFrame<ObjectPropertyFrame> getObject() {
+    public ObjectPropertyFrame getObject() {
         return frame;
     }
 }

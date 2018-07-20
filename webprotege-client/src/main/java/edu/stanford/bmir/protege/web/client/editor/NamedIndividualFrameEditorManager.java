@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.editor;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.UpdateNamedIndividualFrameAction;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.frame.NamedIndividualFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
@@ -16,7 +15,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<NamedIndividualFrame>, GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
+public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntityContext, NamedIndividualFrame, GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
     private final NamedIndividualFrameEditor editor;
 
@@ -26,7 +25,7 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
     }
 
     @Override
-    public EditorView<LabelledFrame<NamedIndividualFrame>> getView(OWLEntityContext context) {
+    public EditorView<NamedIndividualFrame> getView(OWLEntityContext context) {
         return editor;
     }
 
@@ -36,12 +35,12 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
     }
 
     @Override
-    public LabelledFrame<NamedIndividualFrame> extractObject(GetNamedIndividualFrameResult result) {
+    public NamedIndividualFrame extractObject(GetNamedIndividualFrameResult result) {
         return result.getFrame();
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<NamedIndividualFrame>> createUpdateObjectAction(LabelledFrame<NamedIndividualFrame> pristineObject, LabelledFrame<NamedIndividualFrame> editedObject, OWLEntityContext editorContext) {
+    public UpdateObjectAction<NamedIndividualFrame> createUpdateObjectAction(NamedIndividualFrame pristineObject, NamedIndividualFrame editedObject, OWLEntityContext editorContext) {
         return new UpdateNamedIndividualFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
@@ -19,7 +18,7 @@ public class UpdateClassFrameAction extends UpdateFrameAction<ClassFrame, OWLCla
     private UpdateClassFrameAction() {
     }
 
-    public UpdateClassFrameAction(ProjectId projectId, LabelledFrame<ClassFrame> from, LabelledFrame<ClassFrame> to) {
+    public UpdateClassFrameAction(ProjectId projectId, ClassFrame from, ClassFrame to) {
         super(projectId, from, to);
     }
 }

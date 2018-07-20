@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 
 import javax.annotation.Nonnull;
@@ -41,9 +40,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 24/04/2013
  */
-public class AnnotationPropertyFrameEditor extends Composite implements EditorView<LabelledFrame<AnnotationPropertyFrame>>, HasEnabled {
+public class AnnotationPropertyFrameEditor extends Composite implements EditorView<AnnotationPropertyFrame>, HasEnabled {
 
-    private Optional<LabelledFrame<AnnotationPropertyFrame>> lastFrame = Optional.empty();
+    private Optional<AnnotationPropertyFrame> lastFrame = Optional.empty();
 
     interface AnnotationPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, AnnotationPropertyFrameEditor> {
 
@@ -132,12 +131,11 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     }
 
     @Override
-    public void setValue(LabelledFrame<AnnotationPropertyFrame> object) {
+    public void setValue(AnnotationPropertyFrame frame) {
         dirty = false;
-        lastFrame = Optional.of(object);
-        entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
-        final AnnotationPropertyFrame frame = object.getFrame();
-        String decodedIri = URL.decode(object.getFrame().getSubject().getEntity().getIRI().toString());
+        lastFrame = Optional.of(frame);
+        entityDisplay.setDisplayedEntity(java.util.Optional.of(frame.getSubject()));
+        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
         iriField.setValue(decodedIri);
         annotations.setValue(frame.getPropertyValueList());
         domains.setValue(new ArrayList<>(frame.getDomains()));
@@ -154,7 +152,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     }
 
     @Override
-    public Optional<LabelledFrame<AnnotationPropertyFrame>> getValue() {
+    public Optional<AnnotationPropertyFrame> getValue() {
         if(!lastFrame.isPresent()) {
             return Optional.empty();
         }
@@ -166,11 +164,11 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         for(OWLPrimitiveData data : ranges.getValue().get()) {
             rangeTypes.add((OWLEntityData) data);
         }
-        AnnotationPropertyFrame frame = new AnnotationPropertyFrame(lastFrame.get().getFrame().getSubject(),
+        AnnotationPropertyFrame frame = new AnnotationPropertyFrame(lastFrame.get().getSubject(),
                                                                     annotations.getValue().get().getAnnotationPropertyValues(),
                                                                     domainsClasses,
                                                                     rangeTypes);
-        return Optional.of(new LabelledFrame<>(lastFrame.get().getDisplayName(), frame));
+        return Optional.of(frame);
     }
 
     @Override
@@ -184,7 +182,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<AnnotationPropertyFrame>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<AnnotationPropertyFrame>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

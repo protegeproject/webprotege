@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.EventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateDataPropertyFrameAction;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -41,7 +40,7 @@ public class UpdateDataPropertyFrameHandler extends AbstractUpdateFrameHandler<U
     }
 
     @Override
-    protected Result createResponse(LabelledFrame<DataPropertyFrame> to, EventList<ProjectEvent<?>> events) {
+    protected Result createResponse(DataPropertyFrame to, EventList<ProjectEvent<?>> events) {
         return new UpdateObjectResult(events);
     }
 
@@ -51,7 +50,7 @@ public class UpdateDataPropertyFrameHandler extends AbstractUpdateFrameHandler<U
     }
 
     @Override
-    protected String getChangeDescription(LabelledFrame<DataPropertyFrame> from, LabelledFrame<DataPropertyFrame> to) {
+    protected String getChangeDescription(DataPropertyFrame from, DataPropertyFrame to) {
         return "Edited data property";
     }
 

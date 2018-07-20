@@ -10,15 +10,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 28 Jul 16
  */
-public class GetDataPropertyFrameResult implements GetObjectResult<LabelledFrame<DataPropertyFrame>> {
+public class GetDataPropertyFrameResult implements GetObjectResult<DataPropertyFrame> {
 
-    private LabelledFrame<DataPropertyFrame> frame;
+    private DataPropertyFrame frame;
 
     @GwtSerializationConstructor
     private GetDataPropertyFrameResult() {
     }
 
-    public GetDataPropertyFrameResult(LabelledFrame<DataPropertyFrame> frame) {
+    public GetDataPropertyFrameResult(DataPropertyFrame frame) {
         this.frame = checkNotNull(frame);
     }
 
@@ -28,11 +28,11 @@ public class GetDataPropertyFrameResult implements GetObjectResult<LabelledFrame
      * @return The object.  Not {@code null}.
      */
     @Override
-    public LabelledFrame<DataPropertyFrame> getObject() {
+    public DataPropertyFrame getObject() {
         return frame;
     }
 
-    public LabelledFrame<DataPropertyFrame> getFrame() {
+    public DataPropertyFrame getFrame() {
         return frame;
     }
 }

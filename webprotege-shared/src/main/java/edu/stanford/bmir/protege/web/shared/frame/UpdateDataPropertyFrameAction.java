@@ -15,7 +15,7 @@ public class UpdateDataPropertyFrameAction extends UpdateFrameAction<DataPropert
     private UpdateDataPropertyFrameAction() {
     }
 
-    public UpdateDataPropertyFrameAction(ProjectId projectId, LabelledFrame<DataPropertyFrame> from, LabelledFrame<DataPropertyFrame> to) {
+    public UpdateDataPropertyFrameAction(ProjectId projectId, DataPropertyFrame from, DataPropertyFrame to) {
         super(projectId, from, to);
     }
 }

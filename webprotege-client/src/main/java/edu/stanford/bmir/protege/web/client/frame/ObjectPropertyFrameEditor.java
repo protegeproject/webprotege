@@ -43,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/01/2013
  */
-public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameEditor, ValueEditor<LabelledFrame<ObjectPropertyFrame>>, HasEnabled, EditorView<LabelledFrame<ObjectPropertyFrame>> {
+public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameEditor, ValueEditor<ObjectPropertyFrame>, HasEnabled, EditorView<ObjectPropertyFrame> {
 
     @UiField
     protected TextBox iriField;
@@ -62,7 +62,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private EntityDisplay entityDisplay = entityData -> {};
 
 
-    private Optional<LabelledFrame<ObjectPropertyFrame>> previouslySetValue = Optional.empty();
+    private Optional<ObjectPropertyFrame> previouslySetValue = Optional.empty();
 
     interface ObjectPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, ObjectPropertyFrameEditor> {
 
@@ -147,18 +147,17 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     @Override
-    public void setValue(LabelledFrame<ObjectPropertyFrame> object) {
+    public void setValue(ObjectPropertyFrame frame) {
         dirty = false;
-        final ObjectPropertyFrame frame = object.getFrame();
-        String decodedIri = URL.decode(object.getFrame().getSubject().getEntity().getIRI().toString());
+        String decodedIri = URL.decode(frame.getSubject().getEntity().getIRI().toString());
         iriField.setValue(decodedIri);
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
         characteristics.clear();
-        characteristics.addAll(object.getFrame().getCharacteristics());
-        domains.setValue(new ArrayList<>(object.getFrame().getDomains()));
-        ranges.setValue(new ArrayList<>(object.getFrame().getRanges()));
-        previouslySetValue = Optional.of(object);
-        entityDisplay.setDisplayedEntity(java.util.Optional.of(object.getFrame().getSubject()));
+        characteristics.addAll(frame.getCharacteristics());
+        domains.setValue(new ArrayList<>(frame.getDomains()));
+        ranges.setValue(new ArrayList<>(frame.getRanges()));
+        previouslySetValue = Optional.of(frame);
+        entityDisplay.setDisplayedEntity(Optional.of(frame.getSubject()));
     }
 
     @Override
@@ -167,17 +166,17 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         iriField.setValue("");
         annotations.clearValue();
         previouslySetValue = Optional.empty();
-        entityDisplay.setDisplayedEntity(java.util.Optional.empty());
+        entityDisplay.setDisplayedEntity(Optional.empty());
     }
 
     @Override
-    public Optional<LabelledFrame<ObjectPropertyFrame>> getValue() {
+    public Optional<ObjectPropertyFrame> getValue() {
         if(!previouslySetValue.isPresent()) {
             return previouslySetValue;
         }
         Set<PropertyAnnotationValue> annotationValueSet = new HashSet<PropertyAnnotationValue>();
         annotationValueSet.addAll(annotations.getValue().get().getAnnotationPropertyValues());
-        final ObjectPropertyFrame previousFrame = previouslySetValue.get().getFrame();
+        final ObjectPropertyFrame previousFrame = previouslySetValue.get();
         OWLObjectPropertyData subject = previousFrame.getSubject();
         List<OWLClassData> editedDomains = Lists.newArrayList();
         for(OWLPrimitiveData data : domains.getValue().get()) {
@@ -192,7 +191,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                 new HashSet<>(editedRanges),
                 Collections.emptySet(),
                 characteristics);
-        return Optional.of(new LabelledFrame<>(previouslySetValue.get().getDisplayName(), frame));
+        return Optional.of(frame);
     }
 
 
@@ -216,7 +215,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<ObjectPropertyFrame>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<ObjectPropertyFrame>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 }
