@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class OntologyIdData extends ObjectData<OWLOntologyID> {
+public abstract class OntologyIdData implements ObjectData<OWLOntologyID> {
 
     public static OntologyIdData get(@Nonnull OWLOntologyID ontologyID,
                                      @Nonnull String browserText) {

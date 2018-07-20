@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Set;
 
@@ -18,16 +19,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     Represents data about some object.  This data includes browser text for the object.
  * </p>
  */
-public abstract class ObjectData<O> implements HasBrowserText, HasSignature {
+public interface ObjectData<O> extends HasBrowserText, HasSignature {
 
-    public abstract O getObject();
+    @Nonnull
+    O getObject();
 
     /**
      * Gets the signature of this object.
      * @return A (possibly empty) set representing the signature of this object.
      */
     @Override
-    public Set<OWLEntity> getSignature() {
+    default Set<OWLEntity> getSignature() {
         if(getObject() instanceof HasSignature) {
             return ((HasSignature) getSignature()).getSignature();
         }

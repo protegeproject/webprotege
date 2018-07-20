@@ -15,25 +15,25 @@ import java.util.Optional;
  *     {@link IRI}.
  * </p>
  */
-public abstract class OWLPrimitiveData extends ObjectData<OWLObject> {
+public interface OWLPrimitiveData extends ObjectData<OWLObject> {
 
-    public abstract <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
+    <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
 
-    public abstract <R> R accept(OWLEntityVisitorEx<R> visitor, R defaultValue);
+    <R> R accept(OWLEntityVisitorEx<R> visitor, R defaultValue);
 
-    public abstract PrimitiveType getType();
+    PrimitiveType getType();
 
-    public boolean isOWLEntity() {
+    default boolean isOWLEntity() {
         return getObject() instanceof OWLEntity;
     }
 
-    public boolean isIRI() {
+    default boolean isIRI() {
         return getObject() instanceof IRI;
     }
 
-    public boolean isOWLLiteral() {
+    default boolean isOWLLiteral() {
         return getObject() instanceof OWLLiteral;
     }
 
-    public abstract Optional<OWLAnnotationValue> asAnnotationValue();
+    Optional<OWLAnnotationValue> asAnnotationValue();
 }
