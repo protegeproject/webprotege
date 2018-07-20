@@ -18,8 +18,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class OWLEntityData implements OWLPrimitiveData, Comparable<OWLEntityData> {
 
-    private static final OWLAnnotationProperty RDFS_LABEL = DataFactory.get().getRDFSLabel();
-
     public OWLEntity getEntity() {
         return (OWLEntity) getObject();
     }
