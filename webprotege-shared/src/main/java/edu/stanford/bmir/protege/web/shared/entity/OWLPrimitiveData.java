@@ -20,7 +20,7 @@ public interface OWLPrimitiveData extends ObjectData {
 
     @Nonnull
     @Override
-    OWLObject getObject();
+    OWLPrimitive getObject();
 
     <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
 
