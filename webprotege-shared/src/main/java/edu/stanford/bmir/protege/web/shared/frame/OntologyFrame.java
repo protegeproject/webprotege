@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import org.semanticweb.owlapi.model.HasShortForm;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -50,7 +51,7 @@ public class OntologyFrame implements HasSignature, Serializable, HasPropertyVal
     }
 
     @Override
-    public Set<PropertyValue> getPropertyValues() {
+    public ImmutableList<PropertyValue> getPropertyValues() {
         return propertyValueList.getPropertyValues();
     }
 

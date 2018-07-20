@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -56,7 +57,7 @@ public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, HasS
     }
 
     @Override
-    public Set<PropertyValue> getLogicalPropertyValues() {
+    public ImmutableList<PropertyValue> getLogicalPropertyValues() {
         return propertyValueList.getLogicalPropertyValues();
     }
 
@@ -66,7 +67,7 @@ public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, HasS
     }
 
     @Override
-    public Set<PropertyValue> getPropertyValues() {
+    public ImmutableList<PropertyValue> getPropertyValues() {
         return propertyValueList.getPropertyValues();
     }
 

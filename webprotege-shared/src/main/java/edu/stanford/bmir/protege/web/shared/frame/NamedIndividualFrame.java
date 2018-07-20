@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
@@ -64,12 +65,12 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>
     }
 
     @Override
-    public Set<PropertyValue> getLogicalPropertyValues() {
+    public ImmutableList<PropertyValue> getLogicalPropertyValues() {
         return propertyValueList.getLogicalPropertyValues();
     }
 
     @Override
-    public Set<PropertyValue> getPropertyValues() {
+    public ImmutableList<PropertyValue> getPropertyValues() {
         return propertyValueList.getPropertyValues();
     }
 

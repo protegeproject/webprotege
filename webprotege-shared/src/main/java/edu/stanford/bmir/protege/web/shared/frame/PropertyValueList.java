@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -53,15 +55,15 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
                           .toString();
     }
 
-    public Set<PropertyValue> getPropertyValues() {
-        return new LinkedHashSet<PropertyValue>(propertyValues);
+    public ImmutableList<PropertyValue> getPropertyValues() {
+        return ImmutableList.copyOf(propertyValues);
     }
 
     @Override
     public Set<PropertyAnnotationValue> getAnnotationPropertyValues() {
         Set<PropertyAnnotationValue> result = new LinkedHashSet<PropertyAnnotationValue>();
-        for(PropertyValue propertyValue : propertyValues) {
-            if(propertyValue.isAnnotation()) {
+        for (PropertyValue propertyValue : propertyValues) {
+            if (propertyValue.isAnnotation()) {
                 result.add((PropertyAnnotationValue) propertyValue);
             }
         }
@@ -69,28 +71,25 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
     }
 
     @Override
-    public Set<PropertyValue> getLogicalPropertyValues() {
-        Set<PropertyValue> result = new LinkedHashSet<PropertyValue>();
-        for(PropertyValue propertyValue : propertyValues) {
-            if(propertyValue.isLogical()) {
-                result.add(propertyValue);
-            }
-        }
-        return result;
+    public ImmutableList<PropertyValue> getLogicalPropertyValues() {
+        return propertyValues.stream()
+                             .filter(PropertyValue::isLogical)
+                             .collect(toImmutableList());
     }
 
     /**
      * Gets the signature of the object that implements this interface.
+     *
      * @return A set of entities that represent the signature of this object
      */
     @Override
     public Set<OWLEntity> getSignature() {
         Set<OWLEntity> result = new HashSet<OWLEntity>();
-        for(PropertyValue propertyValue : propertyValues) {
+        for (PropertyValue propertyValue : propertyValues) {
             result.addAll(propertyValue.getProperty().getSignature());
-            if(propertyValue instanceof PropertyAnnotationValue) {
+            if (propertyValue instanceof PropertyAnnotationValue) {
                 Optional<OWLEntityData> entityValue = ((PropertyAnnotationValue) propertyValue).getValueAsEntity();
-                if(entityValue.isPresent()) {
+                if (entityValue.isPresent()) {
                     result.add(entityValue.get().getEntity());
                 }
             }

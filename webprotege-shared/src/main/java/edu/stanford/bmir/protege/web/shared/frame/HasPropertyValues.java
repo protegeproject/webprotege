@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import java.util.Set;
+import com.google.common.collect.ImmutableList;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,5 +11,5 @@ import java.util.Set;
  */
 public interface HasPropertyValues {
 
-    Set<PropertyValue> getPropertyValues();
+    ImmutableList<PropertyValue> getPropertyValues();
 }

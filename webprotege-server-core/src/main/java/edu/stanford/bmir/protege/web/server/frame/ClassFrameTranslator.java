@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -85,7 +88,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     private ClassFrame translateToClassFrame(OWLClassData subject) {
-        ClassFrame.Builder builder = new ClassFrame.Builder(rm.getRendering(subject.getEntity()));
+        ClassFrame.Builder builder = ClassFrame.builder(rm.getRendering(subject.getEntity()));
         List<PropertyValue> propertyValues = Lists.newArrayList();
         final Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity(), rootOntology, true);
         propertyValues.addAll(translateAxiomsToPropertyValues(subject.getEntity(),
@@ -105,12 +108,14 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         }
         propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
         propertyValues.sort(propertyValueComparator);
-        builder.addPropertyValues(propertyValues);
-        for(OWLSubClassOfAxiom ax : rootOntology.getSubClassAxiomsForSubClass(subject.getEntity())) {
-            if(!ax.getSuperClass().isAnonymous()) {
-                builder.addClass(rm.getRendering(ax.getSuperClass().asOWLClass()));
-            }
-        }
+        builder.setPropertyValues(propertyValues);
+        ImmutableList<OWLClassData> entries = rootOntology.getSubClassAxiomsForSubClass(subject.getEntity()).stream()
+                                                          .filter(ax -> !ax.getSuperClass().isAnonymous())
+                                                          .map(ax -> ax.getSuperClass().asOWLClass())
+                                                          .distinct()
+                                                          .map(rm::getRendering)
+                                                          .collect(toImmutableList());
+        builder.setClassEntries(entries);
         return builder.build();
     }
 

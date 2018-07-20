@@ -186,7 +186,7 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFr
             Set<PropertyValue> propertyValues = new TreeSet<>();
             annotations.getValue().ifPresent(annos -> propertyValues.addAll(annos.getPropertyValues()));
             properties.getValue().ifPresent(props -> propertyValues.addAll(props.getPropertyValues()));
-            ClassFrame clsFrame = new ClassFrame(currentSubject, classesData, propertyValues);
+            ClassFrame clsFrame = ClassFrame.get(currentSubject, classesData, propertyValues);
             return Optional.of(clsFrame);
         }
     }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.junit.Before;
@@ -38,37 +39,35 @@ public class ClassFrame_TestCase {
     private PropertyValue propertyValue;
 
 
-    private Set<OWLClassData> classes;
+    private ImmutableList<OWLClassData> classes;
 
-    private Set<PropertyValue> propertyValues;
+    private ImmutableList<PropertyValue> propertyValues;
 
     @Before
     public void setUp() throws Exception {
-        classes = Sets.newHashSet(cls);
-        propertyValues = Sets.newHashSet(propertyValue);
-        classFrame = new ClassFrame(subject, classes, propertyValues);
-        otherClassFrame = new ClassFrame(subject, classes, propertyValues);
+        classes = ImmutableList.of(cls);
+        propertyValues = ImmutableList.of(propertyValue);
+        classFrame = ClassFrame.get(subject, classes, propertyValues);
+        otherClassFrame = ClassFrame.get(subject, classes, propertyValues);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerException() {
-        new ClassFrame(null);
-    }
-
+    @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfSubjectIsNull() {
-        new ClassFrame(null, classes, propertyValues);
+        ClassFrame.get(null, classes, propertyValues);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfClassesIsNull() {
-        new ClassFrame(subject, null, propertyValues);
+        ClassFrame.get(subject, null, propertyValues);
     }
 
 
+    @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfPropertyValuesIsNull() {
-        new ClassFrame(subject, classes, null);
+        ClassFrame.get(subject, classes, null);
     }
 
 
