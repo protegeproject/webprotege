@@ -20,6 +20,7 @@ import java.io.Serializable;
 @GwtCompatible(serializable = true)
 public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, Serializable {
 
+    @Nonnull
     public static NamedIndividualFrame get(@Nonnull OWLNamedIndividualData subject,
                                 @Nonnull ImmutableSet<OWLClassData> namedTypes,
                                 @Nonnull ImmutableSet<PropertyValue> propertyValueList,
@@ -30,13 +31,17 @@ public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndivi
                                                   sameIndividuals);
     }
 
+    @Nonnull
     public abstract OWLNamedIndividualData getSubject();
 
+    @Nonnull
     public abstract ImmutableSet<OWLClassData> getClasses();
 
+    @Nonnull
     @Override
     public abstract ImmutableSet<PropertyValue> getPropertyValues();
 
+    @Nonnull
     public abstract ImmutableSet<OWLNamedIndividualData> getSameIndividuals();
 
     @Override
@@ -44,11 +49,13 @@ public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndivi
         return getPropertyValueList().getAnnotationPropertyValues();
     }
 
+    @Nonnull
     @Override
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
         return getPropertyValueList().getLogicalPropertyValues();
     }
 
+    @Nonnull
     @Override
     public PropertyValueList getPropertyValueList() {
         return new PropertyValueList(getPropertyValues());
