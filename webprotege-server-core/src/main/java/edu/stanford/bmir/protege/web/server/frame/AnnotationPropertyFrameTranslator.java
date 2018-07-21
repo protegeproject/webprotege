@@ -39,7 +39,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
     public AnnotationPropertyFrame getFrame(OWLAnnotationPropertyData subject) {
         ImmutableSet.Builder<PropertyAnnotationValue> propertyValues = ImmutableSet.builder();
         ImmutableSet.Builder<OWLEntityData> domains = ImmutableSet.builder();
-        ImmutableList.Builder<OWLEntityData> ranges = ImmutableList.builder();
+        ImmutableSet.Builder<OWLEntityData> ranges = ImmutableSet.builder();
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getEntity().getIRI())) {
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {

@@ -162,7 +162,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         for(OWLPrimitiveData data : domains.getValue().get()) {
             domainsClasses.add((OWLClassData) data);
         }
-        final ImmutableList.Builder<OWLEntityData> rangeTypes = ImmutableList.builder();
+        final ImmutableSet.Builder<OWLEntityData> rangeTypes = ImmutableSet.builder();
         for(OWLPrimitiveData data : ranges.getValue().get()) {
             rangeTypes.add((OWLEntityData) data);
         }
