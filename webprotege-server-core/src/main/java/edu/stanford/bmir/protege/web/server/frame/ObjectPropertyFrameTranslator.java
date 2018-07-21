@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
@@ -13,11 +12,9 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
@@ -29,7 +26,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectPropertyFrame, OWLObjectPropertyData> {
 
     @Nonnull
-    private final RenderingManager rm;
+    private final ContextRenderer ren;
 
     @Nonnull
     private final OWLOntology rootOntology;
@@ -38,10 +35,10 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
     @Inject
-    public ObjectPropertyFrameTranslator(@Nonnull RenderingManager rm,
+    public ObjectPropertyFrameTranslator(@Nonnull ContextRenderer ren,
                                          @Nonnull @RootOntology OWLOntology rootOntology,
                                          @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
-        this.rm = rm;
+        this.ren = ren;
         this.rootOntology = rootOntology;
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
@@ -57,13 +54,13 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
             for (OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {
                 final OWLClassExpression domain = ax.getDomain();
                 if (!domain.isAnonymous()) {
-                    domains.add(rm.getRendering(domain.asOWLClass()));
+                    domains.add(ren.getRendering(domain.asOWLClass()));
                 }
             }
             for (OWLObjectPropertyRangeAxiom ax : ontology.getObjectPropertyRangeAxioms(subject.getEntity())) {
                 OWLClassExpression range = ax.getRange();
                 if (!range.isAnonymous()) {
-                    ranges.add(rm.getRendering(range.asOWLClass()));
+                    ranges.add(ren.getRendering(range.asOWLClass()));
                 }
             }
             if (ontology.getAxiomCount(AxiomType.FUNCTIONAL_OBJECT_PROPERTY) > 1) {
