@@ -72,13 +72,15 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         return EntityType.NAMED_INDIVIDUAL;
     }
 
+    @Nonnull
     @Override
-    public NamedIndividualFrame getFrame(OWLNamedIndividualData subject) {
+    public NamedIndividualFrame getFrame(@Nonnull OWLNamedIndividualData subject) {
         return translateToNamedIndividualFrame(subject);
     }
 
+    @Nonnull
     @Override
-    public Set<OWLAxiom> getAxioms(NamedIndividualFrame frame, Mode mode) {
+    public Set<OWLAxiom> getAxioms(@Nonnull NamedIndividualFrame frame, @Nonnull Mode mode) {
         return translateToAxioms(frame.getSubject().getEntity(), frame, mode);
     }
 

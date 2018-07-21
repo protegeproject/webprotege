@@ -34,8 +34,9 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
         this.rootOntology = rootOntology;
     }
 
+    @Nonnull
     @Override
-    public AnnotationPropertyFrame getFrame(OWLAnnotationPropertyData subject) {
+    public AnnotationPropertyFrame getFrame(@Nonnull OWLAnnotationPropertyData subject) {
         ImmutableSet.Builder<PropertyAnnotationValue> propertyValues = ImmutableSet.builder();
         ImmutableSet.Builder<OWLEntityData> domains = ImmutableSet.builder();
         ImmutableSet.Builder<OWLEntityData> ranges = ImmutableSet.builder();
@@ -70,8 +71,9 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
                                            ranges.build());
     }
 
+    @Nonnull
     @Override
-    public Set<OWLAxiom> getAxioms(AnnotationPropertyFrame frame, Mode mode) {
+    public Set<OWLAxiom> getAxioms(@Nonnull AnnotationPropertyFrame frame, @Nonnull Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
         for (PropertyAnnotationValue value : frame.getPropertyValues()) {
             value.getValue()

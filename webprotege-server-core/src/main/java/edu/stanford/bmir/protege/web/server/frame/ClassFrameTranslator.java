@@ -78,13 +78,15 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         return EntityType.CLASS;
     }
 
+    @Nonnull
     @Override
-    public ClassFrame getFrame(OWLClassData subject) {
+    public ClassFrame getFrame(@Nonnull OWLClassData subject) {
         return translateToClassFrame(subject);
     }
 
+    @Nonnull
     @Override
-    public Set<OWLAxiom> getAxioms(ClassFrame frame, Mode mode) {
+    public Set<OWLAxiom> getAxioms(@Nonnull ClassFrame frame, @Nonnull Mode mode) {
         return translateToAxioms(frame.getSubject(), frame, mode);
     }
 

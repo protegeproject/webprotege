@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -13,7 +14,9 @@ import java.util.Set;
  */
 public interface FrameTranslator<F extends Frame<S>, S> {
 
-    F getFrame(S subject);
+    @Nonnull
+    F getFrame(@Nonnull S subject);
 
-    Set<OWLAxiom> getAxioms(F frame, Mode mode);
+    @Nonnull
+    Set<OWLAxiom> getAxioms(@Nonnull F frame, @Nonnull Mode mode);
 }

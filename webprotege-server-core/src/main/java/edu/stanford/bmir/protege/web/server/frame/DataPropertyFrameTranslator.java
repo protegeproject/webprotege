@@ -45,8 +45,9 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
 
+    @Nonnull
     @Override
-    public DataPropertyFrame getFrame(OWLDataPropertyData subject) {
+    public DataPropertyFrame getFrame(@Nonnull OWLDataPropertyData subject) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
         ImmutableSet.Builder<OWLClassData> domains = ImmutableSet.builder();
         ImmutableSet.Builder<OWLDatatypeData> ranges = ImmutableSet.builder();
@@ -80,8 +81,9 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
                                      functional);
     }
 
+    @Nonnull
     @Override
-    public Set<OWLAxiom> getAxioms(DataPropertyFrame frame, Mode mode) {
+    public Set<OWLAxiom> getAxioms(@Nonnull DataPropertyFrame frame, @Nonnull Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
