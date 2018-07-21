@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -110,12 +111,12 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
         propertyValues.sort(propertyValueComparator);
         builder.setPropertyValues(ImmutableSet.copyOf(propertyValues));
-        ImmutableList<OWLClassData> entries = rootOntology.getSubClassAxiomsForSubClass(subject.getEntity()).stream()
+        ImmutableSet<OWLClassData> entries = rootOntology.getSubClassAxiomsForSubClass(subject.getEntity()).stream()
                                                           .filter(ax -> !ax.getSuperClass().isAnonymous())
                                                           .map(ax -> ax.getSuperClass().asOWLClass())
                                                           .distinct()
                                                           .map(rm::getRendering)
-                                                          .collect(toImmutableList());
+                                                          .collect(toImmutableSet());
         builder.setClassEntries(entries);
         return builder.build();
     }

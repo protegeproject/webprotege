@@ -38,7 +38,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
      */
     public abstract OWLClassData getSubject();
 
-    public abstract ImmutableList<OWLClassData> getClassEntries();
+    public abstract ImmutableSet<OWLClassData> getClassEntries();
 
     /**
      * Gets the {@link PropertyValue}s in this frame.
@@ -52,7 +52,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
                                  @Nonnull Collection<OWLClassData> classEntries,
                                  @Nonnull ImmutableSet<PropertyValue> propertyValues) {
         return ClassFrame.builder(subject)
-                         .setClassEntries(ImmutableList.copyOf(classEntries))
+                         .setClassEntries(ImmutableSet.copyOf(classEntries))
                          .setPropertyValues(propertyValues)
                          .build();
     }
@@ -63,7 +63,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
 
         public abstract Builder setSubject(OWLClassData subject);
 
-        public abstract Builder setClassEntries(List<OWLClassData> classEntries);
+        public abstract Builder setClassEntries(Set<OWLClassData> classEntries);
 
         public abstract Builder setPropertyValues(Set<PropertyValue> propertyValues);
 
@@ -74,7 +74,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
     public static Builder builder(OWLClassData subject) {
         return new AutoValue_ClassFrame.Builder()
                 .setSubject(subject)
-                .setClassEntries(ImmutableList.of())
+                .setClassEntries(ImmutableSet.of())
                 .setPropertyValues(ImmutableSet.of());
     }
 
