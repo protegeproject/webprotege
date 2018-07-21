@@ -31,13 +31,26 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 @GwtCompatible(serializable = true)
 public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
 
+
+    @Nonnull
+    public static ClassFrame get(@Nonnull OWLClassData subject,
+                                 @Nonnull ImmutableSet<OWLClassData> classEntries,
+                                 @Nonnull ImmutableSet<PropertyValue> propertyValues) {
+
+        return new AutoValue_ClassFrame(subject,
+                                        classEntries,
+                                        propertyValues);
+    }
+
     /**
      * Gets the subject of this class frame.
      *
      * @return The subject.  Not {@code null}.
      */
+    @Nonnull
     public abstract OWLClassData getSubject();
 
+    @Nonnull
     public abstract ImmutableSet<OWLClassData> getClassEntries();
 
     /**
@@ -45,49 +58,22 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
      *
      * @return The (possibly empty) set of property values in this frame. Not {@code null}.  The returned set is unmodifiable.
      */
+    @Nonnull
     public abstract ImmutableSet<PropertyValue> getPropertyValues();
 
 
-    public static ClassFrame get(@Nonnull OWLClassData subject,
-                                 @Nonnull Collection<OWLClassData> classEntries,
-                                 @Nonnull ImmutableSet<PropertyValue> propertyValues) {
-        return ClassFrame.builder(subject)
-                         .setClassEntries(ImmutableSet.copyOf(classEntries))
-                         .setPropertyValues(propertyValues)
-                         .build();
-    }
-
-
-    @AutoValue.Builder
-    public static abstract class Builder {
-
-        public abstract Builder setSubject(OWLClassData subject);
-
-        public abstract Builder setClassEntries(Set<OWLClassData> classEntries);
-
-        public abstract Builder setPropertyValues(Set<PropertyValue> propertyValues);
-
-        public abstract ClassFrame build();
-    }
-
     @Nonnull
-    public static Builder builder(OWLClassData subject) {
-        return new AutoValue_ClassFrame.Builder()
-                .setSubject(subject)
-                .setClassEntries(ImmutableSet.of())
-                .setPropertyValues(ImmutableSet.of());
-    }
-
-
     @Override
     public PropertyValueList getPropertyValueList() {
         return new PropertyValueList(getPropertyValues());
     }
 
+    @Nonnull
     public ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return getPropertyValueList().getAnnotationPropertyValues();
     }
 
+    @Nonnull
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
         return getPropertyValueList().getLogicalPropertyValues();
     }

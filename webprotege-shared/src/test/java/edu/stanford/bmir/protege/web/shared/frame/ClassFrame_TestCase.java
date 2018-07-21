@@ -40,13 +40,13 @@ public class ClassFrame_TestCase {
     private PropertyValue propertyValue;
 
 
-    private ImmutableList<OWLClassData> classes;
+    private ImmutableSet<OWLClassData> classes;
 
     private ImmutableSet<PropertyValue> propertyValues;
 
     @Before
     public void setUp() throws Exception {
-        classes = ImmutableList.of(cls);
+        classes = ImmutableSet.of(cls);
         propertyValues = ImmutableSet.of(propertyValue);
         classFrame = ClassFrame.get(subject, classes, propertyValues);
         otherClassFrame = ClassFrame.get(subject, classes, propertyValues);

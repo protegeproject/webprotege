@@ -182,12 +182,12 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFr
             return Optional.empty();
         }
         else {
-            Set<OWLClassData> classesData = new HashSet<>();
+            ImmutableSet.Builder<OWLClassData> classesData = ImmutableSet.builder();
             classes.getValue().ifPresent(clses -> clses.forEach(cls -> classesData.add((OWLClassData) cls)));
             ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
             annotations.getValue().ifPresent(annos -> propertyValues.addAll(annos.getPropertyValues()));
             properties.getValue().ifPresent(props -> propertyValues.addAll(props.getPropertyValues()));
-            ClassFrame clsFrame = ClassFrame.get(currentSubject, classesData, propertyValues.build());
+            ClassFrame clsFrame = ClassFrame.get(currentSubject, classesData.build(), propertyValues.build());
             return Optional.of(clsFrame);
         }
     }

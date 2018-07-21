@@ -90,7 +90,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     private ClassFrame translateToClassFrame(OWLClassData subject) {
-        ClassFrame.Builder builder = ClassFrame.builder(rm.getRendering(subject.getEntity()));
+        OWLClassData subjectData = rm.getRendering(subject.getEntity());
         List<PropertyValue> propertyValues = Lists.newArrayList();
         final Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity(), rootOntology, true);
         propertyValues.addAll(translateAxiomsToPropertyValues(subject.getEntity(),
@@ -110,15 +110,15 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         }
         propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
         propertyValues.sort(propertyValueComparator);
-        builder.setPropertyValues(ImmutableSet.copyOf(propertyValues));
         ImmutableSet<OWLClassData> entries = rootOntology.getSubClassAxiomsForSubClass(subject.getEntity()).stream()
                                                           .filter(ax -> !ax.getSuperClass().isAnonymous())
                                                           .map(ax -> ax.getSuperClass().asOWLClass())
                                                           .distinct()
                                                           .map(rm::getRendering)
                                                           .collect(toImmutableSet());
-        builder.setClassEntries(entries);
-        return builder.build();
+        return ClassFrame.get(subjectData,
+                              entries,
+                              ImmutableSet.copyOf(propertyValues));
     }
 
     private List<PropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
