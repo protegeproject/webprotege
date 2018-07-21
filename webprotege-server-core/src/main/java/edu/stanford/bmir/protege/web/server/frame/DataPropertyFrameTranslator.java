@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
@@ -31,17 +31,17 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     private final OWLOntology rootOntology;
 
     @Nonnull
-    private final RenderingManager rm;
+    private final ContextRenderer ren;
 
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
     @Inject
     public DataPropertyFrameTranslator(@Nonnull OWLOntology rootOntology,
-                                       @Nonnull RenderingManager renderingManager,
+                                       @Nonnull ContextRenderer ren,
                                        @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
         this.rootOntology = rootOntology;
-        this.rm = renderingManager;
+        this.ren = ren;
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
     }
 
@@ -55,12 +55,12 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
             for(OWLDataPropertyDomainAxiom ax : ontology.getDataPropertyDomainAxioms(subject.getEntity())) {
                 if(!ax.getDomain().isAnonymous()) {
-                    domains.add(rm.getRendering(ax.getDomain().asOWLClass()));
+                    domains.add(ren.getRendering(ax.getDomain().asOWLClass()));
                 }
             }
             for(OWLDataPropertyRangeAxiom ax : ontology.getDataPropertyRangeAxioms(subject.getEntity())) {
                 if(ax.getRange().isDatatype()) {
-                    ranges.add(rm.getRendering(ax.getRange().asOWLDatatype()));
+                    ranges.add(ren.getRendering(ax.getRange().asOWLDatatype()));
                 }
             }
             if(EntitySearcher.isFunctional(subject.getEntity(), ontology)) {
