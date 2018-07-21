@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -19,125 +21,78 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/12/2012
  */
-@SuppressWarnings("GwtInconsistentSerializableClass" )
-public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, Serializable {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, Serializable {
 
-    private OWLNamedIndividualData subject;
-
-    private ImmutableSet<OWLClassData> namedTypes;
-
-    private PropertyValueList propertyValueList;
-
-    private ImmutableSet<OWLNamedIndividualData> sameIndividuals;
-
-    @GwtSerializationConstructor
-    private NamedIndividualFrame() {
+    public static NamedIndividualFrame get(@Nonnull OWLNamedIndividualData subject,
+                                @Nonnull ImmutableSet<OWLClassData> namedTypes,
+                                @Nonnull ImmutableSet<PropertyValue> propertyValueList,
+                                @Nonnull ImmutableSet<OWLNamedIndividualData> sameIndividuals) {
+        return new AutoValue_NamedIndividualFrame(subject,
+                                                  namedTypes,
+                                                  ImmutableList.copyOf(propertyValueList),
+                                                  sameIndividuals);
     }
 
-    public NamedIndividualFrame(@Nonnull OWLNamedIndividualData subject,
-                                @Nonnull Set<OWLClassData> namedTypes,
-                                @Nonnull PropertyValueList propertyValueList,
-                                @Nonnull Set<OWLNamedIndividualData> sameIndividuals) {
-        this.subject = checkNotNull(subject);
-        this.namedTypes = ImmutableSet.copyOf(checkNotNull(namedTypes));
-        this.propertyValueList = checkNotNull(propertyValueList);
-        this.sameIndividuals = ImmutableSet.copyOf(checkNotNull(sameIndividuals));
-    }
+    public abstract OWLNamedIndividualData getSubject();
 
-    public OWLNamedIndividualData getSubject() {
-        return subject;
-    }
+    public abstract ImmutableSet<OWLClassData> getClasses();
 
-    public ImmutableSet<OWLClassData> getClasses() {
-        return namedTypes;
-    }
+    @Override
+    public abstract ImmutableList<PropertyValue> getPropertyValues();
 
-    public ImmutableSet<OWLNamedIndividualData> getSameIndividuals() {
-        return sameIndividuals;
-    }
+    public abstract ImmutableSet<OWLNamedIndividualData> getSameIndividuals();
 
     @Override
     public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
-        return propertyValueList.getAnnotationPropertyValues();
+        return getPropertyValueList().getAnnotationPropertyValues();
     }
 
     @Override
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
-        return propertyValueList.getLogicalPropertyValues();
-    }
-
-    @Override
-    public ImmutableList<PropertyValue> getPropertyValues() {
-        return propertyValueList.getPropertyValues();
+        return getPropertyValueList().getLogicalPropertyValues();
     }
 
     @Override
     public PropertyValueList getPropertyValueList() {
-        return propertyValueList;
+        return new PropertyValueList(getPropertyValues());
     }
 
-    @Override
-    public int hashCode() {
-        return subject.hashCode() + namedTypes.hashCode() + propertyValueList.hashCode() + sameIndividuals.hashCode();//Objects.hashCode(subject, namedTypes, propertyValueList);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof NamedIndividualFrame)) {
-            return false;
-        }
-        NamedIndividualFrame other = (NamedIndividualFrame) obj;
-        return this.subject.equals(other.subject) && this.namedTypes.equals(other.namedTypes) && this.propertyValueList.equals(other.propertyValueList) && this.sameIndividuals.equals(other.sameIndividuals);
-    }
-
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper("NamedIndividualFrame")
-                          .addValue(subject)
-                          .add("types", namedTypes)
-                          .addValue(propertyValueList)
-                          .add("sameIndividuals", sameIndividuals)
-                          .toString();
-    }
-
-    public static class Builder {
-
-        private OWLNamedIndividualData subject;
-
-        private Set<OWLClassData> namedTypes = new HashSet<>();
-
-        private List<PropertyValue> propertyValues = new ArrayList<>();
-
-        private Set<OWLNamedIndividualData> sameIndividuals = new HashSet<>();
-
-        public Builder(OWLNamedIndividualData subject) {
-            this.subject = subject;
-        }
-
-        public void addClass(OWLClassData cls) {
-            namedTypes.add(cls);
-        }
-
-        public void addSameIndividual(OWLNamedIndividualData individual) {
-            this.sameIndividuals.add(individual);
-        }
-
-        public void addPropertyValue(PropertyValue propertyValue) {
-            propertyValues.add(propertyValue);
-        }
-
-        public void addPropertyValues(Collection<PropertyValue> propertyValues) {
-            this.propertyValues.addAll(propertyValues);
-        }
-
-        public NamedIndividualFrame build() {
-            return new NamedIndividualFrame(subject, namedTypes, new PropertyValueList(propertyValues), sameIndividuals);
-        }
-
-
-    }
+//    public static class Builder {
+//
+//        private OWLNamedIndividualData subject;
+//
+//        private Set<OWLClassData> namedTypes = new HashSet<>();
+//
+//        private List<PropertyValue> propertyValues = new ArrayList<>();
+//
+//        private Set<OWLNamedIndividualData> sameIndividuals = new HashSet<>();
+//
+//        public Builder(OWLNamedIndividualData subject) {
+//            this.subject = subject;
+//        }
+//
+//        public void addClass(OWLClassData cls) {
+//            namedTypes.add(cls);
+//        }
+//
+//        public void addSameIndividual(OWLNamedIndividualData individual) {
+//            this.sameIndividuals.add(individual);
+//        }
+//
+//        public void addPropertyValue(PropertyValue propertyValue) {
+//            propertyValues.add(propertyValue);
+//        }
+//
+//        public void addPropertyValues(Collection<PropertyValue> propertyValues) {
+//            this.propertyValues.addAll(propertyValues);
+//        }
+//
+//        public NamedIndividualFrame build() {
+//            return new NamedIndividualFrame(subject, namedTypes, new PropertyValueList(propertyValues), sameIndividuals);
+//        }
+//
+//
+//    }
 }

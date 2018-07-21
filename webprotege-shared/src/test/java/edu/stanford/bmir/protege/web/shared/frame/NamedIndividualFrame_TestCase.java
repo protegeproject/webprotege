@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
@@ -33,46 +35,49 @@ public class NamedIndividualFrame_TestCase {
     @Mock
     private OWLNamedIndividualData subject;
 
-    private Set<OWLClassData> types;
+    private ImmutableSet<OWLClassData> types;
 
     @Mock
     private OWLClassData typeA, typeB;
 
     @Mock
-    private PropertyValueList propertyValueList;
+    private PropertyValue propertyValue;
+
+    private ImmutableSet<PropertyValue> propertyValueList;
 
 
-    private Set<OWLNamedIndividualData> sameIndividuals;
+    private ImmutableSet<OWLNamedIndividualData> sameIndividuals;
 
     @Mock
     private OWLNamedIndividualData individualA, individualB;
 
     @Before
     public void setUp() throws Exception {
-        types = Sets.newHashSet(typeA, typeB);
-        sameIndividuals = Sets.newHashSet(individualA, individualB);
-        namedIndividualFrame = new NamedIndividualFrame(subject, types, propertyValueList, sameIndividuals);
-        otherNamedIndividualFrame = new NamedIndividualFrame(subject, types, propertyValueList, sameIndividuals);
+        types = ImmutableSet.of(typeA, typeB);
+        sameIndividuals = ImmutableSet.of(individualA, individualB);
+        propertyValueList = ImmutableSet.of(propertyValue);
+        namedIndividualFrame = NamedIndividualFrame.get(subject, types, propertyValueList, sameIndividuals);
+        otherNamedIndividualFrame = NamedIndividualFrame.get(subject, types, propertyValueList, sameIndividuals);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Subject_IsNull() {
-        new NamedIndividualFrame(null, types, propertyValueList, sameIndividuals);
+        NamedIndividualFrame.get(null, types, propertyValueList, sameIndividuals);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Types_IsNull() {
-        new NamedIndividualFrame(subject, null, propertyValueList, sameIndividuals);
+        NamedIndividualFrame.get(subject, null, propertyValueList, sameIndividuals);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_PropertyValues_IsNull() {
-        new NamedIndividualFrame(subject, types, null, sameIndividuals);
+        NamedIndividualFrame.get(subject, types, null, sameIndividuals);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_SameIndividuals_IsNull() {
-        new NamedIndividualFrame(subject, types, propertyValueList, null);
+        NamedIndividualFrame.get(subject, types, propertyValueList, null);
     }
 
     @Test
@@ -112,7 +117,7 @@ public class NamedIndividualFrame_TestCase {
 
     @Test
     public void shouldReturnSupplied_PropertyValues() {
-        assertThat(namedIndividualFrame.getPropertyValueList(), is(propertyValueList));
+        assertThat(ImmutableSet.copyOf(namedIndividualFrame.getPropertyValues()), is(propertyValueList));
     }
 
     @Test
