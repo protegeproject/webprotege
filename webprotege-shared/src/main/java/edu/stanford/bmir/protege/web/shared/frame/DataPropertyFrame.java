@@ -23,7 +23,7 @@ import static java.util.stream.Collectors.toList;
  * Date: 23/04/2013
  */
 @SuppressWarnings("GwtInconsistentSerializableClass" )
-public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues  {
+public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues  {
 
     private OWLDataPropertyData dataProperty;
 
@@ -69,16 +69,6 @@ public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, HasS
     @Override
     public ImmutableList<PropertyValue> getPropertyValues() {
         return propertyValueList.getPropertyValues();
-    }
-
-    @Override
-    public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> signature = new HashSet<OWLEntity>();
-        signature.add(dataProperty.getEntity());
-        signature.addAll(propertyValueList.getSignature());
-        signature.addAll(domains.stream().map(OWLClassData::getEntity).collect(toList()));
-        signature.addAll(ranges.stream().map(OWLDatatypeData::getEntity).collect(toList()));
-        return signature;
     }
 
     public Set<OWLClassData> getDomains() {
