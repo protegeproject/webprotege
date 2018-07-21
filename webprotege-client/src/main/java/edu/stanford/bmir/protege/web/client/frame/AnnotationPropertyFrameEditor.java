@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -157,7 +158,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         if(!lastFrame.isPresent()) {
             return Optional.empty();
         }
-        final ImmutableList.Builder<OWLEntityData> domainsClasses = ImmutableList.builder();
+        final ImmutableSet.Builder<OWLEntityData> domainsClasses = ImmutableSet.builder();
         for(OWLPrimitiveData data : domains.getValue().get()) {
             domainsClasses.add((OWLClassData) data);
         }

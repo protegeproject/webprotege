@@ -29,7 +29,7 @@ public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotati
     public abstract ImmutableSet<PropertyAnnotationValue> getPropertyValues();
 
     @Nonnull
-    public abstract ImmutableList<OWLEntityData> getDomains();
+    public abstract ImmutableSet<OWLEntityData> getDomains();
 
     @Nonnull
     public abstract ImmutableList<OWLEntityData> getRanges();
@@ -37,7 +37,7 @@ public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotati
     @Nonnull
     public static AnnotationPropertyFrame get(@Nonnull OWLAnnotationPropertyData subject,
                                               @Nonnull ImmutableSet<PropertyAnnotationValue> propertyValues,
-                                              @Nonnull ImmutableList<OWLEntityData> domains,
+                                              @Nonnull ImmutableSet<OWLEntityData> domains,
                                               @Nonnull ImmutableList<OWLEntityData> ranges) {
         return new AutoValue_AnnotationPropertyFrame(subject,
                                                      propertyValues,
