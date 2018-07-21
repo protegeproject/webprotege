@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
@@ -36,7 +36,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     private boolean includeAncestorFrames = false;
 
     @Nonnull
-    private final RenderingManager rm;
+    private final ContextRenderer ren;
 
     @Nonnull
     private final OWLOntology rootOntology;
@@ -54,13 +54,13 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
     @Inject
-    public ClassFrameTranslator(@Nonnull RenderingManager rm,
+    public ClassFrameTranslator(@Nonnull ContextRenderer renderer,
                                 @Nonnull @RootOntology OWLOntology rootOntology,
                                 @Nonnull HasGetAncestors<OWLClass> ancestorsProvider,
                                 @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                 @Nonnull PropertyValueComparator propertyValueComparator,
                                 @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
-        this.rm = rm;
+        this.ren = renderer;
         this.rootOntology = rootOntology;
         this.ancestorsProvider = ancestorsProvider;
         this.propertyValueMinimiser = propertyValueMinimiser;
@@ -89,7 +89,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     private ClassFrame translateToClassFrame(OWLClassData subject) {
-        OWLClassData subjectData = rm.getRendering(subject.getEntity());
+        OWLClassData subjectData = ren.getRendering(subject.getEntity());
         List<PropertyValue> propertyValues = Lists.newArrayList();
         final Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject.getEntity(), true);
         propertyValues.addAll(translateAxiomsToPropertyValues(subject.getEntity(),
@@ -110,7 +110,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                                                           .filter(ax -> !ax.getSuperClass().isAnonymous())
                                                           .map(ax -> ax.getSuperClass().asOWLClass())
                                                           .distinct()
-                                                          .map(rm::getRendering)
+                                                          .map(ren::getRendering)
                                                           .collect(toImmutableSet());
         return ClassFrame.get(subjectData,
                               entries,
