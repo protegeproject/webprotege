@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -88,13 +89,13 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
             }
         }
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
-        ImmutableList<PropertyAnnotationValue> propertyValues = propertyValueAxioms.stream()
+        ImmutableSet<PropertyAnnotationValue> propertyValues = propertyValueAxioms.stream()
                                                                                    .flatMap(ax -> translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED).stream())
                                                                                    .filter(PropertyValue::isAnnotation)
                                                                                    .map(pv -> (PropertyAnnotationValue) pv)
                                                                                    .distinct()
                                                                                    .sorted()
-                                                                                   .collect(toImmutableList());
+                                                                                   .collect(toImmutableSet());
         return ObjectPropertyFrame.get(subject,
                                        propertyValues,
                                        domains.build(),

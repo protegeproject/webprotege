@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 
@@ -19,7 +20,7 @@ import java.io.Serializable;
 public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, HasAnnotationPropertyValues, Serializable {
 
     public static ObjectPropertyFrame get(OWLObjectPropertyData subject,
-                                          ImmutableList<PropertyAnnotationValue> annotationValues,
+                                          ImmutableSet<PropertyAnnotationValue> annotationValues,
                                           ImmutableList<OWLClassData> domains,
                                           ImmutableList<OWLClassData> ranges,
                                           ImmutableList<OWLObjectPropertyData> inverseProperties,
@@ -36,7 +37,7 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
     public abstract OWLObjectPropertyData getSubject();
 
     @Override
-    public abstract ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues();
+    public abstract ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues();
 
     public abstract ImmutableList<OWLClassData> getDomains();
 

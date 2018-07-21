@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
 
@@ -12,5 +13,5 @@ import java.util.Set;
  */
 public interface HasAnnotationPropertyValues {
 
-    ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues();
+    ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues();
 }

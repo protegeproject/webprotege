@@ -13,6 +13,7 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -61,11 +62,11 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
     }
 
     @Override
-    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return propertyValues.stream()
                              .filter(PropertyValue::isAnnotation)
                              .map(pv -> (PropertyAnnotationValue) pv)
-                             .collect(toImmutableList());
+                             .collect(toImmutableSet());
     }
 
     @Override

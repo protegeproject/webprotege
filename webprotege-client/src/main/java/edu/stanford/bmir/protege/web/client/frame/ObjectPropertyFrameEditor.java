@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -160,7 +161,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         if (!previouslySetValue.isPresent()) {
             return previouslySetValue;
         }
-        ImmutableList<PropertyAnnotationValue> annotationValues = annotations.getValue().get().getAnnotationPropertyValues();
+        ImmutableSet<PropertyAnnotationValue> annotationValues = annotations.getValue().get().getAnnotationPropertyValues();
         final ObjectPropertyFrame previousFrame = previouslySetValue.get();
         OWLObjectPropertyData subject = previousFrame.getSubject();
         ImmutableList.Builder<OWLClassData> editedDomains = ImmutableList.builder();

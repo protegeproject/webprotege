@@ -84,7 +84,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
         return new PropertyValueList(getPropertyValues());
     }
 
-    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return getPropertyValueList().getAnnotationPropertyValues();
     }
 

@@ -52,7 +52,7 @@ public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, Seri
     }
 
     @Override
-    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return propertyValueList.getAnnotationPropertyValues();
     }
 

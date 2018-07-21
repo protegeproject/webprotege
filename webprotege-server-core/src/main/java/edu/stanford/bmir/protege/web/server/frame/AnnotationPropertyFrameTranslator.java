@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
@@ -36,7 +37,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
 
     @Override
     public AnnotationPropertyFrame getFrame(OWLAnnotationPropertyData subject) {
-        ImmutableList.Builder<PropertyAnnotationValue> propertyValues = ImmutableList.builder();
+        ImmutableSet.Builder<PropertyAnnotationValue> propertyValues = ImmutableSet.builder();
         ImmutableList.Builder<OWLEntityData> domains = ImmutableList.builder();
         ImmutableList.Builder<OWLEntityData> ranges = ImmutableList.builder();
         for (OWLOntology ont : rootOntology.getImportsClosure()) {

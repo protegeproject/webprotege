@@ -40,7 +40,7 @@ public abstract class NamedIndividualFrame implements EntityFrame<OWLNamedIndivi
     public abstract ImmutableSet<OWLNamedIndividualData> getSameIndividuals();
 
     @Override
-    public ImmutableList<PropertyAnnotationValue> getAnnotationPropertyValues() {
+    public ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues() {
         return getPropertyValueList().getAnnotationPropertyValues();
     }
 

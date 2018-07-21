@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -25,7 +26,7 @@ public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotati
     public abstract OWLAnnotationPropertyData getSubject();
 
     @Nonnull
-    public abstract ImmutableList<PropertyAnnotationValue> getPropertyValues();
+    public abstract ImmutableSet<PropertyAnnotationValue> getPropertyValues();
 
     @Nonnull
     public abstract ImmutableList<OWLEntityData> getDomains();
@@ -35,7 +36,7 @@ public abstract class AnnotationPropertyFrame implements EntityFrame<OWLAnnotati
 
     @Nonnull
     public static AnnotationPropertyFrame get(@Nonnull OWLAnnotationPropertyData subject,
-                                              @Nonnull ImmutableList<PropertyAnnotationValue> propertyValues,
+                                              @Nonnull ImmutableSet<PropertyAnnotationValue> propertyValues,
                                               @Nonnull ImmutableList<OWLEntityData> domains,
                                               @Nonnull ImmutableList<OWLEntityData> ranges) {
         return new AutoValue_AnnotationPropertyFrame(subject,
