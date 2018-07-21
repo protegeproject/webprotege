@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.junit.Before;
@@ -41,12 +42,12 @@ public class ClassFrame_TestCase {
 
     private ImmutableList<OWLClassData> classes;
 
-    private ImmutableList<PropertyValue> propertyValues;
+    private ImmutableSet<PropertyValue> propertyValues;
 
     @Before
     public void setUp() throws Exception {
         classes = ImmutableList.of(cls);
-        propertyValues = ImmutableList.of(propertyValue);
+        propertyValues = ImmutableSet.of(propertyValue);
         classFrame = ClassFrame.get(subject, classes, propertyValues);
         otherClassFrame = ClassFrame.get(subject, classes, propertyValues);
     }

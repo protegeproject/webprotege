@@ -67,7 +67,7 @@ public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, Seri
     }
 
     @Override
-    public ImmutableList<PropertyValue> getPropertyValues() {
+    public ImmutableSet<PropertyValue> getPropertyValues() {
         return propertyValueList.getPropertyValues();
     }
 

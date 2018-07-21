@@ -45,15 +45,15 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
      *
      * @return The (possibly empty) set of property values in this frame. Not {@code null}.  The returned set is unmodifiable.
      */
-    public abstract ImmutableList<PropertyValue> getPropertyValues();
+    public abstract ImmutableSet<PropertyValue> getPropertyValues();
 
 
     public static ClassFrame get(@Nonnull OWLClassData subject,
                                  @Nonnull Collection<OWLClassData> classEntries,
-                                 @Nonnull Collection<PropertyValue> propertyValues) {
+                                 @Nonnull ImmutableSet<PropertyValue> propertyValues) {
         return ClassFrame.builder(subject)
                          .setClassEntries(ImmutableList.copyOf(classEntries))
-                         .setPropertyValues(ImmutableList.copyOf(propertyValues))
+                         .setPropertyValues(propertyValues)
                          .build();
     }
 
@@ -65,7 +65,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
 
         public abstract Builder setClassEntries(List<OWLClassData> classEntries);
 
-        public abstract Builder setPropertyValues(List<PropertyValue> propertyValues);
+        public abstract Builder setPropertyValues(Set<PropertyValue> propertyValues);
 
         public abstract ClassFrame build();
     }
@@ -75,7 +75,7 @@ public abstract class ClassFrame implements EntityFrame<OWLClassData>, Serializa
         return new AutoValue_ClassFrame.Builder()
                 .setSubject(subject)
                 .setClassEntries(ImmutableList.of())
-                .setPropertyValues(ImmutableList.of());
+                .setPropertyValues(ImmutableSet.of());
     }
 
 

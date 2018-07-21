@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -183,10 +184,10 @@ public class ClassFrameEditor extends SimplePanel implements ValueEditor<ClassFr
         else {
             Set<OWLClassData> classesData = new HashSet<>();
             classes.getValue().ifPresent(clses -> clses.forEach(cls -> classesData.add((OWLClassData) cls)));
-            Set<PropertyValue> propertyValues = new TreeSet<>();
+            ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
             annotations.getValue().ifPresent(annos -> propertyValues.addAll(annos.getPropertyValues()));
             properties.getValue().ifPresent(props -> propertyValues.addAll(props.getPropertyValues()));
-            ClassFrame clsFrame = ClassFrame.get(currentSubject, classesData, propertyValues);
+            ClassFrame clsFrame = ClassFrame.get(currentSubject, classesData, propertyValues.build());
             return Optional.of(clsFrame);
         }
     }

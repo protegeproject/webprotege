@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
@@ -108,7 +109,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         }
         propertyValues = propertyValueMinimiser.minimisePropertyValues(propertyValues);
         propertyValues.sort(propertyValueComparator);
-        builder.setPropertyValues(propertyValues);
+        builder.setPropertyValues(ImmutableSet.copyOf(propertyValues));
         ImmutableList<OWLClassData> entries = rootOntology.getSubClassAxiomsForSubClass(subject.getEntity()).stream()
                                                           .filter(ax -> !ax.getSuperClass().isAnonymous())
                                                           .map(ax -> ax.getSuperClass().asOWLClass())

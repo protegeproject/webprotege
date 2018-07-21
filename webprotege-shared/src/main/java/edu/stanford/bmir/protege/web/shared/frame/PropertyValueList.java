@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -21,13 +22,13 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  */
 public class PropertyValueList implements Serializable, HasSignature, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
 
-    private ImmutableList<PropertyValue> propertyValues;
+    private ImmutableSet<PropertyValue> propertyValues;
 
     private PropertyValueList() {
     }
 
     public PropertyValueList(Collection<? extends PropertyValue> propertyValues) {
-        this.propertyValues = ImmutableList.copyOf(checkNotNull(propertyValues));
+        this.propertyValues = ImmutableSet.copyOf(checkNotNull(propertyValues));
     }
 
     @Override
@@ -55,8 +56,8 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
                           .toString();
     }
 
-    public ImmutableList<PropertyValue> getPropertyValues() {
-        return ImmutableList.copyOf(propertyValues);
+    public ImmutableSet<PropertyValue> getPropertyValues() {
+        return propertyValues;
     }
 
     @Override
