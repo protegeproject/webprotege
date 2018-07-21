@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
@@ -35,7 +34,7 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     private final OWLOntology rootOntology;
 
     @Nonnull
-    private final RenderingManager rm;
+    private final ContextRenderer rm;
 
     @Nonnull
     private final PropertyValueMinimiser propertyValueMinimiser;
@@ -51,10 +50,11 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
 
     @Inject
     public NamedIndividualFrameTranslator(@Nonnull @RootOntology OWLOntology rootOntology,
-                                          @Nonnull RenderingManager rm,
+                                          @Nonnull ContextRenderer rm,
                                           @Nonnull PropertyValueMinimiser propertyValueMinimiser,
                                           @Nonnull PropertyValueComparator propertyValueComparator,
-                                          @Nonnull Provider<ClassFrameTranslator> translatorProvider, Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
+                                          @Nonnull Provider<ClassFrameTranslator> translatorProvider,
+                                          @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
         this.rootOntology = rootOntology;
         this.rm = rm;
         this.propertyValueMinimiser = propertyValueMinimiser;
