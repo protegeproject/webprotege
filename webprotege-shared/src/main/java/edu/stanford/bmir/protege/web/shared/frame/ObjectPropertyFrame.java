@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -19,12 +20,13 @@ import java.io.Serializable;
 @GwtCompatible(serializable = true)
 public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectPropertyData>, HasAnnotationPropertyValues, Serializable {
 
-    public static ObjectPropertyFrame get(OWLObjectPropertyData subject,
-                                          ImmutableSet<PropertyAnnotationValue> annotationValues,
-                                          ImmutableSet<OWLClassData> domains,
-                                          ImmutableSet<OWLClassData> ranges,
-                                          ImmutableSet<OWLObjectPropertyData> inverseProperties,
-                                          ImmutableSet<ObjectPropertyCharacteristic> characteristics) {
+    @Nonnull
+    public static ObjectPropertyFrame get(@Nonnull OWLObjectPropertyData subject,
+                                          @Nonnull ImmutableSet<PropertyAnnotationValue> annotationValues,
+                                          @Nonnull ImmutableSet<OWLClassData> domains,
+                                          @Nonnull ImmutableSet<OWLClassData> ranges,
+                                          @Nonnull ImmutableSet<OWLObjectPropertyData> inverseProperties,
+                                          @Nonnull ImmutableSet<ObjectPropertyCharacteristic> characteristics) {
 
         return new AutoValue_ObjectPropertyFrame(subject,
                                                  annotationValues,
@@ -34,16 +36,22 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
                                                  inverseProperties);
     }
 
+    @Nonnull
     public abstract OWLObjectPropertyData getSubject();
 
+    @Nonnull
     @Override
     public abstract ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues();
 
+    @Nonnull
     public abstract ImmutableSet<OWLClassData> getDomains();
 
+    @Nonnull
     public abstract ImmutableSet<OWLClassData> getRanges();
 
+    @Nonnull
     public abstract ImmutableSet<ObjectPropertyCharacteristic> getCharacteristics();
 
+    @Nonnull
     public abstract ImmutableSet<OWLObjectPropertyData> getInverseProperties();
 }
