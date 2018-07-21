@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/11/2012
  */
-public abstract class DataPropertyValue extends PropertyValue implements ClassFramePropertyValue {
+public abstract class DataPropertyValue extends PropertyValue {
 
 
     protected DataPropertyValue() {

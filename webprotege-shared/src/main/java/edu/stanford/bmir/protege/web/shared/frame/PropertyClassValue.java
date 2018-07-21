@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/11/2012
  */
-public final class PropertyClassValue extends ObjectPropertyValue implements ClassFramePropertyValue {
+public final class PropertyClassValue extends ObjectPropertyValue {
 
     private PropertyClassValue() {
     }
