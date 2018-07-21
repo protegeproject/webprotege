@@ -177,7 +177,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                                                             editedDomains.build(),
                                                             editedRanges.build(),
                                                             ImmutableSet.of(),
-                                                            ImmutableList.copyOf(characteristics));
+                                                            ImmutableSet.copyOf(characteristics));
         return Optional.of(frame);
     }
 

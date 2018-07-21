@@ -37,7 +37,7 @@ public class ObjectPropertyFrame_TestCase {
 
     private ImmutableSet<OWLObjectPropertyData> inverses;
 
-    private ImmutableList<ObjectPropertyCharacteristic> characteristics;
+    private ImmutableSet<ObjectPropertyCharacteristic> characteristics;
 
     private ObjectPropertyFrame objectPropertyFrame;
 
@@ -65,7 +65,7 @@ public class ObjectPropertyFrame_TestCase {
         domains = ImmutableSet.of(domain);
         ranges = ImmutableSet.of(range);
         inverses = ImmutableSet.of(inverse);
-        characteristics = ImmutableList.of(ObjectPropertyCharacteristic.FUNCTIONAL,
+        characteristics = ImmutableSet.of(ObjectPropertyCharacteristic.FUNCTIONAL,
                                            ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
         objectPropertyFrame = ObjectPropertyFrame.get(
                 subject,

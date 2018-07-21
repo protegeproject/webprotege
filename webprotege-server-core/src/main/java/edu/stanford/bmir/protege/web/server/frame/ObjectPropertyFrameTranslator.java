@@ -51,7 +51,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
         ImmutableSet.Builder<OWLClassData> domains = ImmutableSet.builder();
         ImmutableSet.Builder<OWLClassData> ranges = ImmutableSet.builder();
-        ImmutableList.Builder<ObjectPropertyCharacteristic> characteristics = ImmutableList.builder();
+        ImmutableSet.Builder<ObjectPropertyCharacteristic> characteristics = ImmutableSet.builder();
         for (OWLOntology ontology : rootOntology.getImportsClosure()) {
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
             for (OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {

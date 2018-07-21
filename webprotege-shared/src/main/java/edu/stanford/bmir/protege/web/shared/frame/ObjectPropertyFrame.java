@@ -24,7 +24,7 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
                                           ImmutableSet<OWLClassData> domains,
                                           ImmutableSet<OWLClassData> ranges,
                                           ImmutableSet<OWLObjectPropertyData> inverseProperties,
-                                          ImmutableList<ObjectPropertyCharacteristic> characteristics) {
+                                          ImmutableSet<ObjectPropertyCharacteristic> characteristics) {
 
         return new AutoValue_ObjectPropertyFrame(subject,
                                                  annotationValues,
@@ -43,7 +43,7 @@ public abstract class ObjectPropertyFrame implements EntityFrame<OWLObjectProper
 
     public abstract ImmutableSet<OWLClassData> getRanges();
 
-    public abstract ImmutableList<ObjectPropertyCharacteristic> getCharacteristics();
+    public abstract ImmutableSet<ObjectPropertyCharacteristic> getCharacteristics();
 
     public abstract ImmutableSet<OWLObjectPropertyData> getInverseProperties();
 }
