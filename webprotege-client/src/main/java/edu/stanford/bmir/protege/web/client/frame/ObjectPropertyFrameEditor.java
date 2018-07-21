@@ -168,7 +168,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         for (OWLPrimitiveData data : domains.getValue().get()) {
             editedDomains.add((OWLClassData) data);
         }
-        ImmutableList.Builder<OWLClassData> editedRanges = ImmutableList.builder();
+        ImmutableSet.Builder<OWLClassData> editedRanges = ImmutableSet.builder();
         for (OWLPrimitiveData data : ranges.getValue().get()) {
             editedRanges.add((OWLClassData) data);
         }
