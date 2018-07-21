@@ -3,18 +3,15 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,7 +20,7 @@ import static java.util.stream.Collectors.toList;
  * Date: 09/12/2012
  */
 @SuppressWarnings("GwtInconsistentSerializableClass" )
-public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, HasSignature, Serializable {
+public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues, HasPropertyValueList, Serializable {
 
     private OWLNamedIndividualData subject;
 
@@ -72,20 +69,6 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividualData>
     @Override
     public ImmutableList<PropertyValue> getPropertyValues() {
         return propertyValueList.getPropertyValues();
-    }
-
-    /**
-     * Gets the signature of the object that implements this interface.
-     * @return A set of entities that represent the signature of this object
-     */
-    @Override
-    public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> result = new HashSet<>();
-        result.add(subject.getEntity());
-        result.addAll(namedTypes.stream().map(OWLClassData::getEntity).collect(toList()));
-        result.addAll(propertyValueList.getSignature());
-        result.addAll(sameIndividuals.stream().map(OWLNamedIndividualData::getEntity).collect(toList()));
-        return result;
     }
 
     @Override
