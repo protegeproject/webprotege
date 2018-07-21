@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -47,8 +48,8 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
     @Override
     public DataPropertyFrame getFrame(OWLDataPropertyData subject) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
-        Set<OWLClassData> domains = new HashSet<>();
-        Set<OWLDatatypeData> ranges = new HashSet<>();
+        ImmutableSet.Builder<OWLClassData> domains = ImmutableSet.builder();
+        ImmutableSet.Builder<OWLDatatypeData> ranges = ImmutableSet.builder();
         boolean functional = false;
         for(OWLOntology ontology : rootOntology.getImportsClosure()) {
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
@@ -66,15 +67,17 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
                 functional = true;
             }
         }
-        Set<PropertyValue> propertyValues = new HashSet<>();
+        ImmutableSet.Builder<PropertyValue> propertyValues = ImmutableSet.builder();
         AxiomPropertyValueTranslator translator = axiomPropertyValueTranslatorProvider.get();
         for(OWLAxiom ax : propertyValueAxioms) {
             propertyValues.addAll(translator.getPropertyValues(subject.getEntity(), ax, rootOntology, State.ASSERTED
             ));
         }
-
-        PropertyValueList pvl = new PropertyValueList(propertyValues);
-        return new DataPropertyFrame(subject, pvl, domains, ranges, functional);
+        return DataPropertyFrame.get(subject,
+                                     propertyValues.build(),
+                                     domains.build(),
+                                     ranges.build(),
+                                     functional);
     }
 
     @Override

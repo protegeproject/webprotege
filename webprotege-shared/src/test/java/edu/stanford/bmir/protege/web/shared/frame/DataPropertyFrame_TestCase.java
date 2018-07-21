@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
@@ -35,9 +36,9 @@ public class DataPropertyFrame_TestCase {
     private OWLDataPropertyData subject;
 
     @Mock
-    private PropertyValueList propertyValueList;
+    private ImmutableSet<PropertyValue> propertyValueList;
 
-    private Set<OWLClassData> domains;
+    private ImmutableSet<OWLClassData> domains;
 
     @Mock
     private OWLClassData domainA, domainB;
@@ -45,36 +46,36 @@ public class DataPropertyFrame_TestCase {
     @Mock
     private OWLDatatypeData rangeA, rangeB;
 
-    private Set<OWLDatatypeData> ranges;
+    private ImmutableSet<OWLDatatypeData> ranges;
 
     private boolean functional = true;
 
     @Before
     public void setUp() throws Exception {
-        domains = Sets.newHashSet(domainA, domainB);
-        ranges = Sets.newHashSet(rangeA, rangeB);
-        dataPropertyFrame = new DataPropertyFrame(subject, propertyValueList, domains, ranges, functional);
-        otherDataPropertyFrame = new DataPropertyFrame(subject, propertyValueList, domains, ranges, functional);
+        domains = ImmutableSet.of(domainA, domainB);
+        ranges = ImmutableSet.of(rangeA, rangeB);
+        dataPropertyFrame = DataPropertyFrame.get(subject, propertyValueList, domains, ranges, functional);
+        otherDataPropertyFrame = DataPropertyFrame.get(subject, propertyValueList, domains, ranges, functional);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Subject_IsNull() {
-        new DataPropertyFrame(null, propertyValueList, domains, ranges, functional);
+        DataPropertyFrame.get(null, propertyValueList, domains, ranges, functional);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_PropertyValueList_IsNull() {
-        new DataPropertyFrame(subject, null, domains, ranges, functional);
+        DataPropertyFrame.get(subject, null, domains, ranges, functional);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Domains_IsNull() {
-        new DataPropertyFrame(subject, propertyValueList, null, ranges, functional);
+        DataPropertyFrame.get(subject, propertyValueList, null, ranges, functional);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Ranges_IsNull() {
-        new DataPropertyFrame(subject, propertyValueList, domains, null, functional);
+        DataPropertyFrame.get(subject, propertyValueList, domains, null, functional);
     }
 
     @Test
@@ -109,7 +110,7 @@ public class DataPropertyFrame_TestCase {
 
     @Test
     public void shouldReturnSupplied_PropertyValueList() {
-        assertThat(dataPropertyFrame.getPropertyValueList(), is(propertyValueList));
+        assertThat(dataPropertyFrame.getPropertyValueList().getPropertyValues(), is(propertyValueList));
     }
 
     @Test

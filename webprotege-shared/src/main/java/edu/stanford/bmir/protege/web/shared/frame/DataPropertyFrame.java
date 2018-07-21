@@ -1,20 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
-import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
-import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -22,95 +17,49 @@ import static java.util.stream.Collectors.toList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-@SuppressWarnings("GwtInconsistentSerializableClass" )
-public class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues  {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class DataPropertyFrame implements EntityFrame<OWLDataPropertyData>, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasLogicalPropertyValues {
 
-    private OWLDataPropertyData dataProperty;
-
-    private PropertyValueList propertyValueList;
-
-    private Set<OWLClassData> domains;
-
-    private Set<OWLDatatypeData> ranges;
-
-    private boolean functional;
-
-    private DataPropertyFrame() {
-    }
-
-    public DataPropertyFrame(OWLDataPropertyData dataProperty, PropertyValueList propertyValueList, Set<OWLClassData> domains, Set<OWLDatatypeData> ranges, boolean functional) {
-        this.dataProperty = checkNotNull(dataProperty);
-        this.propertyValueList = checkNotNull(propertyValueList);
-        this.domains = ImmutableSet.copyOf(checkNotNull(domains));
-        this.ranges = ImmutableSet.copyOf(checkNotNull(ranges));
-        this.functional = functional;
+    @Nonnull
+    public static DataPropertyFrame get(@Nonnull OWLDataPropertyData subject,
+                                        @Nonnull ImmutableSet<PropertyValue> propertyValues,
+                                        @Nonnull ImmutableSet<OWLClassData> domains,
+                                        @Nonnull ImmutableSet<OWLDatatypeData> ranges,
+                                        boolean functional) {
+        return new AutoValue_DataPropertyFrame(subject,
+                                               propertyValues,
+                                               domains,
+                                               ranges,
+                                               functional);
     }
 
     @Override
-    public OWLDataPropertyData getSubject() {
-        return dataProperty;
+    public abstract OWLDataPropertyData getSubject();
+
+    @Override
+    public abstract ImmutableSet<PropertyValue> getPropertyValues();
+
+    @Nonnull
+    public abstract ImmutableSet<OWLClassData> getDomains();
+
+    @Nonnull
+    public abstract ImmutableSet<OWLDatatypeData> getRanges();
+
+    public abstract boolean isFunctional();
+
+    @Override
+    public PropertyValueList getPropertyValueList() {
+        return new PropertyValueList(getPropertyValues());
     }
 
     @Override
     public ImmutableSet<PropertyAnnotationValue> getAnnotationPropertyValues() {
-        return propertyValueList.getAnnotationPropertyValues();
+        return getPropertyValueList().getAnnotationPropertyValues();
     }
 
     @Override
     public ImmutableList<PropertyValue> getLogicalPropertyValues() {
-        return propertyValueList.getLogicalPropertyValues();
+        return getPropertyValueList().getLogicalPropertyValues();
     }
-
-    @Override
-    public PropertyValueList getPropertyValueList() {
-        return propertyValueList;
-    }
-
-    @Override
-    public ImmutableSet<PropertyValue> getPropertyValues() {
-        return propertyValueList.getPropertyValues();
-    }
-
-    public Set<OWLClassData> getDomains() {
-        return domains;
-    }
-
-    public Set<OWLDatatypeData> getRanges() {
-        return ranges;
-    }
-
-    public boolean isFunctional() {
-        return functional;
-    }
-
-    @Override
-    public int hashCode() {
-        return "DataPropertyFrame".hashCode() + dataProperty.hashCode() + propertyValueList.hashCode() + domains.hashCode() + ranges.hashCode() + (functional ? 1 : 0);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof DataPropertyFrame)) {
-            return false;
-        }
-        DataPropertyFrame other = (DataPropertyFrame) obj;
-        return this.dataProperty.equals(other.dataProperty) && this.propertyValueList.equals(other.propertyValueList) && this.domains.equals(other.domains) && this.ranges.equals(other.ranges) && this.functional == other.functional;
-    }
-
-
-    @Override
-    public String toString() {
-        return toStringHelper("DataPropertyFrame")
-                .addValue(dataProperty)
-                .addValue(propertyValueList)
-                .add("domains", domains)
-                .add("ranges", ranges)
-                .add("functional", functional)
-                .toString();
-    }
-
-
 }

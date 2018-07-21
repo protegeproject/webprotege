@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -154,22 +155,22 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Dat
         if(!lastDataPropertyFrame.isPresent()) {
             return Optional.empty();
         }
-        final Set<OWLClassData> domainsClasses = Sets.newHashSet();
+        final ImmutableSet.Builder<OWLClassData> domainsClasses = ImmutableSet.builder();
         if (domains.getValue().isPresent()) {
             for(OWLPrimitiveData primitiveData : domains.getValue().get()) {
                 domainsClasses.add(((OWLClassData) primitiveData));
             }
         }
-        final Set<OWLDatatypeData> rangeTypes = Sets.newHashSet();
+        final ImmutableSet.Builder<OWLDatatypeData> rangeTypes = ImmutableSet.builder();
         if (ranges.getValue().isPresent()) {
             for(OWLPrimitiveData primitiveData : ranges.getValue().get()) {
                 rangeTypes.add(((OWLDatatypeData) primitiveData));
             }
         }
-        DataPropertyFrame frame = new DataPropertyFrame(lastDataPropertyFrame.get().getSubject(),
-                                                        annotations.getValue().get(),
-                                                        domainsClasses,
-                                                        rangeTypes,
+        DataPropertyFrame frame = DataPropertyFrame.get(lastDataPropertyFrame.get().getSubject(),
+                                                        annotations.getValue().get().getPropertyValues(),
+                                                        domainsClasses.build(),
+                                                        rangeTypes.build(),
                                                         functionalCheckBox.getValue());
         return Optional.of(frame);
     }
