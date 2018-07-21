@@ -163,19 +163,20 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         ImmutableList<PropertyAnnotationValue> annotationValues = annotations.getValue().get().getAnnotationPropertyValues();
         final ObjectPropertyFrame previousFrame = previouslySetValue.get();
         OWLObjectPropertyData subject = previousFrame.getSubject();
-        List<OWLClassData> editedDomains = Lists.newArrayList();
+        ImmutableList.Builder<OWLClassData> editedDomains = ImmutableList.builder();
         for (OWLPrimitiveData data : domains.getValue().get()) {
             editedDomains.add((OWLClassData) data);
         }
-        List<OWLClassData> editedRanges = Lists.newArrayList();
+        ImmutableList.Builder<OWLClassData> editedRanges = ImmutableList.builder();
         for (OWLPrimitiveData data : ranges.getValue().get()) {
             editedRanges.add((OWLClassData) data);
         }
-        ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValues,
-                                                            new HashSet<>(editedDomains),
-                                                            new HashSet<>(editedRanges),
-                                                            Collections.emptySet(),
-                                                            characteristics);
+        ObjectPropertyFrame frame = ObjectPropertyFrame.get(subject,
+                                                            annotationValues,
+                                                            editedDomains.build(),
+                                                            editedRanges.build(),
+                                                            ImmutableList.of(),
+                                                            ImmutableList.copyOf(characteristics));
         return Optional.of(frame);
     }
 

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import org.junit.Before;
@@ -10,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-
-import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -31,15 +28,15 @@ public class ObjectPropertyFrame_TestCase {
     @Mock
     private OWLObjectPropertyData subject;
 
-    private Set<OWLClassData> domains;
+    private ImmutableList<OWLClassData> domains;
 
-    private Set<OWLClassData> ranges;
+    private ImmutableList<OWLClassData> ranges;
 
     private ImmutableList<PropertyAnnotationValue> annotations;
 
-    private Set<OWLObjectPropertyData> inverses;
+    private ImmutableList<OWLObjectPropertyData> inverses;
 
-    private Set<ObjectPropertyCharacteristic> characteristics;
+    private ImmutableList<ObjectPropertyCharacteristic> characteristics;
 
     private ObjectPropertyFrame objectPropertyFrame;
 
@@ -64,12 +61,12 @@ public class ObjectPropertyFrame_TestCase {
     public void setUp() throws Exception {
         annotations = ImmutableList.of(annotationValue);
         domain = mock(OWLClassData.class);
-        domains = Sets.newHashSet(domain);
-        ranges = Sets.newHashSet(range);
-        inverses = Sets.newHashSet(inverse);
-        characteristics = Sets.newHashSet(ObjectPropertyCharacteristic.FUNCTIONAL,
-                ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
-        objectPropertyFrame = new ObjectPropertyFrame(
+        domains = ImmutableList.of(domain);
+        ranges = ImmutableList.of(range);
+        inverses = ImmutableList.of(inverse);
+        characteristics = ImmutableList.of(ObjectPropertyCharacteristic.FUNCTIONAL,
+                                           ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
+        objectPropertyFrame = ObjectPropertyFrame.get(
                 subject,
                 annotations,
                 domains,
@@ -78,7 +75,7 @@ public class ObjectPropertyFrame_TestCase {
                 characteristics
         );
 
-        otherObjectPropertyFrame = new ObjectPropertyFrame(
+        otherObjectPropertyFrame = ObjectPropertyFrame.get(
                 subject,
                 annotations,
                 domains,
@@ -90,7 +87,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfSubjectIsNull() {
-        new ObjectPropertyFrame(
+        ObjectPropertyFrame.get(
                 null,
                 annotations,
                 domains,
@@ -103,7 +100,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfAnnotationsIsNull() {
-        new ObjectPropertyFrame(
+        ObjectPropertyFrame.get(
                 subject,
                 null,
                 domains,
@@ -116,7 +113,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfDomainsIsNull() {
-        new ObjectPropertyFrame(
+        ObjectPropertyFrame.get(
                 subject,
                 annotations,
                 null,
@@ -129,7 +126,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfRangesIsNull() {
-        new ObjectPropertyFrame(
+        ObjectPropertyFrame.get(
                 subject,
                 annotations,
                 domains,
@@ -142,7 +139,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfInversesIsNull() {
-        new ObjectPropertyFrame(
+        ObjectPropertyFrame.get(
                 subject,
                 annotations,
                 domains,
@@ -155,7 +152,7 @@ public class ObjectPropertyFrame_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfCharacteristicsIsNull() {
-        new ObjectPropertyFrame(
+        ObjectPropertyFrame.get(
                 subject,
                 annotations,
                 domains,

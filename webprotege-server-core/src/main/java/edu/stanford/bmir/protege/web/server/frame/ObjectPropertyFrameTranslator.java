@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -47,9 +48,9 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     @Override
     public ObjectPropertyFrame getFrame(OWLObjectPropertyData subject) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
-        Set<OWLClassData> domains = new HashSet<>();
-        Set<OWLClassData> ranges = new HashSet<>();
-        Set<ObjectPropertyCharacteristic> characteristics = new HashSet<>();
+        ImmutableList.Builder<OWLClassData> domains = ImmutableList.builder();
+        ImmutableList.Builder<OWLClassData> ranges = ImmutableList.builder();
+        ImmutableList.Builder<ObjectPropertyCharacteristic> characteristics = ImmutableList.builder();
         for (OWLOntology ontology : rootOntology.getImportsClosure()) {
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getEntity().getIRI()));
             for (OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject.getEntity())) {
@@ -94,7 +95,12 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
                                                                                    .distinct()
                                                                                    .sorted()
                                                                                    .collect(toImmutableList());
-        return new ObjectPropertyFrame(subject, propertyValues, domains, ranges, Collections.emptySet(), characteristics);
+        return ObjectPropertyFrame.get(subject,
+                                       propertyValues,
+                                       domains.build(),
+                                       ranges.build(),
+                                       ImmutableList.of(),
+                                       characteristics.build());
     }
 
     @Override
