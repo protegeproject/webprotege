@@ -100,7 +100,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
                                        propertyValues,
                                        domains.build(),
                                        ranges.build(),
-                                       ImmutableList.of(),
+                                       ImmutableSet.of(),
                                        characteristics.build());
     }
 

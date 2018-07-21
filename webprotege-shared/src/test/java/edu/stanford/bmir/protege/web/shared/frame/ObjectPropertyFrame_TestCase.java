@@ -35,7 +35,7 @@ public class ObjectPropertyFrame_TestCase {
 
     private ImmutableSet<PropertyAnnotationValue> annotations;
 
-    private ImmutableList<OWLObjectPropertyData> inverses;
+    private ImmutableSet<OWLObjectPropertyData> inverses;
 
     private ImmutableList<ObjectPropertyCharacteristic> characteristics;
 
@@ -64,7 +64,7 @@ public class ObjectPropertyFrame_TestCase {
         domain = mock(OWLClassData.class);
         domains = ImmutableSet.of(domain);
         ranges = ImmutableSet.of(range);
-        inverses = ImmutableList.of(inverse);
+        inverses = ImmutableSet.of(inverse);
         characteristics = ImmutableList.of(ObjectPropertyCharacteristic.FUNCTIONAL,
                                            ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
         objectPropertyFrame = ObjectPropertyFrame.get(
