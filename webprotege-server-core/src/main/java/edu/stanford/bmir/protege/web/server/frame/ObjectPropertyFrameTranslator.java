@@ -49,7 +49,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     @Override
     public ObjectPropertyFrame getFrame(OWLObjectPropertyData subject) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<>();
-        ImmutableList.Builder<OWLClassData> domains = ImmutableList.builder();
+        ImmutableSet.Builder<OWLClassData> domains = ImmutableSet.builder();
         ImmutableList.Builder<OWLClassData> ranges = ImmutableList.builder();
         ImmutableList.Builder<ObjectPropertyCharacteristic> characteristics = ImmutableList.builder();
         for (OWLOntology ontology : rootOntology.getImportsClosure()) {

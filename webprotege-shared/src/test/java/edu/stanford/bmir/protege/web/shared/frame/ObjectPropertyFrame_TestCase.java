@@ -29,7 +29,7 @@ public class ObjectPropertyFrame_TestCase {
     @Mock
     private OWLObjectPropertyData subject;
 
-    private ImmutableList<OWLClassData> domains;
+    private ImmutableSet<OWLClassData> domains;
 
     private ImmutableList<OWLClassData> ranges;
 
@@ -62,7 +62,7 @@ public class ObjectPropertyFrame_TestCase {
     public void setUp() throws Exception {
         annotations = ImmutableSet.of(annotationValue);
         domain = mock(OWLClassData.class);
-        domains = ImmutableList.of(domain);
+        domains = ImmutableSet.of(domain);
         ranges = ImmutableList.of(range);
         inverses = ImmutableList.of(inverse);
         characteristics = ImmutableList.of(ObjectPropertyCharacteristic.FUNCTIONAL,
