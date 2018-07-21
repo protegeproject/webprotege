@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import edu.stanford.bmir.protege.web.shared.color.Color;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
@@ -52,6 +54,10 @@ public class RpcWhiteList implements Action, Result {
     AvailableProject availableProject;
 
     ProjectDetails projectDetails;
+
+    OWLPrimitiveData primitiveData;
+
+    State state;
 
     public RpcWhiteList() {
     }
@@ -158,5 +164,21 @@ public class RpcWhiteList implements Action, Result {
 
     public void setProjectDetails(ProjectDetails projectDetails) {
         this.projectDetails = projectDetails;
+    }
+
+    public OWLPrimitiveData getPrimitiveData() {
+        return primitiveData;
+    }
+
+    public void setPrimitiveData(OWLPrimitiveData primitiveData) {
+        this.primitiveData = primitiveData;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }
