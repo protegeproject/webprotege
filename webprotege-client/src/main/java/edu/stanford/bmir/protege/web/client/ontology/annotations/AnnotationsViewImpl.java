@@ -70,7 +70,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     public void setValue(Set<PropertyAnnotationValue> object) {
         List<PropertyAnnotationValue> values = new ArrayList<>();
         for(PropertyAnnotationValue annotation : object) {
-            values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), State.ASSERTED));
+            values.add(PropertyAnnotationValue.get(annotation.getProperty(), annotation.getValue(), State.ASSERTED));
         }
         editor.setValue(new PropertyValueList(values));
     }
@@ -83,14 +83,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     @Override
     public Optional<Set<PropertyAnnotationValue>> getValue() {
         Optional<PropertyValueList> valueList = editor.getValue();
-        if(!valueList.isPresent()) {
-            return Optional.empty();
-        }
-        Set<PropertyAnnotationValue> result = new HashSet<PropertyAnnotationValue>();
-        for(PropertyAnnotationValue value : valueList.get().getAnnotationPropertyValues()) {
-            result.add(value);
-        }
-        return Optional.of(result);
+        return valueList.map(PropertyValueList::getAnnotationPropertyValues);
     }
 
     @Override

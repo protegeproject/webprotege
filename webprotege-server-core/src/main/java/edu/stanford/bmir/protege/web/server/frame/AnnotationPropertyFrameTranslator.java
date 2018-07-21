@@ -43,7 +43,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getEntity().getIRI())) {
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {
-                    propertyValues.add(new PropertyAnnotationValue(ren.getRendering(ax.getProperty()),
+                    propertyValues.add(PropertyAnnotationValue.get(ren.getRendering(ax.getProperty()),
                                                                    ren.getRendering(ax.getValue()),
                                                                    State.ASSERTED));
                 }

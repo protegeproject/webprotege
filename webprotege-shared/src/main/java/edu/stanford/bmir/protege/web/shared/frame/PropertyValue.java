@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,35 +14,12 @@ import java.io.Serializable;
  */
 public abstract class PropertyValue implements Comparable<PropertyValue>, Serializable {
 
-    private State state;
 
-    @SuppressWarnings("GwtInconsistentSerializableClass" )
-    private OWLPropertyData property;
+    public abstract OWLPropertyData getProperty();
 
-    @SuppressWarnings("GwtInconsistentSerializableClass" )
-    private OWLPrimitiveData value;
+    public abstract OWLPrimitiveData getValue();
 
-    protected PropertyValue() {
-
-    }
-
-    public PropertyValue(OWLPropertyData property, OWLPrimitiveData value, State state) {
-        this.property = property;
-        this.value = value;
-        this.state = state;
-    }
-
-    public OWLPropertyData getProperty() {
-        return property;
-    }
-
-    public OWLPrimitiveData getValue() {
-        return value;
-    }
-
-    public State getState() {
-        return state;
-    }
+    public abstract State getState();
 
     public abstract boolean isValueMostSpecific();
 
@@ -51,30 +29,8 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     public abstract <R, E extends Throwable>  R accept(PropertyValueVisitor<R, E> visitor) throws E;
 
-    @Override
-    final public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("PropertyValue");
-        sb.append("(");
-        sb.append(getProperty());
-        sb.append(" ");
-        sb.append(getValue());
-        sb.append(")");
-        return sb.toString();
-    }
-
-    @Override
-    public int compareTo(PropertyValue o) {
-        int diff = this.getProperty().compareTo(o.getProperty());
-        if(diff != 0) {
-            return diff;
-        }
-        return this.getValue().getBrowserText().compareTo(o.getValue().getBrowserText());
-
-    }
-
     public PropertyValue setState(State state) {
-        if(this.state == state) {
+        if(getState() == state) {
             return this;
         }
         else {
@@ -84,4 +40,8 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     protected abstract PropertyValue duplicateWithState(State state);
 
+    @Override
+    public int compareTo(PropertyValue o) {
+        return 0;
+    }
 }

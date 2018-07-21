@@ -12,20 +12,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
  */
 public abstract class ObjectPropertyValue extends PropertyValue {
 
-
-    protected ObjectPropertyValue() {
-    }
-
-    public ObjectPropertyValue(OWLObjectPropertyData property, OWLNamedIndividualData value, State state) {
-        super(property, value, state);
-    }
-
-    protected ObjectPropertyValue(OWLObjectPropertyData property, OWLClassData value, State state) {
-        super(property, value, state);
-    }
-
     @Override
-    final public OWLObjectPropertyData getProperty() {
-        return (OWLObjectPropertyData) super.getProperty();
-    }
+    public abstract OWLObjectPropertyData getProperty();
 }

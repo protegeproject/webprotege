@@ -120,12 +120,12 @@ public class PropertyValueFormDataTranslator {
                 for (OWLObject val : owlObjects) {
                     OWLObjectPropertyData objectProp = renderingManager.getRendering((OWLObjectProperty) property);
                     if (val instanceof OWLClass) {
-                        propertyValues.add(new PropertyClassValue(objectProp,
+                        propertyValues.add(PropertyClassValue.get(objectProp,
                                                                   renderingManager.getRendering((OWLClass) val),
                                                                   State.ASSERTED));
                     }
                     else if (val instanceof OWLNamedIndividual) {
-                        propertyValues.add(new PropertyIndividualValue(objectProp,
+                        propertyValues.add(PropertyIndividualValue.get(objectProp,
                                                                        renderingManager.getRendering((OWLNamedIndividual) val),
                                                                        State.ASSERTED));
                     }
@@ -135,12 +135,12 @@ public class PropertyValueFormDataTranslator {
                 for (OWLObject val : owlObjects) {
                     OWLDataPropertyData dataProp = renderingManager.getRendering((OWLDataProperty) property);
                     if (val instanceof OWLClass) {
-                        propertyValues.add(new PropertyDatatypeValue(dataProp,
+                        propertyValues.add(PropertyDatatypeValue.get(dataProp,
                                                                      renderingManager.getRendering((OWLDatatype) val),
                                                                      State.ASSERTED));
                     }
                     else if (val instanceof OWLLiteral) {
-                        propertyValues.add(new PropertyLiteralValue(dataProp,
+                        propertyValues.add(PropertyLiteralValue.get(dataProp,
                                                                     OWLLiteralData.get((OWLLiteral) val),
                                                                     State.ASSERTED));
                     }
@@ -150,18 +150,18 @@ public class PropertyValueFormDataTranslator {
                 for (OWLObject val : owlObjects) {
                     OWLAnnotationPropertyData annotationProp = renderingManager.getRendering((OWLAnnotationProperty) property);
                     if (val instanceof OWLLiteral) {
-                        propertyValues.add(new PropertyAnnotationValue(annotationProp,
+                        propertyValues.add(PropertyAnnotationValue.get(annotationProp,
                                                                        OWLLiteralData.get((OWLLiteral) val),
                                                                        State.ASSERTED));
                     }
                     else if (val instanceof OWLEntity) {
-                        propertyValues.add(new PropertyAnnotationValue(annotationProp,
+                        propertyValues.add(PropertyAnnotationValue.get(annotationProp,
                                                                        renderingManager.getRendering((OWLEntity) val),
                                                                        State.ASSERTED));
 
                     }
                     else if (val instanceof IRI) {
-                        propertyValues.add(new PropertyAnnotationValue(annotationProp,
+                        propertyValues.add(PropertyAnnotationValue.get(annotationProp,
                                                                        IRIData.get((IRI) val),
                                                                        State.ASSERTED));
                     }

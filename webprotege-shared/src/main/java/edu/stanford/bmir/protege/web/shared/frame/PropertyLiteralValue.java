@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLDataPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -9,19 +13,26 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/11/2012
  */
-public final class PropertyLiteralValue extends DataPropertyValue {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class PropertyLiteralValue extends DataPropertyValue {
 
-    private PropertyLiteralValue() {
-    }
-
-    public PropertyLiteralValue(OWLDataPropertyData property, OWLLiteralData value, State state) {
-        super(property, value, state);
+    @Nonnull
+    public static PropertyLiteralValue get(@Nonnull OWLDataPropertyData property,
+                                @Nonnull OWLLiteralData value,
+                                @Nonnull State state) {
+        return new AutoValue_PropertyLiteralValue(property, value, state);
     }
 
     @Override
-    public OWLLiteralData getValue() {
-        return (OWLLiteralData) super.getValue();
-    }
+    public abstract OWLDataPropertyData getProperty();
+
+    @Override
+    public abstract OWLLiteralData getValue();
+
+    @Override
+    public abstract State getState();
+
 
     @Override
     public boolean isValueMostSpecific() {
@@ -44,24 +55,7 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     }
 
     @Override
-    public int hashCode() {
-        return "PropertyLiteralValue".hashCode() + getProperty().hashCode() + getValue().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof PropertyLiteralValue)) {
-            return false;
-        }
-        PropertyLiteralValue other = (PropertyLiteralValue) obj;
-        return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
-    }
-
-    @Override
     protected PropertyValue duplicateWithState(State state) {
-        return new PropertyLiteralValue(getProperty(), getValue(), state);
+        return PropertyLiteralValue.get(getProperty(), getValue(), state);
     }
 }

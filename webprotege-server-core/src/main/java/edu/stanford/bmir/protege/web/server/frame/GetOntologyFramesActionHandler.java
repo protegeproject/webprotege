@@ -56,7 +56,7 @@ public class GetOntologyFramesActionHandler extends AbstractProjectActionHandler
                     PropertyValueList list = new PropertyValueList(
                             o.getAnnotations()
                                     .stream()
-                                    .map(annotation -> new PropertyAnnotationValue(
+                                    .map(annotation -> PropertyAnnotationValue.get(
                                             renderingManager.getRendering(annotation.getProperty()),
                                             renderingManager.getRendering(annotation.getValue()),
                                             State.ASSERTED))

@@ -70,7 +70,7 @@ public class GetOntologyAnnotationsActionHandler extends AbstractProjectActionHa
         List<OWLAnnotation> result = new ArrayList<>(rootOntology.getAnnotations());
         ImmutableList.Builder<PropertyAnnotationValue> annotationValues = ImmutableList.builder();
         result.stream()
-                .map(annotation -> new PropertyAnnotationValue(
+                .map(annotation -> PropertyAnnotationValue.get(
                         renderingManager.getRendering(annotation.getProperty()),
                         renderingManager.getRendering(annotation.getValue()),
                         State.ASSERTED

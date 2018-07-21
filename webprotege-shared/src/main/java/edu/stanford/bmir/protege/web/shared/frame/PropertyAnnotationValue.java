@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.annotations.GwtCompatible;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -12,22 +15,37 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/11/2012
  */
-public class PropertyAnnotationValue extends PropertyValue {
+@AutoValue
+@GwtCompatible(serializable = true)
+public abstract class PropertyAnnotationValue extends PropertyValue {
 
 
-    @SuppressWarnings("GwtInconsistentSerializableClass" )
-    private OWLEntityData entity;
-
-    private PropertyAnnotationValue() {
+    @Nonnull
+    public static PropertyAnnotationValue get(@Nonnull OWLAnnotationPropertyData property,
+                                              @Nonnull OWLPrimitiveData value,
+                                              @Nonnull State state) {
+        return new AutoValue_PropertyAnnotationValue(property, value, state);
     }
 
-    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLPrimitiveData value, State state) {
-        super(property, value, state);
-    }
 
-    public PropertyAnnotationValue(OWLAnnotationPropertyData property, OWLEntityData entityValue, State state) {
-        super(property, entityValue, state);
-        this.entity = entityValue;
+    @Override
+    public abstract OWLAnnotationPropertyData getProperty();
+
+    @Override
+    public abstract OWLPrimitiveData getValue();
+
+    @Override
+    public abstract State getState();
+
+    @Nonnull
+    public Optional<OWLEntityData> getValueAsEntity() {
+        OWLPrimitiveData primitiveData = getValue();
+        if(primitiveData instanceof OWLEntityData) {
+            return Optional.of((OWLEntityData) primitiveData);
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -35,24 +53,6 @@ public class PropertyAnnotationValue extends PropertyValue {
         return true;
     }
 
-    @Override
-    public OWLAnnotationPropertyData getProperty() {
-        return (OWLAnnotationPropertyData) super.getProperty();
-    }
-
-    @Override
-    public OWLPrimitiveData getValue() {
-        return super.getValue();
-    }
-
-    public Optional<OWLEntityData> getValueAsEntity() {
-        if(entity == null) {
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(entity);
-        }
-    }
 
     @Override
     public boolean isAnnotation() {
@@ -66,7 +66,7 @@ public class PropertyAnnotationValue extends PropertyValue {
 
     @Override
     protected PropertyValue duplicateWithState(State state) {
-        return new PropertyAnnotationValue(getProperty(), getValue(), state);
+        return PropertyAnnotationValue.get(getProperty(), getValue(), state);
     }
 
     @Override
