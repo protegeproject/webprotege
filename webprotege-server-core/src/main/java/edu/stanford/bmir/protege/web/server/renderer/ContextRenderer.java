@@ -54,4 +54,9 @@ public class ContextRenderer {
     public OWLDatatypeData getRendering(@Nonnull OWLDatatype datatype) {
         return renderingManager.getRendering(datatype);
     }
+
+    @Nonnull
+    public OWLPrimitiveData getRendering(@Nonnull OWLAnnotationValue value) {
+        return renderingManager.getRendering(value);
+    }
 }

@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.renderer.ContextRenderer;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -23,15 +22,15 @@ import java.util.Set;
 public class AnnotationPropertyFrameTranslator implements FrameTranslator<AnnotationPropertyFrame, OWLAnnotationPropertyData> {
 
     @Nonnull
-    private final RenderingManager renderingManager;
+    private final ContextRenderer ren;
 
     @Nonnull
     private final OWLOntology rootOntology;
 
     @Inject
-    public AnnotationPropertyFrameTranslator(@Nonnull RenderingManager renderingManager,
+    public AnnotationPropertyFrameTranslator(@Nonnull ContextRenderer renderer,
                                              @Nonnull OWLOntology rootOntology) {
-        this.renderingManager = renderingManager;
+        this.ren = renderer;
         this.rootOntology = rootOntology;
     }
 
@@ -43,8 +42,8 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getEntity().getIRI())) {
                 if (!(ax.getValue() instanceof OWLAnonymousIndividual)) {
-                    propertyValues.add(new PropertyAnnotationValue(renderingManager.getRendering(ax.getProperty()),
-                                                                   renderingManager.getRendering(ax.getValue()),
+                    propertyValues.add(new PropertyAnnotationValue(ren.getRendering(ax.getProperty()),
+                                                                   ren.getRendering(ax.getValue()),
                                                                    State.ASSERTED));
                 }
             }
@@ -52,7 +51,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
                 rootOntology.getEntitiesInSignature(ax.getDomain(), Imports.INCLUDED)
                             .stream()
                             .distinct()
-                            .map(renderingManager::getRendering)
+                            .map(ren::getRendering)
                             .sorted()
                             .forEach(domains::add);
             }
@@ -60,12 +59,12 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
                 rootOntology.getEntitiesInSignature(ax.getRange(), Imports.INCLUDED)
                             .stream()
                             .distinct()
-                            .map(renderingManager::getRendering)
+                            .map(ren::getRendering)
                             .sorted()
                             .forEach(ranges::add);
             }
         }
-        return AnnotationPropertyFrame.get(renderingManager.getRendering(subject.getEntity()),
+        return AnnotationPropertyFrame.get(ren.getRendering(subject.getEntity()),
                                            propertyValues.build(),
                                            domains.build(),
                                            ranges.build());
