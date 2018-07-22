@@ -68,12 +68,12 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main} {wp.projectList.projectList}">
-        <g:HTMLPanel addStyleNames="{wp.projectList.projectListHeader} {wp.style.tableHeader}">
-            <g:Label addStyleNames="{wp.projectList.projectNameCol}" text="{msg.projectName}"/>
-            <g:Label addStyleNames="{wp.projectList.ownerCol}" text="{msg.owner}"/>
-            <g:Label addStyleNames="{wp.projectList.lastOpenCol}" text="{msg.lastOpened}"/>
-            <g:Label addStyleNames="{wp.projectList.lastModifiedCol}" text="{msg.lastModified}"/>
-            <g:Label addStyleNames="{wp.projectList.menuButtonCol}"/>
+        <g:HTMLPanel addStyleNames="{wp.projectList.projectListHeader} {wp.style.tableHeader} {wp.projectList.cell}">
+            <g:Label addStyleNames="{wp.projectList.projectNameCol} {wp.projectList.cell}" text="{msg.projectName}"/>
+            <g:Label addStyleNames="{wp.projectList.ownerCol} {wp.projectList.cell}" text="{msg.owner}"/>
+            <g:Label addStyleNames="{wp.projectList.lastOpenCol} {wp.projectList.cell}" text="{msg.lastOpened}"/>
+            <g:Label addStyleNames="{wp.projectList.lastModifiedCol} {wp.projectList.cell}" text="{msg.lastModified}"/>
+            <g:Label addStyleNames="{wp.projectList.menuButtonCol} {wp.projectList.cell}"/>
         </g:HTMLPanel>
         <g:FlowPanel ui:field="itemContainer" addStyleNames="{wp.projectList.rows}"/>
     </g:HTMLPanel>

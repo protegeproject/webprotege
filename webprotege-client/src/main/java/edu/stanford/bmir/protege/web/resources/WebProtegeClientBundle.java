@@ -494,5 +494,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-project-list__rows__row")
         String row();
+
+
+        @ClassName("wp-project-list__cell")
+        String cell();
     }
 }

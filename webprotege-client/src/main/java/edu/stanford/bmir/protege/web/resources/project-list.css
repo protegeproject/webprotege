@@ -31,17 +31,17 @@
 }
 
 .wp-project-list__last-opened-col {
-    flex-basis: 200px;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex-basis: 150px;
+    flex-grow: 1;
+    flex-shrink: 1;
     padding: 5px;
     align-items: baseline;
 }
 
 .wp-project-list__last-modified-col {
-    flex-basis: 200px;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex-basis: 150px;
+    flex-grow: 1;
+    flex-shrink: 1;
     padding: 5px;
     align-items: baseline;
 }
@@ -65,8 +65,16 @@
 .wp-project-list__rows__row {
     display: flex;
     flex-direction: row;
+    flex-flow: nowrap;
     border-bottom: 1px solid #f0f0f0;
     align-items: baseline;
+}
+
+.wp-project-list__cell {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .wp-project-list__rows__row:hover {
