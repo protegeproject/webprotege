@@ -287,3 +287,8 @@
 .wp-panel-neutral .gwt-SuggestBox {
 
 }
+
+.wp-table-header {
+    font-weight: bold;
+    font-size: 16px;
+}

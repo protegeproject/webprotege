@@ -1,0 +1,74 @@
+@external .wp-*;
+
+.wp-project-list {
+
+}
+
+.wp-project-list__header {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #f0f0f0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    align-items: baseline;
+    padding-right: 17px;
+}
+
+.wp-project-list__name-col {
+    flex-basis: 400px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 5px;
+    align-items: baseline;
+}
+
+.wp-project-list__owner-col {
+    flex-basis: 200px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 5px;
+    align-items: baseline;
+}
+
+.wp-project-list__last-opened-col {
+    flex-basis: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 5px;
+    align-items: baseline;
+}
+
+.wp-project-list__last-modified-col {
+    flex-basis: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 5px;
+    align-items: baseline;
+}
+
+.wp-project-list__menu-button-col {
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    align-items: baseline;
+    width: 12px;
+}
+
+.wp-project-list__rows {
+    overflow-y: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+    box-sizing: padding-box;
+}
+
+.wp-project-list__rows__row {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: baseline;
+}
+
+.wp-project-list__rows__row:hover {
+    background-color: #f0f0f0;
+}

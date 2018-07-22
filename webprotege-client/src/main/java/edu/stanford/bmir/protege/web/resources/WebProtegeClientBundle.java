@@ -144,6 +144,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("value-list.css")
     ValueListCss valueList();
 
+    @Source("project-list.css")
+    ProjectList projectList();
+
     @Source("filter.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource svgFilter();
@@ -175,6 +178,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-form-help-text")
         String formHelpText();
+
+        @ClassName("wp-table-header")
+        String tableHeader();
 
         String warningLabel();
 
@@ -458,5 +464,35 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("wp-value-list__delete-button")
         String valueListDeleteButton();
 
+    }
+
+    interface ProjectList extends CssResource {
+
+        @ClassName("wp-project-list")
+        String projectList();
+
+        @ClassName("wp-project-list__header")
+        String projectListHeader();
+
+        @ClassName("wp-project-list__name-col")
+        String projectNameCol();
+
+        @ClassName("wp-project-list__owner-col")
+        String ownerCol();
+
+        @ClassName("wp-project-list__last-opened-col")
+        String lastOpenCol();
+
+        @ClassName("wp-project-list__last-modified-col")
+        String lastModifiedCol();
+
+        @ClassName("wp-project-list__menu-button-col")
+        String menuButtonCol();
+
+        @ClassName("wp-project-list__rows")
+        String rows();
+
+        @ClassName("wp-project-list__rows__row")
+        String row();
     }
 }

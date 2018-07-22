@@ -1,13 +1,12 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
 
         .main {
             display: flex;
             flex-direction: column;
-
-
         }
 
         .header {
@@ -18,31 +17,35 @@
             padding: 5px;
             border-bottom: 1px solid #f0f0f0;
             flex-grow: 0;
-            min-height: 2em;
-            /*flex-shrink: 0;*/
+            flex-shrink: 0;
         }
 
         .displayNameCol {
-            width: 400px;
-            flex-grow: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 400px;
             padding: 5px;
             align-items: baseline;
+
         }
         .ownerCol {
-            width: 200px;
-            flex-grow: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 200px;
             padding: 5px;
             align-items: baseline;
         }
         .openedAtCol {
-            width: 200px;
             flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 200px;
             padding: 5px;
             align-items: baseline;
         }
         .modifiedAtCol {
-            width: 200px;
             flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 200px;
             padding: 5px;
             align-items: baseline;
         }
@@ -57,19 +60,21 @@
 
         .projectList {
             overflow-y: auto;
+            flex-grow: 1;
+            flex-shrink: 1;
         }
 
 
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{style.header}">
-            <g:Label addStyleNames="{style.displayNameCol}" text="{msg.projectName}"/>
-            <g:Label addStyleNames="{style.ownerCol}" text="{msg.owner}"/>
-            <g:Label addStyleNames="{style.openedAtCol}" text="{msg.lastOpened}"/>
-            <g:Label addStyleNames="{style.modifiedAtCol}" text="{msg.lastModified}"/>
-            <g:Label addStyleNames="{style.menuButtonCol}"/>
+    <g:HTMLPanel addStyleNames="{style.main} {wp.projectList.projectList}">
+        <g:HTMLPanel addStyleNames="{wp.projectList.projectListHeader} {wp.style.tableHeader}">
+            <g:Label addStyleNames="{wp.projectList.projectNameCol}" text="{msg.projectName}"/>
+            <g:Label addStyleNames="{wp.projectList.ownerCol}" text="{msg.owner}"/>
+            <g:Label addStyleNames="{wp.projectList.lastOpenCol}" text="{msg.lastOpened}"/>
+            <g:Label addStyleNames="{wp.projectList.lastModifiedCol}" text="{msg.lastModified}"/>
+            <g:Label addStyleNames="{wp.projectList.menuButtonCol}"/>
         </g:HTMLPanel>
-        <g:FlowPanel ui:field="itemContainer" addStyleNames="{style.projectList}"/>
+        <g:FlowPanel ui:field="itemContainer" addStyleNames="{wp.projectList.rows}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
