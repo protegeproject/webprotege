@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
@@ -34,13 +35,17 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     @Nonnull
     private final Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider;
 
+    @Nonnull
+    private final PropertyValueComparator propertyValueComparator;
+
     @Inject
     public ObjectPropertyFrameTranslator(@Nonnull ContextRenderer ren,
                                          @Nonnull @RootOntology OWLOntology rootOntology,
-                                         @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider) {
+                                         @Nonnull Provider<AxiomPropertyValueTranslator> axiomPropertyValueTranslatorProvider, @Nonnull PropertyValueComparator propertyValueComparator) {
         this.ren = ren;
         this.rootOntology = rootOntology;
         this.axiomPropertyValueTranslatorProvider = axiomPropertyValueTranslatorProvider;
+        this.propertyValueComparator = propertyValueComparator;
     }
 
     @Nonnull
@@ -92,7 +97,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
                                                                                    .filter(PropertyValue::isAnnotation)
                                                                                    .map(pv -> (PropertyAnnotationValue) pv)
                                                                                    .distinct()
-                                                                                   .sorted()
+                                                                                   .sorted(propertyValueComparator)
                                                                                    .collect(toImmutableSet());
         return ObjectPropertyFrame.get(subject,
                                        propertyValues,

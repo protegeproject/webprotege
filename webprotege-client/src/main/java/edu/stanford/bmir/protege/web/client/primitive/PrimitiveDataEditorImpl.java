@@ -84,6 +84,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private EntityLinkMode linkMode = EntityLinkMode.SHOW_LINKS_FOR_ENTITIES;
 
+    private boolean wrap = true;
+
     @Inject
     public PrimitiveDataEditorImpl(PrimitiveDataEditorView editorView,
                                    LanguageEditor languageEditor,
@@ -168,6 +170,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public void setWrap(boolean wrap) {
+        this.wrap = wrap;
         view.setWrap(wrap);
     }
 
@@ -788,6 +791,13 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 if (!languageEditor.getValue().orElse("").equalsIgnoreCase(lang)) {
                     languageEditor.setValue(LanguageTagFormatter.format(lang));
                 }
+            }
+            if(data instanceof IRIData) {
+                GWT.log("Setting mode to single line for " + data);
+                view.setWrap(false);
+            }
+            else {
+                view.setWrap(wrap);
             }
             if(selectedSuggestion.isPresent()) {
                 if(!selectedSuggestion.get().getReplacementString().equals(data.getBrowserText())) {
