@@ -69,7 +69,7 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
                          })
                          .sorted(comparing(node -> node.getUserObject().getBrowserText()))
                          .collect(toList());
-            return new GetHierarchyRootsResult(rootNodes);
-        }).orElse(new GetHierarchyRootsResult(emptyList()));
+            return GetHierarchyRootsResult.get(rootNodes);
+        }).orElse(GetHierarchyRootsResult.empty());
     }
 }
