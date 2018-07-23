@@ -68,6 +68,8 @@
     flex-flow: nowrap;
     border-bottom: 1px solid #f0f0f0;
     align-items: baseline;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .wp-project-list__cell {
