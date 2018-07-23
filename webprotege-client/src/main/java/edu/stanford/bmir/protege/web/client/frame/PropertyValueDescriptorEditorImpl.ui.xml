@@ -9,18 +9,22 @@
             align-items: baseline;
         }
         .property-field {
-            flex-grow: 0;
-            min-width: 170px;
-            max-width: 170px;
-        }
-        .value-field {
-            flex-grow: 1;
-            flex-shrink: 1;
-        }
-        .language-field {
+            flex-basis: 180px;
             flex-grow: 0;
             flex-shrink: 0;
-            width: 36px;
+            max-width: 180px;
+        }
+        .value-field {
+            flex-basis: 500px;
+            flex-grow: 1;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+        .language-field {
+            flex-basis: 36px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            min-width: 0;
         }
     </ui:style>
 
