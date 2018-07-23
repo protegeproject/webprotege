@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ObjectPropertyHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ObjectPropertyHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.EntityType;
@@ -50,8 +48,7 @@ public class OWLObjectPropertyHierarchyChangeComputer extends HierarchyChangeCom
                 new GraphNode<>(renderer.render(child))
         ));
         return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), OBJECT_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))),
-                new ObjectPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, OBJECT_PROPERTY_HIERARCHY)
+                new EntityHierarchyChangedEvent(getProjectId(), OBJECT_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge)))
         );
     }
 
@@ -62,8 +59,7 @@ public class OWLObjectPropertyHierarchyChangeComputer extends HierarchyChangeCom
                 new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
         ));
         return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), OBJECT_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge))),
-                new ObjectPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, OBJECT_PROPERTY_HIERARCHY)
+                new EntityHierarchyChangedEvent(getProjectId(), OBJECT_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
         );
     }
 }

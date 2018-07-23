@@ -4,8 +4,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRendere
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.AnnotationPropertyHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.AnnotationPropertyHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,10 +13,12 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.ANNOTATION_PROPERTY_HIERARCHY;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 
 /**
@@ -45,9 +45,8 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
                 new GraphNode<>(renderer.render(parent)),
                 new GraphNode<>(renderer.render(child))
         ));
-        return asList(
-                new EntityHierarchyChangedEvent(getProjectId(), ANNOTATION_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(singletonList(removeEdge))),
-                new AnnotationPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, ANNOTATION_PROPERTY_HIERARCHY)
+        return singletonList(
+                new EntityHierarchyChangedEvent(getProjectId(), ANNOTATION_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(singletonList(removeEdge)))
         );
     }
 
@@ -57,9 +56,8 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
                 new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
                 new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
         ));
-        return asList(
-                new EntityHierarchyChangedEvent(getProjectId(), ANNOTATION_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(singletonList(addEdge))),
-                new AnnotationPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, ANNOTATION_PROPERTY_HIERARCHY)
+        return singletonList(
+                new EntityHierarchyChangedEvent(getProjectId(), ANNOTATION_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(singletonList(addEdge)))
         );
     }
 }

@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRendere
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.DataPropertyHierarchyParentAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -43,9 +42,8 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
                 new GraphNode<>(renderer.render(parent)),
                 new GraphNode<>(renderer.render(child))
         ));
-        return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))),
-                new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, DATA_PROPERTY_HIERARCHY)
+        return Collections.singletonList(
+                new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge)))
         );
     }
 
@@ -55,9 +53,8 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
                 new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
                 new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
         ));
-        return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge))),
-                new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, DATA_PROPERTY_HIERARCHY)
+        return Collections.singletonList(
+                new EntityHierarchyChangedEvent(getProjectId(), DATA_PROPERTY_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
         );
     }
 }

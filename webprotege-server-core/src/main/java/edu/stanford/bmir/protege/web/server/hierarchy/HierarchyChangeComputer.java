@@ -101,7 +101,6 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                                                                                     hierarchyId,
                                                                                     new GraphModelChangedEvent<>(changes));
                 projectEventList.add(event);
-                projectEventList.add(new HierarchyRootAddedEvent<>(projectId, hierarchyId, rootAfter));
             }
         }
         for (T rootBefore : roots) {
@@ -112,8 +111,6 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
                                                                                     hierarchyId,
                                                                                     new GraphModelChangedEvent<>(changes));
                 projectEventList.add(event);
-
-                projectEventList.add(new HierarchyRootRemovedEvent<>(projectId, hierarchyId, rootBefore));
             }
         }
     }

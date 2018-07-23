@@ -5,8 +5,6 @@ import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRendere
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -51,8 +49,7 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
                 new GraphNode<>(renderer.render(child))
         ));
         return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge))),
-                new ClassHierarchyParentRemovedEvent(getProjectId(), child, parent, CLASS_HIERARCHY)
+                new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(removeEdge)))
         );
     }
 
@@ -63,8 +60,7 @@ public class OWLClassHierarchyChangeComputer extends HierarchyChangeComputer<OWL
                 new GraphNode<>(renderer.render(child), classHierarchyProvider.getChildren(child).isEmpty())
         ));
         return Arrays.asList(
-                new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge))),
-                new ClassHierarchyParentAddedEvent(getProjectId(), child, parent, CLASS_HIERARCHY)
+                new EntityHierarchyChangedEvent(getProjectId(), CLASS_HIERARCHY, new GraphModelChangedEvent<>(Collections.singletonList(addEdge)))
         );
     }
 }
