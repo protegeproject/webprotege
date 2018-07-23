@@ -61,11 +61,15 @@
         }
 
         .main > a {
-            color: #f0f0f0;
+            color: #c0c0c0;
+            visibility: hidden;
         }
 
         .main > a:hover {
-            color: #a9a9a9;
+            color: #505050;
+        }
+        .main:hover > a {
+            visibility: visible;
         }
     </ui:style>
 
