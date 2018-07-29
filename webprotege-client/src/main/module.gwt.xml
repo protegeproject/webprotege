@@ -33,6 +33,8 @@
     <inherits name="dagger.Dagger"/>
     <inherits name="edu.stanford.protege.gwt.graphtree.graphtree"/>
 
+    <inherits name="com.google.gwt.user.RemoteServiceObfuscateTypeNames"/>
+
     <set-property name="gwt.suppressNonStaticFinalFieldWarnings" value="true" />
 
     <!--
