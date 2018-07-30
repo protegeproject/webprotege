@@ -935,6 +935,10 @@ public interface Messages extends com.google.gwt.i18n.client.Messages {
     @Key("sortByOwner")
     String sortByOwner();
 
+    @DefaultMessage("Go to entity")
+    @Key("navigation.goToEntity")
+    String navigation_goToEntity();
+
     
     @DefaultMessage("Sort by Project Name")
     @Key("sortByProjectName")

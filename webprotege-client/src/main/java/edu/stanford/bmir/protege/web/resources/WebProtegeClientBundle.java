@@ -82,6 +82,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgEyeIconDown();
 
+    @Source("goto.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource gotoIcon();
+
     @Source("alert-icon.svg")
     @DataResource.MimeType("image/svg+xml")
     DataResource alertIcon();

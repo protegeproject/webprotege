@@ -4,6 +4,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.shared.entity.CommentedEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.issues.SortingKey;
 
 import javax.annotation.Nonnull;
@@ -15,6 +16,10 @@ import java.util.List;
  * 7 Mar 2017
  */
 public interface CommentedEntitiesView extends IsWidget, HasPagination {
+
+    interface GoToEntityHandler {
+        void handleGoToEntity(@Nonnull OWLEntityData entityData);
+    }
 
     void setEntities(@Nonnull List<CommentedEntityData> entities);
 
@@ -39,4 +44,6 @@ public interface CommentedEntitiesView extends IsWidget, HasPagination {
     int getPageNumber();
 
     void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
+
+    void setGoToEntityHandler(@Nonnull GoToEntityHandler handler);
 }

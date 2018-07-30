@@ -1,4 +1,4 @@
-<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g="urn:import:com.google.gwt.user.client.ui"
 >
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field='value' type="edu.stanford.bmir.protege.web.client.issues.CommentedEntityDataRendering"/>
@@ -25,9 +25,31 @@
             padding-left: 10px;
         }
 
+        .entityNameRow {
+            display: flex;
+            flex-direction: row;
+        }
+
         .entityName {
             font-weight: 500;
             line-height: 20px;
+            padding-right: 5px;
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+
+        .gotoButton {
+            visibility: hidden;
+            padding: 1px;
+            justify-self: flex-end;
+        }
+
+        .main:hover .gotoButton {
+            visibility: visible;
+        }
+
+        .main:hover .gotoButton:hover #svg-goto {
+            background-color: blueviolet;
         }
 
         .badge {
@@ -49,26 +71,31 @@
         }
     </ui:style>
 
-    <div class="{style.main}">
-        <div class="{wp.style.classIconInset} {style.mainInner}">
-            <span class="{style.entityName}"><ui:text from="{value.entityBrowserText}"/></span>
-            <div class="{style.detailsContainer}">
-                <div class="{wp.style.commentIconInset}" style="display: inline-block; background-position: 10px 3px;">
-                    <ui:text from="{value.commentCount}"/>
+        <div class="{style.main}">
+            <div class="{wp.style.classIconInset} {style.mainInner}">
+                <div class="{style.entityNameRow}">
+                    <span class="{style.entityName}">
+                        <ui:text from="{value.entityBrowserText}"/>
+                    </span>
+                    <img src="{wp.gotoIcon.getSafeUri}" class="{style.gotoButton}" ui:field="gotoButton" title="{msg.navigation_goToEntity}"/>
                 </div>
-                <div class="{style.modifiedDetails}">
-                    <div>
-                        <ui:text from="{msg.comments_lastComment}"/> <span class="{style.modifiedTime}"><ui:text from="{value.modifiedAt}"/></span>
+                <div class="{style.detailsContainer}">
+                    <div class="{wp.style.commentIconInset}" style="display: inline-block; background-position: 10px 3px;">
+                        <ui:text from="{value.commentCount}"/>
                     </div>
-                    <div>
-                        <ui:text from="{msg.comments_by}"/> <ui:text from="{value.modifiedBy}"/>
+                    <div class="{style.modifiedDetails}">
+                        <div>
+                            <ui:text from="{msg.comments_lastComment}"/> <span class="{style.modifiedTime}"><ui:text from="{value.modifiedAt}"/></span>
+                        </div>
+                        <div>
+                            <ui:text from="{msg.comments_by}"/> <ui:text from="{value.modifiedBy}"/>
+                        </div>
                     </div>
-                </div>
-                <div class="{style.badge}" style="background: {value.statusColor};">
-                    <ui:text from="{value.status}"/>
+                    <div class="{style.badge}" style="background: {value.statusColor};">
+                        <ui:text from="{value.status}"/>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 </ui:UiBinder>
