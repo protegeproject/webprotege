@@ -306,6 +306,12 @@ public class ClientProjectModule {
     DefaultLanguageTagView provideDefaultLanguageTagView(DefaultLanguageTagViewImpl impl) {
         return impl;
     }
+
+    @Provides
+    PreferredLanguageView providePreferredLanguageView(PreferredLanguageViewImpl impl) {
+        return impl;
+    }
+
 }
 
 

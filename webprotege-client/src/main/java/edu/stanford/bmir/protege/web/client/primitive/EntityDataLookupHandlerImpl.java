@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -46,7 +47,9 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
         if(freshEntitiesHandler.isRegisteredFreshEntity(displayName)) {
             Optional<OWLEntity> freshEntity = freshEntitiesHandler.getRegisteredFreshEntity(displayName);
             if (freshEntity.isPresent()) {
-                OWLEntityData entityData = DataFactory.getOWLEntityData(freshEntity.get(), displayName);
+                OWLEntityData entityData = DataFactory.getOWLEntityData(freshEntity.get(),
+                                                                        displayName,
+                                                                        ImmutableMap.of());
                 callback.onSuccess(Optional.of(entityData));
                 return;
             }

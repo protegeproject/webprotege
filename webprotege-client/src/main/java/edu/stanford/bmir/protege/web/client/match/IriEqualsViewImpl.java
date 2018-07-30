@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.match;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -59,6 +60,6 @@ public class IriEqualsViewImpl extends Composite implements IriEqualsView {
 
     @Override
     public void setIri(IRI iri) {
-        this.iriEditor.setValue(IRIData.get(iri));
+        this.iriEditor.setValue(IRIData.get(iri, ImmutableMap.of()));
     }
 }

@@ -60,9 +60,10 @@ public class EntityHierarchyNodeRenderer {
      */
     @Nonnull
     public EntityHierarchyNode render(@Nonnull OWLEntity entity) {
-        return new EntityHierarchyNode(
+        return EntityHierarchyNode.get(
                 entity,
                 dictionaryManager.getShortForm(entity),
+                dictionaryManager.getShortForms(entity),
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity),
                 discussionThreadRepository.getOpenCommentsCount(projectId, entity),

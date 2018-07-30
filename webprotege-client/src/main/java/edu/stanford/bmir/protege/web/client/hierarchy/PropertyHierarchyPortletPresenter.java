@@ -18,6 +18,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropert
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -134,8 +136,8 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                              @Nonnull Provider<EntityHierarchyDropHandler> entityHierarchyDropHandlerProvider,
                                              @Nonnull FilterView filterView,
-                                             @Nonnull TagVisibilityPresenter tagVisibilityPresenter) {
-        super(selectionModel, projectId);
+                                             @Nonnull TagVisibilityPresenter tagVisibilityPresenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.view = view;
         this.messages = messages;
         this.createAction = new PortletAction(messages.create(), this::handleCreate);
@@ -214,6 +216,12 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                            @Nonnull EntityHierarchyModel model,
                            @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
         model.start(eventBus, hierarchyId);
+        eventBus.addProjectEventHandler(getProjectId(),
+                                        PrefLangChangedEvent.PREF_LANG_CHANGED,
+                                        event -> {
+                                            renderer.setPreferredLang(event.getPrefLang());
+                                            treeWidget.setRenderer(renderer);
+                                        });
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(model, EntityHierarchyNode::getEntity));
         treeWidget.addSelectionChangeHandler(this::handleSelectionChanged);

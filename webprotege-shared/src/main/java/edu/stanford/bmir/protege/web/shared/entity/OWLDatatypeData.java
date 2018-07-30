@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
@@ -23,8 +25,9 @@ public abstract class OWLDatatypeData extends OWLEntityData {
 
     @Nonnull
     public static OWLDatatypeData get(@Nonnull OWLDatatype datatype,
-                                      @Nonnull String browserText) {
-        return new AutoValue_OWLDatatypeData(browserText, datatype);
+                                      @Nonnull String browserText,
+                                      @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
+        return new AutoValue_OWLDatatypeData(browserText,  shortForms, datatype);
     }
 
     @Nonnull

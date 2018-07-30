@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.EntityType;
@@ -71,4 +72,12 @@ public interface MultiLingualDictionary {
      */
     void update(@Nonnull Collection<OWLEntity> entities,
                 @Nonnull List<DictionaryLanguage> languages);
+
+    /**
+     * Gets the short forms for the specified entity.
+     * @param entity The entity
+     * @return A map of languages for short forms for known language short form mappings
+     */
+    @Nonnull
+    ImmutableMap<DictionaryLanguage,String> getShortForms(OWLEntity entity);
 }

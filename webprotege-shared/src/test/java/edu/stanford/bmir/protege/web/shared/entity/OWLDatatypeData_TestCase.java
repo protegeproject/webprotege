@@ -1,6 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,17 +26,20 @@ public class OWLDatatypeData_TestCase {
 
     private String browserText = "The browserText";
 
+    private ImmutableMap<DictionaryLanguage, String> shortForms;
+
     @Before
     public void setUp()
         throws Exception
     {
-        data = OWLDatatypeData.get(entity, browserText);
+        shortForms = ImmutableMap.of();
+        data = OWLDatatypeData.get(entity, browserText, shortForms);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        OWLDatatypeData.get(null, browserText);
+        OWLDatatypeData.get(null, browserText, shortForms);
     }
 
     @Test
@@ -45,7 +50,7 @@ public class OWLDatatypeData_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        OWLDatatypeData.get(entity, null);
+        OWLDatatypeData.get(entity, null, shortForms);
     }
 
     @Test
@@ -66,22 +71,22 @@ public class OWLDatatypeData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(data, is(OWLDatatypeData.get(entity, browserText)));
+        assertThat(data, is(OWLDatatypeData.get(entity, browserText, shortForms)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(data, is(Matchers.not(OWLDatatypeData.get(Mockito.mock(OWLDatatype.class), browserText))));
+        assertThat(data, is(Matchers.not(OWLDatatypeData.get(Mockito.mock(OWLDatatype.class), browserText, shortForms))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(data, is(Matchers.not(OWLDatatypeData.get(entity, "String-21fa6bff-caee-40c3-85b1-411d0df51d1a"))));
+        assertThat(data, is(Matchers.not(OWLDatatypeData.get(entity, "String-21fa6bff-caee-40c3-85b1-411d0df51d1a", shortForms))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(data.hashCode(), is(OWLDatatypeData.get(entity, browserText).hashCode()));
+        assertThat(data.hashCode(), is(OWLDatatypeData.get(entity, browserText, shortForms).hashCode()));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -64,31 +65,31 @@ public class PrimitiveDataParserImpl_EntityParsing_TestCase {
     @Test
     public void shouldParseNameAsClass() {
         primitiveTypes.add(PrimitiveType.CLASS);
-        parseEntityData(OWLClassData.get(new OWLClassImpl(IRI.create("http://ont.com/cls")), "A"));
+        parseEntityData(OWLClassData.get(new OWLClassImpl(IRI.create("http://ont.com/cls")), "A", ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsObjectProperty() {
         primitiveTypes.add(PrimitiveType.OBJECT_PROPERTY);
-        parseEntityData(OWLObjectPropertyData.get(new OWLObjectPropertyImpl(IRI.create("http://ont.com/prop")), "prop"));
+        parseEntityData(OWLObjectPropertyData.get(new OWLObjectPropertyImpl(IRI.create("http://ont.com/prop")), "prop", ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsDataProperty() {
         primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-        parseEntityData(OWLDataPropertyData.get(new OWLDataPropertyImpl(IRI.create("http://ont.com/prop")), "prop"));
+        parseEntityData(OWLDataPropertyData.get(new OWLDataPropertyImpl(IRI.create("http://ont.com/prop")), "prop", ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsAnnotationProperty() {
         primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-        parseEntityData(OWLAnnotationPropertyData.get(new OWLAnnotationPropertyImpl(IRI.create("http://ont.com/prop")), "prop"));
+        parseEntityData(OWLAnnotationPropertyData.get(new OWLAnnotationPropertyImpl(IRI.create("http://ont.com/prop")), "prop", ImmutableMap.of()));
     }
 
     @Test
     public void shouldParseNameAsIndividual() {
         primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
-        parseEntityData(OWLNamedIndividualData.get(new OWLNamedIndividualImpl(IRI.create("http://ont.com/ind")), "prop"));
+        parseEntityData(OWLNamedIndividualData.get(new OWLNamedIndividualImpl(IRI.create("http://ont.com/ind")), "prop", ImmutableMap.of()));
     }
 
     private void parseEntityData(OWLEntityData entityData) {

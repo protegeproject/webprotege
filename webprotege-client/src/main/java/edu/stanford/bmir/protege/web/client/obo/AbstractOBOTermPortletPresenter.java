@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -18,8 +19,9 @@ import java.util.Optional;
 public abstract class AbstractOBOTermPortletPresenter extends AbstractWebProtegePortletPresenter {
 
     protected AbstractOBOTermPortletPresenter(@Nonnull SelectionModel selectionModel,
-                                              @Nonnull ProjectId projectId) {
-        super(selectionModel, projectId);
+                                              @Nonnull ProjectId projectId,
+                                              @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
     }
 
     @Override

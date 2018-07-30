@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.GetRootOntologyIdAc
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
@@ -26,8 +27,8 @@ public class OntologyIdPortletPresenter extends AbstractWebProtegePortletPresent
     private OntologyIdView editor;
 
     @Inject
-    public OntologyIdPortletPresenter(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId) {
-        super(selectionModel, projectId);
+    public OntologyIdPortletPresenter(SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
         editor.setEnabled(false);

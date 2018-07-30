@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Streams;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -109,5 +110,10 @@ public class DictionaryManager {
     public void update(@Nonnull Collection<OWLEntity> entities) {
         dictionary.update(entities,
                           languageManager.getLanguages());
+    }
+
+    @Nonnull
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
+        return dictionary.getShortForms(entity);
     }
 }

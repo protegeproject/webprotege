@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -48,8 +49,8 @@ public class ProjectHistoryPortletPresenter extends AbstractWebProtegePortletPre
                                           FilterView filterView,
                                           SelectionModel selectionModel,
                                           ProjectId projectId,
-                                          Messages messages) {
-        super(selectionModel, projectId);
+                                          Messages messages, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         this.filterView = filterView;

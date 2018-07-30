@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
@@ -61,7 +62,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         @Override
         public void handleCreateHasEntity(String name, EntityType<?> entityType) {
             OWLEntity entity = DataFactory.getFreshOWLEntity(entityType, name);
-            freshEntities.add(DataFactory.getOWLEntityData(entity, name));
+            freshEntities.add(DataFactory.getOWLEntityData(entity, name, ImmutableMap.of()));
             checkSyntax();
         }
     };

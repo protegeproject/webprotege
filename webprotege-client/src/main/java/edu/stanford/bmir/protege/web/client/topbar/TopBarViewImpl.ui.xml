@@ -41,6 +41,7 @@
             <g:HTMLPanel addStyleNames="{style.splitter} {wp.laf.topBarSeparator} {style.leftItem}"/>
             <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}  {style.leftItem}"/>
             <g:HTMLPanel addStyleNames="{style.inline} {style.middlePadding}"/>
+            <g:SimplePanel ui:field="preferredLanguageContainer" addStyleNames="{style.inline} {style.rightItem}"/>
             <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
             <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}  {style.rightItem}"/>
             <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}  {style.rightItem}"/>

@@ -1,24 +1,26 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.list.ListBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +37,8 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     private final PaginatorPresenter paginatorPresenter;
 
+    private IndividualsListCellRenderer renderer;
+
     interface IndividualsListViewImplUiBinder extends UiBinder<HTMLPanel, IndividualsListViewImpl> {
 
     }
@@ -42,7 +46,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     private static IndividualsListViewImplUiBinder ourUiBinder = GWT.create(IndividualsListViewImplUiBinder.class);
 
     @UiField
-    protected EntitiesListImpl<OWLNamedIndividualData> individualsList;
+    protected ListBox<OWLNamedIndividualData, OWLNamedIndividualData> individualsList;
 
     @UiField
     protected Label statusLabel;
@@ -77,37 +81,46 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     }
 
     @Override
+    public void setPrefLang(@Nonnull String prefLang) {
+        renderer = new IndividualsListCellRenderer();
+        renderer.setPrefLang(prefLang);
+        individualsList.setRenderer(renderer);
+    }
+
+    @Override
     public void setListData(List<OWLNamedIndividualData> individuals) {
         individualsList.setListData(individuals);
     }
 
     @Override
     public void addListData(Collection<OWLNamedIndividualData> individuals) {
-        individualsList.addAll(individuals);
+//        individualsList.getListData();
+//        individualsList.addAll(individuals);
+        MessageBox.showAlert("Missing Impl");
     }
 
     @Override
     public void removeListData(Collection<OWLNamedIndividualData> individuals) {
-        individualsList.removeAll(individuals);
+        individualsList.setListData(ImmutableList.of());
     }
 
     @Override
     public Collection<OWLNamedIndividualData> getSelectedIndividuals() {
-        return individualsList.getSelectedEntities();
+        return individualsList.getSelection();
     }
 
     @Override
     public Optional<OWLNamedIndividualData> getSelectedIndividual() {
-        return individualsList.getSelectedEntity();
+        return individualsList.getFirstSelectedElement();
     }
 
     @Override
     public void setSelectedIndividual(OWLNamedIndividualData individual) {
-        individualsList.setSelectedEntity(individual);
+        individualsList.setSelection(individual);
     }
 
     @Override
-    public HandlerRegistration addSelectionHandler(SelectionHandler<OWLNamedIndividualData> handler) {
+    public HandlerRegistration addSelectionHandler(SelectionHandler<List<OWLNamedIndividualData>> handler) {
         return individualsList.addSelectionHandler(handler);
     }
 

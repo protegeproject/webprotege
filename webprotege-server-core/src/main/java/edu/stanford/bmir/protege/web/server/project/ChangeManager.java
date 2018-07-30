@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchy
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.server.owlapi.RenameMapFactory;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
 import edu.stanford.bmir.protege.web.server.shortform.ActiveLanguagesManager;
@@ -183,6 +184,9 @@ public class ChangeManager implements HasApplyChanges {
     @Nonnull
     private final Lock changeProcesssingLock = new ReentrantLock();
 
+    @Nonnull
+    private final RenameMapFactory renameMapFactory;
+
     @Inject
     public ChangeManager(@Nonnull ProjectId projectId,
                          @Nonnull OWLOntology rootOntology,
@@ -198,7 +202,10 @@ public class ChangeManager implements HasApplyChanges {
                          @Nonnull ClassHierarchyProvider classHierarchyProvider,
                          @Nonnull OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider,
                          @Nonnull OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider,
-                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, @Nonnull UserInSessionFactory userInSessionFactory, @Nonnull EntityCrudContextFactory entityCrudContextFactory) {
+                         @Nonnull OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider,
+                         @Nonnull UserInSessionFactory userInSessionFactory,
+                         @Nonnull EntityCrudContextFactory entityCrudContextFactory,
+                         @Nonnull RenameMapFactory renameMapFactory) {
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.dictionaryUpdatesProcessor = dictionaryUpdatesProcessor;
@@ -220,6 +227,7 @@ public class ChangeManager implements HasApplyChanges {
         this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
         this.userInSessionFactory = userInSessionFactory;
         this.entityCrudContextFactory = entityCrudContextFactory;
+        this.renameMapFactory = renameMapFactory;
     }
 
     /**
@@ -361,7 +369,7 @@ public class ChangeManager implements HasApplyChanges {
                 List<OWLOntologyChange> effectiveChanges = getEffectiveChanges(minimisedChanges);
                 manager.getDelegate().applyChanges(effectiveChanges);
                 appliedChanges = effectiveChanges;
-                final RenameMap renameMap = new RenameMap(iriRenameMap);
+                final RenameMap renameMap = renameMapFactory.create(iriRenameMap);
                 R renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {

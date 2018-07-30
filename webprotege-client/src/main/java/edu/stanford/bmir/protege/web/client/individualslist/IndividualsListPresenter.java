@@ -94,10 +94,9 @@ public class IndividualsListPresenter {
         this.messages = messages;
         this.controller = controller;
         view.addSelectionHandler(event -> {
-            OWLNamedIndividualData selectedItem = event.getSelectedItem();
-            if (selectedItem != null) {
-                selectionModel.setSelection(selectedItem.getEntity());
-            }
+            event.getSelectedItem().stream().findFirst().ifPresent(sel -> {
+                selectionModel.setSelection(sel.getEntity());
+            });
         });
         view.setSearchStringChangedHandler(() -> {
             searchStringDelayTimer.cancel();
@@ -114,6 +113,11 @@ public class IndividualsListPresenter {
         GWT.log("[IndividualsListPresenter] Started Individuals List");
         container.setWidget(view.asWidget());
     }
+
+    public void setPrefLang(@Nonnull String prefLang) {
+        view.setPrefLang(prefLang);
+    }
+
 
     public void setEntityDisplay(@Nonnull EntityDisplay entityDisplay) {
         this.entityDisplay = checkNotNull(entityDisplay);

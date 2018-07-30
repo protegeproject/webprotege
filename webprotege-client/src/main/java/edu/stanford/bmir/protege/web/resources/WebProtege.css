@@ -228,12 +228,12 @@
 }
 
 .selection {
-    background-color: dodgerblue !important;
-    color: white !important;
+    background-color: literal("var(--selected-item--background-color)") !important;
+    color: literal("var(--selected-item--color)") !important;
 }
 
 .noSelection {
-    background-color: white;
+    background-color: inherit;
 }
 
 .errorLabel {

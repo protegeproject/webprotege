@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -30,6 +32,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
+import static edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent.PREF_LANG_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
@@ -99,8 +102,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull HierarchyActionStatePresenter actionStatePresenter,
                                           @Nonnull EntityHierarchyDropHandler dropHandler,
                                           @Nonnull FilterView filterView,
-                                          @Nonnull TagVisibilityPresenter tagVisibilityPresenter) {
-        super(selectionModel, projectId);
+                                          @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
+                                          @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);
@@ -166,6 +170,17 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
         tagVisibilityPresenter.start(filterView, treeWidget);
         setSelectionInTree(getSelectedEntity());
+
+        eventBus.addProjectEventHandler(getProjectId(), PREF_LANG_CHANGED, this::handlePrefLangChanged);
+    }
+
+    private void handlePrefLangChanged(@Nonnull PrefLangChangedEvent event) {
+        setPreferredDisplayLanguage(event.getPrefLang());
+    }
+
+    private void setPreferredDisplayLanguage(@Nonnull String lang) {
+        renderer.setPreferredLang(checkNotNull(lang));
+        treeWidget.setRenderer(renderer);
     }
 
     private Optional<OWLClass> getFirstSelectedClass() {

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -28,6 +29,7 @@ import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.*;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
@@ -351,7 +353,9 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         }
         String text = getTrimmedText();
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
-        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, text);
+        ImmutableMap<DictionaryLanguage, String> shortForms = currentData.map(OWLPrimitiveData::getShortForms)
+                                                                         .orElse(ImmutableMap.of());
+        OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, text, shortForms);
         setCurrentData(Optional.of(coercedData), EventStrategy.FIRE_EVENTS);
         updateDisplayForCurrentData();
     }
@@ -762,7 +766,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private Set<EntityType<?>> getMatchTypes() {
-        Set<EntityType<?>> types = new LinkedHashSet<EntityType<?>>();
+        Set<EntityType<?>> types = new LinkedHashSet<>();
         for (PrimitiveType primitiveType : allowedTypes) {
             EntityType<?> entityType = primitiveType.getEntityType();
             if (entityType != null) {

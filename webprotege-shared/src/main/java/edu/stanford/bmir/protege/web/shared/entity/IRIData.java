@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
@@ -20,8 +22,9 @@ import java.util.Optional;
 @GwtCompatible(serializable = true)
 public abstract class IRIData extends OWLPrimitiveData {
 
-    public static IRIData get(@Nonnull IRI iri) {
-        return new AutoValue_IRIData(iri);
+    public static IRIData get(@Nonnull IRI iri,
+                              @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
+        return new AutoValue_IRIData(shortForms, iri);
     }
 
     @Nonnull

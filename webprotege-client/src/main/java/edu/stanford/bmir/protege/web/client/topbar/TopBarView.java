@@ -32,4 +32,5 @@ public interface TopBarView extends IsWidget {
 
     AcceptsOneWidget getHelpContainer();
 
+    AcceptsOneWidget getPreferredLanguageContainer();
 }

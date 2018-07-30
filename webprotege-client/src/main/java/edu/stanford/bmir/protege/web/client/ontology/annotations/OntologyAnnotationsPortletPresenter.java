@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -37,8 +38,8 @@ public class OntologyAnnotationsPortletPresenter extends AbstractWebProtegePortl
     private Optional<List<PropertyAnnotationValue>> lastSet = Optional.empty();
 
     @Inject
-    public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, projectId);
+    public OntologyAnnotationsPortletPresenter(AnnotationsView annotationsView, SelectionModel selectionModel, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

@@ -98,7 +98,7 @@ public class CollectionItemListViewImpl extends Composite implements CollectionI
     @Nonnull
     @Override
     public Optional<CollectionItem> getSelection() {
-        return elementList.getSelection();
+        return elementList.getFirstSelectedElement();
     }
 
     @Override

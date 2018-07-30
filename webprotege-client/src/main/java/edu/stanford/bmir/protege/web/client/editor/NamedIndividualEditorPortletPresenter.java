@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.editor;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -30,8 +31,8 @@ public class NamedIndividualEditorPortletPresenter extends AbstractWebProtegePor
     @Inject
     public NamedIndividualEditorPortletPresenter(@Nonnull SelectionModel selectionModel,
                                                  @Nonnull ProjectId projectId,
-                                                 @Nonnull EditorPortletPresenter editorPresenter) {
-        super(selectionModel, projectId);
+                                                 @Nonnull EditorPortletPresenter editorPresenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.editorPresenter = checkNotNull(editorPresenter);
     }
 

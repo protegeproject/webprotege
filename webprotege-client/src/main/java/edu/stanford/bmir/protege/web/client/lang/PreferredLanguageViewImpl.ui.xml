@@ -1,0 +1,7 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        Display language
+        <g:TextBox ui:field="prefLangField"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

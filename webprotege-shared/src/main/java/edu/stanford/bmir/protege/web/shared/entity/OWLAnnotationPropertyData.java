@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
@@ -21,8 +23,9 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 public abstract class OWLAnnotationPropertyData extends OWLPropertyData {
 
     public static OWLAnnotationPropertyData get(@Nonnull OWLAnnotationProperty property,
-                                                @Nonnull String browserText) {
-        return new AutoValue_OWLAnnotationPropertyData(browserText, property);
+                                                @Nonnull String browserText,
+                                                @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms) {
+        return new AutoValue_OWLAnnotationPropertyData(browserText, shortForms, property);
     }
 
     @Nonnull

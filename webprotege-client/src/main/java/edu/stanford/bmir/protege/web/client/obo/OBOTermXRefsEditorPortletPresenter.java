@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermXRefsAction;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermXRefsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -46,8 +46,8 @@ public class OBOTermXRefsEditorPortletPresenter extends AbstractOBOTermPortletPr
                                               @Nonnull ProjectId projectId,
                                               @Nonnull DispatchServiceManager dispatch,
                                               @Nonnull XRefListEditor editor,
-                                              @Nonnull LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, projectId);
+                                              @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.dispatch = dispatch;
         this.editor = editor;
         this.editorHolder = new SimplePanel(editor);

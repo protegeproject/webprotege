@@ -90,12 +90,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
                 });
             }
         }
-        return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList, Collections.emptySet(), "Edited ontology annotations") {
-            @Override
-            public Set<OWLAnnotation> getRenamedResult(Set<OWLAnnotation> result, RenameMap renameMap) {
-                return super.getRenamedResult(result, renameMap);
-            }
-        };
+        return new FixedChangeListGenerator<>(changeList, Collections.emptySet(), "Edited ontology annotations");
     }
 
     @Override

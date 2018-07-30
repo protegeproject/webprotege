@@ -1,6 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,15 +27,18 @@ public class OWLAnnotationPropertyData_TestCase {
 
     private String browserText = "The browserText";
 
+    private ImmutableMap<DictionaryLanguage, String> shortForms;
+
     @Before
     public void setUp() {
-        data = OWLAnnotationPropertyData.get(entity, browserText);
+        shortForms = ImmutableMap.of();
+        data = OWLAnnotationPropertyData.get(entity, browserText, shortForms);
     }
 
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        OWLAnnotationPropertyData.get(null, browserText);
+        OWLAnnotationPropertyData.get(null, browserText, shortForms);
     }
 
     @Test
@@ -44,7 +49,7 @@ public class OWLAnnotationPropertyData_TestCase {
     @SuppressWarnings("ConstantConditions" )
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        OWLAnnotationPropertyData.get(entity, null);
+        OWLAnnotationPropertyData.get(entity, null, shortForms);
     }
 
     @Test
@@ -65,24 +70,24 @@ public class OWLAnnotationPropertyData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(data, is(OWLAnnotationPropertyData.get(entity, browserText)));
+        assertThat(data, is(OWLAnnotationPropertyData.get(entity, browserText, shortForms)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
         assertThat(data,
-                   is(not(OWLAnnotationPropertyData.get(Mockito.mock(OWLAnnotationProperty.class), browserText))));
+                   is(not(OWLAnnotationPropertyData.get(Mockito.mock(OWLAnnotationProperty.class), browserText, shortForms))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
         assertThat(data,
-                   is(not(OWLAnnotationPropertyData.get(entity, "String-6b8e4a42-6d66-47e8-b5ec-e9c463c9a0fc" ))));
+                   is(not(OWLAnnotationPropertyData.get(entity, "String-6b8e4a42-6d66-47e8-b5ec-e9c463c9a0fc", shortForms))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(data.hashCode(), is(OWLAnnotationPropertyData.get(entity, browserText).hashCode()));
+        assertThat(data.hashCode(), is(OWLAnnotationPropertyData.get(entity, browserText, shortForms).hashCode()));
     }
 
     @Test

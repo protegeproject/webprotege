@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;

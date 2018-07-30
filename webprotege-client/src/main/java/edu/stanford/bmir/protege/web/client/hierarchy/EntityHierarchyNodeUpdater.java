@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -69,9 +68,10 @@ public class EntityHierarchyNodeUpdater {
             throw createHierarchyModelIsNullException();
         }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-            EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+            EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                     node.getEntity(),
                     event.getNewBrowserText(),
+                    event.getShortForms(),
                     node.isDeprecated(),
                     node.getWatches(),
                     node.getOpenCommentCount(),
@@ -106,9 +106,10 @@ public class EntityHierarchyNodeUpdater {
         if (model == null) {
             throw createHierarchyModelIsNullException();
         }
-        EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+        EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                 node.getEntity(),
                 node.getBrowserText(),
+                node.getShortForms(),
                 node.isDeprecated(),
                 updatedWatches,
                 node.getOpenCommentCount(),
@@ -122,9 +123,10 @@ public class EntityHierarchyNodeUpdater {
         }
         event.getEntity().ifPresent(entity -> {
             model.getHierarchyNode(entity.getEntity()).ifPresent(node -> {
-                EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+                EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                         node.getEntity(),
                         node.getBrowserText(),
+                        node.getShortForms(),
                         node.isDeprecated(),
                         node.getWatches(),
                         event.getOpenCommentCountForEntity(),
@@ -140,9 +142,10 @@ public class EntityHierarchyNodeUpdater {
         }
         event.getEntity().ifPresent(entity -> {
             model.getHierarchyNode(entity).ifPresent(node -> {
-                EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+                EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                         node.getEntity(),
                         node.getBrowserText(),
+                        node.getShortForms(),
                         node.isDeprecated(),
                         node.getWatches(),
                         event.getOpenCommentsCountForEntity(),
@@ -157,9 +160,10 @@ public class EntityHierarchyNodeUpdater {
             throw createHierarchyModelIsNullException();
         }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-            EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+            EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                     node.getEntity(),
                     node.getBrowserText(),
+                    node.getShortForms(),
                     event.isDeprecated(),
                     node.getWatches(),
                     node.getOpenCommentCount(),
@@ -173,9 +177,10 @@ public class EntityHierarchyNodeUpdater {
             throw createHierarchyModelIsNullException();
         }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-            EntityHierarchyNode updatedNode = new EntityHierarchyNode(
+            EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                     node.getEntity(),
                     node.getBrowserText(),
+                    node.getShortForms(),
                     node.isDeprecated(),
                     node.getWatches(),
                     node.getOpenCommentCount(),

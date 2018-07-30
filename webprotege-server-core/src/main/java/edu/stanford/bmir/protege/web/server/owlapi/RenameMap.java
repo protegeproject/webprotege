@@ -1,10 +1,15 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,14 +28,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RenameMap {
 
-    private Map<IRI, IRI> map = new HashMap<>();
+    @Nonnull
+    private final OWLDataFactory dataFactory;
+
+    @Nonnull
+    private final RenderingManager renderingManager;
+
+    @Nonnull
+    private final Map<IRI, IRI> map = new HashMap<>();
 
     /**
      * Constructs a {@link RenameMap} from the specified IRI map.
      * @param map The map from which to construct this rename map.  Not {@code null}.
+     * @param dataFactory
+     * @param renderingManager
      * @throws NullPointerException if {@code map} is {@code null}.
      */
-    public RenameMap(Map<IRI, IRI> map) {
+    @AutoFactory
+    public RenameMap(@Nonnull Map<IRI, IRI> map,
+                     @Provided @Nonnull OWLDataFactory dataFactory,
+                     @Provided @Nonnull RenderingManager renderingManager) {
+        this.dataFactory = dataFactory;
+        this.renderingManager = checkNotNull(renderingManager);
         this.map.putAll(checkNotNull(map));
     }
 
@@ -47,9 +66,8 @@ public class RenameMap {
         if(renamedIRI == null) {
             return entity;
         }
-        return (E) DataFactory.getOWLEntityData(
-                DataFactory.getOWLEntity(entity.getEntity().getEntityType(), renamedIRI),
-                entity.getBrowserText());
+        OWLEntity renamedEntity = DataFactory.getOWLEntity(entity.getEntity().getEntityType(), renamedIRI);
+        return (E) renderingManager.getRendering(renamedEntity);
     }
 
     public <E extends OWLEntity> E getRenamedEntity(E entity) {
@@ -57,7 +75,7 @@ public class RenameMap {
         if(renamedIRI == null) {
             return entity;
         }
-        return (E) DataFactory.getOWLEntity(entity.getEntityType(), renamedIRI);
+        return (E) dataFactory.getOWLEntity(entity.getEntityType(), renamedIRI);
     }
 
     /**

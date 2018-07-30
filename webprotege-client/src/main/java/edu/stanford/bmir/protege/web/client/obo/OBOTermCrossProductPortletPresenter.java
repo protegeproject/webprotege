@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermCrossProductAction;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermCrossProductAction;
@@ -37,8 +38,8 @@ public class OBOTermCrossProductPortletPresenter extends AbstractOBOTermPortletP
     public OBOTermCrossProductPortletPresenter(@Nonnull SelectionModel selectionModel,
                                                @Nonnull ProjectId projectId,
                                                @Nonnull OBOTermCrossProductEditor editor,
-                                               @Nonnull DispatchServiceManager dispatch) {
-        super(selectionModel, projectId);
+                                               @Nonnull DispatchServiceManager dispatch, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.editor = editor;
         this.dispatch = dispatch;
     }

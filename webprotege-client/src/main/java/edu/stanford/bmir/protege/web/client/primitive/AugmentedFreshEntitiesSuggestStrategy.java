@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -46,7 +47,7 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
                 }
             }
             OWLEntity entity = DataFactory.getFreshOWLEntity(type, query);
-            OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query);
+            OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
             result.add(new EntitySuggestion(entityData, formatSuggestText(query, type)));
         }
         return result;
@@ -59,7 +60,7 @@ public class AugmentedFreshEntitiesSuggestStrategy implements FreshEntitySuggest
     private Optional<FreshEntitySuggestion> getSuggestion(String query, EntityType<?> type, Optional<OWLEntityData> auxiliaryType) {
         // TODO: If query starts with a lowercase letter, suggest individual first?
         OWLEntity entity = DataFactory.getFreshOWLEntity(type, query);
-        OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query);
+        OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
         if(auxiliaryType.isPresent()) {
             AuxiliaryTypeHandler auxiliaryTypeHandler = AuxiliaryTypeHandler.get(auxiliaryType.get());
             if(auxiliaryTypeHandler.isApplicableTo(type)) {

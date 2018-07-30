@@ -314,7 +314,9 @@ public class EntitySearcher {
                 }
             }
         }
-        return new EntitySearchResult(DataFactory.getOWLEntityData(entity, displayShortForm),
+        return new EntitySearchResult(DataFactory.getOWLEntityData(entity,
+                                                                   displayShortForm,
+                                                                   dictionaryManager.getShortForms(entity)),
                                       displayName(),
                                       highlighted.toString());
     }

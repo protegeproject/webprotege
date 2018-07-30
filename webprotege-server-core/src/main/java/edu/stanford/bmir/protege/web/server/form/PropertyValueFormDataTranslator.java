@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -162,7 +163,7 @@ public class PropertyValueFormDataTranslator {
                     }
                     else if (val instanceof IRI) {
                         propertyValues.add(PropertyAnnotationValue.get(annotationProp,
-                                                                       IRIData.get((IRI) val),
+                                                                       IRIData.get((IRI) val, ImmutableMap.of()),
                                                                        State.ASSERTED));
                     }
                 }

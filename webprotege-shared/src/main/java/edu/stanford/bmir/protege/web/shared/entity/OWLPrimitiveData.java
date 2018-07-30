@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -21,6 +23,8 @@ public abstract class OWLPrimitiveData extends ObjectData {
     @Nonnull
     @Override
     public abstract OWLPrimitive getObject();
+
+    public abstract ImmutableMap<DictionaryLanguage, String> getShortForms();
 
     public abstract <R, E extends Throwable> R accept(OWLPrimitiveDataVisitor<R, E> visitor) throws E;
 

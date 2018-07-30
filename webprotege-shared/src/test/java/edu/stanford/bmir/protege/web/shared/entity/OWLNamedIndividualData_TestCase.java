@@ -1,6 +1,8 @@
 
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,15 +25,17 @@ public class OWLNamedIndividualData_TestCase {
 
     private String browserText = "The browserText";
 
+    private ImmutableMap<DictionaryLanguage, String> shortForms;
+
     @Before
     public void setUp() {
-        oWLNamedIndividualData = OWLNamedIndividualData.get(entity, browserText);
+        oWLNamedIndividualData = OWLNamedIndividualData.get(entity, browserText, shortForms);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_entity_IsNull() {
-        OWLNamedIndividualData.get(null, browserText);
+        OWLNamedIndividualData.get(null, browserText, shortForms);
     }
 
     @Test
@@ -42,7 +46,7 @@ public class OWLNamedIndividualData_TestCase {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_browserText_IsNull() {
-        OWLNamedIndividualData.get(entity, null);
+        OWLNamedIndividualData.get(entity, null, shortForms);
     }
 
     @Test
@@ -63,22 +67,22 @@ public class OWLNamedIndividualData_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(oWLNamedIndividualData, is(OWLNamedIndividualData.get(entity, browserText)));
+        assertThat(oWLNamedIndividualData, is(OWLNamedIndividualData.get(entity, browserText, shortForms)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_entity() {
-        assertThat(oWLNamedIndividualData, is(not(OWLNamedIndividualData.get(Mockito.mock(OWLNamedIndividual.class), browserText))));
+        assertThat(oWLNamedIndividualData, is(not(OWLNamedIndividualData.get(Mockito.mock(OWLNamedIndividual.class), browserText, shortForms))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_browserText() {
-        assertThat(oWLNamedIndividualData, is(not(OWLNamedIndividualData.get(entity, "String-fe67d54e-e14f-4f55-980d-de8e89642ff9"))));
+        assertThat(oWLNamedIndividualData, is(not(OWLNamedIndividualData.get(entity, "String-fe67d54e-e14f-4f55-980d-de8e89642ff9", shortForms))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(oWLNamedIndividualData.hashCode(), is(OWLNamedIndividualData.get(entity, browserText).hashCode()));
+        assertThat(oWLNamedIndividualData.hashCode(), is(OWLNamedIndividualData.get(entity, browserText, shortForms).hashCode()));
     }
 
     @Test

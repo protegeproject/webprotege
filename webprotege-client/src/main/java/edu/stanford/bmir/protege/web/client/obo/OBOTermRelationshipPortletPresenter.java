@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermRelationshipsAction;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
@@ -44,8 +45,9 @@ public class OBOTermRelationshipPortletPresenter extends AbstractOBOTermPortletP
     public OBOTermRelationshipPortletPresenter(@Nonnull SelectionModel selectionModel,
                                                @Nonnull ProjectId projectId,
                                                @Nonnull DispatchServiceManager dispatch,
-                                               @Nonnull OBOTermRelationshipEditor editor) {
-        super(selectionModel, projectId);
+                                               @Nonnull OBOTermRelationshipEditor editor,
+                                               @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.dispatch = dispatch;
         this.editor = editor;
     }

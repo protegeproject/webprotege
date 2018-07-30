@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -53,14 +54,14 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
 
     private void parsePrimitiveDataFromTrimmedContent(final String trimmedContent, final java.util.Optional<String> lang, Set<PrimitiveType> allowedTypes, final PrimitiveDataParserCallback callback) {
         if (trimmedContent.isEmpty()) {
-            callback.onSuccess(java.util.Optional.empty());
+            callback.onSuccess(Optional.empty());
             return;
         }
 
         if (lang.isPresent()) {
             if (allowedTypes.contains(PrimitiveType.LITERAL)) {
                 OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
-                callback.onSuccess(java.util.Optional.of(literalData));
+                callback.onSuccess(Optional.of(literalData));
             }
             else {
                 // TODO: Literal not expected
@@ -93,15 +94,15 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
 
     private void handleEntityDataParsingResult(Optional<OWLEntityData> result, PrimitiveDataParserCallback callback, String trimmedContent, java.util.Optional<String> lang, Set<PrimitiveType> allowedTypes) {
         if (result.isPresent()) {
-            callback.onSuccess(java.util.Optional.of(result.get()));
+            callback.onSuccess(Optional.of(result.get()));
         }
         else if (allowedTypes.contains(PrimitiveType.IRI) && isAbsoluteIRI(trimmedContent)) {
-            IRIData iriData = IRIData.get(IRI.create(trimmedContent));
-            callback.onSuccess(java.util.Optional.of(iriData));
+            IRIData iriData = IRIData.get(IRI.create(trimmedContent), ImmutableMap.of());
+            callback.onSuccess(Optional.of(iriData));
         }
         else if (allowedTypes.contains(PrimitiveType.LITERAL)) {
             OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
-            callback.onSuccess(java.util.Optional.of(literalData));
+            callback.onSuccess(Optional.of(literalData));
         }
         else {
             callback.parsingFailure();

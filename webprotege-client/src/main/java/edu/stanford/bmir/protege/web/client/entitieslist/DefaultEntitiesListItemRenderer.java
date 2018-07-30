@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.entitieslist;
 
+import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyTreeNodeRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,6 +15,13 @@ public class DefaultEntitiesListItemRenderer<E extends OWLEntityData> implements
 
     @Override
     public void render(E entity, StringBuilder sb) {
+        StringBuilder title = new StringBuilder();
+        entity.getShortForms().forEach((lang, sf) -> {
+            title.append(lang.getLang()).append(": ").append(sf).append("\n");
+        });
+        sb.append("<span title='").append(title.toString()).append("'>");
+
         sb.append(entity.getBrowserText());
+        sb.append("</span>");
     }
 }

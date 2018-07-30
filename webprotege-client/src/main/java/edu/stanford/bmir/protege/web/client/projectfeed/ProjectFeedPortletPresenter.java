@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -40,8 +41,9 @@ public class ProjectFeedPortletPresenter extends AbstractWebProtegePortletPresen
                                        FilterView filterView,
                                        SelectionModel selectionModel,
                                        ProjectId projectId,
-                                       LoggedInUserProvider loggedInUserManager) {
-        super(selectionModel, projectId);
+                                       LoggedInUserProvider loggedInUserManager,
+                                       PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.loggedInUserProvider = loggedInUserManager;
         this.presenter = presenter;
         this.filterView = filterView;

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.list;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -13,9 +14,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -29,7 +31,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  * Stanford Center for Biomedical Informatics Research
  * 7 Aug 2017
  */
-public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Optional<E>> {
+public class ListBox<K, E> extends Composite implements HasSelectionHandlers<List<E>> {
 
     interface ListBoxUiBinder extends UiBinder<HTMLPanel, ListBox> {
 
@@ -40,11 +42,21 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Opt
     @UiField
     FlowPanel contentHolder;
 
+    @UiField
+    FocusPanel focusPanel;
+
     private SelectionInterval selectionInterval = SelectionInterval.emptySelection();
 
-    private List<E> elements = new ArrayList<>();
+    private ImmutableList<E> elements = ImmutableList.of();
 
-    private ListBoxCellRenderer<E> renderer = element -> new Label(element.toString());
+    private ListBoxCellRenderer<E> renderer = element -> {
+        if(element instanceof HasBrowserText) {
+            return new Label(((HasBrowserText) element).getBrowserText());
+        }
+        else {
+            return new Label(element.toString());
+        }
+    };
 
     public ListBox() {
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -52,14 +64,16 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Opt
 
     public void setRenderer(@Nonnull ListBoxCellRenderer<E> renderer) {
         this.renderer = checkNotNull(renderer);
+        setListData(elements);
     }
 
     public void setListData(@Nonnull List<E> elements) {
         contentHolder.clear();
         int row = 0;
-        this.elements.clear();
+        ImmutableList.Builder<E> builder = ImmutableList.builder();
+        StringBuilder sb = new StringBuilder();
         for(E element : elements) {
-            this.elements.add(element);
+            builder.add(element);
             IsWidget rendering = renderer.render(element);
             Widget rendererWidget = rendering.asWidget();
             if(selectionInterval.contains(row)) {
@@ -71,10 +85,15 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Opt
             contentHolder.add(rendering);
             row++;
         }
+        this.elements = builder.build();
+    }
+
+    public List<E> getElements() {
+        return elements;
     }
 
     @Override
-    public HandlerRegistration addSelectionHandler(SelectionHandler<Optional<E>> handler) {
+    public HandlerRegistration addSelectionHandler(SelectionHandler<List<E>> handler) {
         return addHandler(handler, SelectionEvent.getType());
     }
 
@@ -89,9 +108,14 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Opt
         }
     }
 
-    public Optional<E> getSelection() {
+    public Optional<E> getFirstSelectedElement() {
         return selectionInterval.getFirstSelectedElement(elements);
     }
+
+    public List<E> getSelection() {
+        return getFirstSelectedElement().map(Collections::singletonList).orElse(Collections.emptyList());
+    }
+
 
     public void setSelection(K key) {
         int row = 0;

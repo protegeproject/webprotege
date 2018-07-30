@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,10 +23,13 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
 
     private String newBrowserText;
 
-    public BrowserTextChangedEvent(OWLEntity entity, String newBrowserText, ProjectId projectId) {
+    private ImmutableMap<DictionaryLanguage, String> shortForms;
+
+    public BrowserTextChangedEvent(OWLEntity entity, String newBrowserText, ProjectId projectId, ImmutableMap<DictionaryLanguage, String> shortForms) {
         super(projectId);
         this.entity = entity;
         this.newBrowserText = newBrowserText;
+        this.shortForms = shortForms;
     }
 
     /**
@@ -37,6 +44,11 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
 
     public String getNewBrowserText() {
         return newBrowserText;
+    }
+
+    @Nonnull
+    public ImmutableMap<DictionaryLanguage, String> getShortForms() {
+        return shortForms;
     }
 
     @Override

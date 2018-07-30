@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -25,6 +26,6 @@ public class HasGetEntitiesWithIRIImpl implements HasGetEntitiesWithIRI {
 
     @Override
     public Set<OWLEntity> getEntitiesWithIRI(IRI iri) {
-        return rootOntology.getEntitiesInSignature(iri, true);
+        return rootOntology.getEntitiesInSignature(iri, Imports.INCLUDED);
     }
 }

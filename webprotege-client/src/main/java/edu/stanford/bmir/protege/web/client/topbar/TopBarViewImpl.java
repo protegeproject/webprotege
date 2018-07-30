@@ -44,6 +44,9 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     @UiField
     protected HasText projectTitle;
 
+    @UiField
+    SimplePanel preferredLanguageContainer;
+
     @Override
     public AcceptsOneWidget getGoToHomeContainer() {
         return homeContainer;
@@ -91,5 +94,10 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     @Override
     public AcceptsOneWidget getHelpContainer() {
         return helpContainer;
+    }
+
+    @Override
+    public AcceptsOneWidget getPreferredLanguageContainer() {
+        return preferredLanguageContainer;
     }
 }

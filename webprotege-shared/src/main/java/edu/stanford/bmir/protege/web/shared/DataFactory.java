@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.shared;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -12,6 +14,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import javax.annotation.Nonnull;
 import java.util.Date;
+import java.util.Dictionary;
 import java.util.Optional;
 
 /**
@@ -137,42 +140,44 @@ public class DataFactory {
         return dataFactory.getOWLEntity(entityType, iri);
     }
 
-    public static OWLEntityData getOWLEntityData(OWLEntity entity, final String browserText) {
+    public static OWLEntityData getOWLEntityData(OWLEntity entity,
+                                                 final String browserText,
+                                                 ImmutableMap<DictionaryLanguage, String> shortForms) {
         return entity.accept(new OWLEntityVisitorEx<OWLEntityData>() {
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLClass owlClass) {
-                return OWLClassData.get(owlClass, browserText);
+                return OWLClassData.get(owlClass, browserText, shortForms);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLObjectProperty property) {
-                return OWLObjectPropertyData.get(property, browserText);
+                return OWLObjectPropertyData.get(property, browserText, shortForms);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLDataProperty property) {
-                return OWLDataPropertyData.get(property, browserText);
+                return OWLDataPropertyData.get(property, browserText, shortForms);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLNamedIndividual individual) {
-                return OWLNamedIndividualData.get(individual, browserText);
+                return OWLNamedIndividualData.get(individual, browserText, shortForms);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLDatatype datatype) {
-                return OWLDatatypeData.get(datatype, browserText);
+                return OWLDatatypeData.get(datatype, browserText, shortForms);
             }
 
             @Nonnull
             @Override
             public OWLEntityData visit(@Nonnull OWLAnnotationProperty property) {
-                return OWLAnnotationPropertyData.get(property, browserText);
+                return OWLAnnotationPropertyData.get(property, browserText, shortForms);
             }
         });
     }
@@ -336,7 +341,8 @@ public class DataFactory {
     public static OWLAnnotationPropertyData getRdfsLabelData() {
         return OWLAnnotationPropertyData.get(
                 dataFactory.getRDFSLabel(),
-                OWLRDFVocabulary.RDFS_LABEL.getPrefixedName()
+                OWLRDFVocabulary.RDFS_LABEL.getPrefixedName(),
+                ImmutableMap.of()
         );
     }
 }

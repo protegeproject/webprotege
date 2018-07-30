@@ -24,9 +24,15 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private String preferredLang = "";
+
     @Inject
     public EntityHierarchyTreeNodeRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
+    }
+
+    public void setPreferredLang(@Nonnull String lang) {
+        this.preferredLang = checkNotNull(lang);
     }
 
     @Override
@@ -42,7 +48,7 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         else {
             sb.append("<div>");
         }
-        sb.append(node.getBrowserText());
+        sb.append(node.getText(preferredLang));
         sb.append("</div>");
 
         if (node.getOpenCommentCount() > 0) {

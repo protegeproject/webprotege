@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.topbar;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
+import edu.stanford.bmir.protege.web.client.lang.PreferredLanguagePresenter;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingButtonPresenter;
@@ -35,6 +36,8 @@ public class TopBarPresenter implements HasDispose {
 
     private final SharingButtonPresenter sharingButtonPresenter;
 
+    @Nonnull
+    private final PreferredLanguagePresenter preferredLanguagePresenter;
 
 
     @Inject
@@ -44,7 +47,8 @@ public class TopBarPresenter implements HasDispose {
                            @Nonnull ProjectMenuPresenter projectMenuPresenter,
                            @Nonnull SharingButtonPresenter sharingButtonPresenter,
                            @Nonnull LoggedInUserPresenter loggedInUserPresenter,
-                           @Nonnull HelpPresenter helpPresenter) {
+                           @Nonnull HelpPresenter helpPresenter,
+                           @Nonnull PreferredLanguagePresenter preferredLanguagePresenter) {
         this.view = view;
         this.activeProjectManager = projectDetailsProvider;
         this.projectMenuPresenter = projectMenuPresenter;
@@ -52,6 +56,7 @@ public class TopBarPresenter implements HasDispose {
         this.sharingButtonPresenter = sharingButtonPresenter;
         this.loggedInUserPresenter = loggedInUserPresenter;
         this.helpPresenter = helpPresenter;
+        this.preferredLanguagePresenter = preferredLanguagePresenter;
     }
 
     /**
@@ -73,6 +78,7 @@ public class TopBarPresenter implements HasDispose {
             String displayName = projectDetails.map(ProjectDetails::getDisplayName).orElse("");
             view.setProjectTitle(displayName);
         });
+        preferredLanguagePresenter.start(view.getPreferredLanguageContainer());
     }
 
     @Override

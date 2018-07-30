@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -45,8 +46,8 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
                                            LoggedInUserProjectPermissionChecker permissionChecker,
                                            SelectionModel selectionModel,
                                            ProjectId projectId,
-                                           LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, projectId);
+                                           LoggedInUserProvider loggedInUserProvider, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;

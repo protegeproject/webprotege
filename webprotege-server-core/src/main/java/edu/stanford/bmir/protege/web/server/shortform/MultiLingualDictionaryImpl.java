@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -102,6 +103,19 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
                        @Nonnull List<DictionaryLanguage> languages) {
         logger.debug("Updating dictionary entries for {} entities", entities.size());
         findDictionaries(languages).forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableMap<DictionaryLanguage, String> getShortForms(OWLEntity entity) {
+        ImmutableMap.Builder<DictionaryLanguage, String> resultBuilder = ImmutableMap.builder();
+        dictionaries.forEach((lang, dict) -> {
+            String shortForm = dict.getShortForm(entity, "");
+            if(!shortForm.isEmpty()) {
+                resultBuilder.put(lang, shortForm);
+            }
+        });
+        return resultBuilder.build();
     }
 
     @Nonnull

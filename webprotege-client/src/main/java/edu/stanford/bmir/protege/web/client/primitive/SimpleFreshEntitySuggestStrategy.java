@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.client.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -27,7 +28,7 @@ public class SimpleFreshEntitySuggestStrategy implements FreshEntitySuggestStrat
         List<EntitySuggestion> suggestions = Lists.newArrayList();
         for(EntityType<?> allowedType : suggestedTypes) {
                 OWLEntity entity = DataFactory.getFreshOWLEntity(allowedType, query);
-                OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query);
+                OWLEntityData entityData = DataFactory.getOWLEntityData(entity, query, ImmutableMap.of());
                 suggestions.add(new EntitySuggestion(entityData, formatSuggestText(query, allowedType)));
         }
         return suggestions;

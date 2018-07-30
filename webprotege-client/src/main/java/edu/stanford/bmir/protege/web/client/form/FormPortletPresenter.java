@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPre
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -41,8 +42,8 @@ public class FormPortletPresenter extends AbstractWebProtegePortletPresenter {
     public FormPortletPresenter(SelectionModel selectionModel,
                                 @Nonnull ProjectId projectId,
                                 @Nonnull FormPresenter formPresenter,
-                                @Nonnull DispatchServiceManager dispatchServiceManager) {
-        super(selectionModel, projectId);
+                                @Nonnull DispatchServiceManager dispatchServiceManager, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.projectId = projectId;
         this.formPresenter = formPresenter;
         this.dispatchServiceManager = dispatchServiceManager;

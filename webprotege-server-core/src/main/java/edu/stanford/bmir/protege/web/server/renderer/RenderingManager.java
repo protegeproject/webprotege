@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
@@ -27,7 +27,7 @@ import java.util.*;
 @ProjectSingleton
 public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
 
-    private DictionaryManager dictionaryManager;
+    private final DictionaryManager dictionaryManager;
 
     private final DeprecatedEntityChecker deprecatedEntityChecker;
 
@@ -83,12 +83,14 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLEntityData getRendering(OWLEntity entity) {
-        return DataFactory.getOWLEntityData(entity, dictionaryManager.getShortForm(entity));
+        return DataFactory.getOWLEntityData(entity,
+                                            dictionaryManager.getShortForm(entity),
+                                            dictionaryManager.getShortForms(entity));
     }
 
     public OWLPrimitiveData getRendering(OWLAnnotationValue value) {
         if(value instanceof IRI) {
-            return IRIData.get((IRI) value);
+            return IRIData.get((IRI) value, ImmutableMap.of());
         }
         else if(value instanceof OWLLiteral) {
             return OWLLiteralData.get((OWLLiteral) value);
@@ -99,27 +101,27 @@ public class RenderingManager implements HasGetRendering, HasHtmlBrowserText {
     }
 
     public OWLClassData getRendering(OWLClass cls) {
-        return OWLClassData.get(cls, dictionaryManager.getShortForm(cls));
+        return OWLClassData.get(cls, dictionaryManager.getShortForm(cls), dictionaryManager.getShortForms(cls));
     }
 
     public OWLObjectPropertyData getRendering(OWLObjectProperty property) {
-        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForm(property));
+        return OWLObjectPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
     }
 
     public OWLDataPropertyData getRendering(OWLDataProperty property) {
-        return OWLDataPropertyData.get(property, dictionaryManager.getShortForm(property));
+        return OWLDataPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
     }
 
     public OWLAnnotationPropertyData getRendering(OWLAnnotationProperty property) {
-        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForm(property));
+        return OWLAnnotationPropertyData.get(property, dictionaryManager.getShortForm(property), dictionaryManager.getShortForms(property));
     }
 
     public OWLNamedIndividualData getRendering(OWLNamedIndividual individual) {
-        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForm(individual));
+        return OWLNamedIndividualData.get(individual, dictionaryManager.getShortForm(individual), dictionaryManager.getShortForms(individual));
     }
 
     public OWLDatatypeData getRendering(OWLDatatype datatype) {
-        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForm(datatype));
+        return OWLDatatypeData.get(datatype, dictionaryManager.getShortForm(datatype), dictionaryManager.getShortForms(datatype));
     }
 
     public void dispose() {

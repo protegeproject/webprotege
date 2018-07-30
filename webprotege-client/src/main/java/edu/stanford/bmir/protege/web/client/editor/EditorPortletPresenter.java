@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -19,9 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent.ON_USER_LOGGED_IN;
-import static edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent.ON_USER_LOGGED_OUT;
-import static edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent.ON_PERMISSIONS_CHANGED;
 import static org.semanticweb.owlapi.model.EntityType.*;
 
 /**
@@ -49,8 +47,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull SelectionModel selectionModel,
             @Nonnull EditorPortletView view,
             @Nonnull TagListPresenter tagListPresenter,
-            @Nonnull EditorPresenter editorPresenter) {
-        super(selectionModel, projectId);
+            @Nonnull EditorPresenter editorPresenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
         this.editorPresenter = checkNotNull(editorPresenter);

@@ -115,7 +115,8 @@ public class LookupEntitiesActionHandler extends AbstractProjectActionHandler<Lo
                                             PrefixNameMatchType.NOT_IN_PREFIX_NAME
                                     );
                                     OWLEntityData ed = DataFactory.getOWLEntityData(match.getEntity(),
-                                                                                    match.getShortForm());
+                                                                                    match.getShortForm(),
+                                                                                    dictionaryManager.getShortForms(match.getEntity()));
                                     return new OWLEntityDataMatch(ed, result);
                                 })
                                 .limit(entityLookupRequest.getSearchLimit())

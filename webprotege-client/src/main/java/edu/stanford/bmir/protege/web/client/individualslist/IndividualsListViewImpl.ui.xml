@@ -3,7 +3,8 @@
              xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.library.text"
              xmlns:pagination="urn:import:edu.stanford.bmir.protege.web.client.pagination"
-             xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress">
+             xmlns:progress="urn:import:edu.stanford.bmir.protege.web.client.progress"
+             xmlns:list="urn:import:edu.stanford.bmir.protege.web.client.list">
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
@@ -34,7 +35,8 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
         <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="{msg.enterSearchStringToFilterList}"/>
-        <entitieslist:EntitiesListImpl ui:field="individualsList" addStyleNames="{style.individualsList}"/>
+        <!--<entitieslist:EntitiesListImpl ui:field="individualsList" addStyleNames="{style.individualsList}"/>-->
+        <list:ListBox ui:field="individualsList" addStyleNames="{style.individualsList}"/>
         <g:HTMLPanel addStyleNames="{style.bottomBar}">
             <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
             <pagination:PaginatorView ui:field="paginator"/>

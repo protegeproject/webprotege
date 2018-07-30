@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -35,8 +36,8 @@ public class EntityChangesPortletPresenter extends AbstractWebProtegePortletPres
 	public EntityChangesPortletPresenter(SelectionModel selectionModel,
                                          LoggedInUserProjectPermissionChecker permissionChecker,
                                          ProjectId projectId,
-                                         ChangeListViewPresenter presenter) {
-		super(selectionModel, projectId);
+                                         ChangeListViewPresenter presenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+		super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
 	}

@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, HasBusy, IsWidget {
+public interface IndividualsListView extends HasSelectionHandlers<List<OWLNamedIndividualData>>, HasBusy, IsWidget {
 
     void setListData(List<OWLNamedIndividualData> individuals);
 
@@ -48,4 +49,7 @@ public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndivi
     int getPageNumber();
 
     void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
+
+    void setPrefLang(@Nonnull String prefLang);
+
 }

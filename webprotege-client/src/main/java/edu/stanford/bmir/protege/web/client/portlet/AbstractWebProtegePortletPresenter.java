@@ -1,18 +1,24 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
+import edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.prefs.PreferenceChangeEvent;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent.ON_BROWSER_TEXT_CHANGED;
 
 
 public abstract class AbstractWebProtegePortletPresenter implements WebProtegePortletPresenter, EntityDisplay {
@@ -23,16 +29,23 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private final HandlerRegistration selectionModelHandlerRegistration;
 
+    private final PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer;
+
     private Optional<PortletUi> portletUi = Optional.empty();
 
     private boolean trackSelection = true;
 
     private Optional<OWLEntityData> displayedEntityData = Optional.empty();
 
+
+
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
-                                              @Nonnull ProjectId projectId) {
+                                              @Nonnull ProjectId projectId,
+                                              @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
+        this.preferredLanguageBrowserTextRenderer = preferredLanguageBrowserTextRenderer;
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
                 if (portletUi.map(ui -> ui.asWidget().isAttached()).orElse(true)) {
                     if (trackSelection) {
@@ -55,6 +68,28 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     public final void start(PortletUi portletUi, WebProtegeEventBus eventBus) {
         this.portletUi = Optional.of(portletUi);
         startPortlet(portletUi, eventBus);
+        eventBus.addProjectEventHandler(projectId,
+                                        ON_BROWSER_TEXT_CHANGED,
+                                        this::handleBrowserTextChanged);
+        eventBus.addProjectEventHandler(projectId,
+                                        PrefLangChangedEvent.PREF_LANG_CHANGED,
+                                        this::handlePrefLangChanged);
+    }
+
+    private void handleBrowserTextChanged(@Nonnull BrowserTextChangedEvent event) {
+        getSelectedEntity().ifPresent(selEntity -> {
+            if(selEntity.equals(event.getEntity())) {
+                setDisplayedEntity(Optional.of(DataFactory.getOWLEntityData(event.getEntity(),
+                                                                            event.getNewBrowserText(),
+                                                                            event.getShortForms())));
+            }
+        });
+    }
+
+    private void handlePrefLangChanged(PrefLangChangedEvent event) {
+        displayedEntityData.ifPresent(sel -> {
+            updateViewTitle();
+        });
     }
 
     public abstract void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus);
@@ -76,7 +111,10 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
     private void updateViewTitle() {
         portletUi.ifPresent(ui -> {
             if(displayedEntityData.isPresent()) {
-                displayedEntityData.ifPresent(entityData -> ui.setSubtitle(entityData.getBrowserText()));
+                displayedEntityData.ifPresent(entityData -> {
+                    String subTitle = preferredLanguageBrowserTextRenderer.getBrowserText(entityData);
+                    ui.setSubtitle(subTitle);
+                });
             }
             else {
                 ui.setSubtitle("");

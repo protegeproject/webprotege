@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -60,8 +61,8 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                                   @Nonnull Messages messages,
                                                   @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                                   @Nonnull ProjectId projectId,
-                                                  @Nonnull DiscussionThreadListPresenter presenter) {
-        super(selectionModel, projectId);
+                                                  @Nonnull DiscussionThreadListPresenter presenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.filterView = filterView;
         this.messages = messages;
         this.displayResolvedThreadsFilter = new FilterId(messages.discussionThread_DisplayResolvedThreads());

@@ -73,8 +73,10 @@ public class PortletWidgetMapper implements WidgetMapper {
             Optional<WebProtegePortletComponents> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
             if (thePortlet.isPresent()) {
                 GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
+                WebProtegePortletComponents portletComponents = thePortlet.get();
+                WebProtegePortletPresenter portletPresenter = portletComponents.getPresenter();
                 viewHolder = createViewHolder(terminalNode.getNodeId(),
-                                              thePortlet.get(),
+                                              portletComponents,
                                               terminalNode.getNodeProperties());
             }
             else {
