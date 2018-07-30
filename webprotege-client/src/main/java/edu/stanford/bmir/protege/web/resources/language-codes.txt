@@ -5,6 +5,7 @@
 "ak","Akan"
 "am","Amharic"
 "an","Aragonese"
+"ar","Arabic"
 "ar-AE","Arabic; U.A.E."
 "ar-BH","Arabic; Bahrain"
 "ar-DZ","Arabic; Algeria"
