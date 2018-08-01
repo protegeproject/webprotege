@@ -57,6 +57,11 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         else {
             sb.append(node.getText());
         }
+        if(language.getSecondaryLanguage().isPresent()) {
+            sb.append(" (");
+            sb.append(node.getText(language.getSecondaryLanguage().get()));
+            sb.append(")");
+        }
         sb.append("</div>");
 
         if (node.getOpenCommentCount() > 0) {
