@@ -68,7 +68,6 @@ public class EntityHierarchyNodeUpdater {
         if (model == null) {
             throw createHierarchyModelIsNullException();
         }
-        Window.alert("BT Changed: " + event);
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
             EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                     node.getEntity(),
