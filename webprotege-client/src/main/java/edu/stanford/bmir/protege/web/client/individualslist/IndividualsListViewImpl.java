@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -18,7 +17,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import edu.stanford.bmir.protege.web.shared.search.SearchType;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -81,9 +80,9 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     }
 
     @Override
-    public void setPrefLang(@Nonnull String prefLang) {
+    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language) {
         renderer = new IndividualsListCellRenderer();
-        renderer.setPrefLang(prefLang);
+        renderer.setDisplayLanguage(language);
         individualsList.setRenderer(renderer);
     }
 

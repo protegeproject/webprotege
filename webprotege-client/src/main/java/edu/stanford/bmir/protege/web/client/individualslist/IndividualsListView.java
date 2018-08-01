@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -50,6 +51,6 @@ public interface IndividualsListView extends HasSelectionHandlers<List<OWLNamedI
 
     void setPageNumberChangedHandler(HasPagination.PageNumberChangedHandler handler);
 
-    void setPrefLang(@Nonnull String prefLang);
+    void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language);
 
 }

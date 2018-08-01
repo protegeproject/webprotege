@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
 import javax.annotation.Nonnull;
 
@@ -10,16 +11,5 @@ import javax.annotation.Nonnull;
  * 29 Jul 2018
  */
 public interface PreferredLanguageView extends IsWidget {
-
-    interface ChangeHandler {
-        void handlePreferredLanguageChanged();
-    }
-
-    @Nonnull
-    String getLanguage();
-
-    void setLanguage(@Nonnull String language);
-
-    void setChangeHandler(@Nonnull ChangeHandler handler);
 
 }

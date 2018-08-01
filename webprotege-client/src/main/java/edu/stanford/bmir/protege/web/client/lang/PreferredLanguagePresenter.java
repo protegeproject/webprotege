@@ -19,24 +19,12 @@ public class PreferredLanguagePresenter {
     @Nonnull
     private final PreferredLanguageView view;
 
-    @Nonnull
-    private final PreferredLanguageManager preferredLanguageManager;
-
     @Inject
-    public PreferredLanguagePresenter(@Nonnull PreferredLanguageView view,
-                                      @Nonnull PreferredLanguageManager preferredLanguageManager) {
+    public PreferredLanguagePresenter(@Nonnull PreferredLanguageView view) {
         this.view = checkNotNull(view);
-        this.preferredLanguageManager = checkNotNull(preferredLanguageManager);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        view.setLanguage(preferredLanguageManager.getPrefLang());
-        view.setChangeHandler(this::handlePreferredLanguageChanged);
-    }
-
-    private void handlePreferredLanguageChanged() {
-        preferredLanguageManager.setPrefLang(view.getLanguage());
-        GWT.log("Handling Preferred Lang Changed");
     }
 }

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -41,8 +41,8 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         presenter.start(portletUi);
         presenter.setEntityDisplay(this);
         eventBus.addProjectEventHandler(getProjectId(),
-                                        PrefLangChangedEvent.PREF_LANG_CHANGED,
-                                        event -> presenter.setPrefLang(event.getPrefLang()));
+                                        DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
+                                        event -> presenter.setDisplayLanguage(event.getDisplayLanguage()));
     }
 
     @Override

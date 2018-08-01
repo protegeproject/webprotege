@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.lang;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -26,7 +25,7 @@ public class PreferredLanguageManager {
     private final EventBus eventBus;
 
     @Nonnull
-    private String prefLang = "";
+    private DisplayDictionaryLanguage displayLanguage = DisplayDictionaryLanguage.empty();
 
     @Inject
     public PreferredLanguageManager(@Nonnull ProjectId projectId, @Nonnull EventBus eventBus) {
@@ -35,17 +34,18 @@ public class PreferredLanguageManager {
     }
 
     @Nonnull
-    public String getPrefLang() {
-        return prefLang;
+    public DisplayDictionaryLanguage getDisplayLanguage() {
+        return displayLanguage;
     }
 
-    public void setPrefLang(@Nonnull String prefLang) {
-        GWT.log("[PreferredLanguageManager] setPrefLang: " + prefLang);
-        if (prefLang.equals(this.prefLang)) {
+    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
+        checkNotNull(displayLanguage);
+        if(this.displayLanguage.equals(displayLanguage)) {
             return;
         }
-        this.prefLang = checkNotNull(prefLang);
-        PrefLangChangedEvent event = PrefLangChangedEvent.get(projectId, prefLang);
-        eventBus.fireEventFromSource(event.asGWTEvent(), projectId);
+        GWT.log("Setting display language: " + displayLanguage);
+        this.displayLanguage = checkNotNull(displayLanguage);
+        eventBus.fireEventFromSource(DisplayLanguageChangedEvent.get(projectId, displayLanguage).asGWTEvent(),
+                                     projectId);
     }
 }

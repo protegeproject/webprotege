@@ -1,15 +1,16 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,40 +21,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PreferredLanguageViewImpl extends Composite implements PreferredLanguageView {
 
+    private PopupPanel popupPanel;
+
     interface PreferredLanguageViewImplUiBinder extends UiBinder<HTMLPanel, PreferredLanguageViewImpl> {
 
     }
 
     private static PreferredLanguageViewImplUiBinder ourUiBinder = GWT.create(PreferredLanguageViewImplUiBinder.class);
 
-    @UiField
-    TextBox prefLangField;
 
-    private ChangeHandler changeHandler = () -> {};
+    @UiField
+    Button button;
+
+    @Nonnull
+    private final DisplayLanguageEditorPresenter editorPresenter;
 
     @Inject
-    public PreferredLanguageViewImpl() {
+    public PreferredLanguageViewImpl(@Nonnull DisplayLanguageEditorPresenter editorPresenter) {
+        this.editorPresenter = editorPresenter;
+        popupPanel = new PopupPanel(true, true);
+        popupPanel.addCloseHandler(event -> editorPresenter.stop());
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    @Nonnull
-    @Override
-    public String getLanguage() {
-        return prefLangField.getText();
-    }
-
-    @Override
-    public void setLanguage(@Nonnull String language) {
-        prefLangField.setText(checkNotNull(language));
-    }
-
-    @Override
-    public void setChangeHandler(@Nonnull ChangeHandler handler) {
-        this.changeHandler = checkNotNull(handler);
-    }
-
-    @UiHandler("prefLangField")
-    public void prefLangFieldKeyPress(ValueChangeEvent<String> event) {
-        changeHandler.handlePreferredLanguageChanged();
+    @UiHandler("button")
+    public void buttonClick(ClickEvent event) {
+        editorPresenter.start(popupPanel);
+        popupPanel.showRelativeTo(button);
     }
 }

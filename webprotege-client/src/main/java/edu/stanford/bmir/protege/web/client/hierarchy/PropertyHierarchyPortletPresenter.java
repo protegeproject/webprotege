@@ -18,7 +18,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropert
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
-import edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -217,9 +217,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                            @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
         model.start(eventBus, hierarchyId);
         eventBus.addProjectEventHandler(getProjectId(),
-                                        PrefLangChangedEvent.PREF_LANG_CHANGED,
+                                        DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> {
-                                            renderer.setPreferredLang(event.getPrefLang());
+                                            renderer.setDisplayLanguage(event.getDisplayLanguage());
                                             treeWidget.setRenderer(renderer);
                                         });
         treeWidget.setRenderer(renderer);

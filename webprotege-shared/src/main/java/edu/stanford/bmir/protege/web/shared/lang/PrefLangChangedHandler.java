@@ -9,5 +9,5 @@ import javax.annotation.Nonnull;
  */
 public interface PrefLangChangedHandler {
 
-    void handlePrefLangChanged(@Nonnull PrefLangChangedEvent event);
+    void handlePrefLangChanged(@Nonnull DisplayLanguageChangedEvent event);
 }

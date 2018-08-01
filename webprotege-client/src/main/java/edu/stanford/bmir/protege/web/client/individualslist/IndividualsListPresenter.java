@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -114,8 +115,8 @@ public class IndividualsListPresenter {
         container.setWidget(view.asWidget());
     }
 
-    public void setPrefLang(@Nonnull String prefLang) {
-        view.setPrefLang(prefLang);
+    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
+        view.setDisplayLanguage(displayLanguage);
     }
 
 

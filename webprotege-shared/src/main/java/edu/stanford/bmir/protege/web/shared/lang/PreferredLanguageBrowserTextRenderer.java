@@ -22,10 +22,12 @@ public class PreferredLanguageBrowserTextRenderer {
 
     @Nonnull
     public String getBrowserText(@Nonnull OWLPrimitiveData primitiveData) {
-        return primitiveData.getShortForms().entrySet().stream()
-                            .filter(e -> e.getKey().getLang().equalsIgnoreCase(preferredLanguageManager.getPrefLang()))
-                            .findFirst()
-                            .map(Map.Entry::getValue)
-                            .orElse(primitiveData.getBrowserText());
+        return preferredLanguageManager.getDisplayLanguage().getPrimaryLanguage()
+                                       .map(primaryLang -> primitiveData.getShortForms().entrySet().stream()
+                                                                        .filter(e -> e.getKey().equals(primaryLang))
+                                                                        .findFirst()
+                                                                        .map(Map.Entry::getValue)
+                                                                        .orElse(primitiveData.getBrowserText()))
+                                       .orElse(primitiveData.getBrowserText());
     }
 }

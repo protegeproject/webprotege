@@ -312,6 +312,10 @@ public class ClientProjectModule {
         return impl;
     }
 
+    @Provides
+    DisplayLanguageEditorView provideDisplayLanguageEditorView(DisplayLanguageEditorViewImpl impl) {
+        return impl;
+    }
 }
 
 

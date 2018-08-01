@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -67,6 +68,7 @@ public class EntityHierarchyNodeUpdater {
         if (model == null) {
             throw createHierarchyModelIsNullException();
         }
+        Window.alert("BT Changed: " + event);
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
             EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
                     node.getEntity(),

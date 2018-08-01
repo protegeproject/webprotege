@@ -101,8 +101,8 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
     @Override
     public void update(@Nonnull Collection<OWLEntity> entities,
                        @Nonnull List<DictionaryLanguage> languages) {
-        logger.debug("Updating dictionary entries for {} entities", entities.size());
-        findDictionaries(languages).forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
+        logger.debug("Updating dictionary entries for {} entities.", entities.size());
+        findAllDictionaries(languages).forEach(dictionary -> dictionaryUpdater.update(dictionary, entities));
     }
 
     @Nonnull
@@ -116,6 +116,19 @@ public class MultiLingualDictionaryImpl implements MultiLingualDictionary {
             }
         });
         return resultBuilder.build();
+    }
+
+    /**
+     * Finds all the dictionaries in this multi-lingual dictionary.  The specified list of
+     * languages will be guaranteed to exists.
+     * @param languages The languages
+     * @return The dictionaries
+     */
+    @Nonnull
+    private Stream<Dictionary> findAllDictionaries(@Nonnull List<DictionaryLanguage> languages) {
+        // Add any languages that are not present
+        findDictionaries(languages);
+        return dictionaries.values().stream();
     }
 
     @Nonnull

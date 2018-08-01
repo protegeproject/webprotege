@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
@@ -24,19 +26,20 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private String preferredLang = "";
+    private DisplayDictionaryLanguage language = DisplayDictionaryLanguage.empty();
 
     @Inject
     public EntityHierarchyTreeNodeRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
     }
 
-    public void setPreferredLang(@Nonnull String lang) {
-        this.preferredLang = checkNotNull(lang);
+    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language) {
+        this.language = checkNotNull(language);
     }
 
     @Override
     public String getHtmlRendering(EntityHierarchyNode node) {
+        GWT.log("[EntityHierarchyTreeNodeRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
         sb.append("<div style='display: flex; flex-direction: row; align-items: center;'>");
         String iconIri;
@@ -48,7 +51,12 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
         else {
             sb.append("<div>");
         }
-        sb.append(node.getText(preferredLang));
+        if(language.getPrimaryLanguage().isPresent()) {
+            sb.append(node.getText(language.getPrimaryLanguage().get()));
+        }
+        else {
+            sb.append(node.getText());
+        }
         sb.append("</div>");
 
         if (node.getOpenCommentCount() > 0) {

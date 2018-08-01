@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.lang.PrefLangChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -14,7 +14,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.prefs.PreferenceChangeEvent;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -72,7 +71,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
                                         ON_BROWSER_TEXT_CHANGED,
                                         this::handleBrowserTextChanged);
         eventBus.addProjectEventHandler(projectId,
-                                        PrefLangChangedEvent.PREF_LANG_CHANGED,
+                                        DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         this::handlePrefLangChanged);
     }
 
@@ -86,7 +85,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         });
     }
 
-    private void handlePrefLangChanged(PrefLangChangedEvent event) {
+    private void handlePrefLangChanged(DisplayLanguageChangedEvent event) {
         displayedEntityData.ifPresent(sel -> {
             updateViewTitle();
         });

@@ -64,14 +64,14 @@ public abstract class EntityHierarchyNode implements IsSerializable, Serializabl
                                  ")").orElse(browserText);
     }
 
-    public String getText(@Nonnull String prefLang) {
+    public String getText(@Nonnull DictionaryLanguage prefLang) {
         ImmutableMap<DictionaryLanguage, String> shortForms = getShortForms();
         return shortForms.entrySet().stream()
                          .filter(e -> e.getKey().isAnnotationBased())
-                         .filter(e -> e.getKey().getLang().equals(prefLang))
+                         .filter(e -> e.getKey().equals(prefLang))
                          .findFirst()
                          .map(Map.Entry::getValue)
-                         .orElse(getBrowserText());
+                         .orElse(getBrowserText() + " (def)");
     }
 
     public OWLEntityData getEntityData() {
