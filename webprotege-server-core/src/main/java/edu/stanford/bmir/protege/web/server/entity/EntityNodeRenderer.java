@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.hierarchy;
+package edu.stanford.bmir.protege.web.server.entity;
 
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 29 Nov 2017
  */
-public class EntityHierarchyNodeRenderer {
+public class EntityNodeRenderer {
 
     @Nonnull
     private final ProjectId projectId;
@@ -38,12 +38,12 @@ public class EntityHierarchyNodeRenderer {
     private final TagsManager tagsManager;
 
     @Inject
-    public EntityHierarchyNodeRenderer(@Nonnull ProjectId projectId,
-                                       @Nonnull DictionaryManager dictionaryManager,
-                                       @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
-                                       @Nonnull WatchManager watchManager,
-                                       @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
-                                       @Nonnull TagsManager tagsManager) {
+    public EntityNodeRenderer(@Nonnull ProjectId projectId,
+                              @Nonnull DictionaryManager dictionaryManager,
+                              @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
+                              @Nonnull WatchManager watchManager,
+                              @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
+                              @Nonnull TagsManager tagsManager) {
         this.projectId = checkNotNull(projectId);
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);
@@ -53,9 +53,9 @@ public class EntityHierarchyNodeRenderer {
     }
 
     /**
-     * Renders the hierarchy node for the specified entity.
+     * Renders the node for the specified entity.
      * @param entity The entity to be rendered.
-     * @return The hierarchy node for the specified entity.
+     * @return The node for the specified entity.
      */
     @Nonnull
     public EntityNode render(@Nonnull OWLEntity entity) {

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -26,10 +26,10 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
 
     private final HierarchyProvider<OWLDataProperty> hierarchyProvider;
 
-    private final EntityHierarchyNodeRenderer renderer;
+    private final EntityNodeRenderer renderer;
 
     @Inject
-    public OWLDataPropertyHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLDataProperty> hierarchyProvider, EntityHierarchyNodeRenderer renderer) {
+    public OWLDataPropertyHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLDataProperty> hierarchyProvider, EntityNodeRenderer renderer) {
         super(projectId, EntityType.DATA_PROPERTY, hierarchyProvider, DATA_PROPERTY_HIERARCHY, renderer);
         this.hierarchyProvider = hierarchyProvider;
         this.renderer = renderer;

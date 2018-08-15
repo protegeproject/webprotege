@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.events.EventTranslator;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -29,14 +30,14 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     private final HierarchyId hierarchyId;
 
-    private final EntityHierarchyNodeRenderer renderer;
+    private final EntityNodeRenderer renderer;
 
 
     private SetMultimap<T, T> child2ParentMap = HashMultimap.create();
 
     private Set<T> roots = new HashSet<>();
 
-    public HierarchyChangeComputer(ProjectId projectId, EntityType<T> entityType, HierarchyProvider<T> hierarchyProvider, HierarchyId hierarchyId, EntityHierarchyNodeRenderer renderer) {
+    public HierarchyChangeComputer(ProjectId projectId, EntityType<T> entityType, HierarchyProvider<T> hierarchyProvider, HierarchyId hierarchyId, EntityNodeRenderer renderer) {
         this.projectId = projectId;
         this.hierarchyProvider = hierarchyProvider;
         this.entityType = entityType;

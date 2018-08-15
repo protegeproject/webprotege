@@ -4,7 +4,7 @@ import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -43,7 +43,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     private final DictionaryManager dictionaryManager;
 
     @Nonnull
-    private final EntityHierarchyNodeRenderer nodeRenderer;
+    private final EntityNodeRenderer nodeRenderer;
 
     @Nonnull
     private final RenderingManager renderingManager;
@@ -54,7 +54,7 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
     @Inject
     public GetMatchingEntitiesActionHandler(@Nonnull AccessManager accessManager,
                                             @Nonnull DictionaryManager dictionaryManager,
-                                            @Nonnull EntityHierarchyNodeRenderer nodeRenderer,
+                                            @Nonnull EntityNodeRenderer nodeRenderer,
                                             @Nonnull RenderingManager renderingManager, @Nonnull MatchingEngine matchingEngine) {
         super(accessManager);
         this.dictionaryManager = checkNotNull(dictionaryManager);

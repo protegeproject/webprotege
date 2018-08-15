@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -15,10 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class GraphNodeRenderer {
 
     @Nonnull
-    private final EntityHierarchyNodeRenderer renderer;
+    private final EntityNodeRenderer renderer;
 
     @Inject
-    public GraphNodeRenderer(@Nonnull EntityHierarchyNodeRenderer renderer) {
+    public GraphNodeRenderer(@Nonnull EntityNodeRenderer renderer) {
         this.renderer = checkNotNull(renderer);
     }
 

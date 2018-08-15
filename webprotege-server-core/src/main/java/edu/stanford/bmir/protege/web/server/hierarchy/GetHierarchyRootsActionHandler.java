@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsAction;
@@ -31,12 +32,12 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
     private final HierarchyProviderMapper hierarchyProviderMapper;
 
     @Nonnull
-    private final EntityHierarchyNodeRenderer renderer;
+    private final EntityNodeRenderer renderer;
 
     @Inject
     public GetHierarchyRootsActionHandler(@Nonnull AccessManager accessManager,
                                           @Nonnull HierarchyProviderMapper hierarchyProviderMapper,
-                                          @Nonnull EntityHierarchyNodeRenderer renderer) {
+                                          @Nonnull EntityNodeRenderer renderer) {
         super(accessManager);
         this.hierarchyProviderMapper = checkNotNull(hierarchyProviderMapper);
         this.renderer = checkNotNull(renderer);

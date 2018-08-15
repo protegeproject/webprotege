@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -25,12 +25,12 @@ import static java.util.Collections.singletonList;
 */
 public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChangeComputer<OWLAnnotationProperty> {
 
-    private final EntityHierarchyNodeRenderer renderer;
+    private final EntityNodeRenderer renderer;
 
     private final HierarchyProvider<OWLAnnotationProperty> hierarchyProvider;
 
     @Inject
-    public OWLAnnotationPropertyHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLAnnotationProperty> hierarchyProvider, EntityHierarchyNodeRenderer renderer) {
+    public OWLAnnotationPropertyHierarchyChangeComputer(ProjectId projectId, HierarchyProvider<OWLAnnotationProperty> hierarchyProvider, EntityNodeRenderer renderer) {
         super(projectId, EntityType.ANNOTATION_PROPERTY, hierarchyProvider, ANNOTATION_PROPERTY_HIERARCHY, renderer);
         this.renderer = checkNotNull(renderer);
         this.hierarchyProvider = checkNotNull(hierarchyProvider);
