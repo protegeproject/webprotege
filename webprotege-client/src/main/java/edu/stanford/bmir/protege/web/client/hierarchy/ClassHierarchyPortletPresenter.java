@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
@@ -53,7 +54,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private final EntityHierarchyModel hierarchyModel;
     @Nonnull
-    private final EntityHierarchyTreeNodeRenderer renderer;
+    private final EntityNodeHtmlRenderer renderer;
 
     private final UIAction createClassAction;
 
@@ -101,7 +102,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
                                           @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
-                                          @Nonnull EntityHierarchyTreeNodeRenderer renderer,
+                                          @Nonnull EntityNodeHtmlRenderer renderer,
                                           @Nonnull CreateEntityPresenter createEntityPresenter,
                                           @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                           @Nonnull HierarchyActionStatePresenter actionStatePresenter,

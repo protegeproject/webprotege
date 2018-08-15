@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.entitieslist;
 
-import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyTreeNodeRenderer;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-import javax.annotation.Nonnull;
 
 /**
  * Author: Matthew Horridge<br>

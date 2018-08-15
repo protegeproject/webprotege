@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.hierarchy;
+package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
@@ -22,14 +22,14 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
-public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityNode> {
+public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
     private DisplayDictionaryLanguage language = DisplayDictionaryLanguage.empty();
 
     @Inject
-    public EntityHierarchyTreeNodeRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
+    public EntityNodeHtmlRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
     }
 
@@ -39,7 +39,7 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityN
 
     @Override
     public String getHtmlRendering(EntityNode node) {
-        GWT.log("[EntityHierarchyTreeNodeRenderer] Rendering node: " + node);
+        GWT.log("[EntityNodeHtmlRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
         sb.append("<div style='display: flex; flex-direction: row; align-items: center;'>");
         String iconIri;

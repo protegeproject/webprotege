@@ -7,7 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
-import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyTreeNodeRenderer;
+import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
  */
 public class MatchResult extends Composite {
 
-    private EntityHierarchyTreeNodeRenderer renderer;
+    private EntityNodeHtmlRenderer renderer;
 
     interface MatchResultUiBinder extends UiBinder<HTMLPanel, MatchResult> {
 
@@ -43,7 +43,7 @@ public class MatchResult extends Composite {
     @Inject
     public MatchResult(@Nonnull PrimitiveDataIconProvider iconProvider) {
         this.iconProvider = iconProvider;
-        renderer = new EntityHierarchyTreeNodeRenderer(new LoggedInUserProvider() {
+        renderer = new EntityNodeHtmlRenderer(new LoggedInUserProvider() {
             @Nonnull
             @Override
             public UserId getCurrentUserId() {

@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
+import edu.stanford.bmir.protege.web.client.entity.EntityNodeHtmlRenderer;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
@@ -83,7 +84,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final TreeWidget<EntityNode, OWLEntity> annotationPropertyTree;
 
     @Nonnull
-    private final EntityHierarchyTreeNodeRenderer renderer;
+    private final EntityNodeHtmlRenderer renderer;
 
     @Nonnull
     private final CreateEntityPresenter createEntityPresenter;
@@ -127,7 +128,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull TreeWidget<EntityNode, OWLEntity> objectPropertyTree,
                                              @Nonnull TreeWidget<EntityNode, OWLEntity> dataPropertyTree,
                                              @Nonnull TreeWidget<EntityNode, OWLEntity> annotationPropertyTree,
-                                             @Nonnull EntityHierarchyTreeNodeRenderer renderer,
+                                             @Nonnull EntityNodeHtmlRenderer renderer,
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
                                              @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
