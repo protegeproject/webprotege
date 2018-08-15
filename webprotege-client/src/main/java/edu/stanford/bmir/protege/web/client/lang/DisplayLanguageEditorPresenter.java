@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.PopupPanel;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageManager;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
@@ -79,6 +78,7 @@ public class DisplayLanguageEditorPresenter {
 
     private void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
         checkNotNull(displayLanguage);
+        GWT.log("[DisplayLanguageEditorPresenter] setDisplayLanguage: " + displayLanguage);
         displayLanguage.getPrimaryLanguage()
                        .ifPresent(primaryLanguage -> annotationPropertyIriRenderer.renderAnnotationPropertyIri(
                                primaryLanguage.getAnnotationPropertyIri(), prop -> {

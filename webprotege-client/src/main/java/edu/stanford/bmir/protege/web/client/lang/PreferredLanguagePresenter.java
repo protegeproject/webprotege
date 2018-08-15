@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;

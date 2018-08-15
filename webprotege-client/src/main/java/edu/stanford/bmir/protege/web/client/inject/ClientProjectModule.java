@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.gwt.storage.client.Storage;
 import dagger.Module;
 import dagger.Provides;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
@@ -315,6 +316,11 @@ public class ClientProjectModule {
     @Provides
     DisplayLanguageEditorView provideDisplayLanguageEditorView(DisplayLanguageEditorViewImpl impl) {
         return impl;
+    }
+
+    @Provides
+    Storage provideLocalStorage() {
+        return Storage.getLocalStorageIfSupported();
     }
 }
 

@@ -77,6 +77,7 @@ public class DisplayLanguageEditorViewImpl extends Composite implements DisplayL
     @Override
     public void setSecondaryDisplayLanguage(@Nonnull OWLAnnotationPropertyData property, @Nonnull String lang) {
         secondaryPropertyField.setValue(property);
+        secondaryLangField.setValue(lang);
     }
 
     @Nonnull

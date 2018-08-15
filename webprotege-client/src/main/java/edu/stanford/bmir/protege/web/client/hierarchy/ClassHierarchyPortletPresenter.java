@@ -4,6 +4,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageManager;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
@@ -16,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
-import edu.stanford.bmir.protege.web.shared.lang.PreferredLanguageBrowserTextRenderer;
+import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -88,6 +89,9 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
 
     private boolean transmittingSelectionFromTree = false;
 
+    @Nonnull
+    private final PreferredLanguageManager preferredLanguageManager;
+
     @Inject
     public ClassHierarchyPortletPresenter(@Nonnull final ProjectId projectId,
                                           @Nonnull SelectionModel selectionModel,
@@ -104,7 +108,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull EntityHierarchyDropHandler dropHandler,
                                           @Nonnull FilterView filterView,
                                           @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
-                                          @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+                                          @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer, @Nonnull PreferredLanguageManager preferredLanguageManager) {
         super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
@@ -131,6 +135,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         this.dropHandler = dropHandler;
         this.filterView = checkNotNull(filterView);
         this.tagVisibilityPresenter = checkNotNull(tagVisibilityPresenter);
+        this.preferredLanguageManager = checkNotNull(preferredLanguageManager);
         this.treeWidget.addSelectionChangeHandler(this::transmitSelectionFromTree);
     }
 
@@ -157,6 +162,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         actionStatePresenter.start(eventBus);
 
         hierarchyModel.start(eventBus, CLASS_HIERARCHY);
+        renderer.setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
         treeWidget.setRenderer(renderer);
         treeWidget.setModel(GraphTreeNodeModel.create(hierarchyModel,
                                                       node -> node.getEntity()));

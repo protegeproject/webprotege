@@ -29,6 +29,7 @@ public class OWLNamedIndividualData_TestCase {
 
     @Before
     public void setUp() {
+        shortForms = ImmutableMap.of();
         oWLNamedIndividualData = OWLNamedIndividualData.get(entity, browserText, shortForms);
     }
 

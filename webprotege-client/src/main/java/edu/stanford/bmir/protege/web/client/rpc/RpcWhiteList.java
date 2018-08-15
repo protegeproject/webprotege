@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.State;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
@@ -61,6 +63,10 @@ public class RpcWhiteList implements Action, Result {
     State state;
 
     ObjectPropertyCharacteristic objectPropertyCharacteristic;
+
+    PropertyValueDescriptor propertyValueDescriptor;
+
+    PropertyValue propertyValue;
 
     public RpcWhiteList() {
     }
@@ -191,5 +197,17 @@ public class RpcWhiteList implements Action, Result {
 
     public void setObjectPropertyCharacteristic(ObjectPropertyCharacteristic objectPropertyCharacteristic) {
         this.objectPropertyCharacteristic = objectPropertyCharacteristic;
+    }
+
+    public PropertyValueDescriptor getPropertyValueDescriptor() {
+        return propertyValueDescriptor;
+    }
+
+    public void setPropertyValueDescriptor(PropertyValueDescriptor propertyValueDescriptor) {
+        this.propertyValueDescriptor = propertyValueDescriptor;
+    }
+
+    public PropertyValue getPropertyValue() {
+        return propertyValue;
     }
 }

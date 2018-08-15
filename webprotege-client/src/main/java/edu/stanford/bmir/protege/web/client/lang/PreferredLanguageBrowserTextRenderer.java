@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.lang;
+package edu.stanford.bmir.protege.web.client.lang;
 
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 

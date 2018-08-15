@@ -51,27 +51,21 @@ public abstract class EntityHierarchyNode implements IsSerializable, Serializabl
     @Nonnull
     @Override
     public String getText() {
-        String browserText = getBrowserText();
-        ImmutableMap<DictionaryLanguage, String> shortForms = getShortForms();
-        return shortForms.entrySet().stream()
-                         .filter(e -> !e.getValue().equals(browserText))
-                         .filter(e -> e.getKey().isAnnotationBased())
-                         .findFirst()
-                         .map(Map.Entry::getValue)
-                         .map(altSf -> browserText +
-                                 " (" +
-                                 altSf +
-                                 ")").orElse(browserText);
+        return getBrowserText();
     }
 
     public String getText(@Nonnull DictionaryLanguage prefLang) {
+        return getText(prefLang, getBrowserText());
+    }
+
+    public String getText(@Nonnull DictionaryLanguage prefLang, String defaultText) {
         ImmutableMap<DictionaryLanguage, String> shortForms = getShortForms();
         return shortForms.entrySet().stream()
                          .filter(e -> e.getKey().isAnnotationBased())
                          .filter(e -> e.getKey().equals(prefLang))
                          .findFirst()
                          .map(Map.Entry::getValue)
-                         .orElse(getBrowserText() + " (def)");
+                         .orElse(defaultText);
     }
 
     public OWLEntityData getEntityData() {
