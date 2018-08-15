@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
+import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -19,6 +20,8 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
 
     private final IndividualsListPresenter presenter;
 
+    private final PreferredLanguageManager preferredLanguageManager;
+
     /*
      * Retrieved from the project configuration. If it is set,
      * then the individuals list will always display the instances
@@ -30,9 +33,11 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     @Inject
     public IndividualsListPortletPresenter(IndividualsListPresenter presenter,
                                            SelectionModel selectionModel,
-                                           ProjectId projectId, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+                                           ProjectId projectId,
+                                           PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer, PreferredLanguageManager preferredLanguageManager) {
         super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.presenter = presenter;
+        this.preferredLanguageManager = preferredLanguageManager;
     }
 
     @Override
@@ -40,6 +45,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         presenter.installActions(portletUi);
         presenter.start(portletUi);
         presenter.setEntityDisplay(this);
+        presenter.setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
         eventBus.addProjectEventHandler(getProjectId(),
                                         DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> presenter.setDisplayLanguage(event.getDisplayLanguage()));
