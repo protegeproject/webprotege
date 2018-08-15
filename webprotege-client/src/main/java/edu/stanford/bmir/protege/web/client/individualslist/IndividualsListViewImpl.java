@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorView;
 import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
@@ -45,7 +46,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     private static IndividualsListViewImplUiBinder ourUiBinder = GWT.create(IndividualsListViewImplUiBinder.class);
 
     @UiField
-    protected ListBox<OWLNamedIndividualData, OWLNamedIndividualData> individualsList;
+    protected ListBox<OWLNamedIndividualData, EntityNode> individualsList;
 
     @UiField
     protected Label statusLabel;
@@ -62,10 +63,13 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     private SearchStringChangedHandler searchStringChangedHandler = () -> {};
 
     @Inject
-    public IndividualsListViewImpl(PaginatorPresenter paginatorPresenter) {
+    public IndividualsListViewImpl(@Nonnull PaginatorPresenter paginatorPresenter,
+                                   @Nonnull IndividualsListCellRenderer renderer) {
         this.paginatorPresenter = paginatorPresenter;
         paginator = paginatorPresenter.getView();
+        this.renderer = checkNotNull(renderer);
         initWidget(ourUiBinder.createAndBindUi(this));
+        individualsList.setRenderer(renderer);
     }
 
     @Override
@@ -81,35 +85,34 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Override
     public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language) {
-        renderer = new IndividualsListCellRenderer();
         renderer.setDisplayLanguage(language);
         individualsList.setRenderer(renderer);
     }
 
     @Override
-    public void setListData(List<OWLNamedIndividualData> individuals) {
+    public void setListData(List<EntityNode> individuals) {
         individualsList.setListData(individuals);
     }
 
     @Override
-    public void addListData(Collection<OWLNamedIndividualData> individuals) {
+    public void addListData(Collection<EntityNode> individuals) {
 //        individualsList.getListData();
 //        individualsList.addAll(individuals);
         MessageBox.showAlert("Missing Impl");
     }
 
     @Override
-    public void removeListData(Collection<OWLNamedIndividualData> individuals) {
+    public void removeListData(Collection<EntityNode> individuals) {
         individualsList.setListData(ImmutableList.of());
     }
 
     @Override
-    public Collection<OWLNamedIndividualData> getSelectedIndividuals() {
+    public Collection<EntityNode> getSelectedIndividuals() {
         return individualsList.getSelection();
     }
 
     @Override
-    public Optional<OWLNamedIndividualData> getSelectedIndividual() {
+    public Optional<EntityNode> getSelectedIndividual() {
         return individualsList.getFirstSelectedElement();
     }
 
@@ -119,7 +122,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     }
 
     @Override
-    public HandlerRegistration addSelectionHandler(SelectionHandler<List<OWLNamedIndividualData>> handler) {
+    public HandlerRegistration addSelectionHandler(SelectionHandler<List<EntityNode>> handler) {
         return individualsList.addSelectionHandler(handler);
     }
 

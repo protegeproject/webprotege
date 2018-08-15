@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.individualslist;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -20,7 +21,7 @@ public class GetIndividualsResult implements Result {
     @SuppressWarnings("GwtInconsistentSerializableClass" )
     private OWLClassData type;
 
-    private Page<OWLNamedIndividualData> result;
+    private Page<EntityNode> result;
 
     private int totalIndividuals;
 
@@ -31,7 +32,7 @@ public class GetIndividualsResult implements Result {
     }
 
     public GetIndividualsResult(OWLClassData type,
-                                Page<OWLNamedIndividualData> result, int totalIndividuals, int matchedIndividuals) {
+                                Page<EntityNode> result, int totalIndividuals, int matchedIndividuals) {
         this.type = type;
         this.result = result;
         this.totalIndividuals = totalIndividuals;
@@ -42,7 +43,7 @@ public class GetIndividualsResult implements Result {
         return type;
     }
 
-    public Page<OWLNamedIndividualData> getPaginatedResult() {
+    public Page<EntityNode> getPaginatedResult() {
         return result;
     }
 
@@ -54,7 +55,7 @@ public class GetIndividualsResult implements Result {
         return matchedIndividuals;
     }
 
-    public List<OWLNamedIndividualData> getIndividuals() {
+    public List<EntityNode> getIndividuals() {
         return result.getPageElements();
     }
 }

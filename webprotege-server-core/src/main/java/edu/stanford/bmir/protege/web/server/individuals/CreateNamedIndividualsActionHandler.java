@@ -5,15 +5,13 @@ import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsResult;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import org.semanticweb.owlapi.model.OWLDataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -36,14 +34,7 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
     private final HasApplyChanges changeApplicator;
 
     @Nonnull
-    private final RenderingManager renderer;
-
-    @Nonnull
-    @RootOntology
-    private final OWLOntology rootOntology;
-
-    @Nonnull
-    private final OWLDataFactory dataFactory;
+    private final EntityNodeRenderer renderer;
 
     @Nonnull
     private final CreateIndividualsChangeListGeneratorFactory factory;
@@ -51,14 +42,11 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
     @Inject
     public CreateNamedIndividualsActionHandler(@Nonnull AccessManager accessManager,
                                                @Nonnull HasApplyChanges changeApplicator,
-                                               @Nonnull RenderingManager renderer,
-                                               @Nonnull @RootOntology OWLOntology rootOntology,
-                                               @Nonnull OWLDataFactory dataFactory, @Nonnull CreateIndividualsChangeListGeneratorFactory factory) {
+                                               @Nonnull EntityNodeRenderer renderer,
+                                               @Nonnull CreateIndividualsChangeListGeneratorFactory factory) {
         super(accessManager);
         this.changeApplicator = changeApplicator;
         this.renderer = renderer;
-        this.rootOntology = rootOntology;
-        this.dataFactory = dataFactory;
         this.factory = factory;
     }
 
@@ -75,9 +63,9 @@ public class CreateNamedIndividualsActionHandler extends AbstractProjectActionHa
         ChangeApplicationResult<Set<OWLNamedIndividual>> result = changeApplicator.applyChanges(executionContext.getUserId(),
                                                                                                 factory.create(action.getType(),
                                                                                                                action.getSourceText()));
-        Set<OWLNamedIndividualData> individualData = result.getSubject().stream()
-                                                           .map(renderer::getRendering)
-                                                           .collect(toSet());
+        Set<EntityNode> individualData = result.getSubject().stream()
+                                               .map(renderer::render)
+                                               .collect(toSet());
         return new CreateNamedIndividualsResult(individualData);
     }
 

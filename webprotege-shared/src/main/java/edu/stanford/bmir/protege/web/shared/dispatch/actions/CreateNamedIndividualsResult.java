@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 
 import java.util.HashSet;
@@ -15,16 +16,16 @@ import java.util.Set;
 public class CreateNamedIndividualsResult implements Result {
 
 
-    private Set<OWLNamedIndividualData> individuals = new HashSet<OWLNamedIndividualData>();
+    private Set<EntityNode> individuals = new HashSet<>();
 
     private CreateNamedIndividualsResult() {
     }
 
-    public CreateNamedIndividualsResult(Set<OWLNamedIndividualData> individuals) {
+    public CreateNamedIndividualsResult(Set<EntityNode> individuals) {
         this.individuals = individuals;
     }
 
-    public Set<OWLNamedIndividualData> getIndividuals() {
-        return new HashSet<OWLNamedIndividualData>(individuals);
+    public Set<EntityNode> getIndividuals() {
+        return new HashSet<>(individuals);
     }
 }

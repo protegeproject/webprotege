@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
@@ -19,17 +20,17 @@ import java.util.Optional;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public interface IndividualsListView extends HasSelectionHandlers<List<OWLNamedIndividualData>>, HasBusy, IsWidget {
+public interface IndividualsListView extends HasSelectionHandlers<List<EntityNode>>, HasBusy, IsWidget {
 
-    void setListData(List<OWLNamedIndividualData> individuals);
+    void setListData(List<EntityNode> individuals);
 
-    void addListData(Collection<OWLNamedIndividualData> individuals);
+    void addListData(Collection<EntityNode> individuals);
 
-    void removeListData(Collection<OWLNamedIndividualData> individuals);
+    void removeListData(Collection<EntityNode> individuals);
 
-    Collection<OWLNamedIndividualData> getSelectedIndividuals();
+    Collection<EntityNode> getSelectedIndividuals();
 
-    Optional<OWLNamedIndividualData> getSelectedIndividual();
+    Optional<EntityNode> getSelectedIndividual();
 
     void setSelectedIndividual(OWLNamedIndividualData individual);
 

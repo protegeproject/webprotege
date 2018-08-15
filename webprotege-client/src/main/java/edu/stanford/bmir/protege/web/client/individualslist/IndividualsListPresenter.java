@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
@@ -154,7 +155,7 @@ public class IndividualsListPresenter {
             view.setStatusMessageVisible(true);
             int displayedIndividuals = result.getIndividuals().size();
             int totalIndividuals = result.getTotalIndividuals();
-            Page<OWLNamedIndividualData> paginatedResult = result.getPaginatedResult();
+            Page<EntityNode> paginatedResult = result.getPaginatedResult();
             view.setPageCount(paginatedResult.getPageCount());
             view.setPageNumber(paginatedResult.getPageNumber());
             updateStatusLabel(displayedIndividuals, totalIndividuals);
@@ -184,11 +185,11 @@ public class IndividualsListPresenter {
         controller.setCreateEntityHandler(createFromText -> {
             dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, createFromText),
                                            result -> {
-                                               Set<OWLNamedIndividualData> individuals = result.getIndividuals();
+                                               Set<EntityNode> individuals = result.getIndividuals();
                                                view.addListData(individuals);
                                                if (!individuals.isEmpty()) {
-                                                   OWLNamedIndividualData next = individuals.iterator().next();
-                                                   view.setSelectedIndividual(next);
+                                                   EntityNode next = individuals.iterator().next();
+                                                   view.setSelectedIndividual((OWLNamedIndividualData) next.getEntityData());
                                                }
                                            });
         });
@@ -196,7 +197,7 @@ public class IndividualsListPresenter {
     }
 
     private void handleDeleteIndividuals() {
-        Collection<OWLNamedIndividualData> sel = view.getSelectedIndividuals();
+        Collection<EntityNode> sel = view.getSelectedIndividuals();
         if (sel.isEmpty()) {
             return;
         }
@@ -219,9 +220,9 @@ public class IndividualsListPresenter {
 
 
     private void deleteSelectedIndividuals() {
-        Collection<OWLNamedIndividualData> selection = view.getSelectedIndividuals();
+        Collection<EntityNode> selection = view.getSelectedIndividuals();
         Set<OWLEntity> entities = view.getSelectedIndividuals().stream()
-                .map(OWLNamedIndividualData::getEntity)
+                .map(n -> n.getEntity())
                 .collect(toSet());
         dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, entities),
                 view,

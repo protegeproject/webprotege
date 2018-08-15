@@ -3,12 +3,13 @@ package edu.stanford.bmir.protege.web.server.individuals;
 import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -53,15 +54,20 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     private final RenderingManager renderingManager;
 
+    @Nonnull
+    private final EntityNodeRenderer entityNodeRenderer;
+
     @Inject
     public GetIndividualsActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
                                        @Nonnull @RootOntology OWLOntology rootOntology,
-                                       @Nonnull RenderingManager renderingManager) {
+                                       @Nonnull RenderingManager renderingManager,
+                                       @Nonnull EntityNodeRenderer entityNodeRenderer) {
         super(accessManager);
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
+        this.entityNodeRenderer = entityNodeRenderer;
     }
 
     @Nullable
@@ -80,27 +86,28 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
         }
         else {
             stream = rootOntology.getImportsClosure().stream()
-                            .flatMap(o -> o.getClassAssertionAxioms(action.getType()).stream())
-                            .map(OWLClassAssertionAxiom::getIndividual)
-                            .filter(OWLIndividual::isNamed)
-                            .map(OWLIndividual::asOWLNamedIndividual);
+                                 .flatMap(o -> o.getClassAssertionAxioms(action.getType()).stream())
+                                 .map(OWLClassAssertionAxiom::getIndividual)
+                                 .filter(OWLIndividual::isNamed)
+                                 .map(OWLIndividual::asOWLNamedIndividual);
         }
         Counter counter = new Counter();
-        List<OWLNamedIndividualData> individualsData = stream.peek(i -> counter.increment())
-                                                             .map(renderingManager::getRendering)
-                                                             .filter(i -> {
-                                                                 String searchString = action.getFilterString();
-                                                                 return searchString.isEmpty()
-                                                                         || StringUtils.containsIgnoreCase(
-                                                                                i.getBrowserText(),
-                                                                                searchString);
-                                                             })
-                                                             .distinct()
-                                                             .sorted()
-                                                             .collect(toList());
+        List<EntityNode> individualsData = stream.peek(i -> counter.increment())
+                                                 .map(renderingManager::getRendering)
+                                                 .filter(i -> {
+                                                     String searchString = action.getFilterString();
+                                                     return searchString.isEmpty()
+                                                             || StringUtils.containsIgnoreCase(
+                                                             i.getBrowserText(),
+                                                             searchString);
+                                                 })
+                                                 .distinct()
+                                                 .sorted()
+                                                 .map(ed -> entityNodeRenderer.render(ed.getEntity()))
+                                                 .collect(toList());
         PageRequest pageRequest = action.getPageRequest();
-        Pager<OWLNamedIndividualData> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
-        Page<OWLNamedIndividualData> page = pager.getPage(pageRequest.getPageNumber());
+        Pager<EntityNode> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
+        Page<EntityNode> page = pager.getPage(pageRequest.getPageNumber());
         OWLClassData type = renderingManager.getRendering(action.getType());
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",

@@ -133,11 +133,12 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     }
 
     public void setSelectionInterval(SelectionInterval interval) {
+        GWT.log("[ListBox] setSelectionInterval " + interval);
         SelectionInterval oldInterval = selectionInterval;
         selectionInterval = interval;
-        if(oldInterval.equals(selectionInterval)) {
-            return;
-        }
+//        if(oldInterval.equals(selectionInterval)) {
+//            return;
+//        }
         oldInterval.forEach(i -> setRowStyles(i, false));
         selectionInterval.forEach(i -> setRowStyles(i, true));
         SelectionEvent.fire(this, getSelection());
@@ -145,9 +146,11 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
 
     @UiHandler("focusPanel")
     public void handleClick(MouseUpEvent event) {
+        GWT.log("[ListBox] handleClick");
         event.preventDefault();
         event.stopPropagation();
         handleEventTarget(event.getClientY(), i -> {
+            GWT.log("[ListBox] handleClick for row " + i);
             SelectionInterval nextInterval;
             if(event.isShiftKeyDown()) {
                 nextInterval = selectionInterval.extend(i);
@@ -319,6 +322,7 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
 
         public void forEach(Consumer<Integer> consumer) {
             int from, to;
+            GWT.log("[ListBox][SelectionInterval] forEach " + this);
             if(startIndex <= endIndex) {
                 from = startIndex;
                 to = endIndex;
@@ -327,8 +331,8 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
                 from = endIndex;
                 to = startIndex;
             }
-            for(int i = from; i <= to; i++) {
-                GWT.log("[ListBox] forEach " + i);
+            for(int i = from; i > -1 && i < to + 1; i++) {
+                GWT.log("[ListBox][SelectionInterval] forEach " + i);
                 consumer.accept(i);
             }
         }
