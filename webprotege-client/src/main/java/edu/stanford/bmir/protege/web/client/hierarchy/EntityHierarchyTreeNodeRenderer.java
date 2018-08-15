@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -22,7 +22,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
-public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityHierarchyNode> {
+public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityNode> {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -38,7 +38,7 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
     }
 
     @Override
-    public String getHtmlRendering(EntityHierarchyNode node) {
+    public String getHtmlRendering(EntityNode node) {
         GWT.log("[EntityHierarchyTreeNodeRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
         sb.append("<div style='display: flex; flex-direction: row; align-items: center;'>");
@@ -101,7 +101,7 @@ public class EntityHierarchyTreeNodeRenderer implements TreeNodeRenderer<EntityH
     }
 
     @Nonnull
-    private DataResource getIcon(@Nonnull EntityHierarchyNode node) {
+    private DataResource getIcon(@Nonnull EntityNode node) {
         OWLEntity entity = node.getEntity();
         if (entity.isOWLClass()) {
             if (node.isDeprecated()) {

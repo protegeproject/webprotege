@@ -3,15 +3,13 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 30 Nov 2017
@@ -21,7 +19,7 @@ import java.util.Set;
 public abstract class GetHierarchyRootsResult implements Result {
 
     @NotNull
-    public static GetHierarchyRootsResult get(@Nonnull List<GraphNode<EntityHierarchyNode>> rootNodes) {
+    public static GetHierarchyRootsResult get(@Nonnull List<GraphNode<EntityNode>> rootNodes) {
         return new AutoValue_GetHierarchyRootsResult(ImmutableList.copyOf(rootNodes));
     }
 
@@ -31,5 +29,5 @@ public abstract class GetHierarchyRootsResult implements Result {
     }
 
     @Nonnull
-    public abstract ImmutableList<GraphNode<EntityHierarchyNode>> getRootNodes();
+    public abstract ImmutableList<GraphNode<EntityNode>> getRootNodes();
 }

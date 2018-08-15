@@ -4,10 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
-import javafx.scene.control.TreeView;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
@@ -33,7 +32,7 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
 
     private final List<HierarchyId> hierarchyIds = new ArrayList<>();
 
-    private final List<TreeWidget<EntityHierarchyNode, OWLEntity>> views = new ArrayList<>();
+    private final List<TreeWidget<EntityNode, OWLEntity>> views = new ArrayList<>();
 
     @Nonnull
     private HierarchyIdSelectedHandler hierarchyIdSelectedHandler = hierarchyId -> {};
@@ -57,7 +56,7 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
     @Override
     public void addHierarchy(@Nonnull HierarchyId hierarchyId,
                              @Nonnull String label,
-                             @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> view) {
+                             @Nonnull TreeWidget<EntityNode, OWLEntity> view) {
         switcher.addTab(checkNotNull(label));
         hierarchyIds.add(checkNotNull(hierarchyId));
         views.add(checkNotNull(view));
@@ -82,7 +81,7 @@ public class PropertyHierarchyPortletViewImpl extends Composite implements Prope
     }
 
     @Override
-    public Optional<TreeWidget<EntityHierarchyNode, OWLEntity>> getSelectedHierarchy() {
+    public Optional<TreeWidget<EntityNode, OWLEntity>> getSelectedHierarchy() {
         return Optional.of(views.get(switcher.getSelectedTab()));
     }
 }

@@ -11,8 +11,7 @@ import edu.stanford.bmir.protege.web.client.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.tag.EditEntityTagsUiAction;
-import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.impl.GraphTreeNodeModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -37,7 +36,7 @@ public class EntityHierarchyContextMenuPresenter {
     private final Messages messages;
 
     @Nonnull
-    private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
+    private final TreeWidget<EntityNode, OWLEntity> treeWidget;
 
     @Nonnull
     private final EntityHierarchyModel model;
@@ -62,7 +61,7 @@ public class EntityHierarchyContextMenuPresenter {
 
 
     public EntityHierarchyContextMenuPresenter(@Nonnull EntityHierarchyModel model,
-                                               @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+                                               @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                                @Nonnull UIAction createEntityAction,
                                                @Nonnull UIAction deleteEntityAction,
                                                @Provided @Nonnull MergeEntitiesUiAction mergeEntitiesAction,
@@ -149,7 +148,7 @@ public class EntityHierarchyContextMenuPresenter {
 
     private void handleRefresh() {
         Optional<OWLEntity> firstSelectedKey = treeWidget.getFirstSelectedKey();
-        treeWidget.setModel(GraphTreeNodeModel.create(model, EntityHierarchyNode::getEntity));
+        treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
         firstSelectedKey.ifPresent(sel -> treeWidget.revealTreeNodesForKey(sel, REVEAL_FIRST));
     }
 

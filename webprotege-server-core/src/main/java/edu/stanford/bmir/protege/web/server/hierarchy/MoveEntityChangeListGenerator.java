@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.msg.MessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -81,15 +81,15 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
 
     @Override
     public OntologyChangeList<Boolean> generateChanges(ChangeGenerationContext context) {
-        Path<EntityHierarchyNode> fromPath = action.getFromNodePath();
-        Optional<OWLEntity> move = fromPath.getLast().map(EntityHierarchyNode::getEntity);
+        Path<EntityNode> fromPath = action.getFromNodePath();
+        Optional<OWLEntity> move = fromPath.getLast().map(EntityNode::getEntity);
         if (!move.isPresent()) {
             return notMoved();
         }
-        Optional<EntityHierarchyNode> lastPredecessor = fromPath.getLastPredecessor();
+        Optional<EntityNode> lastPredecessor = fromPath.getLastPredecessor();
         OWLEntity moveEntity = move.get();
-        Optional<OWLEntity> fromParent = lastPredecessor.map(EntityHierarchyNode::getEntity);
-        Optional<OWLEntity> toParent = action.getToNodeParentPath().getLast().map(EntityHierarchyNode::getEntity);
+        Optional<OWLEntity> fromParent = lastPredecessor.map(EntityNode::getEntity);
+        Optional<OWLEntity> toParent = action.getToNodeParentPath().getLast().map(EntityNode::getEntity);
         if (isClassHierarchyMove(moveEntity, fromParent, toParent)) {
             return moveClass(moveEntity.asOWLClass(),
                              fromParent.map(OWLEntity::asOWLClass),
@@ -262,9 +262,9 @@ public class MoveEntityChangeListGenerator implements ChangeListGenerator<Boolea
     @Override
     public String getMessage(ChangeApplicationResult<Boolean> result) {
         String type = action.getFromNodePath().getLast().map(node -> node.getEntity().getEntityType().getPrintName().toLowerCase()).orElse("entity");
-        String entity = action.getFromNodePath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("");
-        String from = action.getFromNodePath().getLastPredecessor().map(EntityHierarchyNode::getBrowserText).orElse("root");
-        String to = action.getToNodeParentPath().getLast().map(EntityHierarchyNode::getBrowserText).orElse("root");
+        String entity = action.getFromNodePath().getLast().map(EntityNode::getBrowserText).orElse("");
+        String from = action.getFromNodePath().getLastPredecessor().map(EntityNode::getBrowserText).orElse("root");
+        String to = action.getToNodeParentPath().getLast().map(EntityNode::getBrowserText).orElse("root");
         return msg.format("Moved {0} {1} from {2} to {3}", type, entity, from, to);
     }
 }

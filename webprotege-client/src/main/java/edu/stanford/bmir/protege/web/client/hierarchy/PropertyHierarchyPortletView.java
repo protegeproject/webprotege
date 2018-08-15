@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -20,7 +20,7 @@ public interface PropertyHierarchyPortletView extends IsWidget {
 
     void addHierarchy(@Nonnull HierarchyId hierarchyId,
                       @Nonnull String label,
-                      @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> view);
+                      @Nonnull TreeWidget<EntityNode, OWLEntity> view);
 
     void setHierarchyIdSelectedHandler(@Nonnull HierarchyIdSelectedHandler hierarchySwitchedHandler);
 
@@ -28,6 +28,6 @@ public interface PropertyHierarchyPortletView extends IsWidget {
 
     Optional<HierarchyId> getSelectedHierarchyId();
 
-    Optional<TreeWidget<EntityHierarchyNode, OWLEntity>> getSelectedHierarchy();
+    Optional<TreeWidget<EntityNode, OWLEntity>> getSelectedHierarchy();
 
 }

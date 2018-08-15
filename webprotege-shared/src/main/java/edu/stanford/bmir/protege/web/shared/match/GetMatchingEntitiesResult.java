@@ -2,12 +2,9 @@ package edu.stanford.bmir.protege.web.shared.match;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 
@@ -21,10 +18,10 @@ import javax.annotation.Nonnull;
 public abstract class GetMatchingEntitiesResult implements Result {
 
     @Nonnull
-    public abstract Page<EntityHierarchyNode> getEntities();
+    public abstract Page<EntityNode> getEntities();
 
     @Nonnull
-    public static GetMatchingEntitiesResult get(@Nonnull Page<EntityHierarchyNode> entities) {
+    public static GetMatchingEntitiesResult get(@Nonnull Page<EntityNode> entities) {
         return new AutoValue_GetMatchingEntitiesResult(entities);
     }
 }

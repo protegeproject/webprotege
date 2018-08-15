@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.ProjectAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -19,17 +20,17 @@ public class MoveHierarchyNodeAction implements ProjectAction<MoveHierarchyNodeR
 
     private HierarchyId hierarchyId;
 
-    private Path<EntityHierarchyNode> fromNodePath;
+    private Path<EntityNode> fromNodePath;
 
-    private Path<EntityHierarchyNode> toNodeParentPath;
+    private Path<EntityNode> toNodeParentPath;
 
     private DropType dropType;
 
 
     public MoveHierarchyNodeAction(@Nonnull ProjectId projectId,
                                    @Nonnull HierarchyId hierarchyId,
-                                   @Nonnull Path<EntityHierarchyNode> fromNodePath,
-                                   @Nonnull Path<EntityHierarchyNode> toNodeParentPath,
+                                   @Nonnull Path<EntityNode> fromNodePath,
+                                   @Nonnull Path<EntityNode> toNodeParentPath,
                                    @Nonnull DropType dropType) {
         this.projectId = checkNotNull(projectId);
         this.hierarchyId = checkNotNull(hierarchyId);
@@ -54,12 +55,12 @@ public class MoveHierarchyNodeAction implements ProjectAction<MoveHierarchyNodeR
     }
 
     @Nonnull
-    public Path<EntityHierarchyNode> getFromNodePath() {
+    public Path<EntityNode> getFromNodePath() {
         return fromNodePath;
     }
 
     @Nonnull
-    public Path<EntityHierarchyNode> getToNodeParentPath() {
+    public Path<EntityNode> getToNodeParentPath() {
         return toNodeParentPath;
     }
 

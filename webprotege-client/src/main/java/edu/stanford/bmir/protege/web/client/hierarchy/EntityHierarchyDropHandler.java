@@ -2,14 +2,13 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.hierarchy.MoveHierarchyNodeAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeNodeDropHandler;
 import edu.stanford.protege.gwt.graphtree.shared.DropType;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.annotation.Nonnull;
@@ -21,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 8 Dec 2017
  */
-public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHierarchyNode> {
+public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityNode> {
 
     @Nonnull
     private final ProjectId projectId;
@@ -45,8 +44,8 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHie
     }
 
     @Override
-    public boolean isDropPossible(@Nonnull Path<EntityHierarchyNode> nodePath,
-                                  @Nonnull Path<EntityHierarchyNode> targetPath,
+    public boolean isDropPossible(@Nonnull Path<EntityNode> nodePath,
+                                  @Nonnull Path<EntityNode> targetPath,
                                   @Nonnull DropType dropType) {
         if(!hierarchyId.isPresent()) {
             return false;
@@ -59,14 +58,14 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHie
     }
 
     @Override
-    public boolean isTextDropPossible(@Nonnull Path<EntityHierarchyNode> path,
+    public boolean isTextDropPossible(@Nonnull Path<EntityNode> path,
                                       @Nonnull DropType dropType) {
         return false;
     }
 
     @Override
-    public void handleDrop(@Nonnull Path<EntityHierarchyNode> nodePath,
-                           @Nonnull Path<EntityHierarchyNode> targetPath,
+    public void handleDrop(@Nonnull Path<EntityNode> nodePath,
+                           @Nonnull Path<EntityNode> targetPath,
                            @Nonnull DropType dropType,
                            @Nonnull DropEndHandler dropEndHandler) {
         GWT.log("[EntityHierarchyDropHandler] handleDrop. From: " + nodePath + " To: " + nodePath);
@@ -78,7 +77,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHie
             dropEndHandler.handleDropCancelled();
             return;
         }
-        if(nodePath.getLast().map(EntityHierarchyNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
+        if(nodePath.getLast().map(EntityNode::getEntity).map(OWLObject::isTopEntity).orElse(false)) {
             dropEndHandler.handleDropCancelled();
             return;
         }
@@ -104,7 +103,7 @@ public class EntityHierarchyDropHandler implements TreeNodeDropHandler<EntityHie
 
     @Override
     public void handleTextDrop(@Nonnull String s,
-                               @Nonnull Path<EntityHierarchyNode> path,
+                               @Nonnull Path<EntityNode> path,
                                @Nonnull DropType dropType,
                                @Nonnull DropEndHandler dropEndHandler) {
 

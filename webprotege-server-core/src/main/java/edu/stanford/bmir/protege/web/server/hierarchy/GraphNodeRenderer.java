@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.protege.gwt.graphtree.shared.graph.GraphNode;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -24,12 +24,12 @@ public class GraphNodeRenderer {
 
     /**
      * Render the specified entity into a {@link GraphNode} whose user object
-     * is and {@link EntityHierarchyNode}.
+     * is and {@link EntityNode}.
      * @param entity The entity to be rendered.
      * @param hierarchyProvider A hierarchy that is used to provide information.
      */
-    public GraphNode<EntityHierarchyNode> toGraphNode(@Nonnull OWLEntity entity,
-                                                      @Nonnull HierarchyProvider<OWLEntity> hierarchyProvider) {
+    public GraphNode<EntityNode> toGraphNode(@Nonnull OWLEntity entity,
+                                             @Nonnull HierarchyProvider<OWLEntity> hierarchyProvider) {
         return new GraphNode<>(renderer.render(entity), hierarchyProvider.getChildren(entity).isEmpty());
     }
 }

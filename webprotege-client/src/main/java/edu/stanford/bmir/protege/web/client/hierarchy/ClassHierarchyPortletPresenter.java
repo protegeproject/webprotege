@@ -13,8 +13,8 @@ import edu.stanford.bmir.protege.web.client.search.SearchDialogController;
 import edu.stanford.bmir.protege.web.client.tag.TagVisibilityPresenter;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
@@ -76,7 +76,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
     private final HierarchyActionStatePresenter actionStatePresenter;
 
     @Nonnull
-    private final TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget;
+    private final TreeWidget<EntityNode, OWLEntity> treeWidget;
 
     @Nonnull
     private final EntityHierarchyDropHandler dropHandler;
@@ -100,7 +100,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull Messages messages,
                                           @Nonnull EntityHierarchyModel hierarchyModel,
                                           @Nonnull EntityHierarchyContextMenuPresenterFactory contextMenuPresenterFactory,
-                                          @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+                                          @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget,
                                           @Nonnull EntityHierarchyTreeNodeRenderer renderer,
                                           @Nonnull CreateEntityPresenter createEntityPresenter,
                                           @Nonnull DeleteEntityPresenter deleteEntityPresenter,

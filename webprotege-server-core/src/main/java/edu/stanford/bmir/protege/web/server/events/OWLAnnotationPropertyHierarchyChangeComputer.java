@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.server.events;
 import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.EntityType;
@@ -13,12 +13,9 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.ANNOTATION_PROPERTY_HIERARCHY;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 
 /**
@@ -41,7 +38,7 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
 
     @Override
     protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
-        RemoveEdge<EntityHierarchyNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
+        RemoveEdge<EntityNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
                 new GraphNode<>(renderer.render(parent)),
                 new GraphNode<>(renderer.render(child))
         ));
@@ -52,7 +49,7 @@ public class OWLAnnotationPropertyHierarchyChangeComputer extends HierarchyChang
 
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
-        AddEdge<EntityHierarchyNode> addEdge = new AddEdge<>(new GraphEdge<>(
+        AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
                 new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
                 new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
         ));

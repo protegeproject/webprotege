@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyPathsToRootResult;
 import edu.stanford.protege.gwt.graphtree.shared.Path;
@@ -61,7 +61,7 @@ public class GetHierarchyPathsToRootActionHandler extends AbstractProjectActionH
         Optional<HierarchyProvider<OWLEntity>> hierarchyProvider = hierarchyProviderMapper.getHierarchyProvider(action.getHierarchyId());
         return hierarchyProvider.map(hp -> {
             Set<List<OWLEntity>> pathsToRoot = hp.getPathsToRoot(action.getEntity());
-            List<Path<GraphNode<EntityHierarchyNode>>> result =
+            List<Path<GraphNode<EntityNode>>> result =
                     pathsToRoot.stream()
                                .map(pathList -> pathList.stream()
                                                         .map(e -> nodeRenderer.toGraphNode(e, hp))

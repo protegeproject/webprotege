@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyRootsResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -19,7 +19,6 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
-import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
@@ -61,10 +60,10 @@ public class GetHierarchyRootsActionHandler extends AbstractProjectActionHandler
         HierarchyId hierarchyId = action.getHierarchyId();
         return hierarchyProviderMapper.getHierarchyProvider(hierarchyId).map(hierarchyProvider -> {
             Set<OWLEntity> roots = hierarchyProvider.getRoots();
-            List<GraphNode<EntityHierarchyNode>> rootNodes =
+            List<GraphNode<EntityNode>> rootNodes =
                     roots.stream()
                          .map(rootEntity -> {
-                             EntityHierarchyNode rootNode = renderer.render(rootEntity);
+                             EntityNode rootNode = renderer.render(rootEntity);
                              return new GraphNode<>(rootNode, hierarchyProvider.getChildren(rootEntity).isEmpty());
                          })
                          .sorted(comparing(node -> node.getUserObject().getBrowserText()))

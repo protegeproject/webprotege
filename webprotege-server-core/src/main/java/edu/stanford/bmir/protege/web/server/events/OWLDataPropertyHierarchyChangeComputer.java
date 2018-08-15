@@ -5,14 +5,13 @@ import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyChangeComputer;
 import edu.stanford.bmir.protege.web.server.hierarchy.HierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyChangedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.shared.graph.*;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -38,7 +37,7 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
 
     @Override
     protected Collection<? extends ProjectEvent<?>> createRemovedEvents(OWLDataProperty child, OWLDataProperty parent) {
-        RemoveEdge<EntityHierarchyNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
+        RemoveEdge<EntityNode> removeEdge = new RemoveEdge<>(new GraphEdge<>(
                 new GraphNode<>(renderer.render(parent)),
                 new GraphNode<>(renderer.render(child))
         ));
@@ -49,7 +48,7 @@ public class OWLDataPropertyHierarchyChangeComputer extends HierarchyChangeCompu
 
     @Override
     protected Collection<? extends ProjectEvent<?>> createAddedEvents(OWLDataProperty child, OWLDataProperty parent) {
-        AddEdge<EntityHierarchyNode> addEdge = new AddEdge<>(new GraphEdge<>(
+        AddEdge<EntityNode> addEdge = new AddEdge<>(new GraphEdge<>(
                 new GraphNode<>(renderer.render(parent), hierarchyProvider.getChildren(parent).isEmpty()),
                 new GraphNode<>(renderer.render(child), hierarchyProvider.getChildren(child).isEmpty())
         ));

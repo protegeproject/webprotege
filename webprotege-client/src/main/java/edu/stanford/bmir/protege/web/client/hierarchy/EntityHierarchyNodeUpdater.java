@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.issues.CommentPostedEvent;
 import edu.stanford.bmir.protege.web.shared.issues.DiscussionThreadStatusChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -69,7 +68,7 @@ public class EntityHierarchyNodeUpdater {
             throw createHierarchyModelIsNullException();
         }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-            EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
+            EntityNode updatedNode = EntityNode.get(
                     node.getEntity(),
                     event.getNewBrowserText(),
                     event.getShortForms(),
@@ -103,11 +102,11 @@ public class EntityHierarchyNodeUpdater {
         });
     }
 
-    private void updateWatches(EntityHierarchyNode node, Set<Watch> updatedWatches) {
+    private void updateWatches(EntityNode node, Set<Watch> updatedWatches) {
         if (model == null) {
             throw createHierarchyModelIsNullException();
         }
-        EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
+        EntityNode updatedNode = EntityNode.get(
                 node.getEntity(),
                 node.getBrowserText(),
                 node.getShortForms(),
@@ -124,7 +123,7 @@ public class EntityHierarchyNodeUpdater {
         }
         event.getEntity().ifPresent(entity -> {
             model.getHierarchyNode(entity.getEntity()).ifPresent(node -> {
-                EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
+                EntityNode updatedNode = EntityNode.get(
                         node.getEntity(),
                         node.getBrowserText(),
                         node.getShortForms(),
@@ -143,7 +142,7 @@ public class EntityHierarchyNodeUpdater {
         }
         event.getEntity().ifPresent(entity -> {
             model.getHierarchyNode(entity).ifPresent(node -> {
-                EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
+                EntityNode updatedNode = EntityNode.get(
                         node.getEntity(),
                         node.getBrowserText(),
                         node.getShortForms(),
@@ -161,7 +160,7 @@ public class EntityHierarchyNodeUpdater {
             throw createHierarchyModelIsNullException();
         }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-            EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
+            EntityNode updatedNode = EntityNode.get(
                     node.getEntity(),
                     node.getBrowserText(),
                     node.getShortForms(),
@@ -178,7 +177,7 @@ public class EntityHierarchyNodeUpdater {
             throw createHierarchyModelIsNullException();
         }
         model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
-            EntityHierarchyNode updatedNode = EntityHierarchyNode.get(
+            EntityNode updatedNode = EntityNode.get(
                     node.getEntity(),
                     node.getBrowserText(),
                     node.getShortForms(),

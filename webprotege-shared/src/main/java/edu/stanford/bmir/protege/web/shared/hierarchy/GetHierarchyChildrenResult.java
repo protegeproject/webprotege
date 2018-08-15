@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
 
 /**
@@ -9,9 +10,9 @@ import edu.stanford.protege.gwt.graphtree.shared.graph.SuccessorMap;
  */
 public class GetHierarchyChildrenResult implements Result {
 
-    private SuccessorMap<EntityHierarchyNode> children;
+    private SuccessorMap<EntityNode> children;
 
-    public GetHierarchyChildrenResult(SuccessorMap<EntityHierarchyNode> children) {
+    public GetHierarchyChildrenResult(SuccessorMap<EntityNode> children) {
         this.children = children;
     }
 
@@ -19,7 +20,7 @@ public class GetHierarchyChildrenResult implements Result {
     private GetHierarchyChildrenResult() {
     }
 
-    public SuccessorMap<EntityHierarchyNode> getChildren() {
+    public SuccessorMap<EntityNode> getChildren() {
         return children;
     }
 }

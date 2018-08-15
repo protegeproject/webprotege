@@ -7,10 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.hierarchy.EntityHierarchyNodeRenderer;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
@@ -92,10 +91,10 @@ public class GetMatchingEntitiesActionHandler extends AbstractProjectActionHandl
                     action.getProjectId(),
                     executionContext.getUserId(),
                     stopwatch.elapsed(TimeUnit.MILLISECONDS));
-        Optional<Page<EntityHierarchyNode>> entityHierarchyNodes = result.map(pg -> {
-            List<EntityHierarchyNode> nodes = pg.getPageElements().stream()
-                                                .map(ed -> nodeRenderer.render(ed.getEntity()))
-                                                .collect(toList());
+        Optional<Page<EntityNode>> entityHierarchyNodes = result.map(pg -> {
+            List<EntityNode> nodes = pg.getPageElements().stream()
+                                       .map(ed -> nodeRenderer.render(ed.getEntity()))
+                                       .collect(toList());
             return new Page<>(pg.getPageNumber(),
                               pg.getPageCount(),
                               nodes,

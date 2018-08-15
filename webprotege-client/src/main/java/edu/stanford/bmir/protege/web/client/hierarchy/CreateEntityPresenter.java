@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateEntitiesInHierarchyAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode;
@@ -40,7 +40,7 @@ public class CreateEntityPresenter {
     }
 
     public void createEntities(@Nonnull EntityType<?> entityType,
-                               TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget,
+                               TreeWidget<EntityNode, OWLEntity> treeWidget,
                                @Nonnull ActionFactory actionFactory) {
         dialogController.clear();
         dialogController.setEntityType(entityType);
@@ -52,7 +52,7 @@ public class CreateEntityPresenter {
 
     private void handleCreateEntities(@Nonnull String enteredText,
                                       @Nonnull ActionFactory actionFactory,
-                                      @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
+                                      @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
 
         CreateEntitiesInHierarchyAction<?, ?> action = actionFactory.createAction(projectId,
                                                                                   enteredText);

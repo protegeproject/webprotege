@@ -43,7 +43,7 @@ import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.tag.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -159,7 +159,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    TreeWidget<EntityHierarchyNode, OWLEntity> providesEntityHierarchyTree() {
+    TreeWidget<EntityNode, OWLEntity> providesEntityHierarchyTree() {
         return new TreeWidget<>();
     }
 

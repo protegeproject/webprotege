@@ -10,11 +10,8 @@ import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.hierarchy.EntityHierarchyTreeNodeRenderer;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.EntityType;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -56,7 +53,7 @@ public class MatchResult extends Composite {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    public void setEntityData(EntityHierarchyNode node) {
+    public void setEntityData(EntityNode node) {
         String html = renderer.getHtmlRendering(node);
         displayNameField.getElement().setInnerHTML(html);
     }

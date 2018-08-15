@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.hierarchy;
+package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -24,22 +23,22 @@ import java.util.Set;
  */
 @AutoValue
 @GwtCompatible(serializable = true)
-public abstract class EntityHierarchyNode implements IsSerializable, Serializable, Comparable<EntityHierarchyNode>, HasTextRendering {
+public abstract class EntityNode implements IsSerializable, Serializable, Comparable<EntityNode>, HasTextRendering {
 
-    public static EntityHierarchyNode get(@Nonnull OWLEntity entity,
-                                          @Nonnull String browserText,
-                                          @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms,
-                                          boolean deprecated,
-                                          @Nonnull Set<Watch> watches,
-                                          int openCommentCount,
-                                          Collection<Tag> tags) {
-        return new AutoValue_EntityHierarchyNode(entity,
-                                                 browserText,
-                                                 ImmutableSet.copyOf(tags),
-                                                 deprecated,
-                                                 ImmutableSet.copyOf(watches),
-                                                 openCommentCount,
-                                                 shortForms);
+    public static EntityNode get(@Nonnull OWLEntity entity,
+                                 @Nonnull String browserText,
+                                 @Nonnull ImmutableMap<DictionaryLanguage, String> shortForms,
+                                 boolean deprecated,
+                                 @Nonnull Set<Watch> watches,
+                                 int openCommentCount,
+                                 Collection<Tag> tags) {
+        return new AutoValue_EntityNode(entity,
+                                        browserText,
+                                        ImmutableSet.copyOf(tags),
+                                        deprecated,
+                                        ImmutableSet.copyOf(watches),
+                                        openCommentCount,
+                                        shortForms);
     }
 
     @Nonnull
@@ -86,7 +85,7 @@ public abstract class EntityHierarchyNode implements IsSerializable, Serializabl
     public abstract ImmutableMap<DictionaryLanguage, String> getShortForms();
 
     @Override
-    public int compareTo(EntityHierarchyNode o) {
+    public int compareTo(EntityNode o) {
         return this.getBrowserText().compareToIgnoreCase(o.getBrowserText());
     }
 

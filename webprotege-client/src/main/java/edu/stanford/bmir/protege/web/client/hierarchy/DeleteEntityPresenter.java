@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -45,8 +45,8 @@ public class DeleteEntityPresenter {
      * Start the deletion of the entities represented by the selected nodes in the specified tree.
      * @param treeWidget The tree.
      */
-    public void start(@Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
-        final Optional<EntityHierarchyNode> currentSelection = treeWidget.getFirstSelectedUserObject();
+    public void start(@Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
+        final Optional<EntityNode> currentSelection = treeWidget.getFirstSelectedUserObject();
         currentSelection.ifPresent(sel -> {
             OWLEntity entity = sel.getEntity();
             String browserText = sel.getBrowserText();
@@ -72,7 +72,7 @@ public class DeleteEntityPresenter {
     }
 
     private void deleteEntity(@Nonnull OWLEntity cls,
-                              @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
+                              @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
         treeWidget.moveSelectionDown();
         dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, singleton(cls)), deleteEntityResult -> {});
     }

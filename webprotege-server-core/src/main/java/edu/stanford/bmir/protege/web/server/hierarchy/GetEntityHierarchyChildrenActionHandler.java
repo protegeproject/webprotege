@@ -4,9 +4,8 @@ import edu.stanford.bmir.protege.web.server.access.AccessManager;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
-import edu.stanford.bmir.protege.web.server.util.AlphaNumericStringComparator;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenAction;
 import edu.stanford.bmir.protege.web.shared.hierarchy.GetHierarchyChildrenResult;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -49,7 +48,7 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
     }
 
     static GetHierarchyChildrenResult emptyResult() {
-        return new GetHierarchyChildrenResult(SuccessorMap.<EntityHierarchyNode>builder().build());
+        return new GetHierarchyChildrenResult(SuccessorMap.<EntityNode>builder().build());
     }
 
     @Nonnull
@@ -73,8 +72,8 @@ public class GetEntityHierarchyChildrenActionHandler extends AbstractProjectActi
             return emptyResult();
         }
         OWLEntity parent = action.getEntity();
-        GraphNode<EntityHierarchyNode> parentNode = nodeRenderer.toGraphNode(parent, hierarchyProvider.get());
-        SuccessorMap.Builder<EntityHierarchyNode> successorMap = SuccessorMap.builder();
+        GraphNode<EntityNode> parentNode = nodeRenderer.toGraphNode(parent, hierarchyProvider.get());
+        SuccessorMap.Builder<EntityNode> successorMap = SuccessorMap.builder();
         hierarchyProvider.get().getChildren(parent).stream()
                          // Filter out deprecated entities that are displayed under owl:Thing, owl:topObjectProperty
                          // owl:topDataProperty

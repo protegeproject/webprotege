@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.match;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
@@ -15,8 +13,8 @@ import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorViewImpl;
 import edu.stanford.bmir.protege.web.client.renderer.PrimitiveDataIconProvider;
 import edu.stanford.bmir.protege.web.client.ui.ScrollTracker;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.perspective.EntityTypePerspectiveMapper;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -119,7 +117,7 @@ public class QueryPortletViewImpl extends Composite implements QueryPortletView 
     }
 
     @Override
-    public void setResult(@Nonnull Page<EntityHierarchyNode> result) {
+    public void setResult(@Nonnull Page<EntityNode> result) {
         resultsCount.setText(NUMBER_FORMAT.format(result.getTotalElements()) + " results");
         resultsContainer.clear();
         result.getPageElements().stream()

@@ -3,13 +3,10 @@ package edu.stanford.bmir.protege.web.client.match;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
-import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * Matthew Horridge
@@ -31,5 +28,5 @@ public interface QueryPortletView extends IsWidget, HasPagination {
 
     void clearResults();
 
-    void setResult(@Nonnull Page<EntityHierarchyNode> result);
+    void setResult(@Nonnull Page<EntityNode> result);
 }

@@ -15,8 +15,8 @@ import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateAnnotationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateObjectPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.hierarchy.EntityHierarchyNode;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
@@ -74,13 +74,13 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
     private final EntityHierarchyModel annotationPropertyHierarchyModel;
 
     @Nonnull
-    private final TreeWidget<EntityHierarchyNode, OWLEntity> objectPropertyTree;
+    private final TreeWidget<EntityNode, OWLEntity> objectPropertyTree;
 
     @Nonnull
-    private final TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree;
+    private final TreeWidget<EntityNode, OWLEntity> dataPropertyTree;
 
     @Nonnull
-    private final TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree;
+    private final TreeWidget<EntityNode, OWLEntity> annotationPropertyTree;
 
     @Nonnull
     private final EntityHierarchyTreeNodeRenderer renderer;
@@ -124,9 +124,9 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                              @Nonnull EntityHierarchyModel objectPropertyHierarchyModel,
                                              @Nonnull EntityHierarchyModel dataPropertyHierarchyModel,
                                              @Nonnull EntityHierarchyModel annotationPropertyHierarchyModel,
-                                             @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> objectPropertyTree,
-                                             @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> dataPropertyTree,
-                                             @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> annotationPropertyTree,
+                                             @Nonnull TreeWidget<EntityNode, OWLEntity> objectPropertyTree,
+                                             @Nonnull TreeWidget<EntityNode, OWLEntity> dataPropertyTree,
+                                             @Nonnull TreeWidget<EntityNode, OWLEntity> annotationPropertyTree,
                                              @Nonnull EntityHierarchyTreeNodeRenderer renderer,
                                              @Nonnull CreateEntityPresenter createEntityPresenter,
                                              @Nonnull DeleteEntityPresenter deleteEntityPresenter,
@@ -214,7 +214,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                            @Nonnull String label,
                            @Nonnull WebProtegeEventBus eventBus,
                            @Nonnull EntityHierarchyModel model,
-                           @Nonnull TreeWidget<EntityHierarchyNode, OWLEntity> treeWidget) {
+                           @Nonnull TreeWidget<EntityNode, OWLEntity> treeWidget) {
         model.start(eventBus, hierarchyId);
         eventBus.addProjectEventHandler(getProjectId(),
                                         DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
@@ -223,7 +223,7 @@ public class PropertyHierarchyPortletPresenter extends AbstractWebProtegePortlet
                                             treeWidget.setRenderer(renderer);
                                         });
         treeWidget.setRenderer(renderer);
-        treeWidget.setModel(GraphTreeNodeModel.create(model, EntityHierarchyNode::getEntity));
+        treeWidget.setModel(GraphTreeNodeModel.create(model, EntityNode::getEntity));
         treeWidget.addSelectionChangeHandler(this::handleSelectionChanged);
         contextMenuPresenterFactory.create(model,
                                            treeWidget,
