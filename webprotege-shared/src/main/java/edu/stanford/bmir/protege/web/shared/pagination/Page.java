@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.pagination;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
@@ -8,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -38,7 +41,7 @@ public class Page<T> implements Serializable, Iterable<T>, IsSerializable {
         checkArgument(pageCount > 0, "pageCount must be greater than 0");
         this.pageCount = pageCount;
         checkArgument(!(pageNumber > pageCount));
-        this.pageElements = new ArrayList<T>(checkNotNull(pageElements));
+        this.pageElements = ImmutableList.copyOf(checkNotNull(pageElements));
         checkArgument(totalElements > -1);
         this.totalElements = totalElements;
     }
@@ -66,5 +69,14 @@ public class Page<T> implements Serializable, Iterable<T>, IsSerializable {
     @Override
     public Iterator<T> iterator() {
         return getPageElements().iterator();
+    }
+
+    public <E> Page<E> transform(Function<T, E> function) {
+        return new Page<>(pageNumber,
+                          pageCount,
+                          pageElements.stream()
+                                      .map(function)
+                                      .collect(toImmutableList()),
+                          totalElements);
     }
 }

@@ -5,11 +5,14 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
@@ -27,12 +30,12 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.server.logging.Markers.BROWSING;
+import static edu.stanford.bmir.protege.web.server.pagination.PageCollector.toPage;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.VIEW_PROJECT;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Author: Matthew Horridge<br>
@@ -92,22 +95,21 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                                  .map(OWLIndividual::asOWLNamedIndividual);
         }
         Counter counter = new Counter();
-        List<EntityNode> individualsData = stream.peek(i -> counter.increment())
-                                                 .map(renderingManager::getRendering)
-                                                 .filter(i -> {
-                                                     String searchString = action.getFilterString();
-                                                     return searchString.isEmpty()
-                                                             || StringUtils.containsIgnoreCase(
-                                                             i.getBrowserText(),
-                                                             searchString);
-                                                 })
-                                                 .distinct()
-                                                 .sorted()
-                                                 .map(ed -> entityNodeRenderer.render(ed.getEntity()))
-                                                 .collect(toList());
         PageRequest pageRequest = action.getPageRequest();
-        Pager<EntityNode> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
-        Page<EntityNode> page = pager.getPage(pageRequest.getPageNumber());
+        Optional<Page<OWLNamedIndividual>> page = stream.peek(i -> counter.increment())
+                                                   .map(renderingManager::getRendering)
+                                                   .filter(i -> {
+                                                       String searchString = action.getFilterString();
+                                                       return searchString.isEmpty()
+                                                               || StringUtils.containsIgnoreCase(
+                                                               i.getBrowserText(),
+                                                               searchString);
+                                                   })
+                                                   .distinct()
+                                                   .sorted()
+                                                   .map(OWLNamedIndividualData::getEntity)
+                                                   .collect(toPage(pageRequest.getPageNumber(),
+                                                                   pageRequest.getPageSize()));
         OWLClassData type = renderingManager.getRendering(action.getType());
         logger.info(BROWSING,
                     "{} {} retrieved instances of {} ({})",
@@ -115,7 +117,8 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
                     executionContext.getUserId(),
                     action.getType(),
                     renderingManager.getRendering(action.getType()).getBrowserText());
-        return new GetIndividualsResult(type, page, counter.getCount(), individualsData.size());
+        Page<EntityNode> entityNodes = page.map(pg -> pg.transform(entityNodeRenderer::render)).orElse(Page.emptyPage());
+        return new GetIndividualsResult(type, entityNodes, counter.getCount(), (int) entityNodes.getTotalElements());
     }
 
     @Nonnull
