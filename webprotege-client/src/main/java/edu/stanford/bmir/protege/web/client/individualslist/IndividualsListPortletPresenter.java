@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
@@ -40,6 +41,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         presenter.start(portletUi, eventBus);
         presenter.setEntityDisplay(this);
         presenter.setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
+        handleAfterSetEntity(Optional.empty());
     }
 
     @Override
@@ -55,7 +57,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
             presenter.setType(selectedClass.get());
         }
         else {
-            presenter.clearType();
+            presenter.setType(DataFactory.getOWLThing());
         }
     }
 }
