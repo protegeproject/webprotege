@@ -3,20 +3,18 @@
     <ui:style>
         .listBox {
             /*border: 1px solid cyan;*/
-            position: relative;
+            /*position: relative;*/
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            display: flex;
         }
         .focusPanel {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            box-sizing: border-box;
-            overflow: auto;
+            flex-grow: 1;
+            flex-shrink: 1;
+            align-items: stretch;
+            margin: 1px;
         }
         .contentHolder {
             display: flex;

@@ -10,11 +10,13 @@
         .main {
             display: flex;
             flex-direction: column;
+            align-items: stretch;
         }
         .searchBox {
             flex-grow: 0;
             flex-shrink: 0;
             padding: 2px;
+            margin: 1px;
         }
         .statusLabel {
             flex-grow: 0;
@@ -35,7 +37,6 @@
     <g:HTMLPanel addStyleNames="{style.main}">
         <progress:BusyViewImpl ui:field="busyView" visible="false"/>
         <text:PlaceholderTextBox ui:field="searchBox" addStyleNames="{style.searchBox}" placeholder="{msg.enterSearchStringToFilterList}"/>
-        <!--<entitieslist:EntitiesListImpl ui:field="individualsList" addStyleNames="{style.individualsList}"/>-->
         <list:ListBox ui:field="individualsList" addStyleNames="{style.individualsList}"/>
         <g:HTMLPanel addStyleNames="{style.bottomBar}">
             <g:Label ui:field="statusLabel" addStyleNames="{style.statusLabel}"/>
