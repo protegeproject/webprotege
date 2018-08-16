@@ -50,7 +50,7 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
 
     private SelectionInterval selectionInterval = SelectionInterval.emptySelection();
 
-    private ImmutableList<E> elements = ImmutableList.of();
+    private List<E> elements = new ArrayList<>();
 
     private Function<E, K> keyExtractor = (element) -> null;
 
@@ -104,14 +104,14 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
 
 
     public void updateElement(E element) {
-        int index = 0;
-        for(E e : elements) {
+        int elementCount = elements.size();
+        for(int index = 0; index < elementCount; index++) {
+            E e = elements.get(index);
             if(keyExtractor.apply(e).equals(keyExtractor.apply(element))) {
                 contentHolder.remove(index);
                 contentHolder.insert(renderElement(index, element), index);
-                break;
+                elements.set(index, element);
             }
-            index++;
         }
     }
 
