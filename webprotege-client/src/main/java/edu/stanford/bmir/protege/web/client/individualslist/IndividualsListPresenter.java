@@ -48,7 +48,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     private static final int SEARCH_DELAY = 700;
 
-    private static final int PAGE_SIZE = 500;
+    private static final int PAGE_SIZE = 200;
 
     private final DispatchServiceManager dispatchServiceManager;
 
