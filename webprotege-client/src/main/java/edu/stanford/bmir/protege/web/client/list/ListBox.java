@@ -136,9 +136,9 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
         GWT.log("[ListBox] setSelectionInterval " + interval);
         SelectionInterval oldInterval = selectionInterval;
         selectionInterval = interval;
-//        if(oldInterval.equals(selectionInterval)) {
-//            return;
-//        }
+        if(oldInterval.equals(selectionInterval)) {
+            return;
+        }
         oldInterval.forEach(i -> setRowStyles(i, false));
         selectionInterval.forEach(i -> setRowStyles(i, true));
         SelectionEvent.fire(this, getSelection());
