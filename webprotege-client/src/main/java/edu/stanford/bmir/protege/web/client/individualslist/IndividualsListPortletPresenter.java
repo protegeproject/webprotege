@@ -3,11 +3,13 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
+import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.tag.EntityTagsChangedEvent;
 import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -43,7 +45,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
     @Override
     public void startPortlet(PortletUi portletUi, WebProtegeEventBus eventBus) {
         presenter.installActions(portletUi);
-        presenter.start(portletUi);
+        presenter.start(portletUi, eventBus);
         presenter.setEntityDisplay(this);
         presenter.setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
         eventBus.addProjectEventHandler(getProjectId(),
