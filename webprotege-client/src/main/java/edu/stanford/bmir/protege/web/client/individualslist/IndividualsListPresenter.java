@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
@@ -14,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -69,6 +69,9 @@ public class IndividualsListPresenter {
 
     private final UIAction deleteAction;
 
+    @Nonnull
+    private final CreateEntitiesDialogController controller;
+
     private Optional<OWLClass> currentType = Optional.empty();
 
     private EntityDisplay entityDisplay = entityData -> { };
@@ -79,9 +82,6 @@ public class IndividualsListPresenter {
             updateList();
         }
     };
-
-    @Nonnull
-    private final CreateEntitiesDialogController controller;
 
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
@@ -150,11 +150,13 @@ public class IndividualsListPresenter {
     }
 
     private void updateList() {
+        Optional<PageRequest> pageRequest = Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
+                                                                                        PAGE_SIZE));
+        OWLClass type = currentType.orElse(DataFactory.getOWLThing());
         GetIndividualsAction action = new GetIndividualsAction(projectId,
-                currentType.orElse(DataFactory.getOWLThing()),
-                view.getSearchString(),
-                Optional.of(PageRequest.requestPageWithSize(view.getPageNumber(),
-                        PAGE_SIZE)));
+                                                               type,
+                                                               view.getSearchString(),
+                                                               pageRequest);
         dispatchServiceManager.execute(action, view, result -> {
             view.setListData(result.getIndividuals());
             view.setStatusMessageVisible(true);
@@ -217,21 +219,21 @@ public class IndividualsListPresenter {
             subMessage = "Are you sure you want to delete " + sel.size() + " individuals?";
         }
         MessageBox.showConfirmBox(title,
-                subMessage,
-                CANCEL, DELETE,
-                this::deleteSelectedIndividuals,
-                CANCEL);
+                                  subMessage,
+                                  CANCEL, DELETE,
+                                  this::deleteSelectedIndividuals,
+                                  CANCEL);
     }
 
 
     private void deleteSelectedIndividuals() {
         Collection<EntityNode> selection = view.getSelectedIndividuals();
         Set<OWLEntity> entities = view.getSelectedIndividuals().stream()
-                .map(n -> n.getEntity())
-                .collect(toSet());
+                                      .map(n -> n.getEntity())
+                                      .collect(toSet());
         dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, entities),
-                view,
-                result -> updateList());
+                                       view,
+                                       result -> updateList());
     }
 
     private void updateButtonStates() {
