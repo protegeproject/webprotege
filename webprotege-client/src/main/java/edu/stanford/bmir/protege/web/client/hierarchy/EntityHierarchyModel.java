@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNodeIndex;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -33,7 +34,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     private final ProjectId projectId;
 
     @Nonnull
-    private final EntityHierarchyNodeUpdater hierarchyNodeUpdater;
+    private final EntityNodeUpdater hierarchyNodeUpdater;
 
     private final List<GraphModelChangedHandler<EntityNode>> handlers = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, 
     @Inject
     public EntityHierarchyModel(@Nonnull DispatchServiceManager dispatchServiceManager,
                                 @Nonnull ProjectId projectId,
-                                @Nonnull EntityHierarchyNodeUpdater hierarchyNodeUpdater) {
+                                @Nonnull EntityNodeUpdater hierarchyNodeUpdater) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.projectId = checkNotNull(projectId);
         this.hierarchyNodeUpdater = checkNotNull(hierarchyNodeUpdater);

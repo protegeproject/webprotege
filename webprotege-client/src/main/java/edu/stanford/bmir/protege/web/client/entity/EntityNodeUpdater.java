@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.hierarchy;
+package edu.stanford.bmir.protege.web.client.entity;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
@@ -32,7 +32,7 @@ import static edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent.ON_
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 30 Nov 2017
  */
-public class EntityHierarchyNodeUpdater {
+public class EntityNodeUpdater {
 
     @Nonnull
     private final ProjectId projectId;
@@ -41,7 +41,7 @@ public class EntityHierarchyNodeUpdater {
     private EntityNodeIndex nodeIndex;
 
     @Inject
-    public EntityHierarchyNodeUpdater(@Nonnull ProjectId projectId) {
+    public EntityNodeUpdater(@Nonnull ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }
 
@@ -53,7 +53,7 @@ public class EntityHierarchyNodeUpdater {
      */
     public void start(@Nonnull WebProtegeEventBus eventBus,
                       @Nonnull EntityNodeIndex nodeIndex) {
-        GWT.log("[EntityHierarchyNodeUpdater] Starting to listen for events");
+        GWT.log("[EntityNodeUpdater] Starting to listen for events");
         this.nodeIndex = checkNotNull(nodeIndex);
         eventBus.addProjectEventHandler(projectId, ON_WATCH_ADDED, this::handleWatchAdded);
         eventBus.addProjectEventHandler(projectId, ON_WATCH_REMOVED, this::handleWatchRemoved);
