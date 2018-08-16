@@ -59,6 +59,8 @@ public class IndividualsListPresenter implements EntityNodeIndex {
     @Nonnull
     private final ProjectId projectId;
 
+    private final SelectionModel selectionModel;
+
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private final UIAction createAction;
@@ -67,6 +69,10 @@ public class IndividualsListPresenter implements EntityNodeIndex {
 
     @Nonnull
     private final CreateEntitiesDialogController controller;
+
+    private final Map<OWLEntity, EntityNode> elementsMap = new HashMap<>();
+
+    private final EntityNodeUpdater entityNodeUpdater;
 
     private Optional<OWLClass> currentType = Optional.empty();
 
@@ -79,10 +85,6 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         }
     };
 
-    private final Map<OWLEntity, EntityNode> elementsMap = new HashMap<>();
-
-    private final EntityNodeUpdater entityNodeUpdater;
-
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
                                     @Nonnull ProjectId projectId,
@@ -92,6 +94,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                     Messages messages,
                                     @Nonnull CreateEntitiesDialogController controller, EntityNodeUpdater entityNodeUpdater) {
         this.projectId = projectId;
+        this.selectionModel = selectionModel;
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
@@ -160,6 +163,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                                                view.getSearchString(),
                                                                pageRequest);
         dispatchServiceManager.execute(action, view, result -> {
+            Collection<EntityNode> curSel = view.getSelectedIndividuals();
             view.setListData(result.getIndividuals());
             view.setStatusMessageVisible(true);
             int displayedIndividuals = result.getIndividuals().size();
@@ -172,6 +176,13 @@ public class IndividualsListPresenter implements EntityNodeIndex {
             elementsMap.clear();
             result.getIndividuals()
                   .forEach(node -> elementsMap.put(node.getEntity(), node));
+            if(!view.getSelectedIndividuals().equals(curSel)) {
+                Optional<EntityNode> selectedIndividual = view.getSelectedIndividual();
+                selectedIndividual.ifPresent(sel -> selectionModel.setSelection(sel.getEntity()));
+                if(!selectedIndividual.isPresent()) {
+                    selectionModel.clearSelection();
+                }
+            }
         });
     }
 
@@ -239,7 +250,9 @@ public class IndividualsListPresenter implements EntityNodeIndex {
                                       .collect(toSet());
         dispatchServiceManager.execute(new DeleteEntitiesAction(projectId, entities),
                                        view,
-                                       result -> updateList());
+                                       result -> {
+                                           updateList();
+                                       });
     }
 
     private void updateButtonStates() {
