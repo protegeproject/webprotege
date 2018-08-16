@@ -15,6 +15,7 @@
             flex-shrink: 1;
             align-items: stretch;
             margin: 1px;
+            overflow: auto;
         }
         .contentHolder {
             display: flex;
