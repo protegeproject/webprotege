@@ -98,9 +98,9 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Override
     public void addListData(Collection<EntityNode> individuals) {
-//        individualsList.getListData();
-//        individualsList.addAll(individuals);
-        MessageBox.showAlert("Missing Impl");
+        List<EntityNode> elements = individualsList.getElements();
+        elements.addAll(0, individuals);
+        individualsList.setListData(elements);
     }
 
     @Override

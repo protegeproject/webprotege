@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +93,7 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     }
 
     public List<E> getElements() {
-        return elements;
+        return new ArrayList<>(elements);
     }
 
     @Override
