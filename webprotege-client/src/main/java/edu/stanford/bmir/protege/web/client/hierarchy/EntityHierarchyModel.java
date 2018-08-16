@@ -5,6 +5,7 @@ import com.google.common.collect.SetMultimap;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNodeIndex;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -23,7 +24,7 @@ import static java.util.Collections.singletonList;
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
  */
-public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity> {
+public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity>, EntityNodeIndex {
 
     @Nonnull
     private final DispatchServiceManager dispatchServiceManager;
@@ -74,10 +75,11 @@ public class EntityHierarchyModel implements GraphModel<EntityNode, OWLEntity> {
         }
     }
 
-    public Optional<EntityNode> getHierarchyNode(@Nonnull OWLEntity entity) {
+    public Optional<EntityNode> getNode(@Nonnull OWLEntity entity) {
         return Optional.ofNullable(nodeCache.get(entity));
     }
 
+    @Override
     public void updateNode(@Nonnull EntityNode node) {
         EntityNode currentNode = nodeCache.get(node.getEntity());
         if (node.equals(currentNode)) {

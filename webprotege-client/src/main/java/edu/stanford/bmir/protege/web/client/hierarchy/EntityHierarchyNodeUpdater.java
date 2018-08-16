@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.hierarchy;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNodeIndex;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
@@ -37,7 +38,7 @@ public class EntityHierarchyNodeUpdater {
     private final ProjectId projectId;
 
     @Nullable
-    private EntityHierarchyModel model;
+    private EntityNodeIndex nodeIndex;
 
     @Inject
     public EntityHierarchyNodeUpdater(@Nonnull ProjectId projectId) {
@@ -48,12 +49,12 @@ public class EntityHierarchyNodeUpdater {
      * Start listening for events on the specified event bus in order to keep the specified hierarchy
      * up to date.
      * @param eventBus The event bus on which project changes are broadcast.
-     * @param model The hierarchy model that will be kept up to date.
+     * @param nodeIndex The node index that will be kept up to date.
      */
     public void start(@Nonnull WebProtegeEventBus eventBus,
-                      @Nonnull EntityHierarchyModel model) {
+                      @Nonnull EntityNodeIndex nodeIndex) {
         GWT.log("[EntityHierarchyNodeUpdater] Starting to listen for events");
-        this.model = checkNotNull(model);
+        this.nodeIndex = checkNotNull(nodeIndex);
         eventBus.addProjectEventHandler(projectId, ON_WATCH_ADDED, this::handleWatchAdded);
         eventBus.addProjectEventHandler(projectId, ON_WATCH_REMOVED, this::handleWatchRemoved);
         eventBus.addProjectEventHandler(projectId, ON_BROWSER_TEXT_CHANGED, this::handleBrowserTextChanged);
@@ -64,10 +65,10 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleBrowserTextChanged(BrowserTextChangedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
-        model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
+        nodeIndex.getNode(event.getEntity()).ifPresent(node -> {
             EntityNode updatedNode = EntityNode.get(
                     node.getEntity(),
                     event.getNewBrowserText(),
@@ -76,15 +77,15 @@ public class EntityHierarchyNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     node.getTags());
-            model.updateNode(updatedNode);
+            nodeIndex.updateNode(updatedNode);
         });
     }
 
     private void handleWatchAdded(WatchAddedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
-        model.getHierarchyNode(event.getWatch().getEntity()).ifPresent(node -> {
+        nodeIndex.getNode(event.getWatch().getEntity()).ifPresent(node -> {
             Set<Watch> updatedWatches = new HashSet<>(node.getWatches());
             updatedWatches.add(event.getWatch());
             updateWatches(node, updatedWatches);
@@ -92,10 +93,10 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void handleWatchRemoved(WatchRemovedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
-        model.getHierarchyNode(event.getWatch().getEntity()).ifPresent(node -> {
+        nodeIndex.getNode(event.getWatch().getEntity()).ifPresent(node -> {
             Set<Watch> updatedWatches = new HashSet<>(node.getWatches());
             updatedWatches.remove(event.getWatch());
             updateWatches(node, updatedWatches);
@@ -103,8 +104,8 @@ public class EntityHierarchyNodeUpdater {
     }
 
     private void updateWatches(EntityNode node, Set<Watch> updatedWatches) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
         EntityNode updatedNode = EntityNode.get(
                 node.getEntity(),
@@ -114,15 +115,15 @@ public class EntityHierarchyNodeUpdater {
                 updatedWatches,
                 node.getOpenCommentCount(),
                 node.getTags());
-        model.updateNode(updatedNode);
+        nodeIndex.updateNode(updatedNode);
     }
 
     private void handleCommentPosted(CommentPostedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
         event.getEntity().ifPresent(entity -> {
-            model.getHierarchyNode(entity.getEntity()).ifPresent(node -> {
+            nodeIndex.getNode(entity.getEntity()).ifPresent(node -> {
                 EntityNode updatedNode = EntityNode.get(
                         node.getEntity(),
                         node.getBrowserText(),
@@ -131,17 +132,17 @@ public class EntityHierarchyNodeUpdater {
                         node.getWatches(),
                         event.getOpenCommentCountForEntity(),
                         node.getTags());
-                model.updateNode(updatedNode);
+                nodeIndex.updateNode(updatedNode);
             });
         });
     }
 
     private void handleDiscussionThreadStatusChanged(DiscussionThreadStatusChangedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
         event.getEntity().ifPresent(entity -> {
-            model.getHierarchyNode(entity).ifPresent(node -> {
+            nodeIndex.getNode(entity).ifPresent(node -> {
                 EntityNode updatedNode = EntityNode.get(
                         node.getEntity(),
                         node.getBrowserText(),
@@ -150,16 +151,16 @@ public class EntityHierarchyNodeUpdater {
                         node.getWatches(),
                         event.getOpenCommentsCountForEntity(),
                         node.getTags());
-                model.updateNode(updatedNode);
+                nodeIndex.updateNode(updatedNode);
             });
         });
     }
 
     private void handleEntityDeprecatedChanged(EntityDeprecatedChangedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
-        model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
+        nodeIndex.getNode(event.getEntity()).ifPresent(node -> {
             EntityNode updatedNode = EntityNode.get(
                     node.getEntity(),
                     node.getBrowserText(),
@@ -168,15 +169,15 @@ public class EntityHierarchyNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     node.getTags());
-            model.updateNode(updatedNode);
+            nodeIndex.updateNode(updatedNode);
         });
     }
 
     private void handleEntityTagsChanged(EntityTagsChangedEvent event) {
-        if (model == null) {
-            throw createHierarchyModelIsNullException();
+        if (nodeIndex == null) {
+            throw createNodeIndexIsNullException();
         }
-        model.getHierarchyNode(event.getEntity()).ifPresent(node -> {
+        nodeIndex.getNode(event.getEntity()).ifPresent(node -> {
             EntityNode updatedNode = EntityNode.get(
                     node.getEntity(),
                     node.getBrowserText(),
@@ -185,12 +186,12 @@ public class EntityHierarchyNodeUpdater {
                     node.getWatches(),
                     node.getOpenCommentCount(),
                     event.getTags());
-            model.updateNode(updatedNode);
+            nodeIndex.updateNode(updatedNode);
         });
     }
 
-    private static RuntimeException createHierarchyModelIsNullException() {
-        return new NullPointerException("Hierarchy Model is null");
+    private static RuntimeException createNodeIndexIsNullException() {
+        return new NullPointerException("NodeIndex is null");
     }
 
 }
