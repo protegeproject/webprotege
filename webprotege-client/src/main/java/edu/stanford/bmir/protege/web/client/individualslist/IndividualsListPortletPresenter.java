@@ -24,14 +24,6 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
 
     private final PreferredLanguageManager preferredLanguageManager;
 
-    /*
-     * Retrieved from the project configuration. If it is set,
-     * then the individuals list will always display the instances
-     * of the preconfigured class.
-     */
-    // TODO: This needs fixing
-    private Optional<OWLClass> preconfiguredClass = Optional.empty();
-
     @Inject
     public IndividualsListPortletPresenter(IndividualsListPresenter presenter,
                                            SelectionModel selectionModel,
@@ -48,25 +40,17 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         presenter.start(portletUi, eventBus);
         presenter.setEntityDisplay(this);
         presenter.setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
-        eventBus.addProjectEventHandler(getProjectId(),
-                                        DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
-                                        event -> presenter.setDisplayLanguage(event.getDisplayLanguage()));
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         Optional<OWLClass> selectedClass;
-        if(preconfiguredClass.isPresent()) {
-            selectedClass = preconfiguredClass;
-        }
-        else if(getSelectionModel().getLastSelectedClass().isPresent()) {
+        if(getSelectionModel().getLastSelectedClass().isPresent()) {
             selectedClass = Optional.of(getSelectionModel().getLastSelectedClass().get());
         }
         else {
             selectedClass = Optional.empty();
         }
-
-
         if(selectedClass.isPresent()) {
             presenter.setType(selectedClass.get());
         }
