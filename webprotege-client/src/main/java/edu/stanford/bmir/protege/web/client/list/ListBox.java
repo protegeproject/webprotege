@@ -15,6 +15,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.HasBrowserText;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -78,22 +79,40 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
         StringBuilder sb = new StringBuilder();
         for(E element : elements) {
             builder.add(element);
-            IsWidget rendering = renderer.render(element);
-            Widget rendererWidget = rendering.asWidget();
-            if(selectionInterval.contains(row)) {
-                rendererWidget.addStyleName(BUNDLE.style().selection());
-            }
-            else {
-                rendererWidget.addStyleName(BUNDLE.style().noSelection());
-            }
+            IsWidget rendering = renderElement(row, element);
             contentHolder.add(rendering);
             row++;
         }
         this.elements = builder.build();
     }
 
+    private IsWidget renderElement(int row, E element) {
+        IsWidget rendering = renderer.render(element);
+        Widget rendererWidget = rendering.asWidget();
+        if(selectionInterval.contains(row)) {
+            rendererWidget.addStyleName(BUNDLE.style().selection());
+        }
+        else {
+            rendererWidget.addStyleName(BUNDLE.style().noSelection());
+        }
+        return rendering;
+    }
+
     public List<E> getElements() {
         return new ArrayList<>(elements);
+    }
+
+
+    public void updateElement(E element) {
+        int index = 0;
+        for(E e : elements) {
+            if(keyExtractor.apply(e).equals(keyExtractor.apply(element))) {
+                contentHolder.remove(index);
+                contentHolder.insert(renderElement(index, element), index);
+                break;
+            }
+            index++;
+        }
     }
 
     @Override

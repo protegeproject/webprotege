@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.progress.HasBusy;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNodeIndex;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
@@ -54,4 +55,5 @@ public interface IndividualsListView extends HasSelectionHandlers<List<EntityNod
 
     void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language);
 
+    void updateNode(@Nonnull EntityNode entityNode);
 }

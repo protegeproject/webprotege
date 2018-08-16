@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
@@ -89,6 +90,11 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language) {
         renderer.setDisplayLanguage(language);
         individualsList.setRenderer(renderer);
+    }
+
+    @Override
+    public void updateNode(@Nonnull EntityNode entityNode) {
+        individualsList.updateElement(entityNode);
     }
 
     @Override

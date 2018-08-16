@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entity.CreateEntitiesDialogController;
+import edu.stanford.bmir.protege.web.client.entity.EntityNodeUpdater;
 import edu.stanford.bmir.protege.web.client.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -14,10 +15,7 @@ import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividualsAction;
-import edu.stanford.bmir.protege.web.shared.entity.DeleteEntitiesAction;
-import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
-import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
@@ -32,9 +30,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.client.library.dlg.DialogButton.CANCEL;
@@ -48,7 +44,7 @@ import static java.util.stream.Collectors.toSet;
  * Author: Matthew Horridge<br> Stanford University<br> Bio-Medical Informatics Research Group<br> Date: 12/09/2013
  */
 @SuppressWarnings("Convert2MethodRef")
-public class IndividualsListPresenter {
+public class IndividualsListPresenter implements EntityNodeIndex {
 
     private static final int SEARCH_DELAY = 700;
 
@@ -83,6 +79,10 @@ public class IndividualsListPresenter {
         }
     };
 
+    private final Map<OWLEntity, EntityNode> elementsMap = new HashMap<>();
+
+    private final EntityNodeUpdater entityNodeUpdater;
+
     @Inject
     public IndividualsListPresenter(IndividualsListView view,
                                     @Nonnull ProjectId projectId,
@@ -90,13 +90,14 @@ public class IndividualsListPresenter {
                                     DispatchServiceManager dispatchServiceManager,
                                     LoggedInUserProjectPermissionChecker permissionChecker,
                                     Messages messages,
-                                    @Nonnull CreateEntitiesDialogController controller) {
+                                    @Nonnull CreateEntitiesDialogController controller, EntityNodeUpdater entityNodeUpdater) {
         this.projectId = projectId;
         this.permissionChecker = permissionChecker;
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.messages = messages;
         this.controller = controller;
+        this.entityNodeUpdater = entityNodeUpdater;
         view.addSelectionHandler(event -> {
             event.getSelectedItem().stream().findFirst().ifPresent(sel -> {
                 selectionModel.setSelection(sel.getEntity());
@@ -119,6 +120,7 @@ public class IndividualsListPresenter {
         eventBus.addProjectEventHandler(projectId,
                                         DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> setDisplayLanguage(event.getDisplayLanguage()));
+        entityNodeUpdater.start(eventBus, this);
     }
 
     public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
@@ -167,6 +169,9 @@ public class IndividualsListPresenter {
             view.setPageNumber(paginatedResult.getPageNumber());
             updateStatusLabel(displayedIndividuals, totalIndividuals);
             entityDisplay.setDisplayedEntity(Optional.of(result.getType()));
+            elementsMap.clear();
+            result.getIndividuals()
+                  .forEach(node -> elementsMap.put(node.getEntity(), node));
         });
     }
 
@@ -194,6 +199,7 @@ public class IndividualsListPresenter {
                                            result -> {
                                                Set<EntityNode> individuals = result.getIndividuals();
                                                view.addListData(individuals);
+                                               individuals.forEach(node -> elementsMap.put(node.getEntity(), node));
                                                if (!individuals.isEmpty()) {
                                                    EntityNode next = individuals.iterator().next();
                                                    view.setSelectedIndividual((OWLNamedIndividualData) next.getEntityData());
@@ -243,4 +249,14 @@ public class IndividualsListPresenter {
         permissionChecker.hasPermission(DELETE_INDIVIDUAL, enabled -> deleteAction.setEnabled(enabled));
     }
 
+    @Override
+    public Optional<EntityNode> getNode(@Nonnull OWLEntity entity) {
+        return Optional.ofNullable(elementsMap.get(entity));
+    }
+
+    @Override
+    public void updateNode(@Nonnull EntityNode entityNode) {
+        elementsMap.put(entityNode.getEntity(), entityNode);
+        view.updateNode(entityNode);
+    }
 }
