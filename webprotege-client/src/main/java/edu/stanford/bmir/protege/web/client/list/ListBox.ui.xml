@@ -22,7 +22,7 @@
             align-items: stretch;
         }
         .contentHolder > * {
-            cursor: pointer;
+            cursor: default;
         }
 
     </ui:style>
