@@ -5,13 +5,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.entity.EntityNodeRenderer;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import edu.stanford.bmir.protege.web.server.pagination.PageCollector;
-import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
@@ -60,17 +58,22 @@ public class GetIndividualsActionHandler extends AbstractProjectActionHandler<Ge
     @Nonnull
     private final EntityNodeRenderer entityNodeRenderer;
 
+    @Nonnull
+    private final DictionaryManager dictionaryManager;
+
     @Inject
     public GetIndividualsActionHandler(@Nonnull AccessManager accessManager,
                                        @Nonnull ProjectId projectId,
                                        @Nonnull @RootOntology OWLOntology rootOntology,
                                        @Nonnull RenderingManager renderingManager,
-                                       @Nonnull EntityNodeRenderer entityNodeRenderer) {
+                                       @Nonnull EntityNodeRenderer entityNodeRenderer,
+                                       @Nonnull DictionaryManager dictionaryManager) {
         super(accessManager);
         this.projectId = projectId;
         this.rootOntology = rootOntology;
         this.renderingManager = renderingManager;
         this.entityNodeRenderer = entityNodeRenderer;
+        this.dictionaryManager = dictionaryManager;
     }
 
     @Nullable

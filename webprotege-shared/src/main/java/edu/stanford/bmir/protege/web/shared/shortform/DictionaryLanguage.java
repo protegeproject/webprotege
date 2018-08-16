@@ -85,6 +85,11 @@ public abstract class DictionaryLanguage {
                 && matchesLang(lang);
     }
 
+    public boolean equalsIgnoreLangCase(@Nonnull DictionaryLanguage language) {
+        return Objects.equal(this.getAnnotationPropertyIri(), language.getAnnotationPropertyIri())
+                && this.getLang().equalsIgnoreCase(language.getLang());
+    }
+
     private boolean matchesLang(@Nonnull String lang) {
         return this.getLang().equals(lang) || this.getLang().equals("*");
     }

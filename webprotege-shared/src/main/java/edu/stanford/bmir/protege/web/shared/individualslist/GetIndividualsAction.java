@@ -51,12 +51,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
         super(projectId);
         this.type = checkNotNull(type);
         this.searchString = checkNotNull(filterString);
-        if(checkNotNull(pageRequest).isPresent()) {
-            this.pageRequest = pageRequest.get();
-        }
-        else {
-            this.pageRequest = PageRequest.requestSinglePage();
-        }
+        this.pageRequest = pageRequest.orElse(PageRequest.requestFirstPage());
     }
 
     /**

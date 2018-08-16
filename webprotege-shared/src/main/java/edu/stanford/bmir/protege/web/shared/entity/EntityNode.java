@@ -61,7 +61,7 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
         ImmutableMap<DictionaryLanguage, String> shortForms = getShortForms();
         return shortForms.entrySet().stream()
                          .filter(e -> e.getKey().isAnnotationBased())
-                         .filter(e -> e.getKey().equals(prefLang))
+                         .filter(e -> e.getKey().equalsIgnoreLangCase(prefLang))
                          .findFirst()
                          .map(Map.Entry::getValue)
                          .orElse(defaultText);
