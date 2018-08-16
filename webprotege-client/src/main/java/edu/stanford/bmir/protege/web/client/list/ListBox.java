@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,6 +49,8 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
     private SelectionInterval selectionInterval = SelectionInterval.emptySelection();
 
     private ImmutableList<E> elements = ImmutableList.of();
+
+    private Function<E, K> keyExtractor = (element) -> null;
 
     private ListBoxCellRenderer<E> renderer = element -> {
         if(element instanceof HasBrowserText) {
@@ -116,11 +119,15 @@ public class ListBox<K, E> extends Composite implements HasSelectionHandlers<Lis
         return getFirstSelectedElement().map(Collections::singletonList).orElse(Collections.emptyList());
     }
 
+    public void setKeyExtractor(@Nonnull Function<E, K> keyExtractor) {
+        this.keyExtractor = checkNotNull(keyExtractor);
+    }
 
     public void setSelection(K key) {
         int row = 0;
         for(E element : elements) {
-            if(element.equals(key)) {
+            K k = keyExtractor.apply(element);
+            if(k != null && k.equals(key)) {
                 setSelectionInterval(SelectionInterval.singleRow(row));
                 break;
             }

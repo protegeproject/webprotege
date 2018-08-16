@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -46,7 +47,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     private static IndividualsListViewImplUiBinder ourUiBinder = GWT.create(IndividualsListViewImplUiBinder.class);
 
     @UiField
-    protected ListBox<OWLNamedIndividualData, EntityNode> individualsList;
+    protected ListBox<OWLNamedIndividual, EntityNode> individualsList;
 
     @UiField
     protected Label statusLabel;
@@ -70,6 +71,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
         this.renderer = checkNotNull(renderer);
         initWidget(ourUiBinder.createAndBindUi(this));
         individualsList.setRenderer(renderer);
+        individualsList.setKeyExtractor(node -> (OWLNamedIndividual) node.getEntity());
     }
 
     @Override
@@ -118,7 +120,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
 
     @Override
     public void setSelectedIndividual(OWLNamedIndividualData individual) {
-        individualsList.setSelection(individual);
+        individualsList.setSelection(individual.getEntity());
     }
 
     @Override
