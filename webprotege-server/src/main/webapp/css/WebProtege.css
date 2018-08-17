@@ -55,6 +55,10 @@ a {
     text-decoration: underline;
 }
 
+.widget-holder-label {
+    font-size: 14px !important;
+}
+
 pre {
     margin: 0;
     padding: 0;
