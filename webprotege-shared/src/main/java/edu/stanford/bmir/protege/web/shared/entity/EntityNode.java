@@ -14,9 +14,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Matthew Horridge Stanford Center for Biomedical Informatics Research 28 Nov 2017
@@ -54,17 +52,16 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
     }
 
     public String getText(@Nonnull DictionaryLanguage prefLang) {
-        return getText(prefLang, getBrowserText());
+        return getText(Collections.singletonList(prefLang), getBrowserText());
     }
 
-    public String getText(@Nonnull DictionaryLanguage prefLang, String defaultText) {
-        ImmutableMap<DictionaryLanguage, String> shortForms = getShortForms();
-        return shortForms.entrySet().stream()
-                         .filter(e -> e.getKey().isAnnotationBased())
-                         .filter(e -> e.getKey().equalsIgnoreLangCase(prefLang))
-                         .findFirst()
-                         .map(Map.Entry::getValue)
-                         .orElse(defaultText);
+    public String getText(@Nonnull List<DictionaryLanguage> prefLang, String defaultText) {
+        return prefLang.stream()
+                       .peek(s -> System.out.println("[EntityNode] getText:  " + s))
+                       .map(language -> getShortForms().get(language))
+                       .filter(Objects::nonNull)
+                       .findFirst()
+                       .orElse(defaultText);
     }
 
     public OWLEntityData getEntityData() {

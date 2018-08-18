@@ -26,10 +26,10 @@ public abstract class DictionaryLanguageData {
         return new AutoValue_DictionaryLanguageData(propertyData, lang);
     }
 
-    @Nonnull
-    public static DictionaryLanguageData get(@Nonnull String lang) {
-        return new AutoValue_DictionaryLanguageData(null, lang);
-    }
+//    @Nonnull
+//    public static DictionaryLanguageData get(@Nonnull String lang) {
+//        return new AutoValue_DictionaryLanguageData(null, lang);
+//    }
 
     @Nonnull
     public static DictionaryLanguageData getRdfsLabelWithEmptyLang() {

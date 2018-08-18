@@ -1,16 +1,24 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.editor.ValueList;
+import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
+import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
 import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -33,63 +41,38 @@ public class DisplayLanguageEditorViewImpl extends Composite implements DisplayL
     private static DisplayLanguageEditorViewImplUiBinder ourUiBinder = GWT.create(DisplayLanguageEditorViewImplUiBinder.class);
 
     @UiField(provided = true)
-    PrimitiveDataEditorImpl primaryPropertyField;
+    final ValueListFlexEditorImpl<DictionaryLanguageData> primaryDisplayNameLanguages;
 
     @UiField(provided = true)
-    DefaultLanguageEditor primaryLangField;
-
-    @UiField(provided = true)
-    PrimitiveDataEditorImpl secondaryPropertyField;
-
-    @UiField(provided = true)
-    DefaultLanguageEditor secondaryLangField;
+    final ValueListFlexEditorImpl<DictionaryLanguageData> secondaryDisplayNameLanguages;
 
     @Inject
-    public DisplayLanguageEditorViewImpl(@Nonnull PrimitiveDataEditorImpl primaryPropertyField,
-                                         @Nonnull DefaultLanguageEditor primaryLangField,
-                                         @Nonnull PrimitiveDataEditorImpl secondaryPropertyField,
-                                         @Nonnull DefaultLanguageEditor secondaryLangField) {
-        this.primaryPropertyField = checkNotNull(primaryPropertyField);
-        this.primaryLangField = checkNotNull(primaryLangField);
-        this.secondaryPropertyField = checkNotNull(secondaryPropertyField);
-        this.secondaryLangField = checkNotNull(secondaryLangField);
+    public DisplayLanguageEditorViewImpl(Provider<DictionaryLanguageDataEditor> editorProvider) {
+        this.primaryDisplayNameLanguages = new ValueListFlexEditorImpl<>(editorProvider::get);
+        this.secondaryDisplayNameLanguages = new ValueListFlexEditorImpl<>(editorProvider::get);
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
     @Override
-    public void setPrimaryDisplayLanguage(@Nonnull OWLAnnotationPropertyData property, @Nonnull String lang) {
-        primaryPropertyField.setValue(property);
-        primaryLangField.setValue(lang);
+    public void setPrimaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages) {
+        primaryDisplayNameLanguages.setValue(languages);
     }
 
     @Nonnull
     @Override
-    public Optional<OWLAnnotationPropertyData> getPrimaryLanguageProperty() {
-        return primaryPropertyField.getValue().map(prop -> (OWLAnnotationPropertyData) prop);
+    public ImmutableList<DictionaryLanguageData> getPrimaryDisplayNameLanguages() {
+        return ImmutableList.copyOf(primaryDisplayNameLanguages.getValue().orElse(ImmutableList.of()));
+    }
+
+    @Override
+    public void setSecondaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages) {
+        secondaryDisplayNameLanguages.setValue(languages);
     }
 
     @Nonnull
     @Override
-    public String getPrimaryLanguageTag() {
-        return primaryLangField.getValue().orElse("");
-    }
-
-    @Override
-    public void setSecondaryDisplayLanguage(@Nonnull OWLAnnotationPropertyData property, @Nonnull String lang) {
-        secondaryPropertyField.setValue(property);
-        secondaryLangField.setValue(lang);
-    }
-
-    @Nonnull
-    @Override
-    public Optional<OWLAnnotationPropertyData> getSecondaryLanguageProperty() {
-        return secondaryPropertyField.getValue().map(prop -> (OWLAnnotationPropertyData) prop);
-    }
-
-    @Nonnull
-    @Override
-    public String getSecondaryLanguageTag() {
-        return secondaryLangField.getValue().orElse("");
+    public ImmutableList<DictionaryLanguageData> getSecondaryDisplayNameLanguages() {
+        return ImmutableList.copyOf(secondaryDisplayNameLanguages.getValue().orElse(ImmutableList.of()));
     }
 
     @Override

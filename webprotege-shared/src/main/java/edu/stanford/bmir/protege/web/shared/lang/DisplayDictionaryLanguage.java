@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
@@ -19,21 +20,21 @@ import java.util.Optional;
 public abstract class DisplayDictionaryLanguage {
 
     @Nonnull
-    public static DisplayDictionaryLanguage get(@Nonnull Optional<DictionaryLanguage> primaryLanguage,
-                                                @Nonnull Optional<DictionaryLanguage> secondaryLanguage) {
-        return new AutoValue_DisplayDictionaryLanguage(primaryLanguage,
-                                                          secondaryLanguage);
+    public static DisplayDictionaryLanguage get(@Nonnull ImmutableList<DictionaryLanguage> primaryLanguages,
+                                                @Nonnull ImmutableList<DictionaryLanguage> secondaryLanguages) {
+        return new AutoValue_DisplayDictionaryLanguage(primaryLanguages,
+                                                       secondaryLanguages);
     }
 
     @Nonnull
     public static DisplayDictionaryLanguage empty() {
-        return get(Optional.empty(),
-                   Optional.empty());
+        return get(ImmutableList.of(),
+                   ImmutableList.of());
     }
 
     @Nonnull
-    public abstract Optional<DictionaryLanguage> getPrimaryLanguage();
+    public abstract ImmutableList<DictionaryLanguage> getPrimaryLanguages();
 
     @Nonnull
-    public abstract Optional<DictionaryLanguage> getSecondaryLanguage();
+    public abstract ImmutableList<DictionaryLanguage> getSecondaryLanguages();
 }

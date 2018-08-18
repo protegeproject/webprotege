@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-
 import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,32 +38,50 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     @Override
     public String getHtmlRendering(EntityNode node) {
+        GWT.log("[EntityNodeHtmlRenderer] Lang: " + language);
         GWT.log("[EntityNodeHtmlRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
-        sb.append("<div style='display: flex; flex-direction: row; align-items: center;'>");
+        sb.append("<div class='wp-entity-node'>");
         String iconIri;
         DataResource icon = getIcon(node);
         sb.append("<img src='").append(icon.getSafeUri().asString()).append("'/>");
         if (node.isDeprecated()) {
-            sb.append("<div style=\"text-decoration: line-through; color: #a0a0a0;\">");
+            sb.append("<div class='wp-entity-node__deprecated-entity wp-entity-node__display-name'>");
         }
         else {
-            sb.append("<div>");
+            sb.append("<div class='wp-entity-node__display-name'>");
         }
-        if(language.getPrimaryLanguage().isPresent()) {
-            sb.append(node.getText(language.getPrimaryLanguage().get()));
+
+        if (node.getEntity().isBuiltIn()) {
+            sb.append(node.getBrowserText());
         }
-        else {
-            sb.append(node.getText());
-        }
-        language.getSecondaryLanguage().ifPresent(secondaryLanguage -> {
-            String secondaryText = node.getText(secondaryLanguage, "");
-            if(!secondaryText.isEmpty()) {
-                sb.append(" <span style=\"color: #909090;\">(");
-                sb.append(secondaryText);
-                sb.append(")</span>");
+        else if (!language.getPrimaryLanguages().isEmpty()) {
+            String text = node.getText(language.getPrimaryLanguages(), null);
+            if (text == null) {
+                sb.append("<span class='wp-entity-node__display-name__default-language'>");
+                sb.append("&bull;&bull;&bull;&bull;&bull;");
+                sb.append("</span>");
+
             }
-        });
+            else {
+                sb.append("<span class='wp-entity-node__display-name__primary-language'>");
+                sb.append(text);
+                sb.append("</span>");
+            }
+        }
+        else {
+            // Plain
+            sb.append(node.getBrowserText());
+        }
+        String secondaryText = node.getText(language.getSecondaryLanguages(), null);
+        if (secondaryText != null) {
+            sb.append(" <span class='wp-entity-node__display-name__secondary-language'>");
+            sb.append(secondaryText);
+            sb.append("</span>");
+        }
+        else {
+            // TODO:  Indicate no secondary?
+        }
         sb.append("</div>");
 
         if (node.getOpenCommentCount() > 0) {

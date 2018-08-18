@@ -75,7 +75,7 @@ public class DictionaryLanguageDataViewImpl extends Composite implements Diction
     @Nonnull
     @Override
     public String getLang() {
-        return languageField.getValue().orElse("*");
+        return languageField.getValue().orElse("");
     }
 
     @Override

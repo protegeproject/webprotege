@@ -5,12 +5,15 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 /**
  * Matthew Horridge
@@ -49,14 +52,8 @@ public class DisplayLanguageEditorPresenter {
 
     @Nonnull
     private DisplayDictionaryLanguage getDisplayLanguage() {
-        Optional<DictionaryLanguage> primaryLanguage = view.getPrimaryLanguageProperty()
-                                                           .map(primaryProp -> DictionaryLanguage.create(primaryProp.getEntity().getIRI(),
-                                                                                                         view.getPrimaryLanguageTag()));
-        Optional<DictionaryLanguage> secondaryLanguage = view.getSecondaryLanguageProperty()
-                                                             .map(secondaryProp -> DictionaryLanguage.create(secondaryProp.getEntity().getIRI(),
-                                                                                                             view.getSecondaryLanguageTag()));
-        return DisplayDictionaryLanguage.get(primaryLanguage,
-                                             secondaryLanguage);
+        return DisplayDictionaryLanguage.get(view.getPrimaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()),
+                                             view.getSecondaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()));
     }
 
     public void setChangeHandler(@Nonnull ChangeHandler changeHandler) {
@@ -79,18 +76,6 @@ public class DisplayLanguageEditorPresenter {
     private void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
         checkNotNull(displayLanguage);
         GWT.log("[DisplayLanguageEditorPresenter] setDisplayLanguage: " + displayLanguage);
-        displayLanguage.getPrimaryLanguage()
-                       .ifPresent(primaryLanguage -> annotationPropertyIriRenderer.renderAnnotationPropertyIri(
-                               primaryLanguage.getAnnotationPropertyIri(), prop -> {
-                                   view.setPrimaryDisplayLanguage(prop, primaryLanguage.getLang());
-                               }));
-        displayLanguage.getSecondaryLanguage()
-                       .ifPresent(secondaryLanguage -> {
-                           annotationPropertyIriRenderer.renderAnnotationPropertyIri(
-                                   secondaryLanguage.getAnnotationPropertyIri(), prop -> {
-                                       view.setSecondaryDisplayLanguage(prop, secondaryLanguage.getLang());
-                                   }
-                           );
-                       });
+
     }
 }

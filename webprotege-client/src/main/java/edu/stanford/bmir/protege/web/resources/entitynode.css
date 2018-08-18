@@ -1,0 +1,31 @@
+@external .wp-*;
+
+.wp-entity-node {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.wp-entity-node__deprecated-entity {
+    text-decoration: line-through;
+    color: #a0a0a0;
+}
+
+.wp-entity-node__display-name {
+
+}
+
+.wp-entity-node__display-name__default-language {
+    color: #a0a0a0;
+}
+
+.wp-entity-node__display-name__primary-language {
+
+}
+
+.wp-entity-node__display-name__secondary-language {
+    margin-left: 3px;
+    text-decoration: underline;
+    -webkit-text-decoration-style: dotted;
+    color: #909090;
+}

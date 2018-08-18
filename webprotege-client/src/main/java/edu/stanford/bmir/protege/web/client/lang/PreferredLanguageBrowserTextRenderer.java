@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * Matthew Horridge
@@ -22,12 +22,12 @@ public class PreferredLanguageBrowserTextRenderer {
 
     @Nonnull
     public String getBrowserText(@Nonnull OWLPrimitiveData primitiveData) {
-        return preferredLanguageManager.getDisplayLanguage().getPrimaryLanguage()
-                                       .map(primaryLang -> primitiveData.getShortForms().entrySet().stream()
-                                                                        .filter(e -> e.getKey().equals(primaryLang))
-                                                                        .findFirst()
-                                                                        .map(Map.Entry::getValue)
-                                                                        .orElse(primitiveData.getBrowserText()))
-                                       .orElse(primitiveData.getBrowserText());
+        return preferredLanguageManager.getDisplayLanguage()
+                                       .getPrimaryLanguages()
+                                       .stream()
+                                       .map(l -> primitiveData.getShortForms().get(l))
+                                       .filter(Objects::nonNull)
+                                       .findFirst()
+                                       .orElse("");
     }
 }

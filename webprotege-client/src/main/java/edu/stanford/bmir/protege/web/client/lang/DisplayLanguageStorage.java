@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
@@ -38,19 +39,19 @@ public class DisplayLanguageStorage {
         storage.removeItem(getPrimaryLangIriKey());
         storage.removeItem(getPrimaryLangTagKey());
 
-        language.getPrimaryLanguage().ifPresent(primaryLang -> {
-            Optional.ofNullable(primaryLang.getAnnotationPropertyIri()).ifPresent(iri -> {
-                storage.setItem(getPrimaryLangIriKey(), iri.toString());
-            });
-            storage.setItem(getPrimaryLangTagKey(), primaryLang.getLang());
-        });
-
-        language.getSecondaryLanguage().ifPresent(secondaryLang -> {
-            Optional.ofNullable(secondaryLang.getAnnotationPropertyIri()).ifPresent(iri -> {
-                storage.setItem(getSecondaryLangIriKey(), iri.toString());
-            });
-            storage.setItem(getSecondaryLangTagKey(), secondaryLang.getLang());
-        });
+//        language.getPrimaryLanguage().ifPresent(primaryLang -> {
+//            Optional.ofNullable(primaryLang.getAnnotationPropertyIri()).ifPresent(iri -> {
+//                storage.setItem(getPrimaryLangIriKey(), iri.toString());
+//            });
+//            storage.setItem(getPrimaryLangTagKey(), primaryLang.getLang());
+//        });
+//
+//        language.getSecondaryLanguage().ifPresent(secondaryLang -> {
+//            Optional.ofNullable(secondaryLang.getAnnotationPropertyIri()).ifPresent(iri -> {
+//                storage.setItem(getSecondaryLangIriKey(), iri.toString());
+//            });
+//            storage.setItem(getSecondaryLangTagKey(), secondaryLang.getLang());
+//        });
     }
 
     private String getPrimaryLangTagKey() {
@@ -73,7 +74,8 @@ public class DisplayLanguageStorage {
     public DisplayDictionaryLanguage get(@Nonnull DisplayDictionaryLanguage def) {
         Optional<DictionaryLanguage> primary = getPrimaryDisplayLanguage();
         Optional<DictionaryLanguage> secondary = getSecondaryDisplayLanguage();
-        return DisplayDictionaryLanguage.get(primary, secondary);
+        return DisplayDictionaryLanguage.get(ImmutableList.of(),
+                                             ImmutableList.of());
     }
 
     private Optional<DictionaryLanguage> getPrimaryDisplayLanguage() {

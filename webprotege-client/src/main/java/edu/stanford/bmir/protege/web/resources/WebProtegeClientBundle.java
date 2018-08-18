@@ -114,6 +114,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtege.css")
     WebProtegeCss style();
 
+    @Source("entitynode.css")
+    EntityNodeCss entityNode();
+
     @Source("datetimepicker.css")
     DateTimePicker dateTimePicker();
 
@@ -498,5 +501,26 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("wp-project-list__cell")
         String cell();
+    }
+
+    interface EntityNodeCss extends CssResource {
+
+        @ClassName("wp-entity-node")
+        String wpEntityNode();
+
+        @ClassName("wp-entity-node__deprecated-entity")
+        String deprecatedEntity();
+
+        @ClassName("wp-entity-node__display-name")
+        String wpEntityNode__displayName();
+
+        @ClassName("wp-entity-node__display-name__primary-language")
+        String wpEntityNode__primaryLanguage();
+
+        @ClassName("wp-entity-node__display-name__secondary-language")
+        String wpEntityNode__secondaryLanguage();
+
+        @ClassName("wp-entity-node__display-name__default-language")
+        String wpEntityNode__displayName__defaultLanguage();
     }
 }

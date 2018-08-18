@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -13,26 +15,18 @@ import java.util.Optional;
  */
 public interface DisplayLanguageEditorView extends IsWidget {
 
-    void setPrimaryDisplayLanguage(@Nonnull OWLAnnotationPropertyData property,
-                                   @Nonnull String lang);
+    void setPrimaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages);
 
     @Nonnull
-    Optional<OWLAnnotationPropertyData> getPrimaryLanguageProperty();
+    ImmutableList<DictionaryLanguageData> getPrimaryDisplayNameLanguages();
+
+    void setSecondaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages);
 
     @Nonnull
-    String getPrimaryLanguageTag();
+    ImmutableList<DictionaryLanguageData> getSecondaryDisplayNameLanguages();
 
-    void setSecondaryDisplayLanguage(@Nonnull OWLAnnotationPropertyData property,
-                                     @Nonnull String lang);
-
-    @Nonnull
-    Optional<OWLAnnotationPropertyData> getSecondaryLanguageProperty();
-
-    @Nonnull
-    String getSecondaryLanguageTag();
 
     void setChangeHandler(@Nonnull ChangeHandler changeHandler);
-
 
     interface ChangeHandler {
 

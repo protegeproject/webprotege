@@ -1,44 +1,40 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.editor">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
-            display: flex;
+            display:        flex;
             flex-direction: column;
         }
-        .row {
-            display: flex;
-            flex-direction: row;
+
+        .langList {
+            margin-bottom: 4px;
         }
-        .propertyField {
-            width: 345px;
-        }
-        .langField {
-            margin-left: 2px;
-            width: 45px;
-        }
+
         .helpText {
             width: 390px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main} {wp.style.form} {wp.style.panelFilled}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="Primary Language" addStyleNames="{wp.style.formLabel}"/>
-            <div class="{style.row}">
-                <primitive:PrimitiveDataEditorImpl annotationPropertiesAllowed="true" showLinksForEntities="false" placeholder="{msg.frame_enterProperty}" ui:field="primaryPropertyField" addStyleNames="{style.propertyField}"/>
-                <primitive:DefaultLanguageEditor ui:field="primaryLangField" placeholder="{msg.frame_lang}" addStyleNames="{style.langField}"/>
-            </div>
-            <g:Label text="The primary language is used as the display name for entities throughout the user interface.  Leave blank to use the project default." addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
+            <g:Label text="Primary Display Name" addStyleNames="{wp.style.formLabel}"/>
+            <editor:ValueListFlexEditorImpl enabled="true" newRowMode="MANUAL"
+                                            ui:field="primaryDisplayNameLanguages" addStyleNames="{style.langList}"/>
+            <g:Label
+                    text="The primary display name is used as the display name for entities throughout the user interface.  Specify a list of property language pairs that should be used to generate the display name.  Leave blank to use the project default."
+                    addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
+
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Label text="Secondary Language" addStyleNames="{wp.style.formLabel}"/>
-            <div class="{style.row}">
-                <primitive:PrimitiveDataEditorImpl annotationPropertiesAllowed="true" showLinksForEntities="false" placeholder="{msg.frame_enterProperty}" ui:field="secondaryPropertyField" addStyleNames="{style.propertyField}"/>
-                <primitive:DefaultLanguageEditor ui:field="secondaryLangField" placeholder="{msg.frame_lang}" addStyleNames="{style.langField}"/>
-            </div>
-            <g:Label text="The secondary language is displayed along side the primary language in hierarchies and lists of entities.  Leave blank for no secondary language." addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
+            <g:Label text="Secondary Display Name" addStyleNames="{wp.style.formLabel}"/>
+            <editor:ValueListFlexEditorImpl enabled="true" newRowMode="MANUAL"
+                                            ui:field="secondaryDisplayNameLanguages" addStyleNames="{style.langList}"/>
+            <g:Label
+                    text="The secondary display name is displayed along side the primary display name in hierarchies and lists of entities.  Specify a list of property language pairs that should be used to generate the display name.  Leave blank to use the project default."
+                    addStyleNames="{style.helpText} {wp.style.formHelpText}"/>
+
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>
