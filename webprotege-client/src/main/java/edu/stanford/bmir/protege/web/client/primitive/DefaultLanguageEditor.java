@@ -39,6 +39,9 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
         suggestBox.addSelectionHandler(event -> {
             setDirty(true, EventStrategy.FIRE_EVENTS);
         });
+        suggestBox.getValueBox().addValueChangeHandler(event -> {
+            setDirty(true, EventStrategy.FIRE_EVENTS);
+        });
         initWidget(suggestBox);
     }
 
