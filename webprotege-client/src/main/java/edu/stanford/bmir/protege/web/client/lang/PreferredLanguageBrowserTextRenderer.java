@@ -13,21 +13,21 @@ import java.util.Objects;
  */
 public class PreferredLanguageBrowserTextRenderer {
 
-    private final PreferredLanguageManager preferredLanguageManager;
+    private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Inject
-    public PreferredLanguageBrowserTextRenderer(PreferredLanguageManager preferredLanguageManager) {
-        this.preferredLanguageManager = preferredLanguageManager;
+    public PreferredLanguageBrowserTextRenderer(DisplayNameSettingsManager displayNameSettingsManager) {
+        this.displayNameSettingsManager = displayNameSettingsManager;
     }
 
     @Nonnull
     public String getBrowserText(@Nonnull OWLPrimitiveData primitiveData) {
-        return preferredLanguageManager.getDisplayLanguage()
-                                       .getPrimaryDisplayNameLanguages()
-                                       .stream()
-                                       .map(l -> primitiveData.getShortForms().get(l))
-                                       .filter(Objects::nonNull)
-                                       .findFirst()
-                                       .orElse("");
+        return displayNameSettingsManager.getDisplayLanguage()
+                                         .getPrimaryDisplayNameLanguages()
+                                         .stream()
+                                         .map(l -> primitiveData.getShortForms().get(l))
+                                         .filter(Objects::nonNull)
+                                         .findFirst()
+                                         .orElse("");
     }
 }

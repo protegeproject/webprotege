@@ -31,15 +31,15 @@ public class DisplayNamedSettingsPresenter {
     private final AnnotationPropertyIriRenderer annotationPropertyIriRenderer;
 
     @Nonnull
-    private final PreferredLanguageManager preferredLanguageManager;
+    private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Inject
     public DisplayNamedSettingsPresenter(@Nonnull DisplayNameSettingsView view,
                                          @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
-                                         @Nonnull PreferredLanguageManager preferredLanguageManager) {
+                                         @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
         this.view = checkNotNull(view);
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
-        this.preferredLanguageManager = checkNotNull(preferredLanguageManager);
+        this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
     }
 
     @Nonnull
@@ -60,12 +60,12 @@ public class DisplayNamedSettingsPresenter {
 
     public void start(@Nonnull AcceptsOneWidget container) {
         container.setWidget(view);
-        setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
+        setDisplayLanguage(displayNameSettingsManager.getDisplayLanguage());
     }
 
 
     public void stop() {
-        preferredLanguageManager.setDisplayLanguage(getDisplayLanguage());
+        displayNameSettingsManager.setDisplayLanguage(getDisplayLanguage());
     }
 
 

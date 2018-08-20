@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 29 Jul 2018
  */
 @ProjectSingleton
-public class PreferredLanguageManager {
+public class DisplayNameSettingsManager {
 
     @Nonnull
     private final ProjectId projectId;
@@ -34,9 +34,9 @@ public class PreferredLanguageManager {
     private boolean loaded = false;
 
     @Inject
-    public PreferredLanguageManager(@Nonnull ProjectId projectId,
-                                    @Nonnull EventBus eventBus,
-                                    @Nonnull DisplayLanguageStorage displayLanguageStorage) {
+    public DisplayNameSettingsManager(@Nonnull ProjectId projectId,
+                                      @Nonnull EventBus eventBus,
+                                      @Nonnull DisplayLanguageStorage displayLanguageStorage) {
         this.projectId = checkNotNull(projectId);
         this.eventBus = checkNotNull(eventBus);
         this.displayLanguageStorage = checkNotNull(displayLanguageStorage);

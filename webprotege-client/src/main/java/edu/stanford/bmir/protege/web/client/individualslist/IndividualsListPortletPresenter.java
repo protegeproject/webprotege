@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageManager;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameSettingsManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -20,16 +20,16 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
 
     private final IndividualsListPresenter presenter;
 
-    private final PreferredLanguageManager preferredLanguageManager;
+    private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Inject
     public IndividualsListPortletPresenter(IndividualsListPresenter presenter,
                                            SelectionModel selectionModel,
                                            ProjectId projectId,
-                                           PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer, PreferredLanguageManager preferredLanguageManager) {
+                                           PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer, DisplayNameSettingsManager displayNameSettingsManager) {
         super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
         this.presenter = presenter;
-        this.preferredLanguageManager = preferredLanguageManager;
+        this.displayNameSettingsManager = displayNameSettingsManager;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class IndividualsListPortletPresenter extends AbstractWebProtegePortletPr
         presenter.installActions(portletUi);
         presenter.start(portletUi, eventBus);
         presenter.setEntityDisplay(this);
-        presenter.setDisplayLanguage(preferredLanguageManager.getDisplayLanguage());
+        presenter.setDisplayLanguage(displayNameSettingsManager.getDisplayLanguage());
         handleAfterSetEntity(Optional.empty());
     }
 
