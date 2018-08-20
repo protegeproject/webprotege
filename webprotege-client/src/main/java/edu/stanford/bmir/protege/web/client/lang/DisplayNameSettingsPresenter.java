@@ -49,8 +49,8 @@ public class DisplayNameSettingsPresenter {
 
     @Nonnull
     private DisplayNameSettings getDisplayLanguage() {
-        return DisplayNameSettings.get(view.getPrimaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()),
-                                       view.getSecondaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()));
+        return DisplayNameSettings.get(view.getPrimaryDisplayNameLanguages(),
+                                       view.getSecondaryDisplayNameLanguages());
     }
 
     public void setChangeHandler(@Nonnull ChangeHandler changeHandler) {

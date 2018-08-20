@@ -1,6 +1,11 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -9,4 +14,8 @@ import com.google.gwt.user.client.ui.IsWidget;
  */
 public interface DefaultDisplayNameSettingsView extends IsWidget {
 
+    @Nonnull
+    ImmutableList<DictionaryLanguageData> getPrimaryLanguages();
+
+    void setPrimaryLanguages(@Nonnull List<DictionaryLanguageData> primaryLanguages);
 }

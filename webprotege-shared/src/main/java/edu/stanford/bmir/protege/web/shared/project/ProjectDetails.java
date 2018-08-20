@@ -180,6 +180,27 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
         }
     }
 
+    public ProjectDetails withDefaultDisplayNameSettings(@Nonnull DisplayNameSettings defaultDisplayNameSettings) {
+        if(defaultDisplayNameSettings.equals(getDefaultDisplayNameSettings())) {
+            return this;
+        }
+        else {
+            return get(getProjectId(),
+                       getDisplayName(),
+                       getDescription(),
+                       getOwner(),
+                       isInTrash(),
+                       getDefaultDictionaryLanguage(),
+                       defaultDisplayNameSettings,
+                       getCreatedAt(),
+                       getCreatedBy(),
+                       getLastModifiedAt(),
+                       getLastModifiedBy());
+        }
+    }
+
+
+
     public ProjectDetails withInTrash(boolean inTrash) {
         if(inTrash == isInTrash()) {
             return this;

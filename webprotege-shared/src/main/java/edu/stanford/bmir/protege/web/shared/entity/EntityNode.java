@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.protege.gwt.graphtree.shared.tree.HasTextRendering;
@@ -51,14 +52,14 @@ public abstract class EntityNode implements IsSerializable, Serializable, Compar
         return getBrowserText();
     }
 
-    public String getText(@Nonnull DictionaryLanguage prefLang) {
+    public String getText(@Nonnull DictionaryLanguageData prefLang) {
         return getText(Collections.singletonList(prefLang), getBrowserText());
     }
 
-    public String getText(@Nonnull List<DictionaryLanguage> prefLang, String defaultText) {
+    public String getText(@Nonnull List<DictionaryLanguageData> prefLang, String defaultText) {
         return prefLang.stream()
                        .peek(s -> System.out.println("[EntityNode] getText:  " + s))
-                       .map(language -> getShortForms().get(language))
+                       .map(language -> getShortForms().get(language.getDictionaryLanguage()))
                        .filter(Objects::nonNull)
                        .findFirst()
                        .orElse(defaultText);

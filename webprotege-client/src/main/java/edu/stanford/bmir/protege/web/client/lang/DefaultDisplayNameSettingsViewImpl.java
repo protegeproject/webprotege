@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -35,5 +38,16 @@ public class DefaultDisplayNameSettingsViewImpl extends Composite implements Def
         languagesList.setEnabled(true);
         languagesList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Nonnull
+    @Override
+    public ImmutableList<DictionaryLanguageData> getPrimaryLanguages() {
+        return languagesList.getValue().map(ImmutableList::copyOf).orElse(ImmutableList.of());
+    }
+
+    @Override
+    public void setPrimaryLanguages(@Nonnull List<DictionaryLanguageData> primaryLanguages) {
+        languagesList.setValue(primaryLanguages);
     }
 }

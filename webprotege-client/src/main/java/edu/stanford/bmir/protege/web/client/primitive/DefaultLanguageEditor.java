@@ -1,20 +1,17 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.lang.LangSuggestOracle;
 import edu.stanford.bmir.protege.web.client.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageTagFormatter;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -87,7 +84,7 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
 
     @Override
     public void setValue(String object) {
-        suggestBox.setValue(object);
+        suggestBox.setValue(LanguageTagFormatter.format(object));
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 

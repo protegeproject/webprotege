@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 import org.junit.After;
@@ -75,10 +76,10 @@ public class ProjectDetailsRepository_IT {
                                             owner,
                                             IN_TRASH,
                                             DictionaryLanguage.rdfsLabel("en"),
-                                            DisplayNameSettings.get(ImmutableList.of(DictionaryLanguage.rdfsLabel("en-GB"),
-                                                                                     DictionaryLanguage.rdfsLabel("en"),
-                                                                                     DictionaryLanguage.rdfsLabel("")),
-                                                                    ImmutableList.of(DictionaryLanguage.rdfsLabel("de"))),
+                                            DisplayNameSettings.get(ImmutableList.of(DictionaryLanguageData.rdfsLabel("en-GB"),
+                                                                                     DictionaryLanguageData.rdfsLabel("en"),
+                                                                                     DictionaryLanguageData.rdfsLabel("")),
+                                                                    ImmutableList.of(DictionaryLanguageData.rdfsLabel("de"))),
                                             CREATED_AT,
                                             createdBy,
                                             MODIFIED_AT,

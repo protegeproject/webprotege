@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -147,6 +148,7 @@ public class ProjectSettingsPresenter {
         generalSettingsView.setDescription(projectSettings.getProjectDescription());
 
         displayDefaultDictionaryLanguage(projectSettings.getDefaultLanguage());
+        displayDefaultDisplayNameLanguages(projectSettings.getDefaultDisplayNameSettings());
         SlackIntegrationSettings slackIntegrationSettings = projectSettings.getSlackIntegrationSettings();
         slackWebhookSettingsView.setWebhookUrl(slackIntegrationSettings.getPayloadUrl());
         WebhookSettings webhookSettings = projectSettings.getWebhookSettings();
@@ -163,6 +165,10 @@ public class ProjectSettingsPresenter {
             defaultDictionaryLanguageView.clearAnnotationProperty();
         }
         defaultDictionaryLanguageView.setLanguageTag(defaultLanguage.getLang());
+    }
+
+    private void displayDefaultDisplayNameLanguages(@Nonnull DisplayNameSettings displayNameSettings) {
+        defaultDisplayNameSettingsView.setPrimaryLanguages(displayNameSettings.getPrimaryDisplayNameLanguages());
     }
 
 
@@ -202,7 +208,10 @@ public class ProjectSettingsPresenter {
     }
 
     private DisplayNameSettings getDefaultDisplayNameSettings() {
-        return DisplayNameSettings.empty();
+        return DisplayNameSettings.get(
+                defaultDisplayNameSettingsView.getPrimaryLanguages(),
+                ImmutableList.of()
+        );
     }
 
     private void handleCancel() {

@@ -101,7 +101,8 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         record.ifPresent(rec -> {
             ProjectDetails updatedRecord = rec.withDisplayName(projectSettings.getProjectDisplayName())
                                               .withDescription(projectSettings.getProjectDescription())
-                                              .withDefaultLanguage(projectSettings.getDefaultLanguage());
+                                              .withDefaultLanguage(projectSettings.getDefaultLanguage())
+                                              .withDefaultDisplayNameSettings(projectSettings.getDefaultDisplayNameSettings());
             repository.save(updatedRecord);
 
         });

@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 import org.hamcrest.Matchers;
@@ -39,10 +40,10 @@ public class ProjectDetails_Serialization_TestCase {
                                             UserId.getUserId("The Owner"),
                                             true,
                                             DictionaryLanguage.rdfsLabel("en-GB"),
-                                            DisplayNameSettings.get(ImmutableList.of(DictionaryLanguage.rdfsLabel("en-GB"),
-                                                                                     DictionaryLanguage.rdfsLabel("en"),
-                                                                                     DictionaryLanguage.rdfsLabel("")),
-                                                                    ImmutableList.of(DictionaryLanguage.rdfsLabel("de"))),
+                                            DisplayNameSettings.get(ImmutableList.of(DictionaryLanguageData.rdfsLabel("en-GB"),
+                                                                                     DictionaryLanguageData.rdfsLabel("en"),
+                                                                                     DictionaryLanguageData.rdfsLabel("")),
+                                                                    ImmutableList.of(DictionaryLanguageData.rdfsLabel("de"))),
                                             2L,
                                             UserId.getUserId("The creator"),
                                             3L,

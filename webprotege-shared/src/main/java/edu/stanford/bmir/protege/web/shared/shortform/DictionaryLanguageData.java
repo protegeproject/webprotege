@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.shortform;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
@@ -8,11 +9,11 @@ import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+
+import static org.semanticweb.owlapi.vocab.OWLRDFVocabulary.RDFS_LABEL;
 
 /**
  * Matthew Horridge
@@ -25,7 +26,9 @@ public abstract class DictionaryLanguageData {
 
     private static final String PROPERTY_IRI = "propertyIri";
 
-    private static final String LANGUAGE_TAG = "languageTag";
+    private static final String LANGUAGE_TAG = "lang";
+
+    private DictionaryLanguage dictionaryLanguage = null;
 
     @Nonnull
     public static DictionaryLanguageData get(@Nonnull IRI propertyIri,
@@ -34,27 +37,26 @@ public abstract class DictionaryLanguageData {
         return new AutoValue_DictionaryLanguageData(propertyIri, browserText, lang);
     }
 
+    @JsonCreator
     @Nonnull
-    public static DictionaryLanguageData get(@Nonnull IRI propertyIri,
-                                             @Nonnull String languageTag) {
+    public static DictionaryLanguageData get(@Nonnull @JsonProperty(PROPERTY_IRI) IRI propertyIri,
+                                             @Nonnull @JsonProperty(LANGUAGE_TAG) String languageTag) {
         return get(propertyIri, getBrowserText(propertyIri), languageTag);
     }
 
-    private static String getBrowserText(@Nonnull IRI propertyIri) {
-        if(propertyIri.equals(OWLRDFVocabulary.RDFS_LABEL.getIRI())) {
-            return OWLRDFVocabulary.RDFS_LABEL.getPrefixedName();
-        }
-        else if(propertyIri.equals(SKOSVocabulary.PREFLABEL.getIRI())) {
-            return SKOSVocabulary.PREFLABEL.getPrefixedName();
-        }
-        else {
-            return "";
-        }
+    public static DictionaryLanguageData rdfsLabel(@Nonnull String languageTag) {
+        return get(RDFS_LABEL.getIRI(), languageTag);
     }
-    
+
+    private static String getBrowserText(@Nonnull IRI propertyIri) {
+        return WellKnownLabellingIris.get(propertyIri)
+                                     .map(l -> l.getPrefixedName())
+                                     .orElse(propertyIri.toString());
+    }
+
     @Nonnull
     public static DictionaryLanguageData getRdfsLabelWithLang(@Nonnull String lang) {
-        return get(OWLRDFVocabulary.RDFS_LABEL.getIRI(), OWLRDFVocabulary.RDFS_LABEL.getPrefixedName(), lang);
+        return get(RDFS_LABEL.getIRI(), RDFS_LABEL.getPrefixedName(), lang);
     }
 
 
@@ -72,6 +74,14 @@ public abstract class DictionaryLanguageData {
     public abstract String getLanguageTag();
 
 
+    @JsonIgnore
+    @Nonnull
+    public DictionaryLanguage getDictionaryLanguage() {
+        if(dictionaryLanguage == null) {
+            dictionaryLanguage = createDictionaryLanguage();
+        }
+        return dictionaryLanguage;
+    }
 
 
     @JsonIgnore
@@ -86,7 +96,7 @@ public abstract class DictionaryLanguageData {
         );
     }
 
-    public DictionaryLanguage toDictionaryLanguage() {
+    private DictionaryLanguage createDictionaryLanguage() {
         return DictionaryLanguage.create(getAnnotationPropertyIri(),
                                          getLanguageTag());
     }

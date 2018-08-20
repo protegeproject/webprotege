@@ -6,6 +6,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 
@@ -24,8 +25,8 @@ public abstract class DisplayNameSettings {
 
     @JsonCreator
     @Nonnull
-    public static DisplayNameSettings get(@Nonnull @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguage> primaryLanguages,
-                                          @Nonnull @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguage> secondaryLanguages) {
+    public static DisplayNameSettings get(@Nonnull @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> primaryLanguages,
+                                          @Nonnull @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES) ImmutableList<DictionaryLanguageData> secondaryLanguages) {
         return new AutoValue_DisplayNameSettings(primaryLanguages,
                                                  secondaryLanguages);
     }
@@ -38,9 +39,9 @@ public abstract class DisplayNameSettings {
 
     @JsonProperty(PRIMARY_DISPLAY_NAME_LANGUAGES)
     @Nonnull
-    public abstract ImmutableList<DictionaryLanguage> getPrimaryDisplayNameLanguages();
+    public abstract ImmutableList<DictionaryLanguageData> getPrimaryDisplayNameLanguages();
 
     @JsonProperty(SECONDARY_DISPLAY_NAME_LANGUAGES)
     @Nonnull
-    public abstract ImmutableList<DictionaryLanguage> getSecondaryDisplayNameLanguages();
+    public abstract ImmutableList<DictionaryLanguageData> getSecondaryDisplayNameLanguages();
 }
