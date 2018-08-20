@@ -53,7 +53,7 @@ public class DictionaryLanguageDataEditor extends Composite implements ValueEdit
     @Override
     public void setValue(DictionaryLanguageData object) {
         object.getAnnotationPropertyData().ifPresent(view::setAnnotationProperty);
-        view.setLang(object.getLanguage());
+        view.setLang(object.getLanguageTag());
     }
 
     @Override
