@@ -1,9 +1,10 @@
-package edu.stanford.bmir.protege.web.server.shortform;
+package edu.stanford.bmir.protege.web.server.lang;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
+import edu.stanford.bmir.protege.web.server.shortform.DictionaryLanguageComparators;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
@@ -16,9 +15,8 @@ import edu.stanford.bmir.protege.web.server.frame.StructuralPropertyValueSubsump
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndex;
 import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexCachingImpl;
-import edu.stanford.bmir.protege.web.server.index.AnnotationAssertionAxiomsIndexWrapperImpl;
 import edu.stanford.bmir.protege.web.server.inject.ProjectActionHandlersModule;
-import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.match.MatchingEngine;
@@ -32,7 +30,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasContainsEntityInSignatureI
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesInSignatureImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasGetEntitiesWithIRIImpl;
 import edu.stanford.bmir.protege.web.server.project.ChangeManager;
-import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.project.RootOntologyProvider;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;

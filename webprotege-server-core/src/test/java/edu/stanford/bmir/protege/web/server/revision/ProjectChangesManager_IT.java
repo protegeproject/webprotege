@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
+import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
@@ -97,7 +99,7 @@ public class ProjectChangesManager_IT {
                 dataFactory
         );
         LanguageManager languageManager = new LanguageManager(new ActiveLanguagesManager(projectId,
-                                                                                         rootOntology));
+                                                                                         rootOntology), projectDetailsManager);
         RenderingManager renderingManager = new RenderingManager(
                 new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(rootOntology)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.shortform;
+package edu.stanford.bmir.protege.web.server.lang;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;

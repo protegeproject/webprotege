@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectActionHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
-import edu.stanford.bmir.protege.web.server.shortform.LanguageManager;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.shortform.SearchString;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.access.BuiltInAction;
@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static edu.stanford.bmir.protege.web.server.shortform.SearchString.parseSearchString;
 import static java.util.stream.Collectors.toList;
 
 /**

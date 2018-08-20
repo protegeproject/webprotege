@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMapFactory;
 import edu.stanford.bmir.protege.web.server.revision.Revision;
 import edu.stanford.bmir.protege.web.server.revision.RevisionManager;
-import edu.stanford.bmir.protege.web.server.shortform.ActiveLanguagesManager;
+import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryUpdatesProcessor;
 import edu.stanford.bmir.protege.web.server.webhook.ProjectChangedWebhookInvoker;
