@@ -33,10 +33,10 @@ public class DisplayNameSettingsTopBarViewImpl extends Composite implements Disp
     Button button;
 
     @Nonnull
-    private final DisplayNamedSettingsPresenter editorPresenter;
+    private final DisplayNameSettingsPresenter editorPresenter;
 
     @Inject
-    public DisplayNameSettingsTopBarViewImpl(@Nonnull DisplayNamedSettingsPresenter editorPresenter) {
+    public DisplayNameSettingsTopBarViewImpl(@Nonnull DisplayNameSettingsPresenter editorPresenter) {
         this.editorPresenter = editorPresenter;
         popupPanel = new PopupPanel(true, true);
         popupPanel.addCloseHandler(event -> editorPresenter.stop());

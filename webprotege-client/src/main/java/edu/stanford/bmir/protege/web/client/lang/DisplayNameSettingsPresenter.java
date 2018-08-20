@@ -17,7 +17,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 31 Jul 2018
  */
-public class DisplayNamedSettingsPresenter {
+public class DisplayNameSettingsPresenter {
 
     interface ChangeHandler {
 
@@ -34,9 +34,9 @@ public class DisplayNamedSettingsPresenter {
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Inject
-    public DisplayNamedSettingsPresenter(@Nonnull DisplayNameSettingsView view,
-                                         @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
-                                         @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
+    public DisplayNameSettingsPresenter(@Nonnull DisplayNameSettingsView view,
+                                        @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
+                                        @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
         this.view = checkNotNull(view);
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
         this.displayNameSettingsManager = checkNotNull(displayNameSettingsManager);
@@ -72,7 +72,7 @@ public class DisplayNamedSettingsPresenter {
 
     private void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
         checkNotNull(displayLanguage);
-        GWT.log("[DisplayNamedSettingsPresenter] setDisplayLanguage: " + displayLanguage);
+        GWT.log("[DisplayNameSettingsPresenter] setDisplayLanguage: " + displayLanguage);
 
     }
 }
