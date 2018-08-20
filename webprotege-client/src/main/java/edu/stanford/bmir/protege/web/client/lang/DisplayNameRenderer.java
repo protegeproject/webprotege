@@ -28,6 +28,6 @@ public class DisplayNameRenderer {
                                          .map(l -> primitiveData.getShortForms().get(l))
                                          .filter(Objects::nonNull)
                                          .findFirst()
-                                         .orElse("");
+                                         .orElse(primitiveData.getBrowserText());
     }
 }
