@@ -6,20 +6,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.editor.ValueList;
-import edu.stanford.bmir.protege.web.client.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.client.editor.ValueListFlexEditorImpl;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
-import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collections;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,16 +21,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 31 Jul 2018
  */
-public class DisplayLanguageEditorViewImpl extends Composite implements DisplayLanguageEditorView {
+public class DisplayNameSettingsViewImpl extends Composite implements DisplayNameSettingsView {
 
     @Nonnull
     private ChangeHandler changeHandler = () -> {};
 
-    interface DisplayLanguageEditorViewImplUiBinder extends UiBinder<HTMLPanel, DisplayLanguageEditorViewImpl> {
+    interface DisplayNameSettingsViewImplUiBinder extends UiBinder<HTMLPanel, DisplayNameSettingsViewImpl> {
 
     }
 
-    private static DisplayLanguageEditorViewImplUiBinder ourUiBinder = GWT.create(DisplayLanguageEditorViewImplUiBinder.class);
+    private static DisplayNameSettingsViewImplUiBinder ourUiBinder = GWT.create(DisplayNameSettingsViewImplUiBinder.class);
 
     @UiField(provided = true)
     final ValueListFlexEditorImpl<DictionaryLanguageData> primaryDisplayNameLanguages;
@@ -47,7 +39,7 @@ public class DisplayLanguageEditorViewImpl extends Composite implements DisplayL
     final ValueListFlexEditorImpl<DictionaryLanguageData> secondaryDisplayNameLanguages;
 
     @Inject
-    public DisplayLanguageEditorViewImpl(Provider<DictionaryLanguageDataEditor> editorProvider) {
+    public DisplayNameSettingsViewImpl(Provider<DictionaryLanguageDataEditor> editorProvider) {
         this.primaryDisplayNameLanguages = new ValueListFlexEditorImpl<>(editorProvider::get);
         this.secondaryDisplayNameLanguages = new ValueListFlexEditorImpl<>(editorProvider::get);
         initWidget(ourUiBinder.createAndBindUi(this));

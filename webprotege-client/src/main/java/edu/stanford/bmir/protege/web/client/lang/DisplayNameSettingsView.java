@@ -13,7 +13,7 @@ import java.util.Optional;
  * Stanford Center for Biomedical Informatics Research
  * 31 Jul 2018
  */
-public interface DisplayLanguageEditorView extends IsWidget {
+public interface DisplayNameSettingsView extends IsWidget {
 
     void setPrimaryDisplayNameLanguages(@Nonnull ImmutableList<DictionaryLanguageData> languages);
 

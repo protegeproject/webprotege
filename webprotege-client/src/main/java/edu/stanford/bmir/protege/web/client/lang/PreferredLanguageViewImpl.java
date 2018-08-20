@@ -6,7 +6,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,10 +33,10 @@ public class PreferredLanguageViewImpl extends Composite implements PreferredLan
     Button button;
 
     @Nonnull
-    private final DisplayLanguageEditorPresenter editorPresenter;
+    private final DisplayNamedSettingsPresenter editorPresenter;
 
     @Inject
-    public PreferredLanguageViewImpl(@Nonnull DisplayLanguageEditorPresenter editorPresenter) {
+    public PreferredLanguageViewImpl(@Nonnull DisplayNamedSettingsPresenter editorPresenter) {
         this.editorPresenter = editorPresenter;
         popupPanel = new PopupPanel(true, true);
         popupPanel.addCloseHandler(event -> editorPresenter.stop());

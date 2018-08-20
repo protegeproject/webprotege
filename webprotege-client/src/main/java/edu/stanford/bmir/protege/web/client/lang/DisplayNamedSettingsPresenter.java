@@ -4,13 +4,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -20,7 +17,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
  * Stanford Center for Biomedical Informatics Research
  * 31 Jul 2018
  */
-public class DisplayLanguageEditorPresenter {
+public class DisplayNamedSettingsPresenter {
 
     interface ChangeHandler {
 
@@ -28,7 +25,7 @@ public class DisplayLanguageEditorPresenter {
     }
 
     @Nonnull
-    private final DisplayLanguageEditorView view;
+    private final DisplayNameSettingsView view;
 
     @Nonnull
     private final AnnotationPropertyIriRenderer annotationPropertyIriRenderer;
@@ -37,16 +34,16 @@ public class DisplayLanguageEditorPresenter {
     private final PreferredLanguageManager preferredLanguageManager;
 
     @Inject
-    public DisplayLanguageEditorPresenter(@Nonnull DisplayLanguageEditorView view,
-                                          @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
-                                          @Nonnull PreferredLanguageManager preferredLanguageManager) {
+    public DisplayNamedSettingsPresenter(@Nonnull DisplayNameSettingsView view,
+                                         @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer,
+                                         @Nonnull PreferredLanguageManager preferredLanguageManager) {
         this.view = checkNotNull(view);
         this.annotationPropertyIriRenderer = checkNotNull(annotationPropertyIriRenderer);
         this.preferredLanguageManager = checkNotNull(preferredLanguageManager);
     }
 
     @Nonnull
-    public DisplayLanguageEditorView getView() {
+    public DisplayNameSettingsView getView() {
         return view;
     }
 
@@ -75,7 +72,7 @@ public class DisplayLanguageEditorPresenter {
 
     private void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
         checkNotNull(displayLanguage);
-        GWT.log("[DisplayLanguageEditorPresenter] setDisplayLanguage: " + displayLanguage);
+        GWT.log("[DisplayNamedSettingsPresenter] setDisplayLanguage: " + displayLanguage);
 
     }
 }

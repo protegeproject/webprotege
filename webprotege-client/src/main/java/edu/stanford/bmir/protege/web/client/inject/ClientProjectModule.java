@@ -314,7 +314,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    DisplayLanguageEditorView provideDisplayLanguageEditorView(DisplayLanguageEditorViewImpl impl) {
+    DisplayNameSettingsView provideDisplayLanguageEditorView(DisplayNameSettingsViewImpl impl) {
         return impl;
     }
 
