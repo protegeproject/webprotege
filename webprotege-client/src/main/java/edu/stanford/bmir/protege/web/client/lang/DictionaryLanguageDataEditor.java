@@ -47,7 +47,7 @@ public class DictionaryLanguageDataEditor extends Composite implements ValueEdit
     public Optional<DictionaryLanguageData> getValue() {
         Optional<OWLAnnotationPropertyData> property = view.getAnnotationProperty();
         String lang = view.getLang().toLowerCase();
-        return property.map(prop -> DictionaryLanguageData.get(prop, lang));
+        return property.map(prop -> DictionaryLanguageData.get(prop.getEntity().getIRI(), prop.getBrowserText(), lang));
     }
 
     @Override
