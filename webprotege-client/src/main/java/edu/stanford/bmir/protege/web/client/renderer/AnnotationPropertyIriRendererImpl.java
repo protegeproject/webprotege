@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.tag.GetEntityTagsAction;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,10 +50,24 @@ public class AnnotationPropertyIriRendererImpl implements AnnotationPropertyIriR
             return;
         }
         pending.put(iri, renderingConsumer);
-        dispatchService.execute(new GetEntityRenderingAction(projectId, DataFactory.getOWLAnnotationProperty(iri)),
-                                result -> {
-                                    OWLAnnotationPropertyData ed = (OWLAnnotationPropertyData) result.getEntityData();
-                                    pending.removeAll(iri).forEach(consumer -> consumer.accept(ed));
-                                });
+        // Don't go to server for well known renderings
+        if(iri.equals(OWLRDFVocabulary.RDFS_LABEL.getIRI())) {
+            propagateToPending(DataFactory.getRdfsLabelData());
+        }
+        else if(iri.equals(SKOSVocabulary.PREFLABEL.getIRI())) {
+            propagateToPending(DataFactory.getSkosPrefLabelData());
+        }
+        else {
+            dispatchService.execute(new GetEntityRenderingAction(projectId, DataFactory.getOWLAnnotationProperty(iri)),
+                                    result -> {
+                                        OWLAnnotationPropertyData ed = (OWLAnnotationPropertyData) result.getEntityData();
+                                        propagateToPending(ed);
+                                    });
+        }
+
+    }
+
+    private void propagateToPending(OWLAnnotationPropertyData ed) {
+        pending.removeAll(ed.getEntity().getIRI()).forEach(consumer -> consumer.accept(ed));
     }
 }

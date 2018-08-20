@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
@@ -342,6 +343,14 @@ public class DataFactory {
         return OWLAnnotationPropertyData.get(
                 dataFactory.getRDFSLabel(),
                 OWLRDFVocabulary.RDFS_LABEL.getPrefixedName(),
+                ImmutableMap.of()
+        );
+    }
+
+    public static OWLAnnotationPropertyData getSkosPrefLabelData() {
+        return OWLAnnotationPropertyData.get(
+                dataFactory.getOWLAnnotationProperty(SKOSVocabulary.PREFLABEL.getIRI()),
+                SKOSVocabulary.PREFLABEL.getPrefixedName(),
                 ImmutableMap.of()
         );
     }
