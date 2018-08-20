@@ -18,17 +18,17 @@ public class DisplayLanguageChangedEvent extends ProjectEvent<PrefLangChangedHan
     public static final transient Event.Type<PrefLangChangedHandler> ON_DISPLAY_LANGUAGE_CHANGED = new Event.Type<>();
 
     @Nonnull
-    private final DisplayNameSettings displayLang;
+    private final DisplayNameSettings displayNameSettings;
 
     private DisplayLanguageChangedEvent(@Nonnull ProjectId source,
-                                        @Nonnull DisplayNameSettings displayLang) {
+                                        @Nonnull DisplayNameSettings displayNameSettings) {
         super(source);
-        this.displayLang = checkNotNull(displayLang);
+        this.displayNameSettings = checkNotNull(displayNameSettings);
     }
 
     public static DisplayLanguageChangedEvent get(@Nonnull ProjectId projectId,
-                                                  @Nonnull DisplayNameSettings prefLang) {
-        return new DisplayLanguageChangedEvent(projectId, prefLang);
+                                                  @Nonnull DisplayNameSettings displayNameSettings) {
+        return new DisplayLanguageChangedEvent(projectId, displayNameSettings);
     }
 
     @Nonnull
@@ -48,6 +48,6 @@ public class DisplayLanguageChangedEvent extends ProjectEvent<PrefLangChangedHan
 
     @Nonnull
     public DisplayNameSettings getDisplayLanguage() {
-        return displayLang;
+        return displayNameSettings;
     }
 }

@@ -25,20 +25,20 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private DisplayNameSettings language = DisplayNameSettings.empty();
+    private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
 
     @Inject
     public EntityNodeHtmlRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
     }
 
-    public void setDisplayLanguage(@Nonnull DisplayNameSettings language) {
-        this.language = checkNotNull(language);
+    public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
+        this.displayNameSettings = checkNotNull(displayNameSettings);
     }
 
     @Override
     public String getHtmlRendering(EntityNode node) {
-        GWT.log("[EntityNodeHtmlRenderer] Lang: " + language);
+        GWT.log("[EntityNodeHtmlRenderer] Settings: " + displayNameSettings);
         GWT.log("[EntityNodeHtmlRenderer] Rendering node: " + node);
         StringBuilder sb = new StringBuilder();
         sb.append("<div class='wp-entity-node'>");
@@ -55,8 +55,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         if (node.getEntity().isBuiltIn()) {
             sb.append(node.getBrowserText());
         }
-        else if (!language.getPrimaryDisplayNameLanguages().isEmpty()) {
-            String text = node.getText(language.getPrimaryDisplayNameLanguages(), null);
+        else if (!displayNameSettings.getPrimaryDisplayNameLanguages().isEmpty()) {
+            String text = node.getText(displayNameSettings.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
                 sb.append("<span class='wp-entity-node__display-name__default-language'>");
                 sb.append("&bull;&bull;&bull;&bull;&bull;");
@@ -73,7 +73,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             // Plain
             sb.append(node.getBrowserText());
         }
-        String secondaryText = node.getText(language.getSecondaryDisplayNameLanguages(), null);
+        String secondaryText = node.getText(displayNameSettings.getSecondaryDisplayNameLanguages(), null);
         if (secondaryText != null) {
             sb.append(" <span class='wp-entity-node__display-name__secondary-language'>");
             sb.append(secondaryText);

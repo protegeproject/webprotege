@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
-import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
@@ -30,7 +29,7 @@ public class PreferredLanguageManager {
     private final DisplayLanguageStorage displayLanguageStorage;
 
     @Nonnull
-    private DisplayNameSettings displayLanguage = DisplayNameSettings.empty();
+    private DisplayNameSettings displayNameSettings = DisplayNameSettings.empty();
 
     private boolean loaded = false;
 
@@ -47,22 +46,19 @@ public class PreferredLanguageManager {
     public DisplayNameSettings getDisplayLanguage() {
         if(!loaded) {
             loaded = true;
-            displayLanguage = displayLanguageStorage.get(DisplayNameSettings.empty());
-            GWT.log("[PreferredLanguageManager] getDisplayLanguage: " + displayLanguage);
+            displayNameSettings = displayLanguageStorage.get(DisplayNameSettings.empty());
         }
-        return displayLanguage;
+        return displayNameSettings;
     }
 
-    public void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
-        checkNotNull(displayLanguage);
-        GWT.log("[PreferredLanguageManager] Setting display language (check): " + displayLanguage);
-        if(this.displayLanguage.equals(displayLanguage)) {
+    public void setDisplayLanguage(@Nonnull DisplayNameSettings displayNameSettings) {
+        checkNotNull(displayNameSettings);
+        if(this.displayNameSettings.equals(displayNameSettings)) {
             return;
         }
-        GWT.log("[PreferredLanguageManager] Setting display language: " + displayLanguage);
-        this.displayLanguage = checkNotNull(displayLanguage);
-        this.displayLanguageStorage.store(displayLanguage);
-        eventBus.fireEventFromSource(DisplayLanguageChangedEvent.get(projectId, displayLanguage).asGWTEvent(),
+        this.displayNameSettings = checkNotNull(displayNameSettings);
+        this.displayLanguageStorage.store(displayNameSettings);
+        eventBus.fireEventFromSource(DisplayLanguageChangedEvent.get(projectId, displayNameSettings).asGWTEvent(),
                                      projectId);
     }
 }
