@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.frame;
 
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -25,8 +25,8 @@ public class OWLEntityDescriptionEditorPortletPresenter extends AbstractWebProte
     private final ManchesterSyntaxFrameEditorPresenter presenter;
 
     @Inject
-    public OWLEntityDescriptionEditorPortletPresenter(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+    public OWLEntityDescriptionEditorPortletPresenter(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, ManchesterSyntaxFrameEditorPresenter presenter, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.presenter = presenter;
     }
 

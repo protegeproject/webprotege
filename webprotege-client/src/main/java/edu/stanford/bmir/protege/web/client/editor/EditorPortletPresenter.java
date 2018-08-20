@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.editor;
 
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.tag.TagListPresenter;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.webprotege.shared.annotations.Portlet;
@@ -47,8 +47,8 @@ public class EditorPortletPresenter extends AbstractWebProtegePortletPresenter {
             @Nonnull SelectionModel selectionModel,
             @Nonnull EditorPortletView view,
             @Nonnull TagListPresenter tagListPresenter,
-            @Nonnull EditorPresenter editorPresenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+            @Nonnull EditorPresenter editorPresenter, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.view = checkNotNull(view);
         this.tagListPresenter = checkNotNull(tagListPresenter);
         this.editorPresenter = checkNotNull(editorPresenter);

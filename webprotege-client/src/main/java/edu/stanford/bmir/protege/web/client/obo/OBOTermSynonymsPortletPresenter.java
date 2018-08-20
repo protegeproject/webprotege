@@ -3,10 +3,10 @@ package edu.stanford.bmir.protege.web.client.obo;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermSynonymsAction;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermSynonymsAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -45,8 +45,8 @@ public class OBOTermSynonymsPortletPresenter extends AbstractOBOTermPortletPrese
                                            @Nonnull ProjectId projectId,
                                            @Nonnull DispatchServiceManager dispatch,
                                            @Nonnull OBOTermSynonymListEditor editor,
-                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.dispatch = dispatch;
         this.editor = editor;
         this.editorHolder = new SimplePanel(editor);

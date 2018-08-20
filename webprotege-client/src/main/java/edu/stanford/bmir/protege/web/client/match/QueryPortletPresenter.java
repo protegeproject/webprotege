@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.match.GetMatchingEntitiesResult;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -44,8 +44,8 @@ public class QueryPortletPresenter extends AbstractWebProtegePortletPresenter {
                                  @Nonnull ProjectId projectId,
                                  @Nonnull EntityCriteriaPresenter presenter,
                                  @Nonnull DispatchServiceManager dispatchServiceManager,
-                                 @Nonnull QueryPortletView view, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                 @Nonnull QueryPortletView view, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.presenter = checkNotNull(presenter);
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.view = checkNotNull(view);

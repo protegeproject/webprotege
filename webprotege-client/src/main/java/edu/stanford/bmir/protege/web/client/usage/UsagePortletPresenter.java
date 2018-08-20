@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
@@ -60,8 +60,8 @@ public class UsagePortletPresenter extends AbstractWebProtegePortletPresenter {
     public UsagePortletPresenter(SelectionModel selectionModel,
                                  DispatchServiceManager dispatchServiceManager,
                                  FilterView filterView,
-                                 ProjectId projectId, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                 ProjectId projectId, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
         usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());

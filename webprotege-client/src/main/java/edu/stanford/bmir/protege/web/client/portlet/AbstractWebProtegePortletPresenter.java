@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -28,7 +28,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     private final HandlerRegistration selectionModelHandlerRegistration;
 
-    private final PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer;
+    private final DisplayNameRenderer displayNameRenderer;
 
     private Optional<PortletUi> portletUi = Optional.empty();
 
@@ -40,11 +40,11 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
 
     public AbstractWebProtegePortletPresenter(@Nonnull SelectionModel selectionModel,
                                               @Nonnull ProjectId projectId,
-                                              @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
+                                              @Nonnull DisplayNameRenderer displayNameRenderer) {
 
         this.selectionModel = checkNotNull(selectionModel);
         this.projectId = checkNotNull(projectId);
-        this.preferredLanguageBrowserTextRenderer = preferredLanguageBrowserTextRenderer;
+        this.displayNameRenderer = displayNameRenderer;
         selectionModelHandlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
                 if (portletUi.map(ui -> ui.asWidget().isAttached()).orElse(true)) {
                     if (trackSelection) {
@@ -111,7 +111,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         portletUi.ifPresent(ui -> {
             if(displayedEntityData.isPresent()) {
                 displayedEntityData.ifPresent(entityData -> {
-                    String subTitle = preferredLanguageBrowserTextRenderer.getBrowserText(entityData);
+                    String subTitle = displayNameRenderer.getBrowserText(entityData);
                     ui.setSubtitle(subTitle);
                 });
             }

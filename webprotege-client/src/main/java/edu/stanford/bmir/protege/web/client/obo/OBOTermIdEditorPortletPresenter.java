@@ -2,10 +2,10 @@ package edu.stanford.bmir.protege.web.client.obo;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermIdAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -44,8 +44,8 @@ public class OBOTermIdEditorPortletPresenter extends AbstractOBOTermPortletPrese
                                            @Nonnull ProjectId projectId,
                                            @Nonnull OBOTermIdEditor editor,
                                            @Nonnull DispatchServiceManager dispatchServiceManager,
-                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                           @Nonnull LoggedInUserProjectPermissionChecker permissionChecker, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.editor = editor;
         this.dispatch = dispatchServiceManager;
         this.permissionChecker = permissionChecker;

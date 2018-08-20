@@ -3,13 +3,13 @@ package edu.stanford.bmir.protege.web.client.issues;
 import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.action.UIAction;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -61,8 +61,8 @@ public class EntityDiscussionThreadPortletPresenter extends AbstractWebProtegePo
                                                   @Nonnull Messages messages,
                                                   @Nonnull LoggedInUserProjectPermissionChecker permissionChecker,
                                                   @Nonnull ProjectId projectId,
-                                                  @Nonnull DiscussionThreadListPresenter presenter, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                                  @Nonnull DiscussionThreadListPresenter presenter, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.filterView = filterView;
         this.messages = messages;
         this.displayResolvedThreadsFilter = new FilterId(messages.discussionThread_DisplayResolvedThreads());

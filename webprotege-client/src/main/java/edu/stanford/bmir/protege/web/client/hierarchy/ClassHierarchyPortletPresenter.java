@@ -18,7 +18,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.gwt.graphtree.client.TreeWidget;
@@ -109,8 +109,8 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
                                           @Nonnull EntityHierarchyDropHandler dropHandler,
                                           @Nonnull FilterView filterView,
                                           @Nonnull TagVisibilityPresenter tagVisibilityPresenter,
-                                          @Nonnull PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer, @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                          @Nonnull DisplayNameRenderer displayNameRenderer, @Nonnull DisplayNameSettingsManager displayNameSettingsManager) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.watchPresenter = checkNotNull(watchPresenter);
         this.searchDialogController = checkNotNull(searchDialogController);
         this.messages = checkNotNull(messages);

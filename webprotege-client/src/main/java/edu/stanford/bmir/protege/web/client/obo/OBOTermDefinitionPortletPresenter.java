@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.obo;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.obo.GetOboTermDefinitionAction;
 import edu.stanford.bmir.protege.web.shared.obo.SetOboTermDefinitionAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,8 +33,8 @@ public class OBOTermDefinitionPortletPresenter extends AbstractOBOTermPortletPre
     public OBOTermDefinitionPortletPresenter(SelectionModel selectionModel,
                                              ProjectId projectId,
                                              @Nonnull DispatchServiceManager dispatch,
-                                             @Nonnull OBOTermDefinitionEditor editor, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                             @Nonnull OBOTermDefinitionEditor editor, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.dispatch = dispatch;
         this.editor = editor;
     }

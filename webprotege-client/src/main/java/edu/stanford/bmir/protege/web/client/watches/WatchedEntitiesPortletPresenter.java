@@ -3,13 +3,13 @@ package edu.stanford.bmir.protege.web.client.watches;
 import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
+import edu.stanford.bmir.protege.web.client.lang.DisplayNameRenderer;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortletPresenter;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletUi;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -46,8 +46,8 @@ public class WatchedEntitiesPortletPresenter extends AbstractWebProtegePortletPr
                                            LoggedInUserProjectPermissionChecker permissionChecker,
                                            SelectionModel selectionModel,
                                            ProjectId projectId,
-                                           LoggedInUserProvider loggedInUserProvider, PreferredLanguageBrowserTextRenderer preferredLanguageBrowserTextRenderer) {
-        super(selectionModel, projectId, preferredLanguageBrowserTextRenderer);
+                                           LoggedInUserProvider loggedInUserProvider, DisplayNameRenderer displayNameRenderer) {
+        super(selectionModel, projectId, displayNameRenderer);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;

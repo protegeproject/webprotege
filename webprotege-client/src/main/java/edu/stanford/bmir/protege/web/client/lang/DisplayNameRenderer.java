@@ -11,12 +11,12 @@ import java.util.Objects;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
-public class PreferredLanguageBrowserTextRenderer {
+public class DisplayNameRenderer {
 
     private final DisplayNameSettingsManager displayNameSettingsManager;
 
     @Inject
-    public PreferredLanguageBrowserTextRenderer(DisplayNameSettingsManager displayNameSettingsManager) {
+    public DisplayNameRenderer(DisplayNameSettingsManager displayNameSettingsManager) {
         this.displayNameSettingsManager = displayNameSettingsManager;
     }
 
