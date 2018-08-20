@@ -18,9 +18,9 @@ import javax.inject.Provider;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class DisplayDictionaryLanguagesViewImpl extends Composite implements DisplayDictionaryLanguagesView {
+public class DefaultDisplayNameSettingsViewImpl extends Composite implements DefaultDisplayNameSettingsView {
 
-    interface DisplayLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DisplayDictionaryLanguagesViewImpl> {
+    interface DisplayLanguagesViewImplUiBinder extends UiBinder<HTMLPanel, DefaultDisplayNameSettingsViewImpl> {
 
     }
 
@@ -30,7 +30,7 @@ public class DisplayDictionaryLanguagesViewImpl extends Composite implements Dis
     ValueListFlexEditorImpl<DictionaryLanguageData> languagesList;
 
     @Inject
-    public DisplayDictionaryLanguagesViewImpl(@Nonnull Provider<DictionaryLanguageDataEditor> editorProvider) {
+    public DefaultDisplayNameSettingsViewImpl(@Nonnull Provider<DictionaryLanguageDataEditor> editorProvider) {
         languagesList = new ValueListFlexEditorImpl<>(editorProvider::get);
         languagesList.setEnabled(true);
         languagesList.setNewRowMode(ValueListEditor.NewRowMode.MANUAL);

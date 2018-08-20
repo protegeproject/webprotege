@@ -289,7 +289,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    DisplayDictionaryLanguagesView provideDisplayLanguagesView(DisplayDictionaryLanguagesViewImpl impl) {
+    DefaultDisplayNameSettingsView provideDisplayLanguagesView(DefaultDisplayNameSettingsViewImpl impl) {
         return impl;
     }
 

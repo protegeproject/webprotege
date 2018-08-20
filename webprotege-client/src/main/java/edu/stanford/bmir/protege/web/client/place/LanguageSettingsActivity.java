@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.place;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import edu.stanford.bmir.protege.web.client.lang.UserLanguageSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.place.LanguageSettingsPlace;
 
 import javax.annotation.Nonnull;
@@ -21,10 +21,10 @@ public class LanguageSettingsActivity extends AbstractActivity {
     private final LanguageSettingsPlace place;
 
     @Nonnull
-    private final UserLanguageSettingsPresenter presenter;
+    private final DefaultDisplayNameSettingsPresenter presenter;
 
     public LanguageSettingsActivity(@Nonnull LanguageSettingsPlace place,
-                                    @Nonnull UserLanguageSettingsPresenter presenter) {
+                                    @Nonnull DefaultDisplayNameSettingsPresenter presenter) {
         this.place = checkNotNull(place);
         this.presenter = checkNotNull(presenter);
     }
@@ -35,18 +35,18 @@ public class LanguageSettingsActivity extends AbstractActivity {
     }
 
     @Nonnull
-    public UserLanguageSettingsPresenter getPresenter() {
+    public DefaultDisplayNameSettingsPresenter getPresenter() {
         return presenter;
     }
 
     public static LanguageSettingsActivity get(@Nonnull LanguageSettingsPlace place,
-                                               @Nonnull UserLanguageSettingsPresenter presenter) {
+                                               @Nonnull DefaultDisplayNameSettingsPresenter presenter) {
         return new LanguageSettingsActivity(place, presenter);
     }
 
     @Override
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        UserLanguageSettingsPresenter presenter = getPresenter();
+        DefaultDisplayNameSettingsPresenter presenter = getPresenter();
         presenter.setNextPlace(getPlace().getNextPlace());
         presenter.start(panel);
 

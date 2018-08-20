@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public class UserLanguageSettingsPresenter {
+public class DefaultDisplayNameSettingsPresenter {
 
     @Nonnull
     private final ProjectId projectId;
@@ -30,7 +30,7 @@ public class UserLanguageSettingsPresenter {
     private final DispatchServiceManager dispatch;
 
     @Nonnull
-    private final DisplayDictionaryLanguagesView displayDictionaryLanguagesView;
+    private final DefaultDisplayNameSettingsView defaultDisplayNameSettingsView;
 
     @Nonnull
     private final DefaultLanguageTagView defaultLanguageTagView;
@@ -39,21 +39,21 @@ public class UserLanguageSettingsPresenter {
     private Optional<Place> nextPlace = Optional.empty();
 
     @Inject
-    public UserLanguageSettingsPresenter(@Nonnull ProjectId projectId,
-                                         @Nonnull SettingsPresenter settingsPresenter,
-                                         @Nonnull DispatchServiceManager dispatch,
-                                         @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView, @Nonnull DefaultLanguageTagView defaultLanguageTagView) {
+    public DefaultDisplayNameSettingsPresenter(@Nonnull ProjectId projectId,
+                                               @Nonnull SettingsPresenter settingsPresenter,
+                                               @Nonnull DispatchServiceManager dispatch,
+                                               @Nonnull DefaultDisplayNameSettingsView defaultDisplayNameSettingsView, @Nonnull DefaultLanguageTagView defaultLanguageTagView) {
         this.projectId = checkNotNull(projectId);
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.dispatch = checkNotNull(dispatch);
         this.defaultLanguageTagView = checkNotNull(defaultLanguageTagView);
-        this.displayDictionaryLanguagesView = checkNotNull(displayDictionaryLanguagesView);
+        this.defaultDisplayNameSettingsView = checkNotNull(defaultDisplayNameSettingsView);
     }
 
     public void start(@Nonnull AcceptsOneWidget container) {
         settingsPresenter.start(container);
         settingsPresenter.setSettingsTitle("User Language Settings");
-        settingsPresenter.addSection("Entity Display Name").setWidget(displayDictionaryLanguagesView);
+        settingsPresenter.addSection("Entity Display Name").setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection("New Entities").setWidget(defaultLanguageTagView);
     }
 

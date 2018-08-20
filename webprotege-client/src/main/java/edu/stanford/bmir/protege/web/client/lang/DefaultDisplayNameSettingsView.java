@@ -7,6 +7,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 17 Jul 2018
  */
-public interface DisplayDictionaryLanguagesView extends IsWidget {
+public interface DefaultDisplayNameSettingsView extends IsWidget {
 
 }

@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.lang.DefaultDictionaryLanguageView;
-import edu.stanford.bmir.protege.web.client.lang.DisplayDictionaryLanguagesView;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsView;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
 import edu.stanford.bmir.protege.web.client.settings.SettingsPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import org.semanticweb.owlapi.model.IRI;
 
 import javax.annotation.Nonnull;
@@ -57,7 +56,7 @@ public class ProjectSettingsPresenter {
     private final DefaultDictionaryLanguageView defaultDictionaryLanguageView;
 
     @Nonnull
-    private final DisplayDictionaryLanguagesView displayDictionaryLanguagesView;
+    private final DefaultDisplayNameSettingsView defaultDisplayNameSettingsView;
 
     @Nonnull
     private final EntityCrudKitSettingsEditor entityCrudKitSettingsEditor;
@@ -82,7 +81,7 @@ public class ProjectSettingsPresenter {
                                     @Nonnull SettingsPresenter settingsPresenter,
                                     @Nonnull GeneralSettingsView generalSettingsView,
                                     @Nonnull DefaultDictionaryLanguageView defaultDictionaryLanguageView,
-                                    @Nonnull DisplayDictionaryLanguagesView displayDictionaryLanguagesView,
+                                    @Nonnull DefaultDisplayNameSettingsView defaultDisplayNameSettingsView,
                                     @Nonnull EntityCrudKitSettingsEditor entityCrudKitSettingsEditor, @Nonnull SlackWebhookSettingsView slackWebhookSettingsView,
                                     @Nonnull WebhookSettingsView webhookSettingsView,
                                     @Nonnull Messages messages, @Nonnull AnnotationPropertyIriRenderer annotationPropertyIriRenderer) {
@@ -93,7 +92,7 @@ public class ProjectSettingsPresenter {
         this.settingsPresenter = checkNotNull(settingsPresenter);
         this.generalSettingsView = checkNotNull(generalSettingsView);
         this.defaultDictionaryLanguageView = checkNotNull(defaultDictionaryLanguageView);
-        this.displayDictionaryLanguagesView = checkNotNull(displayDictionaryLanguagesView);
+        this.defaultDisplayNameSettingsView = checkNotNull(defaultDisplayNameSettingsView);
         this.entityCrudKitSettingsEditor = checkNotNull(entityCrudKitSettingsEditor);
         this.slackWebhookSettingsView = checkNotNull(slackWebhookSettingsView);
         this.webhookSettingsView = checkNotNull(webhookSettingsView);
@@ -126,7 +125,7 @@ public class ProjectSettingsPresenter {
         // TODO: Check that the user can do this
         settingsPresenter.addSection(messages.newEntitySettings()).setWidget(entityCrudKitSettingsEditor);
         settingsPresenter.addSection(messages.language_defaultSettings_title()).setWidget(defaultDictionaryLanguageView);
-        settingsPresenter.addSection("Default Display Name Settings").setWidget(displayDictionaryLanguagesView);
+        settingsPresenter.addSection("Default Display Name Settings").setWidget(defaultDisplayNameSettingsView);
         settingsPresenter.addSection(messages.projectSettings_slackWebHookUrl()).setWidget(slackWebhookSettingsView);
         settingsPresenter.addSection(messages.projectSettings_payloadUrls()).setWidget(webhookSettingsView);
         settingsPresenter.setBusy(container, true);

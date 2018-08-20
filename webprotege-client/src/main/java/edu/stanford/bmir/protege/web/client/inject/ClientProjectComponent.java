@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.inject;
 
 import dagger.Subcomponent;
 import edu.stanford.bmir.protege.web.client.collection.CollectionPresenter;
-import edu.stanford.bmir.protege.web.client.lang.UserLanguageSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.lang.DefaultDisplayNameSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.project.ProjectPrefixDeclarationsPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
@@ -38,5 +38,5 @@ public interface ClientProjectComponent {
 
     ProjectTagsPresenter getProjectTagsPresenter();
 
-    UserLanguageSettingsPresenter getLanguageSettingsPresenter();
+    DefaultDisplayNameSettingsPresenter getLanguageSettingsPresenter();
 }
