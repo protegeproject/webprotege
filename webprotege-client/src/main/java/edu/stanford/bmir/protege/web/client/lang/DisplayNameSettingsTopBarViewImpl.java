@@ -18,15 +18,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
-public class PreferredLanguageViewImpl extends Composite implements PreferredLanguageView {
+public class DisplayNameSettingsTopBarViewImpl extends Composite implements DisplayNameSettingsTopBarView {
 
     private PopupPanel popupPanel;
 
-    interface PreferredLanguageViewImplUiBinder extends UiBinder<HTMLPanel, PreferredLanguageViewImpl> {
+    interface DisplayNameSettingsTopBarViewImplUiBinder extends UiBinder<HTMLPanel, DisplayNameSettingsTopBarViewImpl> {
 
     }
 
-    private static PreferredLanguageViewImplUiBinder ourUiBinder = GWT.create(PreferredLanguageViewImplUiBinder.class);
+    private static DisplayNameSettingsTopBarViewImplUiBinder ourUiBinder = GWT.create(DisplayNameSettingsTopBarViewImplUiBinder.class);
 
 
     @UiField
@@ -36,7 +36,7 @@ public class PreferredLanguageViewImpl extends Composite implements PreferredLan
     private final DisplayNamedSettingsPresenter editorPresenter;
 
     @Inject
-    public PreferredLanguageViewImpl(@Nonnull DisplayNamedSettingsPresenter editorPresenter) {
+    public DisplayNameSettingsTopBarViewImpl(@Nonnull DisplayNamedSettingsPresenter editorPresenter) {
         this.editorPresenter = editorPresenter;
         popupPanel = new PopupPanel(true, true);
         popupPanel.addCloseHandler(event -> editorPresenter.stop());

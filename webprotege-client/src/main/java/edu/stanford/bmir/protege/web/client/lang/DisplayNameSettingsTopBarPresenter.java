@@ -12,13 +12,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
-public class PreferredLanguagePresenter {
+public class DisplayNameSettingsTopBarPresenter {
 
     @Nonnull
-    private final PreferredLanguageView view;
+    private final DisplayNameSettingsTopBarView view;
 
     @Inject
-    public PreferredLanguagePresenter(@Nonnull PreferredLanguageView view) {
+    public DisplayNameSettingsTopBarPresenter(@Nonnull DisplayNameSettingsTopBarView view) {
         this.view = checkNotNull(view);
     }
 

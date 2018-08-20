@@ -309,7 +309,7 @@ public class ClientProjectModule {
     }
 
     @Provides
-    PreferredLanguageView providePreferredLanguageView(PreferredLanguageViewImpl impl) {
+    DisplayNameSettingsTopBarView providePreferredLanguageView(DisplayNameSettingsTopBarViewImpl impl) {
         return impl;
     }
 

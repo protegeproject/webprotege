@@ -7,6 +7,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
-public interface PreferredLanguageView extends IsWidget {
+public interface DisplayNameSettingsTopBarView extends IsWidget {
 
 }
