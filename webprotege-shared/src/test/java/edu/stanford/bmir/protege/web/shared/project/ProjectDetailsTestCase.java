@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -55,6 +56,7 @@ public class ProjectDetailsTestCase {
                                             owner,
                                             IN_TRASH,
                                             DictionaryLanguage.rdfsLabel(""),
+                                            DisplayNameSettings.empty(),
                                             createdAt,
                                             createdBy,
                                             modifiedAt,

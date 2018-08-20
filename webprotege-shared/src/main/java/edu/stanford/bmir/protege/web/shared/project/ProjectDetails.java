@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
 import com.google.gwt.core.shared.GwtIncompatible;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -46,6 +47,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
 
     public static final String DEFAULT_LANGUAGE = "defaultLanguage";
 
+    public static final String DEFAULT_DISPLAY_NAME_SETTINGS = "defaultDisplayNameSettings";
+
     /**
      * Constructs a {@link ProjectDetails} object.
      *
@@ -66,7 +69,8 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                      @Nonnull String description,
                                      @Nonnull UserId owner,
                                      boolean inTrash,
-                                     @Nullable DictionaryLanguage dictionaryLanguage,
+                                     @Nonnull DictionaryLanguage dictionaryLanguage,
+                                     @Nonnull DisplayNameSettings displayNameSettings,
                                      long createdAt,
                                      @Nonnull UserId createdBy,
                                      long lastModifiedAt,
@@ -77,6 +81,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                             owner,
                                             inTrash,
                                             dictionaryLanguage,
+                                            displayNameSettings,
                                             createdAt,
                                             createdBy,
                                             lastModifiedAt,
@@ -96,18 +101,21 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                                          @Nonnull @JsonProperty(OWNER) UserId owner,
                                          @JsonProperty(IN_TRASH) boolean inTrash,
                                          @Nullable @JsonProperty(DEFAULT_LANGUAGE) DictionaryLanguage dictionaryLanguage,
+                                         @Nullable @JsonProperty(DEFAULT_DISPLAY_NAME_SETTINGS) DisplayNameSettings displayNameSettings,
                                          @JsonProperty(CREATED_AT) Instant createdAt,
                                          @JsonProperty(CREATED_BY) @Nonnull UserId createdBy,
                                          @JsonProperty(MODIFIED_AT) Instant lastModifiedAt,
                                          @JsonProperty(MODIFIED_BY) @Nonnull UserId lastModifiedBy) {
         String desc = description == null ? "" : description;
         DictionaryLanguage dl = dictionaryLanguage == null ? DictionaryLanguage.rdfsLabel("") : dictionaryLanguage;
+        DisplayNameSettings dns = displayNameSettings == null ? DisplayNameSettings.empty() : displayNameSettings;
         return get(projectId,
                    displayName,
                    desc,
                    owner,
                    inTrash,
                    dl,
+                   dns,
                    createdAt.toEpochMilli(),
                    createdBy,
                    lastModifiedAt.toEpochMilli(),
@@ -125,6 +133,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getOwner(),
                        isInTrash(),
                        getDefaultDictionaryLanguage(),
+                       getDefaultDisplayNameSettings(),
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
@@ -143,6 +152,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getOwner(),
                        isInTrash(),
                        getDefaultDictionaryLanguage(),
+                       getDefaultDisplayNameSettings(),
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
@@ -162,6 +172,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getOwner(),
                        isInTrash(),
                        defaultLanguage,
+                       getDefaultDisplayNameSettings(),
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
@@ -180,6 +191,7 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
                        getOwner(),
                        inTrash,
                        getDefaultDictionaryLanguage(),
+                       getDefaultDisplayNameSettings(),
                        getCreatedAt(),
                        getCreatedBy(),
                        getLastModifiedAt(),
@@ -237,6 +249,13 @@ public abstract class ProjectDetails implements Serializable, Comparable<Project
     @JsonProperty(DEFAULT_LANGUAGE)
     @Nonnull
     public abstract DictionaryLanguage getDefaultDictionaryLanguage();
+
+    /**
+     * Gets the default display name settings for this project
+     */
+    @JsonProperty(DEFAULT_DISPLAY_NAME_SETTINGS)
+    @Nonnull
+    public abstract DisplayNameSettings getDefaultDisplayNameSettings();
 
     /**
      * Gets the timestamp of when the project was created.

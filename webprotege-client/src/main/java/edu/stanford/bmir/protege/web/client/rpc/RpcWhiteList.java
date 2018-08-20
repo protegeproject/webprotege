@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyCharacteristic;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.State;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.match.criteria.Criteria;
 import edu.stanford.bmir.protege.web.shared.match.criteria.MultiMatchType;
 import edu.stanford.bmir.protege.web.shared.match.criteria.HierarchyFilterType;
@@ -67,6 +68,8 @@ public class RpcWhiteList implements Action, Result {
     PropertyValueDescriptor propertyValueDescriptor;
 
     PropertyValue propertyValue;
+
+    DisplayNameSettings displayNameSettings;
 
     public RpcWhiteList() {
     }
@@ -209,5 +212,17 @@ public class RpcWhiteList implements Action, Result {
 
     public PropertyValue getPropertyValue() {
         return propertyValue;
+    }
+
+    public void setPropertyValue(PropertyValue propertyValue) {
+        this.propertyValue = propertyValue;
+    }
+
+    public DisplayNameSettings getDisplayNameSettings() {
+        return displayNameSettings;
+    }
+
+    public void setDisplayNameSettings(DisplayNameSettings displayNameSettings) {
+        this.displayNameSettings = displayNameSettings;
     }
 }

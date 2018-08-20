@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLAnnotationPropertyData;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -174,6 +175,7 @@ public class ProjectSettingsPresenter {
                 generalSettingsView.getDisplayName(),
                 generalSettingsView.getDescription(),
                 getDefaultLanguage(),
+                getDefaultDisplayNameSettings(),
                 slackIntegrationSettings,
                 webhookSettings
         );
@@ -198,6 +200,10 @@ public class ProjectSettingsPresenter {
                                                                           .orElse(DataFactory.getRdfsLabelData());
         String langTag = defaultDictionaryLanguageView.getLanguageTag();
         return DictionaryLanguage.create(property.getEntity().getIRI(), langTag);
+    }
+
+    private DisplayNameSettings getDefaultDisplayNameSettings() {
+        return DisplayNameSettings.empty();
     }
 
     private void handleCancel() {

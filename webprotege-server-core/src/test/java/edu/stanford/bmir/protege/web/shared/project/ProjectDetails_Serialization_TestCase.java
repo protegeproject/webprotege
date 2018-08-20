@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
@@ -37,6 +39,10 @@ public class ProjectDetails_Serialization_TestCase {
                                             UserId.getUserId("The Owner"),
                                             true,
                                             DictionaryLanguage.rdfsLabel("en-GB"),
+                                            DisplayNameSettings.get(ImmutableList.of(DictionaryLanguage.rdfsLabel("en-GB"),
+                                                                                     DictionaryLanguage.rdfsLabel("en"),
+                                                                                     DictionaryLanguage.rdfsLabel("")),
+                                                                    ImmutableList.of(DictionaryLanguage.rdfsLabel("de"))),
                                             2L,
                                             UserId.getUserId("The creator"),
                                             3L,

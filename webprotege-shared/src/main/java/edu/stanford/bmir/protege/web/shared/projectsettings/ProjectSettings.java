@@ -4,17 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
-import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -33,6 +29,8 @@ public abstract class ProjectSettings implements Serializable, IsSerializable {
     private static final String DESCRIPTION = "description";
 
     private static final String DEFAULT_LANGUAGE = "defaultLanguage";
+
+    private static final String DEFAULT_DISPLAY_NAME_SETTINGS = "defaultDisplayNameSettings";
 
     private static final String SLACK_INTEGRATION_SETTINGS = "slackIntegrationSettings";
 
@@ -67,6 +65,10 @@ public abstract class ProjectSettings implements Serializable, IsSerializable {
     public abstract DictionaryLanguage getDefaultLanguage();
 
     @Nonnull
+    @JsonProperty(DEFAULT_DISPLAY_NAME_SETTINGS)
+    public abstract DisplayNameSettings getDefaultDisplayNameSettings();
+
+    @Nonnull
     @JsonProperty(SLACK_INTEGRATION_SETTINGS)
     public abstract SlackIntegrationSettings getSlackIntegrationSettings();
 
@@ -80,12 +82,14 @@ public abstract class ProjectSettings implements Serializable, IsSerializable {
                                       @Nonnull @JsonProperty(DISPLAY_NAME) String displayName,
                                       @Nonnull @JsonProperty(DESCRIPTION) String description,
                                       @Nonnull @JsonProperty(DEFAULT_LANGUAGE) DictionaryLanguage defaultLanguage,
+                                      @Nonnull @JsonProperty(DEFAULT_DISPLAY_NAME_SETTINGS) DisplayNameSettings defaultDisplayNameSettings,
                                       @Nonnull @JsonProperty(SLACK_INTEGRATION_SETTINGS) SlackIntegrationSettings slackIntegrationSettings,
                                       @Nonnull @JsonProperty(WEBHOOK_SETTINGS) WebhookSettings webhookSettings) {
         return new AutoValue_ProjectSettings(projectId,
                                              displayName,
                                              description,
                                              defaultLanguage,
+                                             defaultDisplayNameSettings,
                                              slackIntegrationSettings,
                                              webhookSettings);
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
 import edu.stanford.bmir.protege.web.server.webhook.WebhookRepository;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -61,6 +62,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                 settings.getProjectOwner(),
                 false,
                 DictionaryLanguage.rdfsLabel(""),
+                DisplayNameSettings.empty(),
                 now,
                 settings.getProjectOwner(),
                 now,
@@ -134,6 +136,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                    projectDetails.getDisplayName(),
                                    projectDetails.getDescription(),
                                    projectDetails.getDefaultDictionaryLanguage(),
+                                   projectDetails.getDefaultDisplayNameSettings(),
                                    SlackIntegrationSettings.get(slackPayloadUrl),
                                    WebhookSettings.get(webhookSettings));
     }

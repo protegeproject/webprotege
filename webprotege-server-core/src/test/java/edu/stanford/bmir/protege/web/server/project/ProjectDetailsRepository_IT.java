@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.google.common.collect.ImmutableList;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.stanford.bmir.protege.web.server.jackson.ObjectMapperProvider;
 import edu.stanford.bmir.protege.web.server.persistence.MongoTestUtils;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -73,6 +75,10 @@ public class ProjectDetailsRepository_IT {
                                             owner,
                                             IN_TRASH,
                                             DictionaryLanguage.rdfsLabel("en"),
+                                            DisplayNameSettings.get(ImmutableList.of(DictionaryLanguage.rdfsLabel("en-GB"),
+                                                                                     DictionaryLanguage.rdfsLabel("en"),
+                                                                                     DictionaryLanguage.rdfsLabel("")),
+                                                                    ImmutableList.of(DictionaryLanguage.rdfsLabel("de"))),
                                             CREATED_AT,
                                             createdBy,
                                             MODIFIED_AT,
