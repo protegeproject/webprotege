@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -35,7 +35,7 @@ import java.util.Optional;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.shared.access.BuiltInAction.*;
 import static edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId.CLASS_HIERARCHY;
-import static edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
+import static edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED;
 import static edu.stanford.protege.gwt.graphtree.shared.tree.RevealMode.REVEAL_FIRST;
 import static org.semanticweb.owlapi.model.EntityType.CLASS;
 
@@ -182,7 +182,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         eventBus.addProjectEventHandler(getProjectId(), ON_DISPLAY_LANGUAGE_CHANGED, this::handleDisplayLanguageChanged);
     }
 
-    private void handleDisplayLanguageChanged(@Nonnull DisplayLanguageChangedEvent event) {
+    private void handleDisplayLanguageChanged(@Nonnull DisplayNameSettingsChangedEvent event) {
         setPreferredDisplayLanguage(event.getDisplayLanguage());
     }
 

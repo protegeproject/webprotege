@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -121,7 +121,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         GWT.log("[IndividualsListPresenter] Started Individuals List");
         container.setWidget(view.asWidget());
         eventBus.addProjectEventHandler(projectId,
-                                        DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
+                                        DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         event -> setDisplayLanguage(event.getDisplayLanguage()));
         entityNodeUpdater.start(eventBus, this);
     }

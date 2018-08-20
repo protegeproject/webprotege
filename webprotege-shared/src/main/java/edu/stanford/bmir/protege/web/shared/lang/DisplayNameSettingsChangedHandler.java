@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
  * Stanford Center for Biomedical Informatics Research
  * 29 Jul 2018
  */
-public interface PrefLangChangedHandler {
+public interface DisplayNameSettingsChangedHandler {
 
-    void handlePrefLangChanged(@Nonnull DisplayLanguageChangedEvent event);
+    void handleDisplayNameSettingsChanged(@Nonnull DisplayNameSettingsChangedEvent event);
 }

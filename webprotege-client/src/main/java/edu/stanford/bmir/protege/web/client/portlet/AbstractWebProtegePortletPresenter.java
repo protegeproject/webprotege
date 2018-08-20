@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.shared.entity.EntityDisplay;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -71,7 +71,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
                                         ON_BROWSER_TEXT_CHANGED,
                                         this::handleBrowserTextChanged);
         eventBus.addProjectEventHandler(projectId,
-                                        DisplayLanguageChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
+                                        DisplayNameSettingsChangedEvent.ON_DISPLAY_LANGUAGE_CHANGED,
                                         this::handlePrefLangChanged);
     }
 
@@ -85,7 +85,7 @@ public abstract class AbstractWebProtegePortletPresenter implements WebProtegePo
         });
     }
 
-    private void handlePrefLangChanged(DisplayLanguageChangedEvent event) {
+    private void handlePrefLangChanged(DisplayNameSettingsChangedEvent event) {
         displayedEntityData.ifPresent(sel -> {
             updateViewTitle();
         });

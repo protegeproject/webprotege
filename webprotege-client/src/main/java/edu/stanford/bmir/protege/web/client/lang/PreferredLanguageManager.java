@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.lang;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.annotation.Nonnull;
@@ -58,7 +58,7 @@ public class PreferredLanguageManager {
         }
         this.displayNameSettings = checkNotNull(displayNameSettings);
         this.displayLanguageStorage.store(displayNameSettings);
-        eventBus.fireEventFromSource(DisplayLanguageChangedEvent.get(projectId, displayNameSettings).asGWTEvent(),
+        eventBus.fireEventFromSource(DisplayNameSettingsChangedEvent.get(projectId, displayNameSettings).asGWTEvent(),
                                      projectId);
     }
 }
