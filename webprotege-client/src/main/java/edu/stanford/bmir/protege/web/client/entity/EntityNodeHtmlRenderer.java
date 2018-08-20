@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.DataResource;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.tag.Tag;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.bmir.protege.web.shared.watches.WatchType;
@@ -25,14 +25,14 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private DisplayDictionaryLanguage language = DisplayDictionaryLanguage.empty();
+    private DisplayNameSettings language = DisplayNameSettings.empty();
 
     @Inject
     public EntityNodeHtmlRenderer(@Nonnull LoggedInUserProvider loggedInUserProvider) {
         this.loggedInUserProvider = checkNotNull(loggedInUserProvider);
     }
 
-    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language) {
+    public void setDisplayLanguage(@Nonnull DisplayNameSettings language) {
         this.language = checkNotNull(language);
     }
 
@@ -55,8 +55,8 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
         if (node.getEntity().isBuiltIn()) {
             sb.append(node.getBrowserText());
         }
-        else if (!language.getPrimaryLanguages().isEmpty()) {
-            String text = node.getText(language.getPrimaryLanguages(), null);
+        else if (!language.getPrimaryDisplayNameLanguages().isEmpty()) {
+            String text = node.getText(language.getPrimaryDisplayNameLanguages(), null);
             if (text == null) {
                 sb.append("<span class='wp-entity-node__display-name__default-language'>");
                 sb.append("&bull;&bull;&bull;&bull;&bull;");
@@ -73,7 +73,7 @@ public class EntityNodeHtmlRenderer implements TreeNodeRenderer<EntityNode> {
             // Plain
             sb.append(node.getBrowserText());
         }
-        String secondaryText = node.getText(language.getSecondaryLanguages(), null);
+        String secondaryText = node.getText(language.getSecondaryDisplayNameLanguages(), null);
         if (secondaryText != null) {
             sb.append(" <span class='wp-entity-node__display-name__secondary-language'>");
             sb.append(secondaryText);

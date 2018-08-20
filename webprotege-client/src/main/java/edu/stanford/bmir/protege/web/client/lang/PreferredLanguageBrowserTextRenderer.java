@@ -23,7 +23,7 @@ public class PreferredLanguageBrowserTextRenderer {
     @Nonnull
     public String getBrowserText(@Nonnull OWLPrimitiveData primitiveData) {
         return preferredLanguageManager.getDisplayLanguage()
-                                       .getPrimaryLanguages()
+                                       .getPrimaryDisplayNameLanguages()
                                        .stream()
                                        .map(l -> primitiveData.getShortForms().get(l))
                                        .filter(Objects::nonNull)

@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
-
-import javax.annotation.Nonnull;
 
 /**
  * Matthew Horridge

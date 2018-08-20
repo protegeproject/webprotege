@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.client.lang.PreferredLanguageBrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -186,7 +186,7 @@ public class ClassHierarchyPortletPresenter extends AbstractWebProtegePortletPre
         setPreferredDisplayLanguage(event.getDisplayLanguage());
     }
 
-    private void setPreferredDisplayLanguage(@Nonnull DisplayDictionaryLanguage lang) {
+    private void setPreferredDisplayLanguage(@Nonnull DisplayNameSettings lang) {
         renderer.setDisplayLanguage(checkNotNull(lang));
         treeWidget.setRenderer(renderer);
     }

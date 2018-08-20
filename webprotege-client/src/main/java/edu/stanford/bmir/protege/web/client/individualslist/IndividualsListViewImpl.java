@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.list.ListBox;
 import edu.stanford.bmir.protege.web.client.pagination.HasPagination;
 import edu.stanford.bmir.protege.web.client.pagination.PaginatorPresenter;
@@ -18,8 +17,7 @@ import edu.stanford.bmir.protege.web.client.progress.BusyView;
 import edu.stanford.bmir.protege.web.client.search.SearchStringChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNode;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.annotation.Nonnull;
@@ -87,7 +85,7 @@ public class IndividualsListViewImpl extends Composite implements IndividualsLis
     }
 
     @Override
-    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage language) {
+    public void setDisplayLanguage(@Nonnull DisplayNameSettings language) {
         renderer.setDisplayLanguage(language);
         individualsList.setRenderer(renderer);
     }

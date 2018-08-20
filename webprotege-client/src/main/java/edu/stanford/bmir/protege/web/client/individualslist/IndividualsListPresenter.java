@@ -18,7 +18,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.actions.CreateNamedIndividu
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEventBus;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
@@ -126,7 +126,7 @@ public class IndividualsListPresenter implements EntityNodeIndex {
         entityNodeUpdater.start(eventBus, this);
     }
 
-    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
+    public void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
         view.setDisplayLanguage(displayLanguage);
     }
 

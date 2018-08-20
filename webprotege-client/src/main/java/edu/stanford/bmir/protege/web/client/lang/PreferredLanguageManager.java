@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.lang;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.storage.client.Storage;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.lang.DisplayLanguageChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -31,7 +30,7 @@ public class PreferredLanguageManager {
     private final DisplayLanguageStorage displayLanguageStorage;
 
     @Nonnull
-    private DisplayDictionaryLanguage displayLanguage = DisplayDictionaryLanguage.empty();
+    private DisplayNameSettings displayLanguage = DisplayNameSettings.empty();
 
     private boolean loaded = false;
 
@@ -45,16 +44,16 @@ public class PreferredLanguageManager {
     }
 
     @Nonnull
-    public DisplayDictionaryLanguage getDisplayLanguage() {
+    public DisplayNameSettings getDisplayLanguage() {
         if(!loaded) {
             loaded = true;
-            displayLanguage = displayLanguageStorage.get(DisplayDictionaryLanguage.empty());
+            displayLanguage = displayLanguageStorage.get(DisplayNameSettings.empty());
             GWT.log("[PreferredLanguageManager] getDisplayLanguage: " + displayLanguage);
         }
         return displayLanguage;
     }
 
-    public void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
+    public void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
         checkNotNull(displayLanguage);
         GWT.log("[PreferredLanguageManager] Setting display language (check): " + displayLanguage);
         if(this.displayLanguage.equals(displayLanguage)) {

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.lang;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.storage.client.Storage;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 import org.semanticweb.owlapi.model.IRI;
@@ -35,7 +35,7 @@ public class DisplayLanguageStorage {
         this.storage = checkNotNull(storage);
     }
 
-    public void store(@Nonnull DisplayDictionaryLanguage language) {
+    public void store(@Nonnull DisplayNameSettings language) {
         storage.removeItem(getPrimaryLangIriKey());
         storage.removeItem(getPrimaryLangTagKey());
 
@@ -71,11 +71,11 @@ public class DisplayLanguageStorage {
     }
 
     @Nonnull
-    public DisplayDictionaryLanguage get(@Nonnull DisplayDictionaryLanguage def) {
+    public DisplayNameSettings get(@Nonnull DisplayNameSettings def) {
         Optional<DictionaryLanguage> primary = getPrimaryDisplayLanguage();
         Optional<DictionaryLanguage> secondary = getSecondaryDisplayLanguage();
-        return DisplayDictionaryLanguage.get(ImmutableList.of(),
-                                             ImmutableList.of());
+        return DisplayNameSettings.get(ImmutableList.of(),
+                                       ImmutableList.of());
     }
 
     private Optional<DictionaryLanguage> getPrimaryDisplayLanguage() {

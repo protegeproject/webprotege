@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.lang;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.renderer.AnnotationPropertyIriRenderer;
-import edu.stanford.bmir.protege.web.shared.lang.DisplayDictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.lang.DisplayNameSettings;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 
 import javax.annotation.Nonnull;
@@ -48,9 +48,9 @@ public class DisplayNamedSettingsPresenter {
     }
 
     @Nonnull
-    private DisplayDictionaryLanguage getDisplayLanguage() {
-        return DisplayDictionaryLanguage.get(view.getPrimaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()),
-                                             view.getSecondaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()));
+    private DisplayNameSettings getDisplayLanguage() {
+        return DisplayNameSettings.get(view.getPrimaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()),
+                                       view.getSecondaryDisplayNameLanguages().stream().map(DictionaryLanguageData::toDictionaryLanguage).collect(toImmutableList()));
     }
 
     public void setChangeHandler(@Nonnull ChangeHandler changeHandler) {
@@ -70,7 +70,7 @@ public class DisplayNamedSettingsPresenter {
 
 
 
-    private void setDisplayLanguage(@Nonnull DisplayDictionaryLanguage displayLanguage) {
+    private void setDisplayLanguage(@Nonnull DisplayNameSettings displayLanguage) {
         checkNotNull(displayLanguage);
         GWT.log("[DisplayNamedSettingsPresenter] setDisplayLanguage: " + displayLanguage);
 
