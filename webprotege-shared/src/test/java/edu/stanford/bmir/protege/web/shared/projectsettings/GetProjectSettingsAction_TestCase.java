@@ -31,7 +31,7 @@ public class GetProjectSettingsAction_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ProjectSettings_IsNull() {
-        new GetProjectSettingsResult(null);
+        GetProjectSettingsResult.get(null);
     }
 
     @Test

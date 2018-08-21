@@ -52,7 +52,7 @@ public class GetProjectSettingsActionHandler extends AbstractProjectActionHandle
     @Nonnull
     @Override
     public GetProjectSettingsResult execute(@Nonnull GetProjectSettingsAction action, @Nonnull ExecutionContext executionContext) {
-        return new GetProjectSettingsResult(projectDetailsManager.getProjectSettings(projectId));
+        return GetProjectSettingsResult.get(projectDetailsManager.getProjectSettings(projectId));
     }
 
 }

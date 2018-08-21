@@ -24,13 +24,13 @@ public class GetProjectSettingsResult_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        result = new GetProjectSettingsResult(settings);
+        result = GetProjectSettingsResult.get(settings);
     }
 
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_ProjectSettings_IsNull() {
-        new GetProjectSettingsResult(null);
+        GetProjectSettingsResult.get(null);
     }
 
     @Test
@@ -50,13 +50,13 @@ public class GetProjectSettingsResult_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        GetProjectSettingsResult other = new GetProjectSettingsResult(settings);
+        GetProjectSettingsResult other = GetProjectSettingsResult.get(settings);
         assertThat(result, is(equalTo(other)));
     }
 
     @Test
     public void shouldHaveSameHashCode() {
-        GetProjectSettingsResult other = new GetProjectSettingsResult(settings);
+        GetProjectSettingsResult other = GetProjectSettingsResult.get(settings);
         assertThat(result.hashCode(), is(other.hashCode()));
     }
 }
