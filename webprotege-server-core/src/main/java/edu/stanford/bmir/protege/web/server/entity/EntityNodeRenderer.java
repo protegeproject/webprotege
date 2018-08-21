@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.entity;
 
 import edu.stanford.bmir.protege.web.server.issues.EntityDiscussionThreadRepository;
+import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.DeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.server.shortform.DictionaryManager;
 import edu.stanford.bmir.protege.web.server.tag.TagsManager;
@@ -37,19 +38,23 @@ public class EntityNodeRenderer {
     @Nonnull
     private final TagsManager tagsManager;
 
+    @Nonnull
+    private final LanguageManager languageManager;
+
     @Inject
     public EntityNodeRenderer(@Nonnull ProjectId projectId,
                               @Nonnull DictionaryManager dictionaryManager,
                               @Nonnull DeprecatedEntityChecker deprecatedEntityChecker,
                               @Nonnull WatchManager watchManager,
                               @Nonnull EntityDiscussionThreadRepository discussionThreadRepository,
-                              @Nonnull TagsManager tagsManager) {
+                              @Nonnull TagsManager tagsManager, @Nonnull LanguageManager languageManager) {
         this.projectId = checkNotNull(projectId);
         this.dictionaryManager = checkNotNull(dictionaryManager);
         this.deprecatedEntityChecker = checkNotNull(deprecatedEntityChecker);
         this.watchManager = checkNotNull(watchManager);
         this.discussionThreadRepository = checkNotNull(discussionThreadRepository);
         this.tagsManager = checkNotNull(tagsManager);
+        this.languageManager = checkNotNull(languageManager);
     }
 
     /**
@@ -61,7 +66,7 @@ public class EntityNodeRenderer {
     public EntityNode render(@Nonnull OWLEntity entity) {
         return EntityNode.get(
                 entity,
-                dictionaryManager.getShortForm(entity),
+                dictionaryManager.getShortForm(entity, languageManager.getLanguages()),
                 dictionaryManager.getShortForms(entity),
                 deprecatedEntityChecker.isDeprecated(entity),
                 watchManager.getDirectWatches(entity),

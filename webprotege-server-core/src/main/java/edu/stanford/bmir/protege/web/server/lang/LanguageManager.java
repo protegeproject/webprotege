@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.lang;
 
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,14 +20,34 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ProjectSingleton
 public class LanguageManager {
 
+    @Nonnull
+    private final ProjectId projectId;
+
+    @Nonnull
     private final ActiveLanguagesManager activeLanguagesManager;
 
+    @Nonnull
+    private final ProjectDetailsRepository projectDetailsRepository;
+
     @Inject
-    public LanguageManager(@Nonnull ActiveLanguagesManager extractor) {
+    public LanguageManager(@Nonnull ProjectId projectId,
+                           @Nonnull ActiveLanguagesManager extractor,
+                           @Nonnull ProjectDetailsRepository projectDetailsRepository) {
+        this.projectId = projectId;
         this.activeLanguagesManager = checkNotNull(extractor);
+        this.projectDetailsRepository = projectDetailsRepository;
     }
 
-    public synchronized ImmutableList<DictionaryLanguage> getLanguages() {
-        return activeLanguagesManager.getLanguagesRankedByUsage();
+    public synchronized List<DictionaryLanguage> getLanguages() {
+        ImmutableList<DictionaryLanguage> defaultDisplayLanguages = projectDetailsRepository.getDisplayNameLanguages(projectId);
+        if (defaultDisplayLanguages.isEmpty()) {
+            return activeLanguagesManager.getLanguagesRankedByUsage();
+        }
+        else {
+            return ImmutableList.<DictionaryLanguage>builder()
+                    .addAll(defaultDisplayLanguages)
+                    .addAll(activeLanguagesManager.getLanguagesRankedByUsage())
+                    .build();
+        }
     }
 }

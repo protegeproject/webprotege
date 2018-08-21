@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.axiom.*;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.lang.ActiveLanguagesManager;
@@ -7,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.lang.LanguageManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.render.*;
 import edu.stanford.bmir.protege.web.server.object.OWLObjectComparatorImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.HasAnnotationAssertionAxiomsImpl;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsRepository;
 import edu.stanford.bmir.protege.web.server.renderer.OWLObjectRendererImpl;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
@@ -21,6 +23,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -37,6 +40,7 @@ import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * Matthew Horridge
@@ -57,6 +61,9 @@ public class ProjectChangesManager_IT {
 
     private ProjectId projectId = ProjectId.get(UUID.randomUUID().toString());
 
+    @Mock
+    private ProjectDetailsRepository repo;
+
     @Before
     public void setUp() throws Exception {
         changeHistoryFile = temporaryFolder.newFile();
@@ -68,6 +75,8 @@ public class ProjectChangesManager_IT {
                 changeHistoryFile,
                 dataFactory
         ));
+        when(repo.findOne(projectId)).thenReturn(Optional.empty());
+        when(repo.getDisplayNameLanguages(projectId)).thenReturn(ImmutableList.of());
         WebProtegeIRIShortFormProvider iriShortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 new HasAnnotationAssertionAxiomsImpl(rootOntology),
@@ -98,8 +107,8 @@ public class ProjectChangesManager_IT {
                 rootOntology,
                 dataFactory
         );
-        LanguageManager languageManager = new LanguageManager(new ActiveLanguagesManager(projectId,
-                                                                                         rootOntology), projectDetailsManager);
+        LanguageManager languageManager = new LanguageManager(projectId, new ActiveLanguagesManager(projectId,
+                                                                                                    rootOntology), repo);
         RenderingManager renderingManager = new RenderingManager(
                 new DictionaryManager(languageManager, new MultiLingualDictionaryImpl(projectId, new DictionaryBuilder(projectId, rootOntology), new DictionaryUpdater(rootOntology)),
                                       new BuiltInShortFormDictionary(new ShortFormCache(), dataFactory)),

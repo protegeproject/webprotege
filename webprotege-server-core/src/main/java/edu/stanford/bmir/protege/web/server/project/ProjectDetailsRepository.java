@@ -1,25 +1,34 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import edu.stanford.bmir.protege.web.server.api.TimestampSerializer;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
+import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
+import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
+import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguageData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static edu.stanford.bmir.protege.web.shared.project.ProjectDetails.*;
 
 /**
@@ -27,6 +36,7 @@ import static edu.stanford.bmir.protege.web.shared.project.ProjectDetails.*;
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
+@ApplicationSingleton
 public class ProjectDetailsRepository implements Repository {
 
     public static final String COLLECTION_NAME = "ProjectDetails";
@@ -36,11 +46,24 @@ public class ProjectDetailsRepository implements Repository {
 
     private final MongoCollection<Document> collection;
 
+    private final LoadingCache<ProjectId, ProjectDetails> cache;
+
+    private final LoadingCache<ProjectId, ImmutableList<DictionaryLanguage>> displayLanguagesCache;
+
     @Inject
     public ProjectDetailsRepository(@Nonnull MongoDatabase database,
                                     @Nonnull ObjectMapper objectMapper) {
         this.collection = database.getCollection(COLLECTION_NAME);
         this.objectMapper = checkNotNull(objectMapper);
+        this.cache = Caffeine.newBuilder()
+                             .expireAfterAccess(Duration.ofMinutes(2))
+                             .build(projectId -> findOneFromDb(projectId).orElse(null));
+        this.displayLanguagesCache = Caffeine.newBuilder()
+                .expireAfterAccess(Duration.ofMinutes(2))
+                .build(projectId -> findOne(projectId).map(settings -> settings.getDefaultDisplayNameSettings().getPrimaryDisplayNameLanguages().stream()
+                                                                               .map(DictionaryLanguageData::getDictionaryLanguage)
+                                                                               .collect(toImmutableList()))
+                                                      .orElse(ImmutableList.of()));
     }
 
     private static Document withProjectId(@Nonnull ProjectId projectId) {
@@ -91,13 +114,21 @@ public class ProjectDetailsRepository implements Repository {
 
     public void setInTrash(ProjectId projectId, boolean inTrash) {
         collection.updateOne(withProjectId(projectId), updateInTrash(inTrash));
+        cache.invalidate(projectId);
+        // No need to invalidate display languages cache
     }
 
     public void setModified(ProjectId projectId, long modifiedAt, UserId modifiedBy) {
         collection.updateOne(withProjectId(projectId), updateModified(modifiedBy, modifiedAt));
+        cache.invalidate(projectId);
+        // No need to invalidate display languages cache
     }
 
     public Optional<ProjectDetails> findOne(@Nonnull ProjectId projectId) {
+        return Optional.ofNullable(cache.get(projectId));
+    }
+
+    private Optional<ProjectDetails> findOneFromDb(@Nonnull ProjectId projectId) {
         return Optional.ofNullable(
                 collection
                         .find(withProjectId(projectId))
@@ -119,9 +150,17 @@ public class ProjectDetailsRepository implements Repository {
         collection.replaceOne(withProjectId(projectRecord.getProjectId()),
                               document,
                               new UpdateOptions().upsert(true));
+        cache.invalidate(projectRecord.getProjectId());
+        displayLanguagesCache.invalidate(projectRecord.getProjectId());
     }
 
     public void delete(@Nonnull ProjectId projectId) {
         collection.deleteOne(withProjectId(projectId));
+        cache.invalidate(projectId);
+        displayLanguagesCache.invalidate(projectId);
+    }
+
+    public ImmutableList<DictionaryLanguage> getDisplayNameLanguages(@Nonnull ProjectId projectId) {
+        return displayLanguagesCache.get(projectId);
     }
 }

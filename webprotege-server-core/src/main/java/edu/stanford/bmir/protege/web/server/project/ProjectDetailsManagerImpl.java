@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.server.webhook.SlackWebhookRepository;
@@ -22,6 +25,7 @@ import edu.stanford.bmir.protege.web.shared.webhook.SlackWebhook;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import javax.inject.Inject;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,7 +123,6 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
                                                                                                    s.getEventTypes())))
                                                               .collect(toList());
         webhookRepository.addProjectWebhooks(projectWebhooks);
-
     }
 
     @Override
