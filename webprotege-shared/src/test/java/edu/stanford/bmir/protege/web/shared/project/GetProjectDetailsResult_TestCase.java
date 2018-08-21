@@ -21,12 +21,12 @@ public class GetProjectDetailsResult_TestCase {
     @Before
     public void setUp()
     {
-        getProjectDetailsResult = new GetProjectDetailsResult(projectDetails);
+        getProjectDetailsResult = GetProjectDetailsResult.get(projectDetails);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectDetails_IsNull() {
-        new GetProjectDetailsResult(null);
+        GetProjectDetailsResult.get(null);
     }
 
     @Test
@@ -46,17 +46,17 @@ public class GetProjectDetailsResult_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(getProjectDetailsResult, is(new GetProjectDetailsResult(projectDetails)));
+        assertThat(getProjectDetailsResult, is(GetProjectDetailsResult.get(projectDetails)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectDetails() {
-        assertThat(getProjectDetailsResult, is(not(new GetProjectDetailsResult(Mockito.mock(ProjectDetails.class)))));
+        assertThat(getProjectDetailsResult, is(not(GetProjectDetailsResult.get(Mockito.mock(ProjectDetails.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(getProjectDetailsResult.hashCode(), is(new GetProjectDetailsResult(projectDetails).hashCode()));
+        assertThat(getProjectDetailsResult.hashCode(), is(GetProjectDetailsResult.get(projectDetails).hashCode()));
     }
 
     @Test

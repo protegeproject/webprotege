@@ -11,7 +11,6 @@ import com.mongodb.client.model.Updates;
 import edu.stanford.bmir.protege.web.server.api.TimestampSerializer;
 import edu.stanford.bmir.protege.web.server.persistence.Repository;
 import edu.stanford.bmir.protege.web.shared.inject.ApplicationSingleton;
-import edu.stanford.bmir.protege.web.shared.inject.ProjectSingleton;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.shortform.DictionaryLanguage;
@@ -59,11 +58,11 @@ public class ProjectDetailsRepository implements Repository {
                              .expireAfterAccess(Duration.ofMinutes(2))
                              .build(projectId -> findOneFromDb(projectId).orElse(null));
         this.displayLanguagesCache = Caffeine.newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(2))
-                .build(projectId -> findOne(projectId).map(settings -> settings.getDefaultDisplayNameSettings().getPrimaryDisplayNameLanguages().stream()
-                                                                               .map(DictionaryLanguageData::getDictionaryLanguage)
-                                                                               .collect(toImmutableList()))
-                                                      .orElse(ImmutableList.of()));
+                                             .expireAfterAccess(Duration.ofMinutes(2))
+                                             .build(projectId -> findOne(projectId).map(settings -> settings.getDefaultDisplayNameSettings().getPrimaryDisplayNameLanguages().stream()
+                                                                                                            .map(DictionaryLanguageData::getDictionaryLanguage)
+                                                                                                            .collect(toImmutableList()))
+                                                                                   .orElse(ImmutableList.of()));
     }
 
     private static Document withProjectId(@Nonnull ProjectId projectId) {
@@ -130,10 +129,9 @@ public class ProjectDetailsRepository implements Repository {
 
     private Optional<ProjectDetails> findOneFromDb(@Nonnull ProjectId projectId) {
         return Optional.ofNullable(
-                collection
-                        .find(withProjectId(projectId))
-                        .limit(1)
-                        .first())
+                collection.find(withProjectId(projectId))
+                          .limit(1)
+                          .first())
                        .map(d -> objectMapper.convertValue(d, ProjectDetails.class));
     }
 
