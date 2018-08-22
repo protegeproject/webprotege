@@ -29,5 +29,6 @@
             </div>
         </div>
         <g:Button ui:field="resetButton" text="{msg.language_defaultDisplayName_reset_title}" addStyleNames="{wp.buttons.button} {wp.buttons.smallPageButton} {wp.buttons.secondaryButton}"/>
+        <g:Label text="Resets the list of display property language pairs to the list of pairs that are used in the project ordered by frequency" addStyleNames="{wp.style.formHelpText}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
